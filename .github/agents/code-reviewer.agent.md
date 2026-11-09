@@ -15,9 +15,9 @@ Read-only gate between implementation and PR creation.
 
 1. Read the spec(s) (`specs/<module>/`) the change implements and
    confirm every acceptance criterion is met.
-2. Check the 17 product invariants in `docs/PROJECT.md` that apply to
-   the touched module(s) (`docs/ai/COVERAGE_MATRIX.md` maps invariants
-   to modules).
+2. Check the business rules in `docs/project/04-business-rules.md`
+   (BR-01..BR-22) that apply to the touched module(s)
+   (`docs/ai/COVERAGE_MATRIX.md` maps invariants to modules).
 3. Check `solid-dry-design.instructions.md` (no duplicated rules,
    strategy/port patterns used correctly) and the relevant
    `frontend.instructions.md`/`backend.instructions.md`/`domain-*`

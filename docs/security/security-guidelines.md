@@ -22,7 +22,7 @@ touching `auth`, `payments`, `cart-checkout`, `orders`, `delivery`,
   (customer/vendor/provider/rider/admin/super_admin), ownership (does
   this user own this shop/order/review?), and scope (is this admin
   assigned to this city/area and does their permission matrix allow
-  this module/action?). See invariant 11 in `docs/PROJECT.md`.
+  this module/action?). See BR-12 in `docs/project/04-business-rules.md`.
 - **IDOR:** never trust an ID from the client as sufficient
   authorization; re-check ownership/scope server-side on every request,
   including nested resources (e.g. an order's items, a business's
@@ -97,7 +97,7 @@ touching `auth`, `payments`, `cart-checkout`, `orders`, `delivery`,
   visible only to admins with the relevant approval permission.
 - WhatsApp/marketing communications require recorded consent;
   `communications` (AD12) must compute consent-aware recipient counts
-  and honour opt-outs (invariant 10).
+  and honour opt-outs (BR-11).
 - Support data export and account/data deletion requests (AU8, AC5)
   end-to-end, including from backups/queues where feasible.
 - Mask sensitive data in UI where not needed in full (e.g. masked rider
@@ -108,7 +108,7 @@ touching `auth`, `payments`, `cart-checkout`, `orders`, `delivery`,
 - Structured logs only; never log secrets, OTPs, full phone numbers,
   payment instrument details, or raw KYC document contents.
 - Every admin action that changes data is **audit-logged** with actor,
-  timestamp, before/after values (invariant 11, module `audit`).
+  timestamp, before/after values (BR-12, module `audit`).
 
 ## 10. Dependencies
 

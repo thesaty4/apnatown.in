@@ -37,7 +37,7 @@ components (`docs/design-system.md`) — don't build bespoke ones.
 
 - Explore state is a **shareable URL** (`/explore?tab=...&category=...`);
   browser Back restores the previous page and scroll position (EX9).
-- Explore and Search keep **separate** filter state (invariant 14,
+- Explore and Search keep **separate** filter state (BR-15,
   `domain-catalog-search.instructions.md`) — never share one store.
 - Never alias event handlers by assignment (e.g.
   `const onClick = this.handleClick` losing `this`/closures); bind or

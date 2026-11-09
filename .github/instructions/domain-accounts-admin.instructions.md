@@ -5,11 +5,12 @@ applyTo: "apps/api/src/modules/{auth,users,admin,geo,communications,settings,aud
 # Domain: Accounts and admin
 
 Builds on `backend.instructions.md`/`frontend.instructions.md`/
-`security.instructions.md`. Invariants: `docs/PROJECT.md` (6, 10-13).
+`security.instructions.md`. Rules: `docs/project/04-business-rules.md`
+(BR-06, BR-11, BR-12, BR-13, BR-14).
 Journeys J7, J9, J10. Covers `auth`, `users`, `admin`, `geo`,
 `communications`, `settings`, `audit`, and the admin frontend.
 
-## OTP login and approval gating (AU4, invariant 6)
+## OTP login and approval gating (AU4, BR-06)
 
 - Mobile OTP: 6-box input, auto-advance, paste support, resend timer,
   attempt limits — verification is server-side only
@@ -18,7 +19,7 @@ Journeys J7, J9, J10. Covers `auth`, `users`, `admin`, `geo`,
   when `approved`; every relevant endpoint re-checks current approval
   status server-side, not a cached client flag.
 
-## RBAC matrix and admin scope (invariant 11)
+## RBAC matrix and admin scope (BR-12)
 
 - Permissions are `(role, module, action)` triples; actions include at
   least view/edit, and create/delete/export where applicable
@@ -26,9 +27,9 @@ Journeys J7, J9, J10. Covers `auth`, `users`, `admin`, `geo`,
 - Admins act **only** within their assigned cities/areas; every admin
   endpoint filters by assigned scope server-side — UI hiding alone is
   not sufficient (`security.instructions.md`).
-- **System roles are locked** — cannot be edited/deleted (invariant
-  12); a custom role **cannot be deleted while any admin is assigned
-  to it** — deletion requires a reassign-picker flow first (SA3).
+- **System roles are locked** — cannot be edited/deleted (BR-13); a
+  custom role **cannot be deleted while any admin is assigned to it**
+  — deletion requires a reassign-picker flow first (SA3).
 
 ## Cities, zones, fee slabs (SA4)
 
@@ -39,7 +40,7 @@ Journeys J7, J9, J10. Covers `auth`, `users`, `admin`, `geo`,
   active orders/riders affected); a disabled city stops new
   discovery/orders but doesn't silently cancel in-flight ones.
 
-## Communications scopes and consent (AD12, invariant 10)
+## Communications scopes and consent (AD12, BR-11)
 
 - Audience resolution scope: Overall / City-wise / Zone-wise, filtered
   to **consented** recipients only; the UI must show a **consent-aware
@@ -51,7 +52,7 @@ Journeys J7, J9, J10. Covers `auth`, `users`, `admin`, `geo`,
 - Sending is permission-scoped the same way as any other admin action
   (an admin can only message within their assigned city/area scope).
 
-## Audit log before/after (invariant 11, X14)
+## Audit log before/after (BR-12, X14)
 
 - Every admin action that changes data (approvals, role/permission
   edits, settings changes, suspensions, category/subcategory decisions,
@@ -62,7 +63,7 @@ Journeys J7, J9, J10. Covers `auth`, `users`, `admin`, `geo`,
   setting and the previous value, since they affect money (fee
   slabs, commission) and policy (refund window, review rules) platform-wide.
 
-## DPDP and KYC visibility (invariant 13)
+## DPDP and KYC visibility (BR-14)
 
 - KYC documents (RD1/VD1/PV1 onboarding) are visible only to admins
   whose permission matrix grants the relevant approval module/action.

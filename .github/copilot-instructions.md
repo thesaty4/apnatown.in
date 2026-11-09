@@ -3,12 +3,16 @@
 Read `AGENTS.md` first for the full read order, lifecycle and agent
 roster. This file holds only the top-priority, repo-wide rules.
 
+Read `docs/PROJECT.md` (index) and the linked `docs/project/*` files
+before implementing any feature.
+
 ## How to work
 
 1. **Plan before coding.** Find or write the spec in
    `specs/<module>/{be,fe}/` (see `docs/FEATURE_INVENTORY.md`); don't
-   invent product behaviour — ambiguity goes to `docs/PROJECT.md` "Open
-   questions", not a guess.
+   invent product behaviour — ambiguity goes to
+   `docs/project/12-decisions-assumptions-open-questions.md`, not a
+   guess.
 2. **Reuse before building.** Check `packages/ui`
    (`docs/design-system.md`), `packages/shared`, and existing
    repositories/services in `docs/architecture.md` before adding new
@@ -51,8 +55,8 @@ roster. This file holds only the top-priority, repo-wide rules.
   colour-only.
 - Location is always optional; WhatsApp/marketing needs recorded
   consent.
-- All 17 invariants: `docs/PROJECT.md` section "Business rules" — these
-  are reviewed on every PR.
+- All business rules: `docs/project/04-business-rules.md` (BR-01..
+  BR-22) — these are reviewed on every PR.
 
 ## Testing and Definition of Done
 

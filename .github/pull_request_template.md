@@ -37,7 +37,7 @@ one non-default UX state (skeleton/empty/error/no-permission). -->
 ## Assumptions
 
 <!-- Anything interpreted from an ambiguous spec. Link the
-docs/PROJECT.md "Open questions" entry if one was raised. -->
+docs/project/12-decisions-assumptions-open-questions.md entry if one was raised. -->
 
 ## Risk and rollback
 
@@ -60,7 +60,7 @@ commit, migration down-path). -->
 ## Checklist
 
 - [ ] Spec acceptance criteria met
-- [ ] Product invariants preserved (`docs/PROJECT.md`)
+- [ ] Product invariants preserved (`docs/project/04-business-rules.md`)
 - [ ] Tests added/passing (including negative/security cases)
 - [ ] `docs/FEATURE_INVENTORY.md` status updated
 - [ ] `node scripts/validate-ai-setup.mjs` passes (if `.github/`/`docs/`

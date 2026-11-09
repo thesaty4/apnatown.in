@@ -1,7 +1,7 @@
 # Coverage Matrix
 
 Mandatory self-check (`AGENTS.md`): every feature ID in `docs/FEATURE_INVENTORY.md` and every 
-invariant in `docs/PROJECT.md` maps to at least one instruction file, skill, agent, and BE module + 
+business rule in `docs/project/04-business-rules.md` maps to at least one instruction file, skill, agent, and BE module + 
 FE area — no row may be empty. The mapping is area-level (every ID in an area's range shares the same 
 row, since that is how the underlying instructions/skills are scoped via `applyTo`); a feature's own 
 spec may narrow this to the specific file(s) it actually used.
@@ -35,29 +35,38 @@ spec may narrow this to the specific file(s) it actually used.
 
 **Total feature IDs covered: 207** (across 22 areas, matching `docs/FEATURE_INVENTORY.md`).
 
-## Business rule invariants (1-17)
+## Business rule invariants (BR-01..BR-22)
 
-| # | Invariant | Instruction file(s) | Skill(s) | Agent(s) | BE module(s) |
-|---|---|---|---|---|---|
-| 1 | Money integer paise; server computes totals | `domain-commerce.instructions.md` | `order-state-machine` | `developer-backend`, `code-reviewer` | `cart-checkout, orders, payments` |
-| 2 | UTC storage, IST 12-hour display | `i18n-a11y.instructions.md`, `backend.instructions.md` | `i18n-en-hi` | `developer-backend`, `developer-frontend`, `code-reviewer` | `packages/shared (all modules)` |
-| 3 | One order per shop, own status/mode/payment/OTP | `domain-commerce.instructions.md` | `order-state-machine` | `developer-backend`, `code-reviewer` | `cart-checkout, orders` |
-| 4 | Order status only via state machine; no oversell | `domain-commerce.instructions.md` | `order-state-machine`, `write-tests` | `developer-backend`, `code-reviewer` | `orders, products` |
-| 5 | Delivery OTP / pickup code verified server-side only | `security.instructions.md`, `domain-delivery-riders.instructions.md` | `otp-and-codes` | `developer-backend`, `security-auditor`, `code-reviewer` | `delivery, orders` |
-| 6 | Only approved vendors/providers/riders sell/accept/go online | `domain-accounts-admin.instructions.md`, `domain-delivery-riders.instructions.md` | `rbac-scope-audit` | `developer-backend`, `code-reviewer` | `users, businesses, delivery` |
-| 7 | Main categories super_admin only; subcategory suggestion/approval; one subcategory per service | `domain-catalog-search.instructions.md` | `search-keyword-mapping`, `rbac-scope-audit` | `developer-backend`, `code-reviewer` | `catalog` |
-| 8 | Reviews only from verified purchasers/enquirers; moderation for unsafe content | `domain-media-engagement.instructions.md`, `testing.instructions.md` | `write-tests`, `secure-coding-review` | `developer-backend`, `code-reviewer` | `reviews` |
-| 9 | Videos public only when approved; reports to moderation; removed shows unavailable | `domain-media-engagement.instructions.md` | `media-embeds-and-reels` | `developer-backend`, `developer-frontend`, `code-reviewer` | `media-videos` |
-| 10 | Location optional; consent for marketing; opt-outs honoured; consent-aware counts | `domain-accounts-admin.instructions.md`, `security.instructions.md` | `consent-and-notifications` | `developer-backend`, `security-auditor`, `code-reviewer` | `communications, users` |
-| 11 | Admins scoped to city/area + permissions; sensitive actions audit-logged | `domain-accounts-admin.instructions.md`, `security.instructions.md` | `rbac-scope-audit` | `developer-backend`, `security-auditor`, `code-reviewer` | `admin, audit` |
-| 12 | Role cannot be deleted while assigned; system roles never deletable | `domain-accounts-admin.instructions.md` | `rbac-scope-audit` | `developer-backend`, `code-reviewer` | `admin` |
-| 13 | DPDP: minimise, consent, export/delete; KYC visible only to authorised admins | `security.instructions.md`, `domain-accounts-admin.instructions.md` | `secure-coding-review` | `developer-backend`, `security-auditor`, `code-reviewer` | `users, admin` |
-| 14 | Explore filter state in shareable URL; Explore and Search keep separate filter state | `domain-catalog-search.instructions.md`, `frontend.instructions.md` | `explore-filter-url-state` | `developer-frontend`, `code-reviewer` | `search` |
-| 15 | Media appears in Gallery/Reels only if vendor allows it (consent) | `domain-media-engagement.instructions.md` | `media-embeds-and-reels` | `developer-backend`, `developer-frontend`, `code-reviewer` | `media-videos, businesses` |
-| 16 | Offer applies only while active and not expired; expired/out-of-stock states shown clearly | `domain-commerce.instructions.md` | `write-tests` | `developer-backend`, `developer-frontend`, `code-reviewer` | `offers` |
-| 17 | A service's subcategory drives Explore/Search filters and counts | `domain-catalog-search.instructions.md` | `explore-filter-url-state`, `search-keyword-mapping` | `developer-backend`, `developer-frontend`, `code-reviewer` | `services, search` |
+Canonical rule text: `docs/project/04-business-rules.md`. These IDs
+superseded the old "17 invariants" numbering (see that file's note on
+the renumbering) — don't reintroduce bare "invariant N" references.
 
-**All 17 invariants covered; no empty cells above.**
+| ID | Instruction file(s) | Skill(s) | Agent(s) | BE module(s) |
+|---|---|---|---|---|
+| BR-01 | `domain-commerce.instructions.md` | `order-state-machine` | `developer-backend`, `code-reviewer` | `cart-checkout, orders, payments` |
+| BR-02 | `i18n-a11y.instructions.md`, `backend.instructions.md` | `i18n-en-hi` | `developer-backend`, `developer-frontend`, `code-reviewer` | `packages/shared (all modules)` |
+| BR-03 | `domain-commerce.instructions.md` | `order-state-machine` | `developer-backend`, `code-reviewer` | `cart-checkout, orders` |
+| BR-04 | `domain-commerce.instructions.md` | `order-state-machine`, `write-tests` | `developer-backend`, `code-reviewer` | `orders, products` |
+| BR-05 | `security.instructions.md`, `domain-delivery-riders.instructions.md` | `otp-and-codes` | `developer-backend`, `security-auditor`, `code-reviewer` | `delivery, orders` |
+| BR-06 | `domain-accounts-admin.instructions.md`, `domain-delivery-riders.instructions.md` | `rbac-scope-audit` | `developer-backend`, `code-reviewer` | `users, businesses, delivery` |
+| BR-07 | `domain-catalog-search.instructions.md` | `search-keyword-mapping`, `rbac-scope-audit` | `developer-backend`, `code-reviewer` | `catalog` |
+| BR-08 | `domain-catalog-search.instructions.md` | `spec-writing` | `developer-backend`, `code-reviewer` | `catalog, services` |
+| BR-09 | `domain-media-engagement.instructions.md`, `testing.instructions.md` | `write-tests`, `secure-coding-review` | `developer-backend`, `code-reviewer` | `reviews` |
+| BR-10 | `domain-media-engagement.instructions.md` | `media-embeds-and-reels` | `developer-backend`, `developer-frontend`, `code-reviewer` | `media-videos` |
+| BR-11 | `domain-accounts-admin.instructions.md`, `security.instructions.md` | `consent-and-notifications` | `developer-backend`, `security-auditor`, `code-reviewer` | `communications, users` |
+| BR-12 | `domain-accounts-admin.instructions.md`, `security.instructions.md` | `rbac-scope-audit` | `developer-backend`, `security-auditor`, `code-reviewer` | `admin, audit` |
+| BR-13 | `domain-accounts-admin.instructions.md` | `rbac-scope-audit` | `developer-backend`, `code-reviewer` | `admin` |
+| BR-14 | `security.instructions.md`, `domain-accounts-admin.instructions.md` | `secure-coding-review` | `developer-backend`, `security-auditor`, `code-reviewer` | `users, admin` |
+| BR-15 | `domain-catalog-search.instructions.md`, `frontend.instructions.md` | `explore-filter-url-state` | `developer-frontend`, `code-reviewer` | `search` |
+| BR-16 | `domain-media-engagement.instructions.md` | `media-embeds-and-reels` | `developer-backend`, `developer-frontend`, `code-reviewer` | `media-videos, businesses` |
+| BR-17 | `domain-commerce.instructions.md` | `write-tests` | `developer-backend`, `developer-frontend`, `code-reviewer` | `offers` |
+| BR-18 | `domain-catalog-search.instructions.md` | `explore-filter-url-state`, `search-keyword-mapping` | `developer-backend`, `developer-frontend`, `code-reviewer` | `services, search` |
+| BR-19 | `domain-commerce.instructions.md` | `order-state-machine` | `developer-backend`, `code-reviewer` | `cart-checkout` |
+| BR-20 | `domain-commerce.instructions.md` | `order-state-machine` | `developer-backend`, `code-reviewer` | `orders, notifications` |
+| BR-21 | `frontend.instructions.md` | `ui-component` | `developer-frontend`, `code-reviewer` | `auth` + all guest-gated FE features |
+| BR-22 | `i18n-a11y.instructions.md` | `ui-component` | `developer-frontend`, `code-reviewer` | `packages/ui` |
+
+**All 22 business rules covered; no empty cells above.**
 
 
 `security-auditor` is additionally required (not re-listed per row) for any PR touching auth, 

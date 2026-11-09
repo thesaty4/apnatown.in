@@ -2,10 +2,10 @@
 
 ## Status
 
-Proposed — this records the assumption in `docs/PROJECT.md` section
-"Tech stack"; it is **not yet confirmed** by a human decision-maker.
-See `docs/PROJECT.md` "Open questions" for the unresolved items this
-ADR depends on.
+Proposed — this records the assumption in
+`docs/project/12-decisions-assumptions-open-questions.md` A-01; it is
+**not yet confirmed** by a human decision-maker. See that file's
+"Open questions" for the unresolved items this ADR depends on.
 
 ## Context
 
@@ -51,7 +51,8 @@ Adopt, as a working assumption, a pnpm monorepo:
   minimal framework.
 - Follow-up: a database engine ADR, a payments-provider ADR, and a
   WhatsApp/SMS-provider ADR are required before those modules can be
-  implemented (see `docs/PROJECT.md` "Open questions" #1-#4).
+  implemented (see `docs/project/12-decisions-assumptions-open-questions.md`
+  Q-16, Q-01, Q-04, Q-17).
 
 ## Alternatives considered
 

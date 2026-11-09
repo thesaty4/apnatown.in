@@ -12,11 +12,11 @@ Used by `.github/agents/spec-writer.agent.md`. Templates:
 
 1. Locate the feature row in `docs/FEATURE_INVENTORY.md` (ID, module,
    roles, routes).
-2. Read `docs/PROJECT.md` invariants and the matching
+2. Read `docs/project/04-business-rules.md` and the matching
    `.github/instructions/domain-*.instructions.md` file for this
    module.
 3. If behaviour is ambiguous, ask a clarifying question or record it in
-   `docs/PROJECT.md` "Open questions" — never guess
+   `docs/project/12-decisions-assumptions-open-questions.md` — never guess
    (`specs-and-docs.instructions.md`).
 4. Copy `specs/_templates/feature-be.md` ->
    `specs/<module>/be/<id>-<slug>.md` and

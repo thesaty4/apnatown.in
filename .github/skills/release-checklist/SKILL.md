@@ -13,7 +13,9 @@ Used by `.github/agents/release-manager.agent.md`.
    feature area) using their summaries and
    `docs/FEATURE_INVENTORY.md` status changes.
 2. Write release notes: new features, fixed bugs, and any change to a
-   product invariant or status model (`docs/PROJECT.md`) that affects
+   product invariant or status model
+   (`docs/project/04-business-rules.md`,
+   `docs/project/05-domain-model.md`) that affects
    existing users/vendors/riders.
 3. Config/migration checklist:
    - New/changed environment variables (diff against `.env.example`).

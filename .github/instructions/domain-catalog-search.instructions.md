@@ -5,10 +5,11 @@ applyTo: "apps/api/src/modules/{catalog,products,services,search}/**,apps/web/sr
 # Domain: Catalog and search
 
 Builds on `backend.instructions.md`/`frontend.instructions.md`.
-Invariants: `docs/PROJECT.md` (7, 14, 17). Covers `catalog`, `products`,
+Rules: `docs/project/04-business-rules.md` (BR-07, BR-08, BR-15,
+BR-18). Covers `catalog`, `products`,
 `services`, `search`, and the Explore/Search frontend.
 
-## Fixed main categories, subcategory suggestions (invariant 7)
+## Fixed main categories, subcategory suggestions (BR-07)
 
 - Main categories are created/edited **only by `super_admin`**
   (SA8) — no other role can create one, server-enforced, not just
@@ -18,11 +19,11 @@ Invariants: `docs/PROJECT.md` (7, 14, 17). Covers `catalog`, `products`,
   reason, or merge into an existing subcategory. Duplicate detection
   (fuzzy match against existing names/keywords) must warn before
   submission and again at admin review.
-- Each **service** has **exactly one** subcategory (SV8, invariant 7);
+- Each **service** has **exactly one** subcategory (SV8, BR-08);
   products use category + subcategory (not single-valued the same way).
 - A provider can be "expert in" **several** subcategories (many-to-many,
-  `docs/PROJECT.md` data relationships) — don't conflate this with a
-  service's single subcategory.
+  `docs/project/05-domain-model.md` data relationships) — don't conflate
+  this with a service's single subcategory.
 
 ## Explore URL contract and Back/scroll (EX8-EX9)
 
@@ -44,7 +45,7 @@ Invariants: `docs/PROJECT.md` (7, 14, 17). Covers `catalog`, `products`,
   this exact component is reused on Search (Services tab) and service
   category pages — never forked (`solid-dry-design.instructions.md`).
 
-## Search vs. Explore filter state (SR10, invariant 14)
+## Search vs. Explore filter state (SR10, BR-15)
 
 - Search keeps its **own** filter state, entirely separate from
   Explore's — switching between Search and Explore never carries one's

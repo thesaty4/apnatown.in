@@ -39,9 +39,9 @@ Include at least one negative/authorization case per spec
   elsewhere — never paste the same checklist/rule block into multiple
   `.md` files. If you find yourself copying a paragraph, replace the
   copy with a link.
-- Product invariants live only in `docs/PROJECT.md`; domain instruction
-  files reference the invariant number, they don't restate the full
-  text.
+- Business rules live only in `docs/project/04-business-rules.md`;
+  domain instruction files reference the rule ID (`BR-xx`), they don't
+  restate the full text.
 - Keep `.github/copilot-instructions.md` and every
   `.github/instructions/*.instructions.md` file under **4,000
   characters** — move detail to `docs/` and link to it

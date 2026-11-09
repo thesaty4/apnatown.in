@@ -1,6 +1,10 @@
 # ApnaTown Feature Inventory
 
-Every feature ID from the product brief (`docs/PROJECT.md` section 1) is listed here. 
+Every feature ID from the product brief is listed here as a **spec-status
+tracker** (BE/FE spec path + status); for the full behaviour description
+of each feature, see `docs/project/03-feature-catalog.md` (the product
+knowledge base's richer, canonical feature catalog — don't duplicate its
+text here).
 Status starts at `not started` for all rows and is updated by the `spec-writer` agent and developers 
 as specs and implementations land. BE/FE spec paths are placeholders the `spec-writer` agent fills in; 
 see `specs/_templates/`.

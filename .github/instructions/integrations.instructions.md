@@ -6,7 +6,7 @@ applyTo: "apps/api/src/integrations/**,apps/api/src/modules/{payments,notificati
 
 Builds on `backend.instructions.md`/`security.instructions.md`.
 Providers for payments, SMS/OTP, and WhatsApp are **not yet chosen**
-(`docs/PROJECT.md` "Open questions") — code against the ports below
+(`docs/project/12-decisions-assumptions-open-questions.md`) — code against the ports below
 regardless of provider.
 
 ## Ports and adapters
@@ -53,7 +53,7 @@ regardless of provider.
 ## WhatsApp consent and templates
 
 - `communications`/`notifications` call `WhatsAppProvider` only for
-  **consented** recipients (invariant 10,
+  **consented** recipients (BR-11,
   `domain-accounts-admin.instructions.md`); templates are the
   provider-approved template objects, not freeform text, to stay
   compliant with WhatsApp Business policy.

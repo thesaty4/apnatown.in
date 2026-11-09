@@ -7,7 +7,9 @@ and every human contributor using an AI agent follows this file first.
 
 1. This file (`AGENTS.md`).
 2. `.github/copilot-instructions.md` — top-priority repo-wide rules.
-3. `docs/PROJECT.md` — product context, roles, invariants, tech stack.
+3. `docs/PROJECT.md` — index into the product knowledge base
+   (`docs/project/`): what to build, roles, rules, journeys, screens,
+   design, copy.
 4. `docs/architecture.md` — module map and layering.
 5. The relevant `.github/instructions/*.instructions.md` file(s) for the
    path you are touching (matched by `applyTo`).
@@ -16,7 +18,7 @@ and every human contributor using an AI agent follows this file first.
 7. The relevant skill in `.github/skills/` for a step-by-step recipe.
 
 Do not skip ahead to code before steps 1-4 are understood; they contain
-the product invariants (`docs/PROJECT.md` section "Business rules")
+the product invariants (`docs/project/04-business-rules.md`)
 that every change must preserve.
 
 ## 2. Lifecycle
@@ -73,11 +75,11 @@ See `.github/agents/*.agent.md` for each agent's full instructions:
   admin permissions, or `communications`.
 - **Don't invent product behaviour.** If section 2 of the original
   product brief (now `docs/PROJECT.md`/`docs/FEATURE_INVENTORY.md`) is
-  ambiguous, add it to `docs/PROJECT.md` "Open questions" and ask,
+  ambiguous, add it to `docs/project/12-decisions-assumptions-open-questions.md` and ask,
   rather than guessing.
-- **Preserve invariants.** The 17 business rules in `docs/PROJECT.md`
-  are enforced by `code-reviewer` on every PR; a Blocker there always
-  means CHANGES_REQUESTED.
+- **Preserve invariants.** The business rules (BR-01..BR-22) in
+  `docs/project/04-business-rules.md` are enforced by `code-reviewer`
+  on every PR; a Blocker there always means CHANGES_REQUESTED.
 
 ## 5. Escalation rules
 

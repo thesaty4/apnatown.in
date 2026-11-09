@@ -15,8 +15,10 @@ FE spec before any code is written.
 ## Inputs
 
 - A feature ID (e.g. `CK2`) or a short description to locate it in
-  `docs/FEATURE_INVENTORY.md`.
-- `docs/PROJECT.md`, `docs/architecture.md`, `docs/design-system.md`,
+  `docs/FEATURE_INVENTORY.md` and
+  `docs/project/03-feature-catalog.md`.
+- `docs/project/04-business-rules.md`, `docs/architecture.md`,
+  `docs/project/08-design-system.md`,
   the relevant `.github/instructions/domain-*.instructions.md` file,
   and `.github/skills/spec-writing/SKILL.md`.
 
@@ -25,7 +27,7 @@ FE spec before any code is written.
 Follow `.github/skills/spec-writing/SKILL.md` step by step. In short:
 read the feature's row and relevant domain instructions/invariants,
 ask rather than guess on ambiguity (recording it under
-`docs/PROJECT.md` "Open questions" if genuinely blocked), write both
+`docs/project/12-decisions-assumptions-open-questions.md` if genuinely blocked), write both
 specs from the templates with Given/When/Then acceptance criteria,
 cross-link them, and update the `docs/FEATURE_INVENTORY.md` row.
 

@@ -6,7 +6,7 @@ description: "Recipe for implementing any one-time code flow (login OTP, deliver
 # OTP and codes
 
 Covers AU4, RD4, OR3-OR4 (`domain-delivery-riders.instructions.md`,
-`security.instructions.md` invariant 5).
+`security.instructions.md` BR-05).
 
 ## Steps
 

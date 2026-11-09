@@ -59,8 +59,8 @@ backend module.
    `businesses` delivery/pickup eligibility and minimum order.
 2. On confirm, `cart-checkout` calls `payments` to create a payment
    intent (or marks COD) then calls `orders` to create **one order per
-   shop**, splitting any coupon discount proportionally (invariant 3, 9
-   in `docs/PROJECT.md`).
+   shop**, splitting any coupon discount proportionally (BR-03, BR-19
+   in `docs/project/04-business-rules.md`).
 3. `orders` emits `order.created` per shop; `notifications` sends
    "order placed"; `delivery` creates a pending delivery job once the
    vendor accepts (or immediately for self-pickup, which skips
@@ -71,7 +71,7 @@ backend module.
    `picked_up`, stored server-side only.
 2. The rider app collects the OTP from the customer at drop; `delivery`
    verifies it server-side with attempt limits before transitioning to
-   `delivered` (invariant 5).
+   `delivered` (BR-05).
 3. Self-pickup uses a separate pickup code verified the same way.
 
 ### Approvals (AU, VD, PV, RD, AD)
@@ -79,7 +79,7 @@ backend module.
 2. `admin` approval queue (AD2) reviews documents; transitions to
    `approved`/`rejected`/`changes_requested`/`suspended`/`inactive`.
 3. Only `approved` accounts can sell / accept orders / go online
-   (invariant 6); `audit` records every decision with a reason.
+   (BR-06); `audit` records every decision with a reason.
 
 ### Moderation (RV, RL, AD9, AD10)
 1. `reviews`/`media-videos` default new content to `pending` when it
@@ -90,15 +90,15 @@ backend module.
 ### Communications (AD12)
 1. `communications` resolves an audience (Overall/City-wise/Zone-wise)
    via `users` + `geo`, filtered to consented recipients only
-   (invariant 10).
+   (BR-11).
 2. Admin picks a template/channel, previews, schedules; a
    review-before-send summary is mandatory; `audit` logs the send and a
    delivery report with opt-outs is produced.
 
 ## 4. Where each status model lives
 
-See `docs/PROJECT.md` section "Status and lifecycle models" for the
-full table; each enum and its transition rules are owned by exactly one
+See `docs/project/05-domain-model.md` for the full state diagrams and
+transition tables; each enum and its transition rules are owned by exactly one
 module's `packages/shared` schema: order/payment/refund ->
 `orders`/`payments`; delivery job -> `delivery`; approval -> `users`;
 review -> `reviews`; offer -> `offers`; video -> `media-videos`;

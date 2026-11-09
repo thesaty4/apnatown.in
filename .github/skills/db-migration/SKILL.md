@@ -23,7 +23,7 @@ skill records the rules that apply regardless of engine
    explicit human sign-off.
 5. Match naming conventions: `snake_case` plural table names,
    `snake_case` columns, `<entity>_id` foreign keys, and the exact enum
-   string values from `docs/PROJECT.md` "Status and lifecycle models".
+   string values from `docs/project/05-domain-model.md`.
 6. Soft-delete user-facing deletable records; reserve hard delete for
    explicit DPDP erasure requests, scoped narrowly.
 

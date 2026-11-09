@@ -5,8 +5,9 @@ applyTo: "apps/api/src/modules/delivery/**,apps/api/src/modules/orders/**,apps/w
 # Domain: Delivery and riders
 
 Builds on `backend.instructions.md`/`frontend.instructions.md`.
-Invariants: `docs/PROJECT.md` (1, 5, 6). Journeys J1, J7:
-`docs/PROJECT.md`. Applies to the `delivery` module, the delivery parts
+Rules: `docs/project/04-business-rules.md` (BR-01, BR-05, BR-06).
+Journeys J1, J7: `docs/project/06-user-journeys.md`. Applies to the
+`delivery` module, the delivery parts
 of `orders`, and the rider PWA (`apps/web/src/features/rider`).
 
 ## Delivery modes and fee slabs (CK3, SA4)
@@ -33,11 +34,11 @@ of `orders`, and the rider PWA (`apps/web/src/features/rider`).
 - A delivery request to a rider includes pickup, drop, distance, and
   estimated earning, with a **countdown** to accept/reject; on timeout
   it is reassigned/requeued, never left pending indefinitely.
-- Only an **approved** rider can go online or accept jobs (invariant
-  6); `online/offline` toggle checks approval status server-side on
+- Only an **approved** rider can go online or accept jobs (BR-06);
+  `online/offline` toggle checks approval status server-side on
   every state change, not just at login.
 
-## OTP / pickup code verification (invariant 5)
+## OTP / pickup code verification (BR-05)
 
 - Delivery OTP (customer-held) and pickup code (customer-held, for
   self-pickup) are generated server-side when the job/order reaches the

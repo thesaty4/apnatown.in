@@ -12,7 +12,8 @@ Full rules: `testing.instructions.md`.
 
 1. Identify the pyramid level: pure logic/formatters/state machines ->
    unit; controller+service+repository -> integration; a full critical
-   journey (J1-J10 in `docs/PROJECT.md`) -> Playwright E2E.
+   journey (J1-J14 in `docs/project/06-user-journeys.md`) -> Playwright
+   E2E.
 2. Map every acceptance criterion in the spec (Given/When/Then) to at
    least one test.
 3. Add the required case categories where relevant to this change:

@@ -5,7 +5,7 @@ applyTo: "apps/api/src/**/repositories/**,**/migrations/**"
 # Database
 
 The engine is **undecided** (`docs/adr/0001-tech-stack.md`,
-`docs/PROJECT.md` "Open questions"). These rules apply regardless of
+`docs/project/12-decisions-assumptions-open-questions.md`). These rules apply regardless of
 engine; schema design itself comes in a later stage — this file is
 placeholder guidance that is already valid and enforceable today.
 
@@ -43,8 +43,7 @@ placeholder guidance that is already valid and enforceable today.
   `delivery_jobs`); columns: `snake_case`; foreign keys:
   `<singular_entity>_id` (e.g. `shop_id`, `rider_id`).
 - Enum-like status columns use the exact string values from
-  `docs/PROJECT.md` "Status and lifecycle models" — don't invent
-  synonyms.
+  `docs/project/05-domain-model.md` — don't invent synonyms.
 
 ## Indexes
 
@@ -60,9 +59,9 @@ placeholder guidance that is already valid and enforceable today.
 - User-facing deletable records (products, services, reviews, videos)
   use a soft-delete flag/timestamp, not a hard delete, so moderation
   history, order history, and audit trails stay intact
-  (`docs/PROJECT.md` invariant 11, 13).
-- Hard delete is reserved for explicit DPDP erasure requests (invariant
-  13), applied narrowly to the requester's own PII, not cascaded
+  (`docs/project/04-business-rules.md` BR-12, BR-14).
+- Hard delete is reserved for explicit DPDP erasure requests (BR-14),
+  applied narrowly to the requester's own PII, not cascaded
   destructively through shared records (e.g. an order a vendor still
   needs for accounting).
 
@@ -84,5 +83,6 @@ placeholder guidance that is already valid and enforceable today.
 
 Schema design (tables, relations, actual engine choice) is out of
 scope for this setup; it is tracked in
-`docs/PROJECT.md` "Open questions" #1 and will follow in
-`docs/adr/000X-database-engine.md` plus per-module `specs/*/be/*.md`.
+`docs/project/12-decisions-assumptions-open-questions.md` Q-16 and
+will follow in `docs/adr/000X-database-engine.md` plus per-module
+`specs/*/be/*.md`.

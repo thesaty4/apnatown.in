@@ -8,9 +8,9 @@ Proposed | Accepted | Superseded by ADR-00NN | Deprecated
 
 ## Context
 
-What problem are we solving? What constraints (product invariants in
-`docs/PROJECT.md`, NFRs, existing modules in `docs/architecture.md`)
-apply?
+What problem are we solving? What constraints (business rules in
+`docs/project/04-business-rules.md`, NFRs, existing modules in
+`docs/architecture.md`) apply?
 
 ## Decision
 

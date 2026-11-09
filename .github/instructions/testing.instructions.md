@@ -5,7 +5,7 @@ applyTo: "**/*.test.*,**/*.spec.*,tests/**,e2e/**"
 # Testing
 
 Builds on `.github/copilot-instructions.md`. Journeys referenced below
-are defined in `docs/PROJECT.md` section "Critical journeys" (J1-J10).
+are defined in `docs/project/06-user-journeys.md` (J1-J14).
 
 ## Pyramid
 
@@ -41,20 +41,13 @@ are defined in `docs/PROJECT.md` section "Critical journeys" (J1-J10).
 
 ## Critical Playwright journeys (cover at least these)
 
-J1 browse -> category -> Explore -> product -> cart -> checkout (two
-shops, split) -> track -> delivery OTP -> review. J2 Home -> category ->
-Explore Services -> filters -> service details -> send enquiry. J3
-offer card -> product/service/list, including expired/out-of-stock. J4
-Reels -> follow/like/share (guest -> login -> same video) -> linked
-product -> cart. J5 search "AC"/"iPhone 15" -> grouped results ->
-service details. J6 vendor uploads video, links products, Gallery
-option -> admin approves -> appears in Reels and Gallery. J7 vendor
-onboarding -> admin approval -> first product -> first order -> accept
--> ready -> rider accepts -> OTP delivery. J8 cancel/refund/dispute with
-admin workflow. J9 subcategory suggestion -> admin approve/reject/merge
--> notification. J10 super admin: deactivate admin (confirmation),
-edit/delete role (reassign rule), draw zone, communications with scope
-and review step, live map city filter.
+Full step-by-step descriptions:
+[docs/project/06-user-journeys.md](../../docs/project/06-user-journeys.md)
+— don't restate them here. Minimum coverage: **J1-J10** (customer
+commerce, services, offers, reels, search, moderation, vendor
+onboarding, disputes, subcategory suggestions, super-admin ops) plus
+**J11-J14** (rider onboarding, guest-to-login, language/theme switch,
+enquiry-to-review) where the change touches those areas.
 
 ## Conventions
 

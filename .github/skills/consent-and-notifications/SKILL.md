@@ -5,7 +5,7 @@ description: "Recipe for WhatsApp/marketing opt-in, template-based sends, consen
 
 # Consent and notifications
 
-Covers NT1-NT4, AD12, invariant 10 in `docs/PROJECT.md`
+Covers NT1-NT4, AD12, BR-11 in `docs/project/04-business-rules.md`
 (`domain-accounts-admin.instructions.md`, `integrations.instructions.md`).
 
 ## Steps
