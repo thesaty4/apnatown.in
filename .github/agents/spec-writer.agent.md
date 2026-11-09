@@ -22,28 +22,12 @@ FE spec before any code is written.
 
 ## Process
 
-1. Read the feature's row (ID, module, role(s), routes) and the
-   relevant domain instruction file(s) and invariants
-   (`docs/PROJECT.md`).
-2. If anything about the required behaviour is ambiguous, **ask a
-   clarifying question** (don't guess); if genuinely blocked, record it
-   under `docs/PROJECT.md` "Open questions" and proceed with the
-   clearest reasonable interpretation, flagged in the spec's "Open
-   questions" section.
-3. Copy `specs/_templates/feature-be.md` to
-   `specs/<module>/be/<id>-<slug>.md` and
-   `specs/_templates/feature-fe.md` to
-   `specs/<module>/fe/<id>-<slug>.md`.
-4. Fill in: acceptance criteria as Given/When/Then
-   (`specs-and-docs.instructions.md`), states/transitions if the
-   feature touches a status model (`docs/PROJECT.md`), permissions
-   (role + ownership + scope), validation rules, security notes
-   (`security.instructions.md`), i18n keys needed
-   (`i18n-a11y.instructions.md`), and a test plan
-   (`testing.instructions.md`).
-5. Link the BE spec and FE spec to each other.
-6. Update the feature's row in `docs/FEATURE_INVENTORY.md`: real spec
-   paths, status `spec written`.
+Follow `.github/skills/spec-writing/SKILL.md` step by step. In short:
+read the feature's row and relevant domain instructions/invariants,
+ask rather than guess on ambiguity (recording it under
+`docs/PROJECT.md` "Open questions" if genuinely blocked), write both
+specs from the templates with Given/When/Then acceptance criteria,
+cross-link them, and update the `docs/FEATURE_INVENTORY.md` row.
 
 ## Output format
 

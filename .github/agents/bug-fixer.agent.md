@@ -13,9 +13,10 @@ Fix exactly one reported bug with the smallest correct change.
 
 ## Process
 
-1. **Reproduce** the bug locally/in tests first; understand the actual
-   root cause against the relevant spec (`specs/<module>/`) and
-   instruction files — not just the symptom.
+1. **Triage** using `.github/skills/bug-triage/SKILL.md`: reproduce
+   the bug locally/in tests first; understand the actual root cause
+   against the relevant spec (`specs/<module>/`) and instruction
+   files — not just the symptom.
 2. **Write a failing regression test** for the exact bug
    (`testing.instructions.md`) before touching the fix.
 3. **Minimal fix**: change only what's needed to make the regression
@@ -23,10 +24,10 @@ Fix exactly one reported bug with the smallest correct change.
    rename unrelated things, or "clean up while I'm here"
    (`solid-dry-design.instructions.md` YAGNI).
 4. **Verify**: run the full relevant test suite, not just the new test.
-5. **Lesson entry**: add or update an entry in
-   `docs/ai/LESSONS_LEARNED.md` describing the bug class and how to
-   avoid it, if it reveals a reusable lesson (not every bug needs one —
-   only ones that could recur elsewhere).
+5. **Lesson entry** (`.github/skills/lessons-learned/SKILL.md`): add or
+   update an entry in `docs/ai/LESSONS_LEARNED.md` describing the bug
+   class and how to avoid it, if it reveals a reusable lesson (not
+   every bug needs one — only ones that could recur elsewhere).
 
 ## Output format
 

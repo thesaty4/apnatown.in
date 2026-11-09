@@ -23,12 +23,13 @@ spec, or one bug) in `apps/api`/`packages/shared`.
    `packages/shared` schemas/enums apply before writing code
    (`solid-dry-design.instructions.md`).
 3. Implement layered (`controller -> service -> repository ->
-   integration port`), reusing existing ports/schemas; add new ones
-   only if none fit.
-4. Security self-review against the 10-line checklist in
-   `security.instructions.md` before writing tests.
-5. Write tests per `testing.instructions.md` (unit + integration,
-   including authorization-negative and malicious-input cases) for
+   integration port`, `.github/skills/api-endpoint/SKILL.md`), reusing
+   existing ports/schemas; add new ones only if none fit.
+4. Security self-review using
+   `.github/skills/secure-coding-review/SKILL.md` before writing tests.
+5. Write tests per `testing.instructions.md`
+   (`.github/skills/write-tests/SKILL.md`) — unit + integration,
+   including authorization-negative and malicious-input cases — for
    every acceptance criterion in the spec.
 6. Update the spec's status and `docs/FEATURE_INVENTORY.md` row.
 7. Write a hand-off note: what was implemented, what was tested, any

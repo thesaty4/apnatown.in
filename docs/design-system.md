@@ -12,24 +12,29 @@ concrete tokens, type scale, spacing, and the component list that
 
 ## 2. Colour tokens
 
+All `Dark` values below are provisional and need an AA-contrast pass
+before launch (`TODO(verify)` — see the note after the table; not
+repeated per row).
+
 | Token | Light | Dark | Usage |
 |---|---|---|---|
-| `color.primary` | `#C2410C` | `#F4722B` <!-- TODO(verify): confirm dark-mode shade for AA contrast --> | primary actions, brand accents |
-| `color.secondary` | `#0F766E` | `#14B8A6` <!-- TODO(verify) --> | secondary actions, links |
-| `color.accent` | `#F59E0B` | `#FBBF24` <!-- TODO(verify) --> | highlights, offer ribbons |
-| `color.success` | `#15803D` | `#4ADE80` <!-- TODO(verify) --> | delivered, approved |
-| `color.warning` | `#B45309` | `#FBBF24` <!-- TODO(verify) --> | low stock, pending |
-| `color.error` | `#B91C1C` | `#F87171` <!-- TODO(verify) --> | failed, rejected |
-| `color.info` | `#1D4ED8` | `#60A5FA` <!-- TODO(verify) --> | informational banners |
-| `color.offer` | `#A3166B` | `#E879C0` <!-- TODO(verify) --> | offer badges |
-| `color.star` | `#F59E0B` | `#FBBF24` <!-- TODO(verify) --> | rating stars |
-| `color.background` | `#FFFBF5` | `#14100C` <!-- TODO(verify) --> | page background |
-| `color.surface` | `#FFFFFF` | `#1F1A14` <!-- TODO(verify) --> | cards, sheets |
-| `color.text` | `#1F1A14` | `#F5F1EA` <!-- TODO(verify) --> | primary text |
+| `color.primary` | `#C2410C` | `#F4722B` | primary actions, brand accents |
+| `color.secondary` | `#0F766E` | `#14B8A6` | secondary actions, links |
+| `color.accent` | `#F59E0B` | `#FBBF24` | highlights, offer ribbons |
+| `color.success` | `#15803D` | `#4ADE80` | delivered, approved |
+| `color.warning` | `#B45309` | `#FBBF24` | low stock, pending |
+| `color.error` | `#B91C1C` | `#F87171` | failed, rejected |
+| `color.info` | `#1D4ED8` | `#60A5FA` | informational banners |
+| `color.offer` | `#A3166B` | `#E879C0` | offer badges |
+| `color.star` | `#F59E0B` | `#FBBF24` | rating stars |
+| `color.background` | `#FFFBF5` | `#14100C` | page background |
+| `color.surface` | `#FFFFFF` | `#1F1A14` | cards, sheets |
+| `color.text` | `#1F1A14` | `#F5F1EA` | primary text |
 
 **Rule:** status is always icon + text, never colour alone
-(`i18n-a11y.instructions.md`). Dark-mode values marked `TODO(verify)`
-must pass WCAG 2.2 AA contrast before launch.
+(`i18n-a11y.instructions.md`). `TODO(verify)`: every dark-mode value
+above is a provisional shade and must pass WCAG 2.2 AA contrast before
+launch.
 
 ### Status colour + icon pairs
 
