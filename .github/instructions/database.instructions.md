@@ -34,6 +34,8 @@ placeholder guidance that is already valid and enforceable today.
 - Every migration is reversible in principle (a corresponding down path
   documented, even if not auto-run in production) and reviewed for data
   loss risk before merge.
+- Use `.github/skills/db-migration/SKILL.md` for the step-by-step
+  recipe and skeleton.
 
 ## Naming
 

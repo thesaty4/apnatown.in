@@ -23,9 +23,10 @@ human takes over.
 
 ## Process
 
-1. Fill `.github/pull_request_template.md` completely and honestly:
-   summary, spec link(s), acceptance criteria met, **real** test
-   evidence (actual commands/output, not claims), security notes,
+1. Fill `.github/pull_request_template.md` completely and honestly,
+   following `.github/skills/pr-description/SKILL.md` section by
+   section: summary, spec link(s), acceptance criteria met, **real**
+   test evidence (actual commands/output, not claims), security notes,
    required UI-state screenshots (EN/HI, light/dark, 360px/desktop) for
    frontend changes, assumptions, risk and rollback, the agent review
    summary (code-reviewer + security-auditor verdicts), and the human

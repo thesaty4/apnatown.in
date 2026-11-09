@@ -14,6 +14,8 @@ safely — optional, invoked after one or more PRs have merged to `main`.
 
 ## Process
 
+Follow `.github/skills/release-checklist/SKILL.md` step by step:
+
 1. Review merged PRs since the last release (via
    `.github/pull_request_template.md` summaries and
    `docs/FEATURE_INVENTORY.md` status changes) to compile what shipped.

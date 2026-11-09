@@ -116,21 +116,9 @@ touching `auth`, `payments`, `cart-checkout`, `orders`, `delivery`,
   promptly; run `codeql.yml` on every PR (see
   `.github/workflows/codeql.yml`).
 
-## 11. Review checklist (copy into PR descriptions for sensitive changes)
+## 11. Self-review checklist
 
-1. Are all queries parameterized and sort/filter fields allow-listed?
-2. Is every endpoint checked for role + ownership + scope, not just
-   role?
-3. Are OTPs/codes verified server-side with attempt limits, never
-   logged?
-4. Are sessions httpOnly/Secure/SameSite with CSRF protection on
-   mutations?
-5. Is all user content rendered as text or through a strict sanitizer?
-6. Are embeds/URLs rebuilt server-side from an allow-list, never
-   embedded raw?
-7. Are uploads validated by content/size and stored via the storage
-   port?
-8. Are webhook handlers signature-verified and idempotent?
-9. Are secrets only in env/secret store, never in code or logs?
-10. Is consent checked before any marketing communication, and is the
-    action audit-logged if it changes admin-controlled data?
+The actionable, single-source checklist lives in
+`.github/skills/secure-coding-review/SKILL.md` — run it before finishing
+any change this file applies to, and paste its filled-in state into the
+PR description for sensitive changes.

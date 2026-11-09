@@ -93,15 +93,8 @@ Required before touching `auth`, `payments`, `cart-checkout`, `orders`,
 - Keep `dependabot.yml` active; CodeQL runs every PR; merge patches
   promptly.
 
-## Review checklist (10 lines)
+## Self-review checklist
 
-1. Parameterized queries, allow-listed sort/filter?
-2. Role + ownership + scope checked, not just role?
-3. OTP/codes verified server-side, attempt-limited, never logged?
-4. Sessions httpOnly/Secure/SameSite + CSRF on mutations?
-5. User content rendered as text / strict sanitizer only?
-6. Embeds/URLs rebuilt server-side from an allow-list?
-7. Uploads validated by content/size via the storage port?
-8. Webhooks signature-verified and idempotent?
-9. Secrets only in env/secret store, never code or logs?
-10. Consent checked before marketing comms; audit-logged?
+Run the checklist in `.github/skills/secure-coding-review/SKILL.md`
+before finishing any change touched by this file — it is the one
+canonical copy, used by `developer-*` and `security-auditor` alike.

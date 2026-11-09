@@ -19,9 +19,9 @@ jobs:
   install-and-test:
     name: Install, lint, build, test
     runs-on: ubuntu-latest
-    # TODO(verify): once apps/web and apps/api exist with package.json
-    # files, this job installs with pnpm and runs lint/build/test. It
-    # is written defensively so CI stays green on this docs-only setup.
+    # No-ops until apps/web and apps/api exist with package.json files.
+    # `--if-present` makes each script a clean no-op when absent, and
+    # still fails the job if a present script actually fails.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -31,30 +31,14 @@ jobs:
         with:
           version: "9" # TODO(verify): pin to the repo's actual pnpm version once apps/ exist
       - name: Install dependencies
-        run: |
-          if [ -f pnpm-lock.yaml ]; then
-            pnpm install --frozen-lockfile
-          else
-            echo "No pnpm-lock.yaml yet (no app packages) — skipping install."
-          fi
+        if: hashFiles('pnpm-lock.yaml') != ''
+        run: pnpm install --frozen-lockfile
       - name: Lint
-        run: |
-          if [ -f package.json ] && pnpm run --if-present lint; then
-            :
-          else
-            echo "No lint script yet — skipping."
-          fi
+        if: hashFiles('package.json') != ''
+        run: pnpm run --if-present lint
       - name: Build
-        run: |
-          if [ -f package.json ] && pnpm run --if-present build; then
-            :
-          else
-            echo "No build script yet — skipping."
-          fi
+        if: hashFiles('package.json') != ''
+        run: pnpm run --if-present build
       - name: Test
-        run: |
-          if [ -f package.json ] && pnpm run --if-present test; then
-            :
-          else
-            echo "No test script yet — skipping."
-          fi
+        if: hashFiles('package.json') != ''
+        run: pnpm run --if-present test
