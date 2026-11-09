@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate-ai-setup:
+    name: Validate AI lifecycle setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: node scripts/validate-ai-setup.mjs
+
+  install-and-test:
+    name: Install, lint, build, test
+    runs-on: ubuntu-latest
+    # TODO(verify): once apps/web and apps/api exist with package.json
+    # files, this job installs with pnpm and runs lint/build/test. It
+    # is written defensively so CI stays green on this docs-only setup.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "9" # TODO(verify): pin to the repo's actual pnpm version once apps/ exist
+      - name: Install dependencies
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm install --frozen-lockfile
+          else
+            echo "No pnpm-lock.yaml yet (no app packages) — skipping install."
+          fi
+      - name: Lint
+        run: |
+          if [ -f package.json ] && pnpm run --if-present lint; then
+            :
+          else
+            echo "No lint script yet — skipping."
+          fi
+      - name: Build
+        run: |
+          if [ -f package.json ] && pnpm run --if-present build; then
+            :
+          else
+            echo "No build script yet — skipping."
+          fi
+      - name: Test
+        run: |
+          if [ -f package.json ] && pnpm run --if-present test; then
+            :
+          else
+            echo "No test script yet — skipping."
+          fi

@@ -1,0 +1,375 @@
+# ApnaTown Feature Inventory
+
+Every feature ID from the product brief (`docs/PROJECT.md` section 1) is listed here. 
+Status starts at `not started` for all rows and is updated by the `spec-writer` agent and developers 
+as specs and implementations land. BE/FE spec paths are placeholders the `spec-writer` agent fills in; 
+see `specs/_templates/`.
+
+Module and role assignments are area-level (see `docs/architecture.md` for the authoritative module map); 
+a feature's actual primary module is confirmed when its spec is written.
+
+
+## X. Cross-cutting
+
+Roles: all roles. Backend module(s): `notifications, audit`. Frontend route/screen: `n/a (cross-cutting; implemented in packages/shared and packages/ui)`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| X1 | English/Hindi toggle | all roles | `notifications, audit` | `n/a (cross-cutting; implemented in packages/shared and packages/ui)` | `specs/notifications/be/x1-english-hindi-toggle.md` | `specs/notifications/fe/x1-english-hindi-toggle.md` | not started |
+| X2 | theme light/dark/auto | all roles | `notifications, audit` | `n/a (cross-cutting; implemented in packages/shared and packages/ui)` | `specs/notifications/be/x2-theme-light-dark-auto.md` | `specs/notifications/fe/x2-theme-light-dark-auto.md` | not started |
+| X3 | responsive 360/tablet/desktop | all roles | `notifications, audit` | `n/a (cross-cutting; implemented in packages/shared and packages/ui)` | `specs/notifications/be/x3-responsive-360-tablet-desktop.md` | `specs/notifications/fe/x3-responsive-360-tablet-desktop.md` | not started |
+| X4 | accessibility (keyboard, focus, ARIA, reduced motion) | all roles | `notifications, audit` | `n/a (cross-cutting; implemented in packages/shared and packages/ui)` | `specs/notifications/be/x4-accessibility.md` | `specs/notifications/fe/x4-accessibility.md` | not started |
+| X5 | offline banner | all roles | `notifications, audit` | `n/a (cross-cutting; implemented in packages/shared and packages/ui)` | `specs/notifications/be/x5-offline-banner.md` | `specs/notifications/fe/x5-offline-banner.md` | not started |
+| X6 | slow-connection/lite mode | all roles | `notifications, audit` | `n/a (cross-cutting; implemented in packages/shared and packages/ui)` | `specs/notifications/be/x6-slow-connection-lite-mode.md` | `specs/notifications/fe/x6-slow-connection-lite-mode.md` | not started |
+| X7 | five UX states on every screen (default, skeleton, empty, error+retry, no-permission) | all roles | `notifications, audit` | `n/a (cross-cutting; implemented in packages/shared and packages/ui)` | `specs/notifications/be/x7-five-ux-states-on-every-screen.md` | `specs/notifications/fe/x7-five-ux-states-on-every-screen.md` | not started |
+| X8 | cookie consent and WhatsApp opt-in components | all roles | `notifications, audit` | `n/a (cross-cutting; implemented in packages/shared and packages/ui)` | `specs/notifications/be/x8-cookie-consent-and-whatsapp-opt-in-co.md` | `specs/notifications/fe/x8-cookie-consent-and-whatsapp-opt-in-co.md` | not started |
+| X9 | system pages (404, 500, offline, maintenance, session expired, account deleted) | all roles | `notifications, audit` | `n/a (cross-cutting; implemented in packages/shared and packages/ui)` | `specs/notifications/be/x9-system-pages.md` | `specs/notifications/fe/x9-system-pages.md` | not started |
+| X10 | SEO page templates (business, product, service, category) with readable URLs, breadcrumbs, structured data | all roles | `notifications, audit` | `n/a (cross-cutting; implemented in packages/shared and packages/ui)` | `specs/notifications/be/x10-seo-page-templates.md` | `specs/notifications/fe/x10-seo-page-templates.md` | not started |
+| X11 | print templates (QR poster/table-tent/sticker, invoice, order slip) | all roles | `notifications, audit` | `n/a (cross-cutting; implemented in packages/shared and packages/ui)` | `specs/notifications/be/x11-print-templates.md` | `specs/notifications/fe/x11-print-templates.md` | not started |
+| X12 | notification templates (in-app, email, WhatsApp) for key events (order placed, out for delivery, delivered, cancelled/refund, approval decision, new enquiry) | all roles | `notifications, audit` | `n/a (cross-cutting; implemented in packages/shared and packages/ui)` | `specs/notifications/be/x12-notification-templates.md` | `specs/notifications/fe/x12-notification-templates.md` | not started |
+| X13 | Indian formatting utilities (INR paise, IST 12-hour, distance, phone) | all roles | `notifications, audit` | `n/a (cross-cutting; implemented in packages/shared and packages/ui)` | `specs/notifications/be/x13-indian-formatting-utilities.md` | `specs/notifications/fe/x13-indian-formatting-utilities.md` | not started |
+| X14 | audit trail for admin actions (before/after) | all roles | `notifications, audit` | `n/a (cross-cutting; implemented in packages/shared and packages/ui)` | `specs/notifications/be/x14-audit-trail-for-admin-actions.md` | `specs/notifications/fe/x14-audit-trail-for-admin-actions.md` | not started |
+| X15 | PWA for rider | all roles | `notifications, audit` | `n/a (cross-cutting; implemented in packages/shared and packages/ui)` | `specs/notifications/be/x15-pwa-for-rider.md` | `specs/notifications/fe/x15-pwa-for-rider.md` | not started |
+
+## AU. Auth and onboarding
+
+Roles: customer, vendor, provider, rider, admin, super_admin. Backend module(s): `auth, users`. Frontend route/screen: `/login, /onboarding`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| AU1 | splash and language choice | customer, vendor, provider, rider, admin, super_admin | `auth, users` | `/login, /onboarding` | `specs/auth/be/au1-splash-and-language-choice.md` | `specs/auth/fe/au1-splash-and-language-choice.md` | not started |
+| AU2 | location primer with manual fallback (location never mandatory) | customer, vendor, provider, rider, admin, super_admin | `auth, users` | `/login, /onboarding` | `specs/auth/be/au2-location-primer-with-manual-fallback.md` | `specs/auth/fe/au2-location-primer-with-manual-fallback.md` | not started |
+| AU3 | browse as guest | customer, vendor, provider, rider, admin, super_admin | `auth, users` | `/login, /onboarding` | `specs/auth/be/au3-browse-as-guest.md` | `specs/auth/fe/au3-browse-as-guest.md` | not started |
+| AU4 | mobile OTP login (6-box input, auto-advance, paste, resend timer, attempt limits), optional email/Google | customer, vendor, provider, rider, admin, super_admin | `auth, users` | `/login, /onboarding` | `specs/auth/be/au4-mobile-otp-login.md` | `specs/auth/fe/au4-mobile-otp-login.md` | not started |
+| AU5 | profile completion | customer, vendor, provider, rider, admin, super_admin | `auth, users` | `/login, /onboarding` | `specs/auth/be/au5-profile-completion.md` | `specs/auth/fe/au5-profile-completion.md` | not started |
+| AU6 | login-required prompt that returns the user to the same page/video after login | customer, vendor, provider, rider, admin, super_admin | `auth, users` | `/login, /onboarding` | `specs/auth/be/au6-login-required-prompt-that-returns-t.md` | `specs/auth/fe/au6-login-required-prompt-that-returns-t.md` | not started |
+| AU7 | logout and session expiry | customer, vendor, provider, rider, admin, super_admin | `auth, users` | `/login, /onboarding` | `specs/auth/be/au7-logout-and-session-expiry.md` | `specs/auth/fe/au7-logout-and-session-expiry.md` | not started |
+| AU8 | account deletion and personal-data download | customer, vendor, provider, rider, admin, super_admin | `auth, users` | `/login, /onboarding` | `specs/auth/be/au8-account-deletion-and-personal-data-d.md` | `specs/auth/fe/au8-account-deletion-and-personal-data-d.md` | not started |
+
+## HM. Home
+
+Roles: customer. Backend module(s): `catalog, businesses, products, services, offers, engagement`. Frontend route/screen: `/`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| HM1 | sticky location selector, search with voice icon, bell, cart, play (videos) icon | customer | `catalog, businesses, products, services, offers, engagement` | `/` | `specs/catalog/be/hm1-sticky-location-selector.md` | `specs/catalog/fe/hm1-sticky-location-selector.md` | not started |
+| HM2 | hero banner carousel | customer | `catalog, businesses, products, services, offers, engagement` | `/` | `specs/catalog/be/hm2-hero-banner-carousel.md` | `specs/catalog/fe/hm2-hero-banner-carousel.md` | not started |
+| HM3 | "Shop by category" tiles open Explore with category pre-applied | customer | `catalog, businesses, products, services, offers, engagement` | `/` | `specs/catalog/be/hm3-shop-by-category-tiles-open-explore-.md` | `specs/catalog/fe/hm3-shop-by-category-tiles-open-explore-.md` | not started |
+| HM4 | "Local services" tiles open Explore Services with category pre-applied | customer | `catalog, businesses, products, services, offers, engagement` | `/` | `specs/catalog/be/hm4-local-services-tiles-open-explore-se.md` | `specs/catalog/fe/hm4-local-services-tiles-open-explore-se.md` | not started |
+| HM5 | offers and deals (card opens product/service/filtered list) | customer | `catalog, businesses, products, services, offers, engagement` | `/` | `specs/catalog/be/hm5-offers-and-deals.md` | `specs/catalog/fe/hm5-offers-and-deals.md` | not started |
+| HM6 | nearby shops with responsive shop card (image top, details bottom; 1/2/3-4 columns; "View all shops") | customer | `catalog, businesses, products, services, offers, engagement` | `/` | `specs/catalog/be/hm6-nearby-shops-with-responsive-shop-ca.md` | `specs/catalog/fe/hm6-nearby-shops-with-responsive-shop-ca.md` | not started |
+| HM7 | featured businesses ("View all businesses" -> Explore Shops featured) | customer | `catalog, businesses, products, services, offers, engagement` | `/` | `specs/catalog/be/hm7-featured-businesses.md` | `specs/catalog/fe/hm7-featured-businesses.md` | not started |
+| HM8 | popular businesses | customer | `catalog, businesses, products, services, offers, engagement` | `/` | `specs/catalog/be/hm8-popular-businesses.md` | `specs/catalog/fe/hm8-popular-businesses.md` | not started |
+| HM9 | featured products ("View all products" -> Explore Products featured) | customer | `catalog, businesses, products, services, offers, engagement` | `/` | `specs/catalog/be/hm9-featured-products.md` | `specs/catalog/fe/hm9-featured-products.md` | not started |
+| HM10 | popular providers | customer | `catalog, businesses, products, services, offers, engagement` | `/` | `specs/catalog/be/hm10-popular-providers.md` | `specs/catalog/fe/hm10-popular-providers.md` | not started |
+| HM11 | local promotions | customer | `catalog, businesses, products, services, offers, engagement` | `/` | `specs/catalog/be/hm11-local-promotions.md` | `specs/catalog/fe/hm11-local-promotions.md` | not started |
+| HM12 | recently viewed | customer | `catalog, businesses, products, services, offers, engagement` | `/` | `specs/catalog/be/hm12-recently-viewed.md` | `specs/catalog/fe/hm12-recently-viewed.md` | not started |
+| HM13 | bookmarks quick access | customer | `catalog, businesses, products, services, offers, engagement` | `/` | `specs/catalog/be/hm13-bookmarks-quick-access.md` | `specs/catalog/fe/hm13-bookmarks-quick-access.md` | not started |
+| HM14 | desktop footer (About, Contact, Vendor/Rider/Provider signup, legal, language) | customer | `catalog, businesses, products, services, offers, engagement` | `/` | `specs/catalog/be/hm14-desktop-footer.md` | `specs/catalog/fe/hm14-desktop-footer.md` | not started |
+
+## LC. Location and discovery
+
+Roles: customer. Backend module(s): `geo`. Frontend route/screen: `/location`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| LC1 | GPS detect, manual area/locality/PIN, saved locations | customer | `geo` | `/location` | `specs/geo/be/lc1-gps-detect.md` | `specs/geo/fe/lc1-gps-detect.md` | not started |
+| LC2 | map and list views with pins, radius slider, "you are here" | customer | `geo` | `/location` | `specs/geo/be/lc2-map-and-list-views-with-pins.md` | `specs/geo/fe/lc2-map-and-list-views-with-pins.md` | not started |
+| LC3 | directions (opens maps app) | customer | `geo` | `/location` | `specs/geo/be/lc3-directions.md` | `specs/geo/fe/lc3-directions.md` | not started |
+| LC4 | clear distinction between "Nearby (distance)" and "Delivers to your address" | customer | `geo` | `/location` | `specs/geo/be/lc4-clear-distinction-between-nearby.md` | `specs/geo/fe/lc4-clear-distinction-between-nearby.md` | not started |
+| LC5 | states: denied, GPS off, outside service area ("We are not in your city yet" + notify-me) | customer | `geo` | `/location` | `specs/geo/be/lc5-states-denied.md` | `specs/geo/fe/lc5-states-denied.md` | not started |
+
+## EX. Explore
+
+Roles: customer. Backend module(s): `search, catalog, products, services, businesses`. Frontend route/screen: `/explore`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| EX1 | tabs Products \| Shops \| Services with result counts | customer | `search, catalog, products, services, businesses` | `/explore` | `specs/search/be/ex1-tabs-products-shops-services-with-re.md` | `specs/search/fe/ex1-tabs-products-shops-services-with-re.md` | not started |
+| EX2 | category pre-applied from home as removable pill, changeable | customer | `search, catalog, products, services, businesses` | `/explore` | `specs/search/be/ex2-category-pre-applied-from-home-as-re.md` | `specs/search/fe/ex2-category-pre-applied-from-home-as-re.md` | not started |
+| EX3 | per-tab filters remembered when switching tabs | customer | `search, catalog, products, services, businesses` | `/explore` | `specs/search/be/ex3-per-tab-filters-remembered-when-swit.md` | `specs/search/fe/ex3-per-tab-filters-remembered-when-swit.md` | not started |
+| EX4 | Products filters (price range, rating, category+subcategory, brand, offers, in stock, delivery/pickup, distance, sort) | customer | `search, catalog, products, services, businesses` | `/explore` | `specs/search/be/ex4-products-filters.md` | `specs/search/fe/ex4-products-filters.md` | not started |
+| EX5 | Shops filters (category, distance, rating, open now, delivers to me, offers, verified, sort) | customer | `search, catalog, products, services, businesses` | `/explore` | `specs/search/be/ex5-shops-filters.md` | `specs/search/fe/ex5-shops-filters.md` | not started |
+| EX6 | Services filter: Category multi-select + Subcategory multi-select grouped under category headings, checkboxes with counts, Select all/Clear per group, inner search when >8, "Show more", disabled when count 0, OR logic, removing a category removes its subcategories, removable chips + Clear all, loading skeleton, long-Hindi-safe, keyboard/screen-reader grouped list | customer | `search, catalog, products, services, businesses` | `/explore` | `specs/search/be/ex6-services-filter-category-multi-selec.md` | `specs/search/fe/ex6-services-filter-category-multi-selec.md` | not started |
+| EX7 | filter UI: bottom sheet (mobile, sticky "Show N results"), left sidebar (desktop, live results), horizontal filter bar with count badge (tablet) | customer | `search, catalog, products, services, businesses` | `/explore` | `specs/search/be/ex7-filter-ui-bottom-sheet.md` | `specs/search/fe/ex7-filter-ui-bottom-sheet.md` | not started |
+| EX8 | shareable URL `/explore?tab=services&category=wedding-events&subcategory=dj-sound,tent-lighting` | customer | `search, catalog, products, services, businesses` | `/explore` | `specs/search/be/ex8-shareable-url-explore-tab-services-c.md` | `specs/search/fe/ex8-shareable-url-explore-tab-services-c.md` | not started |
+| EX9 | browser Back restores previous page and scroll | customer | `search, catalog, products, services, businesses` | `/explore` | `specs/search/be/ex9-browser-back-restores-previous-page-.md` | `specs/search/fe/ex9-browser-back-restores-previous-page-.md` | not started |
+| EX10 | empty state per tab with "Clear category" and suggestions | customer | `search, catalog, products, services, businesses` | `/explore` | `specs/search/be/ex10-empty-state-per-tab-with-clear-cate.md` | `specs/search/fe/ex10-empty-state-per-tab-with-clear-cate.md` | not started |
+| EX11 | map/list toggle; same filter component reused on Search (Services tab) and service category pages | customer | `search, catalog, products, services, businesses` | `/explore` | `specs/search/be/ex11-map-list-toggle-same-filter-compone.md` | `specs/search/fe/ex11-map-list-toggle-same-filter-compone.md` | not started |
+
+## SR. Search
+
+Roles: customer. Backend module(s): `search`. Frontend route/screen: `/search`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| SR1 | tabs All \| Products \| Shops \| Services \| Videos | customer | `search` | `/search` | `specs/search/be/sr1-tabs-all-products-shops-services-vid.md` | `specs/search/fe/sr1-tabs-all-products-shops-services-vid.md` | not started |
+| SR2 | keyword -> category/subcategory/product-tag mapping (e.g. "AC" -> AC products, electronics shops, AC services, videos; "iPhone 15" -> products, mobile shops, mobile-repair services) | customer | `search` | `/search` | `specs/search/be/sr2-keyword-category-subcategory-product.md` | `specs/search/fe/sr2-keyword-category-subcategory-product.md` | not started |
+| SR3 | Hindi/Hinglish and typo tolerance ("एसी", "plumbr") | customer | `search` | `/search` | `specs/search/be/sr3-hindi-hinglish-and-typo-tolerance.md` | `specs/search/fe/sr3-hindi-hinglish-and-typo-tolerance.md` | not started |
+| SR4 | grouped autocomplete (Products, Shops, Services, Categories, Subcategories, related searches) | customer | `search` | `/search` | `specs/search/be/sr4-grouped-autocomplete.md` | `specs/search/fe/sr4-grouped-autocomplete.md` | not started |
+| SR5 | recent and popular searches | customer | `search` | `/search` | `specs/search/be/sr5-recent-and-popular-searches.md` | `specs/search/fe/sr5-recent-and-popular-searches.md` | not started |
+| SR6 | All tab grouped sections with "See all" and "Related services for AC" | customer | `search` | `/search` | `specs/search/be/sr6-all-tab-grouped-sections-with-see-al.md` | `specs/search/fe/sr6-all-tab-grouped-sections-with-see-al.md` | not started |
+| SR7 | per-tab filters (Services reuses the EX6 component) | customer | `search` | `/search` | `specs/search/be/sr7-per-tab-filters.md` | `specs/search/fe/sr7-per-tab-filters.md` | not started |
+| SR8 | sort (relevance, distance, rating, price, newest) | customer | `search` | `/search` | `specs/search/be/sr8-sort.md` | `specs/search/fe/sr8-sort.md` | not started |
+| SR9 | no-results with related categories | customer | `search` | `/search` | `specs/search/be/sr9-no-results-with-related-categories.md` | `specs/search/fe/sr9-no-results-with-related-categories.md` | not started |
+| SR10 | Search keeps its own filter state, separate from Explore | customer | `search` | `/search` | `specs/search/be/sr10-search-keeps-its-own-filter-state.md` | `specs/search/fe/sr10-search-keeps-its-own-filter-state.md` | not started |
+
+## PF. Business and provider profile
+
+Roles: customer, vendor, provider. Backend module(s): `businesses, products, services, media-videos, reviews, engagement`. Frontend route/screen: `/business/:slug`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| PF1 | cover, logo, name, category, verified, rating, open/closed with today's hours, distance | customer, vendor, provider | `businesses, products, services, media-videos, reviews, engagement` | `/business/:slug` | `specs/businesses/be/pf1-cover.md` | `specs/businesses/fe/pf1-cover.md` | not started |
+| PF2 | sticky action bar (Call, WhatsApp, Directions, Share, Save) | customer, vendor, provider | `businesses, products, services, media-videos, reviews, engagement` | `/business/:slug` | `specs/businesses/be/pf2-sticky-action-bar.md` | `specs/businesses/fe/pf2-sticky-action-bar.md` | not started |
+| PF3 | tabs About \| Products & Services \| Offers \| Gallery \| Videos/Reels \| Reviews \| Contact & Location | customer, vendor, provider | `businesses, products, services, media-videos, reviews, engagement` | `/business/:slug` | `specs/businesses/be/pf3-tabs-about-products-services-offers-.md` | `specs/businesses/fe/pf3-tabs-about-products-services-offers-.md` | not started |
+| PF4 | Products & Services section with segmented switch (only applicable ones), products: sticky horizontally scrollable category pills with counts; services: category pills then subcategory pills | customer, vendor, provider | `businesses, products, services, media-videos, reviews, engagement` | `/business/:slug` | `specs/businesses/be/pf4-products-services-section-with-segme.md` | `specs/businesses/fe/pf4-products-services-section-with-segme.md` | not started |
+| PF5 | provider's "expert in" subcategories visible on card and profile | customer, vendor, provider | `businesses, products, services, media-videos, reviews, engagement` | `/business/:slug` | `specs/businesses/be/pf5-provider-s-expert-in-subcategories-v.md` | `specs/businesses/fe/pf5-provider-s-expert-in-subcategories-v.md` | not started |
+| PF6 | weekly hours table, delivery/pickup info and eligibility | customer, vendor, provider | `businesses, products, services, media-videos, reviews, engagement` | `/business/:slug` | `specs/businesses/be/pf6-weekly-hours-table.md` | `specs/businesses/fe/pf6-weekly-hours-table.md` | not started |
+| PF7 | map and directions, QR, report listing, share | customer, vendor, provider | `businesses, products, services, media-videos, reviews, engagement` | `/business/:slug` | `specs/businesses/be/pf7-map-and-directions.md` | `specs/businesses/fe/pf7-map-and-directions.md` | not started |
+| PF8 | follow/unfollow with notification bell | customer, vendor, provider | `businesses, products, services, media-videos, reviews, engagement` | `/business/:slug` | `specs/businesses/be/pf8-follow-unfollow-with-notification-be.md` | `specs/businesses/fe/pf8-follow-unfollow-with-notification-be.md` | not started |
+| PF9 | Gallery with filters (All \| Photos \| Videos \| By product \| By service), lightbox with swipe, captions, linked-item chip, hearts, report media | customer, vendor, provider | `businesses, products, services, media-videos, reviews, engagement` | `/business/:slug` | `specs/businesses/be/pf9-gallery-with-filters.md` | `specs/businesses/fe/pf9-gallery-with-filters.md` | not started |
+| PF10 | Videos/Reels tab (grid, views, follow) | customer, vendor, provider | `businesses, products, services, media-videos, reviews, engagement` | `/business/:slug` | `specs/businesses/be/pf10-videos-reels-tab.md` | `specs/businesses/fe/pf10-videos-reels-tab.md` | not started |
+| PF11 | any profile can show Add to cart (products) and Send Enquiry (services) | customer, vendor, provider | `businesses, products, services, media-videos, reviews, engagement` | `/business/:slug` | `specs/businesses/be/pf11-any-profile-can-show-add-to-cart.md` | `specs/businesses/fe/pf11-any-profile-can-show-add-to-cart.md` | not started |
+| PF12 | owner-only "Add product/Add service" prompts | customer, vendor, provider | `businesses, products, services, media-videos, reviews, engagement` | `/business/:slug` | `specs/businesses/be/pf12-owner-only-add-product-add-service-.md` | `specs/businesses/fe/pf12-owner-only-add-product-add-service-.md` | not started |
+| PF13 | states: unavailable listing (pending/suspended), closed, outside delivery range, no services yet | customer, vendor, provider | `businesses, products, services, media-videos, reviews, engagement` | `/business/:slug` | `specs/businesses/be/pf13-states-unavailable-listing.md` | `specs/businesses/fe/pf13-states-unavailable-listing.md` | not started |
+
+## PD. Product details
+
+Roles: customer. Backend module(s): `products, offers, reviews`. Frontend route/screen: `/product/:slug`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| PD1 | breadcrumbs | customer | `products, offers, reviews` | `/product/:slug` | `specs/products/be/pd1-breadcrumbs.md` | `specs/products/fe/pd1-breadcrumbs.md` | not started |
+| PD2 | media carousel with images and embedded videos (play badge), full-screen viewer (prev/next, swipe, arrow keys, counter, close, pinch/double-tap zoom, heart, focus trap) | customer | `products, offers, reviews` | `/product/:slug` | `specs/products/be/pd2-media-carousel-with-images-and-embed.md` | `specs/products/fe/pd2-media-carousel-with-images-and-embed.md` | not started |
+| PD3 | price, MRP, discount, variants, stock (out-of-stock with notify-me, low stock), quantity, Add to cart, Buy now | customer | `products, offers, reviews` | `/product/:slug` | `specs/products/be/pd3-price.md` | `specs/products/fe/pd3-price.md` | not started |
+| PD4 | offer banner at top (badge, discounted price, validity date, terms; expired and out-of-stock-offer states) | customer | `products, offers, reviews` | `/product/:slug` | `specs/products/be/pd4-offer-banner-at-top.md` | `specs/products/fe/pd4-offer-banner-at-top.md` | not started |
+| PD5 | Videos & Reels section (hidden if none; opens the Reels viewer at that video) | customer | `products, offers, reviews` | `/product/:slug` | `specs/products/be/pd5-videos-reels-section.md` | `specs/products/fe/pd5-videos-reels-section.md` | not started |
+| PD6 | seller card with delivery/pickup info | customer | `products, offers, reviews` | `/product/:slug` | `specs/products/be/pd6-seller-card-with-delivery-pickup-inf.md` | `specs/products/fe/pd6-seller-card-with-delivery-pickup-inf.md` | not started |
+| PD7 | specs, reviews with breakdown and review form | customer | `products, offers, reviews` | `/product/:slug` | `specs/products/be/pd7-specs.md` | `specs/products/fe/pd7-specs.md` | not started |
+| PD8 | related products with "View all" -> Explore Products filtered to same category and subcategory | customer | `products, offers, reviews` | `/product/:slug` | `specs/products/be/pd8-related-products-with-view-all-explo.md` | `specs/products/fe/pd8-related-products-with-view-all-explo.md` | not started |
+| PD9 | share link and bookmark | customer | `products, offers, reviews` | `/product/:slug` | `specs/products/be/pd9-share-link-and-bookmark.md` | `specs/products/fe/pd9-share-link-and-bookmark.md` | not started |
+
+## SV. Services
+
+Roles: customer, provider. Backend module(s): `services, offers, reviews`. Frontend route/screen: `/service/:slug`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| SV1 | service card (image, name, subcategory tag, provider with logo, price/"Price on enquiry", rating, distance, open/availability badge, offer badge, Call/WhatsApp/Save) | customer, provider | `services, offers, reviews` | `/service/:slug` | `specs/services/be/sv1-service-card.md` | `specs/services/fe/sv1-service-card.md` | not started |
+| SV2 | service details page `/service/:slug`: carousel, title, subcategory, price type (from/fixed/range/on enquiry) + unit (per hour/day/event/sq ft), description, included/excluded, service area, hours, provider experience | customer, provider | `services, offers, reviews` | `/service/:slug` | `specs/services/be/sv2-service-details-page-service-slug-ca.md` | `specs/services/fe/sv2-service-details-page-service-slug-ca.md` | not started |
+| SV3 | provider card with follow, verified, rating, Call/WhatsApp/Directions | customer, provider | `services, offers, reviews` | `/service/:slug` | `specs/services/be/sv3-provider-card-with-follow.md` | `specs/services/fe/sv3-provider-card-with-follow.md` | not started |
+| SV4 | reference videos and previous-work gallery | customer, provider | `services, offers, reviews` | `/service/:slug` | `specs/services/be/sv4-reference-videos-and-previous-work-g.md` | `specs/services/fe/sv4-reference-videos-and-previous-work-g.md` | not started |
+| SV5 | Send Enquiry form (name, phone, message, preferred date, success state) as primary CTA; booking/payment is a future placeholder | customer, provider | `services, offers, reviews` | `/service/:slug` | `specs/services/be/sv5-send-enquiry-form.md` | `specs/services/fe/sv5-send-enquiry-form.md` | not started |
+| SV6 | offers, reviews (breakdown, form), FAQs, related services, similar providers, share, bookmark | customer, provider | `services, offers, reviews` | `/service/:slug` | `specs/services/be/sv6-offers.md` | `specs/services/fe/sv6-offers.md` | not started |
+| SV7 | breadcrumbs Services > Category > Subcategory > Service | customer, provider | `services, offers, reviews` | `/service/:slug` | `specs/services/be/sv7-breadcrumbs-services-category-subcat.md` | `specs/services/fe/sv7-breadcrumbs-services-category-subcat.md` | not started |
+| SV8 | each service has exactly one subcategory; a provider can be "expert in" several | customer, provider | `services, offers, reviews` | `/service/:slug` | `specs/services/be/sv8-each-service-has-exactly-one-subcate.md` | `specs/services/fe/sv8-each-service-has-exactly-one-subcate.md` | not started |
+
+## OF. Offers
+
+Roles: customer, vendor, provider, admin. Backend module(s): `offers`. Frontend route/screen: `/offers`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| OF1 | offers page with filters | customer, vendor, provider, admin | `offers` | `/offers` | `specs/offers/be/of1-offers-page-with-filters.md` | `specs/offers/fe/of1-offers-page-with-filters.md` | not started |
+| OF2 | offer card -> product page (single product), service page (service offer), filtered product list (several products), shop page (shop-wide) | customer, vendor, provider, admin | `offers` | `/offers` | `specs/offers/be/of2-offer-card-product-page.md` | `specs/offers/fe/of2-offer-card-product-page.md` | not started |
+| OF3 | states: active, pending admin approval, paused, ended/expired, out-of-stock | customer, vendor, provider, admin | `offers` | `/offers` | `specs/offers/be/of3-states-active.md` | `specs/offers/fe/of3-states-active.md` | not started |
+| OF4 | featured offers on home | customer, vendor, provider, admin | `offers` | `/offers` | `specs/offers/be/of4-featured-offers-on-home.md` | `specs/offers/fe/of4-featured-offers-on-home.md` | not started |
+| OF5 | vendor offer lifecycle pending -> active -> paused -> ended; admin approval | customer, vendor, provider, admin | `offers` | `/offers` | `specs/offers/be/of5-vendor-offer-lifecycle-pending-activ.md` | `specs/offers/fe/of5-vendor-offer-lifecycle-pending-activ.md` | not started |
+
+## CK. Cart and checkout
+
+Roles: customer. Backend module(s): `cart-checkout`. Frontend route/screen: `/cart, /checkout`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| CK1 | cart grouped by business, quantity stepper, remove, save for later, price breakdown, delivery fee, taxes/charges, coupon | customer | `cart-checkout` | `/cart, /checkout` | `specs/cart-checkout/be/ck1-cart-grouped-by-business.md` | `specs/cart-checkout/fe/ck1-cart-grouped-by-business.md` | not started |
+| CK2 | one checkout splits into one order per shop with clear notice | customer | `cart-checkout` | `/cart, /checkout` | `specs/cart-checkout/be/ck2-one-checkout-splits-into-one-order-p.md` | `specs/cart-checkout/fe/ck2-one-checkout-splits-into-one-order-p.md` | not started |
+| CK3 | per shop choose home delivery or self-pickup | customer | `cart-checkout` | `/cart, /checkout` | `specs/cart-checkout/be/ck3-per-shop-choose-home-delivery-or-sel.md` | `specs/cart-checkout/fe/ck3-per-shop-choose-home-delivery-or-sel.md` | not started |
+| CK4 | address book (add/edit/delete, map pin, landmark, PIN, labels, default) | customer | `cart-checkout` | `/cart, /checkout` | `specs/cart-checkout/be/ck4-address-book.md` | `specs/cart-checkout/fe/ck4-address-book.md` | not started |
+| CK5 | delivery range and minimum-order checks, out-of-range message | customer | `cart-checkout` | `/cart, /checkout` | `specs/cart-checkout/be/ck5-delivery-range-and-minimum-order-che.md` | `specs/cart-checkout/fe/ck5-delivery-range-and-minimum-order-che.md` | not started |
+| CK6 | payments: UPI, cards, net banking, wallets, COD / pay-at-pickup | customer | `cart-checkout` | `/cart, /checkout` | `specs/cart-checkout/be/ck6-payments-upi.md` | `specs/cart-checkout/fe/ck6-payments-upi.md` | not started |
+| CK7 | payment failure and retry | customer | `cart-checkout` | `/cart, /checkout` | `specs/cart-checkout/be/ck7-payment-failure-and-retry.md` | `specs/cart-checkout/fe/ck7-payment-failure-and-retry.md` | not started |
+| CK8 | order success with an order id per shop | customer | `cart-checkout` | `/cart, /checkout` | `specs/cart-checkout/be/ck8-order-success-with-an-order-id-per-s.md` | `specs/cart-checkout/fe/ck8-order-success-with-an-order-id-per-s.md` | not started |
+| CK9 | coupons (flat/percent, minimum, discount distributed proportionally across shop orders) | customer | `cart-checkout` | `/cart, /checkout` | `specs/cart-checkout/be/ck9-coupons.md` | `specs/cart-checkout/fe/ck9-coupons.md` | not started |
+
+## OR. Orders and tracking
+
+Roles: customer, rider, vendor, provider, admin. Backend module(s): `orders, delivery, payments`. Frontend route/screen: `/orders`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| OR1 | orders list (active/completed/cancelled) and detail | customer, rider, vendor, provider, admin | `orders, delivery, payments` | `/orders` | `specs/orders/be/or1-orders-list.md` | `specs/orders/fe/or1-orders-list.md` | not started |
+| OR2 | timeline: delivery `placed -> accepted -> preparing -> ready -> out_for_delivery -> delivered`; pickup `placed -> accepted -> ready -> picked_up`; plus `cancelled`, `refunded` | customer, rider, vendor, provider, admin | `orders, delivery, payments` | `/orders` | `specs/orders/be/or2-timeline-delivery-placed-accepted-pr.md` | `specs/orders/fe/or2-timeline-delivery-placed-accepted-pr.md` | not started |
+| OR3 | live tracking: rider name, phone, rating, status, ETA, delivery OTP | customer, rider, vendor, provider, admin | `orders, delivery, payments` | `/orders` | `specs/orders/be/or3-live-tracking-rider-name.md` | `specs/orders/fe/or3-live-tracking-rider-name.md` | not started |
+| OR4 | pickup: address, directions, pickup code | customer, rider, vendor, provider, admin | `orders, delivery, payments` | `/orders` | `specs/orders/be/or4-pickup-address.md` | `specs/orders/fe/or4-pickup-address.md` | not started |
+| OR5 | actions: cancel, request refund, report problem, contact shop/rider, reorder, download invoice | customer, rider, vendor, provider, admin | `orders, delivery, payments` | `/orders` | `specs/orders/be/or5-actions-cancel.md` | `specs/orders/fe/or5-actions-cancel.md` | not started |
+| OR6 | cancellation/refund flow with reasons, message "Admin and vendor have been notified and will contact you", refund tracker `requested -> approved -> completed` | customer, rider, vendor, provider, admin | `orders, delivery, payments` | `/orders` | `specs/orders/be/or6-cancellation-refund-flow-with-reason.md` | `specs/orders/fe/or6-cancellation-refund-flow-with-reason.md` | not started |
+| OR7 | partial fulfilment/substitution (vendor marks item unavailable) | customer, rider, vendor, provider, admin | `orders, delivery, payments` | `/orders` | `specs/orders/be/or7-partial-fulfilment-substitution.md` | `specs/orders/fe/or7-partial-fulfilment-substitution.md` | not started |
+| OR8 | dispute case workflow visible to customer | customer, rider, vendor, provider, admin | `orders, delivery, payments` | `/orders` | `specs/orders/be/or8-dispute-case-workflow-visible-to-cus.md` | `specs/orders/fe/or8-dispute-case-workflow-visible-to-cus.md` | not started |
+
+## RV. Reviews
+
+Roles: customer, vendor, provider, rider. Backend module(s): `reviews`. Frontend route/screen: `/reviews`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| RV1 | separate flows for business, product, service, rider | customer, vendor, provider, rider | `reviews` | `/reviews` | `specs/reviews/be/rv1-separate-flows-for-business.md` | `specs/reviews/fe/rv1-separate-flows-for-business.md` | not started |
+| RV2 | eligibility only for verified purchasers or enquirers, with clear message | customer, vendor, provider, rider | `reviews` | `/reviews` | `specs/reviews/be/rv2-eligibility-only-for-verified-purcha.md` | `specs/reviews/fe/rv2-eligibility-only-for-verified-purcha.md` | not started |
+| RV3 | star rating, text, photos, tags | customer, vendor, provider, rider | `reviews` | `/reviews` | `specs/reviews/be/rv3-star-rating.md` | `specs/reviews/fe/rv3-star-rating.md` | not started |
+| RV4 | edit/delete own review, "My reviews" | customer, vendor, provider, rider | `reviews` | `/reviews` | `specs/reviews/be/rv4-edit-delete-own-review.md` | `specs/reviews/fe/rv4-edit-delete-own-review.md` | not started |
+| RV5 | helpful and report | customer, vendor, provider, rider | `reviews` | `/reviews` | `specs/reviews/be/rv5-helpful-and-report.md` | `specs/reviews/fe/rv5-helpful-and-report.md` | not started |
+| RV6 | moderation: links/abusive words go to pending moderation | customer, vendor, provider, rider | `reviews` | `/reviews` | `specs/reviews/be/rv6-moderation-links-abusive-words-go-to.md` | `specs/reviews/fe/rv6-moderation-links-abusive-words-go-to.md` | not started |
+| RV7 | vendor/provider reply and report abusive review | customer, vendor, provider, rider | `reviews` | `/reviews` | `specs/reviews/be/rv7-vendor-provider-reply-and-report-abu.md` | `specs/reviews/fe/rv7-vendor-provider-reply-and-report-abu.md` | not started |
+
+## EG. Engagement
+
+Roles: customer. Backend module(s): `engagement`. Frontend route/screen: `/saved`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| EG1 | Saved: tabs Shops \| Services \| Photos & Videos (filters Photos/Videos/Reels, remove) | customer | `engagement` | `/saved` | `specs/engagement/be/eg1-saved-tabs-shops-services-photos-vid.md` | `specs/engagement/fe/eg1-saved-tabs-shops-services-photos-vid.md` | not started |
+| EG2 | heart on any photo/video/reel | customer | `engagement` | `/saved` | `specs/engagement/be/eg2-heart-on-any-photo-video-reel.md` | `specs/engagement/fe/eg2-heart-on-any-photo-video-reel.md` | not started |
+| EG3 | follow/unfollow with confirmation and bell | customer | `engagement` | `/saved` | `specs/engagement/be/eg3-follow-unfollow-with-confirmation-an.md` | `specs/engagement/fe/eg3-follow-unfollow-with-confirmation-an.md` | not started |
+| EG4 | like on videos | customer | `engagement` | `/saved` | `specs/engagement/be/eg4-like-on-videos.md` | `specs/engagement/fe/eg4-like-on-videos.md` | not started |
+| EG5 | comments (moderated, "awaiting moderation") | customer | `engagement` | `/saved` | `specs/engagement/be/eg5-comments.md` | `specs/engagement/fe/eg5-comments.md` | not started |
+| EG6 | share sheet (WhatsApp, copy link, native share) | customer | `engagement` | `/saved` | `specs/engagement/be/eg6-share-sheet.md` | `specs/engagement/fe/eg6-share-sheet.md` | not started |
+| EG7 | bookmarks of businesses/providers/services | customer | `engagement` | `/saved` | `specs/engagement/be/eg7-bookmarks-of-businesses-providers-se.md` | `specs/engagement/fe/eg7-bookmarks-of-businesses-providers-se.md` | not started |
+
+## RL. Videos and reels
+
+Roles: customer, vendor, provider. Backend module(s): `media-videos, engagement`. Frontend route/screen: `/videos/:id`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| RL1 | play icon in top bar, desktop nav and bottom navigation opens full-screen feed | customer, vendor, provider | `media-videos, engagement` | `/videos/:id` | `specs/media-videos/be/rl1-play-icon-in-top-bar.md` | `specs/media-videos/fe/rl1-play-icon-in-top-bar.md` | not started |
+| RL2 | pills: For You \| Following \| Nearby \| Offers \| Products \| Services + category pills | customer, vendor, provider | `media-videos, engagement` | `/videos/:id` | `specs/media-videos/be/rl2-pills-for-you-following-nearby-offer.md` | `specs/media-videos/fe/rl2-pills-for-you-following-nearby-offer.md` | not started |
+| RL3 | vertical snap feed, autoplay on view, tap pause/play, mute, progress bar, captions, data-saver "Tap to play", lazy loading | customer, vendor, provider | `media-videos, engagement` | `/videos/:id` | `specs/media-videos/be/rl3-vertical-snap-feed.md` | `specs/media-videos/fe/rl3-vertical-snap-feed.md` | not started |
+| RL4 | desktop: centred player + side panel (comments, linked products) + up/down arrow keys | customer, vendor, provider | `media-videos, engagement` | `/videos/:id` | `specs/media-videos/be/rl4-desktop-centred-player-side-panel.md` | `specs/media-videos/fe/rl4-desktop-centred-player-side-panel.md` | not started |
+| RL5 | overlay: owner avatar/name/verified + Follow/Following/bell, like with count, comments, share, caption, hashtags, distance, open/closed, overflow menu with Report | customer, vendor, provider | `media-videos, engagement` | `/videos/:id` | `specs/media-videos/be/rl5-overlay-owner-avatar-name-verified-f.md` | `specs/media-videos/fe/rl5-overlay-owner-avatar-name-verified-f.md` | not started |
+| RL6 | linked products/services strip with Add to cart / Enquire / View and "Shop this video" sheet | customer, vendor, provider | `media-videos, engagement` | `/videos/:id` | `specs/media-videos/be/rl6-linked-products-services-strip-with-.md` | `specs/media-videos/fe/rl6-linked-products-services-strip-with-.md` | not started |
+| RL7 | guest like/follow/comment -> login prompt -> back to the same video | customer, vendor, provider | `media-videos, engagement` | `/videos/:id` | `specs/media-videos/be/rl7-guest-like-follow-comment-login-prom.md` | `specs/media-videos/fe/rl7-guest-like-follow-comment-login-prom.md` | not started |
+| RL8 | states: empty Following, no videos nearby, skeleton, failed to load with retry, offline, removed/unavailable | customer, vendor, provider | `media-videos, engagement` | `/videos/:id` | `specs/media-videos/be/rl8-states-empty-following.md` | `specs/media-videos/fe/rl8-states-empty-following.md` | not started |
+| RL9 | deep link `/videos/:id` starts at that video; ranking frozen per session | customer, vendor, provider | `media-videos, engagement` | `/videos/:id` | `specs/media-videos/be/rl9-deep-link-videos-id-starts-at-that-v.md` | `specs/media-videos/fe/rl9-deep-link-videos-id-starts-at-that-v.md` | not started |
+| RL10 | videos are YouTube/Instagram links or uploads; embed URLs rebuilt server-side from allow-listed hosts with "Open in YouTube/Instagram" fallback | customer, vendor, provider | `media-videos, engagement` | `/videos/:id` | `specs/media-videos/be/rl10-videos-are-youtube-instagram-links-.md` | `specs/media-videos/fe/rl10-videos-are-youtube-instagram-links-.md` | not started |
+
+## NT. Notifications
+
+Roles: all roles. Backend module(s): `notifications`. Frontend route/screen: `/notifications`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| NT1 | notification centre with read/unread | all roles | `notifications` | `/notifications` | `specs/notifications/be/nt1-notification-centre-with-read-unread.md` | `specs/notifications/fe/nt1-notification-centre-with-read-unread.md` | not started |
+| NT2 | preferences per channel (in-app, email, WhatsApp orders/offers/enquiries) with consent text and easy unsubscribe | all roles | `notifications` | `/notifications` | `specs/notifications/be/nt2-preferences-per-channel.md` | `specs/notifications/fe/nt2-preferences-per-channel.md` | not started |
+| NT3 | follower announcements from owners | all roles | `notifications` | `/notifications` | `specs/notifications/be/nt3-follower-announcements-from-owners.md` | `specs/notifications/fe/nt3-follower-announcements-from-owners.md` | not started |
+| NT4 | per-role notification feeds (order, review, approval, enquiry, job, admin) | all roles | `notifications` | `/notifications` | `specs/notifications/be/nt4-per-role-notification-feeds.md` | `specs/notifications/fe/nt4-per-role-notification-feeds.md` | not started |
+
+## AC. Account
+
+Roles: customer. Backend module(s): `users, settings`. Frontend route/screen: `/account`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| AC1 | profile edit | customer | `users, settings` | `/account` | `specs/users/be/ac1-profile-edit.md` | `specs/users/fe/ac1-profile-edit.md` | not started |
+| AC2 | saved addresses | customer | `users, settings` | `/account` | `specs/users/be/ac2-saved-addresses.md` | `specs/users/fe/ac2-saved-addresses.md` | not started |
+| AC3 | payment methods | customer | `users, settings` | `/account` | `specs/users/be/ac3-payment-methods.md` | `specs/users/fe/ac3-payment-methods.md` | not started |
+| AC4 | language/theme | customer | `users, settings` | `/account` | `specs/users/be/ac4-language-theme.md` | `specs/users/fe/ac4-language-theme.md` | not started |
+| AC5 | privacy (download/delete my data) | customer | `users, settings` | `/account` | `specs/users/be/ac5-privacy.md` | `specs/users/fe/ac5-privacy.md` | not started |
+| AC6 | help, FAQs, contact support | customer | `users, settings` | `/account` | `specs/users/be/ac6-help.md` | `specs/users/fe/ac6-help.md` | not started |
+| AC7 | legal pages (terms, privacy, refund policy), about us | customer | `users, settings` | `/account` | `specs/users/be/ac7-legal-pages.md` | `specs/users/fe/ac7-legal-pages.md` | not started |
+
+## VD. Vendor dashboard
+
+Roles: vendor. Backend module(s): `businesses, products, services, offers, orders, media-videos, engagement, settings`. Frontend route/screen: `/vendor`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| VD1 | signup wizard (mobile OTP, business type, basics, location, hours and delivery, documents, review) with save-draft and approval states (pending limited access, approved, rejected with reason and re-submit, suspended, inactive) | vendor | `businesses, products, services, offers, orders, media-videos, engagement, settings` | `/vendor` | `specs/businesses/be/vd1-signup-wizard.md` | `specs/businesses/fe/vd1-signup-wizard.md` | not started |
+| VD2 | overview KPIs, charts, low-stock alerts, pending actions | vendor | `businesses, products, services, offers, orders, media-videos, engagement, settings` | `/vendor` | `specs/businesses/be/vd2-overview-kpis.md` | `specs/businesses/fe/vd2-overview-kpis.md` | not started |
+| VD3 | profile editor (logo, cover, hours per day, temporarily closed, delivery self vs rider, radius, fee, minimum order, pickup, map pin, live preview) | vendor | `businesses, products, services, offers, orders, media-videos, engagement, settings` | `/vendor` | `specs/businesses/be/vd3-profile-editor.md` | `specs/businesses/fe/vd3-profile-editor.md` | not started |
+| VD4 | products (list, search, filter, bulk edit, CSV import, add/edit with variants, SKU, stock, media sorter with images + YouTube/Instagram embeds, shareable link) | vendor | `businesses, products, services, offers, orders, media-videos, engagement, settings` | `/vendor` | `specs/businesses/be/vd4-products.md` | `specs/businesses/fe/vd4-products.md` | not started |
+| VD5 | product category pills manager (reorder, rename, hide) | vendor | `businesses, products, services, offers, orders, media-videos, engagement, settings` | `/vendor` | `specs/businesses/be/vd5-product-category-pills-manager.md` | `specs/businesses/fe/vd5-product-category-pills-manager.md` | not started |
+| VD6 | subcategory suggestion with duplicate detection and "my suggestions" status | vendor | `businesses, products, services, offers, orders, media-videos, engagement, settings` | `/vendor` | `specs/businesses/be/vd6-subcategory-suggestion-with-duplicat.md` | `specs/businesses/fe/vd6-subcategory-suggestion-with-duplicat.md` | not started |
+| VD7 | offers manager | vendor | `businesses, products, services, offers, orders, media-videos, engagement, settings` | `/vendor` | `specs/businesses/be/vd7-offers-manager.md` | `specs/businesses/fe/vd7-offers-manager.md` | not started |
+| VD8 | orders (new-order alert, accept/reject, preparing, ready, request/assign rider, self-delivery with OTP, pickup code, print slip, mark item unavailable, refund request handling) | vendor | `businesses, products, services, offers, orders, media-videos, engagement, settings` | `/vendor` | `specs/businesses/be/vd8-orders.md` | `specs/businesses/fe/vd8-orders.md` | not started |
+| VD9 | inventory (stock, thresholds, quick toggles, restock) | vendor | `businesses, products, services, offers, orders, media-videos, engagement, settings` | `/vendor` | `specs/businesses/be/vd9-inventory.md` | `specs/businesses/fe/vd9-inventory.md` | not started |
+| VD10 | reviews (reply/report) | vendor | `businesses, products, services, offers, orders, media-videos, engagement, settings` | `/vendor` | `specs/businesses/be/vd10-reviews.md` | `specs/businesses/fe/vd10-reviews.md` | not started |
+| VD11 | QR and links (poster/table-tent/sticker, share) | vendor | `businesses, products, services, offers, orders, media-videos, engagement, settings` | `/vendor` | `specs/businesses/be/vd11-qr-and-links.md` | `specs/businesses/fe/vd11-qr-and-links.md` | not started |
+| VD12 | gallery manager (gallery-only photos, default media-consent setting) and videos/reels manager (link/upload, thumbnail, caption, hashtags, link products/services, "Show in Gallery"/"Show in Reels", approval status, analytics: views, likes, shares, followers gained, taps on linked items) | vendor | `businesses, products, services, offers, orders, media-videos, engagement, settings` | `/vendor` | `specs/businesses/be/vd12-gallery-manager.md` | `specs/businesses/fe/vd12-gallery-manager.md` | not started |
+| VD13 | media-consent toggle on every product/service upload | vendor | `businesses, products, services, offers, orders, media-videos, engagement, settings` | `/vendor` | `specs/businesses/be/vd13-media-consent-toggle-on-every-produ.md` | `specs/businesses/fe/vd13-media-consent-toggle-on-every-produ.md` | not started |
+| VD14 | services manager (title, category, one subcategory, price type/unit/amount, inclusions/exclusions, area, images, videos, active/pause, shareable link) | vendor | `businesses, products, services, offers, orders, media-videos, engagement, settings` | `/vendor` | `specs/businesses/be/vd14-services-manager.md` | `specs/businesses/fe/vd14-services-manager.md` | not started |
+| VD15 | followers (count, growth chart, announce to followers) | vendor | `businesses, products, services, offers, orders, media-videos, engagement, settings` | `/vendor` | `specs/businesses/be/vd15-followers.md` | `specs/businesses/fe/vd15-followers.md` | not started |
+| VD16 | enquiries inbox | vendor | `businesses, products, services, offers, orders, media-videos, engagement, settings` | `/vendor` | `specs/businesses/be/vd16-enquiries-inbox.md` | `specs/businesses/fe/vd16-enquiries-inbox.md` | not started |
+| VD17 | earnings, plan/commission, promotions purchase, invoices | vendor | `businesses, products, services, offers, orders, media-videos, engagement, settings` | `/vendor` | `specs/businesses/be/vd17-earnings.md` | `specs/businesses/fe/vd17-earnings.md` | not started |
+| VD18 | account (owner, payout UPI/bank, staff, security) | vendor | `businesses, products, services, offers, orders, media-videos, engagement, settings` | `/vendor` | `specs/businesses/be/vd18-account.md` | `specs/businesses/fe/vd18-account.md` | not started |
+
+## PV. Provider dashboard
+
+Roles: provider. Backend module(s): `businesses, services, engagement`. Frontend route/screen: `/provider`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| PV1 | onboarding same as vendor | provider | `businesses, services, engagement` | `/provider` | `specs/businesses/be/pv1-onboarding-same-as-vendor.md` | `specs/businesses/fe/pv1-onboarding-same-as-vendor.md` | not started |
+| PV2 | profile with category, "expert in" multi-select subcategories, service area, hours | provider | `businesses, services, engagement` | `/provider` | `specs/businesses/be/pv2-profile-with-category.md` | `specs/businesses/fe/pv2-profile-with-category.md` | not started |
+| PV3 | services manager (as VD14) | provider | `businesses, services, engagement` | `/provider` | `specs/businesses/be/pv3-services-manager.md` | `specs/businesses/fe/pv3-services-manager.md` | not started |
+| PV4 | enquiries inbox with statuses `new -> contacted -> converted -> closed`, call/WhatsApp reply | provider | `businesses, services, engagement` | `/provider` | `specs/businesses/be/pv4-enquiries-inbox-with-statuses-new-co.md` | `specs/businesses/fe/pv4-enquiries-inbox-with-statuses-new-co.md` | not started |
+| PV5 | can also list products and handle orders | provider | `businesses, services, engagement` | `/provider` | `specs/businesses/be/pv5-can-also-list-products-and-handle-or.md` | `specs/businesses/fe/pv5-can-also-list-products-and-handle-or.md` | not started |
+| PV6 | reviews, QR, analytics (views, enquiries, conversion), followers, videos/reels and gallery managers | provider | `businesses, services, engagement` | `/provider` | `specs/businesses/be/pv6-reviews.md` | `specs/businesses/fe/pv6-reviews.md` | not started |
+| PV7 | placeholders for booking/quotation/payment (feature flag off) | provider | `businesses, services, engagement` | `/provider` | `specs/businesses/be/pv7-placeholders-for-booking-quotation-p.md` | `specs/businesses/fe/pv7-placeholders-for-booking-quotation-p.md` | not started |
+
+## RD. Rider (mobile-first PWA)
+
+Roles: rider. Backend module(s): `delivery, users`. Frontend route/screen: `/rider`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| RD1 | signup and verification (profile, selfie, vehicle, licence, ID, bank/UPI) with approval states | rider | `delivery, users` | `/rider` | `specs/delivery/be/rd1-signup-and-verification.md` | `specs/delivery/fe/rd1-signup-and-verification.md` | not started |
+| RD2 | online/offline toggle, today's deliveries and earnings | rider | `delivery, users` | `/rider` | `specs/delivery/be/rd2-online-offline-toggle.md` | `specs/delivery/fe/rd2-online-offline-toggle.md` | not started |
+| RD3 | delivery request with pickup, drop, distance, estimated earning and countdown accept/reject | rider | `delivery, users` | `/rider` | `specs/delivery/be/rd3-delivery-request-with-pickup.md` | `specs/delivery/fe/rd3-delivery-request-with-pickup.md` | not started |
+| RD4 | active delivery flow: accepted -> reached shop -> items check -> picked up -> reached drop -> customer OTP -> delivered, or failed/cancel with reason; cash collection notice; navigation button; masked call | rider | `delivery, users` | `/rider` | `specs/delivery/be/rd4-active-delivery-flow-accepted-reache.md` | `specs/delivery/fe/rd4-active-delivery-flow-accepted-reache.md` | not started |
+| RD5 | history with filters and detail | rider | `delivery, users` | `/rider` | `specs/delivery/be/rd5-history-with-filters-and-detail.md` | `specs/delivery/fe/rd5-history-with-filters-and-detail.md` | not started |
+| RD6 | earnings (per-ride base + per-km, daily/weekly, payout status) | rider | `delivery, users` | `/rider` | `specs/delivery/be/rd6-earnings.md` | `specs/delivery/fe/rd6-earnings.md` | not started |
+| RD7 | feedback and ratings | rider | `delivery, users` | `/rider` | `specs/delivery/be/rd7-feedback-and-ratings.md` | `specs/delivery/fe/rd7-feedback-and-ratings.md` | not started |
+| RD8 | profile, documents, language, support, dispute report | rider | `delivery, users` | `/rider` | `specs/delivery/be/rd8-profile.md` | `specs/delivery/fe/rd8-profile.md` | not started |
+
+## AD. Admin
+
+Roles: admin. Backend module(s): `admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search, geo`. Frontend route/screen: `/admin`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| AD1 | overview KPIs, approvals queue, live orders, alerts | admin | `admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search, geo` | `/admin` | `specs/admin/be/ad1-overview-kpis.md` | `specs/admin/fe/ad1-overview-kpis.md` | not started |
+| AD2 | approvals for businesses, providers, riders with document viewer, approve/reject/request changes with reason and history | admin | `admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search, geo` | `/admin` | `specs/admin/be/ad2-approvals-for-businesses.md` | `specs/admin/fe/ad2-approvals-for-businesses.md` | not started |
+| AD3 | listings CRUD (create, edit status/details, remove) and product moderation (unpublish) | admin | `admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search, geo` | `/admin` | `specs/admin/be/ad3-listings-crud.md` | `specs/admin/fe/ad3-listings-crud.md` | not started |
+| AD4 | users (customers, vendors, riders: search, profile, order history, suspend/reactivate) | admin | `admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search, geo` | `/admin` | `specs/admin/be/ad4-users.md` | `specs/admin/fe/ad4-users.md` | not started |
+| AD5 | categories (view fixed main categories; subcategory tree, types, keywords, filter preview) | admin | `admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search, geo` | `/admin` | `specs/admin/be/ad5-categories.md` | `specs/admin/fe/ad5-categories.md` | not started |
+| AD6 | subcategory suggestion queue (approve, reject with reason, merge into existing, duplicate warning, notification to suggester) | admin | `admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search, geo` | `/admin` | `specs/admin/be/ad6-subcategory-suggestion-queue.md` | `specs/admin/fe/ad6-subcategory-suggestion-queue.md` | not started |
+| AD7 | orders and disputes (case workflow open -> in review -> resolved, notes, refund approval/completion, rider assign/reassign) | admin | `admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search, geo` | `/admin` | `specs/admin/be/ad7-orders-and-disputes.md` | `specs/admin/fe/ad7-orders-and-disputes.md` | not started |
+| AD8 | live deliveries map with city filter (All cities cluster pins/one city), side list (order id, rider, status, ETA), empty state | admin | `admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search, geo` | `/admin` | `specs/admin/be/ad8-live-deliveries-map-with-city-filter.md` | `specs/admin/fe/ad8-live-deliveries-map-with-city-filter.md` | not started |
+| AD9 | review moderation (reported/pending/removed; approve/hide/delete) | admin | `admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search, geo` | `/admin` | `specs/admin/be/ad9-review-moderation.md` | `specs/admin/fe/ad9-review-moderation.md` | not started |
+| AD10 | video moderation queue (pending/approved/rejected/removed/reported, reasons, engagement report) | admin | `admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search, geo` | `/admin` | `specs/admin/be/ad10-video-moderation-queue.md` | `specs/admin/fe/ad10-video-moderation-queue.md` | not started |
+| AD11 | promotions (homepage banners, featured businesses, offer approval) | admin | `admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search, geo` | `/admin` | `specs/admin/be/ad11-promotions.md` | `specs/admin/fe/ad11-promotions.md` | not started |
+| AD12 | communications (searchable audience combobox; scope Overall/City-wise/Zone-wise; template picker; channels WhatsApp/in-app/email; consent-aware recipient counts; preview; schedule; review-before-send summary; delivery report with opt-outs; permission-aware scopes) | admin | `admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search, geo` | `/admin` | `specs/admin/be/ad12-communications.md` | `specs/admin/fe/ad12-communications.md` | not started |
+| AD13 | reports (orders, revenue, vendor, rider, enquiries; CSV export) | admin | `admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search, geo` | `/admin` | `specs/admin/be/ad13-reports.md` | `specs/admin/fe/ad13-reports.md` | not started |
+| AD14 | audit log with search | admin | `admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search, geo` | `/admin` | `specs/admin/be/ad14-audit-log-with-search.md` | `specs/admin/fe/ad14-audit-log-with-search.md` | not started |
+| AD15 | search keyword mapping tool with preview | admin | `admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search, geo` | `/admin` | `specs/admin/be/ad15-search-keyword-mapping-tool-with-pr.md` | `specs/admin/fe/ad15-search-keyword-mapping-tool-with-pr.md` | not started |
+| AD16 | permission-aware UI (hidden/disabled with "You don't have permission") | admin | `admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search, geo` | `/admin` | `specs/admin/be/ad16-permission-aware-ui.md` | `specs/admin/fe/ad16-permission-aware-ui.md` | not started |
+
+## SA. Super admin
+
+Roles: super_admin. Backend module(s): `admin, geo, settings, audit, catalog`. Frontend route/screen: `/super-admin`.
+
+| ID | Feature | Role(s) | BE module(s) | FE route/screen | BE spec path | FE spec path | Status |
+|---|---|---|---|---|---|---|---|
+| SA1 | overview with KPIs and tabbed Graph/Candle chart (shared date range, metric orders/revenue/deliveries, city filter; candles differ by fill/hollow + words "Up/Down" in tooltip; skeleton/empty/error) | super_admin | `admin, geo, settings, audit, catalog` | `/super-admin` | `specs/admin/be/sa1-overview-with-kpis-and-tabbed-graph-.md` | `specs/admin/fe/sa1-overview-with-kpis-and-tabbed-graph-.md` | not started |
+| SA2 | admins and areas (collapsible cards, search by name/phone/email, filters city/area-zone/role/status with removable chips and count, activate/deactivate with confirmation naming the impact, area assignment, per-admin permission matrix) | super_admin | `admin, geo, settings, audit, catalog` | `/super-admin` | `specs/admin/be/sa2-admins-and-areas.md` | `specs/admin/fe/sa2-admins-and-areas.md` | not started |
+| SA3 | roles and permissions (create, edit with unsaved indicator and before/after summary, duplicate, delete blocked while admins assigned with reassign picker, system roles locked) | super_admin | `admin, geo, settings, audit, catalog` | `/super-admin` | `specs/admin/be/sa3-roles-and-permissions.md` | `specs/admin/fe/sa3-roles-and-permissions.md` | not started |
+| SA4 | cities and zones (city cards, enable/disable with confirmation, city detail with polygon editor, zone list with delivery fee slabs, assigned admins, add city, waitlist) | super_admin | `admin, geo, settings, audit, catalog` | `/super-admin` | `specs/admin/be/sa4-cities-and-zones.md` | `specs/admin/fe/sa4-cities-and-zones.md` | not started |
+| SA5 | global settings (branding, delivery slabs, rider earning rule, commission and plans, promotions fees, payments, refund/cancellation window, review rules, WhatsApp/SMS/email integration, SEO defaults, feature flags, legal pages) | super_admin | `admin, geo, settings, audit, catalog` | `/super-admin` | `specs/admin/be/sa5-global-settings.md` | `specs/admin/fe/sa5-global-settings.md` | not started |
+| SA6 | platform analytics | super_admin | `admin, geo, settings, audit, catalog` | `/super-admin` | `specs/admin/be/sa6-platform-analytics.md` | `specs/admin/fe/sa6-platform-analytics.md` | not started |
+| SA7 | activity monitor (audit with before/after and export) | super_admin | `admin, geo, settings, audit, catalog` | `/super-admin` | `specs/admin/be/sa7-activity-monitor.md` | `specs/admin/fe/sa7-activity-monitor.md` | not started |
+| SA8 | main-category management (only super admin) and category tree with keyword/synonym mapping | super_admin | `admin, geo, settings, audit, catalog` | `/super-admin` | `specs/admin/be/sa8-main-category-management.md` | `specs/admin/fe/sa8-main-category-management.md` | not started |
+
+---
+
+Total features tracked: **207**.

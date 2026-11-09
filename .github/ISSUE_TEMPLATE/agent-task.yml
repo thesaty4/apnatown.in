@@ -1,0 +1,68 @@
+name: Agent task
+description: A task for a Copilot coding agent to implement, following the AGENTS.md lifecycle.
+title: "[task]: "
+labels: ["agent-task"]
+body:
+  - type: input
+    id: feature-id
+    attributes:
+      label: Feature ID(s)
+      description: From docs/FEATURE_INVENTORY.md (e.g. CK2, RD4). Leave blank if this is a new feature not yet in the inventory.
+      placeholder: "CK2"
+    validations:
+      required: false
+  - type: dropdown
+    id: module
+    attributes:
+      label: Module
+      description: See docs/architecture.md for the 21-module map.
+      options:
+        - auth
+        - users
+        - catalog
+        - businesses
+        - products
+        - services
+        - search
+        - offers
+        - cart-checkout
+        - orders
+        - delivery
+        - payments
+        - reviews
+        - media-videos
+        - engagement
+        - notifications
+        - communications
+        - geo
+        - admin
+        - audit
+        - settings
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What needs to be done
+      description: Reference the spec path if one exists (specs/<module>/{be,fe}/...); if not, the spec-writer agent should run first.
+    validations:
+      required: true
+  - type: checkboxes
+    id: sensitive
+    attributes:
+      label: Sensitive area
+      description: Check all that apply — these require a security-auditor PASS before pr-creator (AGENTS.md).
+      options:
+        - label: Touches auth
+        - label: Touches payments
+        - label: Touches uploads/CSV
+        - label: Touches embeds
+        - label: Touches admin permissions
+        - label: Touches communications
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Given/When/Then, or a link to the spec that contains them.
+    validations:
+      required: false

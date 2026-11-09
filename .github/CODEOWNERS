@@ -1,0 +1,31 @@
+# CODEOWNERS
+# TODO(verify): replace placeholder team handles with real GitHub teams/usernames once established.
+
+# Default owners for everything not matched below.
+* @apnatown/maintainers
+
+# AI lifecycle setup itself — changes here affect every agent/instruction.
+/AGENTS.md @apnatown/maintainers
+/.github/copilot-instructions.md @apnatown/maintainers
+/.github/instructions/ @apnatown/maintainers
+/.github/agents/ @apnatown/maintainers
+/.github/skills/ @apnatown/maintainers
+/scripts/validate-ai-setup.mjs @apnatown/maintainers
+
+# Security-sensitive paths require a security reviewer.
+/.github/instructions/security.instructions.md @apnatown/security
+/docs/security/ @apnatown/security
+/apps/api/src/modules/auth/ @apnatown/security
+/apps/api/src/modules/payments/ @apnatown/security
+/apps/api/src/modules/admin/ @apnatown/security
+/apps/api/src/modules/communications/ @apnatown/security
+/apps/api/src/integrations/ @apnatown/security
+
+# Frontend design system — keep tokens/components consistent.
+/packages/ui/ @apnatown/frontend
+/docs/design-system.md @apnatown/frontend
+
+# Product context and specs.
+/docs/PROJECT.md @apnatown/product
+/docs/FEATURE_INVENTORY.md @apnatown/product
+/specs/ @apnatown/product
