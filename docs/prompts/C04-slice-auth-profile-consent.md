@@ -21,16 +21,18 @@ docs/design-context/10-sample-data.json       (Padrauna sample data)
 docs/design-context/11-open-issues-and-assumptions.md
 docs/design-context/screenshots/              (reference images: m-<role>-<view>.jpg = 390px, d-<role>-<view>.jpg = 1280px, plus dark and Hindi samples)
 docs/design-context/reference/apnatown-prototype.html and reference/prototype-source/ (the runnable prototype and its complete source and stylesheet; the visual and behavioural source of truth)
-Also read `docs/specs/` for this scope.
+Also read `specs/_foundation/` and the BE/FE pairs in `specs/auth/`,
+`specs/users/`, `specs/notifications/` and `specs/settings/`.
+Use only this slice; legacy `docs/specs/` outputs are not prerequisites.
 
 ## OUTPUT FILES (exact paths)
 - Code in `apps/web`, `apps/api`, `packages/*` as defined by the specs, with tests and Storybook stories
 
 ## REQUIRED CONTENTS
-Build AU, AC, X8, NT2 features end to end (OTP login, session, guest return-to-origin, profile completion, addresses, preferences, privacy export/delete, consent records, system pages). Backend modules auth, users; frontend account routes.
+Build AU, AC, X8, NT2 features end to end (OTP login, session, guest return-to-origin, profile completion, addresses, preferences, privacy export/delete, consent records, system pages). Auth/Users own identity and data requests; Notifications owns notification preferences, Settings owns legal/support content. Preserve every explicit policy/provider gate; no fake privacy completion or inferred consent.
 
 ## IMPLEMENTATION RULES (in addition to the standing requirements)
-- Read `docs/specs/` for this scope and the Design Context Pack; implement exactly what is specified. If a spec is missing or wrong, stop, add an Open Issue and propose the smallest spec fix in the same PR.
+- Follow the current foundation/module specs above and the Design Context Pack. Keep changes slice-scoped; ask about a blocking ambiguity and fix its owning spec, not missing legacy documents or trackers.
 - Work in small pull requests (about 400 changed lines or fewer), one concern each. Branch `feat/<scope>-<name>`; Conventional Commits. Never merge; humans review and merge.
 - Reuse shared components, hooks, utilities, guards and base classes; if you copy code a second time, extract it to the shared layer first.
 - Every change includes tests (unit, integration, component, e2e as specified), lint and type-check clean, English and Hindi strings, accessibility checks, and a screenshot comparison (mobile 390px and desktop 1280px, light and dark) against `docs/design-context/screenshots/` for UI work.

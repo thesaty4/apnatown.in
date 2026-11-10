@@ -5,7 +5,8 @@ applyTo: "apps/api/**,packages/shared/**"
 # Backend
 
 Builds on `.github/copilot-instructions.md` and
-`solid-dry-design.instructions.md`. Module map: `docs/architecture.md`.
+`solid-dry-design.instructions.md`. Implementation contracts:
+`specs/_foundation/backend-shared.md` and `specs/_foundation/architecture.md`.
 
 ## Layers
 
@@ -13,8 +14,9 @@ Builds on `.github/copilot-instructions.md` and
 validate DTOs (zod, from `packages/shared`) and map domain errors to
 the error contract below; they never touch a repository directly.
 Services hold business rules and call repositories/integration ports
-via interfaces (dependency inversion). Repositories are the **only**
-place that talks to the database (`database.instructions.md`).
+via interfaces (dependency inversion). Only owning repository adapters
+and shared persistence infrastructure import Prisma; use-cases own
+transactions through ports (`database.instructions.md`).
 
 ## DTO validation
 
@@ -32,20 +34,23 @@ place that talks to the database (`database.instructions.md`).
 
 ## Pagination and filtering
 
-- Cursor or offset+limit pagination with a sane max page size; always
-  return a `hasMore`/`nextCursor` or total count.
+- Opaque keyset pagination with a stable tie-breaker, explicit default
+  and hard cap 50; return the owning DTO's `nextCursor` and required
+  counts. Never substitute offset pagination for feeds/queues.
 - Every filterable/sortable field used in Explore/Search/admin lists is
   indexed (`database.instructions.md`) and allow-listed here.
 
 ## Error contract
 
-```
-{ "error": { "code": "ORDER_NOT_FOUND", "message": "...", "details"?: {} } }
+```json
+{"code":"COMMON_NOT_FOUND","message_key":"errors.common.notFound","status":404,"details":{},"correlationId":"request-id"}
 ```
 
-- Stable machine-readable `code` per error type; human `message` safe
-  to show (or mapped to an i18n key by the client); never a raw stack
-  trace or DB error to the client.
+- All five fields are required; HTTP status matches `status`. The
+  client localizes `message_key`; details contain only safe allow-listed
+  parameters, never submitted PII, a stack or SQL error.
+- Preserve module-owned codes; use the canonical catalogue and wire
+  rules in `specs/_foundation/backend-shared.md` and `data-model.md`.
 - Map domain errors (e.g. `InvalidTransitionError`, `OutOfStockError`,
   `OutOfDeliveryRangeError`) to specific codes and appropriate HTTP
   status (400/403/404/409/422).
@@ -55,18 +60,20 @@ place that talks to the database (`database.instructions.md`).
 - State-changing writes that can be retried (checkout, payment
   webhooks, refund actions) accept/require an idempotency key or are
   naturally idempotent by state-machine guard.
-- Multi-step writes (e.g. create order + decrement stock + create
-  delivery job) run in a single transaction; never leave partial state
-  on failure.
+- Commit the domain write, outbox, required audit and non-secret
+  idempotency result atomically through the shared unit of work.
+  External calls happen outside the transaction and use the owning
+  reconciliation flow; never hold DB locks across provider calls.
 
 ## Background jobs
 
 - Long-running or external-dependent work (notifications, media
   processing, communications sends) goes through the queue, not inline
   in the request/response cycle.
-- Jobs are idempotent (safe to redeliver) and have bounded retries with
-  backoff; failures after max retries go to a dead-letter path that
-  surfaces in `admin`/`audit`.
+- Use pg-boss plus the PostgreSQL transactional outbox, no Redis at
+  launch. Jobs deduplicate at-least-once delivery and use bounded
+  retries; terminal failures are observable with explicit operator
+  replay, not an invented admin queue screen.
 
 ## Timeouts and retries
 

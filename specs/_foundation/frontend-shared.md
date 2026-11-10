@@ -28,18 +28,24 @@ packages/shared/src/         # shared Zod schemas, types, enums, formatters
 - Shared UI never imports a feature; it renders props and callbacks only—no business logic, API calls or data fetching.
 - Server Components are the default. Add Client Components only for browser state, forms, media, gestures or live updates. API access uses the generated/typed OpenAPI client.
 - Use TanStack Query only in client islands that need client-side cache, mutation or live-update behavior; keep server data loading in Server Components.
+- Bootstrap, root layout/providers/loading/error/not-found, package exports/`transpilePackages`, generated-client commands and same-origin `/api` cookie/CSRF wrappers are specified in [architecture](./architecture.md#runtime-composition-and-lifecycle). Use those shared wrappers, not component fetches. Browser auth always comes from the live Auth contract; no cookie-role or UI-only authorization.
+- `shared/i18n/request.ts` supplies validated `en|hi` request config to the next-intl plugin; root `NextIntlClientProvider` receives the needed locale/messages. Query clients are request-local on SSR and stable per browser session, cleared on logout/account switch. No `"use client"` root layout or global private query cache.
+- Vendor/provider owner wrappers set `X-Business-Kind: shop|provider` explicitly and key private caches by that context; never select the first business implicitly. `BUSINESS_CONTEXT_REQUIRED` is an explicit error, not empty data. Pending-applicant profile capabilities and approved selling roles come from live server contracts, not this header or the role switcher.
 
 ## Rendering and SEO
 
 | Route group / routes | Strategy | Reason and cache rule |
 |---|---|---|
-| `(public)`: `/`, `/category/:slug`, `/shop/:slug`, `/provider/:slug`, `/product/:slug`, `/service/:slug`, `/offers` | ISR with entity/tag revalidation; static legal/help pages use SSG | Public, crawlable pages; only approved/live data is cached. Revalidate affected tags on publish, stock/offer change or removal. |
+| `(public)`: `/`, `/category/:slug`, `/shop/:slug`, `/provider/:slug`, `/product/:slug`, `/service/:slug`, `/offers` | Public content ISR/tag cache; source-only legal/help shells use SSG | Only approved/live data is cached. API-dependent content resolves at runtime, never requiring a running API during `next build`; request-specific locale/theme/auth shell is not shared cached HTML. Revalidate affected tags on publish, stock/offer change or removal. |
 | `(public)`: `/explore`, `/services`, `/search?q=`, `/videos`, `/videos/:id` | SSR for URL-derived results/metadata; Reels feed is a client island | Filters and nearby results depend on request state; do not cache personalized location. Reels uses a frozen server-ranked session and client playback. |
-| `(account)`: `/login`, `/account/**`, `/orders/**`, `/saved`, `/my-reviews`, `/notifications` | SSR auth gate; CSR islands for forms, filters and live order updates | Session-aware and private; `no-store` for user data. Login returns to the validated origin. |
-| `(vendor)` and `(provider)` dashboards | SSR role/ownership gate and initial data; CSR for editing, tables and live updates | Private business data; no shared cache. Revalidate after successful mutations. |
+| Public auth/account shells: `/login`, `/account`, `/session-expired` | SSR with optional live session, public guest/login UI | Never redirect a guest away from login/the guest Account menu. Personalized responses are no-store; fetch protected details only after authentication. |
+| `(account)`: protected `/account/**`, `/orders/**`, `/saved`, `/my-reviews`, `/notifications` | SSR auth gate; CSR islands for forms, filters and live order updates | Private/no-store. Keep public shells outside this protected layout; login returns to the validated origin. |
+| `(vendor)` and `(provider)` dashboards | SSR live role or documented owned-applicant capability + ownership gate; CSR editing/tables/live updates | Pending applicants can reach their permitted onboarding/profile/limited overview, not seller actions. Private business data has no shared cache; revalidate after successful mutations. |
 | `(rider)` PWA | CSR task shell after server session/role check; no-store operational data | Weak-network controls and live requests need client updates; server remains authoritative for countdowns, acceptance and codes. |
 | `(admin)` and `(super-admin)` | SSR role, permission and scope gate; CSR for interactive maps, queues and charts | No shared cache for scoped or sensitive data; server checks every request. |
 | `(public)` system routes `/404`, `/500`, `/offline`, `/maintenance` | Static/SSG shell, dynamic error content only where needed | Must remain useful when application APIs are unavailable. |
+
+Public caching is a data-fragment optimization, not publication authority: the dynamic request shell checks current owner visibility before returning cached content/metadata. Do not serve full-route/CDN HTML that bypasses that check. Resolve revocable media/embeds through current Media eligibility; denial or an unavailable authority check must not fall back to a previously approved cached object. Tag invalidation refreshes data but is not the security gate.
 
 | Public page type / URL | EN / HI title and description template | JSON-LD | Canonical and indexing |
 |---|---|---|---|
@@ -61,6 +67,8 @@ All SEO copy is localized; emit `hreflang` alternates for `en` and `hi` using ne
 - Load Poppins, Noto Sans and Noto Sans Devanagari through `next/font`; body defaults to Noto Sans with Devanagari fallback. Match the token type scale, spacing/radius/shadow/motion and touch targets from the source pack.
 - Breakpoints: tablet 600px, desktop 900px; mobile-first 4/8/12-column grids and 1200px maximum container. Exact measurements live in the token file and design system.
 - Prototype CSS is the visual source of truth; the desktop/mobile dark Explore screenshots duplicate their light variants, so use dark token/CSS rules until corrected ([G-10](../../docs/design-context/11-open-issues-and-assumptions.md)).
+- `pnpm tokens:generate` reads this JSON, emits `packages/ui` token CSS and the pinned Tailwind-version theme integration, merging `dark_overrides` over light values once. Import in root `globals.css`; scan both Web and UI source (or equivalent Tailwind source directives), including exported client components. Verify `ring-focus`, radius, status, motion and 600/900 breakpoints in generated CSS; no second hand-maintained palette.
+- `pnpm i18n:generate` converts [09a-i18n-en-hi.json](../../docs/design-context/09a-i18n-en-hi.json)'s English-text keys using a reviewed `shared/i18n/source-key-map.json` into semantic `messages/en.json` and `hi.json`; the source is not a ready-made next-intl catalogue. Preserve translations, map reused copy intentionally, validate ICU placeholder/key parity, and fail on unmapped/missing keys. API `message_key`s and new UI keys need reviewed EN/HI entries, never machine-invented Hindi. Locale URL routing remains Q-24, not a guessed `[locale]` route.
 
 ## Shared components
 
@@ -163,7 +171,7 @@ Owner paths are under `packages/ui/src`; grouped names share the stated file unl
 - Every screen implements default, skeleton loading, helpful empty with one action, error with retry, no-permission, and offline. Add success/special states only when the screen inventory calls for them. The shared `StateViews`, `Skeleton` and `OfflineBanner` provide the UI; data fetching owns state selection.
 - Every user-facing string is a semantic key with English and Hindi values via next-intl; no hard-coded JSX copy or sentence concatenation. Use ICU placeholders/plurals. Hindi may be longer: allow wrapping and flexible heights; do not truncate meaningful labels. Translation source/review comes from the Design Context i18n catalogue.
 - Auth-required actions use a login sheet, retain a safe same-origin return path (including video ID), and complete the pending action after login per BR-21. Never accept arbitrary redirect URLs.
-- Explore state: `tab`, comma-separated `category`, and services-only `subcategory` slugs in `/explore`; Search has independent `q` and filters at `/search?q=`. URL is the source of truth; Back/Forward restores filters and scroll. Reels deep link `/videos/:id` starts at that video and ranking stays frozen per session.
+- Explore uses Search's typed query DTO: active tab filters are unprefixed; inactive tab filters use `products.`/`shops.`/`services.`; removable shared Home category is `contextCategory`. Do not invent a second serializer. Search (`/search?q=`) is independent; precise location uses the paired `X-Discovery-Latitude`/`X-Discovery-Longitude` headers through the private/no-store wrapper, never shareable params. Back/Forward restores URL filters/scroll; Reels `/videos/:id` resolves by ID against its frozen session.
 - Sheets/dialogs trap focus, close the top layer with Esc, restore focus to the trigger and expose labelled actions. Keyboard navigation, visible 3px focus ring, minimum 48px touch targets, reduced motion and text/icon status are required. The compact prototype button dimensions are a logged exception pending approval in [Q-27](../../docs/design-context/11-open-issues-and-assumptions.md).
 
 ## Performance, media and PWA
@@ -171,6 +179,7 @@ Owner paths are under `packages/ui/src`; grouped names share the stated file unl
 - Budgets: LCP < 2.5 s on slow 4G, route JS approximately 170 KB gzip, CLS < 0.1. Measure production routes; split client islands and lazy-load below-fold media.
 - Use responsive image sizes, lazy-load offscreen images, reserve aspect ratio, and show skeleton/poster before media. Video never autoplays in data-saver/Save-Data mode; show tap-to-play poster and respect reduced motion.
 - Link embeds only from approved hosts; API rebuilds embed URLs. Uploads use the storage port, content/size validation and EXIF/GPS stripping; use short-lived authorized media access where required.
+- Revocable uploaded images use Media's revalidated public-content URLs. Do not let Next's image optimizer/CDN cache bypass their current publication check; use `unoptimized` with supplied dimensions/responsive layout until an equally authorized optimization path exists. Static design assets may use ordinary image caching.
 - Cache the static app shell for offline rendering; do not cache private API, KYC, session or payment data. Show offline state and retry. Rider actions remain server-authoritative; countdowns use server timestamps and cannot be accepted/delivered offline.
 - PWA supports install prompt and weak connections. Data-saver disables autoplay and requests smaller media variants; all controls remain operable without motion.
 
@@ -196,6 +205,7 @@ Owner paths are under `packages/ui/src`; grouped names share the stated file unl
 ### Button — `packages/ui/src/primitives/Button.tsx`
 
 ```tsx
+'use client';
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'tertiary' | 'destructive';
@@ -213,26 +223,27 @@ const variants: Record<ButtonVariant, string> = {
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { variant = 'primary', size = 'md', loading = false, leftIcon, rightIcon, block = false, disabled, children, className = '', ...props }, ref,
+  { variant = 'primary', size = 'md', type = 'button', loading = false, leftIcon, rightIcon, block = false, disabled, children, className = '', ...props }, ref,
 ) {
   const sizes = {
     sm: 'min-h-10 rounded-[var(--r-sm)] px-3.5',
     md: 'min-h-12 rounded-[var(--r-md)] px-5',
     lg: 'min-h-12 rounded-[var(--r-md)] px-5',
   };
-  return <button {...props} ref={ref} disabled={disabled || loading} aria-busy={loading || undefined}
-    className={`inline-flex items-center justify-center gap-2 border-2 font-semibold focus-visible:outline-none focus-visible:ring-focus focus-visible:ring-primary active:scale-[.97] disabled:cursor-not-allowed disabled:opacity-50 transition-transform ${sizes[size]} ${variants[variant]} ${block ? 'w-full' : ''} ${className}`}>
-    {loading ? <span aria-hidden="true" className="size-4 animate-spin rounded-full border-2 border-current border-r-transparent" /> : leftIcon}
+  return <button {...props} type={type} ref={ref} disabled={disabled || loading} aria-busy={loading || undefined}
+    className={`inline-flex items-center justify-center gap-2 border-2 font-semibold focus-visible:outline-none focus-visible:ring-focus focus-visible:ring-primary motion-safe:active:scale-[.97] disabled:cursor-not-allowed disabled:opacity-50 motion-safe:transition-transform ${sizes[size]} ${variants[variant]} ${block ? 'w-full' : ''} ${className}`}>
+    {loading ? <span aria-hidden="true" className="size-4 motion-safe:animate-spin rounded-full border-2 border-current border-r-transparent" /> : leftIcon}
     {children}{!loading && rightIcon}
   </button>;
 });
 ```
 
-The production Button also provides the catalogue's polymorphic `as` adapter; the reference above shows the native-button branch.
+The production Button also provides the catalogue's polymorphic `as` adapter; this is the native branch, defaulting to `type="button"` (forms opt into `submit`). Under reduced motion the spinner is static and press scaling/transitions are absent; label/busy/disabled semantics remain. `lg` is a Q-27 provisional base-size alias, not an approved new metric.
 
 ### Input — `packages/ui/src/primitives/Input.tsx`
 
 ```tsx
+'use client';
 import { forwardRef, useId, type InputHTMLAttributes } from 'react';
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
@@ -242,17 +253,18 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
 };
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  { id, label, hint, error, required, className = '', ...props }, ref,
+  { id, label, hint, error, required, className = '', 'aria-describedby': describedBy, 'aria-invalid': invalid, ...props }, ref,
 ) {
   const generatedId = useId();
-  const inputId = id ?? props.name ?? generatedId;
+  const inputId = id ?? generatedId;
   const hintId = hint ? `${inputId}-hint` : undefined;
   const errorId = error ? `${inputId}-error` : undefined;
+  const descriptionIds = [...new Set([describedBy, hintId, errorId].filter(Boolean).join(' ').split(/\s+/).filter(Boolean))].join(' ') || undefined;
   const borderClass = error ? 'border-error' : 'border-border-strong focus:border-primary';
   return <div className="grid gap-1.5">
     <label htmlFor={inputId} className="font-medium text-text">{label}{required && <span aria-hidden="true"> *</span>}</label>
-    <input {...props} ref={ref} id={inputId} required={required} aria-invalid={Boolean(error)}
-      aria-describedby={[hintId, errorId].filter(Boolean).join(' ') || undefined}
+    <input {...props} ref={ref} id={inputId} required={required} aria-invalid={error ? true : invalid}
+      aria-describedby={descriptionIds}
       className={`min-h-12 rounded-[var(--r-md)] border-2 bg-surface px-3.5 py-2.5 text-text placeholder:text-muted outline-none focus-visible:ring-focus focus-visible:ring-primary-soft disabled:bg-surface-2 ${borderClass} ${className}`} />
     {hint && <p id={hintId} className="text-sm text-text-2">{hint}</p>}
     {error && <p id={errorId} role="alert" className="text-sm text-error">{error}</p>}
@@ -260,32 +272,37 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 });
 ```
 
-The Input example shows the native input branch; the shared field surface also supports the catalogue's text, tel, number, email, search, date, time and textarea controls with the same label/hint/error contract. Textarea uses the prototype's 96px minimum height and vertical resize.
+Input IDs use `useId` unless an explicit unique ID is supplied, **not `name`** (repeated names are valid). External descriptions are merged with hint/error IDs and caller invalid state is preserved. The same contract covers text/tel/number/email/search/date/time and textarea; textarea retains the prototype's 96px minimum height/vertical resize.
 
 ```tsx
 // packages/ui/src/primitives/controls.test.tsx
+import { expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Button } from './Button';
 import { Input } from './Input';
 
-it('uses semantic tokens and disables a loading button', async () => {
+it('Given loading, When clicked, Then semantic native Button stays disabled', async () => {
   const user = userEvent.setup();
   let clicked = false;
   render(<Button loading onClick={() => { clicked = true; }}>Save</Button>);
   const button = screen.getByRole('button', { name: 'Save' });
   expect(button).toHaveClass('bg-primary');
+  expect(button).toHaveAttribute('type', 'button');
   expect(button).toHaveAttribute('aria-busy', 'true');
   expect(button).toBeDisabled();
   await user.click(button);
   expect(clicked).toBe(false);
 });
 
-it('associates the label and error with the input', () => {
-  render(<Input id="name" label="Name" required error="Enter a name" />);
-  const input = screen.getByRole('textbox', { name: 'Name' });
+it('Given repeated names and external help, When rendered, Then IDs and descriptions remain correct', () => {
+  render(<><p id="help">Name</p><Input name="name" label="Shop" required hint="Name" error="Enter a name" aria-describedby="help" /><Input name="name" label="Provider" /></>);
+  const input = screen.getByRole('textbox', { name: /Shop/ });
+  expect(input.id).not.toBe(screen.getByRole('textbox', { name: 'Provider' }).id);
   expect(input).toHaveAttribute('aria-invalid', 'true');
-  expect(input).toHaveAttribute('aria-describedby', 'name-error');
+  expect(input).toHaveAttribute('aria-describedby', `help ${input.id}-hint ${input.id}-error`);
   expect(screen.getByRole('alert')).toHaveTextContent('Enter a name');
 });
 ```
+
+Acceptance/tests: Given a form, when a default Button is clicked, then it does not submit; explicit `type="submit"` does. Given reduced-motion emulation, when loading/pressing, then computed animation/transform is absent but loading remains accessible. Given a caller ID/invalid/description, when an Input hint/error changes, then label association and external descriptions survive without ID collision. RTL + axe cover keyboard/ref/disabled/error and Hindi/light/dark; Playwright checks real generated CSS, root hydration/error recovery, EN/HI parity and the browser-to-API smoke in [architecture](./architecture.md#verification-and-clean-checkout-ci). No app/component test is claimed executed in this spec-only repair.

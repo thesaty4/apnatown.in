@@ -12,10 +12,10 @@ Backend contract: [BE businesses](../be/businesses.md) · [Feature inventory](..
 | `/provider/[slug]` | S-CUST-07 | ISR; approved public business data, revalidate on profile/status change | Public | Self-canonical/index only while approved and live |
 | `/vendor/onboarding` | S-VEND-01 | SSR shell; form client island | Authenticated applicant/vendor | Noindex |
 | `/provider/onboarding` | S-PROV-01 | SSR shell; form client island | Authenticated applicant/provider | Noindex |
-| `/vendor/overview` | S-VEND-02 | SSR, private module summaries | Vendor, own business | Noindex |
-| `/provider/overview` | S-PROV-02 | SSR, private module summaries | Provider, own business | Noindex |
-| `/vendor/profile` | S-VEND-12 | SSR initial data; edit/preview client island | Vendor, own business | Noindex |
-| `/provider/profile` | S-PROV-09 | SSR initial data; edit/preview client island | Provider, own business | Noindex |
+| `/vendor/overview` | S-VEND-02 | SSR, private module summaries | Owned shop applicant/vendor; current capabilities | Noindex |
+| `/provider/overview` | S-PROV-02 | SSR, private module summaries | Owned provider applicant/provider; current capabilities | Noindex |
+| `/vendor/profile` | S-VEND-12 | SSR initial data; edit/preview client island | Owned shop applicant/vendor; editable profile capability | Noindex |
+| `/provider/profile` | S-PROV-09 | SSR initial data; edit/preview client island | Owned provider applicant/provider; editable profile capability | Noindex |
 | `/vendor/qr` | S-VEND-10 | SSR profile; local QR/print client island | Vendor, own approved business | Noindex |
 | `/provider/qr` | S-PROV-13 | SSR profile; local QR/print client island | Provider, own approved business | Noindex |
 | `/provider/analytics` | S-PROV-14 | SSR private data; charts client island | Provider, own business | Noindex |
@@ -26,11 +26,13 @@ Backend contract: [BE businesses](../be/businesses.md) · [Feature inventory](..
 
 Shared UX states come from `frontend-shared.md`; use the screen-specific states below. Match prototype layouts/tokens and screenshot behavior; do not expose OTPs or private documents.
 
+Owner API calls set `X-Business-Kind` from the vendor/provider route group; the server resolves ownership and capabilities. Do not retain one role's private query cache when changing business context. Provider-product fulfilment settings UX is an explicit BE decision gate; unconfigured delivery/pickup is not an implicit free service.
+
 ### S-CUST-06 — Shop profile
 
 - Screenshots: `d-customer-biz-b1.jpg`, `d-customer-biz-b3.jpg`, `d-customer-biz-b4.jpg`, `d-customer-biz-b5.jpg`.
 - Layout: mobile stacks cover/header/actions/tabs; tablet and desktop use the shared profile regions. Use `ShopCard`, `Rating`, `Tabs`, `CategoryPillRow`, `ShareSheet`, `FollowButton`.
-- Data: `GET /businesses/public/{slug}`; products, offers, media, reviews and follow state come from their owning modules.
+- Data: `GET /businesses/public/{slug}`; Products `GET /businesses/public/{slug}/products` and Services `GET /businesses/public/{slug}/services` provide results/counted pills; offers, media, reviews and follow state use their owning modules. Location-dependent distance/delivery eligibility is a no-store island, never cached in the shared ISR profile.
 - Special states: not live (`business.profile.notLive`), temporarily closed (`business.profile.closed`), outside delivery range (`business.profile.outsideRange`), no services/products (`business.profile.noServices`, `business.profile.noProducts`).
 - Interactions: render About, Products & Services, Offers, Gallery, Videos/Reels, Reviews and Contact & Location tabs. Show today's hours, distance, delivery/pickup eligibility and only applicable customer product/service segments; keep category pills/counts sticky. Call/WhatsApp/Directions/Share/QR use approved profile fields; Report listing opens the admin-owned reporting flow; Save, product cart and service enquiry use their owning modules. F-PF-008 is engagement-owned; F-PF-009/010 media panels remain media-videos owned.
 - Rules: F-PF-001, F-PF-002, F-PF-003, F-PF-004, F-PF-005, F-PF-006, F-PF-007, F-PF-011, F-PF-012, F-PF-013; BR-06/16/21; status includes text/icon, not colour alone. Follow G-01 for customer versus owner segment visibility.
@@ -48,7 +50,7 @@ Shared UX states come from `frontend-shared.md`; use the screen-specific states 
 - Rules: F-PF-001–007, F-PF-011/012; BR-06/08/21. Expertise is multi-select; each service still has one subcategory.
 - Given a provider is approved, when the profile loads, then only public profile and provider expertise data are shown.
 - Given the provider has no active services, when the services section loads, then its empty copy is shown without a booking or payment action.
-- Given a guest sends an enquiry, when login is required, then the return path restores this provider profile and the intended action.
+- Given a guest sends an enquiry, when the form is submitted, then Services accepts the guest flow without a fabricated login requirement; gated Save/Follow actions retain the profile return path.
 
 ### S-VEND-01 — Vendor onboarding wizard
 
@@ -78,7 +80,7 @@ Shared UX states come from `frontend-shared.md`; use the screen-specific states 
 
 - Screenshots: `d-vendor-vhome.jpg`, `m-vendor-vhome.jpg`.
 - Layout: `DashboardShell`, KPI/cards, charts, low-stock and pending-action regions.
-- Data: business status plus summary contracts from products/orders; do not add a second business metrics store.
+- Data: `GET /businesses/me/overview` composes Products/Orders summaries and business capabilities; do not add a second business metrics store. Each unavailable section has independent error/retry rather than a false zero.
 - Special states: not approved limited access (`business.dashboard.limitedAccess`); no low-stock/pending actions (`business.dashboard.noActions`).
 - Interactions: cards deep-link to their owning dashboard screens; retry summaries independently.
 - Rules: F-VD-002, BR-06; data is read-only here.
@@ -90,7 +92,7 @@ Shared UX states come from `frontend-shared.md`; use the screen-specific states 
 
 - Screenshots: `d-provider-shome.jpg`, `m-provider-shome.jpg`.
 - Layout: `DashboardShell`, status banner, KPI row, enquiries/chart and coming-soon panel.
-- Data: business status and service enquiries; analytics values only when Q-11 is resolved.
+- Data: `GET /businesses/me/overview` provides business status, real enquiry counts/latest records and source-owned rating/follower summaries. Q-11 gates view/conversion metrics only, not already recorded enquiry counts.
 - Special states: no enquiries (`business.dashboard.noEnquiries`); analytics unavailable (`business.analytics.unavailable`).
 - Interactions: open inbox via services; booking, quotation and payment remain placeholders with the feature flag off and no API mutation.
 - Rules: F-PV-006, F-PV-007, BR-06; no synthetic analytics. Reviews/followers/gallery/video screens in F-PV-006 are owned by reviews, engagement and media-videos.
@@ -102,9 +104,9 @@ Shared UX states come from `frontend-shared.md`; use the screen-specific states 
 
 - Screenshots: `d-vendor-vprofile.jpg`, `m-vendor-vprofile.jpg`.
 - Layout: desktop form beside sticky live preview; mobile stacked form/preview. Use `Input`, `Select`, `Uploader`, `MapView`, `Toggle`, `Button`.
-- Data: GET/PATCH `/businesses/me`; POST `/businesses/me/media` for logo/cover; category and map options from catalog/geo; media files use private `StoragePort`.
+- Data: GET/PATCH `/businesses/me` uses the full typed profile/settings DTO and one version; POST `/businesses/me/media` returns ready logo/cover asset IDs to attach on save. Category and map options come from Catalog/Geo; uploads use Media's private validated asset port.
 - Special states: pending profile-only edit (`business.profile.pendingEdit`); upload error (`business.profile.uploadError`); version conflict (`business.profile.versionConflict`).
-- Interactions: edit logo/cover, EN/HI name, category, description, contacts/social links, address/area/pin, weekly hours, temporary closure and vendor delivery/pickup settings; preview updates without publishing unconfirmed edits.
+- Interactions: edit logo/cover, EN/HI name, category, description, contacts/social links, address/area/pin, weekly hours, temporary closure and vendor delivery/pickup settings including pickup instructions; preview updates without publishing unconfirmed edits. Do not add a holiday editor absent from the source.
 - Rules: F-VD-003, BR-01/02/06/14; money in paise; coordinates optional.
 - Given an owner saves valid profile fields, when the API confirms, then the preview reflects the saved public DTO.
 - Given invalid contact data or a stale version, when save is attempted, then field values remain and a localized error appears.
@@ -114,7 +116,7 @@ Shared UX states come from `frontend-shared.md`; use the screen-specific states 
 
 - Screenshots: `d-provider-sprofile.jpg`, `m-provider-sprofile.jpg`.
 - Layout: same editor/preview pattern as S-VEND-12 with provider expertise/service-area controls.
-- Data: GET/PATCH `/businesses/me`; expertise is read/written through services; logo/cover use `/businesses/me/media`.
+- Data: GET/PATCH `/businesses/me`; expertise GET/PUT uses Services' independent `expertiseVersion`, not the business version; logo/cover use `/businesses/me/media`.
 - Special states: pending edit only (`business.profile.pendingEdit`); empty expertise (`business.profile.noExpertise`); version conflict (`business.profile.versionConflict`).
 - Interactions: update profile, hours, pin and service radius; expertise uses catalog-backed multi-select.
 - Rules: F-PV-002, BR-06/08.
@@ -150,7 +152,7 @@ Shared UX states come from `frontend-shared.md`; use the screen-specific states 
 
 - Screenshots: `d-provider-sanalytics.jpg`, `m-provider-sanalytics.jpg`.
 - Layout: KPI cards, views-vs-enquiries chart and enquiry-status mix, with accessible chart table fallback.
-- Data: read-only provider analytics contract; period shown by the approved contract (prototype shows 30 days). Event source and conversion formula are gated by Q-11.
+- Data: `GET /businesses/me/analytics?period=30d`; render real daily enquiry/status counts. Profile-view source and conversion formula remain Q-11-gated and render unavailable, not fabricated zeros.
 - Special states: empty analytics (`business.analytics.empty`).
 - Interactions: no data mutation; chart tooltips and equivalent table are keyboard accessible.
 - Rules: F-PV-006; no fabricated sample values in production.
@@ -179,7 +181,7 @@ Shared UX states come from `frontend-shared.md`; use the screen-specific states 
 - Interactions: save owner name; render login phone as non-editable pending Q-43; help and language actions route to their owners.
 - Rules: F-PV-006, BR-14.
 - Given a provider saves owner details, when the request is submitted, then cross-owner edits are denied and login phone is not persisted pending Q-43.
-- Given OTP security is changed, when the account UI submits, then it uses the auth-owned contract.
+- Given OTP security information is shown, when no change-phone/recovery action is approved under Q-43, then it remains informational and invokes no nonexistent mutation.
 - Given Hindi or keyboard navigation is used, when account settings render, then labels, focus and errors remain accessible.
 
 ## Feature components and shared components

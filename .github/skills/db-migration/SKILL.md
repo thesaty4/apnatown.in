@@ -1,13 +1,13 @@
 ---
 name: db-migration
-description: "Placeholder guidance for forward-only database migrations, valid now even though the database engine itself is not yet chosen."
+description: "Recipe for forward-only PostgreSQL/Prisma migrations, extension setup, safe recovery and isolated seed tests."
 ---
 
-# DB migration (placeholder guidance for the next stage)
+# DB migration
 
-The database engine is undecided (`docs/adr/0001-tech-stack.md`); this
-skill records the rules that apply regardless of engine
-(`database.instructions.md`). Full schema design is a later stage.
+Use PostgreSQL/Prisma as specified in `specs/_foundation/data-model.md`
+and the owning module's BE spec. Path rules:
+`.github/instructions/database.instructions.md`.
 
 ## Steps
 
@@ -15,26 +15,31 @@ skill records the rules that apply regardless of engine
    migration to change something that already shipped.
 2. One migration does one logical change (add a table, add a column,
    add an index) — don't bundle unrelated schema changes.
-3. Add indexes for every new filterable/sortable field used by
-   Explore/Search/admin lists in the same migration that adds the
-   field.
-4. Document a down-path (even if not auto-executed in production) for
-   every migration, and flag any migration that could lose data for
-   explicit human sign-off.
+3. Use the API-owned Prisma migration history; review generated SQL.
+   Enable required extensions with the migration role, never runtime
+   credentials. Add indexes supporting the specified filter/sort
+   combinations, not blindly one per field.
+4. Document forward repair/restore and data-loss risks. Destructive
+   changes require explicit human sign-off; do not promise an automatic
+   production down migration.
 5. Match naming conventions: `snake_case` plural table names,
    `snake_case` columns, `<entity>_id` foreign keys, and the exact enum
-   string values from `docs/project/05-domain-model.md`.
+   string values from the owning BE spec/shared schema.
 6. Soft-delete user-facing deletable records; reserve hard delete for
    explicit DPDP erasure requests, scoped narrowly.
+7. Apply to an empty isolated test database, verify extensions/FKs and
+   representative queries, then run the synthetic seed twice. Reject
+   production/unmarked targets before any reset; use the foundation's
+   `pnpm db:migrate`, `pnpm db:seed` and suite-provisioning contracts.
 
 ## Skeleton
 
 ```sql
--- 0007_add_delivery_otp_to_delivery_jobs.sql
-ALTER TABLE delivery_jobs ADD COLUMN delivery_otp_hash TEXT;
-ALTER TABLE delivery_jobs ADD COLUMN delivery_otp_attempts INT NOT NULL DEFAULT 0;
-CREATE INDEX idx_delivery_jobs_status ON delivery_jobs (status);
--- down: ALTER TABLE delivery_jobs DROP COLUMN delivery_otp_hash, DROP COLUMN delivery_otp_attempts; DROP INDEX idx_delivery_jobs_status;
+-- Example index for the Products owner-list query; check existing indexes first.
+CREATE INDEX idx_products_owner_page
+  ON products (business_id, created_at DESC, id DESC)
+  WHERE deleted_at IS NULL;
+-- Recovery: a new reviewed migration can drop this index; no row data is removed.
 ```
 
 ## Checklist
@@ -42,5 +47,6 @@ CREATE INDEX idx_delivery_jobs_status ON delivery_jobs (status);
 - [ ] Forward-only; no edits to a merged migration.
 - [ ] One logical change per migration.
 - [ ] Indexes added alongside new filterable/sortable fields.
-- [ ] Down-path documented; data-loss risk flagged for sign-off.
+- [ ] Forward repair/restore documented; data-loss risk flagged for sign-off.
 - [ ] Naming matches convention and shared status enum values.
+- [ ] Empty-DB migration and repeated synthetic seed tested in isolation.

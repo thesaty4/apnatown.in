@@ -1,11 +1,13 @@
-# ADR 0001: Tech stack (working assumption)
+# ADR 0001: Tech stack
 
 ## Status
 
-Proposed — this records the assumption in
-`docs/project/12-decisions-assumptions-open-questions.md` A-01; it is
-**not yet confirmed** by a human decision-maker. See that file's
-"Open questions" for the unresolved items this ADR depends on.
+Superseded for implementation by the user-directed
+[lean specs](../prompts/LEAN-SPECS.md) and
+[architecture foundation](../../specs/_foundation/architecture.md).
+Next.js/NestJS, PostgreSQL/Prisma and pg-boss without Redis are the
+current baseline. Provider, payment-topology and hosting decisions
+remain open; this alignment does not approve any of them.
 
 ## Context
 
@@ -17,22 +19,22 @@ providers are chosen yet.
 
 ## Decision
 
-Adopt, as a working assumption, a pnpm monorepo:
+Use the foundation's pnpm workspace/package and version-pinning contracts:
 
 - `apps/web`: Next.js (App Router), React, TypeScript strict, Tailwind
   CSS with design tokens from `docs/design-system.md`, TanStack Query,
   `react-hook-form` + `zod`, `next-intl` for EN/HI, Playwright + React
   Testing Library for tests.
-- `apps/api`: Node.js + TypeScript, layered (controller -> service ->
+- `apps/api`: NestJS + TypeScript, layered (controller -> service ->
   repository -> integration port, see `docs/architecture.md`), REST +
-  OpenAPI, `zod`/`class-validator` for DTOs, a queue for background
+  OpenAPI from shared `zod` DTOs, pg-boss plus transactional outbox for background
   jobs (order/notification/media processing).
 - `packages/shared`: types, zod schemas, enums/status maps, India
   formatters (money, date/time, distance, phone).
 - `packages/ui`: design-system components (`docs/design-system.md`).
-- Database: **undecided** — all data access goes through repository
-  interfaces (`database.instructions.md`) so the engine can be chosen
-  later without touching services or controllers.
+- Database: **PostgreSQL + PostGIS, pg_trgm, unaccent**, with Prisma
+  repository adapters and reviewed Prisma migrations. Ports isolate
+  persistence from domain logic; there is no multi-engine requirement.
 - Auth: mobile OTP + httpOnly cookie sessions.
 - Integrations as ports with fakes for tests: payments, SMS/OTP,
   WhatsApp Business, email, storage, maps, media processing
@@ -43,16 +45,15 @@ Adopt, as a working assumption, a pnpm monorepo:
 
 - Positive: strong typing end-to-end via shared zod schemas; clear
   module boundaries make per-module specs and `applyTo` globs
-  straightforward; repository/port abstractions defer the database and
-  provider decisions without blocking early feature specs and FE/BE
-  scaffolding.
+  straightforward; repository/integration ports support deterministic
+  tests and defer unchosen external providers without blocking the
+  local scaffold.
 - Negative: Next.js App Router and the chosen state/query libraries add
   learning overhead; a layered Node.js API is more boilerplate than a
   minimal framework.
-- Follow-up: a database engine ADR, a payments-provider ADR, and a
-  WhatsApp/SMS-provider ADR are required before those modules can be
-  implemented (see `docs/project/12-decisions-assumptions-open-questions.md`
-  Q-16, Q-01, Q-04, Q-17).
+- Follow-up: confirm the external providers and production policies
+  listed in the module specs before enabling their real adapters.
+  Local/test ports stay fake; no new database-engine decision is needed.
 
 ## Alternatives considered
 

@@ -18,7 +18,7 @@ Features: F-LC-001, F-LC-002, F-LC-003, F-LC-004, F-LC-005, F-SA-004 | Screens: 
 
 - Screenshots: `d-customer-home.jpg`, `m-customer-home.jpg`.
 - Layout: sticky home location bar; mobile sheet and desktop popover use shared `Sheet`.
-- Data: `GET /geo/cities`, `GET /geo/cities/{cityId}/areas`, `POST /geo/location/resolve`, `POST /geo/waitlist`.
+- Data: paginated `GET /geo/cities` and `GET /geo/cities/{cityId}/areas`, `POST /geo/location/resolve`, `POST /geo/waitlist`; the picker loads further options without silently truncating the city/area set.
 - Special states: location denied, GPS off/unavailable, outside service area; home also retains its own outside-area banner.
 - Interactions: “Use my current location”; choose an area; enter a six-digit PIN; select another city; dismiss without selecting a location. Keep browse-only location in active app-session state; persist coordinates only when explicitly saved as an address through `users` (Q-34).
 - Validation/rules: location is optional (BR-11); invalid PIN retains the form and shows field-level error; notify-me requires a valid phone.
@@ -53,7 +53,7 @@ Features: F-LC-001, F-LC-002, F-LC-003, F-LC-004, F-LC-005, F-SA-004 | Screens: 
 
 - Screenshots: `d-super-xgeo.jpg`, `m-super-xgeo.jpg`.
 - Layout: city cards with status, zone/area/admin/waitlist counts, open-city action, enable/disable, and Add city; status always includes icon and text.
-- Data: `GET/POST /geo/admin/cities`; assigned-admin counts come from the Admin contract, not geo-owned tables.
+- Data: keyset `GET /geo/admin/cities?cursor=&limit=` and POST creation; append further cards with shared pagination. Assigned-admin counts come from Admin, not geo-owned tables.
 - Special states: empty city list.
 - Interactions: Add city collects English and Hindi names (Q-36/G-12); enable/disable opens impact confirmation with the prototype copy; no direct toggle before confirmation.
 - Validation/rules: super admin only; city changes are audited; disabling stops new discovery/orders but open orders continue (BR-12).

@@ -33,9 +33,9 @@ Concrete rules, with ApnaTown examples. Product context:
   which transitions exist, not by `if (mode === 'delivery')` scattered
   through one handler.
 - **Repository ports:** `ProductRepository`, `OrderRepository`, etc. are
-  interfaces; services depend on the interface, the database engine
-  (undecided — `docs/adr/0001-tech-stack.md`) is swappable behind it
-  (`database.instructions.md`).
+  interfaces; services depend on them, not Prisma/PostgreSQL adapters.
+  PostgreSQL is selected; ports isolate persistence and support test
+  fakes, not speculative multi-database support (`database.instructions.md`).
 - **Shared schemas:** one zod schema per entity/DTO in
   `packages/shared`; both `apps/api` validation and `apps/web` forms
   import the same schema — never redefine a shape twice.

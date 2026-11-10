@@ -6,7 +6,7 @@ Features: AU5, AU8, AC1–AC5; F-AU-005, F-AU-008, F-AC-001, F-AC-002, F-AC-003,
 
 | Route | Screen ID | Rendering + reason | Auth / role | Index |
 |---|---|---|---|---|
-| `/account` | S-CUST-24 | SSR, private account menu | Customer session | `noindex` |
+| `/account` | S-CUST-24 | SSR guest menu or private account menu; no guest private-data fetch | Guest/customer | `noindex` |
 | `/account/profile` | S-CUST-25 | SSR data + client form | Customer session | `noindex` |
 | `/account/addresses` | S-CUST-26 | SSR data + client map/form island | Customer session | `noindex` |
 | `/account/preferences` | S-CUST-23 | SSR preferences + client toggles; notification channels owned by `notifications` | Customer session | `noindex` |
@@ -21,10 +21,10 @@ Features: AU5, AU8, AC1–AC5; F-AU-005, F-AU-008, F-AC-001, F-AC-002, F-AC-003,
 
 - Screenshots: `d-customer-account.jpg`, `m-customer-account.jpg`.
 - Layout: account sections for profile, addresses, payment methods, preferences, privacy, help and logout.
-- Data: `GET /users/me`; saved payment-method data/API is owned by `payments` and linked when its spec is written (Q-33).
+- Data: authenticated `GET /users/me`; saved payment-method capability/data is owned by [Payments](../../payments/be/payments.md) under Q-33. Guest account renders only the public menu and login action.
 - Special states: guest entry leads to login; do not show protected records before session validation.
 - Rules: BR-14; shared baseline states in [frontend-shared.md](../../_foundation/frontend-shared.md).
-- Privacy actions: data export request and account deletion are explicit actions; deletion requires a confirmation step, and `/goodbye` appears only after server-confirmed completion. Processing and final copy remain Q-32.
+- Privacy actions: `POST /users/me/data-requests`; poll its owner-scoped status. Completed export opens the prototype's Your data JSON sheet and Copy data action using the export endpoint; show preparing/blocked/failed/expired with retry, never a blank successful export. Deletion requires the prototype confirmation that profile/addresses/bookmarks are erased but order records are retained. `/goodbye` appears only after server-confirmed completion; Q-32 policy blocks are visible, with no invented completion time.
 - Acceptance:
   - Given a signed-in customer, when account opens, then only their own account links and data are shown.
   - Given a guest opens account, when the page loads, then login is offered without exposing private data.
@@ -33,7 +33,7 @@ Features: AU5, AU8, AC1–AC5; F-AU-005, F-AU-008, F-AC-001, F-AC-002, F-AC-003,
 ### S-CUST-25 — Profile (`/account/profile`)
 
 - Screenshots: `d-customer-profile.jpg`, `m-customer-profile.jpg`.
-- Data: `GET/PATCH /users/me`; profile completion is the same saved profile contract.
+- Data: `GET/PATCH /users/me`; profile completion is the same saved profile contract. The verified login phone is read-only until Auth's number-change verification question is resolved; generic profile PATCH cannot silently change login identity.
 - Special states: invalid name/email; first-login completion may be skipped as stated by F-AU-005.
 - Interactions: local form state; submit explicit allow-listed values.
 - Acceptance:
@@ -43,12 +43,13 @@ Features: AU5, AU8, AC1–AC5; F-AU-005, F-AU-008, F-AC-001, F-AC-002, F-AC-003,
 ### S-CUST-26 — Addresses (`/account/addresses`)
 
 - Screenshots: `d-customer-addresses.jpg`, `m-customer-addresses.jpg`.
-- Data: address CRUD endpoints; `geo` resolves city/area options and map selection.
+- Data: address CRUD endpoints include `version`; send `expectedVersion` for edit/default/delete. `geo` resolves city/area options and map selection. A conflict preserves the draft and offers refresh/review, not an automatic overwrite; refresh checkout's address/quote after a confirmed change.
 - Special states: empty address book.
 - Interactions: map pin, landmark, PIN, label, default; keyboard-accessible map controls and form alternative.
 - Acceptance:
   - Given no saved addresses, when opened, then the empty action leads to add-address form.
   - Given the user selects a pin and valid address fields, when saved, then the address appears in their list and is not exposed to another account.
+  - Given another tab changes an address, when a stale edit/default/delete is submitted, then the conflict is visible and the latest address is not overwritten.
   - Given Hindi or dark theme, when editing, then fields and map controls remain readable and wrap without truncation.
 
 ### S-CUST-23 — Consent and preferences (`/account/preferences`)
@@ -65,7 +66,7 @@ Features: AU5, AU8, AC1–AC5; F-AU-005, F-AU-008, F-AC-001, F-AC-002, F-AC-003,
 
 - Screenshots: use the prototype's consent/banner pattern; no dedicated screenshot is listed for this feature.
 - Data: anonymous or signed-in consent endpoint; anonymous identity and purpose categories remain Q-31.
-- Interactions: record only the explicit purposes supplied by the approved copy; do not add analytics/advertising choices without approval.
+- Interactions: record only the explicit purposes supplied by the approved copy and send its current `noticeVersion` for a grant; do not add analytics/advertising choices without approval. Withdrawal remains possible when notice copy changes.
 - Acceptance:
   - Given a visitor changes a consent choice, when saved, then the choice is recorded with its purpose and timestamp.
   - Given consent persistence fails, when the visitor interacts, then the UI reports the failure and does not display a success-shaped confirmation.
@@ -73,7 +74,7 @@ Features: AU5, AU8, AC1–AC5; F-AU-005, F-AU-008, F-AC-001, F-AC-002, F-AC-003,
 ### S-CUST-29 — Account deleted (`/goodbye`)
 
 - Screenshots: `d-customer-bye.jpg`, `m-customer-bye.jpg`.
-- Data: reached only after the backend confirms deletion processing; lifecycle policy remains Q-32.
+- Data: reached only after the backend confirms deletion processing. Keep the deletion completion capability in the active flow's memory and use `GET /users/data-requests/{requestId}/completion` if session revocation precedes the final poll; never put it in a URL/browser storage. Clear private caches and capability after confirmed completion. Reload without proof shows no invented deletion success.
 - Acceptance:
   - Given deletion has not completed, when the user requests it, then the UI does not claim that the account is already deleted.
   - Given deletion is confirmed, when the user reaches this page, then no private profile data is rendered.
@@ -87,5 +88,5 @@ Features: AU5, AU8, AC1–AC5; F-AU-005, F-AU-008, F-AC-001, F-AC-002, F-AC-003,
 ## Tests
 
 - Component: profile validation, address empty/default/delete states, consent toggles, keyboard/map alternative, long Hindi.
-- E2E: J12 profile completion; J13 locale/theme preference; account privacy and consent journeys when completion behavior is approved.
+- E2E: J12 profile completion; J13 locale/theme preference; Your data/Copy data, owner-denied/expired export, blocked deletion, completion after session revocation and consent withdrawal. Destructive production deletion remains Q-32-gated.
 - Visual: 360px and desktop, EN/HI, light/dark.

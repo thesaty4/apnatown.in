@@ -13,7 +13,7 @@ Backend contract: [BE cart-checkout](../be/cart-checkout.md) · [Feature invento
 | `/checkout/success?attemptId={id}` | S-CUST-12 | SSR owner-checked attempt summary | Customer who owns the attempt | `noindex` |
 | `/account/addresses` | S-CUST-26 | Owned and specified by Users; checkout links to it for add/edit | Customer | `noindex` |
 
-Use the shared standard UX states from [frontend-shared.md](../../_foundation/frontend-shared.md); private routes never enter public caches. Price data is server-confirmed and refreshed after every cart, address, mode, coupon or payment-method change.
+Use [frontend-shared.md](../../_foundation/frontend-shared.md) states; private routes never enter public/service-worker caches. Flat errors are read as `code/message_key/status/details/correlationId`. Money is safe-integer paise JSON, not numeric strings or rupee floats. Refresh server quotes after input changes; never reuse an old quote ID with changed cart/address inputs.
 
 ## Screens
 
@@ -21,37 +21,46 @@ Use the shared standard UX states from [frontend-shared.md](../../_foundation/fr
 
 - Screenshots: `d-customer-cart.jpg`, `m-customer-cart.jpg`.
 - Layout: business-grouped product lines; desktop two-column cart/summary, mobile stacked groups with a clear checkout action.
-- Data: `GET /cart`; line add/update/remove/save/restore and `POST /cart/quote` from the [BE spec](../be/cart-checkout.md).
-- Special states: empty cart; below delivery minimum; invalid coupon; saved-for-later list; a shop unavailable or outside delivery range.
-- Interactions: quantity stepper (min 1, max 10/current stock), save for later, restore, remove, coupon apply, proceed to checkout. Enter applies the coupon; stepper buttons have accessible labels.
+- Data: `CartDTO` from `GET /cart`; mutations send cart/line versions. Add uses `{productId,variantId:null|uuid,quantity,expectedCartVersion}`; no synthetic base-variant ID. Catalog actions/reorder use this same contract.
+- Special states: empty cart; invalid/unconfigured coupon or offer pricing; saved lines; unavailable shop; label removed/selection required; shared product stock exhausted.
+- Interactions: quantity stepper (1–10/current stock), save/restore/remove, coupon Apply and proceed. Variant labels share product stock; a product without labels has no empty selector, while a nonempty label set requires an active selection. Enter applies coupon; local input retains focus on validation/refetch.
 - Rules: F-CK-001/F-CK-009, BR-01/17/19. Show GST as included; delivery appears at checkout. Never show client-calculated totals as final.
 - Acceptance:
   - Given no active lines, when the cart opens, then the localized empty state links to shopping.
   - Given a customer changes quantity or saves/removes a line, when the server confirms, then grouped totals refresh without exceeding stock or quantity limits.
   - Given a coupon is invalid or below minimum, when applied, then the cart remains unchanged and shows a localized error.
-  - Given a guest proceeds to checkout, when OTP login succeeds, then the app calls `POST /cart/merge-guest`, shows any clipped/unavailable lines for review, and returns to checkout (J12/Q-70).
+  - Given a guest proceeds to checkout, when OTP login rotates Auth's cookie, then the independent HttpOnly guest-cart proof survives; the app refreshes CSRF, calls `POST /cart/merge-guest`, shows clipped/unavailable lines for review, and returns to checkout (J12/Q-70). Failed/lost merge responses retry the same key without discarding the guest cart or duplicating quantities.
+  - Given a variantless product and two labels of another product, when added/saved/restored, then line keys remain product + nullable variant and server stock conflicts do not create phantom base variants or label-specific stock.
+  - Given an oversized coupon, when the quote arrives, then the UI renders the server-capped discount/nonnegative totals and never recomputes an allocation.
 
 ### S-CUST-11 — Checkout (`/checkout`)
 
 - Screenshots: `d-customer-checkout.jpg`, `m-customer-checkout.jpg`.
 - Layout: address selection, one section per shop, per-shop delivery/pickup radio controls, item/fee breakdown, payment methods and total; sticky order action on mobile and desktop summary column.
-- Data: `POST /cart/quote`, Users address read contract, `POST /checkout/attempts`, `GET /checkout/attempts/{attemptId}`, retry endpoint. The browser never supplies payable totals or trusts a payment redirect as confirmation.
-- Special states: login required; no saved address; out of delivery range; minimum not met; pickup unavailable; shop/stock changed; processing; payment failed with retry or enabled cash fallback.
-- Interactions: choose/change saved address; add/edit opens Users' `/account/addresses`; map selection has keyboard/form alternative. Select delivery or pickup independently per shop. Select UPI/card/net banking/wallet/cash once for checkout; cash is labelled by each shop's mode. Payment failure offers retry or cash only when enabled. Prevent duplicate submit while pending; Esc/back never reports success.
-- Rules: F-CK-002–007/F-CK-009; BR-01/03/04/17/19/21; ST-payment. Any shop issue blocks confirmation until corrected or removed. Geo computes fee; shop minimum/radius and pickup availability come from Businesses. Q-69/Q-71 remain open.
+- Data: `CheckoutQuoteDTO` from `/cart/quote` + Users address/version; submit `{quoteId,expectedCartVersion,expectedAddressVersion?,paymentMethod}`. Observe `CheckoutAttemptDTO` with owner GET polling after browser return/reconnect; retry sends `{quoteId,paymentMethod,expectedVersion}` and a new operation key only when allowed.
+- Special states: login/no address/range/minimum/pickup issues; stale quote/cart/address; disabled method; verified failure; pending/unknown result; captured-but-unplaced `compensating`, `compensated`, `reconciliation_required`.
+- Render `ready=false`, per-mode availability/reasons and unknown null fees/totals explicitly; no confirmation CTA or ₹0 “free delivery” placeholder until the server supplies a fully executable quote.
+- Interactions: address management remains Users-owned; map has keyboard/form alternative. Choose mode per shop and payment once. Preserve attempt ID through navigation/reload, not credentials. While processing, show the pinned quote; editing inputs requires explicit re-review and cannot amend that attempt's charged inputs. Lost responses retry the same key/payload or read status, not create another attempt.
+- Rules: F-CK-002, F-CK-003, F-CK-004, F-CK-005, F-CK-006, F-CK-007, F-CK-009; BR-01, BR-03, BR-04, BR-17, BR-19, BR-21; ST-payment. Explain fee source: shop flat delivery / ApnaTown slab / zero pickup. Read available methods and `allowedActions` from server; approval and payment flags are rechecked there.
+- Financial recovery: Retry/cash fallback is disabled during pending/unknown capture or compensation. New quote/amount requires confirmation; no silent changed-address retry. Captured/unplaced shows recovery status and support, not “No money was taken”, placed orders or an invented refund ETA. Esc/back never confirms/cancels a provider charge.
 - Acceptance:
   - Given two eligible shops, when checkout loads, then each has its own mode choice and the total explains the number of resulting orders.
   - Given an address is outside a shop's range or a delivery minimum is unmet, when the quote refreshes, then the issue is labelled and self-pickup is offered only if enabled.
+  - Given a provider's product fulfilment is unconfigured, when its quote loads, then neither free delivery/default rider nor disabled pickup is preselected; the blocking mode issue offers correction/removal, not a payment CTA.
   - Given Hindi or dark theme is active, when shop names, address details and fee rows render, then long text wraps and status is conveyed by text/icon as well as color.
   - Given the customer is offline, has no permission/session, or the server rejects a stale quote, when submitting, then no success state appears and retry/correction is actionable.
   - Given a payment redirect returns, when Payments has not verified success, then checkout remains pending and does not show orders as placed.
+  - Given cart/address edits, expiry or stock loss during payment, when capture is confirmed, then the app shows compensation/reconciliation without a fabricated order ID and keeps the cart for correction.
+  - Given retry and cash fallback are tapped in two tabs, when only one server round wins, then both converge on its authoritative result and late old success never changes cash to paid.
+  - Given the result is unknown or a payment flag is disabled, when the failure panel renders, then disallowed actions stay disabled with EN/HI explanation; refreshing cannot bypass the gate.
 
 ### S-CUST-12 — Order placed (`/checkout/success`)
 
 - Screenshots: `d-customer-done.jpg`, `m-customer-done.jpg`.
 - Layout: success state and one order card per shop with shop name, order ID, mode, amount and track link.
 - Data: `GET /checkout/attempts/{attemptId}`; show only orders owned by the authenticated customer. Do not expose delivery OTP or pickup code in this response/screen; Orders/Delivery deliver codes through their approved channel.
-- Special states: attempt still processing; attempt not found/not owned; no recent order.
+- Special states: pending/failed/expired/compensating/reconciliation attempt; not found/not owned; no recent order. Only `status='placed'` with committed per-shop IDs renders success.
+- If an old-round late charge needs recovery after the replacement placed, show its separate compensation state alongside the real order cards; do not erase those orders or label the extra charge as their payment.
 - Interactions: track each order separately; continue shopping. Back/refresh re-reads the owner-checked attempt and cannot create orders.
 - Rules: F-CK-008, BR-03/05; per-shop status/transition details belong to Orders/Delivery.
 - Acceptance:
@@ -75,3 +84,5 @@ Use the shared standard UX states from [frontend-shared.md](../../_foundation/fr
 - Component: grouped cart, quantity boundaries, coupon errors, per-shop modes, address selection, failure/retry/cash fallback, pending-vs-success guard, long Hindi, dark mode and offline state.
 - Journey: J1 two-shop checkout through success/tracking; J12 login gate returning to checkout; payment failure followed by retry or enabled cash fallback.
 - Visual: required desktop/mobile screenshots in light and dark, English and Hindi; compare with the named prototype screenshots.
+- Map all acceptance bullets to scenarios: null/required variant identity, shared stock errors, fee-source labels, zero/oversized coupon, stale quote/address during provider handoff, timeout/reload/late success, blocked COD race and compensation without an order.
+- Negatives/a11y: foreign attempt/address, expired session, malicious product/coupon text rendered safely, offline submit, duplicate submit, axe, keyboard payment radios/stepper/dialog focus, Hindi at 360px, dark/reduced-motion states. Never cache or log addresses, codes, handoff secrets or raw provider payloads.

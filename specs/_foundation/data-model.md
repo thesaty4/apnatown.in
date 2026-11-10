@@ -3,20 +3,79 @@
 ## Contents
 
 - [Conventions](#conventions)
+- [JSON and concurrency representations](#json-and-concurrency-representations)
+- [Starter invariant error catalogue](#starter-invariant-error-catalogue)
 - [Ownership and relationships](#ownership-and-relationships)
 - [Hot-query indexes](#hot-query-indexes)
+- [Shared runtime persistence](#shared-runtime-persistence)
+- [Migrations, seeds and isolation](#migrations-seeds-and-isolation)
+- [Persistence acceptance](#persistence-acceptance)
 
 ## Conventions
 
 - PostgreSQL is the target; enable PostGIS, `pg_trgm`, `unaccent`, and full-text search as recorded in [architecture](./architecture.md).
-- Tables and columns use `snake_case`; primary keys are application-generated UUIDv7. Foreign keys are explicit and indexed where they serve a query.
+- Tables and columns use `snake_case`; surrogate primary keys are application-generated UUIDv7. Module-defined natural/composite keys (settings keys, join tables) remain as specified. Foreign keys are explicit and indexed.
 - Store instants as `timestamptz` in UTC; format IST only at the API/UI boundary.
 - Store all money as `bigint` paise; never use floating point for amounts. Serialize through the shared `Money` value object.
 - Use `created_at` and `updated_at` on mutable records. Soft-delete only user/content records that need reversible hiding; immutable audit records and financial facts are not soft-deleted.
 - Use `version` for optimistic concurrency on mutable aggregates with competing writes (inventory, orders, approval records); transition writes include the expected version/current state.
 - Localized names use `name_en` and `name_hi`; localize display copy through message keys, not duplicate free-text columns.
 - Unique constraints encode identity (slugs, normalized suggestion names within category, role/user membership, user-target interactions). Check constraints enforce non-negative paise/stock and valid enum-like values where practical.
-- A module owns every domain table listed below. `outbox_events` and `idempotency_keys` are shared runtime infrastructure, specified once by the shared persistence layer; pg-boss owns its internal queue tables.
+- A module owns every domain table listed below. Shared runtime tables are defined below; pg-boss owns its versioned internal queue schema, not domain state.
+
+## JSON and concurrency representations
+
+These are shared Zod/OpenAPI/client primitives (`@apnatown/shared/wire`), not different wire formats per repository.
+
+| Value | Storage / domain | JSON/OpenAPI / validation |
+|---|---|---|
+| Money (`pricePaise`, `totalPaise`, module `*_paise` fields) | PostgreSQL `bigint`; `Money` uses bigint/exact integer arithmetic internally, with the module's rounding rule | **JSON number, integer paise**, `type: integer`, bounds `0..9007199254740991` for non-negative amounts. Signed adjustments only where the module explicitly allows them, within the safe-integer range. Never BigInt, decimal rupees or a decimal string on the wire. |
+| IDs | UUIDv7 for surrogate/domain/event IDs | Canonical UUID strings (`format: uuid`), never numbers. Slugs/natural keys stay separate named strings; seed aliases such as `grocery` are not UUIDs. Do not infer authorization/time from an ID. |
+| Version | PostgreSQL `int`, initially 1 | JSON integer `1..2147483647`. Return the **current** `version`; mutation `expectedVersion` must match it. CAS predicate includes ID + current version + allowed state; one winner writes `version + 1`, losers return the module's version/state conflict. Do not wrap at overflow or silently increment on a failed write. |
+| Timestamp | UTC `timestamptz` | ISO-8601 UTC strings ending in `Z`; never locale strings, Date instances or numeric epochs unless a module explicitly names an epoch field. Preserve DB precision in sort/cursor keys. Display IST through shared formatters. |
+| Counts / limits | Integer DB values | Non-negative safe JSON integers; HTTP list default 20, cap 50 unless lower. Explicit internal worker batches may use their documented bound (e.g. 500), never that bound on a public list. Validate overflow, not silent `bigint` rounding. |
+| Cursor | Stable ordered key tuple with UUID tie-breaker, filter/sort fingerprint and schema version; Reels also retains its module-defined frozen session/asOf/seed | Opaque base64url string, authenticated by the server; tuple values are JSON-safe strings/integers, not raw BigInt. Bound length/decode depth; validate signature, version, endpoint, sort and authorized scope. No raw precise location/PII: signing is not encryption. Bad/mismatched cursor -> validation error, never offset fallback. |
+| Page / nulls | Owning repository's keyset query | `{items, nextCursor: string\|null}` plus `hasMore` only where documented; end is `null`, not an empty/guessed cursor. Omit only optional fields; use `null` for explicitly nullable fields. No `undefined`, NaN or Infinity in stored/replayed DTOs. |
+
+`Money.toPaiseNumber()` checks bounds **before** conversion; inbound schemas use `.int().safe()` plus the field's sign/range. Arithmetic, sums, coupon allocation and audit/outbox serialization must all use these conversions. Never register `BigInt.prototype.toJSON` or stringify every bigint globally: that would silently change module DTOs.
+An out-of-wire-range persisted/result value fails safely with a logged, redacted `COMMON_INTERNAL_ERROR` 500; invalid client amounts fail the declared validation code. No rounding/truncation/string fallback. This is a technical JSON-safety limit, not a new product price cap.
+Successful mutation DTOs and idempotent replays have the same schema; capability-bearing fields may be freshly issued only under the explicit secret-excluded replay policy below. The flat error envelope is defined in [backend-shared](./backend-shared.md#error-contract). OpenAPI examples, HTTP tests, generated clients, audit JSON and outbox payloads must agree.
+
+## Starter invariant error catalogue
+
+Shared starting vocabulary, not new product rules or aliases overriding a module's documented code. Module DTOs/error catalogues are authoritative for existing endpoints.
+
+Existing common spellings remain registered: `VALIDATION_ERROR` is 400 /
+`errors.common.validationFailed`, `FORBIDDEN` is 403 /
+`errors.common.forbidden`, `AUTH_REQUIRED` is 401 /
+`errors.auth.required`, and the existing `RATE_LIMITED` is 429 /
+`errors.common.rateLimited` with `Retry-After`. They use the same flat envelope; an undeclared
+catalogue code is a configuration/test failure, not a guessed 200/500 mapping.
+
+| Rule | Starter code | HTTP | Message key |
+|---|---|---:|---|
+| BR-01 | `COMMON_MONEY_INVALID` | 422 | `errors.money.invalid` |
+| BR-02 | No error; UTC/IST formatting contract | — | — |
+| BR-03 | `CHECKOUT_SPLIT_INVALID` | 409 | `errors.checkout.splitInvalid` |
+| BR-04 | `ORDERS_INVALID_TRANSITION` | 409 | `errors.orders.invalidTransition` |
+| BR-05 | `DELIVERY_CODE_INVALID` | 422 | `errors.delivery.codeInvalid` |
+| BR-06 | `USERS_APPROVAL_REQUIRED` | 403 | `errors.users.approvalRequired` |
+| BR-07 | `CATALOG_CATEGORY_FORBIDDEN` | 403 | `errors.catalog.categoryForbidden` |
+| BR-08 | `SERVICES_SUBCATEGORY_REQUIRED` | 422 | `errors.services.subcategoryRequired` |
+| BR-09 | `REVIEWS_NOT_ELIGIBLE` | 403 | `errors.reviews.notEligible` |
+| BR-10 | `MEDIA_VIDEO_NOT_PUBLISHED` | 409 | `errors.media.videoNotPublished` |
+| BR-11 | `COMMUNICATIONS_CONSENT_REQUIRED` | 422 | `errors.communications.consentRequired` |
+| BR-12 | `ADMIN_SCOPE_FORBIDDEN` | 403 | `errors.admin.scopeForbidden` |
+| BR-13 | `ADMIN_ROLE_IN_USE` | 409 | `errors.admin.roleInUse` |
+| BR-14 | `USERS_DATA_REQUEST_REQUIRED` | 409 | `errors.users.dataRequestRequired` |
+| BR-15 | `SEARCH_FILTER_INVALID` | 400 | `errors.search.filterInvalid` |
+| BR-16 | `MEDIA_SURFACE_CONSENT_REQUIRED` | 422 | `errors.media.surfaceConsentRequired` |
+| BR-17 | `OFFERS_NOT_ACTIVE` | 409 | `errors.offers.notActive` |
+| BR-18 | No error; counts and results share one filter predicate | — | — |
+| BR-19 | `CHECKOUT_COUPON_INVALID` | 422 | `errors.checkout.couponInvalid` |
+| BR-20 | `ORDERS_REFUND_WINDOW_CLOSED` | 409 | `errors.orders.refundWindowClosed` |
+| BR-21 | `AUTH_REQUIRED` | 401 | `errors.auth.required` |
+| BR-22 | No API error; UI always pairs status text/icon with color | — | — |
 
 ## Ownership and relationships
 
@@ -25,22 +84,24 @@ This ERD is an ownership/relationship map, not a column specification. Each tabl
 ```mermaid
 erDiagram
     %% auth
-    users ||--o{ sessions : authenticates
-    users ||--o{ otp_challenges : verifies
+    users |o--o{ sessions : authenticates
 
     %% users and geo
     users ||--o{ user_roles : has
     users ||--o{ addresses : saves
-    users ||--o{ consents : records
+    users |o--o{ consents : records
+    users ||--o{ data_requests : requests
     cities ||--o{ areas : contains
     cities ||--o{ zones : serves
     zones ||--o{ zone_fee_slabs : prices
-    cities ||--o{ service_area_waitlist : receives
-    areas ||--o{ businesses : locates
+    cities |o--o{ service_area_waitlist : receives
+    areas |o--o{ businesses : locates
     users ||--o{ businesses : owns
 
     %% catalog and listings
     categories ||--o{ subcategories : groups
+    categories ||--o{ category_relations : source
+    categories ||--o{ category_relations : related_target
     keyword_mappings ||--o{ keyword_mapping_terms : matches
     keyword_mappings ||--o{ keyword_mapping_targets : targets
     categories ||--o{ products : classifies
@@ -53,34 +114,74 @@ erDiagram
     businesses ||--o{ products : lists
     businesses ||--o{ services : lists
     businesses ||--o{ provider_expertise : declares
+    businesses ||--o| provider_expertise_versions : versions_expertise
     subcategories ||--o{ provider_expertise : expertise
     businesses ||--o{ business_hours : schedules
     businesses ||--o{ business_documents : owns
-    subcategories ||--o{ subcategory_suggestions : suggested
-    categories ||--o{ keyword_mappings : maps
+    media_assets |o--o{ businesses : logo_asset
+    media_assets |o--o{ businesses : cover_asset
+    media_assets ||--o{ business_documents : asset
+    categories ||--o{ subcategory_suggestions : proposed_under
+    businesses ||--o{ subcategory_suggestions : submits
+    users ||--o{ subcategory_suggestions : submitted_by
+    subcategories |o--o{ subcategory_suggestions : approved_target
+    subcategories |o--o{ subcategory_suggestions : merged_target
+    categories |o--o{ keyword_mapping_targets : category_target
+    subcategories |o--o{ keyword_mapping_targets : subcategory_target
 
     %% commerce
-    users ||--o{ carts : owns
+    users |o--o{ carts : owns
     carts ||--o{ cart_lines : contains
+    products ||--o{ cart_lines : selects
+    product_variants |o--o{ cart_lines : labels
+    carts ||--o{ checkout_quotes : quotes
+    users |o--o{ checkout_quotes : owns
+    addresses |o--o{ checkout_quotes : pins_revision
+    checkout_quotes ||--o{ checkout_attempts : confirms
     businesses ||--o{ offers : publishes
     offers ||--o{ offer_targets : targets
-    offers ||--o{ coupons : enables
+    businesses |o--o{ promotion_placements : promotes
+    media_assets |o--o{ promotion_placements : banner
+    cities |o--o{ promotion_placements : scopes
+    areas |o--o{ promotion_placements : scopes
+    billing_purchases |o--o| promotion_placements : funds
+    promotion_placements |o--o{ billing_purchases : prepares
+    businesses ||--o{ billing_purchases : buys
     users ||--o{ orders : places
     businesses ||--o{ orders : fulfills
     orders ||--|{ order_items : contains
     orders ||--o{ order_status_history : records
-    products ||--o{ order_items : ordered
-    checkout_attempts ||--o{ payment_attempts : funds
-    orders ||--o{ payment_attempts : paid_by
+    products |o--o{ order_items : ordered
+    product_variants |o--o{ order_items : preserves_label
+    orders ||--o{ order_adjustments : adjusts
+    order_items ||--o| order_stock_allocations : reserves
+    orders ||--o{ order_stock_allocations : allocates
+    checkout_attempts ||--o{ order_stock_allocations : reservation
+    checkout_attempts ||--o{ order_stock_operations : deduplicates
+    products ||--o{ order_stock_allocations : stocks
+    product_variants |o--o{ order_stock_allocations : labels
+    checkout_attempts |o--o{ payment_attempts : funds
+    checkout_quotes |o--o{ payment_attempts : binds
+    billing_purchases |o--o{ payment_attempts : purchases
+    payment_charges |o--o{ payment_attempts : allocates
+    orders |o--o{ payment_attempts : paid_by
+    checkout_attempts ||--o{ payment_compensations : recovers
+    checkout_quotes ||--o{ payment_compensations : binds
+    payment_attempts ||--o| payment_compensations : compensates
     orders ||--o{ refunds : refunded_by
     payment_attempts ||--o{ refunds : processes
-    payment_attempts ||--o{ earnings : records
-    orders ||--o{ earnings : reconciles
+    payment_attempts |o--o{ earnings : records
+    orders |o--o{ earnings : reconciles
     businesses ||--o{ earnings : earns
     businesses ||--o{ business_subscriptions : subscribes
-    payment_attempts ||--o| business_subscriptions : activates
+    payment_attempts |o--o| business_subscriptions : activates
     orders ||--o| delivery_jobs : delivered_by
-    users ||--o{ delivery_jobs : rides
+    rider_profiles |o--o{ delivery_jobs : rides
+    users ||--o| rider_profiles : applies
+    rider_profiles ||--o{ rider_documents : documents
+    media_assets ||--o{ rider_documents : asset
+    delivery_jobs ||--o{ delivery_offers : offers
+    orders ||--o{ delivery_codes : verifies
     orders ||--o{ order_cases : resolves
     order_cases ||--o{ order_case_events : records
     order_case_events ||--o{ order_case_attachments : contains
@@ -88,10 +189,11 @@ erDiagram
 
     %% trust and media
     users ||--o{ reviews : writes
-    businesses ||--o{ reviews : receives
+    businesses |o--o{ reviews : receives
     businesses ||--o{ videos : publishes
     videos ||--o{ video_links : links
-    videos ||--o{ media_assets : uses
+    media_assets |o--o{ videos : file_asset
+    media_assets |o--o{ videos : thumbnail_asset
     users ||--o{ follows : follows
     businesses ||--o{ follows : followed
     users ||--o{ likes : likes
@@ -102,14 +204,18 @@ erDiagram
     %% operations
     users ||--o{ notifications : receives
     users ||--o{ campaigns : creates
+    campaign_audience_snapshots ||--o{ campaign_audience_members : contains
+    campaign_audience_snapshots ||--o{ campaign_reviews : binds
+    campaign_reviews ||--o| campaigns : confirms
     campaigns ||--o{ campaign_recipients : targets
-    users ||--o{ audit_logs : acts
+    users |o--o{ audit_logs : acts
     users ||--o| admin_accounts : is
     roles ||--o{ admin_accounts : templates
     admin_accounts ||--o{ admin_permissions : holds
     admin_accounts ||--o{ admin_scopes : assigned
     roles ||--o{ role_permissions : grants
-    settings ||--o{ feature_flags : configures
+    users ||--o{ settings : updates
+    users ||--o{ feature_flags : updates
 ```
 
 | Owner | Tables |
@@ -117,27 +223,30 @@ erDiagram
 | `auth` | `otp_challenges`, `sessions` |
 | `users` | `users`, `user_roles`, `addresses`, `consents`, `data_requests` |
 | `geo` | `cities`, `areas`, `zones`, `zone_fee_slabs`, `service_area_waitlist` |
-| `catalog` | `categories`, `subcategories`, `subcategory_suggestions`, `keyword_mappings`, `keyword_mapping_terms`, `keyword_mapping_targets` |
+| `catalog` | `categories`, `subcategories`, `category_relations`, `subcategory_suggestions`, `keyword_mappings`, `keyword_mapping_terms`, `keyword_mapping_targets` |
 | `businesses` | `businesses`, `business_hours`, `business_settings`, `business_documents` |
 | `products` | `products`, `product_variants`, `inventory`, `product_category_pills` |
-| `services` | `services`, `provider_expertise`, `enquiries` |
+| `services` | `services`, `provider_expertise`, `provider_expertise_versions`, `enquiries` |
 | `search` | No source-of-truth tables; reads owning module data |
-| `offers` | `offers`, `offer_targets`, `coupons` |
-| `cart-checkout` | `carts`, `cart_lines`, `checkout_attempts` |
-| `payments` | `payment_attempts`, `refunds`, `earnings`, `business_subscriptions` |
-| `orders` | `orders`, `order_items`, `order_status_history`, `order_cases`, `order_case_events`, `order_case_attachments` |
-| `delivery` | `rider_profiles`, `rider_documents`, `delivery_jobs`, `delivery_offers`, `delivery_codes`, `rider_payouts` |
+| `offers` | `offers`, `offer_targets`, `coupons`, `promotion_placements` |
+| `cart-checkout` | `carts`, `cart_lines`, `checkout_quotes`, `checkout_attempts` |
+| `payments` | `payment_charges`, `payment_attempts`, `refunds`, `payment_compensations`, `billing_purchases`, `earnings`, `business_subscriptions` |
+| `orders` | `orders`, `order_items`, `order_adjustments`, `order_stock_allocations`, `order_stock_operations`, `order_status_history`, `order_cases`, `order_case_events`, `order_case_attachments` |
+| `delivery` | `rider_profiles`, `rider_documents`, `delivery_jobs`, `delivery_offers`, `delivery_codes` |
 | `reviews` | `reviews`, `review_reports`, `review_helpful_votes`, `review_aggregates` |
-| `engagement` | `follows`, `likes`, `hearts`, `bookmarks`, `video_comments`, `follower_announcements` |
-| `media-videos` | `media_assets`, `gallery_photos`, `videos`, `video_links`, `video_reports` |
-| `notifications` | `notifications`, `notification_preferences`, `notification_templates`, `notification_deliveries` |
-| `communications` | `campaigns`, `campaign_recipients`, `campaign_reports` |
-| `admin` | `roles`, `role_permissions`, `admin_accounts`, `admin_permissions`, `admin_scopes` |
+| `engagement` | `follows`, `follower_daily_counts`, `likes`, `hearts`, `bookmarks`, `video_comments`, `video_engagement_counts`, `follower_announcements` |
+| `media-videos` | `media_assets`, `gallery_photos`, `videos`, `video_links`, `media_reports`, `business_media_order`, `reel_rank_snapshots`, `video_view_dedup` |
+| `notifications` | `notifications`, `notification_preferences`, `notification_templates`, `notification_deliveries`, `notification_provider_receipts`, `notification_fanouts` |
+| `communications` | `campaign_audience_snapshots`, `campaign_audience_members`, `campaign_reviews`, `campaigns`, `campaign_recipients`, `campaign_reports` |
+| `admin` | `roles`, `role_permissions`, `admin_accounts`, `admin_permissions`, `admin_scopes`, `listing_reports` |
 | `audit` | `audit_logs` |
 | `settings` | `settings`, `feature_flags`, `legal_pages`, `support_messages` |
-| Shared runtime | `outbox_events`, `idempotency_keys` |
+| Shared runtime | `outbox_events`, `idempotency_keys`, `rate_limit_buckets` |
 
-`search` uses read-only repository interfaces over `catalog`, `businesses`, `products`, `services`, `offers`, and `media-videos`; it does not duplicate their source data. The ERD shows core foreign-key paths; polymorphic targets (reviews, offer targets, bookmarks) are validated by the owning use-case.
+`search` uses public read ports and owner-exported read-only SQL projections over `catalog`, `businesses`, `products`, `services`, `offers`, `media-videos`, `geo` and `reviews`; it does not import private repositories or duplicate source data. Apply eligibility/filter/facet/keyset predicates before limiting, not to an owner's first page. The ERD shows core foreign-key paths; polymorphic targets (reviews, offer targets, bookmarks) are validated by the owning use-case.
+Pending suggestions reference their **category**, not an already-existing subcategory; approved/merged target links are nullable and state-specific. `product_category_pills` belongs to **products**, although its composite key references a business and catalog subcategory. OTP challenges are pre-account records without a `user_id` FK; keyword mappings target categories through `keyword_mapping_targets`, and independent settings/flags have updater FKs, not a settings-to-flag parent relationship.
+Catalog kind is **`product|service`**; shops reuse the product taxonomy (`CATS`), not a third `shop` kind. Catalog's `category_relations` owns **directed, ordered** cross-kind RELP/RELS links (`source_category_id`, `related_category_id`, `sort_order`), never derived reverse links; its full definition stays in Catalog BE. Services owns `provider_expertise_versions` so an empty mapping set still has an independent optimistic version, not the Business profile version. Business logo/cover/document references point to Media-owned assets without duplicating storage/type/size metadata. Removed product variants retain their IDs with `active=false`; historical order references do not lose identity.
+Nullable session/cart/consent owners represent explicit anonymous state, never authenticated access. Address versions fence quotes; stock-operation/financial ledgers are Orders/Payments-owned, not generic inventory events. Compensation has no required order FK, so captured funds survive a zero-order rollback. Placement/purchase reciprocal nullable links are created in order: prepared placement with no purchase, purchase referencing it, then bind the funded purchase after verified success. No rider-settlement table/writer is invented before its policy is approved.
 
 ## Hot-query indexes
 
@@ -149,9 +258,61 @@ erDiagram
 | City picker and admin city queue | Unique city slug; `(status,name_en)`; waitlist `(city_id,requested_at DESC)`. |
 | Search keyword, name and typo-tolerant matching | GIN trigram on normalized searchable text and `keyword_mapping_terms.normalized_term`; GIN full-text index for token search; partial target indexes on `keyword_mapping_targets`. |
 | Subcategory duplicate checks and suggestion queues | GIN trigram on normalized suggestion names; `(status,city_id,area_id,created_at,id)` for scoped moderation and `(business_id,created_at,id)` for owner history. |
+| Related category discovery | Catalog-owned ordered lookup by `(source_category_id,sort_order,related_category_id)`; filters retain the explicit source->target direction. |
 | Reels and other feeds | Keyset indexes on frozen rank/session key and `id`, or `(created_at, id)` for chronological feeds; never deep-offset pagination. |
 | Customer orders and business order queues | `(customer_user_id, placed_at DESC, id DESC)` and `(business_id, status, placed_at DESC, id DESC)`; add only indexes required by documented filters. |
 | Admin approval/moderation queues | `(status, created_at, id)` plus city/area scope columns used by the authorized query. |
-| Idempotency and outbox workers | Unique idempotency key scoped by actor/operation; outbox status/availability index with stable ordering and deduplication key. |
+| Idempotency, rate limits and outbox | Unique principal/operation/key hash; expiry indexes for cleanup; outbox state/availability/lease indexes with stable ID ordering; atomic rate-limit bucket PK as below. |
 
 Index definitions are finalized with owning module specs and migrations; avoid speculative indexes and verify them with query plans before rollout.
+
+## Shared runtime persistence
+
+Only this foundation defines these tables; shared persistence repositories own them. All fields are NOT NULL unless marked `?`; timestamps are `timestamptz`, JSON is validated JSON-safe `jsonb`. These are reliability records, not an event-sourcing store or a new product module.
+
+| Table | Columns / constraints | Indexes / access |
+|---|---|---|
+| `outbox_events` | `id uuid PK` (event ID); `type text` (module-owned dotted name); `schema_version int DEFAULT 1 CHECK >0`; `aggregate_type text`; `aggregate_id uuid`; `aggregate_version int CHECK >0`; `payload jsonb`; `correlation_id text`; `occurred_at`; `available_at`; `state text DEFAULT 'pending' CHECK pending/publishing/published/dead`; `attempt_count int DEFAULT 0 CHECK >=0`; `lease_owner text?`; `lease_expires_at?`; `published_at?`; `last_error_code text?`. CHECK publishing has a lease and published has a timestamp. | `(state,available_at,id)` for relay polling; `(lease_expires_at,id) WHERE state='publishing'` for abandoned leases; `(aggregate_type,aggregate_id,aggregate_version)` for diagnostics. Never store secrets/OTPs or entire ORM objects in payload/errors. |
+| `idempotency_keys` | `id uuid PK`; `principal_key text` (authenticated actor or named internal consumer); `operation text` (stable method/route or consumer name); `key_hash bytea`; `request_hash bytea`; `state text CHECK in_progress/completed`; `lease_owner text?`; `lease_expires_at?`; `http_status int?`; `response_body jsonb?` (replayable **non-secret projection**); `response_headers jsonb DEFAULT '{}'`; `resource_ref jsonb?`; `created_at`; `updated_at`; `expires_at`. UNIQUE `(principal_key,operation,key_hash)`; completed HTTP records require response status/non-secret result or explicit no-content; in-progress claims have leases. | Unique index arbitrates competing requests; `(expires_at,id)` cleanup; `(state,lease_expires_at)` recovery. Hash keys; allow-list headers (not Set-Cookie) and DTO fields; never persist bearer/session/OTP/CSRF/completion-token plaintext or signed-URL secrets. Stored protected responses remain protected on replay. |
+| `rate_limit_buckets` | `policy_key text`; `subject_hash bytea`; `bucket_start`; `hit_count bigint DEFAULT 0 CHECK >=0`; `expires_at`; PK `(policy_key,subject_hash,bucket_start)`; CHECK expiry after start. | PK supports atomic insert/increment; `(expires_at)` bounded cleanup. Policy identifies route/channel and window, subject is a keyed hash of trusted actor/normalized phone/IP as appropriate, not raw PII. |
+
+**Transaction/helper contracts** (to implement in `apps/api/src/shared/persistence`; application code imports only the ports):
+- `TxContext` is an opaque handle; `UnitOfWork.run<T>(work: (tx: TxContext) => Promise<T>): Promise<T>` starts one transaction, commits only on success and rolls back on any throw. Only shared persistence infrastructure unwraps it using `PrismaDatabase.client(tx): Prisma.TransactionClient`; expired/foreign handles fail, no silent use of the root client.
+- `CommandUnitOfWork.run<T extends JsonValue>(command: CommandContext, work: (tx: TxContext) => Promise<T>, resultPolicy?: IdempotencyResultPolicy<T>): Promise<T>` is the application-invoked idempotent transaction wrapper. `CommandContext` contains live actor, correlation ID and validated operation/key/request hash, never client-supplied roles/scope. It claims/checks idempotency and stores the approved non-secret result in the **same commit** as `work`; registered operation/resource policies re-check current access **also on replay**, before skipping `work`. The HTTP interceptor prepares context, not a second transaction.
+- `IdempotencyResultPolicy<T>` provides `store(result: T): JsonValue` (explicit non-secret allow-list), `replay(tx, stored, command): Promise<T>` (authorized reconstruction inside the replay transaction), and optional `httpStatus(result: T): number` (otherwise the operation's declared success status). Ordinary DTOs use the default safe projection; endpoints returning a capability **must** register a secret-excluding policy. A transient plaintext token is never serialized into the idempotency record, error, audit or outbox, even on the first successful response.
+- `OutboxWriter.append(tx, event): Promise<void>` inserts the typed event; it does not publish to a network/queue. `EventFactory.create(type, aggregate, payload, correlationId)` adds UUIDv7, schema version and clock time; `aggregate` contains type/ID/current version. `AuditWriter.record(tx, entry)` is the [Audit-owned port](../audit/be/audit.md); its implementation joins this same handle and applies its redaction contract. Audit failure rolls back the command.
+- `PrismaDatabase` owns connection lifecycle, not domain orchestration. Only repository adapters and the shared transaction/lease infrastructure import Prisma. Module application code decides the write set and calls outbox/audit ports explicitly; repositories never create transactions, make business decisions or send events.
+
+**Rejected verification outcomes:** Auth/Delivery sometimes must commit a failed-attempt count, lock or valid-but-blocked challenge consumption. Return a typed JSON-safe accepted/rejected outcome from the UoW, commit **only** the permitted security bookkeeping on rejection, then map rejection to the registered non-2xx error envelope outside the transaction. Throwing inside `work` would undo the counter. Delivery's required idempotency policy stores only the outcome's safe code/details and projects its real HTTP status; replay returns the same rejection without another attempt. Unexpected database/programming failures still throw/rollback; never catch all exceptions and commit. Low-entropy code-bearing request fingerprints use a server-keyed hash, not plaintext or an offline-guessable unkeyed digest.
+
+**Outbox/worker semantics:** insert state + outbox (+ required audit/idempotent result) atomically. Relay leases a bounded `FOR UPDATE SKIP LOCKED` batch, commits the lease, then sends to pg-boss outside the transaction using stable event IDs; mark published only after durable enqueue acknowledgement. Crash after enqueue/before mark may deliver twice. Recover expired leases; bounded retry/backoff ends in `dead`, with redacted logs/metrics and explicit operator replay, not an invented admin screen. Replays retain event IDs.
+Consumers claim `idempotency_keys` under `principal_key=consumer:<name>`, `operation=<handler>`, key=event ID; their local state change and receipt commit together. External calls use the owning adapter's idempotency/reconciliation contract and never hold a DB transaction open. No exactly-once promise: a timeout after an external side effect is reconciled, not blindly sent again. Use aggregate version/state guards for stale delivery; cross-consumer/global ordering is not assumed.
+
+**HTTP idempotency:** hash the canonical allow-listed payload plus method/resource/operation and **server-resolved business ID/kind** for owner operations, excluding volatile correlation/CSRF fields. A changed `X-Business-Kind` cannot replay a shop result into a provider context. Same principal/key/hash replays the original status/non-secret result; changed payload/context -> 409 `COMMON_CONFLICT` (or module code); concurrent in-progress work returns a bounded retry response with `Retry-After`, never executes a second domain command. Authorization failure cannot become successful replay. For external payment-like workflows, commit reservation/attempt first, release the transaction, call the provider, then finalize through the owning module's reconciliation state machine; never expire an ambiguous attempt and charge again.
+**Users deletion exception:** the confirming session alone receives a status-only `completionToken`; its hash/expiry is Users-owned in `data_requests`. The idempotency row stores only the non-secret request result/reference. An eligible authenticated retry may atomically rotate that capability via its result policy, replacing the hash and returning the new transient token **without another deletion job**; no generic bearer replay or post-revocation re-authentication. Status polling after session revocation discloses only Users' permitted terminal-status DTO, not PII/export data/privileged actions. Use the same reviewed opaque-token helper as Auth; exact lifetime and access gates belong to Users.
+Retention/lease/backoff settings must be explicit, validated config and cover each module's retry/provider replay horizon; no invented production retention period. Cleanup removes only expired completed records or recoverable leases, not unresolved financial attempts. Policy values not set by module/product remain a deployment gate, while tests specify their own short deterministic windows.
+
+**Rate limits:** use DB time and one parameterized atomic upsert/conditional increment per window, not read-then-write counters. Multiple API processes share the result. Return 429 plus `Retry-After`; use only trusted proxy configuration for client IP. DB failure fails protected throttled operations closed with 503, not an unlimited in-memory fallback. Auth's attempt/cooldown records remain authoritative even when a shared bucket expires. No Redis.
+
+## Migrations, seeds and isolation
+
+1. API owns the single ordered Prisma migration history; domain owners contribute their tables, shared runtime contributes the three tables above. First reviewed SQL enables `postgis`, `pg_trgm`, `unaccent`; full-text is PostgreSQL built-in, not another extension/service. Verify extension versions via DB queries and PostGIS distance/trigram/unaccent smoke tests.
+2. Use a privileged **migration role** for extensions/schema/grants and a least-privilege **runtime role** for repositories; preserve Audit's INSERT/SELECT-only constraint. The pinned pg-boss schema is installed/upgraded once using its supported migration API under the migration role; workers open with runtime DDL disabled. No migrations or seeding in API startup/readiness.
+3. Development creates a reviewed migration using `prisma migrate dev` with an isolated `SHADOW_DATABASE_URL`; CI/deployment uses `prisma migrate deploy` through `pnpm db:migrate`. Never share shadow/prod URLs, edit an applied migration, use `db push` as evidence, or give application users extension/DDL privileges.
+4. `pnpm db:seed` adapts [10-sample-data.json](../../docs/design-context/10-sample-data.json) into the module schemas in FK order (geo/users/catalog before businesses/listings). Maintain a deterministic fixture alias -> valid UUIDv7 mapping, explicit EN/HI values, paise conversions and approved/pending/scoped test actors. Seeds are synthetic, versioned and idempotent by stable keys; repeat produces no duplicate taxonomy/users/rows and no external sends.
+5. Seed uses fixed test clock/ID fixtures, not a production ID generator change. Never seed usable passwords/session tokens/OTP bypasses, real phone recipients, KYC or payment details. Demo defaults are not production fees/legal/provider decisions; production bootstrap data requires a separate reviewed input, not the sample-data script.
+6. Every CI run allocates a separately named disposable DB; parallel HTTP/worker/Playwright suites get distinct databases and pg-boss namespaces/instances, not one shared public schema. Provision extensions, migrations and seed in each; all API/worker/Web test processes point to that same suite DB. Transaction rollback-only tests are insufficient for HTTP/outbox workers that use separate connections.
+7. Test harness verifies local/test environment, explicit database marker and runtime target before any reset/drop. It refuses an unmarked/shared/production URL, even with a “force” flag. A privileged test provisioner creates/drops only its recorded DB names; application credentials cannot drop databases. Cleanup stops workers/connections before dropping; parallel jobs cannot delete each other's DB.
+8. Apply changes **forward only**. Every migration documents its recovery/down procedure and data-loss risk for review, but no automatic production down/reset. Use expand/backfill/validate/contract for incompatible changes, bounded backfills and measured lock timeouts; protect older app/worker readers during rollout.
+9. A failed migration keeps readiness false; inspect the migration ledger and data, restore a verified backup into a **new** DB if necessary, then repair forward. `migrate resolve` only after a human verifies the recorded state matches actual SQL effects; never mark failed SQL applied to bypass a gate. Test upgrade from the preceding schema, empty install, duplicate deploy and recovery on disposable copies.
+10. Production backup retention/RPO/RTO/provider approval remains Q-25; no destructive migration is ready to deploy without an approved backup/restore test. Local/test recovery proves mechanics, not production disaster-recovery readiness.
+
+## Persistence acceptance
+
+- Given DB-only command success/failure, when outbox or required audit insert fails, then domain state, version and idempotent result all roll back; a successful command leaves queryable DB rows before a worker runs.
+- Given concurrent identical keys or two decisions on version N, when both write, then one commit occurs; the loser replays or receives the documented conflict, and no duplicate subcategory/outbox/audit row is created.
+- Given a deletion confirmation retry, when an eligible confirming session requests it, then only the capability hash rotates and one deletion job remains; when inspecting idempotency/audit/outbox JSON or logs, then no completion/bearer/OTP/CSRF plaintext exists, and a revoked session cannot obtain a fresh capability.
+- Given enqueue acknowledgement followed by relay death, when the lease expires, then repeated delivery with the same event ID does not repeat the consumer's persisted side effect.
+- Given two API processes and one rate-limit subject/window, when requests race, then the configured total cannot be exceeded; a forged proxy header does not create a fresh subject.
+- Given maximum-safe paise/UUID/version and a signed keyset cursor, when DTOs round-trip through HTTP/client/outbox, then types and integer values survive exactly; unsafe integers/tampered cursors fail, not stringify or round.
+- Given two clean isolated test DBs, when migrations and seed run twice and one suite is dropped, then constraints/extensions/fixtures remain valid and the other suite is unaffected; production/unmarked reset attempts are refused.

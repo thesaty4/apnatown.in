@@ -21,16 +21,22 @@ docs/design-context/10-sample-data.json       (Padrauna sample data)
 docs/design-context/11-open-issues-and-assumptions.md
 docs/design-context/screenshots/              (reference images: m-<role>-<view>.jpg = 390px, d-<role>-<view>.jpg = 1280px, plus dark and Hindi samples)
 docs/design-context/reference/apnatown-prototype.html and reference/prototype-source/ (the runnable prototype and its complete source and stylesheet; the visual and behavioural source of truth)
-Also read `docs/specs/` for this scope.
+Also read the current [frontend foundation](../../specs/_foundation/frontend-shared.md),
+[workspace/transport contracts](../../specs/_foundation/architecture.md)
+and the owning module FE/BE specs for the components being built.
 
 ## OUTPUT FILES (exact paths)
-- Code in `apps/web`, `apps/api`, `packages/*` as defined by the specs, with tests and Storybook stories
+- Web shared shell/hooks/transport, `packages/ui` components and shared
+  formatters/catalogues, with component/a11y/visual tests and required stories.
+  No duplicated API DTOs or unrelated documentation.
 
 ## REQUIRED CONTENTS
-Implement Tailwind theme and CSS variables from `04-design-tokens.json` (light, dark, auto), fonts (Poppins, Noto Sans, Noto Sans Devanagari), app shells, i18n with catalogues seeded from `09a-i18n-en-hi.json`, formatters, API client, auth gate, `useUrlState`, `useBackScroll`, and the full shared component library per `docs/specs/06-shared-ui/` in numbered parts (primitives, layout/overlays, cards/data, commerce/filter, media/engagement, admin) with Storybook stories, a11y tests and visual snapshots against the screenshots.
+Implement [frontend-shared.md](../../specs/_foundation/frontend-shared.md): deterministic token/Tailwind and semantic EN/HI catalogue generation, the specified fonts/theme, Server Component root and bounded client providers, standard loading/error/offline/empty/disabled states, shared primitives and typed hooks. Use the generated API client and common browser/server cookie/CSRF wrappers; no handwritten duplicate DTOs or business logic in UI.
+
+Build the catalogued components in small owner-linked batches, reusing Button/Input and URL/Back-scroll contracts. Apply the specified rendering, metadata, accessibility, low-bandwidth and PWA rules. Keep unapproved route/copy/button metrics explicit rather than inventing them. Verify real transport only after its API dependencies exist; otherwise report the check as pending, not passed with intercepted success responses.
 
 ## IMPLEMENTATION RULES (in addition to the standing requirements)
-- Read `docs/specs/` for this scope and the Design Context Pack; implement exactly what is specified. If a spec is missing or wrong, stop, add an Open Issue and propose the smallest spec fix in the same PR.
+- Read the current foundation and owning FE/BE specs plus the Design Context Pack. Record a blocking ambiguity inline in its owning spec and ask; no legacy shared-UI document generation or progress trackers.
 - Work in small pull requests (about 400 changed lines or fewer), one concern each. Branch `feat/<scope>-<name>`; Conventional Commits. Never merge; humans review and merge.
 - Reuse shared components, hooks, utilities, guards and base classes; if you copy code a second time, extract it to the shared layer first.
 - Every change includes tests (unit, integration, component, e2e as specified), lint and type-check clean, English and Hindi strings, accessibility checks, and a screenshot comparison (mobile 390px and desktop 1280px, light and dark) against `docs/design-context/screenshots/` for UI work.
@@ -39,7 +45,7 @@ Implement Tailwind theme and CSS variables from `04-design-tokens.json` (light, 
 
 ## STANDING REQUIREMENTS (apply every one; they are binding)
 
-1. **Complete coverage.** Every feature, screen, flow, state and rule from the Design Context Pack must appear in your output. No "etc.", no "similar to above", no deferred items. Every feature ID (F-...) must be traceable to screens (S-...), components, APIs, tables and tests. Do not drop anything from the later additions: category tiles that deep-link to Explore (pre-selected in Products, Shops and Services tabs), offers that open product/service/list, the Explore Services filter with category + subcategory multi-select and URL state, Products & Services section with pills, Videos/Reels (feed, follow, like, share, comments, report, linked items, moderation), videos on product/service pages, service cards and service details, smart search with keyword mapping, gallery and media-consent rules, keyword mapping tool, and the dashboards for every role.
+1. **Complete coverage within this scope.** Cover the shared frontend/component contracts and their tests. Feature screens remain in their module tasks; do not build unrelated dashboards or maintain duplicate inventories as part of the shared foundation.
 2. **UI and behaviour parity.** The built UI and functionality must match the design exactly: colours, typography, spacing, radius, shadows, icons, copy in English and Hindi, states and interactions. Use only the tokens in `docs/design-context/04-design-tokens.json` (and the prototype stylesheet) through the Tailwind theme. Never invent styles or behaviour. When the pack and the prototype disagree, the prototype wins and you record the conflict in `docs/design-context/11-open-issues-and-assumptions.md`.
 3. **Tech stack (fixed).** Next.js (App Router, TypeScript) with Tailwind CSS; NestJS (TypeScript); PostgreSQL. For everything else (ORM, cache, queue, search, storage, realtime, payments, OTP/SMS, WhatsApp, maps, video processing, hosting) choose the option most suitable for each feature and justify it in 2 to 3 lines: the alternative considered and when to switch. Prefer proven, low-cost choices suited to a Padrauna launch that can scale to more cities.
 4. **System design per feature.** Use the design approach suited to each feature, for example: state machines for orders, deliveries, approvals, offers and videos; transactional outbox for notifications and webhooks; queues for media processing and campaigns; idempotency keys for payments, orders, refunds and messages; PostGIS geospatial indexing for nearby search; cursor (keyset) pagination for feeds and lists; denormalised counters for likes, followers and views; caching with explicit invalidation; optimistic locking for stock and status. Give a sequence description (Mermaid sequence diagram plus numbered steps) for each critical flow.

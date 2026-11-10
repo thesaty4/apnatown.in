@@ -21,16 +21,22 @@ docs/design-context/10-sample-data.json       (Padrauna sample data)
 docs/design-context/11-open-issues-and-assumptions.md
 docs/design-context/screenshots/              (reference images: m-<role>-<view>.jpg = 390px, d-<role>-<view>.jpg = 1280px, plus dark and Hindi samples)
 docs/design-context/reference/apnatown-prototype.html and reference/prototype-source/ (the runnable prototype and its complete source and stylesheet; the visual and behavioural source of truth)
-Also read `docs/specs/` for this scope.
+Also read [LEAN-SPECS.md](./LEAN-SPECS.md) and the four current
+[foundation specs](../../specs/_foundation/). Legacy `docs/specs/`
+generation outputs are not scaffold prerequisites.
 
 ## OUTPUT FILES (exact paths)
-- Code in `apps/web`, `apps/api`, `packages/*` as defined by the specs, with tests and Storybook stories
+- Workspace/tooling files and the `apps/web`, `apps/api`, `packages/shared`,
+  `packages/ui`, `packages/api-client` skeletons specified by the foundations,
+  with bootstrap tests. No feature implementations or progress registers.
 
 ## REQUIRED CONTENTS
-Create the pnpm/turborepo monorepo (`apps/web`, `apps/api`, `packages/shared`, `packages/ui`, `packages/config`), TypeScript strict, ESLint (with boundaries and a11y), Prettier, commitlint, husky, env validation, docker-compose (PostgreSQL+PostGIS, Redis, mailhog/minio if needed), GitHub Actions CI, `.env.example`, Storybook, Playwright and Vitest/Jest setup. Spec refs: 05-frontend, 09-infra-security-ops, 10-delivery/04-build-order.
+Implement the workspace/bootstrap contracts in [architecture.md](../../specs/_foundation/architecture.md): exact compatible toolchain pins, package exports and build order, strict TypeScript, lint/format boundaries, owner-specific env validation, PostgreSQL/PostGIS Compose, API/worker entry points and health probes, Next root/error/loading shells, same-origin `/api` transport, generated OpenAPI client, and the named root commands/CI stages. Use Vitest, RTL and Playwright as specified. No Redis, compulsory Turborepo/config package, commit-hook stack or real external-provider service; add tooling only when a current contract needs it.
+
+C00 verifies workspace exports/build and bootstrap probes. Database migrations/shared runtime are C01-C02 dependencies; the authenticated browser smoke additionally requires real Auth and Catalog slices. Do not add login bypasses, mock successful APIs or mark those later checks passed before their dependencies exist.
 
 ## IMPLEMENTATION RULES (in addition to the standing requirements)
-- Read `docs/specs/` for this scope and the Design Context Pack; implement exactly what is specified. If a spec is missing or wrong, stop, add an Open Issue and propose the smallest spec fix in the same PR.
+- Read the current `specs/_foundation/` contracts and the Design Context Pack; implement only this scaffold scope. Record a blocking ambiguity inline in the owning spec and ask, rather than inventing behavior or maintaining extra trackers.
 - Work in small pull requests (about 400 changed lines or fewer), one concern each. Branch `feat/<scope>-<name>`; Conventional Commits. Never merge; humans review and merge.
 - Reuse shared components, hooks, utilities, guards and base classes; if you copy code a second time, extract it to the shared layer first.
 - Every change includes tests (unit, integration, component, e2e as specified), lint and type-check clean, English and Hindi strings, accessibility checks, and a screenshot comparison (mobile 390px and desktop 1280px, light and dark) against `docs/design-context/screenshots/` for UI work.
@@ -39,7 +45,7 @@ Create the pnpm/turborepo monorepo (`apps/web`, `apps/api`, `packages/shared`, `
 
 ## STANDING REQUIREMENTS (apply every one; they are binding)
 
-1. **Complete coverage.** Every feature, screen, flow, state and rule from the Design Context Pack must appear in your output. No "etc.", no "similar to above", no deferred items. Every feature ID (F-...) must be traceable to screens (S-...), components, APIs, tables and tests. Do not drop anything from the later additions: category tiles that deep-link to Explore (pre-selected in Products, Shops and Services tabs), offers that open product/service/list, the Explore Services filter with category + subcategory multi-select and URL state, Products & Services section with pills, Videos/Reels (feed, follow, like, share, comments, report, linked items, moderation), videos on product/service pages, service cards and service details, smart search with keyword mapping, gallery and media-consent rules, keyword mapping tool, and the dashboards for every role.
+1. **Complete coverage within this scope.** Implement every scaffold contract above and trace relevant requirements to its checks. Feature screens and domain behavior remain in their owning module tasks; this prompt does not request the entire product or new inventory/progress documents.
 2. **UI and behaviour parity.** The built UI and functionality must match the design exactly: colours, typography, spacing, radius, shadows, icons, copy in English and Hindi, states and interactions. Use only the tokens in `docs/design-context/04-design-tokens.json` (and the prototype stylesheet) through the Tailwind theme. Never invent styles or behaviour. When the pack and the prototype disagree, the prototype wins and you record the conflict in `docs/design-context/11-open-issues-and-assumptions.md`.
 3. **Tech stack (fixed).** Next.js (App Router, TypeScript) with Tailwind CSS; NestJS (TypeScript); PostgreSQL. For everything else (ORM, cache, queue, search, storage, realtime, payments, OTP/SMS, WhatsApp, maps, video processing, hosting) choose the option most suitable for each feature and justify it in 2 to 3 lines: the alternative considered and when to switch. Prefer proven, low-cost choices suited to a Padrauna launch that can scale to more cities.
 4. **System design per feature.** Use the design approach suited to each feature, for example: state machines for orders, deliveries, approvals, offers and videos; transactional outbox for notifications and webhooks; queues for media processing and campaigns; idempotency keys for payments, orders, refunds and messages; PostGIS geospatial indexing for nearby search; cursor (keyset) pagination for feeds and lists; denormalised counters for likes, followers and views; caching with explicit invalidation; optimistic locking for stock and status. Give a sequence description (Mermaid sequence diagram plus numbered steps) for each critical flow.

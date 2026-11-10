@@ -17,10 +17,10 @@ Backend contract: [BE services](../be/services.md) · [Feature inventory](../../
 | Route | Screen ID | Rendering + reason | Auth / role | Index policy |
 |---|---|---|---|---|
 | `/service/[slug]` | S-CUST-09 | ISR; revalidate service, business, media and offer tags on owning-module changes | Public | Self-canonical; index only for active service of approved business |
-| `/vendor/services` | S-VEND-13 | SSR initial page; editor and active toggle are client islands | Vendor, own business | Noindex |
+| `/vendor/services` | S-VEND-13 | SSR initial page; editor and active toggle are client islands | Approved vendor, own business | Noindex |
 | `/vendor/enquiries` and `/vendor/enquiries/[id]` | S-VEND-14 | SSR private shell; inbox/detail client islands with keyset pagination | Vendor, own business | Noindex |
 | `/provider/enquiries` and `/provider/enquiries/[id]` | S-PROV-03 | SSR private shell; inbox/detail client islands with keyset pagination | Provider, own business | Noindex |
-| `/provider/services` | S-PROV-08 | SSR initial page; editor and active toggle are client islands | Provider, own business | Noindex |
+| `/provider/services` | S-PROV-08 | SSR initial page; editor and active toggle are client islands | Approved provider, own business | Noindex |
 
 ## Screens
 
@@ -30,7 +30,7 @@ Standard default, skeleton, empty, error+retry, offline and no-permission behavi
 
 - Screenshots: `d-customer-service-b4-sv2.jpg`, `d-customer-service-s11-sv1.jpg`, `d-customer-service-s7-sv0.jpg`, `m-customer-service-b4-sv2.jpg`.
 - Layout: mobile stacks breadcrumb, image carousel, details and enquiry form; tablet/desktop use two-column media/details, then inclusions, availability, provider, videos, previous work, reviews, FAQs and related sections. Reuse `Breadcrumbs`, `MediaCarousel`, `ServiceCard`, `Avatar`, `Rating`, `FollowButton`, `IconButton`, `ShareSheet`, `Accordion`, `OfferBanner`, `GalleryGrid`, `EmbedCard`, `ReviewForm`, `RatingBreakdown`, `EnquiryForm`, and `Input` textarea mode.
-- Data: `GET /services/{slug}`; offers, reviews, follow/bookmark, directions and approved videos come from owning modules. ISR tags are invalidated by their owners.
+- Data: `GET /services/{slug}`, `/services/{slug}/related`, `/services/{slug}/similar-providers`; public business tabs use `/businesses/public/{slug}/services` with counted category/subcategory pills. Offers, reviews, follow/bookmark, directions and approved videos come from owning modules. ISR tags are invalidated by their owners.
 - Special states: enquiry success; paused service; no reference videos; no reviews; empty related services.
 - Interactions: carousel is keyboard operable; breadcrumb links open Explore Services with category/subcategory; call, WhatsApp and Directions are explicit user-initiated links. Guest enquiry submits without login; Save/Follow prompts login and returns to this service. Booking/payment placeholder is disabled. Enquiry form fields are name, 10-digit phone, message and optional non-past preferred date.
 - Rules: F-SV-001, F-SV-002, F-SV-003, F-SV-004, F-SV-005, F-SV-006, F-SV-007, F-SV-008 (catalog-owned), F-LC-003, F-RV-005 and F-X-010 (owning modules); BR-06/08/09/10/14/18/21; reviews become available only after verified-enquirer eligibility.
@@ -56,9 +56,9 @@ Standard default, skeleton, empty, error+retry, offline and no-permission behavi
 
 - Screenshots: vendor `d-vendor-venq-e1.jpg`, `d-vendor-venq.jpg`, `m-vendor-venq-e1.jpg`, `m-vendor-venq.jpg`; provider `d-provider-senq-e1.jpg`, `d-provider-senq.jpg`, `m-provider-senq-e1.jpg`, `m-provider-senq.jpg`.
 - Layout: `DashboardShell` with keyset-paginated `DataTable`/mobile cards, status filters and selected detail; use `StatusBadge`, `Pagination` and `Button`. Provider and vendor use the same shared view.
-- Data: owner-scoped inbox/detail/status endpoints; status mutation invalidates the inbox and detail query.
+- Data: owner-scoped inbox/detail/status endpoints with `query`, `statusCounts` and keyset pagination; status mutation invalidates inbox/detail and summary queries.
 - Special states: no enquiries; no result for selected status; stale transition conflict.
-- Interactions: call/WhatsApp open native/external user-initiated links; explicit status action advances only valid ST-enquiry transitions. Never auto-send a WhatsApp message.
+- Interactions: call/WhatsApp open native/external user-initiated links and request `new -> contacted` only when applicable, surfacing a failed status save without claiming a delivered message. Status buttons expose only the BE-allowed edges until the ST-enquiry/J14/prototype conflict is approved; no arbitrary reset to new.
 - Rules: F-VD-016, F-PV-004, ST-enquiry, BR-09/14.
 - Given a vendor/provider opens another business's enquiry, when detail is requested, then show no-permission without exposing PII.
 - Given an enquiry is new, when the owner marks it contacted, then the status updates; invalid transitions show localized conflict feedback.
@@ -75,7 +75,7 @@ Standard default, skeleton, empty, error+retry, offline and no-permission behavi
 
 ## Components and integrations
 
-Service card is reusable by Search, Explore, business profiles and category pages; Search owns those screens and uses this module's read contract. Reuse components from `packages/ui` and `frontend-shared.md`; add no module-local duplicate for shared cards, states, forms or status badges. Provider expertise selection in onboarding/profile uses `PUT /businesses/me/expertise`, owned here and surfaced by the businesses screens.
+Service card is reusable by Search, Explore, business profiles and category pages; Search owns those screens and uses this module's read contract. Reuse components from `packages/ui` and `frontend-shared.md`; add no module-local duplicate for shared cards, states, forms or status badges. Provider expertise selection in onboarding/profile uses GET/PUT `/businesses/me/expertise` with its returned `expertiseVersion`, not the business profile version. Draft applicants get profile-only expertise capability, not a service selling role.
 
 ## i18n and analytics
 
@@ -86,5 +86,5 @@ Service card is reusable by Search, Explore, business profiles and category page
 ## Tests
 
 - Component: service detail active/paused, enquiry validation/success, service editor price/subcategory validation, inbox status and no-permission.
-- E2E: J2 service discovery-to-enquiry; J14 provider inbox-to-converted review eligibility.
+- E2E: J2 service discovery-to-enquiry; J14 provider inbox-to-converted proof and Reviews' approved eligibility gate; independent expertise-version conflict and pending-applicant publication denial.
 - Screenshot checks: named mobile/desktop service, manager and inbox images; EN/HI and light/dark.

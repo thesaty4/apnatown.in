@@ -2,6 +2,8 @@
 
 Features: F-LC-001–F-LC-005, F-SA-004 | Rules: BR-01, BR-02, BR-11, BR-12, BR-14 | State machines: ST-city | Depends on: none | Used by: users, businesses, services, search, cart-checkout, delivery, admin
 
+Frontend counterpart: [FE geo](../fe/geo.md).
+
 ## Responsibility
 
 Own cities, customer-facing areas, service zones, delivery-fee slabs and service-area waitlist requests. Resolve optional location input and provide authoritative city/zone serviceability. Business distance and delivery-radius rules remain with `businesses`/`search`; geo does not own shop or provider pins.
@@ -22,14 +24,14 @@ City states map to the prototype's `active`/`planned`/`soon` labels as enabled/d
 
 | Method | Path | Auth, role, permission, scope | Request → response | Errors | Idempotent | Features / screens |
 |---|---|---|---|---|---|---|
-| GET | `/geo/cities` | Public; no location required | → `{id,slug,nameEn,nameHi,status}[]` | — | Yes | F-LC-001, F-LC-005 |
-| GET | `/geo/cities/{cityId}/areas?query=&pinCode=` | Public; query fields allow-listed | → matching area DTOs | `CITY_NOT_FOUND`, `PIN_CODE_INVALID` | Yes | F-LC-001 |
+| GET | `/geo/cities?cursor=&limit=` | Public; no location required | → `{items:[{id,slug,nameEn,nameHi,status}],nextCursor}`; limit ≤50 | `VALIDATION_ERROR` | Yes | F-LC-001, F-LC-005 |
+| GET | `/geo/cities/{cityId}/areas?query=&pinCode=&cursor=&limit=` | Public; query fields allow-listed | → `{items:[{id,cityId,slug,nameEn,nameHi,pinCode}],nextCursor}`; limit ≤50 | `CITY_NOT_FOUND`, `PIN_CODE_INVALID` | Yes | F-LC-001 |
 | POST | `/geo/location/resolve` | Public; rate limited | Exactly one of `{lat,lng}`, `{pinCode}`, `{areaId}` → city/area/status and optional matching zone | `LOCATION_INVALID`, `LOCATION_UNRESOLVED`, `CITY_NOT_FOUND`, `AREA_NOT_FOUND` | Yes | F-LC-001, F-LC-004, F-LC-005 |
 | POST | `/geo/waitlist` | Public; rate limited; explicit phone submission | `{cityId?,phone}` → `{requestId}` | `VALIDATION_ERROR`, `CITY_NOT_FOUND` | Yes via `Idempotency-Key` | F-LC-005 |
-| GET | `/geo/admin/cities` | `super_admin`; platform-wide; no city/area grant or module permission applies | → city DTOs with area/zone/waitlist counts | `FORBIDDEN` | Yes | F-SA-004, S-SUPR-04 |
+| GET | `/geo/admin/cities?cursor=&limit=` | `super_admin`; platform-wide; no city/area grant or module permission applies | → `{items,nextCursor}` city DTOs with area/zone/waitlist counts; limit ≤50 | `FORBIDDEN` | Yes | F-SA-004, S-SUPR-04 |
 | POST | `/geo/admin/cities` | `super_admin`; platform-wide; audit required | `{nameEn,nameHi,status}` → city DTO | `VALIDATION_ERROR`, `CITY_SLUG_CONFLICT` | Yes via `Idempotency-Key` | F-SA-004 |
 | GET | `/geo/admin/cities/{cityId}` | `super_admin`; platform-wide | → city, areas, zones and fee slabs; admin assignments are read from `admin` | `CITY_NOT_FOUND` | Yes | F-SA-004, S-SUPR-05 |
-| POST | `/geo/admin/cities/{cityId}/status` | `super_admin`; platform-wide; audit required | `{action:"enable"|"disable",expectedVersion}` → updated city | `CITY_NOT_FOUND`, `CITY_TRANSITION_INVALID`, `GEO_VERSION_CONFLICT` | Yes via `Idempotency-Key` | F-SA-004 |
+| POST | `/geo/admin/cities/{cityId}/status` | `super_admin`; platform-wide; audit required | `{action:"enable"\|"disable",expectedVersion}` → updated city | `CITY_NOT_FOUND`, `CITY_TRANSITION_INVALID`, `GEO_VERSION_CONFLICT` | Yes via `Idempotency-Key` | F-SA-004 |
 | POST | `/geo/admin/cities/{cityId}/zones` | `super_admin`; platform-wide; audit required | `{name,polygon,feeSlabs:[{upperDistanceKm,feePaise}],status}` → zone DTO | `CITY_NOT_FOUND`, `ZONE_INVALID`, `FEE_SLAB_INVALID` | Yes via `Idempotency-Key` | F-SA-004 |
 | PATCH | `/geo/admin/zones/{zoneId}` | `super_admin`; platform-wide; audit required | Allow-listed `{name?,polygon?,feeSlabs?:[{upperDistanceKm,feePaise}],status?,expectedVersion}` → zone DTO | `ZONE_NOT_FOUND`, `ZONE_INVALID`, `FEE_SLAB_INVALID`, `GEO_VERSION_CONFLICT` | Yes via `Idempotency-Key` | F-SA-004 |
 | DELETE | `/geo/admin/zones/{zoneId}` | `super_admin`; platform-wide; audit required | `{expectedVersion}` → deletion acknowledgement | `ZONE_NOT_FOUND`, `GEO_VERSION_CONFLICT` | Yes via `Idempotency-Key` | F-SA-004 |
@@ -37,6 +39,13 @@ City states map to the prototype's `active`/`planned`/`soon` labels as enabled/d
 All responses use the shared error envelope and OpenAPI DTOs in [backend-shared.md](../../_foundation/backend-shared.md). City-card assigned-admin counts and detail rows come from `admin`; `geo` does not read `admin_scopes` directly.
 
 Internal `GeoDeliveryPort.quoteDeliveryFee({cityId,destination,origin})` resolves the destination zone and distance, then returns `{zoneId?,distanceKm,feePaise}` to `cart-checkout`; callers never read geo tables or submit a client fee. For an enabled, resolved city without a matching active zone, use the global default schedule from `settings` (Q-38). `businesses`/`cart-checkout` still enforce each shop's delivery radius. Rider earning rules remain in `settings` and are applied by `delivery` at job completion.
+
+`GeoScopePort.resolve({areaId,location?}) -> {cityId,areaId,cityStatus,zoneId?}` validates an area and optionally resolves a containing zone. Area IDs and delivery-zone IDs are not interchangeable; changing a fee polygon never grants admin permissions. Admin checks both old and destination areas on moves; zone-targeted communications use actual zone membership, not all recipients in the city. `GeoScopePort.assertAreasInCity({cityId,areaIds})` rejects mismatched IDs before any owner write.
+
+`GeoAdminReadPort.options(ctx,{kind:'city'|'area'|'zone',cityId?,q?,cursor?,limit?}) -> Page<GeoScopeOption>` returns authorized options, limit ≤50: city `{kind,id,nameEn,nameHi,status,version}`, area `{kind,id,cityId,nameEn,nameHi}`, zone `{kind,id,cityId,name,status,version}`. Choices do not grant authority. `summary(ctx) -> {enabledCities,waitlistSignups}` uses real records, super_admin only.
+`GeoAdminReadPort.resolveZoneScope({zoneIds[]}) -> {zones:[{id,cityId,areaIds[],version}],revision,unresolved}` supplies only authoritative area relationships. Area centroids/PINs do not establish full polygon containment. Open question: area-boundary/zone-area mapping source is not supplied; mark it unresolved for area-only authorization instead of fabricating a mapping. An explicit whole-city grant may authorize its known city/zone without claiming an area mapping; recipient zone membership still requires authoritative location.
+
+The fee port is for `apna_town_rider` delivery only. Self-delivery uses the business's configured flat fee and pickup uses zero; callers cannot accidentally apply Geo slabs to both modes. Resolve current enabled city and versioned zone/settings state again at checkout commitment, not only from a cached discovery response.
 
 ## Rules and use-cases
 
@@ -85,6 +94,9 @@ Internal `GeoDeliveryPort.quoteDeliveryFee({cityId,destination,origin})` resolve
 8. Given an invalid polygon, overlapping active zone or invalid slab order, when saved, then the mutation is rejected without partial writes.
 9. Given a valid phone is submitted to notify-me, when accepted, then the encrypted request is counted for its known city and no outbound message is sent.
 10. Given a zone is deleted, when deletion is confirmed, then an enabled, resolved city uses the configured default delivery-fee schedule and the zone change is audited.
+11. Given two areas share a city, when an area-scoped caller supplies the other area's ID or a zone ID in its place, then the owner operation is denied without broadening to city-wide access.
+12. Given self-delivery or pickup is selected, when checkout computes the fee, then it uses the business flat fee or zero respectively, not platform-rider slabs.
+13. Given unknown zone-area relationships, when an area-only admin requests broader zone authority, then no same-city/centroid inference grants it; scoped options paginate without broadening access.
 
 ## Tests
 

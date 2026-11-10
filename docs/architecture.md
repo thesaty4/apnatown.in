@@ -3,6 +3,9 @@
 This is the canonical module map. `specs/<module>/{be,fe}/`,
 `.github/instructions/*.instructions.md` `applyTo` globs, and
 `docs/FEATURE_INVENTORY.md` all use these exact module names.
+Current implementation contracts, dependency boundaries and bootstrap commands
+live in [the architecture foundation](../specs/_foundation/architecture.md);
+the linked module specs own detailed schemas and transitions.
 
 ## 1. Layering (per `apps/api`)
 
@@ -26,24 +29,24 @@ feature's internals (see `frontend.instructions.md`).
 
 | Module | Responsibility | Primary FE areas |
 |---|---|---|
-| `auth` | OTP login, sessions, logout, account deletion | AU |
-| `users` | Customer/vendor/provider/rider/admin profiles, roles | AU, AC, RD, AD |
+| `auth` | OTP login, anonymous CSRF state, sessions and logout | AU |
+| `users` | User profiles, roles, addresses, consent and export/deletion processing | AU, AC, RD, AD |
 | `catalog` | Main categories (super admin only), subcategories, suggestion queue, keyword mapping | AD5, AD6, AD15, SA8 |
 | `businesses` | Shop/provider profile, onboarding, hours, delivery settings and private approval documents | PF, VD, PV |
 | `products` | Product CRUD, variants, stock, media sorter | PD, VD4 |
 | `services` | Service CRUD, one subcategory per service, "expert in" | SV, VD14, PV |
-| `search` | Keyword mapping, autocomplete, Explore/Search filters, URL state | EX, SR |
-| `offers` | Offer lifecycle and approval | OF, PD4, VD7 |
+| `search` | Consumes Catalog keyword mappings; autocomplete, Explore/Search queries | EX, SR |
+| `offers` | Offers, coupons, promotion placements and approval | OF, PD4, VD7 |
 | `cart-checkout` | Cart, per-shop order split, coupons, delivery/pickup choice | CK |
 | `orders` | Order state machine, refunds, disputes, invoices | OR, VD8, AD7 |
-| `delivery` | Delivery job lifecycle, OTP/pickup code, rider assignment, fee slabs | RD, OR3, AD8 |
-| `payments` | Payment intents, retries, idempotency, COD, refunds | CK6-7, OR6 |
+| `delivery` | Rider applications, assignments, job lifecycle, delivery/pickup codes and earnings | RD, OR3, AD8 |
+| `payments` | Charges, per-shop allocations, cash collection, refunds, compensation and billing | CK6-7, OR6 |
 | `reviews` | Review submission, eligibility, moderation, replies | RV, PD7, SV6 |
 | `media-videos` | Reels/gallery upload, embeds, moderation, consent | RL, PF9-10, VD12-13, AD10 |
 | `engagement` | Follow, like, heart, save/bookmark, comments | EG |
 | `notifications` | Notification centre, preferences, templates | NT, X12 |
 | `communications` | Admin bulk campaigns (WhatsApp/in-app/email), consent-aware audience | AD12 |
-| `geo` | Location detection, cities/zones, polygons, delivery range | LC, SA4 |
+| `geo` | Location, cities/areas/zones, polygons, serviceability and delivery fee slabs | LC, SA4 |
 | `admin` | Admin console shell, approvals, RBAC, permission matrix | AD, SA2-3 |
 | `audit` | Audit log (before/after) for admin and settings changes | X14, AD14, SA7 |
 | `settings` | Global settings (branding, fee slabs, commission, SEO defaults, feature flags) | SA5, AC |
@@ -55,52 +58,57 @@ backend module.
 ## 3. Event flows
 
 ### Checkout (CK, OR)
-1. `cart-checkout` validates cart against `products`/`services` stock and
-   `businesses` delivery/pickup eligibility and minimum order.
-2. On confirm, `cart-checkout` calls `payments` to create a payment
-   intent (or marks COD) then calls `orders` to create **one order per
-   shop**, splitting any coupon discount proportionally (BR-03, BR-19
-   in `docs/project/04-business-rules.md`).
-3. `orders` emits `order.created` per shop; `notifications` sends
-   "order placed"; `delivery` creates a pending delivery job once the
-   vendor accepts (or immediately for self-pickup, which skips
-   `delivery`).
+1. `cart-checkout` pins a versioned Products-only cart, address and
+   server-priced quote; services remain enquiry-only.
+2. Current-round verified payment or eligible cash confirmation creates
+   one order per shop. Orders owns the stock-operation ledger; stock,
+   orders, payment links and cart clearing commit together. Cash remains
+   uncollected until explicit verified handover.
+3. `order.created` notifies each shop/customer. Captured funds that cannot
+   place orders enter compensation/reconciliation, even with no order ID.
+   The [critical-flow contract](../specs/_foundation/architecture.md#critical-flows)
+   defines retry fencing and failure handling.
 
 ### Delivery OTP (RD, OR)
-1. `delivery` generates a one-time delivery OTP when a job reaches
-   `picked_up`, stored server-side only.
-2. The rider app collects the OTP from the customer at drop; `delivery`
-   verifies it server-side with attempt limits before transitioning to
-   `delivered` (BR-05).
-3. Self-pickup uses a separate pickup code verified the same way.
+1. A platform-rider order reaching **ready**, not accepted, requests one
+   job. Self-delivery and pickup create no rider job.
+2. Delivery issues codes at platform pickup, self-dispatch or pickup-ready.
+   Only the authorized customer can read the live generation; operational
+   APIs never disclose it.
+3. Code verification, explicit cash collection when due and Orders'
+   fulfilment transition commit together. Failed-attempt bookkeeping also
+   persists on rejection; see [Delivery](../specs/delivery/be/delivery.md).
 
 ### Approvals (AU, VD, PV, RD, AD)
-1. `users` creates a vendor/provider/rider application in `pending`.
-2. `admin` approval queue (AD2) reviews documents; transitions to
-   `approved`/`rejected`/`changes_requested`/`suspended`/`inactive`.
-3. Only `approved` accounts can sell / accept orders / go online
-   (BR-06); `audit` records every decision with a reason.
+1. Businesses owns shop/provider applications; Delivery owns rider
+   applications. Users owns identity/roles, not those application records.
+2. Admin delegates scoped decisions to the owner, which commits the
+   transition, audit and any approved-role grant via Users together.
+3. Pending applicants have narrow owned-application capabilities; only
+   currently approved owners/riders may sell, accept orders or go online.
 
 ### Moderation (RV, RL, AD9, AD10)
-1. `reviews`/`media-videos` default new content to `pending` when it
-   contains links/abusive words or is reported.
-2. `admin` moderation queues approve/hide/delete/remove; `notifications`
-   informs the author on rejection where applicable.
+1. Reviews, Media and Engagement own their content-specific moderation
+   transitions. A report queues evidence; it does not itself change
+   approval or automatically take down content.
+2. Scoped `reviews` permissions guard moderation actions; publication
+   requires current owner visibility, moderation state and surface consent.
+   Decisions are audited and notify authors through the owner event contract.
 
 ### Communications (AD12)
-1. `communications` resolves an audience (Overall/City-wise/Zone-wise)
-   via `users` + `geo`, filtered to consented recipients only
-   (BR-11).
-2. Admin picks a template/channel, previews, schedules; a
-   review-before-send summary is mandatory; `audit` logs the send and a
-   delivery report with opt-outs is produced.
+1. Communications resolves an authorized audience through owner ports.
+   Review binds immutable membership, content, channels, scope and schedule.
+2. Confirming requires that same reviewed snapshot; actual sends/retries
+   recheck current authority, preferences and consent. Receipts drive
+   deduplicated reports; preview counts alone never authorize a send.
 
 ## 4. Where each status model lives
 
 See `docs/project/05-domain-model.md` for the full state diagrams and
 transition tables; each enum and its transition rules are owned by exactly one
 module's `packages/shared` schema: order/payment/refund ->
-`orders`/`payments`; delivery job -> `delivery`; approval -> `users`;
+`orders`/`payments`; delivery job/rider approval -> `delivery`;
+shop/provider approval -> `businesses`;
 review -> `reviews`; offer -> `offers`; video -> `media-videos`;
 enquiry -> `services`; subcategory suggestion -> `catalog`; comment ->
 `engagement`; campaign -> `communications`.

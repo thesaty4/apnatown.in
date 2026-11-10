@@ -4,20 +4,24 @@ Features: F-EG-001, F-EG-002, F-EG-003, F-EG-004, F-EG-005, F-EG-006, F-EG-007, 
 
 Frontend counterpart: [FE engagement](../fe/engagement.md)
 
+Contents: [Tables](#tables) · [Endpoints](#endpoints) · [Rules](#rules-and-use-cases) · [Events](#events-and-jobs) · [Acceptance](#acceptance-criteria)
+
 ## Responsibility
 
-Own customer social actions: follow (+ bell), like on videos, heart on photos/videos, bookmarks of shops/providers/services, moderated video comments, share tracking, and owner announcements to followers. Counters on videos are pushed to media-videos via events; follower counts live here.
+Own follow/bell, likes, media hearts, bookmarks, moderated video comments, share counts and the existing owner **new offer/new video** announcements. Relationship/counter truth lives here; Media holds event-refreshed projections. No generic announcement kind, messaging product or invented daily owner quota.
 
 ## Tables
 
 | Table | Columns and constraints | Indexes (query served) |
 |---|---|---|
-| `follows` | `user_id uuid FK users`; `business_id uuid FK businesses`; `bell_on bool NOT NULL DEFAULT true`; `created_at timestamptz NOT NULL`; `unfollowed_at timestamptz NULL`; PK `(user_id,business_id)` | `(business_id) WHERE unfollowed_at IS NULL` (follower count, announcement fan-out); `(business_id,created_at)` (growth chart); `(user_id) WHERE unfollowed_at IS NULL` (Following feed) |
+| `follows` | `user_id uuid FK users`; `business_id uuid FK businesses`; `bell_on bool NOT NULL DEFAULT false`; `created_at timestamptz NOT NULL`; `last_followed_at timestamptz NOT NULL`; `unfollowed_at timestamptz NULL`; PK `(user_id,business_id)` | `(business_id,user_id) WHERE unfollowed_at IS NULL` (count/fan-out); `(business_id,created_at)` growth; `(user_id) WHERE unfollowed_at IS NULL` Following |
+| `follower_daily_counts` | `business_id uuid FK businesses`; `ist_date date NOT NULL`; `follow_transitions/unfollow_transitions int NOT NULL DEFAULT 0 CHECK >=0`; `closing_total int NOT NULL CHECK >=0`; PK `(business_id,ist_date)` | PK supports eight-week growth, updated in the relationship transaction |
 | `likes` | `user_id uuid FK`; `video_id uuid FK videos`; `created_at`; PK `(user_id,video_id)` | PK; `(video_id)` |
-| `hearts` | `user_id uuid FK`; `target_type text CHECK ('gallery_photo','video','product_image','service_image')`; `target_id uuid`; `created_at`; PK `(user_id,target_type,target_id)` | `(user_id,created_at DESC)` (Saved Photos & Videos tab) |
+| `hearts` | `user_id uuid FK`; `target_type text CHECK ('photo','video')`; `target_id uuid` (`media_assets.id` for a photo, `videos.id` for video/reel; never an array index or storage key); `created_at`; PK `(user_id,target_type,target_id)` | `(user_id,created_at DESC,target_id)` Saved media |
 | `bookmarks` | `user_id uuid FK`; `target_type text CHECK ('shop','provider','service')`; `target_id uuid`; `created_at`; PK `(user_id,target_type,target_id)` | `(user_id,target_type,created_at DESC)` (Saved tabs) |
-| `video_comments` | `id uuid PK`; `video_id uuid NOT NULL FK videos`; `author_user_id uuid NOT NULL FK users`; `text text NOT NULL CHECK length 1–500`; `status text NOT NULL CHECK ('pending','published','removed')`; `removed_reason text NULL`; `created_at/updated_at` | `(video_id,status,created_at DESC,id DESC)` (comment list); `(status,created_at)` (moderation) |
-| `follower_announcements` | `id uuid PK`; `business_id uuid NOT NULL FK businesses`; `kind text NOT NULL CHECK ('offer','video','message')`; `target_id uuid NULL`; `message_en text NOT NULL CHECK <= 200`; `message_hi text NULL`; `recipient_count int NOT NULL DEFAULT 0`; `created_at`; | `(business_id,created_at DESC)` |
+| `video_comments` | `id uuid PK`; `video_id uuid NOT NULL FK videos`; `author_user_id uuid NOT NULL FK users`; `text text NOT NULL CHECK trimmed length 1–500`; `status text NOT NULL CHECK ('pending','published','removed')`; `removed_reason text NULL`; `version int NOT NULL DEFAULT 1`; `created_at/updated_at` | `(video_id,status,created_at DESC,id DESC)` list; `(status,created_at,id)` moderation |
+| `video_engagement_counts` | `video_id uuid PK FK videos`; `like_count/published_comment_count/share_count bigint NOT NULL DEFAULT 0 CHECK >=0`; `version bigint NOT NULL DEFAULT 1`; `updated_at` | PK for authoritative counter projection/reconciliation |
+| `follower_announcements` | `id uuid PK`; `business_id uuid NOT NULL FK businesses`; `kind text NOT NULL CHECK ('offer','video')`; `target_id uuid NULL`; `message_en text NOT NULL CHECK trimmed length 1–200`; `message_hi text NULL CHECK length <=200`; `recipient_count int NOT NULL DEFAULT 0`; `created_at` | `(business_id,created_at DESC,id DESC)` recent three announcements |
 
 ## Endpoints
 
@@ -25,55 +29,75 @@ All customer writes require login; guest calls return `AUTH_REQUIRED` so the FE 
 
 | Method | Path | Auth, role, permission, scope | Request → response | Errors | Idempotent | Features / screens |
 |---|---|---|---|---|---|---|
-| PUT / DELETE | `/engagement/follows/{businessId}` | Customer | PUT `{bellOn?}` → `{following,bellOn,followerCount}`; DELETE unfollows | `ENGAGEMENT_TARGET_NOT_FOUND` | Yes | F-EG-003, F-PF-008 |
-| PUT / DELETE | `/engagement/likes/{videoId}` | Customer; approved video | → `{liked,likeCount}` | `MEDIA_VIDEO_NOT_PUBLISHED` | Yes | F-EG-004 |
-| PUT / DELETE | `/engagement/hearts/{targetType}/{targetId}` | Customer; public target | → `{hearted}` | `ENGAGEMENT_TARGET_NOT_FOUND` | Yes | F-EG-002 |
-| PUT / DELETE | `/engagement/bookmarks/{targetType}/{targetId}` | Customer | → `{bookmarked}` | `ENGAGEMENT_TARGET_NOT_FOUND` | Yes | F-EG-007 |
+| PUT / DELETE | `/engagement/follows/{businessId}` | Customer; own relationship | PUT `{bellOn?}` → `{following,bellOn,followerCount}`; new/refollow defaults bell false; DELETE never needs target public | `ENGAGEMENT_TARGET_NOT_FOUND` on create | Yes | F-EG-003, F-PF-008 |
+| PUT / DELETE | `/engagement/likes/{videoId}` | Customer; PUT requires approved/public video; DELETE own relationship only | → `{liked,likeCount}` | `MEDIA_VIDEO_NOT_PUBLISHED` on create | Yes | F-EG-004 |
+| PUT / DELETE | `/engagement/hearts/{targetType}/{targetId}` | Customer; PUT public photo/video, DELETE own relationship even if target unavailable | → `{hearted}` | `ENGAGEMENT_TARGET_NOT_FOUND` on create | Yes | F-EG-002 |
+| PUT / DELETE | `/engagement/bookmarks/{targetType}/{targetId}` | Customer; PUT public target, DELETE own existing relationship | → `{bookmarked}` | `ENGAGEMENT_TARGET_NOT_FOUND` on create | Yes | F-EG-007 |
 | GET | `/engagement/me/saved?tab=shops\|services\|media&mediaFilter=photos\|videos\|reels&cursor=` | Customer; own | → cards from owning modules; unavailable items flagged | `VALIDATION_ERROR` | Yes | F-EG-001, S-CUST-19 |
 | GET | `/engagement/me/state?videoIds=&businessIds=&targets=` | Customer (guest → empty) | batch → liked/followed/hearted/bookmarked flags (max 50 ids) | — | Yes | overlays, cards |
 | GET | `/videos/{videoId}/comments?cursor=` | Public | → published comments + caller's own pending ones | — | Yes | F-EG-005 |
 | POST | `/videos/{videoId}/comments` | Customer | `{text}` → comment with status | `VALIDATION_ERROR`, `RATE_LIMITED` | Required key | F-EG-005 |
 | DELETE | `/videos/{videoId}/comments/{id}` | Author | → 204 | `ENGAGEMENT_TARGET_NOT_FOUND` | Yes | F-EG-005 |
 | POST | `/engagement/shares` | Public | `{targetType:'video'\|'shop'\|'provider'\|'product'\|'service',targetId,channel:'whatsapp'\|'copy'\|'native'}` → 204 | — | Yes | F-EG-006 |
-| GET | `/businesses/me/followers?range=30d\|90d` | Approved vendor/provider; own | → count, daily growth series, recent announcements | — | Yes | F-VD-015, S-VEND-15, S-PROV-11 |
-| POST | `/businesses/me/announcements` | Approved vendor/provider; own; max 1 per 24 h | `{kind,targetId?,messageEn,messageHi?}` → announcement + recipient count | `ANNOUNCEMENT_LIMIT_REACHED`, `ENGAGEMENT_TARGET_NOT_FOUND` | Required key | F-NT-003 |
-| GET / POST | `/admin/comments?status=pending` · `/admin/comments/{id}/decision` | Admin `catalog:view`/`catalog:edit` + video's business area scope; audited | `{action:'publish'\|'remove',reason?}` | `COMMENT_INVALID_TRANSITION` | Yes | F-EG-005, S-ADMN-11 |
+| GET | `/businesses/me/followers` | Approved vendor/provider; own business from session | → `{followers,gainedThisWeek,approvedVideos,growth:[{start,end,total,gained}],asOf,definitionVersion?,unavailable[],recentAnnouncements[]}`; eight weekly buckets, latest three announcements | — | Yes | F-VD-015, S-VEND-15, S-PROV-11 |
+| POST | `/businesses/me/announcements` | Approved vendor/provider; own; shared abuse limiter, no product quota assumed | `{kind:'offer'\|'video',targetId?,messageEn,messageHi?}` → `{announcementId,status:'queued',eligibleRecipients}`; not a claim of delivery | `ENGAGEMENT_TARGET_NOT_FOUND`, `COMMON_RATE_LIMITED` | Required key | F-NT-003 |
+| GET | `/admin/comments?status=pending\|published\|removed&cursor=&limit=` | Admin **`reviews:view`** + exact video's business scope; super_admin | → page `{id,videoId,businessId,authorLabel,text,status,reason?,version,allowedActions}` + scoped counts | `ADMIN_SCOPE_FORBIDDEN` | Yes | F-EG-005, S-ADMN-11 |
+| POST | `/admin/comments/{id}/decision` | Admin **`reviews:edit`** + same scope; audited | `{action:'publish'\|'remove',reason?,expectedVersion}` → comment and counters; require reason for removal | `COMMENT_INVALID_TRANSITION`, `COMMENT_VERSION_CONFLICT` | Required key | F-EG-005, S-ADMN-11 |
 
 ## Rules and use-cases
 
 1. All toggles are idempotent upserts/deletes keyed by PK; counts never go negative.
-2. Unfollow sets `unfollowed_at` (kept for growth chart); re-follow clears it. Bell off suppresses follower notifications only.
-3. Comments: text with a URL or a blocked word → `pending` (shown only to the author as "awaiting moderation"); else `published`. ST-comment explicit handlers. Rate limit 5 comments/min/user.
-4. Targets must be public (approved business, approved video, active service); otherwise `ENGAGEMENT_TARGET_NOT_FOUND`.
-5. Announcements: target offer/video must belong to the business and be active/approved; fan-out goes to followers with `bell_on` via Notifications (in-app always; WhatsApp/email only with consent, BR-11). Limit assumption: 1 per business per 24 h.
-6. Saved lists hydrate cards via owning module read contracts; removed/unavailable targets are shown as unavailable with a Remove action.
+2. New follow has an **unset/off bell** (`js24.js:4–6`); follow is not marketing consent. Unfollow records the transition and clears bell; re-follow does not silently re-enable it. Daily count rows update once in the same transaction, not from replayable analytics.
+3. Comments: URL/blocked word → pending (author-only); clean → published. Explicit edges: pending→published/removed, published→removed (admin or author deletion), removed terminal. Rate limit 5/min/user. Admin moderation uses reviews, not catalog (`js27.js:23–27`; G-09).
+4. Require public/approved/consented target only when **creating** a relationship, comment or share. DELETE addresses the caller's stored relationship and is successful/idempotent even if the target is suspended, hidden, removed or deleted; no public lookup can block Saved removal.
+5. Announcements match `js26.js:31–35`: message + New offer/New video only; optional supplied target must belong to this business and remain active/approved. No target picker is mandatory; absent target links to `/offers` or `/videos` as the source does. Notifications fans out only to current followers with bell on and eligible selected channel/preferences/consents; no unconditional in-app delivery.
+6. Saved pages preserve relationship IDs/type and return `{available:false,reasonKey}` tombstones without leaking private target content. Remove remains enabled. A retry of PUT after availability loss fails rather than recreating the relationship.
+7. Follower screen fields follow final `js26`, not a 30/90-day chart. `followers` is current active follows; `approvedVideos` comes from `MediaOwnerReadPort.approvedVideoCount({businessId})`. Eight-week growth/“gained this week” must use approved Q-11 week/cohort/refollow definitions; until then their values are null with `unavailable`, not synthetic growth. Actual daily transition counts are not mislabeled unique gains.
+8. Moderation scopes use [Admin's predicate](../../admin/be/admin.md#scope-and-read-context); counts filter before aggregation. S-ADMN-11 uses this queue alongside video/photo moderation, never a new moderation screen.
+
+### Read ports and account data
+
+- `EngagementReadPort.following({userId,cursor?,limit?}) -> Page<{businessId}>`; `followers({businessId,asOf,afterUserId?,upperUserId?,limit<=500}) -> {items:[{userId,bellOn,followedAt}],upperUserId,nextCursor}` uses stable user-ID order, captures an initial upper bound and includes only active relationships with last_followed_at≤asOf. New/refollows after fan-out start cannot enter a resumed batch. `canNotifyFollower({userId,businessId}) -> {following,bellOn,businessApproved}` is rechecked for **every** send/retry.
+- `EngagementReadPort.videoCounters({videoIds[]}) -> [{videoId,likes,publishedComments,shares,version}]` provides absolute authoritative counts. `EngagementAdminReadPort.summary(ctx) -> {pendingComments,publishedComments,removedComments}` requires reviews:view and scope.
+- Required hydration ports: `BusinessPublicReadPort.cards({ids[]})`, `ServicePublicReadPort.cards({ids[]})`, `MediaPublicReadPort.cards({targets:[{type:'photo'|'video',id}]})` → `{id,available,canonicalPath?,label?,thumbnailAssetId?,mediaKind?}` items. For unavailable targets return ID/false only; callers cannot expand private projections. Shop/provider IDs are Businesses IDs.
+- `EngagementUserDataPort` implements Users' `UserDataPort.exportPage({userId,cursor,limit})` for own bookmarks, hearts, likes, follows/bell and authored comments, not other followers' identities. Limit ≤50, stable typed cursor; internal authorized orchestrator only.
+- `erase({userId,requestId,policyVersion}) -> {receipt,status:'completed'|'blocked',reasonCode?}` requires approved Q-32 disposition, is resumable/idempotent and removes only that subject's records. Reconcile active follower, like and published-comment counts once and invalidate Saved/Following. Undecided retention of authored comments/evidence returns blocked; no guessed cascade. Terminal status polling/capabilities remain Users-owned.
 
 ## Events and jobs
 
-Publishes `engagement.followed/unfollowed`, `engagement.liked/unliked`, `engagement.comment_published`, `engagement.shared`, `engagement.announcement_created` (Notifications fans out via job `notifications.fanout_followers`). Consumes `video.removed` (hide comments), `business.status_changed`.
+Publish `engagement.followed`, `engagement.unfollowed`, `engagement.bell_changed`, `engagement.liked`, `engagement.unliked`, `engagement.comment_published`, **`engagement.comment_removed`**, `engagement.comment_pending`, `engagement.comment_moderated`, `engagement.shared`, `engagement.announcement_created`. All use transactional outbox with stable event IDs.
+Comment payload `{commentId,videoId,businessId,authorUserId,scope,fromStatus,toStatus,version,publishedCountDelta}`: publish +1; removing/deleting a published comment −1; pending→removed 0. `comment_moderated` is emitted for an **admin decision** as the author-notification source; self-deletion/count companion events do not send duplicates. Pending triggers the existing admin reviews-moderation alert.
+Media deduplicates events and refreshes absolute counts via `videoCounters`; monotonic versions prevent out-of-order remove/publish from losing a decrement. Share/like mutations and counters commit together.
+Announcement event `{announcementId,businessId,kind,targetId?}` starts Notifications' resumable `notifications.fanout_followers`. `FollowerAnnouncementReadPort.read({announcementId}) -> {businessId,ownerRole,kind,messageEn,messageHi?,linkPath}` supplies content to that worker, not a bulk browser request.
+Consume `video.removed` and **`business.application.decision_changed`** to invalidate visibility/Following/Saved; preserve removable relationships. `user.account.status_changed`/`user.account.deleted` invalidate subject caches/fan-out eligibility immediately; actual erasure remains the Users-orchestrated policy-gated contract.
 
 ## Error codes added
 
 | Code | HTTP | Message key |
 |---|---:|---|
 | `ENGAGEMENT_TARGET_NOT_FOUND` | 404 | `errors.engagement.targetNotFound` |
-| `ANNOUNCEMENT_LIMIT_REACHED` | 429 | `errors.engagement.announcementLimit` |
 | `COMMENT_INVALID_TRANSITION` | 409 | `errors.engagement.commentInvalidTransition` |
+| `COMMENT_VERSION_CONFLICT` | 409 | `errors.engagement.commentVersionConflict` |
 
 ## Acceptance criteria
 
-1. Given a guest taps Follow, then `AUTH_REQUIRED` and, after login, the follow is applied once.
-2. Given the same like PUT is sent twice, then like count increases by one.
+1. Given a guest, when Follow is attempted, then login returns to the origin and applies one follow with bell off.
+2. Given the same like PUT, when sent twice, then like count increases once.
 3. Given a comment containing a link, when posted, then only its author sees it with "awaiting moderation".
-4. Given a vendor announces a new approved video, then followers with bell on receive an in-app notification and recipient count is returned; a second announcement within 24 h gets `ANNOUNCEMENT_LIMIT_REACHED`.
-5. Given a saved shop is later suspended, then Saved shows it as unavailable with Remove.
-6. Given a vendor requests another business's followers, then 404.
+4. Given an authorized new-video announcement, when fan-out resumes after interruption, then each eligible follower/channel is processed once; bell/consent/preference withdrawal before send/retry suppresses it.
+5. Given a saved shop/photo/service later becomes hidden/deleted, when its owner removes the saved relationship, then DELETE succeeds and subsequent Saved pages omit it.
+6. Given another business's followers, when a vendor requests them, then 404.
 7. Given an admin outside the video's area, when deciding a comment, then 403.
+8. Given catalog-only versus reviews:edit admins, when moderating a comment, then catalog-only is denied and the scoped review moderator succeeds.
+9. Given a published comment, when the author deletes it or an admin removes it, then public count drops once despite duplicate/out-of-order events; pending removal never decrements it.
+10. Given a follow/unfollow/refollow sequence, when refreshed, then counts stay nonnegative and refollow's bell remains off; the screen contract still contains Followers, Gained this week, Videos and eight weeks.
+11. Given kind `message`, when announcing, then validation rejects it; only source-defined offer/video announcements are accepted.
+12. Given repeated account-erasure calls, when policy is approved, then receipts and counter changes are idempotent; without Q-32 policy they remain blocked.
 
 ## Tests
 
-Unit: toggle idempotency, comment moderation, announcement limit. Integration: follow → Following feed; like events → media counters; announcement fan-out with Notifications fake. Authorisation negatives: guest writes, cross-business followers, author-only comment delete, unscoped admin.
+Unit: AC1/2/5/10 relationship transitions, typed target IDs, comment state/counter deltas. Integration: Saved tombstone removal, moderation queue/counts, out-of-order counter reconciliation, announcement worker restart/withdrawal, account receipts. Authorization negatives: guest writes, foreign saved relation/followers, non-author comment deletion, same-city foreign area, catalog-only moderator. Malicious text/IDs and duplicate/retried POSTs are bounded/inert.
 
 ## Open questions
 
-Announcement frequency limit (assumed 1/24 h); comment moderation owner (assumed admin videos queue with `catalog` permission).
+Open question: Q-11 defines weekly gain/cohort/refollow attribution; do not generate a trend or invent announcement quotas. Q-32/Q-13 govern account-held comment retention. Comment moderation ownership is settled: existing S-ADMN-11, **reviews:view/edit**, not catalog.

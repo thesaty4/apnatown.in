@@ -21,16 +21,22 @@ docs/design-context/10-sample-data.json       (Padrauna sample data)
 docs/design-context/11-open-issues-and-assumptions.md
 docs/design-context/screenshots/              (reference images: m-<role>-<view>.jpg = 390px, d-<role>-<view>.jpg = 1280px, plus dark and Hindi samples)
 docs/design-context/reference/apnatown-prototype.html and reference/prototype-source/ (the runnable prototype and its complete source and stylesheet; the visual and behavioural source of truth)
-Also read `docs/specs/` for this scope.
+Also read the current [backend foundation](../../specs/_foundation/backend-shared.md),
+[architecture](../../specs/_foundation/architecture.md),
+[data model](../../specs/_foundation/data-model.md) and
+[Catalog BE spec](../../specs/catalog/be/catalog.md).
 
 ## OUTPUT FILES (exact paths)
-- Code in `apps/web`, `apps/api`, `packages/*` as defined by the specs, with tests and Storybook stories
+- API shared runtime/integration ports, shared DTOs, the Catalog reference
+  slice and their tests. No frontend or unrelated documentation.
 
 ## REQUIRED CONTENTS
-Implement `apps/api/src/shared` exactly as in `docs/specs/04-backend/02-shared-layer.md`: config, logger, correlation id, exception filter and error codes, validation pipes, guards (roles, permission, area scope), decorators, interceptors (idempotency, audit), pagination helper, Money, base repository and unit of work, outbox, adapters (ports) with fakes, OpenAPI setup, health endpoints, i18n messages; plus the reference module from `09-reference-module-skeleton.md`.
+Implement `apps/api/src/shared` from [backend-shared.md](../../specs/_foundation/backend-shared.md): config/logger/correlation, strict Zod DTO validation, the flat error envelope, real live-session/CSRF/role/permission/ownership/scope enforcement, keyset pagination, checked Money, opaque transaction ports, atomic outbox/audit/idempotency and rate limits. Wire API versus pg-boss worker composition, integration ports/fakes, health probes and offline OpenAPI generation as specified in the other foundations.
+
+Implement the Catalog suggestion reference with its documented collaborators, DI bindings, guarded controller, repository mappings and real DB assertions. Its migrations and Auth/Users/Business ownership prerequisites must exist first; take them from their owner specs in dependency-sized changes. Unit fakes do not replace authentication or guards in HTTP tests. Do not invent helpers or claim integration success from mocks.
 
 ## IMPLEMENTATION RULES (in addition to the standing requirements)
-- Read `docs/specs/` for this scope and the Design Context Pack; implement exactly what is specified. If a spec is missing or wrong, stop, add an Open Issue and propose the smallest spec fix in the same PR.
+- Read the current foundation and owning module specs plus the Design Context Pack. Record a blocking ambiguity inline in the owning spec and ask; do not generate missing legacy documentation or trackers.
 - Work in small pull requests (about 400 changed lines or fewer), one concern each. Branch `feat/<scope>-<name>`; Conventional Commits. Never merge; humans review and merge.
 - Reuse shared components, hooks, utilities, guards and base classes; if you copy code a second time, extract it to the shared layer first.
 - Every change includes tests (unit, integration, component, e2e as specified), lint and type-check clean, English and Hindi strings, accessibility checks, and a screenshot comparison (mobile 390px and desktop 1280px, light and dark) against `docs/design-context/screenshots/` for UI work.
@@ -39,7 +45,7 @@ Implement `apps/api/src/shared` exactly as in `docs/specs/04-backend/02-shared-l
 
 ## STANDING REQUIREMENTS (apply every one; they are binding)
 
-1. **Complete coverage.** Every feature, screen, flow, state and rule from the Design Context Pack must appear in your output. No "etc.", no "similar to above", no deferred items. Every feature ID (F-...) must be traceable to screens (S-...), components, APIs, tables and tests. Do not drop anything from the later additions: category tiles that deep-link to Explore (pre-selected in Products, Shops and Services tabs), offers that open product/service/list, the Explore Services filter with category + subcategory multi-select and URL state, Products & Services section with pills, Videos/Reels (feed, follow, like, share, comments, report, linked items, moderation), videos on product/service pages, service cards and service details, smart search with keyword mapping, gallery and media-consent rules, keyword mapping tool, and the dashboards for every role.
+1. **Complete coverage within this scope.** Cover all shared-backend and reference-slice contracts with tests. Feature behavior outside this slice belongs to its module task; do not expand this task into the whole product or maintain extra coverage documents.
 2. **UI and behaviour parity.** The built UI and functionality must match the design exactly: colours, typography, spacing, radius, shadows, icons, copy in English and Hindi, states and interactions. Use only the tokens in `docs/design-context/04-design-tokens.json` (and the prototype stylesheet) through the Tailwind theme. Never invent styles or behaviour. When the pack and the prototype disagree, the prototype wins and you record the conflict in `docs/design-context/11-open-issues-and-assumptions.md`.
 3. **Tech stack (fixed).** Next.js (App Router, TypeScript) with Tailwind CSS; NestJS (TypeScript); PostgreSQL. For everything else (ORM, cache, queue, search, storage, realtime, payments, OTP/SMS, WhatsApp, maps, video processing, hosting) choose the option most suitable for each feature and justify it in 2 to 3 lines: the alternative considered and when to switch. Prefer proven, low-cost choices suited to a Padrauna launch that can scale to more cities.
 4. **System design per feature.** Use the design approach suited to each feature, for example: state machines for orders, deliveries, approvals, offers and videos; transactional outbox for notifications and webhooks; queues for media processing and campaigns; idempotency keys for payments, orders, refunds and messages; PostGIS geospatial indexing for nearby search; cursor (keyset) pagination for feeds and lists; denormalised counters for likes, followers and views; caching with explicit invalidation; optimistic locking for stock and status. Give a sequence description (Mermaid sequence diagram plus numbered steps) for each critical flow.

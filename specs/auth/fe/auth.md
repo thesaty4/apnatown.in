@@ -16,14 +16,15 @@ Features: F-AU-004, F-AU-006, F-AU-007 | Screens: S-CUST-27, S-CUST-28 | Flows: 
 
 - Screenshots: `d-customer-login.jpg`, `m-customer-login.jpg`.
 - Layout: phone entry then six OTP boxes; EN/HI copy; mobile-first, matching the design tokens.
-- Data: `POST /auth/otp/challenges`, `POST /auth/otp/challenges/{id}/verify`; see [BE auth](../be/auth.md).
+- Data: bootstrap `GET /auth/csrf`, then `POST /auth/otp/challenges` and `POST /auth/otp/challenges/{id}/verify` through the credentialed same-origin client; refresh CSRF binding and `GET /auth/session` after login. See [BE auth](../be/auth.md).
 - Special states: invalid/expired OTP, locked attempt limit, resend wait; optional email/Google methods remain unresolved (Q-30).
-- Interactions: auto-advance, paste, numeric keyboard, accessible labels; resend is unavailable until 30 seconds; do not expose OTP or session token.
+- Interactions: auto-advance, paste, numeric keyboard, accessible labels; calculate resend wait from server `resendAfter`, replace `challengeId` after resend and clear old digits. Do not expose OTP or session token. Email/Google have explicit unavailable states until configured; never use the prototype demo-login handler.
 - Rules: BR-05; server is the sole verifier.
 - Acceptance:
   - Given a valid phone, when the user requests login, then the page shows the resend countdown and OTP entry without displaying a code.
   - Given an invalid or locked code, when submitted, then a localized error appears and the six-box input remains keyboard accessible.
   - Given Hindi and dark mode, when the form renders at mobile and desktop widths, then translated text wraps and token contrast remains accessible.
+  - Given a resend supersedes the prior challenge or the account is unavailable, when verification fails, then show its localized error and do not enter a dashboard or replay a pending action.
 
 ### S-CUST-28 — Session expired (`/session-expired`)
 
@@ -48,7 +49,7 @@ Features: F-AU-004, F-AU-006, F-AU-007 | Screens: S-CUST-27, S-CUST-28 | Flows: 
 
 - Shared: `PhoneInput`, `OtpInput`, `Input`, `Sheet`, `Button`, shared `StateViews`.
 - Key prefix: `auth.login.*`, `auth.sessionExpired.*`; reuse the approved EN/HI catalogue.
-- Session cookies are never read by client JavaScript or stored in browser storage.
+- Session cookies are never read by client JavaScript or stored in browser storage. CSRF tokens stay in the shared client's memory; reload bootstraps them again. A session-invalidating response clears private query caches before a new account logs in.
 
 ## Tests
 

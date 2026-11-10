@@ -21,16 +21,21 @@ docs/design-context/10-sample-data.json       (Padrauna sample data)
 docs/design-context/11-open-issues-and-assumptions.md
 docs/design-context/screenshots/              (reference images: m-<role>-<view>.jpg = 390px, d-<role>-<view>.jpg = 1280px, plus dark and Hindi samples)
 docs/design-context/reference/apnatown-prototype.html and reference/prototype-source/ (the runnable prototype and its complete source and stylesheet; the visual and behavioural source of truth)
-Also read `docs/specs/` for this scope.
+Also read the current [data foundation](../../specs/_foundation/data-model.md),
+[bootstrap contracts](../../specs/_foundation/architecture.md) and each
+owning module's `specs/<module>/be/<module>.md`.
 
 ## OUTPUT FILES (exact paths)
-- Code in `apps/web`, `apps/api`, `packages/*` as defined by the specs, with tests and Storybook stories
+- API-owned Prisma schema, reviewed migrations, synthetic seed/provisioning
+  commands and database tests; no frontend or extra schema documents.
 
 ## REQUIRED CONTENTS
-Implement all migrations and seed scripts from `docs/specs/03-database/` (PostGIS, pg_trgm, unaccent, tables, constraints, indexes, counters, outbox, idempotency), with seed data from `docs/design-context/10-sample-data.json` (dev/test only) and a migration test that boots an empty database.
+Implement [data-model.md](../../specs/_foundation/data-model.md) and the owning BE table contracts in FK/dependency order: PostgreSQL extensions, domain constraints/indexes, shared outbox/idempotency/rate-limit tables and pg-boss schema setup. Use Prisma Migrate with a separate migration role, runtime least privilege and forward repair; no `db push`, production seed/reset or API-startup migration.
+
+Adapt `docs/design-context/10-sample-data.json` only into deterministic synthetic local/test fixtures. Prove an empty isolated DB migrates, extensions work, the seed is repeatable and suite cleanup rejects unrelated targets. Implement the foundation's named commands; unresolved business/policy values stay gated, never become production seed defaults.
 
 ## IMPLEMENTATION RULES (in addition to the standing requirements)
-- Read `docs/specs/` for this scope and the Design Context Pack; implement exactly what is specified. If a spec is missing or wrong, stop, add an Open Issue and propose the smallest spec fix in the same PR.
+- Read the current foundation and owning BE specs plus the Design Context Pack. Record a blocking ambiguity inline in its owning spec and ask; do not recreate legacy database docs or progress trackers.
 - Work in small pull requests (about 400 changed lines or fewer), one concern each. Branch `feat/<scope>-<name>`; Conventional Commits. Never merge; humans review and merge.
 - Reuse shared components, hooks, utilities, guards and base classes; if you copy code a second time, extract it to the shared layer first.
 - Every change includes tests (unit, integration, component, e2e as specified), lint and type-check clean, English and Hindi strings, accessibility checks, and a screenshot comparison (mobile 390px and desktop 1280px, light and dark) against `docs/design-context/screenshots/` for UI work.
@@ -39,7 +44,7 @@ Implement all migrations and seed scripts from `docs/specs/03-database/` (PostGI
 
 ## STANDING REQUIREMENTS (apply every one; they are binding)
 
-1. **Complete coverage.** Every feature, screen, flow, state and rule from the Design Context Pack must appear in your output. No "etc.", no "similar to above", no deferred items. Every feature ID (F-...) must be traceable to screens (S-...), components, APIs, tables and tests. Do not drop anything from the later additions: category tiles that deep-link to Explore (pre-selected in Products, Shops and Services tabs), offers that open product/service/list, the Explore Services filter with category + subcategory multi-select and URL state, Products & Services section with pills, Videos/Reels (feed, follow, like, share, comments, report, linked items, moderation), videos on product/service pages, service cards and service details, smart search with keyword mapping, gallery and media-consent rules, keyword mapping tool, and the dashboards for every role.
+1. **Complete coverage within this scope.** Cover the selected schema/migration/seed contracts and their tests. Build in dependency-sized changes without inventing undecided product values; feature APIs/screens are separate module tasks.
 2. **UI and behaviour parity.** The built UI and functionality must match the design exactly: colours, typography, spacing, radius, shadows, icons, copy in English and Hindi, states and interactions. Use only the tokens in `docs/design-context/04-design-tokens.json` (and the prototype stylesheet) through the Tailwind theme. Never invent styles or behaviour. When the pack and the prototype disagree, the prototype wins and you record the conflict in `docs/design-context/11-open-issues-and-assumptions.md`.
 3. **Tech stack (fixed).** Next.js (App Router, TypeScript) with Tailwind CSS; NestJS (TypeScript); PostgreSQL. For everything else (ORM, cache, queue, search, storage, realtime, payments, OTP/SMS, WhatsApp, maps, video processing, hosting) choose the option most suitable for each feature and justify it in 2 to 3 lines: the alternative considered and when to switch. Prefer proven, low-cost choices suited to a Padrauna launch that can scale to more cities.
 4. **System design per feature.** Use the design approach suited to each feature, for example: state machines for orders, deliveries, approvals, offers and videos; transactional outbox for notifications and webhooks; queues for media processing and campaigns; idempotency keys for payments, orders, refunds and messages; PostGIS geospatial indexing for nearby search; cursor (keyset) pagination for feeds and lists; denormalised counters for likes, followers and views; caching with explicit invalidation; optimistic locking for stock and status. Give a sequence description (Mermaid sequence diagram plus numbered steps) for each critical flow.

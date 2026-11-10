@@ -4,6 +4,8 @@ Features: F-SA-005, F-AC-005, F-AC-006, F-X-009 | Screens: S-SUPR-06, S-CUST-30,
 
 Backend contract: [BE settings](../be/settings.md)
 
+Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Tests](#tests)
+
 ## Routes and rendering
 
 | Route (production) | Screen ID | Rendering + reason | Auth / role | Index policy |
@@ -22,20 +24,28 @@ Backend contract: [BE settings](../be/settings.md)
 
 ### S-SUPR-06 Global settings | `d-super-xsettings.jpg`, `m-super-xsettings.jpg`
 - Layout: heading; section chips (URL `section`): Branding, Delivery & rider pay, Commission & plans, Payments, Policies & reviews, Notifications & WhatsApp, SEO defaults, Feature flags, Legal pages; one form card per section; link "Manage categories".
-- Delivery: slab rows "Up to (km)" / "Fee (₹)"; rider rule "Base per ride (₹)", "Per km (₹)" with live "Example: 3 km ride earns ₹41".
+- Delivery: slab rows "Up to (km)" / "Fee (₹)"; rider rule "Base per ride (₹)", "Per km (₹)" with a live example from **configured** values; no demo ₹20/₹7 production fallback.
 - Commission & plans: default commission %, platform fee ₹, plan rows (name, ₹/mo, commission %), promotion fee rows.
-- Payments: toggles Online payments / Cash on delivery; gateway select; key status badge "Configured" / "Not configured" (no key input).
-- Policies: refund window hours; review rule textarea; blocked words (chips).
-- Notifications & WhatsApp: info "Keys are stored encrypted."; WhatsApp number, status badge, enable toggle; SMS provider; email sender.
+- Payments: Online payments / Cash on delivery toggles; approved configured gateway choices; "Configured"/"Not configured" badge, no key input or silently selected provider.
+- Policies: approved refund window; review rule EN/HI textarea; blocked words chips. Rule copy cannot resolve Reviews' eligibility/re-review gates.
+- Notifications & WhatsApp: configured sender/status/enable toggle, SMS adapter and email sender; **public support Call and WhatsApp E.164 destinations**. No secrets or example phone number.
 - SEO: default title/description with search-result preview.
-- Feature flags: toggles Customer reviews, Guest browsing, WhatsApp messages, Service booking (future), Donations (future), Maintenance; toggle saves immediately with toast "Updated".
+- Feature flags: Customer reviews, Guest browsing, WhatsApp, Maintenance; future Booking/Donations visible **false, disabled, unavailable** until separately implemented.
 - Legal pages: Terms of use, Privacy policy, Refund policy, About us → Edit `Sheet` with EN/HI tabs.
-- Rupee inputs convert to paise in the form schema; save shows toast "Saved"/"Rules saved"; version conflict → reload banner.
-- Acceptance: Given invalid slab order, inline error and no save; Given conflict, banner "Settings changed by someone else" + Reload; Given Hindi, all labels Hindi; Given dark mode, tokens apply.
+- Each grouped form makes **one** PUT `/super-admin/settings/groups/{group}` with all values/expectedVersions: `delivery_rider_pay` = delivery+rider_earning; `commission_plans` = commission+plans+promotion_fees; `policies_reviews` = policies+reviews. No separate parallel per-key saves and no half-form success.
+- Branding, gateway choice, integrations/support contacts and SEO use allowed single-key Save; legal pages save per slug. Existing online/COD/WhatsApp/feature switches are **immediate versioned flag mutations**, visually distinct from Save-bound edits. Maintenance enable describes the BE admission rules, not “all APIs stop”.
+- GET `/super-admin/settings` hydrates all values/versions. Rupees submit integer paise and percentages integer bps. Missing approved config remains “Not configured”, not sample money/provider values.
+- Save shows pending→success only after the whole group response. Invalid/stale group retains **all** edits, with key-specific errors and “Settings changed by someone else” + Reload. Reapply only after hydrating all fresh versions. Flag PUT sends `{enabled,expectedVersion}`; failed optimistic toggles restore server state.
+- Cache invalidates coherent group values and configured contacts; `feature_flag.updated` affects feature availability and `legal.updated` its slug/locale metadata. UI never locally enables a future product.
+- Acceptance: Given non-super admin, when loading/mutating, then route/API are forbidden. Given one invalid/stale group member, when Save is attempted, then no member changes and every local edit survives. Given concurrent flag writes, then version conflict restores current state.
+- Acceptance: Given Hindi/dark mode, when all sections render, then labels/errors stay readable and no credentials appear. Given Booking/Donations, when toggled by forged API/UI, then they stay disabled. Given changed financial settings, then UI does not claim existing orders were repriced.
 
 ### S-CUST-30 Help and support | `d-customer-help.jpg`, `m-customer-help.jpg`
-- FAQ accordion (`details` with keyboard support); Contact support form "Your message" (required) → Send; Call (`tel:`) and WhatsApp (`wa.me`) buttons.
-- Acceptance: Given empty message, inline error; Given sent, toast and form clears; Given offline, Send disabled with offline banner.
+- FAQ accordion (`details` keyboard support); public **message-only** form “Your message” → Send, matching final `js7.js`. No required guest phone or login field.
+- Load `/settings/public.support`; Call/WA use configured `tel:`/`https://wa.me/` links with normalized numbers, not arbitrary URLs. A null contact disables that button with an accessible explanation; no hard-coded prototype phone. Link launch is user initiated, not a notification-consent change.
+- POST `/support/messages` **`{message}`** + retained idempotency key; trim 1–1000. On `202`, toast “Message sent” and clear. The actual BE handoff is an authorized existing Admin overview notification/detail, not a future inbox.
+- Preserve draft on validation/rate/network error; offline disables Send with banner. Do not promise reply time/channel for anonymous intake (SET-Q1).
+- Acceptance: Given a guest with only a message, when Send succeeds/replays, then one intake is acknowledged without phone. Given empty message, sixth/hour or offline, then localized feedback preserves the draft. Given missing contact config, when viewing Help, then only configured actions open. Given markup, when rendered in admin detail, then it is inert text.
 
 ### S-CUST-31 About us | `d-customer-about.jpg`, `m-customer-about.jpg`
 - Heading, brand paragraph, three cards (Local shops, Trusted services, Fast delivery).
@@ -53,7 +63,10 @@ Backend contract: [BE settings](../be/settings.md)
 - `EmptyState` 📡 "No internet connection" / "You can still view saved pages. Reconnect to place orders." + Try again.
 
 ### S-CUST-37 Maintenance | `d-customer-maintenance.jpg`, `m-customer-maintenance.jpg`
-- `EmptyState` 🛠️ "We'll be right back" / "ApnaTown is under maintenance. Please try again in a few minutes." + Check again (calls `/health`).
+- `EmptyState` 🛠️ "We'll be right back" / "ApnaTown is under maintenance. Please try again in a few minutes." + Check again → **no-store GET `/health`**. Preserve only a validated same-origin intended path, never a purchase POST or external redirect.
+- Health HTTP 200 `maintenance` stays here; `ok` retries the intended route once. Network/error stays retryable, not falsely recovered. Blocked SSR marketplace pages use HTTP 503; health deliberately does not.
+- No catch-all frontend redirect on Auth OTP/session recovery, signed callbacks, admitted existing-operation status/correctness flows or authenticated super-admin settings. An expired super session must be able to authenticate and disable maintenance; exact route admission is BE-owned.
+- Acceptance: Given blocked checkout, when routed here, then its safe path survives without re-submitting a purchase. Given health maintenance/network error, when Check again is pressed, then it stays; given ok, then navigation retries once. Given an expired super session, when recovering, then Auth/settings stay reachable.
 
 ### S-CUST-38 Design system and checklists | `d-customer-design.jpg`, `m-customer-design.jpg`
 - Internal page listing tokens, shared components (from `frontend-shared.md`), flows and checklists; built only in non-production for design QA (F-X-001, F-X-002, F-X-003, F-X-004).
@@ -68,4 +81,4 @@ Prefixes `superAdmin.settings.*`, `help.*`, `legal.*`, `system.*`. Events: `sett
 
 ## Tests
 
-Component: paise conversion, slab validation, flag toggle, FAQ keyboard. E2E: J10 super admin changes rider earning; customer sees 404 on unknown route; maintenance flag shows maintenance page.
+Component/axe: atomic group payloads/versions, error focus and retained drafts, keyboard tabs/toggles/FAQ, paise/bps transforms, Hindi/dark, legal sanitisation, message-only support and null contacts. E2E J10: grouped Save versus stale-member rollback; future flags remain false; support→real admin alert/detail with scope denial; flag/legal cache refresh; maintenance→Auth recovery→disable→health recovery without new-charge replay. Verify signed callbacks and admitted in-flight correctness are not intercepted by the frontend redirect.

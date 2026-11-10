@@ -21,16 +21,18 @@ docs/design-context/10-sample-data.json       (Padrauna sample data)
 docs/design-context/11-open-issues-and-assumptions.md
 docs/design-context/screenshots/              (reference images: m-<role>-<view>.jpg = 390px, d-<role>-<view>.jpg = 1280px, plus dark and Hindi samples)
 docs/design-context/reference/apnatown-prototype.html and reference/prototype-source/ (the runnable prototype and its complete source and stylesheet; the visual and behavioural source of truth)
-Also read `docs/specs/` for this scope.
+Also read `specs/_foundation/` and the existing module BE/FE acceptance
+criteria for each implemented journey. Legacy `docs/specs/` outputs are
+not prerequisites.
 
 ## OUTPUT FILES (exact paths)
 - Code in `apps/web`, `apps/api`, `packages/*` as defined by the specs, with tests and Storybook stories
 
 ## REQUIRED CONTENTS
-Run and fix: Lighthouse CI budgets, axe on all screens, keyboard and screen-reader checks, Hindi and dark-mode visual regression against screenshots, security review (OWASP checklist per flow, dependency scan, penetration checklist), load tests (k6) for Explore, search, checkout, reels; verify every F-ID and S-ID through `scripts/audit-specs.mjs`; release checklist and runbooks.
+Run and fix the implemented foundation/module checks: measured performance budgets, axe plus keyboard/screen-reader checks, Hindi/dark visual comparisons, security review and targeted load tests for Explore, search, checkout and Reels. Use the existing test stack; add a measurement tool only when required. `node scripts/check-spec-coverage.mjs` verifies structural F-ID/S-ID coverage, **not** functioning features: also execute each module's acceptance/journey tests. Prepare release material only when explicitly requested; do not generate missing legacy audit scripts or trackers.
 
 ## IMPLEMENTATION RULES (in addition to the standing requirements)
-- Read `docs/specs/` for this scope and the Design Context Pack; implement exactly what is specified. If a spec is missing or wrong, stop, add an Open Issue and propose the smallest spec fix in the same PR.
+- Follow the current foundation/module specs above and the Design Context Pack. Keep changes slice-scoped; ask about a blocking ambiguity and fix its owning spec, not missing legacy documents or trackers.
 - Work in small pull requests (about 400 changed lines or fewer), one concern each. Branch `feat/<scope>-<name>`; Conventional Commits. Never merge; humans review and merge.
 - Reuse shared components, hooks, utilities, guards and base classes; if you copy code a second time, extract it to the shared layer first.
 - Every change includes tests (unit, integration, component, e2e as specified), lint and type-check clean, English and Hindi strings, accessibility checks, and a screenshot comparison (mobile 390px and desktop 1280px, light and dark) against `docs/design-context/screenshots/` for UI work.

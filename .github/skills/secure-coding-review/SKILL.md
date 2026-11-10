@@ -40,20 +40,15 @@ task, and as the working checklist for `security-auditor`. Full rules:
 14. [ ] Marketing/WhatsApp sends check recorded consent and honour
     opt-outs.
 
-## Skeleton: authorization guard
+## Authorization reference
 
-```ts
-// apps/api/src/modules/<module>/authorize.ts
-export function authorize(ctx: RequestContext, required: {
-  roles: Role[];
-  ownerCheck?: (ctx: RequestContext) => Promise<boolean>;
-  adminScope?: { city?: string; module: string; action: 'view' | 'edit' | 'create' | 'delete' | 'export' };
-}): void {
-  if (!required.roles.includes(ctx.user.role)) throw new ForbiddenError();
-  if (required.ownerCheck && !isSatisfiedBy(required.ownerCheck, ctx)) throw new ForbiddenError();
-  if (required.adminScope && !hasAdminScope(ctx.user, required.adminScope)) throw new ForbiddenError();
-}
-```
+Use the real guard/policy and Catalog reference contracts in
+[backend-shared.md](../../../specs/_foundation/backend-shared.md),
+not a second placeholder authorization helper.
+Await asynchronous ownership/scope checks before proceeding; a Promise is
+not an authorization result. Recheck mutable authority inside the command
+transaction and on idempotent replay. Pending applicants use owner-issued
+capabilities, never self-granted seller/rider roles.
 
 ## Output
 

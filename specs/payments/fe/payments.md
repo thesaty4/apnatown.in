@@ -1,8 +1,8 @@
 # FE: payments
 
-Features: F-CK-006, F-CK-007, F-OR-006, F-VD-017 | Screens: S-CUST-11, S-CUST-14, S-CUST-15, S-VEND-16 | Flows: J1
+Features: F-CK-006, F-CK-007, F-OR-006, F-VD-017, F-AC-001 (gated integration) | Screens: S-CUST-11, S-CUST-14, S-CUST-15, S-CUST-24, S-VEND-16 | Flows: J1
 
-Backend contract: [BE payments](../be/payments.md) · Checkout selection/retry stays in the Cart/Checkout screen; order/refund request UI stays in Orders.
+Backend contract: [BE payments](../be/payments.md) · [Checkout](../../cart-checkout/fe/cart-checkout.md) owns customer selection/retry; [Orders](../../orders/fe/orders.md) owns refund requests/decisions. Use flat foundation errors and safe-integer paise JSON; do not parse numeric strings/float rupees or nested error envelopes.
 
 ## Routes and rendering
 
@@ -18,9 +18,11 @@ Backend contract: [BE payments](../be/payments.md) · Checkout selection/retry s
 
 - Screenshots: `d-vendor-vearn.jpg`, `m-vendor-vearn.jpg`.
 - Layout: monthly gross, commission and next-payout summary; six-month chart; current/available subscription plans; promotion purchase rows; invoices. Desktop uses the prototype's multi-column cards; mobile stacks cards and turns invoice rows into labelled entries.
-- Data: `GET /payments/me/earnings`, `GET /payments/me/subscription`, `GET /payments/me/invoices`; `POST /payments/me/plan-purchases` and `/payments/me/promotion-purchases` from [BE payments](../be/payments.md). No client cache may cross business accounts.
-- Special states: no posted ledger entries; unavailable/unconfigured plan or payout policy; purchase pending verification; failed payment with retry; invoices empty; business no-permission.
-- Interactions: switch plan / buy promotion starts a server-priced, idempotent payment; keep the current plan/placement until verified success. Do not optimistically mark a plan active, promotion live, invoice paid or payout scheduled. Keyboard users can activate cards/buttons with Enter/Space; dialogs/sheets close on Esc and restore focus.
+- Data: `/payments/me/earnings` (`EarningsDTO` with summary, six-month chart and paginated ledger), `/subscription`, `/promotions`, `/invoices`; create purchases, GET `/payments/me/purchases` / `/{purchaseId}`, and POST `/{purchaseId}/retry`. Observe with owner-scoped polling while pending; restore selected purchase via `?purchaseId=` on reload. No cache crosses accounts.
+- Special states: available zero ledger vs policy-unavailable null amounts; absent next-payout schedule; missing price/period/activation configuration; provider verification pending; failure with permitted retry; reconciliation required; charge succeeded but placement blocked; invoice policy unavailable vs genuine empty issued list.
+- Interactions: Switch/Buy uses a server-priced key and current approved-business/payment-flag eligibility. Promotion sends prepared placement ID, not arbitrary business/banner/price. Reuse the same key after a lost response; a permitted retry uses the versioned retry endpoint, never a new purchase to bypass pending capture. A changed price/period requires re-review. Polling/browser return does not prove success.
+- Activation: plan changes only after verified subscription application; promotion state comes from Offers. Render paid-but-not-live distinctly with its blocked reason; never start a duration locally, create an invoice number or promise a payout. Disabled flags/approval/content/policy explain why Buy is unavailable.
+- Accessibility: cards/buttons work with Enter/Space; chart has a text table, not a color-only tooltip; dialogs close on Esc and restore focus. Date ranges use server IST period boundaries.
 - Rules: F-VD-017, BR-01/02/12/22 and ST-payment. The prototype's sample amounts, chart values, plan rates, promotion duration and invoice rows are not production data. Display currency/date using shared paise/IST formatters; do not fabricate a next-payout date.
 - Acceptance:
   - Given a vendor owns an approved business with configured financial records, when Earnings loads, then totals and chart use only that business's server ledger and display INR values with localized labels.
@@ -28,12 +30,21 @@ Backend contract: [BE payments](../be/payments.md) · Checkout selection/retry s
   - Given the vendor starts a plan or promotion purchase, when provider verification is pending or fails, then the current plan/placement remains unchanged and the localized pending/error state is actionable.
   - Given another vendor's identifier is supplied or the signed-in role is not vendor, when the route/data loads, then no financial data is disclosed and the no-permission state is shown.
   - Given Hindi or dark theme is active, when chart labels, amounts and invoice rows render, then labels wrap, status uses icon+text+color, and token styling matches the prototype.
+  - Given a pending purchase is reloaded or a provider callback arrives late, when status refreshes, then the original purchase is restored and no second charge/period is initiated.
+  - Given a successful promotion charge has blocked activation, when displayed, then “paid” and placement availability are separate; the UI neither marks it live nor invents a refund.
+  - Given a suspended business, disabled online flag, stale purchase version or unknown provider outcome, when Retry/Buy is attempted, then no optimistic financial/activation state appears and the server reason remains actionable.
 
 ### Checkout payment and order refund states
 
 - Screens: S-CUST-11, S-CUST-14, S-CUST-15 are specified by their owning Checkout/Orders screens; Payments adds no duplicate route or form.
-- Contract: reflect server-confirmed `pending`, `paid`, `failed`, `collected`, `refunded` and ST-refund states. Browser return from a gateway is never success. Preserve the existing failure copy from `09-content-and-i18n.md`; the Orders screen owns refund request reason, window and notification copy.
-- Acceptance: failure offers retry or enabled cash fallback; pending never appears as placed/paid; refund tracker reflects the server state and never claims provider completion before confirmation.
+- Contract: reflect server-confirmed `pending`, `paid`, `failed`, `collected`, `refunded` and separate ST-refund decision/processing states. `refund.approved`/`refund.declined` are Orders decisions; `payment.refund_completed`/`payment.refund_failed` are execution outcomes. Approval is not returned money; execution failure is not a declined decision.
+- Recovery: Checkout displays compensation against an attempt even without an order ID. Pending/unknown capture or incomplete compensation disables retry/COD; copy never promises “money safe” or a refund ETA for an unknown result. Orders displays ordered/fulfilled/current-payable/refunded amounts independently.
+- Acceptance: Given a verified failure with no exposure, when Checkout renders allowed actions, then retry/enabled cash fallback is offered. Given unknown capture or compensation, when the same panel opens, then no unsafe retry or placed state appears. Given only refund approval, when Orders refreshes, then completion remains unconfirmed.
+
+### Account saved methods (Users-owned S-CUST-24)
+
+- Users calls `GET /payments/me/saved-methods`; under Q-33 its `{status:'unavailable',reasonCode:'PAYMENT_SAVED_METHODS_UNAVAILABLE'}` renders a disabled/unavailable row, **not** “No saved methods”. No save/remove/tokenization interaction is implemented until provider and policy are approved.
+- Acceptance: Given Q-33 is unresolved, when Account loads, then no fake empty success, payment instrument or add-method action is shown; a failed/session-expired request remains an error rather than unavailable capability.
 
 ## Standard states, components and i18n
 
@@ -47,7 +58,8 @@ Backend contract: [BE payments](../be/payments.md) · Checkout selection/retry s
 - Component: configured/unconfigured summary, ledger empty/error, pending/failed purchase without optimistic activation, invoice rows, keyboard/dialog operation, Hindi and dark mode.
 - Journey: J1 payment failure then retry or enabled cash fallback; vendor owner views S-VEND-16 and completes a configured purchase only after the verified-success response.
 - Visual: `d-vendor-vearn.jpg` and `m-vendor-vearn.jpg`, 360px/mobile and desktop, light/dark, EN/HI. Never compare against seeded invoice amounts as live data.
+- Map every acceptance bullet to component/contract/E2E scenarios: reload/status/retry, duplicate tap, stale/new-price review, late capture, paid-but-blocked placement, null-policy vs authoritative zero, decision-vs-execution, current COD payable and Q-33 unavailable. Axe/keyboard chart/dialog focus, malicious labels, redacted telemetry and IST month-boundary rendering are required.
 
 ## Open questions
 
-Q-01/Q-21, Q-06–Q-08, Q-17, Q-33 and Q-74–Q-76 remain open; see [BE payments](../be/payments.md) and the open-issues register.
+Q-01/Q-21 provider/capture, Q-06 invoice/GST, Q-07 refund SLA, Q-17 authority, Q-32 retention, Q-33 saved methods, Q-73 recovery method, Q-74 purchase lifecycle, Q-75 payouts and Q-76/Q-77 partial refunds remain gated; see [BE payments](../be/payments.md). These are unavailable branches, not completed features or sample-data fallbacks.

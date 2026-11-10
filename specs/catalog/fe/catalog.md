@@ -87,7 +87,7 @@ Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../..
 
 - Screenshots: `d-admin-acats.jpg`, `m-admin-acats.jpg`.
 - Layout: mobile uses stacked tree/cards; tablet and desktop use the shared tree/preview regions and `DataTable`; main categories are visibly fixed for area admins.
-- Data: `GET /catalog/admin/categories`; filter preview uses the search-owned preview API; edits follow BE role constraints.
+- Data: `GET /catalog/admin/categories`; filter preview uses `POST /search/admin/preview` with selected taxonomy IDs and the permitted scope; edits follow BE role constraints.
 - Special states: no permission; empty subcategory tree; duplicate warning; preview with no results.
 - Interactions: expand/collapse category; preview filter; add/edit is available only to super admin pending Q-39; area admins use the suggestion queue.
 - Rules: F-AD-005/F-SA-008, BR-07, BR-12; no destructive category delete.
@@ -101,19 +101,20 @@ Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../..
 - Screenshots: `d-admin-asubs.jpg`, `m-admin-asubs.jpg`.
 - Layout: mobile uses labelled cards and stacked status tabs; tablet/desktop use `DataTable`, `Tabs`, `StatusBadge`, `Sheet`, `ConfirmDialog`.
 - Data: scoped `GET /catalog/admin/subcategory-suggestions`; decision endpoint from BE; decision changes refresh the active queue and badge counts.
-- Special states: empty per status; duplicate candidates; rejection reason required; merge target picker limited to active siblings.
+- Special states: empty per status; duplicate candidates; rejection reason required; merge target picker limited to active siblings; approval requires reviewed Hindi text when the suggestion omitted it.
 - Interactions: status tabs are keyboard-operable; decision dialog traps focus and closes on Esc; never recolour status without text/icon.
 - Rules: ST-subcategory-suggestion, BR-07, BR-12, BR-22.
 - Acceptance:
   - Given an out-of-scope item, when an admin deep-links to it, then no-permission state replaces the action controls.
   - Given a rejection, when the reason is blank, then submit is blocked and a localized field error appears.
   - Given a merge, when a valid target is selected, then the item moves to Merged and shows the target.
+  - Given a suggestion lacks Hindi, when Approve opens, then the reviewer must provide `approvalNameHi`; an untranslated/null taxonomy row is never silently published.
 
 ### S-ADMN-15 — Search keywords
 
 - Screenshots: `d-admin-akeys.jpg`, `m-admin-akeys.jpg`.
 - Layout: mobile uses mapping cards and a responsive `Sheet`; tablet/desktop use `DataTable` with target chips and a live preview panel.
-- Data: catalog keyword mapping list/write APIs; preview uses the search-owned preview API and returns product/shop/service/video groups.
+- Data: catalog keyword mapping list/write APIs; `POST /search/admin/preview` accepts the unsaved typed mapping and returns scoped product/shop/service/video groups without publishing it.
 - Special states: no mappings; no preview results; duplicate synonym; no permission for writes.
 - Interactions: search terms and targets are editable by super admin; preview before save; delete requires confirmation; EN/HI/Hinglish variants share one mapping.
 - Rules: F-AD-015, F-SA-008, BR-12.

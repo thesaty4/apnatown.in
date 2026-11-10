@@ -21,16 +21,18 @@ docs/design-context/10-sample-data.json       (Padrauna sample data)
 docs/design-context/11-open-issues-and-assumptions.md
 docs/design-context/screenshots/              (reference images: m-<role>-<view>.jpg = 390px, d-<role>-<view>.jpg = 1280px, plus dark and Hindi samples)
 docs/design-context/reference/apnatown-prototype.html and reference/prototype-source/ (the runnable prototype and its complete source and stylesheet; the visual and behavioural source of truth)
-Also read `docs/specs/` for this scope.
+Also read `specs/_foundation/` and the BE/FE pairs in `specs/catalog/`,
+`specs/search/`, `specs/geo/`, `specs/products/` and `specs/services/`.
+Use only this slice; legacy `docs/specs/` outputs are not prerequisites.
 
 ## OUTPUT FILES (exact paths)
 - Code in `apps/web`, `apps/api`, `packages/*` as defined by the specs, with tests and Storybook stories
 
 ## REQUIRED CONTENTS
-Start with the reference slice from `docs/specs/08-screens/reference-slice-explore-services.md`, then complete catalog (categories, subcategories, suggestions), Explore (Products, Shops, Services, filters, URL, Back/scroll, counts), Search (tabs, keyword mapping, typo tolerance, grouped suggestions), Home sections and category pages.
+Start with the Explore Services contract in [Search FE](../../specs/search/fe/search.md) and its owning BE projections, then complete catalog (categories, subcategories, suggestions), Explore (Products, Shops, Services, filters, URL, Back/scroll, counts), Search (tabs, keyword mapping, typo tolerance, grouped suggestions), Home sections and category pages. Reuse the Catalog reference in the backend foundation; no missing legacy vertical-slice file is required.
 
 ## IMPLEMENTATION RULES (in addition to the standing requirements)
-- Read `docs/specs/` for this scope and the Design Context Pack; implement exactly what is specified. If a spec is missing or wrong, stop, add an Open Issue and propose the smallest spec fix in the same PR.
+- Follow the current foundation/module specs above and the Design Context Pack. Keep changes slice-scoped; ask about a blocking ambiguity and fix its owning spec, not missing legacy documents or trackers.
 - Work in small pull requests (about 400 changed lines or fewer), one concern each. Branch `feat/<scope>-<name>`; Conventional Commits. Never merge; humans review and merge.
 - Reuse shared components, hooks, utilities, guards and base classes; if you copy code a second time, extract it to the shared layer first.
 - Every change includes tests (unit, integration, component, e2e as specified), lint and type-check clean, English and Hindi strings, accessibility checks, and a screenshot comparison (mobile 390px and desktop 1280px, light and dark) against `docs/design-context/screenshots/` for UI work.

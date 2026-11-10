@@ -8,10 +8,20 @@ docs/design-context/                   the Design Context Pack (00-11, screensho
 docs/prompts/                          STANDING_REQUIREMENTS.md, 00-MASTER.md, P01..P11, P08a..P08g, C00..C14
 scripts/validate-design-pack.mjs       pack validator
 ```
-Run `node scripts/validate-design-pack.mjs` (must print PASSED). Commit to `main` (or a branch merged to `main`): Copilot agents read `.github/copilot-instructions.md` from the default branch.
+Run `node scripts/validate-design-pack.mjs` (must print PASSED). Work on
+a feature branch and let a human review/merge; this guide does not
+authorize committing or pushing unreviewed changes.
 
-## 2. Generate the specifications (Copilot agent, one prompt at a time)
-For each prompt: open the file, paste its whole content into the Copilot agent (or create a GitHub issue with the content and assign it to Copilot; if a prompt is too large for an issue body (65,536 characters), tell Copilot "Read and execute `docs/prompts/<file>`"). Review the PR, merge, then run the next.
+## 2. Current specifications
+
+[LEAN-SPECS.md](./LEAN-SPECS.md) supersedes P02-P11. Use the four
+[foundation specs](../../specs/_foundation/) and 21 module BE/FE pairs
+under [specs/](../../specs/). Repair only a relevant spec gap; do not
+regenerate inventories/progress files or create missing legacy outputs.
+Run `node scripts/check-spec-coverage.mjs` for structural coverage and
+review the actual contracts/acceptance criteria for readiness.
+
+### Historical generation sequence (reference only; do not run P02-P11)
 
 | Order | Prompt | Result |
 |---|---|---|
@@ -29,10 +39,19 @@ For each prompt: open the file, paste its whole content into the Copilot agent (
 | 11 | P10-testing-delivery-traceability.md | docs/specs/10-delivery/ |
 | 12 | P11-coverage-audit.md | docs/specs/11-coverage-audit.md + audit script + fixes |
 
-Do not start implementation until P11 reports zero gaps.
+The old P11 prerequisite applies only to that superseded workflow.
+Current implementation follows the foundation dependencies and owning
+module specs; their explicit product/provider/policy gates still apply.
 
 ## 3. Build the product (Copilot agent, one prompt at a time, small PRs)
-C00 monorepo -> C01 shared backend layer -> C02 database -> C03 shared frontend + UI library -> C04 auth/account -> C05 catalog/Explore/Search -> C06 profiles/product/service/SEO -> C07 cart/checkout/orders -> C08 delivery/rider -> C09 reviews/engagement/offers -> C10 reels/media -> C11 vendor/provider dashboards -> C12 admin/notifications/communications -> C13 super admin -> C14 hardening.
+C00 monorepo; C01 shared backend; C02 database; C03 shared frontend;
+C04 auth/account; C05 discovery; C06 profiles/listings/SEO; C07 commerce;
+C08 delivery; C09 reviews/engagement/offers; C10 media; C11 dashboards;
+C12 administration/notifications/communications; C13 super admin;
+C14 hardening. These are scope groupings, not a strict dependency order:
+migrations and real Auth/owner ports precede the protected Catalog
+reference tests; Web/API slices precede authenticated browser smoke.
+The foundation defines exact future setup/build/start/test commands.
 Humans review and merge every PR.
 
 ## 4. Human decisions needed early
