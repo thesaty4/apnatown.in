@@ -148,7 +148,7 @@ Roles: customer. Backend module(s): `products, offers, reviews`. Frontend route/
 | PD1 | breadcrumbs | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
 | PD2 | media carousel with images and embedded videos (play badge), full-screen viewer (prev/next, swipe, arrow keys, counter, close, pinch/double-tap zoom, heart, focus trap) | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
 | PD3 | price, MRP, discount, variants, stock (out-of-stock with notify-me, low stock), quantity, Add to cart, Buy now | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
-| PD4 | offer banner at top (badge, discounted price, validity date, terms; expired and out-of-stock-offer states) | `specs/offers/be/offers.md` | `specs/offers/fe/offers.md` | not started |
+| PD4 | offer banner at top (badge, discounted price, validity date, terms; expired and out-of-stock-offer states) | `specs/offers/be/offers.md` | `specs/offers/fe/offers.md` | spec written |
 | PD5 | Videos & Reels section (hidden if none; opens the Reels viewer at that video) | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
 | PD6 | seller card with delivery/pickup info | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
 | PD7 | specs, reviews with breakdown and review form | `specs/reviews/be/reviews.md` | `specs/reviews/fe/reviews.md` | not started |
@@ -176,11 +176,11 @@ Roles: customer, vendor, provider, admin. Backend module(s): `offers`. Frontend 
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| OF1 | offers page with filters | `specs/offers/be/of1-offers-page-with-filters.md` | `specs/offers/fe/of1-offers-page-with-filters.md` | not started |
-| OF2 | offer card -> product page (single product), service page (service offer), filtered product list (several products), shop page (shop-wide) | `specs/offers/be/of2-offer-card-product-page.md` | `specs/offers/fe/of2-offer-card-product-page.md` | not started |
-| OF3 | states: active, pending admin approval, paused, ended/expired, out-of-stock | `specs/offers/be/of3-states-active.md` | `specs/offers/fe/of3-states-active.md` | not started |
-| OF4 | featured offers on home | `specs/offers/be/of4-featured-offers-on-home.md` | `specs/offers/fe/of4-featured-offers-on-home.md` | not started |
-| OF5 | vendor offer lifecycle pending -> active -> paused -> ended; admin approval | `specs/offers/be/of5-vendor-offer-lifecycle-pending-activ.md` | `specs/offers/fe/of5-vendor-offer-lifecycle-pending-activ.md` | not started |
+| OF1 | offers page with filters | `specs/offers/be/offers.md` | `specs/offers/fe/offers.md` | spec written |
+| OF2 | offer card -> product page (single product), service page (service offer), filtered product list (several products), shop page (shop-wide) | `specs/offers/be/offers.md` | `specs/offers/fe/offers.md` | spec written |
+| OF3 | states: active, pending admin approval, paused, ended/expired, out-of-stock | `specs/offers/be/offers.md` | `specs/offers/fe/offers.md` | spec written |
+| OF4 | featured offers on home | `specs/offers/be/offers.md` | `specs/offers/fe/offers.md` | spec written |
+| OF5 | vendor offer lifecycle pending -> active -> paused -> ended; admin approval | `specs/offers/be/offers.md` | `specs/offers/fe/offers.md` | spec written |
 
 ## CK. Cart and checkout
 
@@ -295,7 +295,7 @@ Roles: vendor. Backend module(s): `businesses, products, services, offers, order
 | VD4 | products (list, search, filter, bulk edit, CSV import, add/edit with variants, SKU, stock, media sorter with images + YouTube/Instagram embeds, shareable link) | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
 | VD5 | product category pills manager (reorder, rename, hide) | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
 | VD6 | subcategory suggestion with duplicate detection and "my suggestions" status | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
-| VD7 | offers manager | `specs/businesses/be/vd7-offers-manager.md` | `specs/businesses/fe/vd7-offers-manager.md` | not started |
+| VD7 | offers manager | `specs/offers/be/offers.md` | `specs/offers/fe/offers.md` | spec written |
 | VD8 | orders (new-order alert, accept/reject, preparing, ready, request/assign rider, self-delivery with OTP, pickup code, print slip, mark item unavailable, refund request handling) | `specs/businesses/be/vd8-orders.md` | `specs/businesses/fe/vd8-orders.md` | not started |
 | VD9 | inventory (stock, thresholds, quick toggles, restock) | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
 | VD10 | reviews (reply/report) | `specs/businesses/be/vd10-reviews.md` | `specs/businesses/fe/vd10-reviews.md` | not started |
@@ -353,7 +353,7 @@ Roles: admin. Backend module(s): `admin, users, catalog, orders, delivery, revie
 | AD8 | live deliveries map with city filter (All cities cluster pins/one city), side list (order id, rider, status, ETA), empty state | `specs/admin/be/ad8-live-deliveries-map-with-city-filter.md` | `specs/admin/fe/ad8-live-deliveries-map-with-city-filter.md` | not started |
 | AD9 | review moderation (reported/pending/removed; approve/hide/delete) | `specs/admin/be/ad9-review-moderation.md` | `specs/admin/fe/ad9-review-moderation.md` | not started |
 | AD10 | video moderation queue (pending/approved/rejected/removed/reported, reasons, engagement report) | `specs/admin/be/ad10-video-moderation-queue.md` | `specs/admin/fe/ad10-video-moderation-queue.md` | not started |
-| AD11 | promotions (homepage banners, featured businesses, offer approval) | `specs/admin/be/ad11-promotions.md` | `specs/admin/fe/ad11-promotions.md` | not started |
+| AD11 | promotions (homepage banners, featured businesses, offer approval) | `specs/offers/be/offers.md` | `specs/offers/fe/offers.md` | spec written |
 | AD12 | communications (searchable audience combobox; scope Overall/City-wise/Zone-wise; template picker; channels WhatsApp/in-app/email; consent-aware recipient counts; preview; schedule; review-before-send summary; delivery report with opt-outs; permission-aware scopes) | `specs/admin/be/ad12-communications.md` | `specs/admin/fe/ad12-communications.md` | not started |
 | AD13 | reports (orders, revenue, vendor, rider, enquiries; CSV export) | `specs/admin/be/ad13-reports.md` | `specs/admin/fe/ad13-reports.md` | not started |
 | AD14 | audit log with search | `specs/admin/be/ad14-audit-log-with-search.md` | `specs/admin/fe/ad14-audit-log-with-search.md` | not started |
