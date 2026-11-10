@@ -41,6 +41,8 @@ erDiagram
 
     %% catalog and listings
     categories ||--o{ subcategories : groups
+    keyword_mappings ||--o{ keyword_mapping_terms : matches
+    keyword_mappings ||--o{ keyword_mapping_targets : targets
     categories ||--o{ products : classifies
     subcategories ||--o{ services : classifies
     businesses ||--o{ products : lists
@@ -95,7 +97,7 @@ erDiagram
 | `auth` | `otp_challenges`, `sessions` |
 | `users` | `users`, `user_roles`, `addresses`, `consents`, `data_requests` |
 | `geo` | `cities`, `areas`, `zones`, `zone_fee_slabs`, `service_area_waitlist` |
-| `catalog` | `categories`, `subcategories`, `subcategory_suggestions`, `keyword_mappings` |
+| `catalog` | `categories`, `subcategories`, `subcategory_suggestions`, `keyword_mappings`, `keyword_mapping_terms`, `keyword_mapping_targets` |
 | `businesses` | `businesses`, `business_hours`, `business_settings` |
 | `products` | `products`, `product_variants`, `inventory` |
 | `services` | `services`, `provider_expertise`, `enquiries` |
@@ -125,7 +127,8 @@ erDiagram
 | Nearby businesses/services and delivery range | PostGIS geography point with GiST index; filter by city/zone and serviceability before distance ordering. |
 | Point-in-zone delivery lookup | GiST index on `zones.polygon`; B-tree on `(city_id,status)`; fee slabs keyed by `(zone_id,upper_distance_km)`. |
 | City picker and admin city queue | Unique city slug; `(status,name_en)`; waitlist `(city_id,requested_at DESC)`. |
-| Search keyword, name and typo-tolerant matching | GIN trigram indexes on normalized searchable text; GIN full-text index for token search; indexed keyword-to-category/subcategory mappings. |
+| Search keyword, name and typo-tolerant matching | GIN trigram on normalized searchable text and `keyword_mapping_terms.normalized_term`; GIN full-text index for token search; partial target indexes on `keyword_mapping_targets`. |
+| Subcategory duplicate checks and suggestion queues | GIN trigram on normalized suggestion names; `(status,city_id,area_id,created_at,id)` for scoped moderation and `(business_id,created_at,id)` for owner history. |
 | Reels and other feeds | Keyset indexes on frozen rank/session key and `id`, or `(created_at, id)` for chronological feeds; never deep-offset pagination. |
 | Customer orders and business order queues | `(customer_id, created_at DESC, id DESC)` and `(business_id, status, created_at, id)`; add only indexes required by documented filters. |
 | Admin approval/moderation queues | `(status, created_at, id)` plus city/area scope columns used by the authorized query. |

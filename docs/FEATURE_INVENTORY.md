@@ -52,24 +52,24 @@ Roles: customer, vendor, provider, rider, admin, super_admin. Backend module(s):
 
 ## HM. Home
 
-Roles: customer. Backend module(s): `catalog, businesses, products, services, offers, engagement`. Frontend route/screen: `/`.
+Roles: customer. Backend module(s): `search` (home composition), `catalog` (category taxonomy), businesses, products, services, offers, engagement. Frontend route/screen: `/`.
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| HM1 | sticky location selector, search with voice icon, bell, cart, play (videos) icon | `specs/catalog/be/hm1-sticky-location-selector.md` | `specs/catalog/fe/hm1-sticky-location-selector.md` | not started |
-| HM2 | hero banner carousel | `specs/catalog/be/hm2-hero-banner-carousel.md` | `specs/catalog/fe/hm2-hero-banner-carousel.md` | not started |
-| HM3 | "Shop by category" tiles open Explore with category pre-applied | `specs/catalog/be/hm3-shop-by-category-tiles-open-explore-.md` | `specs/catalog/fe/hm3-shop-by-category-tiles-open-explore-.md` | not started |
-| HM4 | "Local services" tiles open Explore Services with category pre-applied | `specs/catalog/be/hm4-local-services-tiles-open-explore-se.md` | `specs/catalog/fe/hm4-local-services-tiles-open-explore-se.md` | not started |
-| HM5 | offers and deals (card opens product/service/filtered list) | `specs/catalog/be/hm5-offers-and-deals.md` | `specs/catalog/fe/hm5-offers-and-deals.md` | not started |
-| HM6 | nearby shops with responsive shop card (image top, details bottom; 1/2/3-4 columns; "View all shops") | `specs/catalog/be/hm6-nearby-shops-with-responsive-shop-ca.md` | `specs/catalog/fe/hm6-nearby-shops-with-responsive-shop-ca.md` | not started |
-| HM7 | featured businesses ("View all businesses" -> Explore Shops featured) | `specs/catalog/be/hm7-featured-businesses.md` | `specs/catalog/fe/hm7-featured-businesses.md` | not started |
-| HM8 | popular businesses | `specs/catalog/be/hm8-popular-businesses.md` | `specs/catalog/fe/hm8-popular-businesses.md` | not started |
-| HM9 | featured products ("View all products" -> Explore Products featured) | `specs/catalog/be/hm9-featured-products.md` | `specs/catalog/fe/hm9-featured-products.md` | not started |
-| HM10 | popular providers | `specs/catalog/be/hm10-popular-providers.md` | `specs/catalog/fe/hm10-popular-providers.md` | not started |
-| HM11 | local promotions | `specs/catalog/be/hm11-local-promotions.md` | `specs/catalog/fe/hm11-local-promotions.md` | not started |
-| HM12 | recently viewed | `specs/catalog/be/hm12-recently-viewed.md` | `specs/catalog/fe/hm12-recently-viewed.md` | not started |
-| HM13 | bookmarks quick access | `specs/catalog/be/hm13-bookmarks-quick-access.md` | `specs/catalog/fe/hm13-bookmarks-quick-access.md` | not started |
-| HM14 | desktop footer (About, Contact, Vendor/Rider/Provider signup, legal, language) | `specs/catalog/be/hm14-desktop-footer.md` | `specs/catalog/fe/hm14-desktop-footer.md` | not started |
+| HM1 | sticky location selector, search with voice icon, bell, cart, play (videos) icon | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
+| HM2 | hero banner carousel | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
+| HM3 | "Shop by category" tiles open Explore with category pre-applied | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
+| HM4 | "Local services" tiles open Explore Services with category pre-applied | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
+| HM5 | offers and deals (card opens product/service/filtered list) | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
+| HM6 | nearby shops with responsive shop card (image top, details bottom; 1/2/3-4 columns; "View all shops") | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
+| HM7 | featured businesses ("View all businesses" -> Explore Shops featured) | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
+| HM8 | popular businesses | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
+| HM9 | featured products ("View all products" -> Explore Products featured) | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
+| HM10 | popular providers | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
+| HM11 | local promotions | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
+| HM12 | recently viewed | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
+| HM13 | bookmarks quick access | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
+| HM14 | desktop footer (About, Contact, Vendor/Rider/Provider signup, legal, language) | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
 
 ## LC. Location and discovery
 
@@ -167,7 +167,7 @@ Roles: customer, provider. Backend module(s): `services, offers, reviews`. Front
 | SV5 | Send Enquiry form (name, phone, message, preferred date, success state) as primary CTA; booking/payment is a future placeholder | `specs/services/be/sv5-send-enquiry-form.md` | `specs/services/fe/sv5-send-enquiry-form.md` | not started |
 | SV6 | offers, reviews (breakdown, form), FAQs, related services, similar providers, share, bookmark | `specs/services/be/sv6-offers.md` | `specs/services/fe/sv6-offers.md` | not started |
 | SV7 | breadcrumbs Services > Category > Subcategory > Service | `specs/services/be/sv7-breadcrumbs-services-category-subcat.md` | `specs/services/fe/sv7-breadcrumbs-services-category-subcat.md` | not started |
-| SV8 | each service has exactly one subcategory; a provider can be "expert in" several | `specs/services/be/sv8-each-service-has-exactly-one-subcate.md` | `specs/services/fe/sv8-each-service-has-exactly-one-subcate.md` | not started |
+| SV8 | each service has exactly one subcategory; a provider can be "expert in" several | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
 
 ## OF. Offers
 
@@ -293,7 +293,7 @@ Roles: vendor. Backend module(s): `businesses, products, services, offers, order
 | VD3 | profile editor (logo, cover, hours per day, temporarily closed, delivery self vs rider, radius, fee, minimum order, pickup, map pin, live preview) | `specs/businesses/be/vd3-profile-editor.md` | `specs/businesses/fe/vd3-profile-editor.md` | not started |
 | VD4 | products (list, search, filter, bulk edit, CSV import, add/edit with variants, SKU, stock, media sorter with images + YouTube/Instagram embeds, shareable link) | `specs/businesses/be/vd4-products.md` | `specs/businesses/fe/vd4-products.md` | not started |
 | VD5 | product category pills manager (reorder, rename, hide) | `specs/businesses/be/vd5-product-category-pills-manager.md` | `specs/businesses/fe/vd5-product-category-pills-manager.md` | not started |
-| VD6 | subcategory suggestion with duplicate detection and "my suggestions" status | `specs/businesses/be/vd6-subcategory-suggestion-with-duplicat.md` | `specs/businesses/fe/vd6-subcategory-suggestion-with-duplicat.md` | not started |
+| VD6 | subcategory suggestion with duplicate detection and "my suggestions" status | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
 | VD7 | offers manager | `specs/businesses/be/vd7-offers-manager.md` | `specs/businesses/fe/vd7-offers-manager.md` | not started |
 | VD8 | orders (new-order alert, accept/reject, preparing, ready, request/assign rider, self-delivery with OTP, pickup code, print slip, mark item unavailable, refund request handling) | `specs/businesses/be/vd8-orders.md` | `specs/businesses/fe/vd8-orders.md` | not started |
 | VD9 | inventory (stock, thresholds, quick toggles, restock) | `specs/businesses/be/vd9-inventory.md` | `specs/businesses/fe/vd9-inventory.md` | not started |
@@ -346,8 +346,8 @@ Roles: admin. Backend module(s): `admin, users, catalog, orders, delivery, revie
 | AD2 | approvals for businesses, providers, riders with document viewer, approve/reject/request changes with reason and history | `specs/admin/be/ad2-approvals-for-businesses.md` | `specs/admin/fe/ad2-approvals-for-businesses.md` | not started |
 | AD3 | listings CRUD (create, edit status/details, remove) and product moderation (unpublish) | `specs/admin/be/ad3-listings-crud.md` | `specs/admin/fe/ad3-listings-crud.md` | not started |
 | AD4 | users (customers, vendors, riders: search, profile, order history, suspend/reactivate) | `specs/admin/be/ad4-users.md` | `specs/admin/fe/ad4-users.md` | not started |
-| AD5 | categories (view fixed main categories; subcategory tree, types, keywords, filter preview) | `specs/admin/be/ad5-categories.md` | `specs/admin/fe/ad5-categories.md` | not started |
-| AD6 | subcategory suggestion queue (approve, reject with reason, merge into existing, duplicate warning, notification to suggester) | `specs/admin/be/ad6-subcategory-suggestion-queue.md` | `specs/admin/fe/ad6-subcategory-suggestion-queue.md` | not started |
+| AD5 | categories (view fixed main categories; subcategory tree, types, keywords, filter preview) | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
+| AD6 | subcategory suggestion queue (approve, reject with reason, merge into existing, duplicate warning, notification to suggester) | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
 | AD7 | orders and disputes (case workflow open -> in review -> resolved, notes, refund approval/completion, rider assign/reassign) | `specs/admin/be/ad7-orders-and-disputes.md` | `specs/admin/fe/ad7-orders-and-disputes.md` | not started |
 | AD8 | live deliveries map with city filter (All cities cluster pins/one city), side list (order id, rider, status, ETA), empty state | `specs/admin/be/ad8-live-deliveries-map-with-city-filter.md` | `specs/admin/fe/ad8-live-deliveries-map-with-city-filter.md` | not started |
 | AD9 | review moderation (reported/pending/removed; approve/hide/delete) | `specs/admin/be/ad9-review-moderation.md` | `specs/admin/fe/ad9-review-moderation.md` | not started |
@@ -356,7 +356,7 @@ Roles: admin. Backend module(s): `admin, users, catalog, orders, delivery, revie
 | AD12 | communications (searchable audience combobox; scope Overall/City-wise/Zone-wise; template picker; channels WhatsApp/in-app/email; consent-aware recipient counts; preview; schedule; review-before-send summary; delivery report with opt-outs; permission-aware scopes) | `specs/admin/be/ad12-communications.md` | `specs/admin/fe/ad12-communications.md` | not started |
 | AD13 | reports (orders, revenue, vendor, rider, enquiries; CSV export) | `specs/admin/be/ad13-reports.md` | `specs/admin/fe/ad13-reports.md` | not started |
 | AD14 | audit log with search | `specs/admin/be/ad14-audit-log-with-search.md` | `specs/admin/fe/ad14-audit-log-with-search.md` | not started |
-| AD15 | search keyword mapping tool with preview | `specs/admin/be/ad15-search-keyword-mapping-tool-with-pr.md` | `specs/admin/fe/ad15-search-keyword-mapping-tool-with-pr.md` | not started |
+| AD15 | search keyword mapping tool with preview | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
 | AD16 | permission-aware UI (hidden/disabled with "You don't have permission") | `specs/admin/be/ad16-permission-aware-ui.md` | `specs/admin/fe/ad16-permission-aware-ui.md` | not started |
 
 ## SA. Super admin
@@ -372,7 +372,7 @@ Roles: super_admin. Backend module(s): `admin, geo, settings, audit, catalog`. F
 | SA5 | global settings (branding, delivery slabs, rider earning rule, commission and plans, promotions fees, payments, refund/cancellation window, review rules, WhatsApp/SMS/email integration, SEO defaults, feature flags, legal pages) | `specs/admin/be/sa5-global-settings.md` | `specs/admin/fe/sa5-global-settings.md` | not started |
 | SA6 | platform analytics | `specs/admin/be/sa6-platform-analytics.md` | `specs/admin/fe/sa6-platform-analytics.md` | not started |
 | SA7 | activity monitor (audit with before/after and export) | `specs/admin/be/sa7-activity-monitor.md` | `specs/admin/fe/sa7-activity-monitor.md` | not started |
-| SA8 | main-category management (only super admin) and category tree with keyword/synonym mapping | `specs/admin/be/sa8-main-category-management.md` | `specs/admin/fe/sa8-main-category-management.md` | not started |
+| SA8 | main-category management (only super admin) and category tree with keyword/synonym mapping | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
 
 ---
 
