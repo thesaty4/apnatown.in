@@ -127,7 +127,7 @@ erDiagram
 | `reviews` | `reviews`, `review_reports`, `review_helpful_votes`, `review_aggregates` |
 | `engagement` | `follows`, `likes`, `hearts`, `bookmarks`, `video_comments`, `follower_announcements` |
 | `media-videos` | `media_assets`, `gallery_photos`, `videos`, `video_links`, `video_reports` |
-| `notifications` | `notifications`, `notification_preferences`, `notification_templates` |
+| `notifications` | `notifications`, `notification_preferences`, `notification_templates`, `notification_deliveries` |
 | `communications` | `campaigns`, `campaign_recipients`, `campaign_reports` |
 | `admin` | `roles`, `role_permissions`, `admin_scopes` |
 | `audit` | `audit_logs` |

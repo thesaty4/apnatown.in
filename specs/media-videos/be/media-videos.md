@@ -88,4 +88,4 @@ Unit: URL parser (allow-list, ID regex, all kinds); ST-video handlers; score/cur
 
 ## Open questions
 
-Video upload size/duration limits and whether to transcode (assumed: mp4 ≤ 50 MB, no transcoding); admin permission key for video moderation (assumed `catalog`); Instagram thumbnails (owner-uploaded thumbnail required).
+Q-03 video upload hosting/transcoding and size/duration limits (assumed: mp4 ≤ 50 MB, no transcoding); admin permission key for video moderation (assumed `catalog`); Instagram thumbnails (owner-uploaded thumbnail required).
