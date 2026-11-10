@@ -26,7 +26,7 @@ Roles: all roles. Backend module(s): `notifications, audit`. Frontend route/scre
 | X5 | offline banner | `specs/notifications/be/x5-offline-banner.md` | `specs/notifications/fe/x5-offline-banner.md` | not started |
 | X6 | slow-connection/lite mode | `specs/notifications/be/x6-slow-connection-lite-mode.md` | `specs/notifications/fe/x6-slow-connection-lite-mode.md` | not started |
 | X7 | five UX states on every screen (default, skeleton, empty, error+retry, no-permission) | `specs/notifications/be/x7-five-ux-states-on-every-screen.md` | `specs/notifications/fe/x7-five-ux-states-on-every-screen.md` | not started |
-| X8 | cookie consent and WhatsApp opt-in components | `specs/notifications/be/x8-cookie-consent-and-whatsapp-opt-in-co.md` | `specs/notifications/fe/x8-cookie-consent-and-whatsapp-opt-in-co.md` | not started |
+| X8 | cookie consent and WhatsApp opt-in components | `specs/users/be/users.md` | `specs/users/fe/users.md` | spec written |
 | X9 | system pages (404, 500, offline, maintenance, session expired, account deleted) | `specs/notifications/be/x9-system-pages.md` | `specs/notifications/fe/x9-system-pages.md` | not started |
 | X10 | SEO page templates (business, product, service, category) with readable URLs, breadcrumbs, structured data | `specs/notifications/be/x10-seo-page-templates.md` | `specs/notifications/fe/x10-seo-page-templates.md` | not started |
 | X11 | print templates (QR poster/table-tent/sticker, invoice, order slip) | `specs/notifications/be/x11-print-templates.md` | `specs/notifications/fe/x11-print-templates.md` | not started |
@@ -45,10 +45,10 @@ Roles: customer, vendor, provider, rider, admin, super_admin. Backend module(s):
 | AU2 | location primer with manual fallback (location never mandatory) | `specs/auth/be/au2-location-primer-with-manual-fallback.md` | `specs/auth/fe/au2-location-primer-with-manual-fallback.md` | not started |
 | AU3 | browse as guest | `specs/auth/be/au3-browse-as-guest.md` | `specs/auth/fe/au3-browse-as-guest.md` | not started |
 | AU4 | mobile OTP login (6-box input, auto-advance, paste, resend timer, attempt limits), optional email/Google | `specs/auth/be/auth.md` | `specs/auth/fe/auth.md` | spec written |
-| AU5 | profile completion | `specs/auth/be/au5-profile-completion.md` | `specs/auth/fe/au5-profile-completion.md` | not started |
+| AU5 | profile completion | `specs/users/be/users.md` | `specs/users/fe/users.md` | spec written |
 | AU6 | login-required prompt that returns the user to the same page/video after login | `specs/auth/be/auth.md` | `specs/auth/fe/auth.md` | spec written |
 | AU7 | logout and session expiry | `specs/auth/be/auth.md` | `specs/auth/fe/auth.md` | spec written |
-| AU8 | account deletion and personal-data download | `specs/auth/be/au8-account-deletion-and-personal-data-d.md` | `specs/auth/fe/au8-account-deletion-and-personal-data-d.md` | not started |
+| AU8 | account deletion and personal-data download | `specs/users/be/users.md` | `specs/users/fe/users.md` | spec written |
 
 ## HM. Home
 
@@ -274,11 +274,11 @@ Roles: customer. Backend module(s): `users, settings`. Frontend route/screen: `/
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| AC1 | profile edit | `specs/users/be/ac1-profile-edit.md` | `specs/users/fe/ac1-profile-edit.md` | not started |
-| AC2 | saved addresses | `specs/users/be/ac2-saved-addresses.md` | `specs/users/fe/ac2-saved-addresses.md` | not started |
-| AC3 | payment methods | `specs/users/be/ac3-payment-methods.md` | `specs/users/fe/ac3-payment-methods.md` | not started |
-| AC4 | language/theme | `specs/users/be/ac4-language-theme.md` | `specs/users/fe/ac4-language-theme.md` | not started |
-| AC5 | privacy (download/delete my data) | `specs/users/be/ac5-privacy.md` | `specs/users/fe/ac5-privacy.md` | not started |
+| AC1 | profile edit | `specs/users/be/users.md` | `specs/users/fe/users.md` | spec written |
+| AC2 | saved addresses | `specs/users/be/users.md` | `specs/users/fe/users.md` | spec written |
+| AC3 | payment methods | `specs/users/be/users.md` | `specs/users/fe/users.md` | spec written |
+| AC4 | language/theme | `specs/users/be/users.md` | `specs/users/fe/users.md` | spec written |
+| AC5 | privacy (download/delete my data) | `specs/users/be/users.md` | `specs/users/fe/users.md` | spec written |
 | AC6 | help, FAQs, contact support | `specs/users/be/ac6-help.md` | `specs/users/fe/ac6-help.md` | not started |
 | AC7 | legal pages (terms, privacy, refund policy), about us | `specs/users/be/ac7-legal-pages.md` | `specs/users/fe/ac7-legal-pages.md` | not started |
 

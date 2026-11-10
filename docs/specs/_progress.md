@@ -66,7 +66,7 @@ Source: [LEAN-SPECS.md](../prompts/LEAN-SPECS.md). Foundation checkpoint is comp
 | # | Module | BE | FE |
 |---:|---|---|---|
 | 1 | `auth` | Done | Done |
-| 2 | `users` | Not started | Not started |
+| 2 | `users` | Done | Done |
 | 3 | `geo` | Not started | Not started |
 | 4 | `catalog` | Not started | Not started |
 | 5 | `businesses` | Not started | Not started |
