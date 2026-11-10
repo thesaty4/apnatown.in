@@ -22,7 +22,7 @@ Modular monolith: NestJS modules own their domain tables and use-cases. A module
 | `search` | Home, Explore, Search, suggestions and facet queries | `catalog`, `businesses`, `products`, `services`, `offers`, `media-videos` | No source-of-truth tables; read-only queries over owning modules |
 | `offers` | Offers, coupons and approval lifecycle | `businesses`, `products`, `services` | `offers`, `offer_targets`, `coupons` |
 | `cart-checkout` | Cart, quote, per-shop checkout orchestration | `products`, `businesses`, `offers`, `geo`, `payments`, `orders`, `users`, `settings` | `carts`, `cart_lines`, `checkout_attempts` |
-| `payments` | Payment attempts, collection and refunds | — | `payment_attempts`, `refunds`, `earnings` |
+| `payments` | Payment attempts, collection, refunds and vendor billing records | `businesses`, `settings`, typed event/contracts from `cart-checkout`, `orders`, `delivery` | `payment_attempts`, `refunds`, `earnings`, `business_subscriptions` |
 | `orders` | Per-shop order lifecycle, cases and invoices | `users` | `orders`, `order_items`, `order_cases` |
 | `delivery` | Rider requests, assignments, delivery and pickup codes | `geo`, `users` | `rider_profiles`, `delivery_jobs`, `delivery_codes` |
 | `reviews` | Eligibility, moderation, reviews and replies | `users`, `orders`, `businesses`, `products`, `services` | `reviews`, `review_reports` |
@@ -34,7 +34,7 @@ Modular monolith: NestJS modules own their domain tables and use-cases. A module
 | `audit` | Append-only record of sensitive changes | — | `audit_logs` |
 | `settings` | Global settings, feature flags and legal content | — | `settings`, `feature_flags` |
 
-`outbox_events` and `idempotency_keys` are shared runtime infrastructure, not domain-owned tables; their schema is specified once by the shared persistence layer. Each domain table's columns and constraints are defined only in its owning module BE spec.
+`outbox_events` and `idempotency_keys` are shared runtime infrastructure, not domain-owned tables; their schema is specified once by the shared persistence layer. Each domain table's columns and constraints are defined only in its owning module BE spec. Payments consumes order/delivery events and publishes billing events; it never reads another module's repositories. Offers owns promotion placement and consumes the successful-purchase event.
 
 ### Technology decisions
 

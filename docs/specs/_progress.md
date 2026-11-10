@@ -75,7 +75,7 @@ Source: [LEAN-SPECS.md](../prompts/LEAN-SPECS.md). The foundation checkpoint is 
 | 8 | `search` | Done | Done |
 | 9 | `offers` | Done | Done |
 | 10 | `cart-checkout` | Done | Done |
-| 11 | `payments` | Not started | Not started |
+| 11 | `payments` | Done | Done |
 | 12 | `orders` | Not started | Not started |
 | 13 | `delivery` | Not started | Not started |
 | 14 | `reviews` | Not started | Not started |

@@ -193,8 +193,8 @@ Roles: customer. Backend module(s): `cart-checkout`. Frontend route/screen: `/ca
 | CK3 | per shop choose home delivery or self-pickup | `specs/cart-checkout/be/cart-checkout.md` | `specs/cart-checkout/fe/cart-checkout.md` | spec written |
 | CK4 | address book (add/edit/delete, map pin, landmark, PIN, labels, default) | `specs/users/be/users.md` | `specs/cart-checkout/fe/cart-checkout.md` | spec written |
 | CK5 | delivery range and minimum-order checks, out-of-range message | `specs/cart-checkout/be/cart-checkout.md` | `specs/cart-checkout/fe/cart-checkout.md` | spec written |
-| CK6 | payments: UPI, cards, net banking, wallets, COD / pay-at-pickup | `specs/cart-checkout/be/cart-checkout.md` | `specs/cart-checkout/fe/cart-checkout.md` | spec written |
-| CK7 | payment failure and retry | `specs/cart-checkout/be/cart-checkout.md` | `specs/cart-checkout/fe/cart-checkout.md` | spec written |
+| CK6 | payments: UPI, cards, net banking, wallets, COD / pay-at-pickup | `specs/payments/be/payments.md` | `specs/cart-checkout/fe/cart-checkout.md` | spec written |
+| CK7 | payment failure and retry | `specs/payments/be/payments.md` | `specs/cart-checkout/fe/cart-checkout.md` | spec written |
 | CK8 | order success with an order id per shop | `specs/cart-checkout/be/cart-checkout.md` | `specs/cart-checkout/fe/cart-checkout.md` | spec written |
 | CK9 | coupons (flat/percent, minimum, discount distributed proportionally across shop orders) | `specs/cart-checkout/be/cart-checkout.md` | `specs/cart-checkout/fe/cart-checkout.md` | spec written |
 
@@ -209,7 +209,7 @@ Roles: customer, rider, vendor, provider, admin. Backend module(s): `orders, del
 | OR3 | live tracking: rider name, phone, rating, status, ETA, delivery OTP | `specs/orders/be/or3-live-tracking-rider-name.md` | `specs/orders/fe/or3-live-tracking-rider-name.md` | not started |
 | OR4 | pickup: address, directions, pickup code | `specs/orders/be/or4-pickup-address.md` | `specs/orders/fe/or4-pickup-address.md` | not started |
 | OR5 | actions: cancel, request refund, report problem, contact shop/rider, reorder, download invoice | `specs/orders/be/or5-actions-cancel.md` | `specs/orders/fe/or5-actions-cancel.md` | not started |
-| OR6 | cancellation/refund flow with reasons, message "Admin and vendor have been notified and will contact you", refund tracker `requested -> approved -> completed` | `specs/orders/be/or6-cancellation-refund-flow-with-reason.md` | `specs/orders/fe/or6-cancellation-refund-flow-with-reason.md` | not started |
+| OR6 | cancellation/refund flow with reasons, message "Admin and vendor have been notified and will contact you", refund tracker `requested -> approved -> completed` | `specs/payments/be/payments.md` | `specs/orders/fe/or6-cancellation-refund-flow-with-reason.md` | not started |
 | OR7 | partial fulfilment/substitution (vendor marks item unavailable) | `specs/orders/be/or7-partial-fulfilment-substitution.md` | `specs/orders/fe/or7-partial-fulfilment-substitution.md` | not started |
 | OR8 | dispute case workflow visible to customer | `specs/orders/be/or8-dispute-case-workflow-visible-to-cus.md` | `specs/orders/fe/or8-dispute-case-workflow-visible-to-cus.md` | not started |
 
@@ -305,7 +305,7 @@ Roles: vendor. Backend module(s): `businesses, products, services, offers, order
 | VD14 | services manager (title, category, one subcategory, price type/unit/amount, inclusions/exclusions, area, images, videos, active/pause, shareable link) | `specs/services/be/services.md` | `specs/services/fe/services.md` | spec written |
 | VD15 | followers (count, growth chart, announce to followers) | `specs/businesses/be/vd15-followers.md` | `specs/businesses/fe/vd15-followers.md` | not started |
 | VD16 | enquiries inbox | `specs/services/be/services.md` | `specs/services/fe/services.md` | spec written |
-| VD17 | earnings, plan/commission, promotions purchase, invoices | `specs/businesses/be/vd17-earnings.md` | `specs/businesses/fe/vd17-earnings.md` | not started |
+| VD17 | earnings, plan/commission, promotions purchase, invoices | `specs/payments/be/payments.md` | `specs/payments/fe/payments.md` | spec written |
 | VD18 | account (owner, payout UPI/bank, staff, security) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 
 ## PV. Provider dashboard

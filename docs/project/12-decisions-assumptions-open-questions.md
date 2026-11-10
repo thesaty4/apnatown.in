@@ -52,6 +52,9 @@ into the list below (one is now resolved).
 | Q-17 | SMS/OTP provider and its failover provider. | Open |
 | Q-18 | Hosting/infra target for CI runner (`copilot-setup-steps.yml`). | Open |
 | Q-19 | Dark-mode colour-token shades need an AA-contrast pass before launch (see [08-design-system.md](./08-design-system.md)). | Open |
+| Q-74 | Subscription plan and promotion purchase rules: billing period, renewals, proration, price changes, cancellation, activation and invoice/tax evidence. | Open |
+| Q-75 | Vendor payout eligibility, calculation, schedule, status, failure/retry and dispute rules for earnings and next payout. | Open |
+| Q-76 | Full/partial refund amount and approval policy, fee/tax reversal, and interaction with ST-payment's no-partial-refund state. | Open |
 
 ## 4. Resolved (for traceability — don't re-open without new evidence)
 

@@ -69,8 +69,15 @@ erDiagram
     businesses ||--o{ orders : fulfills
     orders ||--|{ order_items : contains
     products ||--o{ order_items : ordered
+    checkout_attempts ||--o{ payment_attempts : funds
     orders ||--o{ payment_attempts : paid_by
     orders ||--o{ refunds : refunded_by
+    payment_attempts ||--o{ refunds : processes
+    payment_attempts ||--o{ earnings : records
+    orders ||--o{ earnings : reconciles
+    businesses ||--o{ earnings : earns
+    businesses ||--o{ business_subscriptions : subscribes
+    payment_attempts ||--o| business_subscriptions : activates
     orders ||--o| delivery_jobs : delivered_by
     users ||--o{ delivery_jobs : rides
     orders ||--o{ order_cases : resolves
@@ -110,7 +117,7 @@ erDiagram
 | `search` | No source-of-truth tables; reads owning module data |
 | `offers` | `offers`, `offer_targets`, `coupons` |
 | `cart-checkout` | `carts`, `cart_lines`, `checkout_attempts` |
-| `payments` | `payment_attempts`, `refunds`, `earnings` |
+| `payments` | `payment_attempts`, `refunds`, `earnings`, `business_subscriptions` |
 | `orders` | `orders`, `order_items`, `order_cases` |
 | `delivery` | `rider_profiles`, `delivery_jobs`, `delivery_codes` |
 | `reviews` | `reviews`, `review_reports` |
