@@ -34,6 +34,8 @@ erDiagram
     users ||--o{ consents : records
     cities ||--o{ areas : contains
     cities ||--o{ zones : serves
+    zones ||--o{ zone_fee_slabs : prices
+    cities ||--o{ service_area_waitlist : receives
     areas ||--o{ businesses : locates
     users ||--o{ businesses : owns
 
@@ -92,7 +94,7 @@ erDiagram
 |---|---|
 | `auth` | `otp_challenges`, `sessions` |
 | `users` | `users`, `user_roles`, `addresses`, `consents`, `data_requests` |
-| `geo` | `cities`, `areas`, `zones` |
+| `geo` | `cities`, `areas`, `zones`, `zone_fee_slabs`, `service_area_waitlist` |
 | `catalog` | `categories`, `subcategories`, `subcategory_suggestions`, `keyword_mappings` |
 | `businesses` | `businesses`, `business_hours`, `business_settings` |
 | `products` | `products`, `product_variants`, `inventory` |
@@ -121,6 +123,8 @@ erDiagram
 |---|---|
 | Explore products/services and facet counts | Partial B-tree indexes on active/published listing status plus category/subcategory and stable sort keys; use the same predicates for rows and counts. |
 | Nearby businesses/services and delivery range | PostGIS geography point with GiST index; filter by city/zone and serviceability before distance ordering. |
+| Point-in-zone delivery lookup | GiST index on `zones.polygon`; B-tree on `(city_id,status)`; fee slabs keyed by `(zone_id,upper_distance_km)`. |
+| City picker and admin city queue | Unique city slug; `(status,name_en)`; waitlist `(city_id,requested_at DESC)`. |
 | Search keyword, name and typo-tolerant matching | GIN trigram indexes on normalized searchable text; GIN full-text index for token search; indexed keyword-to-category/subcategory mappings. |
 | Reels and other feeds | Keyset indexes on frozen rank/session key and `id`, or `(created_at, id)` for chronological feeds; never deep-offset pagination. |
 | Customer orders and business order queues | `(customer_id, created_at DESC, id DESC)` and `(business_id, status, created_at, id)`; add only indexes required by documented filters. |

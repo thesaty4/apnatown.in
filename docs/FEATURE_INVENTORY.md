@@ -77,11 +77,11 @@ Roles: customer. Backend module(s): `geo`. Frontend route/screen: `/location`.
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| LC1 | GPS detect, manual area/locality/PIN, saved locations | `specs/geo/be/lc1-gps-detect.md` | `specs/geo/fe/lc1-gps-detect.md` | not started |
-| LC2 | map and list views with pins, radius slider, "you are here" | `specs/geo/be/lc2-map-and-list-views-with-pins.md` | `specs/geo/fe/lc2-map-and-list-views-with-pins.md` | not started |
-| LC3 | directions (opens maps app) | `specs/geo/be/lc3-directions.md` | `specs/geo/fe/lc3-directions.md` | not started |
-| LC4 | clear distinction between "Nearby (distance)" and "Delivers to your address" | `specs/geo/be/lc4-clear-distinction-between-nearby.md` | `specs/geo/fe/lc4-clear-distinction-between-nearby.md` | not started |
-| LC5 | states: denied, GPS off, outside service area ("We are not in your city yet" + notify-me) | `specs/geo/be/lc5-states-denied.md` | `specs/geo/fe/lc5-states-denied.md` | not started |
+| LC1 | GPS detect, manual area/locality/PIN, saved locations | `specs/geo/be/geo.md` | `specs/geo/fe/geo.md` | spec written |
+| LC2 | map and list views with pins, radius slider, "you are here" | `specs/geo/be/geo.md` | `specs/geo/fe/geo.md` | spec written |
+| LC3 | directions (opens maps app) | `specs/geo/be/geo.md` | `specs/geo/fe/geo.md` | spec written |
+| LC4 | clear distinction between "Nearby (distance)" and "Delivers to your address" | `specs/geo/be/geo.md` | `specs/geo/fe/geo.md` | spec written |
+| LC5 | states: denied, GPS off, outside service area ("We are not in your city yet" + notify-me) | `specs/geo/be/geo.md` | `specs/geo/fe/geo.md` | spec written |
 
 ## EX. Explore
 
@@ -368,7 +368,7 @@ Roles: super_admin. Backend module(s): `admin, geo, settings, audit, catalog`. F
 | SA1 | overview with KPIs and tabbed Graph/Candle chart (shared date range, metric orders/revenue/deliveries, city filter; candles differ by fill/hollow + words "Up/Down" in tooltip; skeleton/empty/error) | `specs/admin/be/sa1-overview-with-kpis-and-tabbed-graph-.md` | `specs/admin/fe/sa1-overview-with-kpis-and-tabbed-graph-.md` | not started |
 | SA2 | admins and areas (collapsible cards, search by name/phone/email, filters city/area-zone/role/status with removable chips and count, activate/deactivate with confirmation naming the impact, area assignment, per-admin permission matrix) | `specs/admin/be/sa2-admins-and-areas.md` | `specs/admin/fe/sa2-admins-and-areas.md` | not started |
 | SA3 | roles and permissions (create, edit with unsaved indicator and before/after summary, duplicate, delete blocked while admins assigned with reassign picker, system roles locked) | `specs/admin/be/sa3-roles-and-permissions.md` | `specs/admin/fe/sa3-roles-and-permissions.md` | not started |
-| SA4 | cities and zones (city cards, enable/disable with confirmation, city detail with polygon editor, zone list with delivery fee slabs, assigned admins, add city, waitlist) | `specs/admin/be/sa4-cities-and-zones.md` | `specs/admin/fe/sa4-cities-and-zones.md` | not started |
+| SA4 | cities and zones (city cards, enable/disable with confirmation, city detail with polygon editor, zone list with delivery fee slabs, assigned admins, add city, waitlist) | `specs/geo/be/geo.md` | `specs/geo/fe/geo.md` | spec written |
 | SA5 | global settings (branding, delivery slabs, rider earning rule, commission and plans, promotions fees, payments, refund/cancellation window, review rules, WhatsApp/SMS/email integration, SEO defaults, feature flags, legal pages) | `specs/admin/be/sa5-global-settings.md` | `specs/admin/fe/sa5-global-settings.md` | not started |
 | SA6 | platform analytics | `specs/admin/be/sa6-platform-analytics.md` | `specs/admin/fe/sa6-platform-analytics.md` | not started |
 | SA7 | activity monitor (audit with before/after and export) | `specs/admin/be/sa7-activity-monitor.md` | `specs/admin/fe/sa7-activity-monitor.md` | not started |
