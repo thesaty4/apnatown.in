@@ -56,20 +56,20 @@ Roles: customer. Backend module(s): `search` (home composition), `catalog` (cate
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| HM1 | sticky location selector, search with voice icon, bell, cart, play (videos) icon | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
-| HM2 | hero banner carousel | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
+| HM1 | sticky location selector, search with voice icon, bell, cart, play (videos) icon | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| HM2 | hero banner carousel | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
 | HM3 | "Shop by category" tiles open Explore with category pre-applied | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
 | HM4 | "Local services" tiles open Explore Services with category pre-applied | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
-| HM5 | offers and deals (card opens product/service/filtered list) | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
-| HM6 | nearby shops with responsive shop card (image top, details bottom; 1/2/3-4 columns; "View all shops") | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
-| HM7 | featured businesses ("View all businesses" -> Explore Shops featured) | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
-| HM8 | popular businesses | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
-| HM9 | featured products ("View all products" -> Explore Products featured) | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
-| HM10 | popular providers | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
-| HM11 | local promotions | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
-| HM12 | recently viewed | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
-| HM13 | bookmarks quick access | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
-| HM14 | desktop footer (About, Contact, Vendor/Rider/Provider signup, legal, language) | `specs/search/be/search.md` | `specs/search/fe/search.md` | not started |
+| HM5 | offers and deals (card opens product/service/filtered list) | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| HM6 | nearby shops with responsive shop card (image top, details bottom; 1/2/3-4 columns; "View all shops") | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| HM7 | featured businesses ("View all businesses" -> Explore Shops featured) | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| HM8 | popular businesses | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| HM9 | featured products ("View all products" -> Explore Products featured) | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| HM10 | popular providers | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| HM11 | local promotions | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| HM12 | recently viewed | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| HM13 | bookmarks quick access | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| HM14 | desktop footer (About, Contact, Vendor/Rider/Provider signup, legal, language) | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
 
 ## LC. Location and discovery
 
@@ -89,17 +89,18 @@ Roles: customer. Backend module(s): `search, catalog, products, services, busine
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| EX1 | tabs Products \| Shops \| Services with result counts | `specs/search/be/ex1-tabs-products-shops-services-with-re.md` | `specs/search/fe/ex1-tabs-products-shops-services-with-re.md` | not started |
-| EX2 | category pre-applied from home as removable pill, changeable | `specs/search/be/ex2-category-pre-applied-from-home-as-re.md` | `specs/search/fe/ex2-category-pre-applied-from-home-as-re.md` | not started |
-| EX3 | per-tab filters remembered when switching tabs | `specs/search/be/ex3-per-tab-filters-remembered-when-swit.md` | `specs/search/fe/ex3-per-tab-filters-remembered-when-swit.md` | not started |
-| EX4 | Products filters (price range, rating, category+subcategory, brand, offers, in stock, delivery/pickup, distance, sort) | `specs/search/be/ex4-products-filters.md` | `specs/search/fe/ex4-products-filters.md` | not started |
-| EX5 | Shops filters (category, distance, rating, open now, delivers to me, offers, verified, sort) | `specs/search/be/ex5-shops-filters.md` | `specs/search/fe/ex5-shops-filters.md` | not started |
-| EX6 | Services filter: Category multi-select + Subcategory multi-select grouped under category headings, checkboxes with counts, Select all/Clear per group, inner search when >8, "Show more", disabled when count 0, OR logic, removing a category removes its subcategories, removable chips + Clear all, loading skeleton, long-Hindi-safe, keyboard/screen-reader grouped list | `specs/search/be/ex6-services-filter-category-multi-selec.md` | `specs/search/fe/ex6-services-filter-category-multi-selec.md` | not started |
-| EX7 | filter UI: bottom sheet (mobile, sticky "Show N results"), left sidebar (desktop, live results), horizontal filter bar with count badge (tablet) | `specs/search/be/ex7-filter-ui-bottom-sheet.md` | `specs/search/fe/ex7-filter-ui-bottom-sheet.md` | not started |
-| EX8 | shareable URL `/explore?tab=services&category=wedding-events&subcategory=dj-sound,tent-lighting` | `specs/search/be/ex8-shareable-url-explore-tab-services-c.md` | `specs/search/fe/ex8-shareable-url-explore-tab-services-c.md` | not started |
-| EX9 | browser Back restores previous page and scroll | `specs/search/be/ex9-browser-back-restores-previous-page-.md` | `specs/search/fe/ex9-browser-back-restores-previous-page-.md` | not started |
-| EX10 | empty state per tab with "Clear category" and suggestions | `specs/search/be/ex10-empty-state-per-tab-with-clear-cate.md` | `specs/search/fe/ex10-empty-state-per-tab-with-clear-cate.md` | not started |
-| EX11 | map/list toggle; same filter component reused on Search (Services tab) and service category pages | `specs/search/be/ex11-map-list-toggle-same-filter-compone.md` | `specs/search/fe/ex11-map-list-toggle-same-filter-compone.md` | not started |
+| EX1 | tabs Products \| Shops \| Services with result counts | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| EX2 | category pre-applied from home as removable pill, changeable | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| EX3 | per-tab filters remembered when switching tabs | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| EX4 | Products filters (price range, rating, category+subcategory, brand, offers, in stock, delivery/pickup, distance, sort) | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| EX5 | Shops filters (category, distance, rating, open now, delivers to me, offers, verified, sort) | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| EX6 | Services filter: Category multi-select + Subcategory multi-select grouped under category headings, checkboxes with counts, Select all/Clear per group, inner search when >8, "Show more", disabled when count 0, OR logic, removing a category removes its subcategories, removable chips + Clear all, loading skeleton, long-Hindi-safe, keyboard/screen-reader grouped list | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| EX7 | filter UI: bottom sheet (mobile, sticky "Show N results"), left sidebar (desktop, live results), horizontal filter bar with count badge (tablet) | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| EX8 | shareable URL `/explore?tab=services&category=wedding-events&subcategory=dj-sound,tent-lighting` | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| EX9 | browser Back restores previous page and scroll | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| EX10 | empty state per tab with "Clear category" and suggestions | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| EX11 | map/list toggle with pins for shops and service providers | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| EX12 | reusable Services filter on Explore, Search Services tab and service category pages | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
 
 ## SR. Search
 
@@ -107,16 +108,16 @@ Roles: customer. Backend module(s): `search`. Frontend route/screen: `/search`.
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| SR1 | tabs All \| Products \| Shops \| Services \| Videos | `specs/search/be/sr1-tabs-all-products-shops-services-vid.md` | `specs/search/fe/sr1-tabs-all-products-shops-services-vid.md` | not started |
-| SR2 | keyword -> category/subcategory/product-tag mapping (e.g. "AC" -> AC products, electronics shops, AC services, videos; "iPhone 15" -> products, mobile shops, mobile-repair services) | `specs/search/be/sr2-keyword-category-subcategory-product.md` | `specs/search/fe/sr2-keyword-category-subcategory-product.md` | not started |
-| SR3 | Hindi/Hinglish and typo tolerance ("एसी", "plumbr") | `specs/search/be/sr3-hindi-hinglish-and-typo-tolerance.md` | `specs/search/fe/sr3-hindi-hinglish-and-typo-tolerance.md` | not started |
-| SR4 | grouped autocomplete (Products, Shops, Services, Categories, Subcategories, related searches) | `specs/search/be/sr4-grouped-autocomplete.md` | `specs/search/fe/sr4-grouped-autocomplete.md` | not started |
-| SR5 | recent and popular searches | `specs/search/be/sr5-recent-and-popular-searches.md` | `specs/search/fe/sr5-recent-and-popular-searches.md` | not started |
-| SR6 | All tab grouped sections with "See all" and "Related services for AC" | `specs/search/be/sr6-all-tab-grouped-sections-with-see-al.md` | `specs/search/fe/sr6-all-tab-grouped-sections-with-see-al.md` | not started |
-| SR7 | per-tab filters (Services reuses the EX6 component) | `specs/search/be/sr7-per-tab-filters.md` | `specs/search/fe/sr7-per-tab-filters.md` | not started |
-| SR8 | sort (relevance, distance, rating, price, newest) | `specs/search/be/sr8-sort.md` | `specs/search/fe/sr8-sort.md` | not started |
-| SR9 | no-results with related categories | `specs/search/be/sr9-no-results-with-related-categories.md` | `specs/search/fe/sr9-no-results-with-related-categories.md` | not started |
-| SR10 | Search keeps its own filter state, separate from Explore | `specs/search/be/sr10-search-keeps-its-own-filter-state.md` | `specs/search/fe/sr10-search-keeps-its-own-filter-state.md` | not started |
+| SR1 | tabs All \| Products \| Shops \| Services \| Videos | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| SR2 | keyword -> category/subcategory/product-tag mapping (e.g. "AC" -> AC products, electronics shops, AC services, videos; "iPhone 15" -> products, mobile shops, mobile-repair services) | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| SR3 | Hindi/Hinglish and typo tolerance ("एसी", "plumbr") | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| SR4 | grouped autocomplete (Products, Shops, Services, Categories, Subcategories, related searches) | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| SR5 | recent and popular searches | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| SR6 | All tab grouped sections with "See all" and "Related services for AC" | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| SR7 | per-tab filters (Services reuses the EX6 component) | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| SR8 | sort (relevance, distance, rating, price, newest) | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| SR9 | no-results with related categories | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| SR10 | Search keeps its own filter state, separate from Explore | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
 
 ## PF. Business and provider profile
 
