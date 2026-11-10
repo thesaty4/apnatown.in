@@ -123,7 +123,7 @@ erDiagram
 | `cart-checkout` | `carts`, `cart_lines`, `checkout_attempts` |
 | `payments` | `payment_attempts`, `refunds`, `earnings`, `business_subscriptions` |
 | `orders` | `orders`, `order_items`, `order_status_history`, `order_cases`, `order_case_events`, `order_case_attachments` |
-| `delivery` | `rider_profiles`, `delivery_jobs`, `delivery_codes` |
+| `delivery` | `rider_profiles`, `rider_documents`, `delivery_jobs`, `delivery_offers`, `delivery_codes`, `rider_payouts` |
 | `reviews` | `reviews`, `review_reports` |
 | `engagement` | `follows`, `likes`, `hearts`, `bookmarks`, `video_comments` |
 | `media-videos` | `media_assets`, `videos`, `video_links` |
