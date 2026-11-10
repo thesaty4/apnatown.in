@@ -32,7 +32,7 @@ Modular monolith: NestJS modules own their domain tables and use-cases. A module
 | `communications` | Scoped, consent-aware admin campaigns | `users`, `geo`, `notifications` | `campaigns`, `campaign_recipients`, `campaign_reports` |
 | `admin` | Admin approvals, roles, permissions and console actions | `users`, `geo`, `catalog`, `businesses`, `offers`, `orders`, `reviews`, `media-videos`, `communications` | `roles`, `role_permissions`, `admin_accounts`, `admin_permissions`, `admin_scopes` |
 | `audit` | Append-only record of sensitive changes | — | `audit_logs` |
-| `settings` | Global settings, feature flags and legal content | — | `settings`, `feature_flags` |
+| `settings` | Global settings, feature flags and legal content | — | `settings`, `feature_flags`, `legal_pages`, `support_messages` |
 
 `outbox_events` and `idempotency_keys` are shared runtime infrastructure, not domain-owned tables; their schema is specified once by the shared persistence layer. Each domain table's columns and constraints are defined only in its owning module BE spec. Payments consumes order/delivery events and publishes billing events; it never reads another module's repositories. Offers owns promotion placement and consumes the successful-purchase event.
 

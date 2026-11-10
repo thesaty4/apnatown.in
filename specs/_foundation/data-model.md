@@ -134,7 +134,7 @@ erDiagram
 | `communications` | `campaigns`, `campaign_recipients`, `campaign_reports` |
 | `admin` | `roles`, `role_permissions`, `admin_accounts`, `admin_permissions`, `admin_scopes` |
 | `audit` | `audit_logs` |
-| `settings` | `settings`, `feature_flags` |
+| `settings` | `settings`, `feature_flags`, `legal_pages`, `support_messages` |
 | Shared runtime | `outbox_events`, `idempotency_keys` |
 
 `search` uses read-only repository interfaces over `catalog`, `businesses`, `products`, `services`, `offers`, and `media-videos`; it does not duplicate their source data. The ERD shows core foreign-key paths; polymorphic targets (reviews, offer targets, bookmarks) are validated by the owning use-case.
