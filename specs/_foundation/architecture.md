@@ -30,7 +30,7 @@ Modular monolith: NestJS modules own their domain tables and use-cases. A module
 | `media-videos` | Media assets, embeds, consent, video moderation | `businesses`, `products`, `services` | `media_assets`, `gallery_photos`, `videos`, `video_links`, `video_reports` |
 | `notifications` | In-app notifications, preferences and templates | `users`, `settings` | `notifications`, `notification_preferences`, `notification_templates`, `notification_deliveries` |
 | `communications` | Scoped, consent-aware admin campaigns | `users`, `geo`, `notifications` | `campaigns`, `campaign_recipients`, `campaign_reports` |
-| `admin` | Admin approvals, roles, permissions and console actions | `users`, `geo`, `catalog`, `businesses`, `offers`, `orders`, `reviews`, `media-videos`, `communications` | `roles`, `role_permissions`, `admin_scopes` |
+| `admin` | Admin approvals, roles, permissions and console actions | `users`, `geo`, `catalog`, `businesses`, `offers`, `orders`, `reviews`, `media-videos`, `communications` | `roles`, `role_permissions`, `admin_accounts`, `admin_permissions`, `admin_scopes` |
 | `audit` | Append-only record of sensitive changes | — | `audit_logs` |
 | `settings` | Global settings, feature flags and legal content | — | `settings`, `feature_flags` |
 

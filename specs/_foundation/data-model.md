@@ -104,7 +104,10 @@ erDiagram
     users ||--o{ campaigns : creates
     campaigns ||--o{ campaign_recipients : targets
     users ||--o{ audit_logs : acts
-    users ||--o{ admin_scopes : assigned
+    users ||--o| admin_accounts : is
+    roles ||--o{ admin_accounts : templates
+    admin_accounts ||--o{ admin_permissions : holds
+    admin_accounts ||--o{ admin_scopes : assigned
     roles ||--o{ role_permissions : grants
     settings ||--o{ feature_flags : configures
 ```
@@ -129,7 +132,7 @@ erDiagram
 | `media-videos` | `media_assets`, `gallery_photos`, `videos`, `video_links`, `video_reports` |
 | `notifications` | `notifications`, `notification_preferences`, `notification_templates`, `notification_deliveries` |
 | `communications` | `campaigns`, `campaign_recipients`, `campaign_reports` |
-| `admin` | `roles`, `role_permissions`, `admin_scopes` |
+| `admin` | `roles`, `role_permissions`, `admin_accounts`, `admin_permissions`, `admin_scopes` |
 | `audit` | `audit_logs` |
 | `settings` | `settings`, `feature_flags` |
 | Shared runtime | `outbox_events`, `idempotency_keys` |
