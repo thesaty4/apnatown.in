@@ -44,6 +44,11 @@ erDiagram
     keyword_mappings ||--o{ keyword_mapping_terms : matches
     keyword_mappings ||--o{ keyword_mapping_targets : targets
     categories ||--o{ products : classifies
+    subcategories ||--o{ products : classifies
+    products ||--o{ product_variants : offers
+    products ||--|| inventory : tracks
+    businesses ||--o{ product_category_pills : configures
+    subcategories ||--o{ product_category_pills : labels
     subcategories ||--o{ services : classifies
     businesses ||--o{ products : lists
     businesses ||--o{ services : lists
@@ -100,7 +105,7 @@ erDiagram
 | `geo` | `cities`, `areas`, `zones`, `zone_fee_slabs`, `service_area_waitlist` |
 | `catalog` | `categories`, `subcategories`, `subcategory_suggestions`, `keyword_mappings`, `keyword_mapping_terms`, `keyword_mapping_targets` |
 | `businesses` | `businesses`, `business_hours`, `business_settings`, `business_documents` |
-| `products` | `products`, `product_variants`, `inventory` |
+| `products` | `products`, `product_variants`, `inventory`, `product_category_pills` |
 | `services` | `services`, `provider_expertise`, `enquiries` |
 | `search` | No source-of-truth tables; reads owning module data |
 | `offers` | `offers`, `offer_targets`, `coupons` |

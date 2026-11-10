@@ -144,15 +144,15 @@ Roles: customer. Backend module(s): `products, offers, reviews`. Frontend route/
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| PD1 | breadcrumbs | `specs/products/be/pd1-breadcrumbs.md` | `specs/products/fe/pd1-breadcrumbs.md` | not started |
-| PD2 | media carousel with images and embedded videos (play badge), full-screen viewer (prev/next, swipe, arrow keys, counter, close, pinch/double-tap zoom, heart, focus trap) | `specs/products/be/pd2-media-carousel-with-images-and-embed.md` | `specs/products/fe/pd2-media-carousel-with-images-and-embed.md` | not started |
-| PD3 | price, MRP, discount, variants, stock (out-of-stock with notify-me, low stock), quantity, Add to cart, Buy now | `specs/products/be/pd3-price.md` | `specs/products/fe/pd3-price.md` | not started |
-| PD4 | offer banner at top (badge, discounted price, validity date, terms; expired and out-of-stock-offer states) | `specs/products/be/pd4-offer-banner-at-top.md` | `specs/products/fe/pd4-offer-banner-at-top.md` | not started |
-| PD5 | Videos & Reels section (hidden if none; opens the Reels viewer at that video) | `specs/products/be/pd5-videos-reels-section.md` | `specs/products/fe/pd5-videos-reels-section.md` | not started |
-| PD6 | seller card with delivery/pickup info | `specs/products/be/pd6-seller-card-with-delivery-pickup-inf.md` | `specs/products/fe/pd6-seller-card-with-delivery-pickup-inf.md` | not started |
-| PD7 | specs, reviews with breakdown and review form | `specs/products/be/pd7-specs.md` | `specs/products/fe/pd7-specs.md` | not started |
-| PD8 | related products with "View all" -> Explore Products filtered to same category and subcategory | `specs/products/be/pd8-related-products-with-view-all-explo.md` | `specs/products/fe/pd8-related-products-with-view-all-explo.md` | not started |
-| PD9 | share link and bookmark | `specs/products/be/pd9-share-link-and-bookmark.md` | `specs/products/fe/pd9-share-link-and-bookmark.md` | not started |
+| PD1 | breadcrumbs | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
+| PD2 | media carousel with images and embedded videos (play badge), full-screen viewer (prev/next, swipe, arrow keys, counter, close, pinch/double-tap zoom, heart, focus trap) | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
+| PD3 | price, MRP, discount, variants, stock (out-of-stock with notify-me, low stock), quantity, Add to cart, Buy now | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
+| PD4 | offer banner at top (badge, discounted price, validity date, terms; expired and out-of-stock-offer states) | `specs/offers/be/offers.md` | `specs/offers/fe/offers.md` | not started |
+| PD5 | Videos & Reels section (hidden if none; opens the Reels viewer at that video) | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
+| PD6 | seller card with delivery/pickup info | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
+| PD7 | specs, reviews with breakdown and review form | `specs/reviews/be/reviews.md` | `specs/reviews/fe/reviews.md` | not started |
+| PD8 | related products with "View all" -> Explore Products filtered to same category and subcategory | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
+| PD9 | share link and bookmark | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
 
 ## SV. Services
 
@@ -291,12 +291,12 @@ Roles: vendor. Backend module(s): `businesses, products, services, offers, order
 | VD1 | signup wizard (mobile OTP, business type, basics, location, hours and delivery, documents, review) with save-draft and approval states (pending limited access, approved, rejected with reason and re-submit, suspended, inactive) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 | VD2 | overview KPIs, charts, low-stock alerts, pending actions | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 | VD3 | profile editor (logo, cover, hours per day, temporarily closed, delivery self vs rider, radius, fee, minimum order, pickup, map pin, live preview) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
-| VD4 | products (list, search, filter, bulk edit, CSV import, add/edit with variants, SKU, stock, media sorter with images + YouTube/Instagram embeds, shareable link) | `specs/businesses/be/vd4-products.md` | `specs/businesses/fe/vd4-products.md` | not started |
-| VD5 | product category pills manager (reorder, rename, hide) | `specs/businesses/be/vd5-product-category-pills-manager.md` | `specs/businesses/fe/vd5-product-category-pills-manager.md` | not started |
+| VD4 | products (list, search, filter, bulk edit, CSV import, add/edit with variants, SKU, stock, media sorter with images + YouTube/Instagram embeds, shareable link) | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
+| VD5 | product category pills manager (reorder, rename, hide) | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
 | VD6 | subcategory suggestion with duplicate detection and "my suggestions" status | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
 | VD7 | offers manager | `specs/businesses/be/vd7-offers-manager.md` | `specs/businesses/fe/vd7-offers-manager.md` | not started |
 | VD8 | orders (new-order alert, accept/reject, preparing, ready, request/assign rider, self-delivery with OTP, pickup code, print slip, mark item unavailable, refund request handling) | `specs/businesses/be/vd8-orders.md` | `specs/businesses/fe/vd8-orders.md` | not started |
-| VD9 | inventory (stock, thresholds, quick toggles, restock) | `specs/businesses/be/vd9-inventory.md` | `specs/businesses/fe/vd9-inventory.md` | not started |
+| VD9 | inventory (stock, thresholds, quick toggles, restock) | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
 | VD10 | reviews (reply/report) | `specs/businesses/be/vd10-reviews.md` | `specs/businesses/fe/vd10-reviews.md` | not started |
 | VD11 | QR and links (poster/table-tent/sticker, share) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 | VD12 | gallery manager (gallery-only photos, default media-consent setting) and videos/reels manager (link/upload, thumbnail, caption, hashtags, link products/services, "Show in Gallery"/"Show in Reels", approval status, analytics: views, likes, shares, followers gained, taps on linked items) | `specs/businesses/be/vd12-gallery-manager.md` | `specs/businesses/fe/vd12-gallery-manager.md` | not started |
