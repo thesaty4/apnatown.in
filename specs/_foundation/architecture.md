@@ -21,7 +21,7 @@ Modular monolith: NestJS modules own their domain tables and use-cases. A module
 | `services` | Service listings, expertise and enquiries | `businesses`, `catalog`, `geo` | `services`, `provider_expertise`, `enquiries` |
 | `search` | Home, Explore, Search, suggestions and facet queries | `catalog`, `businesses`, `products`, `services`, `offers`, `media-videos` | No source-of-truth tables; read-only queries over owning modules |
 | `offers` | Offers, coupons and approval lifecycle | `businesses`, `products`, `services` | `offers`, `offer_targets`, `coupons` |
-| `cart-checkout` | Cart, quote, per-shop checkout orchestration | `products`, `services`, `businesses`, `offers`, `geo`, `payments`, `orders` | `carts`, `cart_lines`, `checkout_attempts` |
+| `cart-checkout` | Cart, quote, per-shop checkout orchestration | `products`, `businesses`, `offers`, `geo`, `payments`, `orders`, `users`, `settings` | `carts`, `cart_lines`, `checkout_attempts` |
 | `payments` | Payment attempts, collection and refunds | — | `payment_attempts`, `refunds`, `earnings` |
 | `orders` | Per-shop order lifecycle, cases and invoices | `users` | `orders`, `order_items`, `order_cases` |
 | `delivery` | Rider requests, assignments, delivery and pickup codes | `geo`, `users` | `rider_profiles`, `delivery_jobs`, `delivery_codes` |

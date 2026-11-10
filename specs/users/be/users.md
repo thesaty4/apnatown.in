@@ -1,6 +1,6 @@
 # BE: users
 
-Features: AU5, AU8, AC1–AC5; F-AU-005, F-AU-008, F-AC-001–F-AC-004, F-X-008 | Rules: BR-02, BR-11, BR-14 | State machines: none specified | Depends on: `geo`; used by `auth`, `businesses`, `communications`
+Features: AU5, AU8, AC1–AC5; F-AU-005, F-AU-008, F-AC-001–F-AC-004, F-X-008 | Rules: BR-02, BR-11, BR-14 | State machines: none specified | Depends on: `geo`; used by `auth`, `businesses`, `communications`, `cart-checkout`
 
 ## Responsibility
 

@@ -188,15 +188,15 @@ Roles: customer. Backend module(s): `cart-checkout`. Frontend route/screen: `/ca
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| CK1 | cart grouped by business, quantity stepper, remove, save for later, price breakdown, delivery fee, taxes/charges, coupon | `specs/cart-checkout/be/ck1-cart-grouped-by-business.md` | `specs/cart-checkout/fe/ck1-cart-grouped-by-business.md` | not started |
-| CK2 | one checkout splits into one order per shop with clear notice | `specs/cart-checkout/be/ck2-one-checkout-splits-into-one-order-p.md` | `specs/cart-checkout/fe/ck2-one-checkout-splits-into-one-order-p.md` | not started |
-| CK3 | per shop choose home delivery or self-pickup | `specs/cart-checkout/be/ck3-per-shop-choose-home-delivery-or-sel.md` | `specs/cart-checkout/fe/ck3-per-shop-choose-home-delivery-or-sel.md` | not started |
-| CK4 | address book (add/edit/delete, map pin, landmark, PIN, labels, default) | `specs/cart-checkout/be/ck4-address-book.md` | `specs/cart-checkout/fe/ck4-address-book.md` | not started |
-| CK5 | delivery range and minimum-order checks, out-of-range message | `specs/cart-checkout/be/ck5-delivery-range-and-minimum-order-che.md` | `specs/cart-checkout/fe/ck5-delivery-range-and-minimum-order-che.md` | not started |
-| CK6 | payments: UPI, cards, net banking, wallets, COD / pay-at-pickup | `specs/cart-checkout/be/ck6-payments-upi.md` | `specs/cart-checkout/fe/ck6-payments-upi.md` | not started |
-| CK7 | payment failure and retry | `specs/cart-checkout/be/ck7-payment-failure-and-retry.md` | `specs/cart-checkout/fe/ck7-payment-failure-and-retry.md` | not started |
-| CK8 | order success with an order id per shop | `specs/cart-checkout/be/ck8-order-success-with-an-order-id-per-s.md` | `specs/cart-checkout/fe/ck8-order-success-with-an-order-id-per-s.md` | not started |
-| CK9 | coupons (flat/percent, minimum, discount distributed proportionally across shop orders) | `specs/cart-checkout/be/ck9-coupons.md` | `specs/cart-checkout/fe/ck9-coupons.md` | not started |
+| CK1 | cart grouped by business, quantity stepper, remove, save for later, price breakdown, delivery fee, taxes/charges, coupon | `specs/cart-checkout/be/cart-checkout.md` | `specs/cart-checkout/fe/cart-checkout.md` | spec written |
+| CK2 | one checkout splits into one order per shop with clear notice | `specs/cart-checkout/be/cart-checkout.md` | `specs/cart-checkout/fe/cart-checkout.md` | spec written |
+| CK3 | per shop choose home delivery or self-pickup | `specs/cart-checkout/be/cart-checkout.md` | `specs/cart-checkout/fe/cart-checkout.md` | spec written |
+| CK4 | address book (add/edit/delete, map pin, landmark, PIN, labels, default) | `specs/users/be/users.md` | `specs/cart-checkout/fe/cart-checkout.md` | spec written |
+| CK5 | delivery range and minimum-order checks, out-of-range message | `specs/cart-checkout/be/cart-checkout.md` | `specs/cart-checkout/fe/cart-checkout.md` | spec written |
+| CK6 | payments: UPI, cards, net banking, wallets, COD / pay-at-pickup | `specs/cart-checkout/be/cart-checkout.md` | `specs/cart-checkout/fe/cart-checkout.md` | spec written |
+| CK7 | payment failure and retry | `specs/cart-checkout/be/cart-checkout.md` | `specs/cart-checkout/fe/cart-checkout.md` | spec written |
+| CK8 | order success with an order id per shop | `specs/cart-checkout/be/cart-checkout.md` | `specs/cart-checkout/fe/cart-checkout.md` | spec written |
+| CK9 | coupons (flat/percent, minimum, discount distributed proportionally across shop orders) | `specs/cart-checkout/be/cart-checkout.md` | `specs/cart-checkout/fe/cart-checkout.md` | spec written |
 
 ## OR. Orders and tracking
 
