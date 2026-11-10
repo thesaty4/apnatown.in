@@ -1,6 +1,6 @@
 # FE: users
 
-Features: AU5, AU8, AC1–AC5; F-AU-005, F-AU-008, F-AC-001–F-AC-004, F-X-008 | Screens: S-CUST-23–S-CUST-29, S-CUST-33 | Flows: J12, J13
+Features: AU5, AU8, AC1–AC5; F-AU-005, F-AU-008, F-AC-001, F-AC-002, F-AC-003, F-AC-004, F-X-008 | Screens: S-CUST-23–S-CUST-29, S-CUST-33 | Flows: J12, J13
 
 ## Routes and rendering
 

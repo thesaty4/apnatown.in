@@ -1,6 +1,6 @@
 # BE: users
 
-Features: AU5, AU8, AC1–AC5; F-AU-005, F-AU-008, F-AC-001–F-AC-004, F-X-008 | Rules: BR-02, BR-11, BR-14 | State machines: none specified | Depends on: `geo`; used by `auth`, `businesses`, `communications`, `cart-checkout`
+Features: AU5, AU8, AC1–AC5; F-AU-005, F-AU-008, F-AC-001, F-AC-002, F-AC-003, F-AC-004, F-X-008 | Rules: BR-02, BR-11, BR-14 | State machines: none specified | Depends on: `geo`; used by `auth`, `businesses`, `communications`, `cart-checkout`
 
 ## Responsibility
 
@@ -10,7 +10,7 @@ Own user profiles, roles, saved addresses, account-level preferences, consent re
 
 | Table | Columns and constraints | Indexes |
 |---|---|---|
-| `users` | `id uuid PK`; `phone_ciphertext text NOT NULL`; `phone_lookup_hash bytea NOT NULL UNIQUE`; `email_ciphertext text NULL`; `display_name text NULL`; `preferred_locale text NOT NULL DEFAULT 'en' CHECK en/hi`; `theme_preference text NOT NULL DEFAULT 'light' CHECK light/dark/auto`; `deleted_at timestamptz NULL`; `created_at/updated_at timestamptz NOT NULL` | unique phone lookup hash; partial active-user index on `deleted_at` |
+| `users` | `id uuid PK`; `phone_ciphertext text NOT NULL`; `phone_lookup_hash bytea NOT NULL UNIQUE`; `email_ciphertext text NULL`; `display_name text NULL`; `preferred_locale text NOT NULL DEFAULT 'en' CHECK en/hi`; `theme_preference text NOT NULL DEFAULT 'light' CHECK light/dark/auto`; `account_status text NOT NULL DEFAULT 'active' CHECK active/suspended`; `version int NOT NULL DEFAULT 1`; `deleted_at timestamptz NULL`; `created_at/updated_at timestamptz NOT NULL` | unique phone lookup hash; partial active-user index on `deleted_at` |
 | `user_roles` | `user_id uuid NOT NULL FK users`; `role text NOT NULL` (six platform roles); `created_at timestamptz NOT NULL`; composite PK `(user_id,role)` | `(role,user_id)` for role lookup |
 | `addresses` | `id uuid PK`; `user_id uuid NOT NULL FK users`; `label text NOT NULL`; encrypted `address_text text NOT NULL`, `landmark text NULL`; `pin_code text NOT NULL`; `city_id uuid NOT NULL FK geo.cities`; `area_id uuid NULL FK geo.areas`; `location geography(Point,4326) NULL`; `is_default bool NOT NULL DEFAULT false`; `deleted_at timestamptz NULL`; `created_at/updated_at timestamptz NOT NULL` | `(user_id,deleted_at,created_at)`; unique partial default address per user |
 | `consents` | `id uuid PK`; `user_id uuid NULL FK users`; `anonymous_subject_hash bytea NULL`; `purpose text NOT NULL`; `channel text NULL`; `granted bool NOT NULL`; `recorded_at timestamptz NOT NULL`; `source text NOT NULL`; check exactly one subject reference | `(user_id,purpose,recorded_at desc)`; `(anonymous_subject_hash,purpose,recorded_at desc)` |
@@ -33,6 +33,7 @@ Own user profiles, roles, saved addresses, account-level preferences, consent re
 | PUT | `/users/me/consents/{purpose}` | Authenticated self | `{channel?,granted}` → recorded consent | `VALIDATION_ERROR`, `CONSENT_PURPOSE_INVALID` | Yes | F-X-008, F-AC-004 |
 | GET | `/consents` | Guest; anonymous consent cookie (Q-31) | → recorded anonymous choices | — | Yes | F-X-008 |
 | PUT | `/consents/{purpose}` | Guest; anonymous consent cookie | `{channel?,granted}` → recorded anonymous consent | `VALIDATION_ERROR`, `CONSENT_PURPOSE_INVALID` | Yes | F-X-008 |
+| Internal | `setAccountStatus` | Called only by `admin` after `users:edit` + scope check | `{userId,status,reasonKey,expectedVersion}` → status; suspended users' sessions are revoked via `auth` and audit before/after is written | `USER_NOT_FOUND`, `USER_VERSION_CONFLICT` | Yes | F-AD-004 |
 | POST | `/users/me/data-requests` | Authenticated; own user + CSRF | `{type:"export"|"delete"}` → `{requestId}` | `VALIDATION_ERROR` | Yes per request key | F-AU-008, F-AC-004 |
 
 Use the shared error envelope and OpenAPI DTOs from [backend-shared.md](../../_foundation/backend-shared.md). `payments` owns stored provider references and the saved-method API contract (Q-33); users must not store card, bank, or provider credentials.
@@ -58,6 +59,7 @@ Use the shared error envelope and OpenAPI DTOs from [backend-shared.md](../../_f
 | Code | Status | Message key |
 |---|---:|---|
 | `USER_NOT_FOUND` | 404 | `users.notFound` |
+| `USER_VERSION_CONFLICT` | 409 | `users.versionConflict` |
 | `ADDRESS_NOT_FOUND` | 404 | `users.address.notFound` |
 | `ADDRESS_OUT_OF_SCOPE` | 403 | `users.address.outOfScope` |
 | `CONSENT_PURPOSE_INVALID` | 422 | `users.consent.purposeInvalid` |
