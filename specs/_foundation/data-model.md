@@ -68,6 +68,7 @@ erDiagram
     users ||--o{ orders : places
     businesses ||--o{ orders : fulfills
     orders ||--|{ order_items : contains
+    orders ||--o{ order_status_history : records
     products ||--o{ order_items : ordered
     checkout_attempts ||--o{ payment_attempts : funds
     orders ||--o{ payment_attempts : paid_by
@@ -81,6 +82,9 @@ erDiagram
     orders ||--o| delivery_jobs : delivered_by
     users ||--o{ delivery_jobs : rides
     orders ||--o{ order_cases : resolves
+    order_cases ||--o{ order_case_events : records
+    order_case_events ||--o{ order_case_attachments : contains
+    media_assets ||--o{ order_case_attachments : evidence
 
     %% trust and media
     users ||--o{ reviews : writes
@@ -118,7 +122,7 @@ erDiagram
 | `offers` | `offers`, `offer_targets`, `coupons` |
 | `cart-checkout` | `carts`, `cart_lines`, `checkout_attempts` |
 | `payments` | `payment_attempts`, `refunds`, `earnings`, `business_subscriptions` |
-| `orders` | `orders`, `order_items`, `order_cases` |
+| `orders` | `orders`, `order_items`, `order_status_history`, `order_cases`, `order_case_events`, `order_case_attachments` |
 | `delivery` | `rider_profiles`, `delivery_jobs`, `delivery_codes` |
 | `reviews` | `reviews`, `review_reports` |
 | `engagement` | `follows`, `likes`, `hearts`, `bookmarks`, `video_comments` |
@@ -143,7 +147,7 @@ erDiagram
 | Search keyword, name and typo-tolerant matching | GIN trigram on normalized searchable text and `keyword_mapping_terms.normalized_term`; GIN full-text index for token search; partial target indexes on `keyword_mapping_targets`. |
 | Subcategory duplicate checks and suggestion queues | GIN trigram on normalized suggestion names; `(status,city_id,area_id,created_at,id)` for scoped moderation and `(business_id,created_at,id)` for owner history. |
 | Reels and other feeds | Keyset indexes on frozen rank/session key and `id`, or `(created_at, id)` for chronological feeds; never deep-offset pagination. |
-| Customer orders and business order queues | `(customer_id, created_at DESC, id DESC)` and `(business_id, status, created_at, id)`; add only indexes required by documented filters. |
+| Customer orders and business order queues | `(customer_user_id, placed_at DESC, id DESC)` and `(business_id, status, placed_at DESC, id DESC)`; add only indexes required by documented filters. |
 | Admin approval/moderation queues | `(status, created_at, id)` plus city/area scope columns used by the authorized query. |
 | Idempotency and outbox workers | Unique idempotency key scoped by actor/operation; outbox status/availability index with stable ordering and deduplication key. |
 

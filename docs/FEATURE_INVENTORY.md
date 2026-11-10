@@ -204,14 +204,14 @@ Roles: customer, rider, vendor, provider, admin. Backend module(s): `orders, del
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| OR1 | orders list (active/completed/cancelled) and detail | `specs/orders/be/or1-orders-list.md` | `specs/orders/fe/or1-orders-list.md` | not started |
-| OR2 | timeline: delivery `placed -> accepted -> preparing -> ready -> out_for_delivery -> delivered`; pickup `placed -> accepted -> ready -> picked_up`; plus `cancelled`, `refunded` | `specs/orders/be/or2-timeline-delivery-placed-accepted-pr.md` | `specs/orders/fe/or2-timeline-delivery-placed-accepted-pr.md` | not started |
-| OR3 | live tracking: rider name, phone, rating, status, ETA, delivery OTP | `specs/orders/be/or3-live-tracking-rider-name.md` | `specs/orders/fe/or3-live-tracking-rider-name.md` | not started |
-| OR4 | pickup: address, directions, pickup code | `specs/orders/be/or4-pickup-address.md` | `specs/orders/fe/or4-pickup-address.md` | not started |
-| OR5 | actions: cancel, request refund, report problem, contact shop/rider, reorder, download invoice | `specs/orders/be/or5-actions-cancel.md` | `specs/orders/fe/or5-actions-cancel.md` | not started |
-| OR6 | cancellation/refund flow with reasons, message "Admin and vendor have been notified and will contact you", refund tracker `requested -> approved -> completed` | `specs/payments/be/payments.md` | `specs/orders/fe/or6-cancellation-refund-flow-with-reason.md` | not started |
-| OR7 | partial fulfilment/substitution (vendor marks item unavailable) | `specs/orders/be/or7-partial-fulfilment-substitution.md` | `specs/orders/fe/or7-partial-fulfilment-substitution.md` | not started |
-| OR8 | dispute case workflow visible to customer | `specs/orders/be/or8-dispute-case-workflow-visible-to-cus.md` | `specs/orders/fe/or8-dispute-case-workflow-visible-to-cus.md` | not started |
+| OR1 | orders list (active/completed/cancelled) and detail | `specs/orders/be/orders.md` | `specs/orders/fe/orders.md` | spec written |
+| OR2 | timeline: delivery `placed -> accepted -> preparing -> ready -> out_for_delivery -> delivered`; pickup `placed -> accepted -> ready -> picked_up`; plus `cancelled`, `refunded` | `specs/orders/be/orders.md` | `specs/orders/fe/orders.md` | spec written |
+| OR3 | live tracking: rider name, phone, rating, status, ETA, delivery OTP | `specs/orders/be/orders.md` | `specs/orders/fe/orders.md` | spec written |
+| OR4 | pickup: address, directions, pickup code | `specs/orders/be/orders.md` | `specs/orders/fe/orders.md` | spec written |
+| OR5 | actions: cancel, request refund, report problem, contact shop/rider, reorder, download invoice | `specs/orders/be/orders.md` | `specs/orders/fe/orders.md` | spec written |
+| OR6 | cancellation/refund flow with reasons, message "Admin and vendor have been notified and will contact you", refund tracker `requested -> approved -> completed` | `specs/orders/be/orders.md` | `specs/orders/fe/orders.md` | spec written |
+| OR7 | partial fulfilment/substitution (vendor marks item unavailable) | `specs/orders/be/orders.md` | `specs/orders/fe/orders.md` | spec written |
+| OR8 | dispute case workflow visible to customer | `specs/orders/be/orders.md` | `specs/orders/fe/orders.md` | spec written |
 
 ## RV. Reviews
 
@@ -296,7 +296,7 @@ Roles: vendor. Backend module(s): `businesses, products, services, offers, order
 | VD5 | product category pills manager (reorder, rename, hide) | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
 | VD6 | subcategory suggestion with duplicate detection and "my suggestions" status | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
 | VD7 | offers manager | `specs/offers/be/offers.md` | `specs/offers/fe/offers.md` | spec written |
-| VD8 | orders (new-order alert, accept/reject, preparing, ready, request/assign rider, self-delivery with OTP, pickup code, print slip, mark item unavailable, refund request handling) | `specs/businesses/be/vd8-orders.md` | `specs/businesses/fe/vd8-orders.md` | not started |
+| VD8 | orders (new-order alert, accept/reject, preparing, ready, request/assign rider, self-delivery with OTP, pickup code, print slip, mark item unavailable, refund request handling) | `specs/orders/be/orders.md` | `specs/orders/fe/orders.md` | spec written |
 | VD9 | inventory (stock, thresholds, quick toggles, restock) | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
 | VD10 | reviews (reply/report) | `specs/businesses/be/vd10-reviews.md` | `specs/businesses/fe/vd10-reviews.md` | not started |
 | VD11 | QR and links (poster/table-tent/sticker, share) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
@@ -318,7 +318,7 @@ Roles: provider. Backend module(s): `businesses, services, engagement`. Frontend
 | PV2 | profile with category, "expert in" multi-select subcategories, service area, hours | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 | PV3 | services manager (as VD14) | `specs/services/be/services.md` | `specs/services/fe/services.md` | spec written |
 | PV4 | enquiries inbox with statuses `new -> contacted -> converted/closed`, call/WhatsApp reply | `specs/services/be/services.md` | `specs/services/fe/services.md` | spec written |
-| PV5 | can also list products and handle orders | `specs/businesses/be/pv5-can-also-list-products-and-handle-or.md` | `specs/businesses/fe/pv5-can-also-list-products-and-handle-or.md` | not started |
+| PV5 | can also list products and handle orders | `specs/orders/be/orders.md` | `specs/orders/fe/orders.md` | spec written |
 | PV6 | reviews, QR, analytics (views, enquiries, conversion), followers, videos/reels and gallery managers | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 | PV7 | placeholders for booking/quotation/payment (feature flag off) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 
@@ -349,7 +349,7 @@ Roles: admin. Backend module(s): `admin, users, catalog, orders, delivery, revie
 | AD4 | users (customers, vendors, riders: search, profile, order history, suspend/reactivate) | `specs/admin/be/ad4-users.md` | `specs/admin/fe/ad4-users.md` | not started |
 | AD5 | categories (view fixed main categories; subcategory tree, types, keywords, filter preview) | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
 | AD6 | subcategory suggestion queue (approve, reject with reason, merge into existing, duplicate warning, notification to suggester) | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
-| AD7 | orders and disputes (case workflow open -> in review -> resolved, notes, refund approval/completion, rider assign/reassign) | `specs/admin/be/ad7-orders-and-disputes.md` | `specs/admin/fe/ad7-orders-and-disputes.md` | not started |
+| AD7 | orders and disputes (case workflow open -> in review -> resolved, notes, refund approval/completion, rider assign/reassign) | `specs/orders/be/orders.md` | `specs/orders/fe/orders.md` | spec written |
 | AD8 | live deliveries map with city filter (All cities cluster pins/one city), side list (order id, rider, status, ETA), empty state | `specs/admin/be/ad8-live-deliveries-map-with-city-filter.md` | `specs/admin/fe/ad8-live-deliveries-map-with-city-filter.md` | not started |
 | AD9 | review moderation (reported/pending/removed; approve/hide/delete) | `specs/admin/be/ad9-review-moderation.md` | `specs/admin/fe/ad9-review-moderation.md` | not started |
 | AD10 | video moderation queue (pending/approved/rejected/removed/reported, reasons, engagement report) | `specs/admin/be/ad10-video-moderation-queue.md` | `specs/admin/fe/ad10-video-moderation-queue.md` | not started |

@@ -55,6 +55,10 @@ into the list below (one is now resolved).
 | Q-74 | Subscription plan and promotion purchase rules: billing period, renewals, proration, price changes, cancellation, activation and invoice/tax evidence. | Open |
 | Q-75 | Vendor payout eligibility, calculation, schedule, status, failure/retry and dispute rules for earnings and next payout. | Open |
 | Q-76 | Full/partial refund amount and approval policy, fee/tax reversal, and interaction with ST-payment's no-partial-refund state. | Open |
+| Q-77 | Unavailable-item replacement/substitution approval, repricing, discount recalculation and refund behavior. | Open |
+| Q-78 | Customer/vendor/admin visibility, retention and redaction rules for dispute/case notes and evidence. | Open |
+| Q-79 | Refund eligibility/window start for pickup, cancelled and vendor-rejected orders. | Open |
+| Q-80 | File format, limits, retention and visibility for optional order-refund evidence photos. | Open |
 
 ## 4. Resolved (for traceability — don't re-open without new evidence)
 

@@ -76,7 +76,7 @@ Source: [LEAN-SPECS.md](../prompts/LEAN-SPECS.md). The foundation checkpoint is 
 | 9 | `offers` | Done | Done |
 | 10 | `cart-checkout` | Done | Done |
 | 11 | `payments` | Done | Done |
-| 12 | `orders` | Not started | Not started |
+| 12 | `orders` | Done | Done |
 | 13 | `delivery` | Not started | Not started |
 | 14 | `reviews` | Not started | Not started |
 | 15 | `engagement` | Not started | Not started |
@@ -87,7 +87,7 @@ Source: [LEAN-SPECS.md](../prompts/LEAN-SPECS.md). The foundation checkpoint is 
 | 20 | `audit` | Not started | Not started |
 | 21 | `settings` | Not started | Not started |
 
-The required coverage script is deferred until the module specs exist; it would correctly fail against the intentionally incomplete foundation checkpoint.
+The coverage checker is available at [check-spec-coverage.mjs](../../scripts/check-spec-coverage.mjs). Current run: 145/206 features, 63/105 screens, and 24/42 module BE/FE specs; it fails until the remaining modules and IDs are covered. Whole-project coverage should reach 206/206 and 105/105 only after all 21 modules have BE and FE specs.
 
 ## Pack file manifest and sizes
 

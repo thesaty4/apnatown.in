@@ -23,7 +23,7 @@ Modular monolith: NestJS modules own their domain tables and use-cases. A module
 | `offers` | Offers, coupons and approval lifecycle | `businesses`, `products`, `services` | `offers`, `offer_targets`, `coupons` |
 | `cart-checkout` | Cart, quote, per-shop checkout orchestration | `products`, `businesses`, `offers`, `geo`, `payments`, `orders`, `users`, `settings` | `carts`, `cart_lines`, `checkout_attempts` |
 | `payments` | Payment attempts, collection, refunds and vendor billing records | `businesses`, `settings`, typed event/contracts from `cart-checkout`, `orders`, `delivery` | `payment_attempts`, `refunds`, `earnings`, `business_subscriptions` |
-| `orders` | Per-shop order lifecycle, cases and invoices | `users` | `orders`, `order_items`, `order_cases` |
+| `orders` | Per-shop order lifecycle, status history, cases and invoices | `users`, `businesses`, `products`, `payments`, `media-videos` (private-asset contract), Delivery event contracts | `orders`, `order_items`, `order_status_history`, `order_cases`, `order_case_events`, `order_case_attachments` |
 | `delivery` | Rider requests, assignments, delivery and pickup codes | `geo`, `users` | `rider_profiles`, `delivery_jobs`, `delivery_codes` |
 | `reviews` | Eligibility, moderation, reviews and replies | `users`, `orders`, `businesses`, `products`, `services` | `reviews`, `review_reports` |
 | `engagement` | Follows, likes, hearts, saves and comments | `users`, `businesses`, `products`, `media-videos` | `follows`, `likes`, `hearts`, `bookmarks`, `video_comments` |
