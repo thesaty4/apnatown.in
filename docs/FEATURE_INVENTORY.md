@@ -29,7 +29,7 @@ Roles: all roles. Backend module(s): `notifications, audit`. Frontend route/scre
 | X8 | cookie consent and WhatsApp opt-in components | `specs/users/be/users.md` | `specs/users/fe/users.md` | spec written |
 | X9 | system pages (404, 500, offline, maintenance, session expired, account deleted) | `specs/notifications/be/x9-system-pages.md` | `specs/notifications/fe/x9-system-pages.md` | not started |
 | X10 | SEO page templates (business, product, service, category) with readable URLs, breadcrumbs, structured data | `specs/notifications/be/x10-seo-page-templates.md` | `specs/notifications/fe/x10-seo-page-templates.md` | not started |
-| X11 | print templates (QR poster/table-tent/sticker, invoice, order slip) | `specs/notifications/be/x11-print-templates.md` | `specs/notifications/fe/x11-print-templates.md` | not started |
+| X11 | print templates (QR poster/table-tent/sticker, invoice, order slip) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 | X12 | notification templates (in-app, email, WhatsApp) for key events (order placed, out for delivery, delivered, cancelled/refund, approval decision, new enquiry) | `specs/notifications/be/x12-notification-templates.md` | `specs/notifications/fe/x12-notification-templates.md` | not started |
 | X13 | Indian formatting utilities (INR paise, IST 12-hour, distance, phone) | `specs/notifications/be/x13-indian-formatting-utilities.md` | `specs/notifications/fe/x13-indian-formatting-utilities.md` | not started |
 | X14 | audit trail for admin actions (before/after) | `specs/notifications/be/x14-audit-trail-for-admin-actions.md` | `specs/notifications/fe/x14-audit-trail-for-admin-actions.md` | not started |
@@ -120,23 +120,23 @@ Roles: customer. Backend module(s): `search`. Frontend route/screen: `/search`.
 
 ## PF. Business and provider profile
 
-Roles: customer, vendor, provider. Backend module(s): `businesses, products, services, media-videos, reviews, engagement`. Frontend route/screen: `/business/:slug`.
+Roles: customer, vendor, provider. Backend module(s): `businesses, products, services, media-videos, reviews, engagement, admin`. Frontend route/screen: `/shop/:slug, /provider/:slug`.
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| PF1 | cover, logo, name, category, verified, rating, open/closed with today's hours, distance | `specs/businesses/be/pf1-cover.md` | `specs/businesses/fe/pf1-cover.md` | not started |
-| PF2 | sticky action bar (Call, WhatsApp, Directions, Share, Save) | `specs/businesses/be/pf2-sticky-action-bar.md` | `specs/businesses/fe/pf2-sticky-action-bar.md` | not started |
-| PF3 | tabs About \| Products & Services \| Offers \| Gallery \| Videos/Reels \| Reviews \| Contact & Location | `specs/businesses/be/pf3-tabs-about-products-services-offers-.md` | `specs/businesses/fe/pf3-tabs-about-products-services-offers-.md` | not started |
-| PF4 | Products & Services section with segmented switch (only applicable ones), products: sticky horizontally scrollable category pills with counts; services: category pills then subcategory pills | `specs/businesses/be/pf4-products-services-section-with-segme.md` | `specs/businesses/fe/pf4-products-services-section-with-segme.md` | not started |
-| PF5 | provider's "expert in" subcategories visible on card and profile | `specs/businesses/be/pf5-provider-s-expert-in-subcategories-v.md` | `specs/businesses/fe/pf5-provider-s-expert-in-subcategories-v.md` | not started |
-| PF6 | weekly hours table, delivery/pickup info and eligibility | `specs/businesses/be/pf6-weekly-hours-table.md` | `specs/businesses/fe/pf6-weekly-hours-table.md` | not started |
-| PF7 | map and directions, QR, report listing, share | `specs/businesses/be/pf7-map-and-directions.md` | `specs/businesses/fe/pf7-map-and-directions.md` | not started |
-| PF8 | follow/unfollow with notification bell | `specs/businesses/be/pf8-follow-unfollow-with-notification-be.md` | `specs/businesses/fe/pf8-follow-unfollow-with-notification-be.md` | not started |
-| PF9 | Gallery with filters (All \| Photos \| Videos \| By product \| By service), lightbox with swipe, captions, linked-item chip, hearts, report media | `specs/businesses/be/pf9-gallery-with-filters.md` | `specs/businesses/fe/pf9-gallery-with-filters.md` | not started |
-| PF10 | Videos/Reels tab (grid, views, follow) | `specs/businesses/be/pf10-videos-reels-tab.md` | `specs/businesses/fe/pf10-videos-reels-tab.md` | not started |
-| PF11 | any profile can show Add to cart (products) and Send Enquiry (services) | `specs/businesses/be/pf11-any-profile-can-show-add-to-cart.md` | `specs/businesses/fe/pf11-any-profile-can-show-add-to-cart.md` | not started |
-| PF12 | owner-only "Add product/Add service" prompts | `specs/businesses/be/pf12-owner-only-add-product-add-service-.md` | `specs/businesses/fe/pf12-owner-only-add-product-add-service-.md` | not started |
-| PF13 | states: unavailable listing (pending/suspended), closed, outside delivery range, no services yet | `specs/businesses/be/pf13-states-unavailable-listing.md` | `specs/businesses/fe/pf13-states-unavailable-listing.md` | not started |
+| PF1 | cover, logo, name, category, verified, rating, open/closed with today's hours, distance | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
+| PF2 | sticky action bar (Call, WhatsApp, Directions, Share, Save) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
+| PF3 | tabs About \| Products & Services \| Offers \| Gallery \| Videos/Reels \| Reviews \| Contact & Location | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
+| PF4 | Products & Services section with segmented switch (only applicable ones), products: sticky horizontally scrollable category pills with counts; services: category pills then subcategory pills | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
+| PF5 | provider's "expert in" subcategories visible on card and profile | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
+| PF6 | weekly hours table, delivery/pickup info and eligibility | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
+| PF7 | map and directions, QR, report listing, share | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
+| PF8 | follow/unfollow with notification bell | `specs/engagement/be/engagement.md` | `specs/engagement/fe/engagement.md` | not started |
+| PF9 | Gallery with filters (All \| Photos \| Videos \| By product \| By service), lightbox with swipe, captions, linked-item chip, hearts, report media | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
+| PF10 | Videos/Reels tab (grid, views, follow) | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
+| PF11 | any profile can show Add to cart (products) and Send Enquiry (services) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
+| PF12 | owner-only "Add product/Add service" prompts | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
+| PF13 | states: unavailable listing (pending/suspended), closed, outside delivery range, no services yet | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 
 ## PD. Product details
 
@@ -288,9 +288,9 @@ Roles: vendor. Backend module(s): `businesses, products, services, offers, order
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| VD1 | signup wizard (mobile OTP, business type, basics, location, hours and delivery, documents, review) with save-draft and approval states (pending limited access, approved, rejected with reason and re-submit, suspended, inactive) | `specs/businesses/be/vd1-signup-wizard.md` | `specs/businesses/fe/vd1-signup-wizard.md` | not started |
-| VD2 | overview KPIs, charts, low-stock alerts, pending actions | `specs/businesses/be/vd2-overview-kpis.md` | `specs/businesses/fe/vd2-overview-kpis.md` | not started |
-| VD3 | profile editor (logo, cover, hours per day, temporarily closed, delivery self vs rider, radius, fee, minimum order, pickup, map pin, live preview) | `specs/businesses/be/vd3-profile-editor.md` | `specs/businesses/fe/vd3-profile-editor.md` | not started |
+| VD1 | signup wizard (mobile OTP, business type, basics, location, hours and delivery, documents, review) with save-draft and approval states (pending limited access, approved, rejected with reason and re-submit, suspended, inactive) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
+| VD2 | overview KPIs, charts, low-stock alerts, pending actions | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
+| VD3 | profile editor (logo, cover, hours per day, temporarily closed, delivery self vs rider, radius, fee, minimum order, pickup, map pin, live preview) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 | VD4 | products (list, search, filter, bulk edit, CSV import, add/edit with variants, SKU, stock, media sorter with images + YouTube/Instagram embeds, shareable link) | `specs/businesses/be/vd4-products.md` | `specs/businesses/fe/vd4-products.md` | not started |
 | VD5 | product category pills manager (reorder, rename, hide) | `specs/businesses/be/vd5-product-category-pills-manager.md` | `specs/businesses/fe/vd5-product-category-pills-manager.md` | not started |
 | VD6 | subcategory suggestion with duplicate detection and "my suggestions" status | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
@@ -298,14 +298,14 @@ Roles: vendor. Backend module(s): `businesses, products, services, offers, order
 | VD8 | orders (new-order alert, accept/reject, preparing, ready, request/assign rider, self-delivery with OTP, pickup code, print slip, mark item unavailable, refund request handling) | `specs/businesses/be/vd8-orders.md` | `specs/businesses/fe/vd8-orders.md` | not started |
 | VD9 | inventory (stock, thresholds, quick toggles, restock) | `specs/businesses/be/vd9-inventory.md` | `specs/businesses/fe/vd9-inventory.md` | not started |
 | VD10 | reviews (reply/report) | `specs/businesses/be/vd10-reviews.md` | `specs/businesses/fe/vd10-reviews.md` | not started |
-| VD11 | QR and links (poster/table-tent/sticker, share) | `specs/businesses/be/vd11-qr-and-links.md` | `specs/businesses/fe/vd11-qr-and-links.md` | not started |
+| VD11 | QR and links (poster/table-tent/sticker, share) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 | VD12 | gallery manager (gallery-only photos, default media-consent setting) and videos/reels manager (link/upload, thumbnail, caption, hashtags, link products/services, "Show in Gallery"/"Show in Reels", approval status, analytics: views, likes, shares, followers gained, taps on linked items) | `specs/businesses/be/vd12-gallery-manager.md` | `specs/businesses/fe/vd12-gallery-manager.md` | not started |
 | VD13 | media-consent toggle on every product/service upload | `specs/businesses/be/vd13-media-consent-toggle-on-every-produ.md` | `specs/businesses/fe/vd13-media-consent-toggle-on-every-produ.md` | not started |
 | VD14 | services manager (title, category, one subcategory, price type/unit/amount, inclusions/exclusions, area, images, videos, active/pause, shareable link) | `specs/businesses/be/vd14-services-manager.md` | `specs/businesses/fe/vd14-services-manager.md` | not started |
 | VD15 | followers (count, growth chart, announce to followers) | `specs/businesses/be/vd15-followers.md` | `specs/businesses/fe/vd15-followers.md` | not started |
 | VD16 | enquiries inbox | `specs/businesses/be/vd16-enquiries-inbox.md` | `specs/businesses/fe/vd16-enquiries-inbox.md` | not started |
 | VD17 | earnings, plan/commission, promotions purchase, invoices | `specs/businesses/be/vd17-earnings.md` | `specs/businesses/fe/vd17-earnings.md` | not started |
-| VD18 | account (owner, payout UPI/bank, staff, security) | `specs/businesses/be/vd18-account.md` | `specs/businesses/fe/vd18-account.md` | not started |
+| VD18 | account (owner, payout UPI/bank, staff, security) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 
 ## PV. Provider dashboard
 
@@ -313,13 +313,13 @@ Roles: provider. Backend module(s): `businesses, services, engagement`. Frontend
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| PV1 | onboarding same as vendor | `specs/businesses/be/pv1-onboarding-same-as-vendor.md` | `specs/businesses/fe/pv1-onboarding-same-as-vendor.md` | not started |
-| PV2 | profile with category, "expert in" multi-select subcategories, service area, hours | `specs/businesses/be/pv2-profile-with-category.md` | `specs/businesses/fe/pv2-profile-with-category.md` | not started |
+| PV1 | onboarding same as vendor | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
+| PV2 | profile with category, "expert in" multi-select subcategories, service area, hours | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 | PV3 | services manager (as VD14) | `specs/businesses/be/pv3-services-manager.md` | `specs/businesses/fe/pv3-services-manager.md` | not started |
 | PV4 | enquiries inbox with statuses `new -> contacted -> converted -> closed`, call/WhatsApp reply | `specs/businesses/be/pv4-enquiries-inbox-with-statuses-new-co.md` | `specs/businesses/fe/pv4-enquiries-inbox-with-statuses-new-co.md` | not started |
 | PV5 | can also list products and handle orders | `specs/businesses/be/pv5-can-also-list-products-and-handle-or.md` | `specs/businesses/fe/pv5-can-also-list-products-and-handle-or.md` | not started |
-| PV6 | reviews, QR, analytics (views, enquiries, conversion), followers, videos/reels and gallery managers | `specs/businesses/be/pv6-reviews.md` | `specs/businesses/fe/pv6-reviews.md` | not started |
-| PV7 | placeholders for booking/quotation/payment (feature flag off) | `specs/businesses/be/pv7-placeholders-for-booking-quotation-p.md` | `specs/businesses/fe/pv7-placeholders-for-booking-quotation-p.md` | not started |
+| PV6 | reviews, QR, analytics (views, enquiries, conversion), followers, videos/reels and gallery managers | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
+| PV7 | placeholders for booking/quotation/payment (feature flag off) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 
 ## RD. Rider (mobile-first PWA)
 

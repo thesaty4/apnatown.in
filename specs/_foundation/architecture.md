@@ -16,7 +16,7 @@ Modular monolith: NestJS modules own their domain tables and use-cases. A module
 | `users` | Profiles, roles, addresses, consent | `geo` | `users`, `user_roles`, `addresses`, `consents`, `data_requests` |
 | `geo` | Cities, areas, delivery zones/fees, serviceability and service-area waitlist | `settings` (global fallback delivery-fee schedule) | `cities`, `areas`, `zones`, `zone_fee_slabs`, `service_area_waitlist` |
 | `catalog` | Categories, subcategories, suggestions, keyword mappings | — | `categories`, `subcategories`, `subcategory_suggestions`, `keyword_mappings`, `keyword_mapping_terms`, `keyword_mapping_targets` |
-| `businesses` | Shop/provider profile, hours, location and delivery settings | `users`, `geo`, `catalog` | `businesses`, `business_hours`, `business_settings` |
+| `businesses` | Shop/provider profile, onboarding, hours, location, delivery settings and private approval documents | `users`, `geo`, `catalog` | `businesses`, `business_hours`, `business_settings`, `business_documents` |
 | `products` | Product listings, variants and stock | `businesses`, `catalog` | `products`, `product_variants`, `inventory` |
 | `services` | Service listings, expertise and enquiries | `businesses`, `catalog`, `geo` | `services`, `provider_expertise`, `enquiries` |
 | `search` | Home, Explore, Search, suggestions and facet queries | `catalog`, `businesses`, `products`, `services`, `offers`, `media-videos` | No source-of-truth tables; read-only queries over owning modules |

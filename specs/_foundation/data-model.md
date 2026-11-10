@@ -50,6 +50,7 @@ erDiagram
     businesses ||--o{ provider_expertise : declares
     subcategories ||--o{ provider_expertise : expertise
     businesses ||--o{ business_hours : schedules
+    businesses ||--o{ business_documents : owns
     subcategories ||--o{ subcategory_suggestions : suggested
     categories ||--o{ keyword_mappings : maps
 
@@ -98,7 +99,7 @@ erDiagram
 | `users` | `users`, `user_roles`, `addresses`, `consents`, `data_requests` |
 | `geo` | `cities`, `areas`, `zones`, `zone_fee_slabs`, `service_area_waitlist` |
 | `catalog` | `categories`, `subcategories`, `subcategory_suggestions`, `keyword_mappings`, `keyword_mapping_terms`, `keyword_mapping_targets` |
-| `businesses` | `businesses`, `business_hours`, `business_settings` |
+| `businesses` | `businesses`, `business_hours`, `business_settings`, `business_documents` |
 | `products` | `products`, `product_variants`, `inventory` |
 | `services` | `services`, `provider_expertise`, `enquiries` |
 | `search` | No source-of-truth tables; reads owning module data |

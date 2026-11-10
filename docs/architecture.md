@@ -29,7 +29,7 @@ feature's internals (see `frontend.instructions.md`).
 | `auth` | OTP login, sessions, logout, account deletion | AU |
 | `users` | Customer/vendor/provider/rider/admin profiles, roles | AU, AC, RD, AD |
 | `catalog` | Main categories (super admin only), subcategories, suggestion queue, keyword mapping | AD5, AD6, AD15, SA8 |
-| `businesses` | Shop/provider profile, hours, delivery settings, follow | PF, VD, PV |
+| `businesses` | Shop/provider profile, onboarding, hours, delivery settings and private approval documents | PF, VD, PV |
 | `products` | Product CRUD, variants, stock, media sorter | PD, VD4 |
 | `services` | Service CRUD, one subcategory per service, "expert in" | SV, VD14, PV |
 | `search` | Keyword mapping, autocomplete, Explore/Search filters, URL state | EX, SR |

@@ -54,7 +54,7 @@ Status applies to the actual prompt files and outputs. Step 0 and P01 are comple
 
 ## LEAN SPECS progress
 
-Source: [LEAN-SPECS.md](../prompts/LEAN-SPECS.md). Foundation checkpoint is complete; stop here for human review. The module sequence below follows the prompt's dependency order. A module is complete only when both BE and FE columns are done.
+Source: [LEAN-SPECS.md](../prompts/LEAN-SPECS.md). The foundation checkpoint is complete and module specs are in progress. Stop for human review after each five-module checkpoint as required by the prompt; a module is complete only when both BE and FE columns are done.
 
 | Foundation file | Status |
 |---|---|
@@ -69,7 +69,7 @@ Source: [LEAN-SPECS.md](../prompts/LEAN-SPECS.md). Foundation checkpoint is comp
 | 2 | `users` | Done | Done |
 | 3 | `geo` | Done | Done |
 | 4 | `catalog` | Done | Done |
-| 5 | `businesses` | Not started | Not started |
+| 5 | `businesses` | Done | Done |
 | 6 | `products` | Not started | Not started |
 | 7 | `services` | Not started | Not started |
 | 8 | `search` | Not started | Not started |
