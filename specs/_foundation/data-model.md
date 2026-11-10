@@ -124,7 +124,7 @@ erDiagram
 | `payments` | `payment_attempts`, `refunds`, `earnings`, `business_subscriptions` |
 | `orders` | `orders`, `order_items`, `order_status_history`, `order_cases`, `order_case_events`, `order_case_attachments` |
 | `delivery` | `rider_profiles`, `rider_documents`, `delivery_jobs`, `delivery_offers`, `delivery_codes`, `rider_payouts` |
-| `reviews` | `reviews`, `review_reports` |
+| `reviews` | `reviews`, `review_reports`, `review_helpful_votes`, `review_aggregates` |
 | `engagement` | `follows`, `likes`, `hearts`, `bookmarks`, `video_comments` |
 | `media-videos` | `media_assets`, `videos`, `video_links` |
 | `notifications` | `notifications`, `notification_preferences`, `notification_templates` |

@@ -58,7 +58,7 @@ All rider routes use `DashboardShell` with rider nav (Home, Requests, Active, Hi
 
 ### S-RIDE-07 Feedback | `/rider/feedback` | `d-rider-rfeedback.jpg`, `m-rider-rfeedback.jpg`
 - Layout: average `Rating`, breakdown, comment list.
-- Data: Reviews `GET /reviews?targetType=rider&targetId=me` (see [BE reviews](../../reviews/be/reviews.md)).
+- Data: Reviews `GET /reviews/riders/me` (see [BE reviews](../../reviews/be/reviews.md)).
 - Special states: empty ("No feedback yet").
 - Acceptance: Given hidden reviews, then they are not listed.
 

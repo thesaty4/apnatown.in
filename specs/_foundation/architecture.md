@@ -25,7 +25,7 @@ Modular monolith: NestJS modules own their domain tables and use-cases. A module
 | `payments` | Payment attempts, collection, refunds and vendor billing records | `businesses`, `settings`, typed event/contracts from `cart-checkout`, `orders`, `delivery` | `payment_attempts`, `refunds`, `earnings`, `business_subscriptions` |
 | `orders` | Per-shop order lifecycle, status history, cases and invoices | `users`, `businesses`, `products`, `payments`, `media-videos` (private-asset contract), Delivery event contracts | `orders`, `order_items`, `order_status_history`, `order_cases`, `order_case_events`, `order_case_attachments` |
 | `delivery` | Rider requests, assignments, delivery and pickup codes | `geo`, `users`, `settings`, `media-videos` (private assets), `payments` (cash collection) | `rider_profiles`, `rider_documents`, `delivery_jobs`, `delivery_offers`, `delivery_codes`, `rider_payouts` |
-| `reviews` | Eligibility, moderation, reviews and replies | `users`, `orders`, `businesses`, `products`, `services` | `reviews`, `review_reports` |
+| `reviews` | Eligibility, moderation, reviews and replies | `users`, `orders`, `businesses`, `products`, `services` | `reviews`, `review_reports`, `review_helpful_votes`, `review_aggregates` |
 | `engagement` | Follows, likes, hearts, saves and comments | `users`, `businesses`, `products`, `media-videos` | `follows`, `likes`, `hearts`, `bookmarks`, `video_comments` |
 | `media-videos` | Media assets, embeds, consent, video moderation | `businesses`, `products`, `services` | `media_assets`, `videos`, `video_links` |
 | `notifications` | In-app notifications, preferences and templates | `users`, `settings` | `notifications`, `notification_preferences`, `notification_templates` |
