@@ -156,17 +156,17 @@ Roles: customer. Backend module(s): `products, offers, reviews`. Frontend route/
 
 ## SV. Services
 
-Roles: customer, provider. Backend module(s): `services, offers, reviews`. Frontend route/screen: `/service/:slug`.
+Roles: customer, vendor, provider. Backend module(s): `services, offers, reviews`. Frontend route/screen: `/service/:slug`, vendor/provider services and enquiries.
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| SV1 | service card (image, name, subcategory tag, provider with logo, price/"Price on enquiry", rating, distance, open/availability badge, offer badge, Call/WhatsApp/Save) | `specs/services/be/sv1-service-card.md` | `specs/services/fe/sv1-service-card.md` | not started |
-| SV2 | service details page `/service/:slug`: carousel, title, subcategory, price type (from/fixed/range/on enquiry) + unit (per hour/day/event/sq ft), description, included/excluded, service area, hours, provider experience | `specs/services/be/sv2-service-details-page-service-slug-ca.md` | `specs/services/fe/sv2-service-details-page-service-slug-ca.md` | not started |
-| SV3 | provider card with follow, verified, rating, Call/WhatsApp/Directions | `specs/services/be/sv3-provider-card-with-follow.md` | `specs/services/fe/sv3-provider-card-with-follow.md` | not started |
-| SV4 | reference videos and previous-work gallery | `specs/services/be/sv4-reference-videos-and-previous-work-g.md` | `specs/services/fe/sv4-reference-videos-and-previous-work-g.md` | not started |
-| SV5 | Send Enquiry form (name, phone, message, preferred date, success state) as primary CTA; booking/payment is a future placeholder | `specs/services/be/sv5-send-enquiry-form.md` | `specs/services/fe/sv5-send-enquiry-form.md` | not started |
-| SV6 | offers, reviews (breakdown, form), FAQs, related services, similar providers, share, bookmark | `specs/services/be/sv6-offers.md` | `specs/services/fe/sv6-offers.md` | not started |
-| SV7 | breadcrumbs Services > Category > Subcategory > Service | `specs/services/be/sv7-breadcrumbs-services-category-subcat.md` | `specs/services/fe/sv7-breadcrumbs-services-category-subcat.md` | not started |
+| SV1 | service card (image, name, subcategory tag, provider with logo, price/"Price on enquiry", rating, distance, open/availability badge, offer badge, Call/WhatsApp/Save) | `specs/services/be/services.md` | `specs/services/fe/services.md` | spec written |
+| SV2 | service details page `/service/:slug`: carousel, title, subcategory, price type (from/fixed/range/on enquiry) + unit (per hour/day/event/sq ft), description, included/excluded, service area, hours, provider experience | `specs/services/be/services.md` | `specs/services/fe/services.md` | spec written |
+| SV3 | provider card with follow, verified, rating, Call/WhatsApp/Directions | `specs/services/be/services.md` | `specs/services/fe/services.md` | spec written |
+| SV4 | reference videos and previous-work gallery | `specs/services/be/services.md` | `specs/services/fe/services.md` | spec written |
+| SV5 | Send Enquiry form (name, phone, message, preferred date, success state) as primary CTA; booking/payment is a future placeholder | `specs/services/be/services.md` | `specs/services/fe/services.md` | spec written |
+| SV6 | offers, reviews (breakdown, form), FAQs, related services, similar providers, share, bookmark | `specs/services/be/services.md` | `specs/services/fe/services.md` | spec written |
+| SV7 | breadcrumbs Services > Category > Subcategory > Service | `specs/services/be/services.md` | `specs/services/fe/services.md` | spec written |
 | SV8 | each service has exactly one subcategory; a provider can be "expert in" several | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
 
 ## OF. Offers
@@ -301,9 +301,9 @@ Roles: vendor. Backend module(s): `businesses, products, services, offers, order
 | VD11 | QR and links (poster/table-tent/sticker, share) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 | VD12 | gallery manager (gallery-only photos, default media-consent setting) and videos/reels manager (link/upload, thumbnail, caption, hashtags, link products/services, "Show in Gallery"/"Show in Reels", approval status, analytics: views, likes, shares, followers gained, taps on linked items) | `specs/businesses/be/vd12-gallery-manager.md` | `specs/businesses/fe/vd12-gallery-manager.md` | not started |
 | VD13 | media-consent toggle on every product/service upload | `specs/businesses/be/vd13-media-consent-toggle-on-every-produ.md` | `specs/businesses/fe/vd13-media-consent-toggle-on-every-produ.md` | not started |
-| VD14 | services manager (title, category, one subcategory, price type/unit/amount, inclusions/exclusions, area, images, videos, active/pause, shareable link) | `specs/businesses/be/vd14-services-manager.md` | `specs/businesses/fe/vd14-services-manager.md` | not started |
+| VD14 | services manager (title, category, one subcategory, price type/unit/amount, inclusions/exclusions, area, images, videos, active/pause, shareable link) | `specs/services/be/services.md` | `specs/services/fe/services.md` | spec written |
 | VD15 | followers (count, growth chart, announce to followers) | `specs/businesses/be/vd15-followers.md` | `specs/businesses/fe/vd15-followers.md` | not started |
-| VD16 | enquiries inbox | `specs/businesses/be/vd16-enquiries-inbox.md` | `specs/businesses/fe/vd16-enquiries-inbox.md` | not started |
+| VD16 | enquiries inbox | `specs/services/be/services.md` | `specs/services/fe/services.md` | spec written |
 | VD17 | earnings, plan/commission, promotions purchase, invoices | `specs/businesses/be/vd17-earnings.md` | `specs/businesses/fe/vd17-earnings.md` | not started |
 | VD18 | account (owner, payout UPI/bank, staff, security) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 
@@ -315,8 +315,8 @@ Roles: provider. Backend module(s): `businesses, services, engagement`. Frontend
 |---|---|---|---|---|
 | PV1 | onboarding same as vendor | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 | PV2 | profile with category, "expert in" multi-select subcategories, service area, hours | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
-| PV3 | services manager (as VD14) | `specs/businesses/be/pv3-services-manager.md` | `specs/businesses/fe/pv3-services-manager.md` | not started |
-| PV4 | enquiries inbox with statuses `new -> contacted -> converted -> closed`, call/WhatsApp reply | `specs/businesses/be/pv4-enquiries-inbox-with-statuses-new-co.md` | `specs/businesses/fe/pv4-enquiries-inbox-with-statuses-new-co.md` | not started |
+| PV3 | services manager (as VD14) | `specs/services/be/services.md` | `specs/services/fe/services.md` | spec written |
+| PV4 | enquiries inbox with statuses `new -> contacted -> converted/closed`, call/WhatsApp reply | `specs/services/be/services.md` | `specs/services/fe/services.md` | spec written |
 | PV5 | can also list products and handle orders | `specs/businesses/be/pv5-can-also-list-products-and-handle-or.md` | `specs/businesses/fe/pv5-can-also-list-products-and-handle-or.md` | not started |
 | PV6 | reviews, QR, analytics (views, enquiries, conversion), followers, videos/reels and gallery managers | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 | PV7 | placeholders for booking/quotation/payment (feature flag off) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
