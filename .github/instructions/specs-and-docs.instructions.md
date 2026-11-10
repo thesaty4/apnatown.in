@@ -16,9 +16,9 @@ Builds on `.github/copilot-instructions.md`. Templates:
 - `<module>` must be one of the 21 modules in `docs/architecture.md`;
   don't invent a new module name without updating
   `docs/architecture.md` and getting human sign-off (via an ADR).
-- A BE spec and its FE spec link to each other and to the same
-  `docs/FEATURE_INVENTORY.md` row; update that row's status and spec
-  paths when a spec is written.
+- A BE spec and its FE spec link to each other. Writing a spec means
+  writing only the spec files: no inventory/progress/register updates
+  unless asked, and no speculative design beyond the features (KISS).
 
 ## Given/When/Then
 
@@ -58,8 +58,6 @@ Include at least one negative/authorization case per spec
 - Tables over prose for anything enumerable (states, roles, modules,
   options) — easier to scan and to keep in sync with code.
 
-## Updating the coverage matrix
+## Spec coverage
 
-Any new instruction/skill/agent, or any new feature ID/invariant,
-requires updating `docs/ai/COVERAGE_MATRIX.md` so no row is left empty
-(`.github/agents/architect.agent.md`, `AGENTS.md`).
+`node scripts/check-spec-coverage.mjs` is the coverage gate for specs.
