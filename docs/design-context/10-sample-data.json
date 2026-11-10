@@ -1,0 +1,9171 @@
+{
+ "_note": "SAMPLE DATA ONLY (fictional Padrauna businesses, approximate coordinates). Use to seed development databases and for screenshots/tests.",
+ "categories": [
+  {
+   "id": "grocery",
+   "en": "Grocery",
+   "hi": "किराना",
+   "e": "🛒",
+   "h": 30
+  },
+  {
+   "id": "medical",
+   "en": "Medical",
+   "hi": "दवाइयाँ",
+   "e": "💊",
+   "h": 160
+  },
+  {
+   "id": "electronics",
+   "en": "Electronics",
+   "hi": "इलेक्ट्रॉनिक्स",
+   "e": "📺",
+   "h": 215
+  },
+  {
+   "id": "mobile",
+   "en": "Mobile",
+   "hi": "मोबाइल",
+   "e": "📱",
+   "h": 260
+  },
+  {
+   "id": "food",
+   "en": "Food & Sweets",
+   "hi": "खाना व मिठाई",
+   "e": "🍬",
+   "h": 350
+  },
+  {
+   "id": "clothing",
+   "en": "Clothing",
+   "hi": "कपड़े",
+   "e": "👕",
+   "h": 300
+  },
+  {
+   "id": "hardware",
+   "en": "Hardware",
+   "hi": "हार्डवेयर",
+   "e": "🔧",
+   "h": 200
+  },
+  {
+   "id": "stationery",
+   "en": "Stationery",
+   "hi": "स्टेशनरी",
+   "e": "✏️",
+   "h": 50
+  },
+  {
+   "id": "furniture",
+   "en": "Furniture",
+   "hi": "फर्नीचर",
+   "e": "🛋️",
+   "h": 20
+  },
+  {
+   "id": "jewellery",
+   "en": "Jewellery",
+   "hi": "ज्वेलरी",
+   "e": "💍",
+   "h": 45
+  }
+ ],
+ "serviceCategories": [
+  {
+   "id": "wedding",
+   "en": "Wedding & Events",
+   "hi": "शादी व इवेंट",
+   "e": "💒",
+   "h": 330
+  },
+  {
+   "id": "builder",
+   "en": "Home Builders",
+   "hi": "भवन निर्माण",
+   "e": "🏗️",
+   "h": 25
+  },
+  {
+   "id": "mechanic",
+   "en": "Mechanic & Repair",
+   "hi": "मैकेनिक व रिपेयर",
+   "e": "🛠️",
+   "h": 200
+  },
+  {
+   "id": "education",
+   "en": "Coaching & Education",
+   "hi": "कोचिंग व शिक्षा",
+   "e": "📚",
+   "h": 240
+  },
+  {
+   "id": "electrician",
+   "en": "Electrician",
+   "hi": "इलेक्ट्रीशियन",
+   "e": "⚡",
+   "h": 48
+  },
+  {
+   "id": "plumber",
+   "en": "Plumber",
+   "hi": "प्लंबर",
+   "e": "🚿",
+   "h": 190
+  },
+  {
+   "id": "other",
+   "en": "Other Services",
+   "hi": "अन्य सेवाएँ",
+   "e": "➕",
+   "h": 120
+  }
+ ],
+ "serviceSubcategories": {
+  "wedding": [
+   [
+    "Tent & Lighting",
+    "टेंट व लाइटिंग"
+   ],
+   [
+    "DJ & Sound",
+    "डीजे व साउंड सिस्टम"
+   ],
+   [
+    "Catering",
+    "खान-पान व केटरिंग सेवा"
+   ],
+   [
+    "Photography & Video",
+    "फोटोग्राफी व वीडियोग्राफी"
+   ],
+   [
+    "Decoration",
+    "सजावट"
+   ],
+   [
+    "Mehndi & Makeup",
+    "मेहंदी व मेकअप"
+   ],
+   [
+    "Band & Baraat",
+    "बैंड-बाजा व बारात"
+   ],
+   [
+    "Invitation Cards",
+    "निमंत्रण कार्ड"
+   ],
+   [
+    "Bridal Wear Rental",
+    "दुल्हन के कपड़े किराये पर"
+   ]
+  ],
+  "builder": [
+   [
+    "Mason",
+    "राजमिस्त्री"
+   ],
+   [
+    "Painter",
+    "पेंटर"
+   ],
+   [
+    "Plumber",
+    "प्लंबर"
+   ],
+   [
+    "Electrician",
+    "इलेक्ट्रीशियन"
+   ]
+  ],
+  "mechanic": [
+   [
+    "Two-wheeler",
+    "दोपहिया वाहन"
+   ],
+   [
+    "Four-wheeler",
+    "चारपहिया वाहन"
+   ],
+   [
+    "AC Repair",
+    "एसी रिपेयर"
+   ],
+   [
+    "AC Installation",
+    "एसी इंस्टॉलेशन"
+   ],
+   [
+    "Mobile Repair",
+    "मोबाइल रिपेयर"
+   ],
+   [
+    "Appliance Repair",
+    "घरेलू उपकरण रिपेयर"
+   ]
+  ],
+  "education": [
+   [
+    "School Coaching",
+    "स्कूल कोचिंग"
+   ],
+   [
+    "Spoken English",
+    "स्पोकन इंग्लिश"
+   ],
+   [
+    "Computer Classes",
+    "कंप्यूटर क्लास"
+   ]
+  ],
+  "electrician": [
+   [
+    "House Wiring",
+    "घर की वायरिंग"
+   ],
+   [
+    "Inverter & Battery",
+    "इन्वर्टर व बैटरी"
+   ],
+   [
+    "Appliance Repair",
+    "उपकरणों की मरम्मत"
+   ]
+  ],
+  "plumber": [
+   [
+    "Leakage Repair",
+    "लीकेज की मरम्मत"
+   ],
+   [
+    "Bathroom Fitting",
+    "बाथरूम फ़िटिंग"
+   ],
+   [
+    "Tank Cleaning",
+    "टंकी की सफ़ाई"
+   ]
+  ],
+  "other": [
+   [
+    "General Services",
+    "सामान्य सेवाएँ"
+   ]
+  ]
+ },
+ "reviewTags": {
+  "b": [
+   "Fair price",
+   "Fresh",
+   "Helpful staff",
+   "On time",
+   "Clean"
+  ],
+  "p": [
+   "Good quality",
+   "Value for money",
+   "As described"
+  ],
+  "s": [
+   "Quick visit",
+   "Professional",
+   "Fair quote",
+   "Polite"
+  ],
+  "r": [
+   "Polite",
+   "On time",
+   "Careful"
+  ]
+ },
+ "orderStatusLabels": {
+  "placed": [
+   "Placed",
+   "--st-placed",
+   "◔"
+  ],
+  "accepted": [
+   "Accepted",
+   "--st-accepted",
+   "✓"
+  ],
+  "preparing": [
+   "Preparing",
+   "--st-preparing",
+   "◐"
+  ],
+  "ready": [
+   "Ready",
+   "--st-ready",
+   "▣"
+  ],
+  "out": [
+   "Out for delivery",
+   "--st-out",
+   "➜"
+  ],
+  "delivered": [
+   "Delivered",
+   "--st-delivered",
+   "✔"
+  ],
+  "pickedup": [
+   "Picked up",
+   "--st-delivered",
+   "✔"
+  ],
+  "cancelled": [
+   "Cancelled",
+   "--st-cancelled",
+   "✕"
+  ],
+  "refunded": [
+   "Refunded",
+   "--st-refunded",
+   "↺"
+  ]
+ },
+ "biz": [
+  {
+   "id": "b1",
+   "name": {
+    "en": "Shri Ram Kirana Store",
+    "hi": "श्री राम किराना स्टोर"
+   },
+   "cat": "grocery",
+   "emoji": "🛒",
+   "hue": 30,
+   "area": "hata",
+   "addr": "Near Hata Road Chauraha, Padrauna",
+   "lat": 26.9085,
+   "lng": 83.98899999999999,
+   "phone": "9876500001",
+   "wa": "9876500001",
+   "email": "b1@example.com",
+   "rating": 4.6,
+   "rc": 212,
+   "verified": true,
+   "featured": true,
+   "popular": true,
+   "status": "approved",
+   "since": 2016,
+   "hours": [
+    [
+     "07:30",
+     "21:30"
+    ],
+    [
+     "07:30",
+     "21:30"
+    ],
+    [
+     "07:30",
+     "21:30"
+    ],
+    [
+     "07:30",
+     "21:30"
+    ],
+    [
+     "07:30",
+     "21:30"
+    ],
+    [
+     "07:30",
+     "21:30"
+    ],
+    [
+     "07:30",
+     "21:30"
+    ]
+   ],
+   "del": {
+    "mode": "rider",
+    "radius": 4,
+    "fee": 20,
+    "min": 149,
+    "pickup": true,
+    "note": "Collect from the counter. Show your pickup code."
+   },
+   "desc": "Family-run kirana since 2015. Atta, dal, oil, spices and daily needs at fair prices. Same-day home delivery in Padrauna.",
+   "social": {
+    "ig": "shriramkirana",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "🏬",
+    "🧺",
+    "🪧",
+    "🛍️"
+   ],
+   "closedNow": false,
+   "media": [
+    {
+     "t": "yt",
+     "vid": "aqz-KE-bpKQ",
+     "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+     "reel": false,
+     "tags": [
+      "p1",
+      "p4"
+     ],
+     "id": "m11",
+     "title": "Fresh stock this week",
+     "cap": "New stock of atta and dal. Awaiting approval.",
+     "hashtags": [
+      "#Kirana"
+     ],
+     "views": 0,
+     "likes": 0,
+     "shares": 0,
+     "gained": 0,
+     "taps": 0,
+     "thumb": "🛒",
+     "dur": 15,
+     "age": 10800000,
+     "status": "pending",
+     "ts": 1794262768790,
+     "reels": true,
+     "gal": true,
+     "comments": [
+      {
+       "name": "Sunita Gupta",
+       "text": "Looks great! Is this available in Padrauna?",
+       "ts": 1794187168790,
+       "st": "ok"
+      }
+     ]
+    }
+   ],
+   "services": [],
+   "followers": 127,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "b2",
+   "name": {
+    "en": "Gupta Medical Hall",
+    "hi": "गुप्ता मेडिकल हॉल"
+   },
+   "cat": "medical",
+   "emoji": "💊",
+   "hue": 160,
+   "area": "busstand",
+   "addr": "Opp. Bus Stand, Padrauna",
+   "lat": 26.9075,
+   "lng": 83.976,
+   "phone": "9876500002",
+   "wa": "9876500002",
+   "email": "b2@example.com",
+   "rating": 4.7,
+   "rc": 164,
+   "verified": true,
+   "featured": true,
+   "popular": true,
+   "status": "approved",
+   "since": 2017,
+   "hours": [
+    [
+     "08:00",
+     "23:00"
+    ],
+    [
+     "08:00",
+     "23:00"
+    ],
+    [
+     "08:00",
+     "23:00"
+    ],
+    [
+     "08:00",
+     "23:00"
+    ],
+    [
+     "08:00",
+     "23:00"
+    ],
+    [
+     "08:00",
+     "23:00"
+    ],
+    [
+     "08:00",
+     "23:00"
+    ]
+   ],
+   "del": {
+    "mode": "rider",
+    "radius": 6,
+    "fee": 0,
+    "min": 99,
+    "pickup": true,
+    "note": "Bring prescription for Rx items."
+   },
+   "desc": "Licensed pharmacy. Medicines, health devices and baby care. Prescription needed for scheduled drugs.",
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "🏬",
+    "🧺",
+    "🪧",
+    "🛍️"
+   ],
+   "closedNow": false,
+   "media": [],
+   "services": [],
+   "followers": 140,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "b3",
+   "name": {
+    "en": "Singh Electronics",
+    "hi": "सिंह इलेक्ट्रॉनिक्स"
+   },
+   "cat": "electronics",
+   "emoji": "📺",
+   "hue": 215,
+   "area": "chauraha",
+   "addr": "Main Market, Padrauna Chauraha",
+   "lat": 26.903,
+   "lng": 83.98249999999999,
+   "phone": "9876500003",
+   "wa": "9876500003",
+   "email": "b3@example.com",
+   "rating": 4.4,
+   "rc": 98,
+   "verified": true,
+   "featured": false,
+   "popular": true,
+   "status": "approved",
+   "since": 2018,
+   "hours": [
+    null,
+    [
+     "10:00",
+     "20:30"
+    ],
+    [
+     "10:00",
+     "20:30"
+    ],
+    [
+     "10:00",
+     "20:30"
+    ],
+    [
+     "10:00",
+     "20:30"
+    ],
+    [
+     "10:00",
+     "20:30"
+    ],
+    [
+     "10:00",
+     "20:30"
+    ]
+   ],
+   "del": {
+    "mode": "rider",
+    "radius": 5,
+    "fee": 0,
+    "min": 150,
+    "pickup": true,
+    "note": "Show the pickup code at the counter."
+   },
+   "desc": "TVs, fans, coolers, mixers and home appliances. Free installation within town.",
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "🏬",
+    "🧺",
+    "🪧",
+    "🛍️"
+   ],
+   "closedNow": false,
+   "media": [
+    {
+     "id": "m4",
+     "t": "yt",
+     "vid": "aqz-KE-bpKQ",
+     "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+     "title": "iPhone 16 unboxing (sample)",
+     "tags": [
+      "p45"
+     ],
+     "cap": "iPhone 16 unboxing (sample)",
+     "hashtags": [],
+     "status": "approved",
+     "views": 494,
+     "likes": 49,
+     "shares": 7,
+     "gained": 4,
+     "taps": 25,
+     "thumb": "▶️",
+     "dur": 20,
+     "ts": 1794100768790,
+     "reels": true,
+     "gal": true,
+     "comments": [
+      {
+       "name": "Sunita Gupta",
+       "text": "Looks great! Is this available in Padrauna?",
+       "ts": 1794187168790,
+       "st": "ok"
+      }
+     ]
+    },
+    {
+     "t": "ig",
+     "vid": "C0sample06",
+     "url": "https://www.instagram.com/reel/C0sample06/",
+     "reel": true,
+     "tags": [
+      "p50",
+      "p51",
+      "b3-sv2"
+     ],
+     "id": "m6",
+     "title": "Split AC buying guide",
+     "cap": "1.5 ton or 1 ton? Quick guide before summer. Free installation in town.",
+     "hashtags": [
+      "#AC",
+      "#Summer",
+      "#SinghElectronics"
+     ],
+     "views": 2210,
+     "likes": 268,
+     "shares": 37,
+     "gained": 19,
+     "taps": 150,
+     "thumb": "❄️",
+     "dur": 30,
+     "age": 86400000,
+     "status": "approved",
+     "ts": 1794187168790,
+     "reels": true,
+     "gal": true,
+     "comments": [
+      {
+       "name": "Sunita Gupta",
+       "text": "Looks great! Is this available in Padrauna?",
+       "ts": 1794187168790,
+       "st": "ok"
+      }
+     ]
+    }
+   ],
+   "services": [
+    {
+     "id": "b3-sv0",
+     "n": "TV wall-mount installation",
+     "p": "₹399",
+     "from": 399,
+     "desc": "TV wall-mount installation by Singh Electronics. Send an enquiry for a quote.",
+     "sub": "appliance-repair",
+     "cat": "mechanic",
+     "ptype": "fixed",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and nearby",
+     "exp": 3,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "📺",
+       "h": 215
+      },
+      {
+       "t": "img",
+       "e": "📺",
+       "h": 243
+      },
+      {
+       "t": "img",
+       "e": "📺",
+       "h": 271
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "b3-sv1",
+     "n": "Free home demo",
+     "p": "₹0",
+     "from": 0,
+     "desc": "Free home demo by Singh Electronics. Send an enquiry for a quote.",
+     "sub": "appliance-repair",
+     "cat": "mechanic",
+     "ptype": "free",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and nearby",
+     "exp": 5,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "📺",
+       "h": 215
+      },
+      {
+       "t": "img",
+       "e": "📺",
+       "h": 243
+      },
+      {
+       "t": "img",
+       "e": "📺",
+       "h": 271
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "b3-sv2",
+     "n": "AC installation",
+     "p": "from ₹799",
+     "from": 799,
+     "desc": "AC installation by Singh Electronics. Send an enquiry for a quote.",
+     "sub": "ac-installation",
+     "cat": "mechanic",
+     "ptype": "from",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and nearby",
+     "exp": 7,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "📺",
+       "h": 215
+      },
+      {
+       "t": "img",
+       "e": "📺",
+       "h": 243
+      },
+      {
+       "t": "img",
+       "e": "📺",
+       "h": 271
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    }
+   ],
+   "followers": 153,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "b4",
+   "name": {
+    "en": "Raj Mobile Point",
+    "hi": "राज मोबाइल पॉइंट"
+   },
+   "cat": "mobile",
+   "emoji": "📱",
+   "hue": 260,
+   "area": "station",
+   "addr": "Station Road, Padrauna",
+   "lat": 26.9015,
+   "lng": 83.98849999999999,
+   "phone": "9876500004",
+   "wa": "9876500004",
+   "email": "b4@example.com",
+   "rating": 4.3,
+   "rc": 121,
+   "verified": true,
+   "featured": true,
+   "popular": false,
+   "status": "approved",
+   "since": 2019,
+   "hours": [
+    [
+     "10:00",
+     "21:00"
+    ],
+    [
+     "10:00",
+     "21:00"
+    ],
+    [
+     "10:00",
+     "21:00"
+    ],
+    [
+     "10:00",
+     "21:00"
+    ],
+    [
+     "10:00",
+     "21:00"
+    ],
+    [
+     "10:00",
+     "21:00"
+    ],
+    [
+     "10:00",
+     "21:00"
+    ]
+   ],
+   "del": {
+    "mode": "rider",
+    "radius": 5,
+    "fee": 0,
+    "min": 150,
+    "pickup": true,
+    "note": "Show the pickup code at the counter."
+   },
+   "desc": "New phones, accessories, recharge and repair.",
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "🏬",
+    "🧺",
+    "🪧",
+    "🛍️"
+   ],
+   "closedNow": false,
+   "media": [
+    {
+     "id": "m1",
+     "t": "yt",
+     "vid": "aqz-KE-bpKQ",
+     "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+     "title": "Store tour (sample)",
+     "tags": [
+      "p16",
+      "p17",
+      "b4-sv0"
+     ],
+     "cap": "Store tour (sample)",
+     "hashtags": [],
+     "status": "approved",
+     "views": 494,
+     "likes": 49,
+     "shares": 7,
+     "gained": 4,
+     "taps": 25,
+     "thumb": "▶️",
+     "dur": 20,
+     "ts": 1794100768790,
+     "reels": true,
+     "gal": true,
+     "comments": [
+      {
+       "name": "Sunita Gupta",
+       "text": "Looks great! Is this available in Padrauna?",
+       "ts": 1794187168790,
+       "st": "ok"
+      }
+     ]
+    },
+    {
+     "t": "yt",
+     "vid": "aqz-KE-bpKQ",
+     "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+     "reel": false,
+     "tags": [
+      "p52",
+      "p53"
+     ],
+     "id": "m5",
+     "title": "iPhone 15 first look",
+     "cap": "iPhone 15 is in stock at Raj Mobile Point! Pickup or home delivery in Padrauna.",
+     "hashtags": [
+      "#iPhone15",
+      "#Padrauna",
+      "#RajMobile"
+     ],
+     "views": 3420,
+     "likes": 412,
+     "shares": 58,
+     "gained": 31,
+     "taps": 204,
+     "thumb": "📱",
+     "dur": 24,
+     "age": 172800000,
+     "status": "approved",
+     "ts": 1794100768790,
+     "reels": true,
+     "gal": true,
+     "comments": [
+      {
+       "name": "Sunita Gupta",
+       "text": "Looks great! Is this available in Padrauna?",
+       "ts": 1794187168790,
+       "st": "ok"
+      }
+     ]
+    }
+   ],
+   "services": [
+    {
+     "id": "b4-sv0",
+     "n": "Mobile screen repair",
+     "p": "from ₹499",
+     "from": 499,
+     "desc": "Mobile screen repair by Raj Mobile Point. Send an enquiry for a quote.",
+     "sub": "mobile-repair",
+     "cat": "mechanic",
+     "ptype": "from",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and nearby",
+     "exp": 3,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "📱",
+       "h": 260
+      },
+      {
+       "t": "img",
+       "e": "📱",
+       "h": 288
+      },
+      {
+       "t": "img",
+       "e": "📱",
+       "h": 316
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "b4-sv1",
+     "n": "Software update & data transfer",
+     "p": "₹149",
+     "from": 149,
+     "desc": "Software update & data transfer by Raj Mobile Point. Send an enquiry for a quote.",
+     "sub": "mobile-repair",
+     "cat": "mechanic",
+     "ptype": "fixed",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and nearby",
+     "exp": 5,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "📱",
+       "h": 260
+      },
+      {
+       "t": "img",
+       "e": "📱",
+       "h": 288
+      },
+      {
+       "t": "img",
+       "e": "📱",
+       "h": 316
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "b4-sv2",
+     "n": "Screen replacement",
+     "p": "from ₹1,499",
+     "from": 1499,
+     "desc": "Screen replacement by Raj Mobile Point. Send an enquiry for a quote.",
+     "sub": "mobile-repair",
+     "cat": "mechanic",
+     "ptype": "from",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and nearby",
+     "exp": 7,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "📱",
+       "h": 260
+      },
+      {
+       "t": "img",
+       "e": "📱",
+       "h": 288
+      },
+      {
+       "t": "img",
+       "e": "📱",
+       "h": 316
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    }
+   ],
+   "followers": 166,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "b5",
+   "name": {
+    "en": "Kushinagar Sweets & Namkeen",
+    "hi": "कुशीनगर स्वीट्स एवं नमकीन"
+   },
+   "cat": "food",
+   "emoji": "🍬",
+   "hue": 350,
+   "area": "tehsil",
+   "addr": "Tehsil Road, Padrauna",
+   "lat": 26.9115,
+   "lng": 83.979,
+   "phone": "9876500005",
+   "wa": "9876500005",
+   "email": "b5@example.com",
+   "rating": 4.8,
+   "rc": 340,
+   "verified": true,
+   "featured": true,
+   "popular": true,
+   "status": "approved",
+   "since": 2020,
+   "hours": [
+    [
+     "07:00",
+     "22:00"
+    ],
+    [
+     "07:00",
+     "22:00"
+    ],
+    [
+     "07:00",
+     "22:00"
+    ],
+    [
+     "07:00",
+     "22:00"
+    ],
+    [
+     "07:00",
+     "22:00"
+    ],
+    [
+     "07:00",
+     "22:00"
+    ],
+    [
+     "07:00",
+     "22:00"
+    ]
+   ],
+   "del": {
+    "mode": "self",
+    "radius": 5,
+    "fee": 30,
+    "min": 200,
+    "pickup": true,
+    "note": "Ready in 20 minutes."
+   },
+   "desc": "Fresh mithai made daily in pure desi ghee. Party orders welcome.",
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "🏬",
+    "🧺",
+    "🪧",
+    "🛍️"
+   ],
+   "closedNow": false,
+   "media": [
+    {
+     "id": "m2",
+     "t": "ig",
+     "vid": "C0sample01",
+     "url": "https://www.instagram.com/reel/C0sample01/",
+     "title": "Kaju katli being made (sample reel)",
+     "tags": [
+      "p20"
+     ],
+     "cap": "Kaju katli being made (sample reel)",
+     "hashtags": [],
+     "status": "approved",
+     "views": 494,
+     "likes": 49,
+     "shares": 7,
+     "gained": 4,
+     "taps": 25,
+     "thumb": "📷",
+     "dur": 20,
+     "ts": 1794100768790,
+     "reels": true,
+     "gal": true,
+     "comments": [
+      {
+       "name": "Sunita Gupta",
+       "text": "Looks great! Is this available in Padrauna?",
+       "ts": 1794187168790,
+       "st": "ok"
+      }
+     ]
+    }
+   ],
+   "services": [],
+   "followers": 179,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "b6",
+   "name": {
+    "en": "Maa Durga Cloth House",
+    "hi": "माँ दुर्गा क्लॉथ हाउस"
+   },
+   "cat": "clothing",
+   "emoji": "👕",
+   "hue": 300,
+   "area": "chauraha",
+   "addr": "Gandhi Chowk, Padrauna",
+   "lat": 26.9025,
+   "lng": 83.9785,
+   "phone": "9876500006",
+   "wa": "9876500006",
+   "email": "b6@example.com",
+   "rating": 4.2,
+   "rc": 76,
+   "verified": true,
+   "featured": false,
+   "popular": false,
+   "status": "approved",
+   "since": 2021,
+   "hours": [
+    [
+     "10:30",
+     "21:00"
+    ],
+    null,
+    [
+     "10:30",
+     "21:00"
+    ],
+    [
+     "10:30",
+     "21:00"
+    ],
+    [
+     "10:30",
+     "21:00"
+    ],
+    [
+     "10:30",
+     "21:00"
+    ],
+    [
+     "10:30",
+     "21:00"
+    ]
+   ],
+   "del": {
+    "mode": "rider",
+    "radius": 5,
+    "fee": 0,
+    "min": 150,
+    "pickup": true,
+    "note": "Show the pickup code at the counter."
+   },
+   "desc": "Sarees, kurtas, kids wear and bedsheets. Wedding season specials.",
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "🏬",
+    "🧺",
+    "🪧",
+    "🛍️"
+   ],
+   "closedNow": false,
+   "media": [
+    {
+     "t": "ig",
+     "vid": "C0sample12",
+     "url": "https://www.instagram.com/reel/C0sample12/",
+     "reel": true,
+     "tags": [
+      "p26"
+     ],
+     "id": "m12",
+     "title": "Wedding sarees reel",
+     "cap": "Sarees for the season.",
+     "hashtags": [
+      "#Saree"
+     ],
+     "views": 0,
+     "likes": 0,
+     "shares": 0,
+     "gained": 0,
+     "taps": 0,
+     "thumb": "🥻",
+     "dur": 20,
+     "age": 518400000,
+     "status": "rejected",
+     "reason": "Music is copyrighted. Please upload without background music.",
+     "ts": 1793755168790,
+     "reels": true,
+     "gal": true,
+     "comments": [
+      {
+       "name": "Sunita Gupta",
+       "text": "Looks great! Is this available in Padrauna?",
+       "ts": 1794187168790,
+       "st": "ok"
+      }
+     ]
+    }
+   ],
+   "services": [],
+   "followers": 192,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "b7",
+   "name": {
+    "en": "Sharma Hardware & Paints",
+    "hi": "शर्मा हार्डवेयर एवं पेंट्स"
+   },
+   "cat": "hardware",
+   "emoji": "🔧",
+   "hue": 200,
+   "area": "ramkola",
+   "addr": "Ramkola Road, Padrauna",
+   "lat": 26.8975,
+   "lng": 83.9755,
+   "phone": "9876500007",
+   "wa": "9876500007",
+   "email": "b7@example.com",
+   "rating": 4.5,
+   "rc": 88,
+   "verified": true,
+   "featured": false,
+   "popular": false,
+   "status": "approved",
+   "since": 2022,
+   "hours": [
+    null,
+    [
+     "09:00",
+     "19:30"
+    ],
+    [
+     "09:00",
+     "19:30"
+    ],
+    [
+     "09:00",
+     "19:30"
+    ],
+    [
+     "09:00",
+     "19:30"
+    ],
+    [
+     "09:00",
+     "19:30"
+    ],
+    [
+     "09:00",
+     "19:30"
+    ]
+   ],
+   "del": {
+    "mode": "rider",
+    "radius": 8,
+    "fee": 0,
+    "min": 500,
+    "pickup": true,
+    "note": "Heavy items loaded at the godown."
+   },
+   "desc": "Cement, paints, pipes, tools and electrical goods for builders.",
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "🏬",
+    "🧺",
+    "🪧",
+    "🛍️"
+   ],
+   "closedNow": false,
+   "media": [],
+   "services": [
+    {
+     "id": "b7-sv0",
+     "n": "Paint colour consultation",
+     "p": "₹0",
+     "from": 0,
+     "desc": "Paint colour consultation by Sharma Hardware & Paints. Send an enquiry for a quote.",
+     "sub": "painter",
+     "cat": "builder",
+     "ptype": "free",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and nearby",
+     "exp": 3,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "🔧",
+       "h": 200
+      },
+      {
+       "t": "img",
+       "e": "🔧",
+       "h": 228
+      },
+      {
+       "t": "img",
+       "e": "🔧",
+       "h": 256
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    }
+   ],
+   "followers": 205,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "b8",
+   "name": {
+    "en": "Student Stationery Corner",
+    "hi": "स्टूडेंट स्टेशनरी कॉर्नर"
+   },
+   "cat": "stationery",
+   "emoji": "✏️",
+   "hue": 50,
+   "area": "collect",
+   "addr": "Near Collectorate, Padrauna",
+   "lat": 26.915,
+   "lng": 83.984,
+   "phone": "9876500008",
+   "wa": "9876500008",
+   "email": "b8@example.com",
+   "rating": 4.4,
+   "rc": 59,
+   "verified": true,
+   "featured": false,
+   "popular": false,
+   "status": "approved",
+   "since": 2015,
+   "hours": [
+    null,
+    [
+     "09:30",
+     "20:00"
+    ],
+    [
+     "09:30",
+     "20:00"
+    ],
+    [
+     "09:30",
+     "20:00"
+    ],
+    [
+     "09:30",
+     "20:00"
+    ],
+    [
+     "09:30",
+     "20:00"
+    ],
+    [
+     "09:30",
+     "20:00"
+    ]
+   ],
+   "del": {
+    "mode": "rider",
+    "radius": 5,
+    "fee": 0,
+    "min": 150,
+    "pickup": true,
+    "note": "Show the pickup code at the counter."
+   },
+   "desc": "Books, notebooks, art supplies and school bags.",
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "🏬",
+    "🧺",
+    "🪧",
+    "🛍️"
+   ],
+   "closedNow": false,
+   "media": [],
+   "services": [],
+   "followers": 218,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "b9",
+   "name": {
+    "en": "Shree Furniture Mart",
+    "hi": "श्री फर्नीचर मार्ट"
+   },
+   "cat": "furniture",
+   "emoji": "🛋️",
+   "hue": 20,
+   "area": "ramkola",
+   "addr": "Ramkola Road, Padrauna",
+   "lat": 26.8955,
+   "lng": 83.9735,
+   "phone": "9876500009",
+   "wa": "9876500009",
+   "email": "b9@example.com",
+   "rating": 4.1,
+   "rc": 41,
+   "verified": true,
+   "featured": false,
+   "popular": false,
+   "status": "approved",
+   "since": 2016,
+   "hours": [
+    [
+     "10:00",
+     "20:00"
+    ],
+    [
+     "10:00",
+     "20:00"
+    ],
+    [
+     "10:00",
+     "20:00"
+    ],
+    [
+     "10:00",
+     "20:00"
+    ],
+    [
+     "10:00",
+     "20:00"
+    ],
+    [
+     "10:00",
+     "20:00"
+    ],
+    [
+     "10:00",
+     "20:00"
+    ]
+   ],
+   "del": {
+    "mode": "self",
+    "radius": 10,
+    "fee": 150,
+    "min": 1000,
+    "pickup": true,
+    "note": "Showroom pickup on request."
+   },
+   "desc": "Beds, almirahs, tables and chairs. Custom orders on request.",
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "🏬",
+    "🧺",
+    "🪧",
+    "🛍️"
+   ],
+   "closedNow": false,
+   "media": [],
+   "services": [],
+   "followers": 231,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "b10",
+   "name": {
+    "en": "Lakshmi Jewellers",
+    "hi": "लक्ष्मी ज्वेलर्स"
+   },
+   "cat": "jewellery",
+   "emoji": "💍",
+   "hue": 45,
+   "area": "chauraha",
+   "addr": "Sarafa Bazaar, Padrauna",
+   "lat": 26.9055,
+   "lng": 83.98349999999999,
+   "phone": "9876500010",
+   "wa": "9876500010",
+   "email": "b10@example.com",
+   "rating": 4.7,
+   "rc": 132,
+   "verified": true,
+   "featured": false,
+   "popular": false,
+   "status": "approved",
+   "since": 2017,
+   "hours": [
+    null,
+    [
+     "10:30",
+     "20:30"
+    ],
+    [
+     "10:30",
+     "20:30"
+    ],
+    [
+     "10:30",
+     "20:30"
+    ],
+    [
+     "10:30",
+     "20:30"
+    ],
+    [
+     "10:30",
+     "20:30"
+    ],
+    [
+     "10:30",
+     "20:30"
+    ]
+   ],
+   "del": {
+    "mode": "rider",
+    "radius": 5,
+    "fee": 0,
+    "min": 150,
+    "pickup": true,
+    "note": "Show the pickup code at the counter."
+   },
+   "desc": "Silver, gold-plated and imitation jewellery. Hallmark on request.",
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "🏬",
+    "🧺",
+    "🪧",
+    "🛍️"
+   ],
+   "closedNow": false,
+   "media": [],
+   "services": [],
+   "followers": 281,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  }
+ ],
+ "svc": [
+  {
+   "id": "s1",
+   "name": {
+    "en": "Shubh Vivah Events & Tent House",
+    "hi": "शुभ विवाह इवेंट्स एवं टेंट हाउस"
+   },
+   "cat": "wedding",
+   "emoji": "💒",
+   "hue": 330,
+   "area": "tehsil",
+   "addr": "Tehsil Road, Padrauna",
+   "lat": 26.9105,
+   "lng": 83.978,
+   "phone": "9876500101",
+   "wa": "9876500101",
+   "email": "s1@example.com",
+   "rating": 4.8,
+   "rc": 87,
+   "verified": true,
+   "status": "approved",
+   "desc": "Complete wedding planning: tent, lighting, DJ, catering and decoration.",
+   "services": [
+    {
+     "id": "s1-sv0",
+     "n": "Wedding decoration",
+     "p": "from ₹25,000",
+     "from": 25000,
+     "desc": "Wedding decoration by Shubh Vivah Events & Tent House. Send an enquiry for a quote.",
+     "sub": "decoration",
+     "cat": "wedding",
+     "ptype": "from",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 3,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 330
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 358
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 386
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "s1-sv1",
+     "n": "Tent & lighting",
+     "p": "from ₹8,000",
+     "from": 8000,
+     "desc": "Tent & lighting by Shubh Vivah Events & Tent House. Send an enquiry for a quote.",
+     "sub": "tent-lighting",
+     "cat": "wedding",
+     "ptype": "from",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 5,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 330
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 358
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 386
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "s1-sv2",
+     "n": "DJ & sound",
+     "p": "from ₹6,000",
+     "from": 6000,
+     "desc": "DJ & sound by Shubh Vivah Events & Tent House. Send an enquiry for a quote.",
+     "sub": "dj-sound",
+     "cat": "wedding",
+     "ptype": "from",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 7,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 330
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 358
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 386
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    }
+   ],
+   "hours": [
+    null,
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ]
+   ],
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "📸",
+    "🎉",
+    "🛠️",
+    "🏠"
+   ],
+   "serviceArea": "Padrauna and 15 km around",
+   "featured": true,
+   "del": {
+    "mode": "rider",
+    "radius": 6,
+    "fee": 0,
+    "min": 0,
+    "pickup": true,
+    "note": "Collect at the provider’s shop."
+   },
+   "media": [],
+   "ssubs": [
+    "tent-lighting",
+    "dj-sound",
+    "decoration"
+   ],
+   "followers": 127,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "s2",
+   "name": {
+    "en": "Sai Builders & Contractors",
+    "hi": "साईं बिल्डर्स एवं कॉन्ट्रैक्टर्स"
+   },
+   "cat": "builder",
+   "emoji": "🏗️",
+   "hue": 25,
+   "area": "ramkola",
+   "addr": "Ramkola Road, Padrauna",
+   "lat": 26.8995,
+   "lng": 83.97449999999999,
+   "phone": "9876500102",
+   "wa": "9876500102",
+   "email": "s2@example.com",
+   "rating": 4.5,
+   "rc": 34,
+   "verified": true,
+   "status": "approved",
+   "desc": "House construction, renovation and RCC work with transparent estimates.",
+   "services": [
+    {
+     "id": "s2-sv0",
+     "n": "House construction",
+     "p": "₹1,650 / sq ft",
+     "from": 1650,
+     "desc": "House construction by Sai Builders & Contractors. Send an enquiry for a quote.",
+     "sub": "mason",
+     "cat": "builder",
+     "ptype": "fixed",
+     "unit": "/ sq ft",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 3,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "🏗️",
+       "h": 25
+      },
+      {
+       "t": "img",
+       "e": "🏗️",
+       "h": 53
+      },
+      {
+       "t": "img",
+       "e": "🏗️",
+       "h": 81
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "s2-sv1",
+     "n": "Renovation",
+     "p": "On quote",
+     "from": 0,
+     "desc": "Renovation by Sai Builders & Contractors. Send an enquiry for a quote.",
+     "sub": "painter",
+     "cat": "builder",
+     "ptype": "enquiry",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 5,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "🏗️",
+       "h": 25
+      },
+      {
+       "t": "img",
+       "e": "🏗️",
+       "h": 53
+      },
+      {
+       "t": "img",
+       "e": "🏗️",
+       "h": 81
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "s2-sv2",
+     "n": "Boundary wall",
+     "p": "On quote",
+     "from": 0,
+     "desc": "Boundary wall by Sai Builders & Contractors. Send an enquiry for a quote.",
+     "sub": "mason",
+     "cat": "builder",
+     "ptype": "enquiry",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 7,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "🏗️",
+       "h": 25
+      },
+      {
+       "t": "img",
+       "e": "🏗️",
+       "h": 53
+      },
+      {
+       "t": "img",
+       "e": "🏗️",
+       "h": 81
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    }
+   ],
+   "hours": [
+    null,
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ]
+   ],
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "📸",
+    "🎉",
+    "🛠️",
+    "🏠"
+   ],
+   "serviceArea": "Padrauna and 15 km around",
+   "del": {
+    "mode": "rider",
+    "radius": 6,
+    "fee": 0,
+    "min": 0,
+    "pickup": true,
+    "note": "Collect at the provider’s shop."
+   },
+   "media": [],
+   "ssubs": [
+    "mason",
+    "painter"
+   ],
+   "followers": 140,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "s3",
+   "name": {
+    "en": "Ansari Auto Works",
+    "hi": "अंसारी ऑटो वर्क्स"
+   },
+   "cat": "mechanic",
+   "emoji": "🛠️",
+   "hue": 200,
+   "area": "station",
+   "addr": "Station Road, Padrauna",
+   "lat": 26.9,
+   "lng": 83.99,
+   "phone": "9876500103",
+   "wa": "9876500103",
+   "email": "s3@example.com",
+   "rating": 4.6,
+   "rc": 102,
+   "verified": true,
+   "status": "approved",
+   "desc": "Two-wheeler and four-wheeler servicing, puncture, denting and painting.",
+   "services": [
+    {
+     "id": "s3-sv0",
+     "n": "Bike service",
+     "p": "from ₹399",
+     "from": 399,
+     "desc": "Bike service by Ansari Auto Works. Send an enquiry for a quote.",
+     "sub": "two-wheeler",
+     "cat": "mechanic",
+     "ptype": "from",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 3,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "🛠️",
+       "h": 200
+      },
+      {
+       "t": "img",
+       "e": "🛠️",
+       "h": 228
+      },
+      {
+       "t": "img",
+       "e": "🛠️",
+       "h": 256
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "s3-sv1",
+     "n": "Car service",
+     "p": "from ₹1,499",
+     "from": 1499,
+     "desc": "Car service by Ansari Auto Works. Send an enquiry for a quote.",
+     "sub": "four-wheeler",
+     "cat": "mechanic",
+     "ptype": "from",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 5,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "🛠️",
+       "h": 200
+      },
+      {
+       "t": "img",
+       "e": "🛠️",
+       "h": 228
+      },
+      {
+       "t": "img",
+       "e": "🛠️",
+       "h": 256
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "s3-sv2",
+     "n": "Puncture repair",
+     "p": "₹60",
+     "from": 60,
+     "desc": "Puncture repair by Ansari Auto Works. Send an enquiry for a quote.",
+     "sub": "two-wheeler",
+     "cat": "mechanic",
+     "ptype": "fixed",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 7,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "🛠️",
+       "h": 200
+      },
+      {
+       "t": "img",
+       "e": "🛠️",
+       "h": 228
+      },
+      {
+       "t": "img",
+       "e": "🛠️",
+       "h": 256
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    }
+   ],
+   "hours": [
+    null,
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ]
+   ],
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "📸",
+    "🎉",
+    "🛠️",
+    "🏠"
+   ],
+   "serviceArea": "Padrauna and 15 km around",
+   "popular": true,
+   "del": {
+    "mode": "rider",
+    "radius": 6,
+    "fee": 0,
+    "min": 0,
+    "pickup": true,
+    "note": "Collect at the provider’s shop."
+   },
+   "media": [],
+   "ssubs": [
+    "two-wheeler",
+    "four-wheeler"
+   ],
+   "followers": 153,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "s4",
+   "name": {
+    "en": "Bright Future Coaching",
+    "hi": "ब्राइट फ्यूचर कोचिंग"
+   },
+   "cat": "education",
+   "emoji": "📚",
+   "hue": 240,
+   "area": "collect",
+   "addr": "Collectorate Chauraha, Padrauna",
+   "lat": 26.9165,
+   "lng": 83.9845,
+   "phone": "9876500104",
+   "wa": "9876500104",
+   "email": "s4@example.com",
+   "rating": 4.7,
+   "rc": 156,
+   "verified": true,
+   "status": "approved",
+   "desc": "Classes 6-12, board exams and competitive foundation. Small batches.",
+   "services": [
+    {
+     "id": "s4-sv0",
+     "n": "Class 9-10 (all subjects)",
+     "p": "₹700 / month",
+     "from": 700,
+     "desc": "Class 9-10 (all subjects) by Bright Future Coaching. Send an enquiry for a quote.",
+     "sub": "school-coaching",
+     "cat": "education",
+     "ptype": "fixed",
+     "unit": "/ month",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 3,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "📚",
+       "h": 240
+      },
+      {
+       "t": "img",
+       "e": "📚",
+       "h": 268
+      },
+      {
+       "t": "img",
+       "e": "📚",
+       "h": 296
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "s4-sv1",
+     "n": "Class 11-12 Science",
+     "p": "₹1,200 / month",
+     "from": 1200,
+     "desc": "Class 11-12 Science by Bright Future Coaching. Send an enquiry for a quote.",
+     "sub": "school-coaching",
+     "cat": "education",
+     "ptype": "fixed",
+     "unit": "/ month",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 5,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "📚",
+       "h": 240
+      },
+      {
+       "t": "img",
+       "e": "📚",
+       "h": 268
+      },
+      {
+       "t": "img",
+       "e": "📚",
+       "h": 296
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "s4-sv2",
+     "n": "Spoken English",
+     "p": "₹500 / month",
+     "from": 500,
+     "desc": "Spoken English by Bright Future Coaching. Send an enquiry for a quote.",
+     "sub": "spoken-english",
+     "cat": "education",
+     "ptype": "fixed",
+     "unit": "/ month",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 7,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "📚",
+       "h": 240
+      },
+      {
+       "t": "img",
+       "e": "📚",
+       "h": 268
+      },
+      {
+       "t": "img",
+       "e": "📚",
+       "h": 296
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    }
+   ],
+   "hours": [
+    null,
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ]
+   ],
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "📸",
+    "🎉",
+    "🛠️",
+    "🏠"
+   ],
+   "serviceArea": "Padrauna and 15 km around",
+   "featured": true,
+   "del": {
+    "mode": "rider",
+    "radius": 6,
+    "fee": 0,
+    "min": 0,
+    "pickup": true,
+    "note": "Collect at the provider’s shop."
+   },
+   "media": [],
+   "ssubs": [
+    "school-coaching",
+    "spoken-english"
+   ],
+   "followers": 166,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "s5",
+   "name": {
+    "en": "Verma Electricals",
+    "hi": "वर्मा इलेक्ट्रिकल्स"
+   },
+   "cat": "electrician",
+   "emoji": "⚡",
+   "hue": 48,
+   "area": "hata",
+   "addr": "Hata Road, Padrauna",
+   "lat": 26.9115,
+   "lng": 83.987,
+   "phone": "9876500105",
+   "wa": "9876500105",
+   "email": "s5@example.com",
+   "rating": 4.6,
+   "rc": 73,
+   "verified": true,
+   "status": "approved",
+   "desc": "Wiring, inverter, fan and appliance repair. Quick visits in Padrauna.",
+   "services": [
+    {
+     "id": "s5-sv0",
+     "n": "House wiring",
+     "p": "on visit",
+     "from": 0,
+     "desc": "House wiring by Verma Electricals. Send an enquiry for a quote.",
+     "sub": "house-wiring",
+     "cat": "electrician",
+     "ptype": "enquiry",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 3,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "⚡",
+       "h": 48
+      },
+      {
+       "t": "img",
+       "e": "⚡",
+       "h": 76
+      },
+      {
+       "t": "img",
+       "e": "⚡",
+       "h": 104
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "s5-sv1",
+     "n": "Inverter install",
+     "p": "₹500",
+     "from": 500,
+     "desc": "Inverter install by Verma Electricals. Send an enquiry for a quote.",
+     "sub": "inverter-battery",
+     "cat": "electrician",
+     "ptype": "fixed",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 5,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "⚡",
+       "h": 48
+      },
+      {
+       "t": "img",
+       "e": "⚡",
+       "h": 76
+      },
+      {
+       "t": "img",
+       "e": "⚡",
+       "h": 104
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "s5-sv2",
+     "n": "Fan / geyser repair",
+     "p": "from ₹150",
+     "from": 150,
+     "desc": "Fan / geyser repair by Verma Electricals. Send an enquiry for a quote.",
+     "sub": "appliance-repair",
+     "cat": "mechanic",
+     "ptype": "from",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 7,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "⚡",
+       "h": 48
+      },
+      {
+       "t": "img",
+       "e": "⚡",
+       "h": 76
+      },
+      {
+       "t": "img",
+       "e": "⚡",
+       "h": 104
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    }
+   ],
+   "hours": [
+    null,
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ]
+   ],
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "📸",
+    "🎉",
+    "🛠️",
+    "🏠"
+   ],
+   "serviceArea": "Padrauna and 15 km around",
+   "popular": true,
+   "del": {
+    "mode": "rider",
+    "radius": 6,
+    "fee": 0,
+    "min": 0,
+    "pickup": true,
+    "note": "Collect at the provider’s shop."
+   },
+   "media": [
+    {
+     "id": "m3",
+     "t": "yt",
+     "vid": "aqz-KE-bpKQ",
+     "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+     "title": "Inverter installation demo (sample)",
+     "tags": [
+      "p48",
+      "s5-sv1"
+     ],
+     "cap": "Inverter installation demo (sample)",
+     "hashtags": [],
+     "status": "approved",
+     "views": 494,
+     "likes": 49,
+     "shares": 7,
+     "gained": 4,
+     "taps": 25,
+     "thumb": "▶️",
+     "dur": 20,
+     "ts": 1794100768790,
+     "reels": true,
+     "gal": true,
+     "comments": [
+      {
+       "name": "Sunita Gupta",
+       "text": "Looks great! Is this available in Padrauna?",
+       "ts": 1794187168790,
+       "st": "ok"
+      }
+     ]
+    }
+   ],
+   "ssubs": [
+    "house-wiring",
+    "inverter-battery",
+    "appliance-repair"
+   ],
+   "followers": 179,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "s6",
+   "name": {
+    "en": "Rajesh Plumbing Service",
+    "hi": "राजेश प्लंबिंग सर्विस"
+   },
+   "cat": "plumber",
+   "emoji": "🚿",
+   "hue": 190,
+   "area": "busstand",
+   "addr": "Bus Stand, Padrauna",
+   "lat": 26.9035,
+   "lng": 83.9765,
+   "phone": "9876500106",
+   "wa": "9876500106",
+   "email": "s6@example.com",
+   "rating": 4.3,
+   "rc": 51,
+   "verified": true,
+   "status": "approved",
+   "desc": "Leakage, bathroom fitting, motor and tank cleaning.",
+   "services": [
+    {
+     "id": "s6-sv0",
+     "n": "Tap / pipe repair",
+     "p": "from ₹150",
+     "from": 150,
+     "desc": "Tap / pipe repair by Rajesh Plumbing Service. Send an enquiry for a quote.",
+     "sub": "leakage-repair",
+     "cat": "plumber",
+     "ptype": "from",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 3,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "🚿",
+       "h": 190
+      },
+      {
+       "t": "img",
+       "e": "🚿",
+       "h": 218
+      },
+      {
+       "t": "img",
+       "e": "🚿",
+       "h": 246
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "s6-sv1",
+     "n": "Bathroom fitting",
+     "p": "on quote",
+     "from": 0,
+     "desc": "Bathroom fitting by Rajesh Plumbing Service. Send an enquiry for a quote.",
+     "sub": "bathroom-fitting",
+     "cat": "plumber",
+     "ptype": "enquiry",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 5,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "🚿",
+       "h": 190
+      },
+      {
+       "t": "img",
+       "e": "🚿",
+       "h": 218
+      },
+      {
+       "t": "img",
+       "e": "🚿",
+       "h": 246
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "s6-sv2",
+     "n": "Tank cleaning",
+     "p": "₹600",
+     "from": 600,
+     "desc": "Tank cleaning by Rajesh Plumbing Service. Send an enquiry for a quote.",
+     "sub": "tank-cleaning",
+     "cat": "plumber",
+     "ptype": "fixed",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 7,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "🚿",
+       "h": 190
+      },
+      {
+       "t": "img",
+       "e": "🚿",
+       "h": 218
+      },
+      {
+       "t": "img",
+       "e": "🚿",
+       "h": 246
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    }
+   ],
+   "hours": [
+    null,
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ]
+   ],
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "📸",
+    "🎉",
+    "🛠️",
+    "🏠"
+   ],
+   "serviceArea": "Padrauna and 15 km around",
+   "del": {
+    "mode": "rider",
+    "radius": 6,
+    "fee": 0,
+    "min": 0,
+    "pickup": true,
+    "note": "Collect at the provider’s shop."
+   },
+   "media": [],
+   "ssubs": [
+    "leakage-repair",
+    "bathroom-fitting"
+   ],
+   "followers": 192,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "s7",
+   "name": {
+    "en": "Rocket DJ & Sound",
+    "hi": "रॉकेट डीजे व साउंड"
+   },
+   "cat": "wedding",
+   "emoji": "💒",
+   "hue": 330,
+   "area": "station",
+   "addr": "Station Road, Padrauna",
+   "lat": 26.898,
+   "lng": 83.985,
+   "phone": "9876500107",
+   "wa": "9876500107",
+   "email": "s7@example.com",
+   "rating": 4.6,
+   "rc": 44,
+   "verified": true,
+   "status": "approved",
+   "desc": "DJ, sound system and dance-floor lights for weddings and parties.",
+   "services": [
+    {
+     "id": "s7-sv0",
+     "n": "DJ with sound (6 hrs)",
+     "p": "from ₹6,000",
+     "from": 6000,
+     "desc": "DJ with sound (6 hrs) by Rocket DJ & Sound. Send an enquiry for a quote.",
+     "sub": "dj-sound",
+     "cat": "wedding",
+     "ptype": "from",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 3,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 330
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 358
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 386
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "s7-sv1",
+     "n": "Dance floor lights",
+     "p": "₹2,500",
+     "from": 2500,
+     "desc": "Dance floor lights by Rocket DJ & Sound. Send an enquiry for a quote.",
+     "sub": "tent-lighting",
+     "cat": "wedding",
+     "ptype": "fixed",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 5,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 330
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 358
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 386
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    }
+   ],
+   "hours": [
+    null,
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ]
+   ],
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "📸",
+    "🎉",
+    "🛠️",
+    "🏠"
+   ],
+   "serviceArea": "Padrauna and 15 km around",
+   "ssubs": [
+    "dj-sound"
+   ],
+   "media": [
+    {
+     "t": "ig",
+     "vid": "C0sample07",
+     "url": "https://www.instagram.com/reel/C0sample07/",
+     "reel": true,
+     "tags": [
+      "s7-sv0",
+      "s7-sv1"
+     ],
+     "id": "m7",
+     "title": "DJ night setup",
+     "cap": "Full DJ and sound setup for your wedding function.",
+     "hashtags": [
+      "#DJ",
+      "#WeddingSeason",
+      "#Padrauna"
+     ],
+     "views": 5120,
+     "likes": 690,
+     "shares": 120,
+     "gained": 64,
+     "taps": 310,
+     "thumb": "🎧",
+     "dur": 18,
+     "age": 259200000,
+     "status": "approved",
+     "ts": 1794014368790,
+     "reels": true,
+     "gal": true,
+     "comments": [
+      {
+       "name": "Sunita Gupta",
+       "text": "Looks great! Is this available in Padrauna?",
+       "ts": 1794187168790,
+       "st": "ok"
+      }
+     ]
+    }
+   ],
+   "del": {
+    "mode": "rider",
+    "radius": 6,
+    "fee": 0,
+    "min": 0,
+    "pickup": true,
+    "note": ""
+   },
+   "followers": 205,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "s8",
+   "name": {
+    "en": "Annapurna Catering",
+    "hi": "अन्नपूर्णा केटरिंग"
+   },
+   "cat": "wedding",
+   "emoji": "💒",
+   "hue": 330,
+   "area": "tehsil",
+   "addr": "Tehsil Road, Padrauna",
+   "lat": 26.908,
+   "lng": 83.975,
+   "phone": "9876500108",
+   "wa": "9876500108",
+   "email": "s8@example.com",
+   "rating": 4.7,
+   "rc": 63,
+   "verified": true,
+   "status": "approved",
+   "desc": "Pure veg catering for weddings, tilak and parties. Live counters available.",
+   "services": [
+    {
+     "id": "s8-sv0",
+     "n": "Wedding catering",
+     "p": "from ₹180 / plate",
+     "from": 180,
+     "desc": "Wedding catering by Annapurna Catering. Send an enquiry for a quote.",
+     "sub": "catering",
+     "cat": "wedding",
+     "ptype": "from",
+     "unit": "/ plate",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 3,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 330
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 358
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 386
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "s8-sv1",
+     "n": "Party snacks",
+     "p": "from ₹90 / plate",
+     "from": 90,
+     "desc": "Party snacks by Annapurna Catering. Send an enquiry for a quote.",
+     "sub": "catering",
+     "cat": "wedding",
+     "ptype": "from",
+     "unit": "/ plate",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 5,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 330
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 358
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 386
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    }
+   ],
+   "hours": [
+    null,
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ]
+   ],
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "📸",
+    "🎉",
+    "🛠️",
+    "🏠"
+   ],
+   "serviceArea": "Padrauna and 15 km around",
+   "ssubs": [
+    "catering"
+   ],
+   "media": [
+    {
+     "t": "yt",
+     "vid": "aqz-KE-bpKQ",
+     "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+     "reel": false,
+     "tags": [
+      "s8-sv0"
+     ],
+     "id": "m8",
+     "title": "Wedding menu tour",
+     "cap": "Our veg wedding menu: live chaat, paneer and desserts.",
+     "hashtags": [
+      "#Catering",
+      "#WeddingMenu"
+     ],
+     "views": 1980,
+     "likes": 240,
+     "shares": 44,
+     "gained": 22,
+     "taps": 98,
+     "thumb": "🍛",
+     "dur": 26,
+     "age": 345600000,
+     "status": "approved",
+     "ts": 1793927968790,
+     "reels": true,
+     "gal": true,
+     "comments": [
+      {
+       "name": "Sunita Gupta",
+       "text": "Looks great! Is this available in Padrauna?",
+       "ts": 1794187168790,
+       "st": "ok"
+      }
+     ]
+    }
+   ],
+   "del": {
+    "mode": "rider",
+    "radius": 6,
+    "fee": 0,
+    "min": 0,
+    "pickup": true,
+    "note": ""
+   },
+   "followers": 218,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "s9",
+   "name": {
+    "en": "Shiv Tent & Lights",
+    "hi": "शिव टेंट एवं लाइट्स"
+   },
+   "cat": "wedding",
+   "emoji": "💒",
+   "hue": 330,
+   "area": "hata",
+   "addr": "Hata Road, Padrauna",
+   "lat": 26.906,
+   "lng": 83.99,
+   "phone": "9876500109",
+   "wa": "9876500109",
+   "email": "s9@example.com",
+   "rating": 4.4,
+   "rc": 38,
+   "verified": true,
+   "status": "approved",
+   "desc": "Tents, chairs, carpets and decorative lighting on rent.",
+   "services": [
+    {
+     "id": "s9-sv0",
+     "n": "Tent & lighting package",
+     "p": "from ₹8,000",
+     "from": 8000,
+     "desc": "Tent & lighting package by Shiv Tent & Lights. Send an enquiry for a quote.",
+     "sub": "tent-lighting",
+     "cat": "wedding",
+     "ptype": "from",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 3,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 330
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 358
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 386
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "s9-sv1",
+     "n": "Chair & table rental",
+     "p": "₹6 / chair",
+     "from": 6,
+     "desc": "Chair & table rental by Shiv Tent & Lights. Send an enquiry for a quote.",
+     "sub": "tent-lighting",
+     "cat": "wedding",
+     "ptype": "fixed",
+     "unit": "/ chair",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 5,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 330
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 358
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 386
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    }
+   ],
+   "hours": [
+    null,
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ]
+   ],
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "📸",
+    "🎉",
+    "🛠️",
+    "🏠"
+   ],
+   "serviceArea": "Padrauna and 15 km around",
+   "ssubs": [
+    "tent-lighting",
+    "decoration"
+   ],
+   "media": [
+    {
+     "t": "yt",
+     "vid": "aqz-KE-bpKQ",
+     "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+     "reel": false,
+     "tags": [
+      "s9-sv0"
+     ],
+     "id": "m13",
+     "title": "Tent setup time-lapse",
+     "cap": "A full tent and light setup in one hour.",
+     "hashtags": [
+      "#Tent"
+     ],
+     "views": 900,
+     "likes": 70,
+     "shares": 9,
+     "gained": 3,
+     "taps": 20,
+     "thumb": "⛺",
+     "dur": 19,
+     "age": 691200000,
+     "status": "removed",
+     "ts": 1793582368790,
+     "reels": true,
+     "gal": true,
+     "comments": [
+      {
+       "name": "Sunita Gupta",
+       "text": "Looks great! Is this available in Padrauna?",
+       "ts": 1794187168790,
+       "st": "ok"
+      }
+     ]
+    }
+   ],
+   "del": {
+    "mode": "rider",
+    "radius": 6,
+    "fee": 0,
+    "min": 0,
+    "pickup": true,
+    "note": ""
+   },
+   "followers": 231,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "s10",
+   "name": {
+    "en": "Shree Photo & Video",
+    "hi": "श्री फोटो एवं वीडियो"
+   },
+   "cat": "wedding",
+   "emoji": "💒",
+   "hue": 330,
+   "area": "chauraha",
+   "addr": "Padrauna Chauraha, Padrauna",
+   "lat": 26.901,
+   "lng": 83.97999999999999,
+   "phone": "9876500110",
+   "wa": "9876500110",
+   "email": "s10@example.com",
+   "rating": 4.8,
+   "rc": 91,
+   "verified": true,
+   "status": "approved",
+   "desc": "Wedding photography, cinematic video and drone shots.",
+   "services": [
+    {
+     "id": "s10-sv0",
+     "n": "Wedding photography",
+     "p": "from ₹15,000",
+     "from": 15000,
+     "desc": "Wedding photography by Shree Photo & Video. Send an enquiry for a quote.",
+     "sub": "photography-video",
+     "cat": "wedding",
+     "ptype": "from",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 3,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 330
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 358
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 386
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    },
+    {
+     "id": "s10-sv1",
+     "n": "Cinematic video",
+     "p": "from ₹20,000",
+     "from": 20000,
+     "desc": "Cinematic video by Shree Photo & Video. Send an enquiry for a quote.",
+     "sub": "photography-video",
+     "cat": "wedding",
+     "ptype": "from",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 5,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 330
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 358
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 386
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ]
+    }
+   ],
+   "hours": [
+    null,
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ]
+   ],
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "📸",
+    "🎉",
+    "🛠️",
+    "🏠"
+   ],
+   "serviceArea": "Padrauna and 15 km around",
+   "ssubs": [
+    "photography-video"
+   ],
+   "media": [
+    {
+     "t": "ig",
+     "vid": "C0sample10",
+     "url": "https://www.instagram.com/reel/C0sample10/",
+     "reel": true,
+     "tags": [
+      "s10-sv0",
+      "s10-sv1"
+     ],
+     "id": "m10",
+     "title": "Wedding highlights",
+     "cap": "Cinematic wedding highlights from Kushinagar road.",
+     "hashtags": [
+      "#WeddingVideo",
+      "#Photography"
+     ],
+     "views": 6400,
+     "likes": 880,
+     "shares": 170,
+     "gained": 95,
+     "taps": 412,
+     "thumb": "💍",
+     "dur": 28,
+     "age": 432000000,
+     "status": "approved",
+     "ts": 1793841568790,
+     "reels": true,
+     "gal": true,
+     "comments": [
+      {
+       "name": "Sunita Gupta",
+       "text": "Looks great! Is this available in Padrauna?",
+       "ts": 1794187168790,
+       "st": "ok"
+      }
+     ]
+    }
+   ],
+   "del": {
+    "mode": "rider",
+    "radius": 6,
+    "fee": 0,
+    "min": 0,
+    "pickup": true,
+    "note": ""
+   },
+   "followers": 281,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "s11",
+   "name": {
+    "en": "Cool Care AC Services",
+    "hi": "कूल केयर एसी सर्विसेज"
+   },
+   "cat": "mechanic",
+   "emoji": "🛠️",
+   "hue": 200,
+   "area": "station",
+   "addr": "Station Road, Padrauna",
+   "lat": 26.9065,
+   "lng": 83.98649999999999,
+   "phone": "9876500111",
+   "wa": "9876500111",
+   "email": "s11@example.com",
+   "rating": 4.7,
+   "rc": 58,
+   "verified": true,
+   "status": "approved",
+   "desc": "AC installation, repair, gas refill and annual service. Same-day visits in Padrauna.",
+   "services": [
+    {
+     "id": "s11-sv0",
+     "n": "AC Installation",
+     "p": "from ₹799 / unit",
+     "sub": "ac-installation",
+     "cat": "mechanic",
+     "from": 799,
+     "ptype": "from",
+     "unit": "/ unit",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 3,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "🛠️",
+       "h": 200
+      },
+      {
+       "t": "img",
+       "e": "🛠️",
+       "h": 228
+      },
+      {
+       "t": "img",
+       "e": "🛠️",
+       "h": 256
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ],
+     "desc": "AC Installation by Cool Care AC Services. Send an enquiry for a quote."
+    },
+    {
+     "id": "s11-sv1",
+     "n": "AC Repair & Service",
+     "p": "from ₹399",
+     "sub": "ac-repair",
+     "cat": "mechanic",
+     "from": 399,
+     "ptype": "from",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 5,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "🛠️",
+       "h": 200
+      },
+      {
+       "t": "img",
+       "e": "🛠️",
+       "h": 228
+      },
+      {
+       "t": "img",
+       "e": "🛠️",
+       "h": 256
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ],
+     "desc": "AC Repair & Service by Cool Care AC Services. Send an enquiry for a quote."
+    },
+    {
+     "id": "s11-sv2",
+     "n": "AC Gas Refill",
+     "p": "from ₹1,800",
+     "sub": "ac-repair",
+     "cat": "mechanic",
+     "from": 1800,
+     "ptype": "from",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 7,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "🛠️",
+       "h": 200
+      },
+      {
+       "t": "img",
+       "e": "🛠️",
+       "h": 228
+      },
+      {
+       "t": "img",
+       "e": "🛠️",
+       "h": 256
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ],
+     "desc": "AC Gas Refill by Cool Care AC Services. Send an enquiry for a quote."
+    }
+   ],
+   "hours": [
+    null,
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ]
+   ],
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "📸",
+    "🎉",
+    "🛠️",
+    "🏠"
+   ],
+   "serviceArea": "Padrauna and 15 km around",
+   "ssubs": [
+    "ac-repair",
+    "ac-installation",
+    "appliance-repair"
+   ],
+   "media": [
+    {
+     "t": "ig",
+     "vid": "C0sample09",
+     "url": "https://www.instagram.com/reel/C0sample09/",
+     "reel": true,
+     "tags": [
+      "s11-sv0",
+      "s11-sv1",
+      "s11-sv2"
+     ],
+     "id": "m9",
+     "title": "AC service demo",
+     "cap": "What a proper AC service includes. Book before the heat!",
+     "hashtags": [
+      "#ACService",
+      "#Padrauna"
+     ],
+     "views": 2740,
+     "likes": 331,
+     "shares": 61,
+     "gained": 28,
+     "taps": 177,
+     "thumb": "🧊",
+     "dur": 22,
+     "age": 86400000,
+     "status": "approved",
+     "ts": 1794187168790,
+     "reels": true,
+     "gal": true,
+     "comments": [
+      {
+       "name": "Sunita Gupta",
+       "text": "Looks great! Is this available in Padrauna?",
+       "ts": 1794187168790,
+       "st": "ok"
+      }
+     ]
+    }
+   ],
+   "del": {
+    "mode": "rider",
+    "radius": 6,
+    "fee": 0,
+    "min": 0,
+    "pickup": true,
+    "note": ""
+   },
+   "followers": 294,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  },
+  {
+   "id": "s12",
+   "name": {
+    "en": "Glow Mehndi & Makeup",
+    "hi": "ग्लो मेहंदी एवं मेकअप"
+   },
+   "cat": "wedding",
+   "emoji": "💒",
+   "hue": 330,
+   "area": "chauraha",
+   "addr": "Padrauna Chauraha, Padrauna",
+   "lat": 26.9055,
+   "lng": 83.97749999999999,
+   "phone": "9876500112",
+   "wa": "9876500112",
+   "email": "s12@example.com",
+   "rating": 4.9,
+   "rc": 77,
+   "verified": true,
+   "status": "approved",
+   "desc": "Bridal mehndi artists and makeup for weddings and parties.",
+   "services": [
+    {
+     "id": "s12-sv0",
+     "n": "Bridal Mehndi",
+     "p": "from ₹3,000",
+     "sub": "mehndi-makeup",
+     "cat": "wedding",
+     "from": 3000,
+     "ptype": "from",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 3,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 330
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 358
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 386
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ],
+     "desc": "Bridal Mehndi by Glow Mehndi & Makeup. Send an enquiry for a quote."
+    },
+    {
+     "id": "s12-sv1",
+     "n": "Party Makeup",
+     "p": "from ₹2,000",
+     "sub": "mehndi-makeup",
+     "cat": "wedding",
+     "from": 2000,
+     "ptype": "from",
+     "unit": "",
+     "active": true,
+     "incl": [
+      "Visit and inspection",
+      "Basic material handling",
+      "Support after service"
+     ],
+     "excl": [
+      "Spare parts and extra material",
+      "Government fees"
+     ],
+     "area": "Padrauna and 15 km around",
+     "exp": 5,
+     "imgs": [
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 330
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 358
+      },
+      {
+       "t": "img",
+       "e": "💒",
+       "h": 386
+      }
+     ],
+     "faq": [
+      [
+       "How soon can you visit?",
+       "Usually the same or next day in Padrauna."
+      ],
+      [
+       "Do you give a fixed price?",
+       "You get an estimate after the visit. Prices on this page are starting prices."
+      ]
+     ],
+     "desc": "Party Makeup by Glow Mehndi & Makeup. Send an enquiry for a quote."
+    }
+   ],
+   "hours": [
+    null,
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ],
+    [
+     "09:00",
+     "19:00"
+    ]
+   ],
+   "social": {
+    "ig": "",
+    "yt": "",
+    "fb": ""
+   },
+   "gallery": [
+    "📸",
+    "🎉",
+    "🛠️",
+    "🏠"
+   ],
+   "serviceArea": "Padrauna and 15 km around",
+   "ssubs": [
+    "mehndi-makeup"
+   ],
+   "media": [],
+   "del": {
+    "mode": "rider",
+    "radius": 6,
+    "fee": 0,
+    "min": 0,
+    "pickup": true,
+    "note": ""
+   },
+   "followers": 47,
+   "mediaDefault": true,
+   "pill": {
+    "order": [],
+    "hidden": [],
+    "rename": {}
+   },
+   "gal": []
+  }
+ ],
+ "products": [
+  {
+   "id": "p1",
+   "bid": "b1",
+   "name": {
+    "en": "Chakki Fresh Atta",
+    "hi": "चक्की फ्रेश आटा"
+   },
+   "cat": "grocery",
+   "price": 265,
+   "mrp": 295,
+   "unit": "5 kg",
+   "emoji": "🌾",
+   "hue": 30,
+   "stock": 48,
+   "low": 5,
+   "variants": [
+    "5 kg",
+    "10 kg"
+   ],
+   "sku": "B1-1",
+   "sub": "Atta & Oil",
+   "desc": "Chakki Fresh Atta from Shri Ram Kirana Store. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "5 kg"
+    ],
+    [
+     "Sold by",
+     "Shri Ram Kirana Store"
+    ]
+   ],
+   "tags": [],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🌾",
+     "h": 30
+    },
+    {
+     "t": "img",
+     "e": "🌾",
+     "h": 55
+    },
+    {
+     "t": "img",
+     "e": "🌾",
+     "h": 80
+    }
+   ],
+   "brand": "Kisan Choice"
+  },
+  {
+   "id": "p2",
+   "bid": "b1",
+   "name": {
+    "en": "Refined Soya Oil",
+    "hi": "रिफाइंड सोया तेल"
+   },
+   "cat": "grocery",
+   "price": 118,
+   "mrp": 135,
+   "unit": "1 L",
+   "emoji": "🛢️",
+   "hue": 38,
+   "stock": 60,
+   "low": 5,
+   "variants": [],
+   "sku": "B1-2",
+   "sub": "Atta & Oil",
+   "desc": "Refined Soya Oil from Shri Ram Kirana Store. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 L"
+    ],
+    [
+     "Sold by",
+     "Shri Ram Kirana Store"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🛢️",
+     "h": 38
+    },
+    {
+     "t": "img",
+     "e": "🛢️",
+     "h": 63
+    },
+    {
+     "t": "img",
+     "e": "🛢️",
+     "h": 88
+    }
+   ],
+   "brand": "Ganga Fresh"
+  },
+  {
+   "id": "p3",
+   "bid": "b1",
+   "name": {
+    "en": "Iodised Salt",
+    "hi": "आयोडीन नमक"
+   },
+   "cat": "grocery",
+   "price": 28,
+   "mrp": 30,
+   "unit": "1 kg",
+   "emoji": "🧂",
+   "hue": 46,
+   "stock": 120,
+   "low": 5,
+   "variants": [],
+   "sku": "B1-3",
+   "sub": "Salt & Spices",
+   "desc": "Iodised Salt from Shri Ram Kirana Store. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 kg"
+    ],
+    [
+     "Sold by",
+     "Shri Ram Kirana Store"
+    ]
+   ],
+   "tags": [],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🧂",
+     "h": 46
+    },
+    {
+     "t": "img",
+     "e": "🧂",
+     "h": 71
+    },
+    {
+     "t": "img",
+     "e": "🧂",
+     "h": 96
+    }
+   ],
+   "brand": "Desi Chakki"
+  },
+  {
+   "id": "p4",
+   "bid": "b1",
+   "name": {
+    "en": "Basmati Rice",
+    "hi": "बासमती चावल"
+   },
+   "cat": "grocery",
+   "price": 420,
+   "mrp": 480,
+   "unit": "5 kg",
+   "emoji": "🍚",
+   "hue": 54,
+   "stock": 22,
+   "low": 5,
+   "variants": [],
+   "sku": "B1-4",
+   "sub": "Rice & Dal",
+   "desc": "Basmati Rice from Shri Ram Kirana Store. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "5 kg"
+    ],
+    [
+     "Sold by",
+     "Shri Ram Kirana Store"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🍚",
+     "h": 54
+    },
+    {
+     "t": "img",
+     "e": "🍚",
+     "h": 79
+    },
+    {
+     "t": "img",
+     "e": "🍚",
+     "h": 104
+    }
+   ],
+   "brand": "Kisan Choice"
+  },
+  {
+   "id": "p5",
+   "bid": "b1",
+   "name": {
+    "en": "Arhar Dal",
+    "hi": "अरहर दाल"
+   },
+   "cat": "grocery",
+   "price": 165,
+   "mrp": 180,
+   "unit": "1 kg",
+   "emoji": "🫘",
+   "hue": 62,
+   "stock": 3,
+   "low": 5,
+   "variants": [],
+   "sku": "B1-5",
+   "sub": "Rice & Dal",
+   "desc": "Arhar Dal from Shri Ram Kirana Store. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 kg"
+    ],
+    [
+     "Sold by",
+     "Shri Ram Kirana Store"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🫘",
+     "h": 62
+    },
+    {
+     "t": "img",
+     "e": "🫘",
+     "h": 87
+    },
+    {
+     "t": "img",
+     "e": "🫘",
+     "h": 112
+    }
+   ],
+   "brand": "Ganga Fresh"
+  },
+  {
+   "id": "p6",
+   "bid": "b1",
+   "name": {
+    "en": "Instant Noodles",
+    "hi": "इंस्टेंट नूडल्स"
+   },
+   "cat": "grocery",
+   "price": 84,
+   "mrp": 90,
+   "unit": "6-pack",
+   "emoji": "🍜",
+   "hue": 70,
+   "stock": 0,
+   "low": 5,
+   "variants": [],
+   "sku": "B1-6",
+   "sub": "Instant Food",
+   "desc": "Instant Noodles from Shri Ram Kirana Store. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "6-pack"
+    ],
+    [
+     "Sold by",
+     "Shri Ram Kirana Store"
+    ]
+   ],
+   "tags": [
+    "noodles",
+    "maggi"
+   ],
+   "featured": false,
+   "status": "active",
+   "avail": false,
+   "media": [
+    {
+     "t": "img",
+     "e": "🍜",
+     "h": 70
+    },
+    {
+     "t": "img",
+     "e": "🍜",
+     "h": 95
+    },
+    {
+     "t": "img",
+     "e": "🍜",
+     "h": 120
+    }
+   ],
+   "brand": "Desi Chakki"
+  },
+  {
+   "id": "p7",
+   "bid": "b2",
+   "name": {
+    "en": "Paracetamol 500 mg",
+    "hi": "पैरासिटामोल 500 मि.ग्रा."
+   },
+   "cat": "medical",
+   "price": 22,
+   "mrp": 25,
+   "unit": "strip of 10",
+   "emoji": "💊",
+   "hue": 160,
+   "stock": 200,
+   "low": 5,
+   "variants": [],
+   "sku": "B2-1",
+   "sub": "Medicines",
+   "desc": "Paracetamol 500 mg from Gupta Medical Hall. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "strip of 10"
+    ],
+    [
+     "Sold by",
+     "Gupta Medical Hall"
+    ]
+   ],
+   "tags": [],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "💊",
+     "h": 160
+    },
+    {
+     "t": "img",
+     "e": "💊",
+     "h": 185
+    },
+    {
+     "t": "img",
+     "e": "💊",
+     "h": 210
+    }
+   ],
+   "brand": "HealthPlus"
+  },
+  {
+   "id": "p8",
+   "bid": "b2",
+   "name": {
+    "en": "ORS Sachets",
+    "hi": "ओआरएस पैकेट"
+   },
+   "cat": "medical",
+   "price": 45,
+   "mrp": 50,
+   "unit": "pack of 5",
+   "emoji": "🧃",
+   "hue": 168,
+   "stock": 80,
+   "low": 5,
+   "variants": [],
+   "sku": "B2-2",
+   "sub": "Health Drinks",
+   "desc": "ORS Sachets from Gupta Medical Hall. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "pack of 5"
+    ],
+    [
+     "Sold by",
+     "Gupta Medical Hall"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🧃",
+     "h": 168
+    },
+    {
+     "t": "img",
+     "e": "🧃",
+     "h": 193
+    },
+    {
+     "t": "img",
+     "e": "🧃",
+     "h": 218
+    }
+   ],
+   "brand": "CureWell"
+  },
+  {
+   "id": "p9",
+   "bid": "b2",
+   "name": {
+    "en": "Digital Thermometer",
+    "hi": "डिजिटल थर्मामीटर"
+   },
+   "cat": "medical",
+   "price": 180,
+   "mrp": 250,
+   "unit": "1 pc",
+   "emoji": "🌡️",
+   "hue": 176,
+   "stock": 25,
+   "low": 5,
+   "variants": [],
+   "sku": "B2-3",
+   "sub": "Devices",
+   "desc": "Digital Thermometer from Gupta Medical Hall. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Gupta Medical Hall"
+    ]
+   ],
+   "tags": [],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🌡️",
+     "h": 176
+    },
+    {
+     "t": "img",
+     "e": "🌡️",
+     "h": 201
+    },
+    {
+     "t": "img",
+     "e": "🌡️",
+     "h": 226
+    }
+   ],
+   "brand": "HealthPlus"
+  },
+  {
+   "id": "p10",
+   "bid": "b2",
+   "name": {
+    "en": "Cough Syrup",
+    "hi": "खाँसी की दवा"
+   },
+   "cat": "medical",
+   "price": 96,
+   "mrp": 110,
+   "unit": "100 ml",
+   "emoji": "🧴",
+   "hue": 184,
+   "stock": 40,
+   "low": 5,
+   "variants": [],
+   "sku": "B2-4",
+   "sub": "Medicines",
+   "desc": "Cough Syrup from Gupta Medical Hall. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "100 ml"
+    ],
+    [
+     "Sold by",
+     "Gupta Medical Hall"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🧴",
+     "h": 184
+    },
+    {
+     "t": "img",
+     "e": "🧴",
+     "h": 209
+    },
+    {
+     "t": "img",
+     "e": "🧴",
+     "h": 234
+    }
+   ],
+   "brand": "CureWell"
+  },
+  {
+   "id": "p11",
+   "bid": "b2",
+   "name": {
+    "en": "BP Monitor",
+    "hi": "बीपी मॉनिटर"
+   },
+   "cat": "medical",
+   "price": 1499,
+   "mrp": 1899,
+   "unit": "1 pc",
+   "emoji": "🩺",
+   "hue": 192,
+   "stock": 6,
+   "low": 5,
+   "variants": [],
+   "sku": "B2-5",
+   "sub": "Devices",
+   "desc": "BP Monitor from Gupta Medical Hall. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Gupta Medical Hall"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🩺",
+     "h": 192
+    },
+    {
+     "t": "img",
+     "e": "🩺",
+     "h": 217
+    },
+    {
+     "t": "img",
+     "e": "🩺",
+     "h": 242
+    }
+   ],
+   "brand": "HealthPlus"
+  },
+  {
+   "id": "p12",
+   "bid": "b3",
+   "name": {
+    "en": "LED TV 32 inch",
+    "hi": "एलईडी टीवी 32 इंच"
+   },
+   "cat": "electronics",
+   "price": 10990,
+   "mrp": 14990,
+   "unit": "1 pc",
+   "emoji": "📺",
+   "hue": 215,
+   "stock": 5,
+   "low": 5,
+   "variants": [],
+   "sku": "B3-1",
+   "sub": "TV",
+   "desc": "LED TV 32 inch from Singh Electronics. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Singh Electronics"
+    ]
+   ],
+   "tags": [
+    "tv",
+    "television"
+   ],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "📺",
+     "h": 215
+    },
+    {
+     "t": "img",
+     "e": "📺",
+     "h": 240
+    },
+    {
+     "t": "img",
+     "e": "📺",
+     "h": 265
+    }
+   ],
+   "brand": "Orbit"
+  },
+  {
+   "id": "p13",
+   "bid": "b3",
+   "name": {
+    "en": "Ceiling Fan 1200 mm",
+    "hi": "सीलिंग फैन 1200 मिमी"
+   },
+   "cat": "electronics",
+   "price": 1850,
+   "mrp": 2200,
+   "unit": "1 pc",
+   "emoji": "🌀",
+   "hue": 223,
+   "stock": 14,
+   "low": 5,
+   "variants": [
+    "White",
+    "Brown"
+   ],
+   "sku": "B3-2",
+   "sub": "Fans",
+   "desc": "Ceiling Fan 1200 mm from Singh Electronics. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Singh Electronics"
+    ]
+   ],
+   "tags": [
+    "fan"
+   ],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🌀",
+     "h": 223
+    },
+    {
+     "t": "img",
+     "e": "🌀",
+     "h": 248
+    },
+    {
+     "t": "img",
+     "e": "🌀",
+     "h": 273
+    }
+   ],
+   "brand": "Zenith"
+  },
+  {
+   "id": "p14",
+   "bid": "b3",
+   "name": {
+    "en": "Mixer Grinder 500 W",
+    "hi": "मिक्सर ग्राइंडर 500 W"
+   },
+   "cat": "electronics",
+   "price": 2199,
+   "mrp": 2799,
+   "unit": "1 pc",
+   "emoji": "🍹",
+   "hue": 231,
+   "stock": 9,
+   "low": 5,
+   "variants": [],
+   "sku": "B3-3",
+   "sub": "Kitchen",
+   "desc": "Mixer Grinder 500 W from Singh Electronics. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Singh Electronics"
+    ]
+   ],
+   "tags": [],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🍹",
+     "h": 231
+    },
+    {
+     "t": "img",
+     "e": "🍹",
+     "h": 256
+    },
+    {
+     "t": "img",
+     "e": "🍹",
+     "h": 281
+    }
+   ],
+   "brand": "Crown"
+  },
+  {
+   "id": "p15",
+   "bid": "b3",
+   "name": {
+    "en": "LED Bulb 9 W",
+    "hi": "एलईडी बल्ब 9 W"
+   },
+   "cat": "electronics",
+   "price": 249,
+   "mrp": 320,
+   "unit": "pack of 4",
+   "emoji": "💡",
+   "hue": 239,
+   "stock": 70,
+   "low": 5,
+   "variants": [],
+   "sku": "B3-4",
+   "sub": "Lighting",
+   "desc": "LED Bulb 9 W from Singh Electronics. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "pack of 4"
+    ],
+    [
+     "Sold by",
+     "Singh Electronics"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "💡",
+     "h": 239
+    },
+    {
+     "t": "img",
+     "e": "💡",
+     "h": 264
+    },
+    {
+     "t": "img",
+     "e": "💡",
+     "h": 289
+    }
+   ],
+   "brand": "Orbit"
+  },
+  {
+   "id": "p16",
+   "bid": "b4",
+   "name": {
+    "en": "Smartphone 6GB/128GB",
+    "hi": "स्मार्टफोन 6GB/128GB"
+   },
+   "cat": "mobile",
+   "price": 10499,
+   "mrp": 12999,
+   "unit": "1 pc",
+   "emoji": "📱",
+   "hue": 260,
+   "stock": 11,
+   "low": 5,
+   "variants": [
+    "Black",
+    "Blue"
+   ],
+   "sku": "B4-1",
+   "sub": "Phones",
+   "desc": "Smartphone 6GB/128GB from Raj Mobile Point. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Raj Mobile Point"
+    ]
+   ],
+   "tags": [
+    "smartphone",
+    "mobile"
+   ],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "📱",
+     "h": 260
+    },
+    {
+     "t": "img",
+     "e": "📱",
+     "h": 285
+    },
+    {
+     "t": "img",
+     "e": "📱",
+     "h": 310
+    }
+   ],
+   "brand": "Samsung"
+  },
+  {
+   "id": "p17",
+   "bid": "b4",
+   "name": {
+    "en": "Fast Charger 33 W",
+    "hi": "फास्ट चार्जर 33 W"
+   },
+   "cat": "mobile",
+   "price": 599,
+   "mrp": 899,
+   "unit": "1 pc",
+   "emoji": "🔌",
+   "hue": 268,
+   "stock": 35,
+   "low": 5,
+   "variants": [],
+   "sku": "B4-2",
+   "sub": "Accessories",
+   "desc": "Fast Charger 33 W from Raj Mobile Point. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Raj Mobile Point"
+    ]
+   ],
+   "tags": [
+    "charger",
+    "mobile"
+   ],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🔌",
+     "h": 268
+    },
+    {
+     "t": "img",
+     "e": "🔌",
+     "h": 293
+    },
+    {
+     "t": "img",
+     "e": "🔌",
+     "h": 318
+    }
+   ],
+   "brand": "Realme"
+  },
+  {
+   "id": "p18",
+   "bid": "b4",
+   "name": {
+    "en": "Tempered Glass",
+    "hi": "टेम्पर्ड ग्लास"
+   },
+   "cat": "mobile",
+   "price": 99,
+   "mrp": 199,
+   "unit": "1 pc",
+   "emoji": "🛡️",
+   "hue": 276,
+   "stock": 100,
+   "low": 5,
+   "variants": [],
+   "sku": "B4-3",
+   "sub": "Accessories",
+   "desc": "Tempered Glass from Raj Mobile Point. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Raj Mobile Point"
+    ]
+   ],
+   "tags": [],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🛡️",
+     "h": 276
+    },
+    {
+     "t": "img",
+     "e": "🛡️",
+     "h": 301
+    },
+    {
+     "t": "img",
+     "e": "🛡️",
+     "h": 326
+    }
+   ],
+   "brand": "Apple"
+  },
+  {
+   "id": "p19",
+   "bid": "b4",
+   "name": {
+    "en": "Wireless Earbuds",
+    "hi": "वायरलेस ईयरबड्स"
+   },
+   "cat": "mobile",
+   "price": 799,
+   "mrp": 1499,
+   "unit": "1 pc",
+   "emoji": "🎧",
+   "hue": 284,
+   "stock": 2,
+   "low": 5,
+   "variants": [],
+   "sku": "B4-4",
+   "sub": "Audio",
+   "desc": "Wireless Earbuds from Raj Mobile Point. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Raj Mobile Point"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🎧",
+     "h": 284
+    },
+    {
+     "t": "img",
+     "e": "🎧",
+     "h": 309
+    },
+    {
+     "t": "img",
+     "e": "🎧",
+     "h": 334
+    }
+   ],
+   "brand": "Samsung"
+  },
+  {
+   "id": "p20",
+   "bid": "b5",
+   "name": {
+    "en": "Kaju Katli",
+    "hi": "काजू कतली"
+   },
+   "cat": "food",
+   "price": 520,
+   "mrp": 560,
+   "unit": "500 g",
+   "emoji": "🍬",
+   "hue": 350,
+   "stock": 18,
+   "low": 5,
+   "variants": [],
+   "sku": "B5-1",
+   "sub": "Sweets",
+   "desc": "Kaju Katli from Kushinagar Sweets & Namkeen. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "500 g"
+    ],
+    [
+     "Sold by",
+     "Kushinagar Sweets & Namkeen"
+    ]
+   ],
+   "tags": [],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🍬",
+     "h": 350
+    },
+    {
+     "t": "img",
+     "e": "🍬",
+     "h": 375
+    },
+    {
+     "t": "img",
+     "e": "🍬",
+     "h": 400
+    }
+   ],
+   "brand": "Kushinagar"
+  },
+  {
+   "id": "p21",
+   "bid": "b5",
+   "name": {
+    "en": "Motichoor Laddu",
+    "hi": "मोतीचूर लड्डू"
+   },
+   "cat": "food",
+   "price": 380,
+   "mrp": 400,
+   "unit": "1 kg",
+   "emoji": "🟠",
+   "hue": 358,
+   "stock": 25,
+   "low": 5,
+   "variants": [],
+   "sku": "B5-2",
+   "sub": "Sweets",
+   "desc": "Motichoor Laddu from Kushinagar Sweets & Namkeen. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 kg"
+    ],
+    [
+     "Sold by",
+     "Kushinagar Sweets & Namkeen"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🟠",
+     "h": 358
+    },
+    {
+     "t": "img",
+     "e": "🟠",
+     "h": 383
+    },
+    {
+     "t": "img",
+     "e": "🟠",
+     "h": 408
+    }
+   ],
+   "brand": "Moti Ghar"
+  },
+  {
+   "id": "p22",
+   "bid": "b5",
+   "name": {
+    "en": "Samosa",
+    "hi": "समोसा"
+   },
+   "cat": "food",
+   "price": 60,
+   "mrp": 60,
+   "unit": "6 pcs",
+   "emoji": "🥟",
+   "hue": 366,
+   "stock": 40,
+   "low": 5,
+   "variants": [],
+   "sku": "B5-3",
+   "sub": "Snacks",
+   "desc": "Samosa from Kushinagar Sweets & Namkeen. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "6 pcs"
+    ],
+    [
+     "Sold by",
+     "Kushinagar Sweets & Namkeen"
+    ]
+   ],
+   "tags": [],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🥟",
+     "h": 366
+    },
+    {
+     "t": "img",
+     "e": "🥟",
+     "h": 391
+    },
+    {
+     "t": "img",
+     "e": "🥟",
+     "h": 416
+    }
+   ],
+   "brand": "Kushinagar"
+  },
+  {
+   "id": "p23",
+   "bid": "b5",
+   "name": {
+    "en": "Rasgulla Tin",
+    "hi": "रसगुल्ला टिन"
+   },
+   "cat": "food",
+   "price": 240,
+   "mrp": 260,
+   "unit": "1 kg",
+   "emoji": "⚪",
+   "hue": 374,
+   "stock": 16,
+   "low": 5,
+   "variants": [],
+   "sku": "B5-4",
+   "sub": "Sweets",
+   "desc": "Rasgulla Tin from Kushinagar Sweets & Namkeen. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 kg"
+    ],
+    [
+     "Sold by",
+     "Kushinagar Sweets & Namkeen"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "⚪",
+     "h": 374
+    },
+    {
+     "t": "img",
+     "e": "⚪",
+     "h": 399
+    },
+    {
+     "t": "img",
+     "e": "⚪",
+     "h": 424
+    }
+   ],
+   "brand": "Moti Ghar"
+  },
+  {
+   "id": "p24",
+   "bid": "b5",
+   "name": {
+    "en": "Namkeen Mix",
+    "hi": "नमकीन मिक्स"
+   },
+   "cat": "food",
+   "price": 140,
+   "mrp": 150,
+   "unit": "500 g",
+   "emoji": "🥨",
+   "hue": 382,
+   "stock": 30,
+   "low": 5,
+   "variants": [],
+   "sku": "B5-5",
+   "sub": "Snacks",
+   "desc": "Namkeen Mix from Kushinagar Sweets & Namkeen. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "500 g"
+    ],
+    [
+     "Sold by",
+     "Kushinagar Sweets & Namkeen"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🥨",
+     "h": 382
+    },
+    {
+     "t": "img",
+     "e": "🥨",
+     "h": 407
+    },
+    {
+     "t": "img",
+     "e": "🥨",
+     "h": 432
+    }
+   ],
+   "brand": "Kushinagar"
+  },
+  {
+   "id": "p25",
+   "bid": "b6",
+   "name": {
+    "en": "Men’s Cotton Kurta",
+    "hi": "पुरुष कॉटन कुर्ता"
+   },
+   "cat": "clothing",
+   "price": 799,
+   "mrp": 1099,
+   "unit": "1 pc",
+   "emoji": "👘",
+   "hue": 300,
+   "stock": 20,
+   "low": 5,
+   "variants": [
+    "M",
+    "L",
+    "XL"
+   ],
+   "sku": "B6-1",
+   "sub": "Men",
+   "desc": "Men’s Cotton Kurta from Maa Durga Cloth House. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Maa Durga Cloth House"
+    ]
+   ],
+   "tags": [],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "👘",
+     "h": 300
+    },
+    {
+     "t": "img",
+     "e": "👘",
+     "h": 325
+    },
+    {
+     "t": "img",
+     "e": "👘",
+     "h": 350
+    }
+   ],
+   "brand": "Rangila"
+  },
+  {
+   "id": "p26",
+   "bid": "b6",
+   "name": {
+    "en": "Cotton Saree",
+    "hi": "कॉटन साड़ी"
+   },
+   "cat": "clothing",
+   "price": 1199,
+   "mrp": 1599,
+   "unit": "1 pc",
+   "emoji": "🥻",
+   "hue": 308,
+   "stock": 12,
+   "low": 5,
+   "variants": [],
+   "sku": "B6-2",
+   "sub": "Women",
+   "desc": "Cotton Saree from Maa Durga Cloth House. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Maa Durga Cloth House"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🥻",
+     "h": 308
+    },
+    {
+     "t": "img",
+     "e": "🥻",
+     "h": 333
+    },
+    {
+     "t": "img",
+     "e": "🥻",
+     "h": 358
+    }
+   ],
+   "brand": "Durga Weaves"
+  },
+  {
+   "id": "p27",
+   "bid": "b6",
+   "name": {
+    "en": "Kids T-shirt",
+    "hi": "बच्चों की टी-शर्ट"
+   },
+   "cat": "clothing",
+   "price": 299,
+   "mrp": 399,
+   "unit": "1 pc",
+   "emoji": "👕",
+   "hue": 316,
+   "stock": 33,
+   "low": 5,
+   "variants": [
+    "2-4 yr",
+    "4-6 yr",
+    "6-8 yr"
+   ],
+   "sku": "B6-3",
+   "sub": "Kids",
+   "desc": "Kids T-shirt from Maa Durga Cloth House. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Maa Durga Cloth House"
+    ]
+   ],
+   "tags": [],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "👕",
+     "h": 316
+    },
+    {
+     "t": "img",
+     "e": "👕",
+     "h": 341
+    },
+    {
+     "t": "img",
+     "e": "👕",
+     "h": 366
+    }
+   ],
+   "brand": "Rangila"
+  },
+  {
+   "id": "p28",
+   "bid": "b6",
+   "name": {
+    "en": "Double Bedsheet",
+    "hi": "डबल बेडशीट"
+   },
+   "cat": "clothing",
+   "price": 649,
+   "mrp": 899,
+   "unit": "1 set",
+   "emoji": "🛏️",
+   "hue": 324,
+   "stock": 15,
+   "low": 5,
+   "variants": [],
+   "sku": "B6-4",
+   "sub": "Home",
+   "desc": "Double Bedsheet from Maa Durga Cloth House. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 set"
+    ],
+    [
+     "Sold by",
+     "Maa Durga Cloth House"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🛏️",
+     "h": 324
+    },
+    {
+     "t": "img",
+     "e": "🛏️",
+     "h": 349
+    },
+    {
+     "t": "img",
+     "e": "🛏️",
+     "h": 374
+    }
+   ],
+   "brand": "Durga Weaves"
+  },
+  {
+   "id": "p29",
+   "bid": "b7",
+   "name": {
+    "en": "Wall Paint",
+    "hi": "वॉल पेंट"
+   },
+   "cat": "hardware",
+   "price": 1450,
+   "mrp": 1650,
+   "unit": "4 L",
+   "emoji": "🎨",
+   "hue": 200,
+   "stock": 24,
+   "low": 5,
+   "variants": [
+    "White",
+    "Cream",
+    "Sky Blue"
+   ],
+   "sku": "B7-1",
+   "sub": "Paints",
+   "desc": "Wall Paint from Sharma Hardware & Paints. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "4 L"
+    ],
+    [
+     "Sold by",
+     "Sharma Hardware & Paints"
+    ]
+   ],
+   "tags": [],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🎨",
+     "h": 200
+    },
+    {
+     "t": "img",
+     "e": "🎨",
+     "h": 225
+    },
+    {
+     "t": "img",
+     "e": "🎨",
+     "h": 250
+    }
+   ],
+   "brand": "ProTool"
+  },
+  {
+   "id": "p30",
+   "bid": "b7",
+   "name": {
+    "en": "Hammer Set",
+    "hi": "हथौड़ा सेट"
+   },
+   "cat": "hardware",
+   "price": 349,
+   "mrp": 450,
+   "unit": "3 pcs",
+   "emoji": "🔨",
+   "hue": 208,
+   "stock": 18,
+   "low": 5,
+   "variants": [],
+   "sku": "B7-2",
+   "sub": "Tools",
+   "desc": "Hammer Set from Sharma Hardware & Paints. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "3 pcs"
+    ],
+    [
+     "Sold by",
+     "Sharma Hardware & Paints"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🔨",
+     "h": 208
+    },
+    {
+     "t": "img",
+     "e": "🔨",
+     "h": 233
+    },
+    {
+     "t": "img",
+     "e": "🔨",
+     "h": 258
+    }
+   ],
+   "brand": "BuildMax"
+  },
+  {
+   "id": "p31",
+   "bid": "b7",
+   "name": {
+    "en": "Cement",
+    "hi": "सीमेंट"
+   },
+   "cat": "hardware",
+   "price": 390,
+   "mrp": 420,
+   "unit": "50 kg bag",
+   "emoji": "🧱",
+   "hue": 216,
+   "stock": 150,
+   "low": 5,
+   "variants": [],
+   "sku": "B7-3",
+   "sub": "Building",
+   "desc": "Cement from Sharma Hardware & Paints. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "50 kg bag"
+    ],
+    [
+     "Sold by",
+     "Sharma Hardware & Paints"
+    ]
+   ],
+   "tags": [],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🧱",
+     "h": 216
+    },
+    {
+     "t": "img",
+     "e": "🧱",
+     "h": 241
+    },
+    {
+     "t": "img",
+     "e": "🧱",
+     "h": 266
+    }
+   ],
+   "brand": "ProTool"
+  },
+  {
+   "id": "p32",
+   "bid": "b7",
+   "name": {
+    "en": "Electrical Wire",
+    "hi": "इलेक्ट्रिकल वायर"
+   },
+   "cat": "hardware",
+   "price": 1320,
+   "mrp": 1500,
+   "unit": "90 m coil",
+   "emoji": "🪢",
+   "hue": 224,
+   "stock": 20,
+   "low": 5,
+   "variants": [],
+   "sku": "B7-4",
+   "sub": "Electrical",
+   "desc": "Electrical Wire from Sharma Hardware & Paints. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "90 m coil"
+    ],
+    [
+     "Sold by",
+     "Sharma Hardware & Paints"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🪢",
+     "h": 224
+    },
+    {
+     "t": "img",
+     "e": "🪢",
+     "h": 249
+    },
+    {
+     "t": "img",
+     "e": "🪢",
+     "h": 274
+    }
+   ],
+   "brand": "BuildMax"
+  },
+  {
+   "id": "p33",
+   "bid": "b8",
+   "name": {
+    "en": "Notebooks",
+    "hi": "नोटबुक"
+   },
+   "cat": "stationery",
+   "price": 210,
+   "mrp": 240,
+   "unit": "pack of 6",
+   "emoji": "📓",
+   "hue": 50,
+   "stock": 60,
+   "low": 5,
+   "variants": [],
+   "sku": "B8-1",
+   "sub": "Notebooks",
+   "desc": "Notebooks from Student Stationery Corner. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "pack of 6"
+    ],
+    [
+     "Sold by",
+     "Student Stationery Corner"
+    ]
+   ],
+   "tags": [],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "📓",
+     "h": 50
+    },
+    {
+     "t": "img",
+     "e": "📓",
+     "h": 75
+    },
+    {
+     "t": "img",
+     "e": "📓",
+     "h": 100
+    }
+   ],
+   "brand": "Doms"
+  },
+  {
+   "id": "p34",
+   "bid": "b8",
+   "name": {
+    "en": "Gel Pens",
+    "hi": "जेल पेन"
+   },
+   "cat": "stationery",
+   "price": 90,
+   "mrp": 110,
+   "unit": "pack of 10",
+   "emoji": "🖊️",
+   "hue": 58,
+   "stock": 90,
+   "low": 5,
+   "variants": [],
+   "sku": "B8-2",
+   "sub": "Writing",
+   "desc": "Gel Pens from Student Stationery Corner. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "pack of 10"
+    ],
+    [
+     "Sold by",
+     "Student Stationery Corner"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🖊️",
+     "h": 58
+    },
+    {
+     "t": "img",
+     "e": "🖊️",
+     "h": 83
+    },
+    {
+     "t": "img",
+     "e": "🖊️",
+     "h": 108
+    }
+   ],
+   "brand": "Classmate"
+  },
+  {
+   "id": "p35",
+   "bid": "b8",
+   "name": {
+    "en": "Geometry Box",
+    "hi": "ज्योमेट्री बॉक्स"
+   },
+   "cat": "stationery",
+   "price": 120,
+   "mrp": 150,
+   "unit": "1 pc",
+   "emoji": "📐",
+   "hue": 66,
+   "stock": 40,
+   "low": 5,
+   "variants": [],
+   "sku": "B8-3",
+   "sub": "Geometry",
+   "desc": "Geometry Box from Student Stationery Corner. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Student Stationery Corner"
+    ]
+   ],
+   "tags": [],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "📐",
+     "h": 66
+    },
+    {
+     "t": "img",
+     "e": "📐",
+     "h": 91
+    },
+    {
+     "t": "img",
+     "e": "📐",
+     "h": 116
+    }
+   ],
+   "brand": "Doms"
+  },
+  {
+   "id": "p36",
+   "bid": "b8",
+   "name": {
+    "en": "School Bag",
+    "hi": "स्कूल बैग"
+   },
+   "cat": "stationery",
+   "price": 549,
+   "mrp": 799,
+   "unit": "1 pc",
+   "emoji": "🎒",
+   "hue": 74,
+   "stock": 12,
+   "low": 5,
+   "variants": [],
+   "sku": "B8-4",
+   "sub": "Bags",
+   "desc": "School Bag from Student Stationery Corner. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Student Stationery Corner"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🎒",
+     "h": 74
+    },
+    {
+     "t": "img",
+     "e": "🎒",
+     "h": 99
+    },
+    {
+     "t": "img",
+     "e": "🎒",
+     "h": 124
+    }
+   ],
+   "brand": "Classmate"
+  },
+  {
+   "id": "p37",
+   "bid": "b9",
+   "name": {
+    "en": "Steel Almirah",
+    "hi": "स्टील अलमारी"
+   },
+   "cat": "furniture",
+   "price": 7999,
+   "mrp": 9999,
+   "unit": "1 pc",
+   "emoji": "🗄️",
+   "hue": 20,
+   "stock": 4,
+   "low": 5,
+   "variants": [],
+   "sku": "B9-1",
+   "sub": "Storage",
+   "desc": "Steel Almirah from Shree Furniture Mart. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Shree Furniture Mart"
+    ]
+   ],
+   "tags": [],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🗄️",
+     "h": 20
+    },
+    {
+     "t": "img",
+     "e": "🗄️",
+     "h": 45
+    },
+    {
+     "t": "img",
+     "e": "🗄️",
+     "h": 70
+    }
+   ],
+   "brand": "HomeNest"
+  },
+  {
+   "id": "p38",
+   "bid": "b9",
+   "name": {
+    "en": "Wooden Study Table",
+    "hi": "लकड़ी की स्टडी टेबल"
+   },
+   "cat": "furniture",
+   "price": 3499,
+   "mrp": 4299,
+   "unit": "1 pc",
+   "emoji": "🪑",
+   "hue": 28,
+   "stock": 6,
+   "low": 5,
+   "variants": [],
+   "sku": "B9-2",
+   "sub": "Tables",
+   "desc": "Wooden Study Table from Shree Furniture Mart. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Shree Furniture Mart"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🪑",
+     "h": 28
+    },
+    {
+     "t": "img",
+     "e": "🪑",
+     "h": 53
+    },
+    {
+     "t": "img",
+     "e": "🪑",
+     "h": 78
+    }
+   ],
+   "brand": "Shree"
+  },
+  {
+   "id": "p39",
+   "bid": "b9",
+   "name": {
+    "en": "Plastic Chair",
+    "hi": "प्लास्टिक कुर्सी"
+   },
+   "cat": "furniture",
+   "price": 399,
+   "mrp": 499,
+   "unit": "1 pc",
+   "emoji": "💺",
+   "hue": 36,
+   "stock": 40,
+   "low": 5,
+   "variants": [],
+   "sku": "B9-3",
+   "sub": "Chairs",
+   "desc": "Plastic Chair from Shree Furniture Mart. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Shree Furniture Mart"
+    ]
+   ],
+   "tags": [],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "💺",
+     "h": 36
+    },
+    {
+     "t": "img",
+     "e": "💺",
+     "h": 61
+    },
+    {
+     "t": "img",
+     "e": "💺",
+     "h": 86
+    }
+   ],
+   "brand": "HomeNest"
+  },
+  {
+   "id": "p40",
+   "bid": "b9",
+   "name": {
+    "en": "Single Bed",
+    "hi": "सिंगल बेड"
+   },
+   "cat": "furniture",
+   "price": 6499,
+   "mrp": 7999,
+   "unit": "1 pc",
+   "emoji": "🛏️",
+   "hue": 44,
+   "stock": 3,
+   "low": 5,
+   "variants": [],
+   "sku": "B9-4",
+   "sub": "Beds",
+   "desc": "Single Bed from Shree Furniture Mart. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Shree Furniture Mart"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🛏️",
+     "h": 44
+    },
+    {
+     "t": "img",
+     "e": "🛏️",
+     "h": 69
+    },
+    {
+     "t": "img",
+     "e": "🛏️",
+     "h": 94
+    }
+   ],
+   "brand": "Shree"
+  },
+  {
+   "id": "p41",
+   "bid": "b10",
+   "name": {
+    "en": "Silver Anklet",
+    "hi": "चाँदी की पायल"
+   },
+   "cat": "jewellery",
+   "price": 1299,
+   "mrp": 1499,
+   "unit": "pair",
+   "emoji": "🔔",
+   "hue": 45,
+   "stock": 20,
+   "low": 5,
+   "variants": [],
+   "sku": "B10-1",
+   "sub": "Silver",
+   "desc": "Silver Anklet from Lakshmi Jewellers. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "pair"
+    ],
+    [
+     "Sold by",
+     "Lakshmi Jewellers"
+    ]
+   ],
+   "tags": [],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🔔",
+     "h": 45
+    },
+    {
+     "t": "img",
+     "e": "🔔",
+     "h": 70
+    },
+    {
+     "t": "img",
+     "e": "🔔",
+     "h": 95
+    }
+   ],
+   "brand": "SilverArt"
+  },
+  {
+   "id": "p42",
+   "bid": "b10",
+   "name": {
+    "en": "Necklace Set",
+    "hi": "नेकलेस सेट"
+   },
+   "cat": "jewellery",
+   "price": 699,
+   "mrp": 999,
+   "unit": "1 set",
+   "emoji": "📿",
+   "hue": 53,
+   "stock": 14,
+   "low": 5,
+   "variants": [],
+   "sku": "B10-2",
+   "sub": "Fashion",
+   "desc": "Necklace Set from Lakshmi Jewellers. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "1 set"
+    ],
+    [
+     "Sold by",
+     "Lakshmi Jewellers"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "📿",
+     "h": 53
+    },
+    {
+     "t": "img",
+     "e": "📿",
+     "h": 78
+    },
+    {
+     "t": "img",
+     "e": "📿",
+     "h": 103
+    }
+   ],
+   "brand": "Lakshmi"
+  },
+  {
+   "id": "p43",
+   "bid": "b10",
+   "name": {
+    "en": "Silver Coin",
+    "hi": "चाँदी का सिक्का"
+   },
+   "cat": "jewellery",
+   "price": 1050,
+   "mrp": 1100,
+   "unit": "10 g",
+   "emoji": "🪙",
+   "hue": 61,
+   "stock": 30,
+   "low": 5,
+   "variants": [],
+   "sku": "B10-3",
+   "sub": "Silver",
+   "desc": "Silver Coin from Lakshmi Jewellers. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "10 g"
+    ],
+    [
+     "Sold by",
+     "Lakshmi Jewellers"
+    ]
+   ],
+   "tags": [],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🪙",
+     "h": 61
+    },
+    {
+     "t": "img",
+     "e": "🪙",
+     "h": 86
+    },
+    {
+     "t": "img",
+     "e": "🪙",
+     "h": 111
+    }
+   ],
+   "brand": "SilverArt"
+  },
+  {
+   "id": "p44",
+   "bid": "b10",
+   "name": {
+    "en": "Gold-plated Earrings",
+    "hi": "गोल्ड प्लेटेड झुमके"
+   },
+   "cat": "jewellery",
+   "price": 499,
+   "mrp": 699,
+   "unit": "pair",
+   "emoji": "✨",
+   "hue": 69,
+   "stock": 26,
+   "low": 5,
+   "variants": [],
+   "sku": "B10-4",
+   "sub": "Fashion",
+   "desc": "Gold-plated Earrings from Lakshmi Jewellers. Quality checked and fairly priced.",
+   "specs": [
+    [
+     "Pack size",
+     "pair"
+    ],
+    [
+     "Sold by",
+     "Lakshmi Jewellers"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "✨",
+     "h": 69
+    },
+    {
+     "t": "img",
+     "e": "✨",
+     "h": 94
+    },
+    {
+     "t": "img",
+     "e": "✨",
+     "h": 119
+    }
+   ],
+   "brand": "Lakshmi"
+  },
+  {
+   "id": "p45",
+   "bid": "b3",
+   "name": {
+    "en": "iPhone 16 128 GB",
+    "hi": "आईफ़ोन 16 128 GB"
+   },
+   "cat": "electronics",
+   "price": 74900,
+   "mrp": 79900,
+   "unit": "1 pc",
+   "emoji": "📱",
+   "hue": 215,
+   "stock": 4,
+   "low": 5,
+   "variants": [
+    "Black",
+    "White",
+    "Teal"
+   ],
+   "sku": "B3-p45",
+   "sub": "Phones",
+   "desc": "New iPhone 16 with warranty and GST bill. Free screen guard from Singh Electronics.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Singh Electronics"
+    ]
+   ],
+   "tags": [
+    "iphone",
+    "iphone 16",
+    "apple",
+    "mobile"
+   ],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "brand": "Apple",
+   "media": [
+    {
+     "t": "img",
+     "e": "📱",
+     "h": 215
+    },
+    {
+     "t": "img",
+     "e": "📱",
+     "h": 240
+    },
+    {
+     "t": "img",
+     "e": "📱",
+     "h": 265
+    },
+    {
+     "t": "yt",
+     "id": "pm1",
+     "vid": "aqz-KE-bpKQ",
+     "url": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+     "title": "iPhone 16 overview (sample video)"
+    },
+    {
+     "t": "ig",
+     "id": "pm2",
+     "vid": "C0sample02",
+     "url": "https://www.instagram.com/reel/C0sample02/",
+     "title": "Colour options reel (sample)"
+    }
+   ]
+  },
+  {
+   "id": "p46",
+   "bid": "s3",
+   "name": {
+    "en": "Engine Oil",
+    "hi": "इंजन ऑयल"
+   },
+   "cat": "mechanic",
+   "price": 450,
+   "mrp": 520,
+   "unit": "1 L",
+   "emoji": "🛢️",
+   "hue": 200,
+   "stock": 30,
+   "low": 5,
+   "variants": [],
+   "sku": "S3-p46",
+   "sub": "Spares",
+   "desc": "Engine Oil from Ansari Auto Works.",
+   "specs": [
+    [
+     "Pack size",
+     "1 L"
+    ],
+    [
+     "Sold by",
+     "Ansari Auto Works"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🛢️",
+     "h": 200
+    },
+    {
+     "t": "img",
+     "e": "🛢️",
+     "h": 225
+    },
+    {
+     "t": "img",
+     "e": "🛢️",
+     "h": 250
+    }
+   ],
+   "brand": "LubeMax"
+  },
+  {
+   "id": "p47",
+   "bid": "s3",
+   "name": {
+    "en": "Bike Helmet",
+    "hi": "बाइक हेलमेट"
+   },
+   "cat": "mechanic",
+   "price": 899,
+   "mrp": 1199,
+   "unit": "1 pc",
+   "emoji": "⛑️",
+   "hue": 200,
+   "stock": 12,
+   "low": 5,
+   "variants": [],
+   "sku": "S3-p47",
+   "sub": "Safety",
+   "desc": "Bike Helmet from Ansari Auto Works.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Ansari Auto Works"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "⛑️",
+     "h": 200
+    },
+    {
+     "t": "img",
+     "e": "⛑️",
+     "h": 225
+    },
+    {
+     "t": "img",
+     "e": "⛑️",
+     "h": 250
+    }
+   ],
+   "brand": "AutoPro"
+  },
+  {
+   "id": "p48",
+   "bid": "s5",
+   "name": {
+    "en": "LED Bulb 12 W",
+    "hi": "एलईडी बल्ब 12 W"
+   },
+   "cat": "electrician",
+   "price": 199,
+   "mrp": 260,
+   "unit": "pack of 2",
+   "emoji": "💡",
+   "hue": 48,
+   "stock": 40,
+   "low": 5,
+   "variants": [],
+   "sku": "S5-p48",
+   "sub": "Lighting",
+   "desc": "LED Bulb 12 W from Verma Electricals.",
+   "specs": [
+    [
+     "Pack size",
+     "pack of 2"
+    ],
+    [
+     "Sold by",
+     "Verma Electricals"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "💡",
+     "h": 48
+    },
+    {
+     "t": "img",
+     "e": "💡",
+     "h": 73
+    },
+    {
+     "t": "img",
+     "e": "💡",
+     "h": 98
+    }
+   ],
+   "brand": "LubeMax"
+  },
+  {
+   "id": "p49",
+   "bid": "s5",
+   "name": {
+    "en": "Modular Switch Board",
+    "hi": "मॉड्यूलर स्विच बोर्ड"
+   },
+   "cat": "electrician",
+   "price": 349,
+   "mrp": 420,
+   "unit": "1 pc",
+   "emoji": "🔌",
+   "hue": 48,
+   "stock": 18,
+   "low": 5,
+   "variants": [],
+   "sku": "S5-p49",
+   "sub": "Switches",
+   "desc": "Modular Switch Board from Verma Electricals.",
+   "specs": [
+    [
+     "Pack size",
+     "1 pc"
+    ],
+    [
+     "Sold by",
+     "Verma Electricals"
+    ]
+   ],
+   "tags": [],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🔌",
+     "h": 48
+    },
+    {
+     "t": "img",
+     "e": "🔌",
+     "h": 73
+    },
+    {
+     "t": "img",
+     "e": "🔌",
+     "h": 98
+    }
+   ],
+   "brand": "Volt"
+  },
+  {
+   "id": "p50",
+   "bid": "b3",
+   "name": {
+    "en": "Split AC 1.5 Ton 3 Star",
+    "hi": "स्प्लिट एसी 1.5 टन 3 स्टार"
+   },
+   "cat": "electronics",
+   "price": 34990,
+   "mrp": 44990,
+   "unit": "1 pc",
+   "emoji": "❄️",
+   "hue": 215,
+   "stock": 6,
+   "low": 5,
+   "variants": [],
+   "sku": "B3-p50",
+   "sub": "Home Appliances",
+   "desc": "Split AC 1.5 Ton 3 Star from Singh Electronics. Genuine product with bill and warranty.",
+   "specs": [
+    [
+     "Sold by",
+     "Singh Electronics"
+    ]
+   ],
+   "tags": [
+    "ac",
+    "air conditioner",
+    "split ac",
+    "cooling"
+   ],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "❄️",
+     "h": 215
+    },
+    {
+     "t": "img",
+     "e": "❄️",
+     "h": 240
+    },
+    {
+     "t": "img",
+     "e": "❄️",
+     "h": 265
+    }
+   ],
+   "brand": "Orbit"
+  },
+  {
+   "id": "p51",
+   "bid": "b3",
+   "name": {
+    "en": "Window AC 1 Ton",
+    "hi": "विंडो एसी 1 टन"
+   },
+   "cat": "electronics",
+   "price": 24990,
+   "mrp": 31990,
+   "unit": "1 pc",
+   "emoji": "🌬️",
+   "hue": 215,
+   "stock": 4,
+   "low": 5,
+   "variants": [],
+   "sku": "B3-p51",
+   "sub": "Home Appliances",
+   "desc": "Window AC 1 Ton from Singh Electronics. Genuine product with bill and warranty.",
+   "specs": [
+    [
+     "Sold by",
+     "Singh Electronics"
+    ]
+   ],
+   "tags": [
+    "ac",
+    "air conditioner",
+    "window ac",
+    "cooling"
+   ],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🌬️",
+     "h": 215
+    },
+    {
+     "t": "img",
+     "e": "🌬️",
+     "h": 240
+    },
+    {
+     "t": "img",
+     "e": "🌬️",
+     "h": 265
+    }
+   ],
+   "brand": "Zenith"
+  },
+  {
+   "id": "p52",
+   "bid": "b4",
+   "name": {
+    "en": "iPhone 15 128 GB",
+    "hi": "आईफ़ोन 15 128 GB"
+   },
+   "cat": "mobile",
+   "price": 64900,
+   "mrp": 69900,
+   "unit": "1 pc",
+   "emoji": "📱",
+   "hue": 260,
+   "stock": 5,
+   "low": 5,
+   "variants": [
+    "Black",
+    "Blue",
+    "Pink"
+   ],
+   "sku": "B4-p52",
+   "sub": "Phones",
+   "desc": "iPhone 15 128 GB from Raj Mobile Point. Genuine product with bill and warranty.",
+   "specs": [
+    [
+     "Sold by",
+     "Raj Mobile Point"
+    ]
+   ],
+   "tags": [
+    "iphone",
+    "iphone 15",
+    "apple",
+    "mobile"
+   ],
+   "featured": true,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "📱",
+     "h": 260
+    },
+    {
+     "t": "img",
+     "e": "📱",
+     "h": 285
+    },
+    {
+     "t": "img",
+     "e": "📱",
+     "h": 310
+    }
+   ],
+   "brand": "Apple"
+  },
+  {
+   "id": "p53",
+   "bid": "b4",
+   "name": {
+    "en": "iPhone 15 Silicone Case",
+    "hi": "आईफ़ोन 15 सिलिकॉन केस"
+   },
+   "cat": "mobile",
+   "price": 1499,
+   "mrp": 1999,
+   "unit": "1 pc",
+   "emoji": "🛡️",
+   "hue": 260,
+   "stock": 22,
+   "low": 5,
+   "variants": [],
+   "sku": "B4-p53",
+   "sub": "Accessories",
+   "desc": "iPhone 15 Silicone Case from Raj Mobile Point. Genuine product with bill and warranty.",
+   "specs": [
+    [
+     "Sold by",
+     "Raj Mobile Point"
+    ]
+   ],
+   "tags": [
+    "iphone",
+    "iphone 15",
+    "case",
+    "apple"
+   ],
+   "featured": false,
+   "status": "active",
+   "avail": true,
+   "media": [
+    {
+     "t": "img",
+     "e": "🛡️",
+     "h": 260
+    },
+    {
+     "t": "img",
+     "e": "🛡️",
+     "h": 285
+    },
+    {
+     "t": "img",
+     "e": "🛡️",
+     "h": 310
+    }
+   ],
+   "brand": "Apple"
+  }
+ ],
+ "offers": [
+  {
+   "id": "of1",
+   "bid": "b1",
+   "title": "10% off on Atta & Oil",
+   "type": "percent",
+   "value": 10,
+   "pids": [
+    "p1",
+    "p2"
+   ],
+   "from": 1794100768782,
+   "to": 1794705568782,
+   "status": "active",
+   "featured": true,
+   "views": 420,
+   "uses": 38,
+   "sids": [],
+   "terms": "Offer applies automatically at checkout. Cannot be combined with other shop offers. The shop may end the offer anytime."
+  },
+  {
+   "id": "of2",
+   "bid": "b5",
+   "title": "Free delivery on orders above ₹500",
+   "type": "freedel",
+   "value": 0,
+   "pids": [],
+   "from": 1794187168782,
+   "to": 1795137568782,
+   "status": "active",
+   "featured": true,
+   "views": 610,
+   "uses": 71,
+   "sids": [],
+   "terms": "Offer applies automatically at checkout. Cannot be combined with other shop offers. The shop may end the offer anytime."
+  },
+  {
+   "id": "of3",
+   "bid": "b4",
+   "title": "₹100 off on accessories",
+   "type": "flat",
+   "value": 100,
+   "pids": [
+    "p17",
+    "p18"
+   ],
+   "from": 1794187168782,
+   "to": 1794878368782,
+   "status": "active",
+   "featured": false,
+   "views": 240,
+   "uses": 12,
+   "sids": [],
+   "terms": "Offer applies automatically at checkout. Cannot be combined with other shop offers. The shop may end the offer anytime."
+  },
+  {
+   "id": "of4",
+   "bid": "b6",
+   "title": "Wedding season sale: 15% off sarees",
+   "type": "percent",
+   "value": 15,
+   "pids": [
+    "p26"
+   ],
+   "from": 1794273568782,
+   "to": 1795483168782,
+   "status": "pending",
+   "featured": false,
+   "views": 0,
+   "uses": 0,
+   "sids": [],
+   "terms": "Offer applies automatically at checkout. Cannot be combined with other shop offers. The shop may end the offer anytime."
+  },
+  {
+   "id": "of5",
+   "bid": "b1",
+   "title": "Diwali dhamaka (ended)",
+   "type": "percent",
+   "value": 20,
+   "pids": [
+    "p3"
+   ],
+   "from": 1789089568782,
+   "to": 1790817568782,
+   "status": "ended",
+   "featured": false,
+   "views": 2100,
+   "uses": 260,
+   "sids": [],
+   "terms": "Offer applies automatically at checkout. Cannot be combined with other shop offers. The shop may end the offer anytime."
+  },
+  {
+   "from": 1794187168790,
+   "views": 0,
+   "uses": 0,
+   "featured": false,
+   "pids": [
+    "p6"
+   ],
+   "sids": [],
+   "id": "of6",
+   "bid": "b1",
+   "title": "Free delivery on noodles & dal",
+   "type": "freedel",
+   "value": 0,
+   "to": 1794791968790,
+   "status": "active",
+   "terms": "Free delivery on this item for orders in Padrauna."
+  },
+  {
+   "from": 1794187168790,
+   "views": 0,
+   "uses": 0,
+   "featured": true,
+   "pids": [],
+   "sids": [
+    "s11-sv1"
+   ],
+   "id": "of7",
+   "bid": "s11",
+   "title": "₹200 off on AC Repair & Service",
+   "type": "flat",
+   "value": 200,
+   "to": 1795051168790,
+   "status": "active",
+   "terms": "Valid once per household. Parts extra."
+  },
+  {
+   "from": 1794187168790,
+   "views": 0,
+   "uses": 0,
+   "featured": true,
+   "pids": [
+    "p50",
+    "p51"
+   ],
+   "sids": [],
+   "id": "of8",
+   "bid": "b3",
+   "title": "10% off on Split & Window AC",
+   "type": "percent",
+   "value": 10,
+   "to": 1795310368790,
+   "status": "active",
+   "terms": "Installation charged separately."
+  }
+ ],
+ "orders": [
+  {
+   "id": "AT10231",
+   "uid": "u1",
+   "bid": "b1",
+   "mode": "delivery",
+   "items": [
+    {
+     "pid": "p1",
+     "name": {
+      "en": "Chakki Fresh Atta",
+      "hi": "चक्की फ्रेश आटा"
+     },
+     "price": 265,
+     "qty": 1,
+     "variant": "5 kg",
+     "emoji": "🌾"
+    },
+    {
+     "pid": "p2",
+     "name": {
+      "en": "Refined Soya Oil",
+      "hi": "रिफाइंड सोया तेल"
+     },
+     "price": 118,
+     "qty": 2,
+     "variant": "",
+     "emoji": "🛢️"
+    },
+    {
+     "pid": "p3",
+     "name": {
+      "en": "Iodised Salt",
+      "hi": "आयोडीन नमक"
+     },
+     "price": 28,
+     "qty": 1,
+     "variant": "",
+     "emoji": "🧂"
+    }
+   ],
+   "subtotal": 529,
+   "delivery": 20,
+   "fee": 5,
+   "discount": 0,
+   "pay": {
+    "method": "COD",
+    "status": "pending"
+   },
+   "status": "preparing",
+   "ts": 1794272088030,
+   "history": [
+    {
+     "s": "placed",
+     "ts": 1794272088030
+    },
+    {
+     "s": "accepted",
+     "ts": 1794272268030
+    },
+    {
+     "s": "preparing",
+     "ts": 1794272688030
+    }
+   ],
+   "otp": "4729",
+   "pickupCode": "",
+   "addr": "Home: 14, Shivpuri Colony, near Hata Road, Padrauna 274304",
+   "addrPos": {
+    "lat": 26.9102,
+    "lng": 83.9893
+   },
+   "riderId": null,
+   "cust": "Rohit Kumar",
+   "phone": "9876543210"
+  },
+  {
+   "id": "AT10232",
+   "uid": "u1",
+   "bid": "b2",
+   "mode": "pickup",
+   "items": [
+    {
+     "pid": "p7",
+     "name": {
+      "en": "Paracetamol 500 mg",
+      "hi": "पैरासिटामोल 500 मि.ग्रा."
+     },
+     "price": 22,
+     "qty": 2,
+     "variant": "",
+     "emoji": "💊"
+    },
+    {
+     "pid": "p8",
+     "name": {
+      "en": "ORS Sachets",
+      "hi": "ओआरएस पैकेट"
+     },
+     "price": 45,
+     "qty": 1,
+     "variant": "",
+     "emoji": "🧃"
+    }
+   ],
+   "subtotal": 89,
+   "delivery": 0,
+   "fee": 5,
+   "discount": 0,
+   "pay": {
+    "method": "UPI",
+    "status": "paid"
+   },
+   "status": "ready",
+   "ts": 1794269388030,
+   "history": [
+    {
+     "s": "placed",
+     "ts": 1794269388030
+    },
+    {
+     "s": "accepted",
+     "ts": 1794269628030
+    },
+    {
+     "s": "ready",
+     "ts": 1794272388030
+    }
+   ],
+   "otp": "",
+   "pickupCode": "4821",
+   "addr": "",
+   "riderId": null,
+   "cust": "Rohit Kumar",
+   "phone": "9876543210"
+  },
+  {
+   "id": "AT10198",
+   "uid": "u1",
+   "bid": "b5",
+   "mode": "delivery",
+   "items": [
+    {
+     "pid": "p20",
+     "name": {
+      "en": "Kaju Katli",
+      "hi": "काजू कतली"
+     },
+     "price": 520,
+     "qty": 1,
+     "variant": "",
+     "emoji": "🍬"
+    },
+    {
+     "pid": "p21",
+     "name": {
+      "en": "Motichoor Laddu",
+      "hi": "मोतीचूर लड्डू"
+     },
+     "price": 380,
+     "qty": 1,
+     "variant": "",
+     "emoji": "🟠"
+    }
+   ],
+   "subtotal": 900,
+   "delivery": 30,
+   "fee": 5,
+   "discount": 50,
+   "pay": {
+    "method": "UPI",
+    "status": "paid"
+   },
+   "status": "delivered",
+   "ts": 1794100788030,
+   "history": [
+    {
+     "s": "placed",
+     "ts": 1794100788030
+    },
+    {
+     "s": "accepted",
+     "ts": 1794100968030
+    },
+    {
+     "s": "preparing",
+     "ts": 1794101328030
+    },
+    {
+     "s": "ready",
+     "ts": 1794102588030
+    },
+    {
+     "s": "out",
+     "ts": 1794102948030
+    },
+    {
+     "s": "delivered",
+     "ts": 1794104268030
+    }
+   ],
+   "otp": "1182",
+   "pickupCode": "",
+   "addr": "Home: 14, Shivpuri Colony, near Hata Road, Padrauna 274304",
+   "addrPos": {
+    "lat": 26.9102,
+    "lng": 83.9893
+   },
+   "riderId": "r1",
+   "cust": "Rohit Kumar",
+   "phone": "9876543210"
+  },
+  {
+   "id": "AT10177",
+   "uid": "u1",
+   "bid": "b6",
+   "mode": "delivery",
+   "items": [
+    {
+     "pid": "p25",
+     "name": {
+      "en": "Men’s Cotton Kurta",
+      "hi": "पुरुष कॉटन कुर्ता"
+     },
+     "price": 799,
+     "qty": 1,
+     "variant": "L",
+     "emoji": "👘"
+    }
+   ],
+   "subtotal": 799,
+   "delivery": 35,
+   "fee": 5,
+   "discount": 0,
+   "pay": {
+    "method": "UPI",
+    "status": "refunded"
+   },
+   "status": "cancelled",
+   "ts": 1793841588030,
+   "history": [
+    {
+     "s": "placed",
+     "ts": 1793841588030
+    },
+    {
+     "s": "cancelled",
+     "ts": 1793843388030
+    }
+   ],
+   "otp": "",
+   "pickupCode": "",
+   "cancel": {
+    "by": "vendor",
+    "reason": "Item out of stock"
+   },
+   "refund": {
+    "status": "completed",
+    "steps": [
+     [
+      "requested",
+      7169
+     ],
+     [
+      "approved",
+      7140
+     ],
+     [
+      "completed",
+      5760
+     ]
+    ]
+   },
+   "addr": "Home: 14, Shivpuri Colony, near Hata Road, Padrauna 274304",
+   "riderId": null,
+   "cust": "Rohit Kumar",
+   "phone": "9876543210"
+  },
+  {
+   "id": "AT10240",
+   "uid": "u2",
+   "bid": "b1",
+   "mode": "delivery",
+   "items": [
+    {
+     "pid": "p2",
+     "name": {
+      "en": "Refined Soya Oil",
+      "hi": "रिफाइंड सोया तेल"
+     },
+     "price": 118,
+     "qty": 1,
+     "variant": "",
+     "emoji": "🛢️"
+    },
+    {
+     "pid": "p4",
+     "name": {
+      "en": "Basmati Rice",
+      "hi": "बासमती चावल"
+     },
+     "price": 420,
+     "qty": 1,
+     "variant": "",
+     "emoji": "🍚"
+    }
+   ],
+   "subtotal": 538,
+   "delivery": 20,
+   "fee": 5,
+   "discount": 0,
+   "pay": {
+    "method": "COD",
+    "status": "pending"
+   },
+   "status": "placed",
+   "ts": 1794273348030,
+   "history": [
+    {
+     "s": "placed",
+     "ts": 1794273348030
+    }
+   ],
+   "otp": "6034",
+   "pickupCode": "",
+   "addr": "22, Kaushal Nagar, Padrauna 274304",
+   "addrPos": {
+    "lat": 26.906,
+    "lng": 83.992
+   },
+   "riderId": null,
+   "cust": "Anita Devi",
+   "phone": "9876500888"
+  },
+  {
+   "id": "AT10236",
+   "uid": "u3",
+   "bid": "b1",
+   "mode": "delivery",
+   "items": [
+    {
+     "pid": "p3",
+     "name": {
+      "en": "Iodised Salt",
+      "hi": "आयोडीन नमक"
+     },
+     "price": 28,
+     "qty": 3,
+     "variant": "",
+     "emoji": "🧂"
+    },
+    {
+     "pid": "p5",
+     "name": {
+      "en": "Arhar Dal",
+      "hi": "अरहर दाल"
+     },
+     "price": 165,
+     "qty": 1,
+     "variant": "",
+     "emoji": "🫘"
+    }
+   ],
+   "subtotal": 249,
+   "delivery": 20,
+   "fee": 5,
+   "discount": 0,
+   "pay": {
+    "method": "UPI",
+    "status": "paid"
+   },
+   "status": "ready",
+   "ts": 1794271188030,
+   "history": [
+    {
+     "s": "placed",
+     "ts": 1794271188030
+    },
+    {
+     "s": "accepted",
+     "ts": 1794271368030
+    },
+    {
+     "s": "preparing",
+     "ts": 1794271788030
+    },
+    {
+     "s": "ready",
+     "ts": 1794273108030
+    }
+   ],
+   "otp": "7741",
+   "pickupCode": "",
+   "addr": "Ward 5, Station Road, Padrauna",
+   "addrPos": {
+    "lat": 26.9021,
+    "lng": 83.9902
+   },
+   "riderId": null,
+   "cust": "Mohd Imran",
+   "phone": "9876500777"
+  }
+ ],
+ "riders": [
+  {
+   "id": "r1",
+   "name": "Sunil Yadav",
+   "phone": "9876500401",
+   "vehicle": "Bike UP57 AB 2210",
+   "rating": 4.8,
+   "rc": 96,
+   "online": true,
+   "status": "approved",
+   "area": "Hata Road",
+   "earnToday": 0
+  },
+  {
+   "id": "r2",
+   "name": "Imran Ansari",
+   "phone": "9876500402",
+   "vehicle": "Scooter UP57 CD 7781",
+   "rating": 4.6,
+   "rc": 61,
+   "online": true,
+   "status": "approved",
+   "area": "Station Road"
+  },
+  {
+   "id": "r3",
+   "name": "Deepak Maurya",
+   "phone": "9876500403",
+   "vehicle": "Bike UP57 EF 1145",
+   "rating": 4.5,
+   "rc": 40,
+   "online": false,
+   "status": "approved",
+   "area": "Bus Stand"
+  },
+  {
+   "id": "r4",
+   "name": "Pintu Singh",
+   "phone": "9876500404",
+   "vehicle": "Bike UP57 GH 9022",
+   "rating": 4.1,
+   "rc": 12,
+   "online": false,
+   "status": "suspended",
+   "area": "Tehsil Road"
+  }
+ ],
+ "admins": [
+  {
+   "id": "ad1",
+   "name": "Admin Kavita",
+   "email": "kavita@apnatown.in",
+   "areas": [
+    "chauraha",
+    "busstand",
+    "hata",
+    "tehsil",
+    "collect"
+   ],
+   "status": "active",
+   "perms": {
+    "approvals": [
+     "view",
+     "edit"
+    ],
+    "orders": [
+     "view",
+     "edit"
+    ],
+    "users": [
+     "view"
+    ],
+    "reviews": [
+     "view",
+     "edit"
+    ],
+    "comms": [
+     "view",
+     "edit"
+    ],
+    "reports": [
+     "view"
+    ],
+    "catalog": [
+     "view",
+     "edit"
+    ],
+    "promos": [
+     "view",
+     "edit"
+    ]
+   },
+   "phone": "9876500501",
+   "role": "Area Admin",
+   "cities": [
+    "padrauna"
+   ],
+   "last": 1794272368784,
+   "scopes": [
+    "city",
+    "zone"
+   ]
+  },
+  {
+   "id": "ad2",
+   "name": "Admin Manoj",
+   "email": "manoj@apnatown.in",
+   "areas": [
+    "station",
+    "ramkola"
+   ],
+   "status": "active",
+   "perms": {
+    "approvals": [
+     "view"
+    ],
+    "orders": [
+     "view",
+     "edit"
+    ],
+    "users": [
+     "view"
+    ],
+    "reviews": [
+     "view"
+    ],
+    "comms": [],
+    "reports": [
+     "view"
+    ],
+    "catalog": [
+     "view"
+    ],
+    "promos": []
+   },
+   "phone": "9876500502",
+   "role": "Support",
+   "cities": [
+    "padrauna"
+   ],
+   "last": 1794262768784,
+   "scopes": [
+    "zone"
+   ]
+  },
+  {
+   "id": "ad3",
+   "name": "Admin Seema",
+   "email": "seema@apnatown.in",
+   "areas": [],
+   "status": "inactive",
+   "perms": {
+    "approvals": [],
+    "orders": [
+     "view"
+    ],
+    "users": [],
+    "reviews": [],
+    "comms": [],
+    "reports": [
+     "view"
+    ],
+    "catalog": [],
+    "promos": []
+   },
+   "phone": "9876500503",
+   "role": "Moderator",
+   "cities": [
+    "padrauna"
+   ],
+   "last": 1793236768784,
+   "scopes": []
+  }
+ ],
+ "cities": [
+  {
+   "id": "padrauna",
+   "en": "Padrauna",
+   "hi": "पडरौना",
+   "state": "active",
+   "areas": 7,
+   "lat": 26.904,
+   "lng": 83.981
+  },
+  {
+   "id": "kasia",
+   "en": "Kasia (Kushinagar)",
+   "hi": "कसया (कुशीनगर)",
+   "state": "soon",
+   "areas": 0,
+   "lat": 26.741,
+   "lng": 83.888
+  },
+  {
+   "id": "deoria",
+   "en": "Deoria",
+   "hi": "देवरिया",
+   "state": "planned",
+   "areas": 0,
+   "lat": 26.502,
+   "lng": 83.779
+  },
+  {
+   "id": "gorakhpur",
+   "en": "Gorakhpur",
+   "hi": "गोरखपुर",
+   "state": "planned",
+   "areas": 0,
+   "lat": 26.76,
+   "lng": 83.373
+  }
+ ],
+ "coupons": [
+  {
+   "code": "APNA50",
+   "type": "flat",
+   "value": 50,
+   "min": 299,
+   "desc": "₹50 off on orders above ₹299"
+  },
+  {
+   "code": "WELCOME10",
+   "type": "percent",
+   "value": 10,
+   "max": 100,
+   "min": 0,
+   "desc": "10% off (up to ₹100) for new users"
+  }
+ ],
+ "kw": [
+  {
+   "id": "k1",
+   "key": "ac",
+   "syn": [
+    "ac",
+    "एसी",
+    "air conditioner",
+    "a/c",
+    "aircon"
+   ],
+   "shopCats": [
+    "electronics"
+   ],
+   "pcats": [
+    "electronics"
+   ],
+   "subs": [
+    "ac-repair",
+    "ac-installation"
+   ],
+   "tags": [
+    "ac"
+   ],
+   "note": "AC → Electronics → Home Appliances; AC services"
+  },
+  {
+   "id": "k2",
+   "key": "iphone",
+   "syn": [
+    "iphone",
+    "आईफोन",
+    "i phone",
+    "iphone 15",
+    "iphone 16",
+    "apple phone"
+   ],
+   "shopCats": [
+    "mobile"
+   ],
+   "pcats": [
+    "mobile"
+   ],
+   "subs": [
+    "mobile-repair"
+   ],
+   "tags": [
+    "iphone"
+   ],
+   "note": "iPhone → Mobile; Mobile Repair, Screen Replacement"
+  },
+  {
+   "id": "k3",
+   "key": "dj",
+   "syn": [
+    "dj",
+    "डीजे",
+    "sound system",
+    "music system"
+   ],
+   "shopCats": [],
+   "pcats": [],
+   "subs": [
+    "dj-sound"
+   ],
+   "tags": [
+    "dj"
+   ],
+   "note": "DJ → Wedding & Events ▸ DJ & Sound"
+  },
+  {
+   "id": "k4",
+   "key": "tent",
+   "syn": [
+    "tent",
+    "टेंट",
+    "shamiyana",
+    "tent house"
+   ],
+   "shopCats": [],
+   "pcats": [],
+   "subs": [
+    "tent-lighting"
+   ],
+   "tags": [
+    "tent"
+   ],
+   "note": "Tent → Wedding & Events ▸ Tent & Lighting"
+  },
+  {
+   "id": "k5",
+   "key": "plumber",
+   "syn": [
+    "plumber",
+    "प्लंबर",
+    "nal",
+    "pipe fitting"
+   ],
+   "shopCats": [
+    "hardware"
+   ],
+   "pcats": [
+    "hardware"
+   ],
+   "subs": [
+    "leakage-repair",
+    "bathroom-fitting",
+    "tank-cleaning",
+    "plumber"
+   ],
+   "tags": [
+    "pipe"
+   ],
+   "note": "Plumber → services; Hardware shops"
+  },
+  {
+   "id": "k6",
+   "key": "mobile repair",
+   "syn": [
+    "mobile repair",
+    "phone repair",
+    "screen replacement",
+    "मोबाइल रिपेयर",
+    "screen guard"
+   ],
+   "shopCats": [
+    "mobile"
+   ],
+   "pcats": [
+    "mobile"
+   ],
+   "subs": [
+    "mobile-repair"
+   ],
+   "tags": [],
+   "note": "Mobile Repair → Mobile shops"
+  },
+  {
+   "id": "k7",
+   "key": "electrician",
+   "syn": [
+    "electrician",
+    "इलेक्ट्रीशियन",
+    "wiring",
+    "light fitting"
+   ],
+   "shopCats": [
+    "electronics"
+   ],
+   "pcats": [
+    "electronics"
+   ],
+   "subs": [
+    "house-wiring",
+    "inverter-battery",
+    "appliance-repair"
+   ],
+   "tags": [
+    "led",
+    "bulb"
+   ],
+   "note": "Electrician services + Electronics shops"
+  },
+  {
+   "id": "k8",
+   "key": "catering",
+   "syn": [
+    "catering",
+    "कैटरिंग",
+    "halwai",
+    "cook"
+   ],
+   "shopCats": [
+    "food"
+   ],
+   "pcats": [
+    "food"
+   ],
+   "subs": [
+    "catering"
+   ],
+   "tags": [],
+   "note": "Catering → Food & Sweets shops"
+  }
+ ],
+ "subs": [
+  {
+   "id": "sb1",
+   "main": "mobile",
+   "en": "Mobile Repair",
+   "hi": "मोबाइल रिपेयर",
+   "status": "approved",
+   "by": "Admin Kavita",
+   "byRole": "admin",
+   "ts": 1791681588032
+  },
+  {
+   "id": "sb2",
+   "main": "grocery",
+   "en": "Dairy & Eggs",
+   "hi": "डेयरी व अंडे",
+   "status": "pending",
+   "by": "Shri Ram Kirana Store",
+   "byRole": "vendor",
+   "bid": "b1",
+   "ts": 1794251988032
+  },
+  {
+   "id": "sb3",
+   "main": "electrician",
+   "en": "Inverter & Battery",
+   "hi": "इन्वर्टर व बैटरी",
+   "status": "pending",
+   "by": "Verma Electricals",
+   "byRole": "provider",
+   "bid": "s5",
+   "ts": 1794187188032
+  },
+  {
+   "id": "sb4",
+   "main": "clothing",
+   "en": "Wedding Wear",
+   "hi": "शादी के कपड़े",
+   "status": "rejected",
+   "reason": "Too broad. Use Men / Women instead.",
+   "by": "Maa Durga Cloth House",
+   "byRole": "vendor",
+   "bid": "b6",
+   "ts": 1793841588032
+  }
+ ],
+ "reviews": [
+  {
+   "id": "rv1",
+   "type": "b",
+   "tid": "b1",
+   "uid": "u9",
+   "name": "Sunita Gupta",
+   "rating": 5,
+   "text": "Delivery was quick and the atta was fresh. Fair prices too.",
+   "ts": 1794014368782,
+   "tags": [
+    "On time",
+    "Fair price"
+   ],
+   "helpful": 6,
+   "status": "published",
+   "reply": "Thank you, behenji! Visit again."
+  },
+  {
+   "id": "rv2",
+   "type": "b",
+   "tid": "b1",
+   "uid": "u8",
+   "name": "Vikas Yadav",
+   "rating": 4,
+   "text": "Good shop. Sometimes rush in the evening.",
+   "ts": 1793755168782,
+   "tags": [],
+   "helpful": 2,
+   "status": "published",
+   "reply": ""
+  },
+  {
+   "id": "rv3",
+   "type": "b",
+   "tid": "b2",
+   "uid": "u7",
+   "name": "Rakesh Pandey",
+   "rating": 5,
+   "text": "Always has the medicines in stock. Helpful pharmacist.",
+   "ts": 1793495968782,
+   "tags": [
+    "Helpful staff"
+   ],
+   "helpful": 9,
+   "status": "published",
+   "reply": ""
+  },
+  {
+   "id": "rv4",
+   "type": "b",
+   "tid": "b5",
+   "uid": "u6",
+   "name": "Priya Singh",
+   "rating": 5,
+   "text": "Best kaju katli in Padrauna!",
+   "ts": 1794187168782,
+   "tags": [
+    "Tasty"
+   ],
+   "helpful": 11,
+   "status": "published",
+   "reply": ""
+  },
+  {
+   "id": "rv5",
+   "type": "p",
+   "tid": "p1",
+   "uid": "u8",
+   "name": "Vikas Yadav",
+   "rating": 5,
+   "text": "Soft rotis. Value for money.",
+   "ts": 1793582368782,
+   "tags": [],
+   "helpful": 3,
+   "status": "published",
+   "reply": ""
+  },
+  {
+   "id": "rv6",
+   "type": "s",
+   "tid": "s5",
+   "uid": "u5",
+   "name": "Neha Verma",
+   "rating": 5,
+   "text": "Came within an hour and fixed the inverter wiring.",
+   "ts": 1793927968782,
+   "tags": [
+    "Quick visit"
+   ],
+   "helpful": 4,
+   "status": "published",
+   "reply": ""
+  },
+  {
+   "id": "rv7",
+   "type": "s",
+   "tid": "s1",
+   "uid": "u4",
+   "name": "Amit Tiwari",
+   "rating": 5,
+   "text": "Our wedding decoration was beautiful.",
+   "ts": 1792545568782,
+   "tags": [],
+   "helpful": 7,
+   "status": "published",
+   "reply": ""
+  },
+  {
+   "id": "rv8",
+   "type": "r",
+   "tid": "r1",
+   "uid": "u1",
+   "name": "Rohit Kumar",
+   "rating": 5,
+   "text": "Polite and on time.",
+   "ts": 1794100768782,
+   "tags": [
+    "Polite"
+   ],
+   "helpful": 0,
+   "status": "published",
+   "reply": ""
+  },
+  {
+   "id": "rv9",
+   "type": "b",
+   "tid": "b1",
+   "uid": "u5",
+   "name": "Anonymous",
+   "rating": 1,
+   "text": "Spam link: visit www.cheap-deals.example now!!!",
+   "ts": 1794187168782,
+   "tags": [],
+   "helpful": 0,
+   "status": "reported",
+   "reply": "",
+   "reports": 3
+  }
+ ],
+ "enq": [
+  {
+   "id": "e1",
+   "sid": "s5",
+   "name": "Neha Verma",
+   "phone": "9876500201",
+   "msg": "Need inverter installation at home, 2BHK.",
+   "date": "Sat",
+   "ts": 1794255568782,
+   "status": "new"
+  },
+  {
+   "id": "e2",
+   "sid": "s5",
+   "name": "Rohit Kumar",
+   "phone": "9876543210",
+   "msg": "Ceiling fan not working, please visit.",
+   "date": "Tomorrow",
+   "ts": 1794187168782,
+   "status": "contacted"
+  },
+  {
+   "id": "e3",
+   "sid": "s5",
+   "name": "Anil Mishra",
+   "phone": "9876500202",
+   "msg": "Full wiring for new shop.",
+   "date": "Next week",
+   "ts": 1794014368782,
+   "status": "converted"
+  },
+  {
+   "id": "e4",
+   "sid": "s5",
+   "name": "Pooja Rani",
+   "phone": "9876500203",
+   "msg": "Geyser installation",
+   "date": "Any",
+   "ts": 1793755168782,
+   "status": "closed"
+  },
+  {
+   "id": "e5",
+   "sid": "s1",
+   "name": "Sandeep Rai",
+   "phone": "9876500204",
+   "msg": "Wedding on 28 Feb, need decor quote.",
+   "date": "28 Feb",
+   "ts": 1794266368782,
+   "status": "new"
+  }
+ ],
+ "notifs": {
+  "cust": [
+   {
+    "id": "nsw48u",
+    "type": "order",
+    "title": "Order AT10231 is being prepared",
+    "body": "Shri Ram Kirana Store started preparing your order.",
+    "ts": 1794272688030,
+    "read": false,
+    "link": "order-AT10231"
+   },
+   {
+    "id": "nblqdo",
+    "type": "order",
+    "title": "Ready for pickup",
+    "body": "Order AT10232 is ready at Gupta Medical Hall. Code 4821.",
+    "ts": 1794272388030,
+    "read": false,
+    "link": "order-AT10232"
+   },
+   {
+    "id": "ng8y0w",
+    "type": "offer",
+    "title": "Free delivery on sweets",
+    "body": "Kushinagar Sweets: free delivery above ₹500.",
+    "ts": 1794187188030,
+    "read": true,
+    "link": "offers"
+   }
+  ],
+  "vendor": [
+   {
+    "id": "np38ky",
+    "type": "order",
+    "title": "New order AT10240",
+    "body": "Anita Devi placed an order worth ₹563.",
+    "ts": 1794273348030,
+    "read": false,
+    "link": "vorder-AT10240"
+   },
+   {
+    "id": "na6ibj",
+    "type": "review",
+    "title": "New 5★ review",
+    "body": "Sunita Gupta reviewed your shop.",
+    "ts": 1794014388030,
+    "read": true,
+    "link": "vreviews"
+   },
+   {
+    "id": "nfeds5",
+    "type": "admin",
+    "title": "Offer pending approval",
+    "body": "Your offer “Diwali dhamaka” has ended.",
+    "ts": 1790817588030,
+    "read": true,
+    "link": "voffers"
+   }
+  ],
+  "provider": [
+   {
+    "id": "nyxpib",
+    "type": "enq",
+    "title": "New enquiry from Neha Verma",
+    "body": "Need inverter installation at home, 2BHK.",
+    "ts": 1794255588030,
+    "read": false,
+    "link": "senq-e1"
+   }
+  ],
+  "rider": [
+   {
+    "id": "nhssqg",
+    "type": "job",
+    "title": "New delivery nearby",
+    "body": "Pickup: Shri Ram Kirana Store · earn ₹35",
+    "ts": 1794273228030,
+    "read": false,
+    "link": "rreq"
+   }
+  ],
+  "admin": [
+   {
+    "id": "n2o0oj",
+    "type": "appr",
+    "title": "3 approvals waiting",
+    "body": "Mahadev Dairy, Pandit Ji Catering, Rakesh Kumar",
+    "ts": 1794269988030,
+    "read": false,
+    "link": "aappr"
+   },
+   {
+    "id": "nhs17c",
+    "type": "review",
+    "title": "Review reported 3 times",
+    "body": "Spam review on Shri Ram Kirana Store.",
+    "ts": 1794255588030,
+    "read": false,
+    "link": "areviews"
+   }
+  ],
+  "super": [
+   {
+    "id": "nile0i",
+    "type": "sys",
+    "title": "Kasia city waitlist: 48 people",
+    "body": "Consider enabling Kasia (Kushinagar).",
+    "ts": 1794187188030,
+    "read": false,
+    "link": "xgeo"
+   }
+  ]
+ },
+ "banners": [
+  {
+   "id": "bn1",
+   "t": "Kushinagar Sweets: free delivery",
+   "s": "On orders above ₹500 this week",
+   "c1": "#C2410C",
+   "c2": "#F59E0B",
+   "link": "biz-b5",
+   "on": true
+  },
+  {
+   "id": "bn2",
+   "t": "Shop local, save time",
+   "s": "Delivery from Padrauna’s own shops",
+   "c1": "#0F766E",
+   "c2": "#15803D",
+   "link": "explore",
+   "on": true
+  },
+  {
+   "id": "bn3",
+   "t": "Wedding season is here",
+   "s": "Find trusted event planners & tent houses",
+   "c1": "#6D28D9",
+   "c2": "#BE185D",
+   "link": "cat-wedding",
+   "on": true
+  }
+ ],
+ "types": {
+  "ac-repair": [
+   "AC Service",
+   "AC Gas Refill",
+   "AC Cleaning"
+  ],
+  "ac-installation": [
+   "Split AC",
+   "Window AC"
+  ],
+  "dj-sound": [
+   "DJ per event",
+   "Sound only"
+  ],
+  "tent-lighting": [
+   "Tent house",
+   "Decorative lights"
+  ],
+  "mobile-repair": [
+   "Screen replacement",
+   "Battery",
+   "Software"
+  ],
+  "mason": [
+   "Brick work",
+   "Plastering"
+  ],
+  "painter": [
+   "Interior",
+   "Exterior"
+  ]
+ },
+ "jobs": [
+  {
+   "id": "J1",
+   "oid": "AT10236",
+   "riderId": null,
+   "status": "requested",
+   "ts": 1794273228030,
+   "dist": 2.1,
+   "earn": 35,
+   "expires": 1794277188030
+  },
+  {
+   "id": "J0",
+   "oid": "AT10198",
+   "riderId": "r1",
+   "status": "delivered",
+   "ts": 1794100788030,
+   "dist": 3.2,
+   "earn": 42
+  }
+ ],
+ "apps": [
+  {
+   "id": "ap1",
+   "type": "business",
+   "name": "Mahadev Dairy & Sweets",
+   "owner": "Dinesh Kushwaha",
+   "phone": "9876500301",
+   "area": "Ramkola Road",
+   "ts": 1794255588030,
+   "status": "pending",
+   "docs": [
+    "GST certificate",
+    "Shop photo",
+    "Aadhaar (owner)"
+   ],
+   "hist": []
+  },
+  {
+   "id": "ap2",
+   "type": "service",
+   "name": "Pandit Ji Catering",
+   "owner": "Ram Avadh Pandey",
+   "phone": "9876500302",
+   "area": "Tehsil Road",
+   "ts": 1794187188030,
+   "status": "pending",
+   "docs": [
+    "Aadhaar (owner)",
+    "Work photos"
+   ],
+   "hist": []
+  },
+  {
+   "id": "ap3",
+   "type": "rider",
+   "name": "Rakesh Kumar",
+   "owner": "Rakesh Kumar",
+   "phone": "9876500303",
+   "area": "Station Road",
+   "ts": 1794100788030,
+   "status": "pending",
+   "docs": [
+    "Driving licence",
+    "Aadhaar",
+    "RC book",
+    "Selfie"
+   ],
+   "hist": []
+  },
+  {
+   "id": "ap4",
+   "type": "business",
+   "name": "City Optical",
+   "owner": "Faisal Khan",
+   "phone": "9876500304",
+   "area": "Chauraha",
+   "ts": 1793927988030,
+   "status": "rejected",
+   "docs": [
+    "Shop photo"
+   ],
+   "hist": [
+    {
+     "by": "Admin Kavita",
+     "s": "rejected",
+     "note": "Shop photo unclear. Please upload again.",
+     "ts": 1794014388030
+    }
+   ]
+  }
+ ],
+ "audit": [
+  {
+   "id": "azph4r",
+   "ts": 1794014388030,
+   "actor": "Admin Kavita",
+   "action": "Rejected business application",
+   "detail": "City Optical",
+   "before": {
+    "status": "pending"
+   },
+   "after": {
+    "status": "rejected"
+   }
+  },
+  {
+   "id": "a8hme1",
+   "ts": 1793755188030,
+   "actor": "Super Admin",
+   "action": "Changed rider earning rule",
+   "detail": "Per-km rate",
+   "before": {
+    "perKm": 6
+   },
+   "after": {
+    "perKm": 7
+   }
+  },
+  {
+   "id": "a04wy2",
+   "ts": 1793495988030,
+   "actor": "Admin Kavita",
+   "action": "Unpublished review",
+   "detail": "rv-old-12 (abusive language)",
+   "before": {
+    "status": "published"
+   },
+   "after": {
+    "status": "hidden"
+   }
+  }
+ ],
+ "zones": [
+  {
+   "id": "z1",
+   "city": "padrauna",
+   "name": "Core town (up to 3 km)",
+   "poly": [
+    [
+     26.9215,
+     83.9655
+    ],
+    [
+     26.9215,
+     83.9965
+    ],
+    [
+     26.8865,
+     83.9965
+    ],
+    [
+     26.8865,
+     83.9655
+    ]
+   ],
+   "slabs": [
+    {
+     "upto": 2,
+     "fee": 20
+    },
+    {
+     "upto": 3,
+     "fee": 30
+    }
+   ],
+   "status": "active"
+  },
+  {
+   "id": "z2",
+   "city": "padrauna",
+   "name": "Outer ring (3 to 7 km)",
+   "poly": [
+    [
+     26.933,
+     83.948
+    ],
+    [
+     26.933,
+     84.014
+    ],
+    [
+     26.875,
+     84.014
+    ],
+    [
+     26.875,
+     83.948
+    ]
+   ],
+   "slabs": [
+    {
+     "upto": 5,
+     "fee": 40
+    },
+    {
+     "upto": 7,
+     "fee": 55
+    }
+   ],
+   "status": "active"
+  }
+ ],
+ "cfg": {
+  "slabs": [
+   {
+    "upto": 2,
+    "fee": 20
+   },
+   {
+    "upto": 4,
+    "fee": 35
+   },
+   {
+    "upto": 7,
+    "fee": 50
+   }
+  ],
+  "riderBase": 20,
+  "riderPerKm": 7,
+  "commission": 6,
+  "platformFee": 5,
+  "plans": [
+   {
+    "id": "basic",
+    "n": "Basic",
+    "price": 0,
+    "comm": 6
+   },
+   {
+    "id": "growth",
+    "n": "Growth",
+    "price": 499,
+    "comm": 4
+   },
+   {
+    "id": "pro",
+    "n": "Pro",
+    "price": 999,
+    "comm": 3
+   }
+  ],
+  "promos": [
+   {
+    "id": "pr1",
+    "n": "Featured listing (7 days)",
+    "price": 199
+   },
+   {
+    "id": "pr2",
+    "n": "Homepage banner (7 days)",
+    "price": 699
+   }
+  ],
+  "cod": true,
+  "online": true,
+  "refundHrs": 24,
+  "flags": {
+   "reviews": true,
+   "guestBrowse": true,
+   "whatsapp": true,
+   "booking": false,
+   "donations": false
+  },
+  "seo": {
+   "title": "ApnaTown.in | Padrauna’s local marketplace",
+   "desc": "Shops, products and services in Padrauna."
+  },
+  "reviewRule": "Only verified purchasers or enquirers can review.",
+  "brand": {
+   "name": "ApnaTown",
+   "tag": "Apna Shehar, Apni Dukaan"
+  }
+ },
+ "comms": [
+  {
+   "id": "c1",
+   "ts": 1794100788030,
+   "target": "Shri Ram Kirana Store",
+   "ch": [
+    "WhatsApp",
+    "In-app"
+   ],
+   "tpl": "Offer",
+   "sent": 128,
+   "delivered": 121,
+   "failed": 7,
+   "optout": 3,
+   "status": "sent"
+  }
+ ],
+ "users": [
+  {
+   "id": "u1",
+   "name": "Rohit Kumar",
+   "phone": "9876543210",
+   "role": "customer",
+   "status": "active",
+   "orders": 4,
+   "joined": 1787361588030
+  },
+  {
+   "id": "u2",
+   "name": "Anita Devi",
+   "phone": "9876500888",
+   "role": "customer",
+   "status": "active",
+   "orders": 2,
+   "joined": 1791681588030
+  },
+  {
+   "id": "u3",
+   "name": "Mohd Imran",
+   "phone": "9876500777",
+   "role": "customer",
+   "status": "active",
+   "orders": 7,
+   "joined": 1783905588030
+  },
+  {
+   "id": "u5",
+   "name": "Spam Account",
+   "phone": "9000000000",
+   "role": "customer",
+   "status": "suspended",
+   "orders": 0,
+   "joined": 1794014388030
+  }
+ ],
+ "roles": [
+  {
+   "id": "rl1",
+   "name": "Area Admin",
+   "desc": "Manages approvals, orders and reviews for assigned areas.",
+   "system": true,
+   "mx": {
+    "approvals": "ve",
+    "orders": "ve",
+    "users": "v",
+    "reviews": "ve",
+    "comms": "v",
+    "reports": "v",
+    "catalog": "ve",
+    "promos": "v"
+   }
+  },
+  {
+   "id": "rl2",
+   "name": "Support",
+   "desc": "Handles orders, refunds and customer queries.",
+   "system": false,
+   "mx": {
+    "approvals": "v",
+    "orders": "ve",
+    "users": "v",
+    "reviews": "v",
+    "comms": "",
+    "reports": "",
+    "catalog": "",
+    "promos": ""
+   }
+  },
+  {
+   "id": "rl3",
+   "name": "Moderator",
+   "desc": "Moderates reviews and listings.",
+   "system": false,
+   "mx": {
+    "approvals": "",
+    "orders": "",
+    "users": "v",
+    "reviews": "ve",
+    "comms": "",
+    "reports": "",
+    "catalog": "v",
+    "promos": ""
+   }
+  }
+ ],
+ "liveSyn": [
+  {
+   "id": "AT10211",
+   "rider": "Imran Ansari",
+   "st": "Out for delivery",
+   "eta": 9,
+   "city": "padrauna",
+   "lat": 26.9068,
+   "lng": 83.9902
+  },
+  {
+   "id": "AT10214",
+   "rider": "Deepak Maurya",
+   "st": "Heading to shop",
+   "eta": 14,
+   "city": "padrauna",
+   "lat": 26.9011,
+   "lng": 83.9741
+  },
+  {
+   "id": "AT10217",
+   "rider": "Imran Ansari",
+   "st": "Picked up",
+   "eta": 11,
+   "city": "padrauna",
+   "lat": 26.9112,
+   "lng": 83.9818
+  },
+  {
+   "id": "AT10219",
+   "rider": "Sunil Yadav",
+   "st": "Out for delivery",
+   "eta": 6,
+   "city": "padrauna",
+   "lat": 26.8981,
+   "lng": 83.9852
+  }
+ ]
+}
