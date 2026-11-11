@@ -1,0 +1,48 @@
+{
+  "name": "@apnatown/ui",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    "./primitives/Button": {
+      "types": "./dist/primitives/Button.d.ts",
+      "import": "./dist/primitives/Button.js"
+    },
+    "./feedback/Skeleton": {
+      "types": "./dist/feedback/Skeleton.d.ts",
+      "import": "./dist/feedback/Skeleton.js"
+    },
+    "./feedback/StateViews": {
+      "types": "./dist/feedback/StateViews.d.ts",
+      "import": "./dist/feedback/StateViews.js"
+    },
+    "./navigation/SkipLink": {
+      "types": "./dist/navigation/SkipLink.d.ts",
+      "import": "./dist/navigation/SkipLink.js"
+    },
+    "./tokens.css": "./dist/tokens.css",
+    "./tailwind": "./dist/tailwind.css"
+  },
+  "scripts": {
+    "tokens:generate": "node scripts/generate-tokens.mjs",
+    "i18n:generate": "node scripts/generate-i18n.mjs",
+    "check:generated": "node scripts/check-generated.mjs tokens",
+    "build": "tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
+    "typecheck": "tsc -p tsconfig.build.json --noEmit"
+  },
+  "peerDependencies": {
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@formatjs/icu-messageformat-parser": "3.5.23",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "typescript": "5.9.3"
+  }
+}

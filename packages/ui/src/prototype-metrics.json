@@ -1,0 +1,25 @@
+{
+  "source": "docs/design-context/reference/prototype-source/style.css: .wrap, .state, .btn, .skel, h1/h2 desktop overrides",
+  "tokens": {
+    "animate": {
+      "skeleton": "apnatown-shimmer 1.3s infinite",
+      "spinner": "apnatown-spin .7s linear infinite"
+    },
+    "spacing": {
+      "page-gutter": "14px",
+      "state-gap": "10px",
+      "state-inline": "18px",
+      "state-block": "36px",
+      "state-icon": "92px",
+      "button-inline": "20px"
+    },
+    "container": {
+      "state-copy": "38ch"
+    },
+    "text": {
+      "state-icon": "2.6rem",
+      "h1-desktop": "2.2rem",
+      "h2-desktop": "1.65rem"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "@apnatown/api-client",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./schema": {
+      "types": "./dist/schema.d.ts"
+    }
+  },
+  "scripts": {
+    "client:generate": "node scripts/generate.mjs",
+    "check:generated": "node scripts/check-generated.mjs",
+    "build": "tsc -p tsconfig.build.json && node scripts/copy-schema.mjs",
+    "typecheck": "tsc -p tsconfig.build.json --noEmit"
+  },
+  "dependencies": {
+    "openapi-fetch": "0.17.0"
+  },
+  "devDependencies": {
+    "openapi-typescript": "7.13.0",
+    "typescript": "5.9.3"
+  }
+}

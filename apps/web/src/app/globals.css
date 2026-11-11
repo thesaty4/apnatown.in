@@ -1,0 +1,48 @@
+@import 'tailwindcss';
+@import '@apnatown/ui/tokens.css';
+@import '@apnatown/ui/tailwind';
+
+@source "../../../../packages/ui/src";
+
+:root {
+  --at-font-display:
+    var(--font-poppins, 'Poppins'),
+    var(--font-devanagari, 'Noto Sans Devanagari'),
+    var(--font-noto, 'Noto Sans'), sans-serif;
+  --at-font-body:
+    var(--font-noto, 'Noto Sans'),
+    var(--font-devanagari, 'Noto Sans Devanagari'), sans-serif;
+  padding-top: var(--at-sat);
+  padding-bottom: var(--at-sab);
+}
+
+@layer base {
+  body {
+    @apply m-0 min-h-dvh bg-bg font-body text-body text-text;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display font-bold leading-heading tracking-heading;
+  }
+  :focus-visible {
+    @apply ring-focus;
+  }
+  button,
+  a,
+  p,
+  h1,
+  label {
+    overflow-wrap: anywhere;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+      transition: none !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

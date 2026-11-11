@@ -1,0 +1,16 @@
+packages:
+  - apps/*
+  - packages/*
+
+strictPeerDependencies: true
+managePackageManagerVersions: false
+
+onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - esbuild
+  - prisma
+  - sharp
+
+ignoredBuiltDependencies:
+  - '@scarf/scarf'

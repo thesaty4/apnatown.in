@@ -11,6 +11,7 @@ coverage/
 .env
 .env.local
 .env.*.local
+.local/
 
 # Logs
 *.log
@@ -31,3 +32,4 @@ test-results/
 # Misc
 *.tsbuildinfo
 .turbo/
+apps/api/src/shared/persistence/generated/

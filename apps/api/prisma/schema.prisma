@@ -1,0 +1,10 @@
+// C00 intentionally has no domain models. C01/C02 own runtime/domain migrations.
+generator client {
+  provider = "prisma-client"
+  output   = "../src/shared/persistence/generated"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}

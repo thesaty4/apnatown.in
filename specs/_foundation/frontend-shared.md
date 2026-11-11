@@ -1,5 +1,11 @@
 # Frontend shared foundation
 
+**Bootstrap copy contract:** `common.navigation.skipToContent` uses the EN/HI
+pair approved on 2026-11-11, stored only in
+`apps/web/src/shared/i18n/reviewed-additions.json` and emitted by the catalogue
+generator without fallback. The first keyboard-focusable link targets `#main`
+(`tabIndex={-1}`); keyboard activation moves focus there.
+
 ## Contents
 
 - [Structure and imports](#structure-and-imports)
