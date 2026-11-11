@@ -4,6 +4,10 @@ Features: F-AU-004, F-AU-006, F-AU-007 | Rules: BR-05, BR-21 | State machines: n
 
 Frontend counterpart: [FE auth](../fe/auth.md).
 
+Implementation status: local backend slice implemented; runtime verification and
+security-auditor hand-off pending. Includes the Users identity/profile/preferences
+dependency, not addresses, consent, privacy processing or privileged authority.
+
 ## Responsibility
 
 Issue and verify login challenges, create and revoke server-side sessions, and expose the authenticated principal. Guest browsing and the safe return-to-origin interaction are frontend concerns; authentication never trusts a client-side verified flag.
@@ -42,9 +46,15 @@ new migration or approved restore, not an automatic destructive down migration.
 Client generation and schema validation are offline; no database application,
 constraint/grant execution or session/OTP flow has been verified.
 
-Encryption, code hashing, delivery, challenge concurrency/cooldown enforcement,
-cookie/CSRF middleware, live-principal checks, endpoints and Auth cleanup remain
-unimplemented. Hash/ciphertext column names do not implement those protections.
+The local backend slice now supplies contextual AES-GCM encryption, separately
+keyed phone/code hashes, serialized challenge/cooldown/attempt consumption,
+PostgreSQL-backed csrf-sync state, rotated opaque session cookies, live identity
+checks, five Auth endpoints and bounded expiry cleanup. Private local OTP delivery
+is opt-in; production startup explicitly fails until a real provider/fallback and
+approved policy settings are configured. Business/rider approval states remain
+explicitly unavailable and grant no operational authority. Runtime/database
+verification has not been performed. Four focused unit checks covering DTOs,
+cryptography, CSRF and cookies pass; database integration coverage remains unrun.
 
 - Given invalid kind/user pairing, a missing user, a wrong-length session digest
   or duplicate digest, when a session is persisted, then its constraints reject it.

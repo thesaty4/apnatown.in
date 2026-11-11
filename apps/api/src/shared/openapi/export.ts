@@ -7,12 +7,24 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { cleanupOpenApiDoc } from 'nestjs-zod';
 import { HealthController } from '../health/health.controller';
 import { ReadinessService } from '../health/readiness';
+import { AuthController } from '../../modules/auth/presentation/auth.controller';
+import { UsersController } from '../../modules/users/presentation/users.controller';
+import { SessionService } from '../../modules/auth/application/session.service';
+import { OtpService } from '../../modules/auth/application/otp.service';
+import { ProfileService } from '../../modules/users/application/profile.service';
+import { SessionCookie } from '../auth/cookie';
 
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
 @Module({
-  controllers: [HealthController],
-  providers: [{ provide: ReadinessService, useValue: Object.freeze({}) }],
+  controllers: [HealthController, AuthController, UsersController],
+  providers: [
+    ReadinessService,
+    SessionService,
+    OtpService,
+    ProfileService,
+    SessionCookie,
+  ].map((provide) => ({ provide, useValue: Object.freeze({}) })),
 })
 class OpenApiModule {}
 
@@ -33,14 +45,29 @@ async function main(): Promise<void> {
       .setTitle('ApnaTown API')
       .setVersion('0.0.0')
       .addServer('/api')
+      .addCookieAuth(
+        '__Host-apnatown_session',
+        {
+          type: 'apiKey',
+          in: 'cookie',
+          description:
+            'HttpOnly host-only session; loopback HTTP uses apnatown_session. Never expose the cookie to JavaScript.',
+        },
+        'sessionCookie',
+      )
       .build();
     const document = cleanupOpenApiDoc(
       SwaggerModule.createDocument(app, config),
     );
     for (const item of Object.values(document.paths)) {
-      for (const operation of [item.get, item.head].filter(
-        (value) => value !== undefined,
-      )) {
+      for (const operation of [
+        item.get,
+        item.head,
+        item.post,
+        item.patch,
+        item.put,
+        item.delete,
+      ].filter((value) => value !== undefined)) {
         operation.parameters ??= [];
         operation.parameters.push({
           name: 'X-Correlation-ID',
@@ -59,6 +86,11 @@ async function main(): Promise<void> {
               'X-Correlation-ID': {
                 schema: { type: 'string' },
                 description: 'Validated or generated request ID',
+              },
+              'Cache-Control': {
+                schema: { type: 'string' },
+                description:
+                  'Auth and own-account responses are private, no-store.',
               },
               ...(status === '429'
                 ? {

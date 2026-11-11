@@ -14,6 +14,36 @@
         "default": "./dist/cjs/index.js"
       }
     },
+    "./geo": {
+      "import": {
+        "types": "./dist/esm/geo.d.ts",
+        "default": "./dist/esm/geo.js"
+      },
+      "require": {
+        "types": "./dist/cjs/geo.d.ts",
+        "default": "./dist/cjs/geo.js"
+      }
+    },
+    "./auth": {
+      "import": {
+        "types": "./dist/esm/auth.d.ts",
+        "default": "./dist/esm/auth.js"
+      },
+      "require": {
+        "types": "./dist/cjs/auth.d.ts",
+        "default": "./dist/cjs/auth.js"
+      }
+    },
+    "./users": {
+      "import": {
+        "types": "./dist/esm/users.d.ts",
+        "default": "./dist/esm/users.js"
+      },
+      "require": {
+        "types": "./dist/cjs/users.d.ts",
+        "default": "./dist/cjs/users.js"
+      }
+    },
     "./wire": {
       "import": {
         "types": "./dist/esm/wire.d.ts",

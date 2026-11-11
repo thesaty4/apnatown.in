@@ -25,9 +25,11 @@ Q-32 still gates approved retention, export expiry, deletion boundaries and re-r
 The Prisma `User`/`UserRole` models and additive
 [`20261111172454_users_identity`](../../../apps/api/prisma/migrations/20261111172454_users_identity/migration.sql)
 migration cover only `users` and `user_roles`, the identity prerequisites for
-Auth. No accounts or privileged memberships are seeded, and no endpoint, live
-principal lookup, encryption adapter or role-grant use-case is implemented yet.
-Addresses, consent and data-request persistence remain separate slices.
+Auth. No accounts or privileged memberships are seeded. Identity resolution,
+live-principal lookup, encrypted profile fields and own profile/preferences
+endpoints are implemented for local use. Privileged approval integrations and
+role-grant use-cases remain unavailable; addresses, consent and data-request
+persistence remain separate slices.
 
 SQL CHECK constraints enforce locale/theme/status/role values, positive version,
 optional 2-60-character display names and paired phone fields. Non-deleted rows

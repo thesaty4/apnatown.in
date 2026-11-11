@@ -8,6 +8,15 @@ const schema = z.object({
   WEB_ORIGIN: z.string().url(),
   CURSOR_SIGNING_KEY: z.string().regex(/^[A-Za-z0-9_-]{43,128}$/),
   IDEMPOTENCY_HASH_KEY: z.string().regex(/^[a-f0-9]{64}$/),
+  PII_ENCRYPTION_KEY: z.string().regex(/^[a-f0-9]{64}$/),
+  PHONE_LOOKUP_HASH_KEY: z.string().regex(/^[a-f0-9]{64}$/),
+  OTP_HASH_KEY: z.string().regex(/^[a-f0-9]{64}$/),
+  ANONYMOUS_SESSION_TTL_SECONDS: z.coerce.number().int().min(1).max(3600),
+  SESSION_TTL_SECONDS: z.coerce.number().int().min(1).max(2592000),
+  OTP_TTL_SECONDS: z.coerce.number().int().min(1).max(900),
+  OTP_MAX_ATTEMPTS: z.coerce.number().int().min(1).max(10),
+  OTP_PHONE_REQUESTS_PER_HOUR: z.coerce.number().int().min(1).max(100),
+  OTP_DELIVERY_ADAPTER: z.enum(['private-local', 'unavailable']),
   PORT: integer(1, 65535, 3001),
   WORKER_PROBE_PORT: integer(1, 65535, 3002),
   LOG_LEVEL: z
@@ -36,7 +45,17 @@ export function parseConfig(env: NodeJS.ProcessEnv): RuntimeConfig {
   const db = new URL(config.DATABASE_URL);
   const web = new URL(config.WEB_ORIGIN);
   const local = config.APP_ENV !== 'production';
+  const keys = [
+    config.PII_ENCRYPTION_KEY,
+    config.PHONE_LOOKUP_HASH_KEY,
+    config.OTP_HASH_KEY,
+    config.IDEMPOTENCY_HASH_KEY,
+    config.CURSOR_SIGNING_KEY,
+  ];
   if (
+    new Set(keys).size !== keys.length ||
+    keys.some((key) => /^(.)\1+$/.test(key)) ||
+    (!local && config.OTP_DELIVERY_ADAPTER === 'private-local') ||
     !['postgres:', 'postgresql:'].includes(db.protocol) ||
     !db.username ||
     !db.password ||

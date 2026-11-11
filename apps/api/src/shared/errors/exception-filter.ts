@@ -69,7 +69,7 @@ export class ErrorFilter implements ExceptionFilter {
     if (body.status >= 500) this.logger.error(metadata);
     else this.logger.warn(metadata);
     response.setHeader('X-Correlation-ID', id);
-    response.setHeader('Cache-Control', 'no-store');
+    response.setHeader('Cache-Control', 'private, no-store');
     if (retryAfterSeconds !== undefined)
       response.setHeader('Retry-After', retryAfterSeconds);
     response.status(body.status).json(body);

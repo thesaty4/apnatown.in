@@ -4,21 +4,23 @@ import { ZodValidationPipe } from 'nestjs-zod';
 import type { RuntimeConfig } from './shared/config/config';
 import { ErrorFilter } from './shared/errors/exception-filter';
 import { HealthController } from './shared/health/health.controller';
-import { ProbeOnlyGuard } from './shared/health/probe-only.guard';
+import { AuthGuard } from './shared/auth/auth.guard';
+import { AuthModule } from './modules/auth/auth.module';
 import { RuntimeModule } from './shared/health/runtime.module';
 import { RateLimitGuard } from './shared/rate-limit/rate-limit';
 
 @Module({})
 export class AppModule {
   static forRoot(config: RuntimeConfig): DynamicModule {
+    const runtime = RuntimeModule.forRoot(config);
     return {
       module: AppModule,
-      imports: [RuntimeModule.forRoot(config)],
+      imports: [runtime, AuthModule.forRoot(runtime, config)],
       controllers: [HealthController],
       providers: [
         { provide: APP_PIPE, useClass: ZodValidationPipe },
         { provide: APP_FILTER, useClass: ErrorFilter },
-        { provide: APP_GUARD, useClass: ProbeOnlyGuard },
+        { provide: APP_GUARD, useClass: AuthGuard },
         { provide: APP_GUARD, useClass: RateLimitGuard },
       ],
     };

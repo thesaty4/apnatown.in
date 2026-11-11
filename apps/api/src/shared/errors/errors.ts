@@ -1,6 +1,21 @@
 import type { ErrorDetails, ErrorResponse } from '@apnatown/shared/wire';
 
 const catalogue = {
+  OTP_INVALID: [401, 'errors.auth.otp.invalid'],
+  OTP_NOT_FOUND: [404, 'errors.auth.otp.notFound'],
+  OTP_EXPIRED: [410, 'errors.auth.otp.expired'],
+  OTP_LOCKED: [429, 'errors.auth.otp.locked'],
+  OTP_RATE_LIMITED: [429, 'errors.auth.otp.rateLimited'],
+  OTP_DELIVERY_FAILED: [503, 'errors.auth.otp.deliveryFailed'],
+  SESSION_EXPIRED: [401, 'errors.auth.session.expired'],
+  CSRF_INVALID: [403, 'errors.auth.session.csrfInvalid'],
+  ACCOUNT_UNAVAILABLE: [403, 'errors.auth.account.unavailable'],
+  USER_NOT_FOUND: [404, 'errors.users.notFound'],
+  CITY_NOT_FOUND: [404, 'errors.geo.city.notFound'],
+  AREA_NOT_FOUND: [404, 'errors.geo.area.notFound'],
+  PIN_CODE_INVALID: [422, 'errors.geo.pin.invalid'],
+  LOCATION_INVALID: [422, 'errors.geo.location.invalid'],
+  LOCATION_UNRESOLVED: [422, 'errors.geo.location.unresolved'],
   COMMON_VALIDATION_FAILED: [400, 'errors.common.validationFailed'],
   COMMON_UNAUTHENTICATED: [401, 'errors.common.unauthenticated'],
   COMMON_FORBIDDEN: [403, 'errors.common.forbidden'],

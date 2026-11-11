@@ -44,10 +44,10 @@ Roles: customer, vendor, provider, rider, admin, super_admin. Backend module(s):
 | AU1 | splash and language choice | `specs/auth/be/au1-splash-and-language-choice.md` | `specs/auth/fe/au1-splash-and-language-choice.md` | not started |
 | AU2 | location primer with manual fallback (location never mandatory) | `specs/auth/be/au2-location-primer-with-manual-fallback.md` | `specs/auth/fe/au2-location-primer-with-manual-fallback.md` | not started |
 | AU3 | browse as guest | `specs/auth/be/au3-browse-as-guest.md` | `specs/auth/fe/au3-browse-as-guest.md` | not started |
-| AU4 | mobile OTP login (6-box input, auto-advance, paste, resend timer, attempt limits), optional email/Google | `specs/auth/be/auth.md` | `specs/auth/fe/auth.md` | spec written |
+| AU4 | mobile OTP login (6-box input, auto-advance, paste, resend timer, attempt limits), optional email/Google | `specs/auth/be/auth.md` | `specs/auth/fe/auth.md` | backend local slice; runtime/provider gates pending |
 | AU5 | profile completion | `specs/users/be/users.md` | `specs/users/fe/users.md` | spec written |
 | AU6 | login-required prompt that returns the user to the same page/video after login | `specs/auth/be/auth.md` | `specs/auth/fe/auth.md` | spec written |
-| AU7 | logout and session expiry | `specs/auth/be/auth.md` | `specs/auth/fe/auth.md` | spec written |
+| AU7 | logout and session expiry | `specs/auth/be/auth.md` | `specs/auth/fe/auth.md` | backend local slice; runtime verification pending |
 | AU8 | account deletion and personal-data download | `specs/users/be/users.md` | `specs/users/fe/users.md` | spec written |
 
 ## HM. Home

@@ -13,6 +13,15 @@ const ownerKeys = {
     'WEB_ORIGIN',
     'CURSOR_SIGNING_KEY',
     'IDEMPOTENCY_HASH_KEY',
+    'PII_ENCRYPTION_KEY',
+    'PHONE_LOOKUP_HASH_KEY',
+    'OTP_HASH_KEY',
+    'ANONYMOUS_SESSION_TTL_SECONDS',
+    'SESSION_TTL_SECONDS',
+    'OTP_TTL_SECONDS',
+    'OTP_MAX_ATTEMPTS',
+    'OTP_PHONE_REQUESTS_PER_HOUR',
+    'OTP_DELIVERY_ADAPTER',
     'PORT',
     'WORKER_PROBE_PORT',
     'LOG_LEVEL',
@@ -90,6 +99,44 @@ export function validateLocalEnvironment(values) {
       'Provision IDEMPOTENCY_HASH_KEY with 32 random bytes encoded as lowercase hex. Existing local configuration is never overwritten or automatically rotated.',
     );
   }
+  const authKeys = [
+    'PII_ENCRYPTION_KEY',
+    'PHONE_LOOKUP_HASH_KEY',
+    'OTP_HASH_KEY',
+  ];
+  for (const key of authKeys) {
+    if (
+      !/^[a-f0-9]{64}$/.test(values[key] ?? '') ||
+      /^(.)\1+$/.test(values[key])
+    ) {
+      throw new Error(
+        `Provision ${key} with independent random 32-byte lowercase hex; existing secrets are never overwritten.`,
+      );
+    }
+  }
+  const keys = [...authKeys, 'IDEMPOTENCY_HASH_KEY', 'CURSOR_SIGNING_KEY'].map(
+    (key) => values[key],
+  );
+  if (new Set(keys).size !== keys.length)
+    throw new Error('Auth keys must be independent.');
+  for (const [key, min, max] of [
+    ['ANONYMOUS_SESSION_TTL_SECONDS', 1, 3600],
+    ['SESSION_TTL_SECONDS', 1, 2592000],
+    ['OTP_TTL_SECONDS', 1, 900],
+    ['OTP_MAX_ATTEMPTS', 1, 10],
+    ['OTP_PHONE_REQUESTS_PER_HOUR', 1, 100],
+  ]) {
+    if (
+      !/^[1-9]\d*$/.test(values[key] ?? '') ||
+      Number(values[key]) < min ||
+      Number(values[key]) > max
+    )
+      throw new Error(
+        `Provision bounded ${key}; local fixture values are not production policy.`,
+      );
+  }
+  if (!['private-local', 'unavailable'].includes(values.OTP_DELIVERY_ADAPTER))
+    throw new Error('OTP delivery adapter must be explicit.');
   for (const key of ['APP_BASE_URL', 'API_INTERNAL_ORIGIN', 'WEB_ORIGIN']) {
     let url;
     try {
@@ -142,8 +189,15 @@ export async function createLocalEnvironment(root, environment = process.env) {
     SHADOW_DATABASE_URL: `postgresql://apnatown_migrator:${migrationPassword}@127.0.0.1:5432/apnatown_shadow`,
     CURSOR_SIGNING_KEY: randomBytes(32).toString('hex'),
     IDEMPOTENCY_HASH_KEY: randomBytes(32).toString('hex'),
-    SESSION_COOKIE_SECRET: randomBytes(32).toString('hex'),
+    PII_ENCRYPTION_KEY: randomBytes(32).toString('hex'),
+    PHONE_LOOKUP_HASH_KEY: randomBytes(32).toString('hex'),
+    OTP_HASH_KEY: randomBytes(32).toString('hex'),
     ANONYMOUS_SESSION_TTL_SECONDS: '900',
+    SESSION_TTL_SECONDS: '86400',
+    OTP_TTL_SECONDS: '300',
+    OTP_MAX_ATTEMPTS: '5',
+    OTP_PHONE_REQUESTS_PER_HOUR: '10',
+    OTP_DELIVERY_ADAPTER: 'private-local',
     SHUTDOWN_TIMEOUT_MS: '10000',
   });
   validateLocalEnvironment(values);
