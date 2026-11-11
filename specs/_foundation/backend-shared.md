@@ -46,6 +46,9 @@ unsafe integers, with depth 16, 10,000 nodes and 65,536-character bounds.
 The flat-error filter registers the starter invariant catalogue and legacy
 aliases, exposes only allow-listed field paths, and logs technical codes/status
 with correlation IDs rather than exception messages or submitted values.
+`withCorrelation` isolates the validated ID across asynchronous HTTP work;
+the shared Pino logger includes that context automatically. Job/relay owners
+must enter it using the persisted event ID context, not a process-global value.
 Signed adjustments still require their owning DTO's explicit permission.
 These primitives do not imply that persistence, live authorization or the
 Catalog reference below are implemented. Automated test tooling remains

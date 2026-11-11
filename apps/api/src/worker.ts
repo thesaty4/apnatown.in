@@ -6,6 +6,7 @@ import { parseConfig } from './shared/config/config';
 import { DomainError, errorResponse } from './shared/errors/errors';
 import { ReadinessService } from './shared/health/readiness';
 import { handleSignals, shutdownHandler } from './shared/lifecycle';
+import { withCorrelation } from './shared/logger/context';
 import {
   correlationId,
   createLogger,
@@ -38,7 +39,7 @@ async function main(): Promise<void> {
       if (request.url === '/api/health/ready') return health.ready();
       throw new DomainError('COMMON_NOT_FOUND');
     };
-    void probe()
+    void withCorrelation(id, probe)
       .then((body) => response.end(JSON.stringify(body)))
       .catch((error: unknown) => {
         const body = errorResponse(

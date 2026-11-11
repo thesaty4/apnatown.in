@@ -6,6 +6,7 @@ import type { Logger } from 'pino';
 import type { RuntimeConfig } from '../config/config';
 import { errorResponse } from '../errors/errors';
 import { correlationId } from '../logger/logger';
+import { withCorrelation } from '../logger/context';
 
 export function configureHttp(
   app: NestExpressApplication,
@@ -46,7 +47,7 @@ export function configureHttp(
       request.headers.origin !== new URL(config.WEB_ORIGIN).origin
     ) {
       response.status(403).json(errorResponse('COMMON_FORBIDDEN', id));
-    } else next();
+    } else withCorrelation(id, next);
   });
   app.use(cookieParser());
   // Nest's rawBody support retains bytes for future signature-verifying adapters.
