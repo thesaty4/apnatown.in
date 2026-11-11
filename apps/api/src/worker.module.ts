@@ -7,6 +7,11 @@ import {
   TransactionalEventConsumer,
 } from './shared/jobs/event-consumer';
 import {
+  OUTBOX_HANDLERS,
+  OutboxDispatcher,
+  type OutboxHandler,
+} from './shared/jobs/outbox-dispatcher';
+import {
   OutboxRelay,
   PG_BOSS_FACTORY,
   type PgBossFactory,
@@ -40,8 +45,13 @@ export class WorkerModule {
         OutboxRelay,
         RuntimeCleanup,
         { provide: EVENT_CONSUMER, useClass: TransactionalEventConsumer },
+        {
+          provide: OUTBOX_HANDLERS,
+          useValue: Object.freeze<OutboxHandler[]>([]),
+        },
+        OutboxDispatcher,
       ],
-      exports: [OutboxRelay, RuntimeCleanup, EVENT_CONSUMER],
+      exports: [OutboxRelay, RuntimeCleanup, EVENT_CONSUMER, OutboxDispatcher],
     };
   }
 }

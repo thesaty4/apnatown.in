@@ -18,14 +18,14 @@ import {
 
 export const EVENT_CONSUMER = Symbol('EVENT_CONSUMER');
 
-const operationSchema = z.strictObject({
+export const ConsumerOperationSchema = z.strictObject({
   consumer: z.string().regex(/^[A-Za-z0-9:_-]{1,200}$/),
   handler: z.string().regex(/^[A-Za-z0-9._:-]{1,200}$/),
   eventType: EventEnvelopeSchema.shape.type,
   schemaVersion: EventEnvelopeSchema.shape.schemaVersion,
 });
 
-export type ConsumerOperation = z.infer<typeof operationSchema>;
+export type ConsumerOperation = z.infer<typeof ConsumerOperationSchema>;
 
 export interface EventConsumer {
   run(
@@ -61,7 +61,7 @@ export class TransactionalEventConsumer implements EventConsumer {
     expiresAt: Date,
     work: (tx: TxContext, event: EventEnvelope) => Promise<void>,
   ): Promise<void> {
-    const policy = operationSchema.safeParse(operation);
+    const policy = ConsumerOperationSchema.safeParse(operation);
     if (!policy.success) throw new Error('INVALID_CONSUMER_OPERATION');
     const envelope = this.validateEvent(event);
     if (

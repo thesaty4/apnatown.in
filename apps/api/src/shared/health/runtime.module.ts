@@ -17,6 +17,7 @@ import {
 } from '../idempotency/context';
 import { PrismaOutboxWriter } from '../persistence/outbox-writer';
 import { OutboxRelayStore } from '../persistence/outbox-relay-store';
+import { OutboxEventStore } from '../persistence/outbox-event-store';
 import { RuntimeCleanupStore } from '../persistence/runtime-cleanup-store';
 import {
   RATE_LIMIT_REPOSITORY,
@@ -68,6 +69,7 @@ export class RuntimeModule {
           inject: [PrismaDatabase],
         },
         OutboxRelayStore,
+        OutboxEventStore,
         RuntimeCleanupStore,
         {
           provide: RATE_LIMIT_REPOSITORY,
@@ -92,6 +94,7 @@ export class RuntimeModule {
         UNIT_OF_WORK,
         OUTBOX_WRITER,
         OutboxRelayStore,
+        OutboxEventStore,
         RuntimeCleanupStore,
         PrismaDatabase,
         RATE_LIMIT_REPOSITORY,

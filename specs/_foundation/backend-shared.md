@@ -68,15 +68,20 @@ ms (default 1,000). Relay retry delay grows linearly by attempt and is capped
 at base delay times retry limit plus one; pg-boss retries use exponential
 backoff with the base rounded up to seconds and capped at that rounded delay
 times retry limit plus one. Exhausted or malformed events become `dead` with a
-safe error code, never exception text or event payload in logs. Consumers and
+safe error code, never exception text or event payload in logs. Domain consumers and
 readiness-manifest registration remain deferred, so this relay does not imply
 any domain handler is active or make worker readiness true.
 `WorkerModule` now exports the `EVENT_CONSUMER` transactional execution port.
 It validates the expected event type/version and deduplicates each named
 consumer/handler/event through `COMMAND_UNIT_OF_WORK`, committing local effects
 and a non-secret receipt together. Its exact boundaries are in the
-[data-model contract](./data-model.md#shared-runtime-persistence); it does not
-register a pg-boss callback, load events or perform external sends.
+[data-model contract](./data-model.md#shared-runtime-persistence).
+`OutboxDispatcher` now loads the persisted envelope by job event ID, selects
+explicitly registered type/version handlers, and invokes that port for each.
+The worker's `OUTBOX_HANDLERS` list is deliberately empty until real module
+handlers are implemented. Neither helper registers a pg-boss callback or
+performs external sends; an unknown event is a failure, not an acknowledged
+no-op. Empty registration never makes worker readiness true.
 Structured failure logs and persisted dead-state exist; a metrics exporter and
 operator replay control are still deferred and remain deployment/operations
 gates. Do not invent an admin queue screen to close those gaps.

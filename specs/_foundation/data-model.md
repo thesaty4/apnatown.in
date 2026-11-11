@@ -362,11 +362,36 @@ transactional effects, with current eligibility and aggregate-version checks
 owned by the handler. Replaying a receipt returns no protected data and performs
 no new effect; it does not authorize an external send. The owner selects expiry
 to cover its retry/replay horizon and retains domain-level stale/duplicate guards
-after receipt expiry. No generic retention default is added. Queue registration,
-persisted-event loading, domain handlers, readiness registration and external
-delivery/reconciliation remain unimplemented; this executor alone activates none
-of them. Runtime/database deduplication remains unverified until service-backed
-validation is permitted.
+after receipt expiry. No generic retention default is added. Runtime/database
+deduplication remains unverified until service-backed validation is permitted.
+
+The worker's `OutboxDispatcher.dispatch(jobData)` now accepts only strict
+`{eventId: UUID}` data and loads the envelope through `OutboxEventStore` using
+one parameterized primary-key read. Additional job fields, missing/invalid
+events and unsupported type/version registrations fail explicitly. Loading does
+not require `state='published'`: a job may run after durable enqueue but before
+the relay records its acknowledgement. Relay delivery state is not the consumer
+completion receipt and does not change the immutable envelope.
+
+`OUTBOX_HANDLERS` is a static worker-only list of
+`{operation, expiresAt(event), handle(tx,event)}` registrations. Each has one
+exact event type/schema version and a unique consumer/handler identity;
+duplicate identities or invalid declarations fail during composition.
+The expiry function is a pure, owner-selected policy. The dispatcher takes a
+validated metadata snapshot and preserves the receiver of handler/policy methods.
+It visits every matching handler sequentially without assuming domain order,
+committing each through its independent consumer receipt. A failure is logged
+with only event ID, handler identity, correlation and fixed code; other handlers
+are still attempted, then dispatch rejects so the queue owner can retry.
+Successful handlers are skipped by their receipts on retry; no partial success
+is acknowledged as whole-job success.
+
+The current list is empty because no domain handler has been implemented.
+Queue callback registration/acknowledgement, domain handlers, readiness
+registration and external delivery/reconciliation remain unimplemented.
+The dispatcher starts no loop or connection during construction, and an empty
+handler list never implies worker readiness. No runtime dispatch validation or
+query-plan measurements are claimed.
 
 **HTTP idempotency:** hash the canonical allow-listed payload plus method/resource/operation and **server-resolved business ID/kind** for owner operations, excluding volatile correlation/CSRF fields. A changed `X-Business-Kind` cannot replay a shop result into a provider context. Same principal/key/hash replays the original status/non-secret result; changed payload/context -> 409 `COMMON_CONFLICT` (or module code); concurrent in-progress work returns a bounded retry response with `Retry-After`, never executes a second domain command. Authorization failure cannot become successful replay. For external payment-like workflows, commit reservation/attempt first, release the transaction, call the provider, then finalize through the owning module's reconciliation state machine; never expire an ambiguous attempt and charge again.
 
@@ -454,6 +479,9 @@ automated test harness was restored.
 
 ## Persistence acceptance
 
+- Given a queued event ID, when dispatch runs, then only its persisted envelope is used; injected job payload fields, missing events and unmatched type/version handlers fail rather than being acknowledged.
+- Given several matching handlers and one failure, when dispatch runs, then the others are still attempted in independent transactions, the overall dispatch rejects, and retry skips already committed effects through their receipts.
+- Given duplicate consumer/handler identities, when the worker is composed, then startup fails; an empty declared registry activates no handler and does not change readiness.
 - Given a named consumer/handler and supported persisted event, when local work completes, then its effects and one no-result receipt commit together; identical redelivery before expiry skips the work.
 - Given changed event data under the same receipt identity, an unsupported event type/version, invalid JSON or a corrupt receipt, when consumption is attempted, then it fails without executing fresh effects. A thrown handler error rolls back both effects and the claim.
 - Given independent consumers/handlers or concurrent retries, when they consume the same event, then each identity is independent and each claim uses the shared bounded concurrency rule; external side effects are not covered by this transaction.
