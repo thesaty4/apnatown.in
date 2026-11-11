@@ -17,6 +17,8 @@ const ownerKeys = {
     'WORKER_PROBE_PORT',
     'LOG_LEVEL',
     'SHUTDOWN_TIMEOUT_MS',
+    'RUNTIME_CLEANUP_INTERVAL_MS',
+    'RUNTIME_CLEANUP_BATCH_SIZE',
   ],
   web: ['APP_ENV', 'NODE_ENV', 'APP_BASE_URL', 'API_INTERNAL_ORIGIN'],
   database: [

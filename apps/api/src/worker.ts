@@ -6,6 +6,7 @@ import { parseConfig } from './shared/config/config';
 import { DomainError, errorResponse } from './shared/errors/errors';
 import { ReadinessService } from './shared/health/readiness';
 import { OutboxRelay } from './shared/jobs/outbox-relay';
+import { RuntimeCleanup } from './shared/jobs/runtime-cleanup';
 import { handleSignals, shutdownHandler } from './shared/lifecycle';
 import { withCorrelation } from './shared/logger/context';
 import {
@@ -25,6 +26,7 @@ async function main(): Promise<void> {
     },
   );
   const relay = app.get(OutboxRelay);
+  const cleanup = app.get(RuntimeCleanup);
   const health = app.get(ReadinessService);
   const server = createServer({ maxHeaderSize: 8192 }, (request, response) => {
     const id = correlationId(request.headers['x-correlation-id']);
@@ -63,13 +65,17 @@ async function main(): Promise<void> {
     server.listen(config.WORKER_PROBE_PORT, '127.0.0.1', resolve);
   });
   relay.start();
+  cleanup.start();
   handleSignals(
-    shutdownHandler(app, server, config.SHUTDOWN_TIMEOUT_MS, logger),
+    shutdownHandler(app, server, config.SHUTDOWN_TIMEOUT_MS, logger, () =>
+      cleanup.stop(),
+    ),
     logger,
   );
   logger.info({
     event: 'worker.listening',
     outboxRelayRegistered: true,
+    runtimeCleanupRegistered: true,
     consumersRegistered: false,
   });
 }

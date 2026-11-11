@@ -372,7 +372,28 @@ factory does not authenticate users or resolve ownership.
   regeneration or a cursor-key rotation.
 
 **Users deletion exception:** the confirming session alone receives a status-only `completionToken`; its hash/expiry is Users-owned in `data_requests`. The idempotency row stores only the non-secret request result/reference. An eligible authenticated retry may atomically rotate that capability via its result policy, replacing the hash and returning the new transient token **without another deletion job**; no generic bearer replay or post-revocation re-authentication. Status polling after session revocation discloses only Users' permitted terminal-status DTO, not PII/export data/privileged actions. Use the same reviewed opaque-token helper as Auth; exact lifetime and access gates belong to Users.
-The idempotency claim lease is validated `IDEMPOTENCY_LEASE_MS` configuration (10-300 seconds, default 30 seconds); it bounds recovery of a claim, not the operation's retry horizon. Each operation owns its server-selected record expiry and must cover its documented client/provider retry horizon; do not invent one shared production retention period. Cleanup removes only expired completed records or recoverable leases, not unresolved financial attempts. Bounded cleanup is a separate worker responsibility and is not yet implemented.
+The idempotency claim lease is validated `IDEMPOTENCY_LEASE_MS` configuration (10-300 seconds, default 30 seconds); it bounds recovery of a claim, not the operation's retry horizon. Each operation owns its server-selected record expiry and must cover its documented client/provider retry horizon; do not invent one shared production retention period.
+
+**Shared runtime cleanup:** the worker now runs one immediate bounded batch and
+then at `RUNTIME_CLEANUP_INTERVAL_MS` (1 second-1 hour, default 60 seconds).
+`RUNTIME_CLEANUP_BATCH_SIZE` is 1-500, default 100 **per table per tick**, not an
+HTTP list limit. It deletes only expired rate-limit buckets and expired
+`state='completed'` idempotency receipts using database statement time (a stable
+expiry cutoff suitable for the existing `expires_at` indexes). Each table selects an ordered `FOR UPDATE SKIP LOCKED`
+batch; both deletes commit together through the shared unit of work. Locked
+rows are skipped, concurrent workers can make progress, and one process never
+overlaps its own ticks or loops until the backlog is empty.
+
+All `in_progress` receipts are retained, including expired leases; recovery
+belongs to the command/owning workflow, not blanket deletion. Outbox events,
+financial attempts, session/OTP records and domain data are untouched. No
+domain retention policy is introduced. Logs contain only deleted-row counts
+or a fixed failure code; failures retry on the next tick, without advancing an
+in-memory cleanup cursor. The API never starts this timer. Shutdown stops new
+ticks immediately and awaits the active task before releasing the database,
+within the worker lifecycle's existing bounded deadline. Cleanup does not make
+worker readiness true. Query plans and database-runtime behavior still require
+verification before rollout; no measurements are claimed by this implementation.
 
 **Rate limits:** use DB time and one parameterized atomic upsert/conditional increment per fixed, epoch-aligned policy window (`date_bin`), not read-then-write counters. The saturating hit count is bounded at `maximumHits + 1`; the extra count distinguishes the first rejected request without unbounded growth. Multiple API processes share the result. Return 429 plus `Retry-After` rounded up to the bucket expiry; use the socket IP unless an explicit trusted-proxy policy is configured. Hash subjects with a purpose-separated HMAC; never persist raw IP, user ID, or phone. DB failure fails protected throttled operations closed with 503, not an unlimited in-memory fallback. Expiry cleanup is bounded by the existing `expires_at` index. Auth's attempt/cooldown records remain authoritative even when a shared bucket expires. No Redis.
 
@@ -402,6 +423,8 @@ automated test harness was restored.
 
 ## Persistence acceptance
 
+- Given expired and live shared-runtime records, when one cleanup tick runs, then it deletes at most the configured batch size from each eligible table and preserves live buckets, all in-progress receipts and every business/outbox record.
+- Given concurrent cleanup workers or a row locked by replay, when batches run, then locked rows are skipped without double deletion; a failed batch rolls back and the next tick can retry. Shutdown schedules no new cleanup.
 - Given a permitted attempt-counter update and an explicit rejected outcome policy, when the command returns that outcome, then the counter and non-secret `4xx` receipt commit together before the caller maps the domain error.
 - Given a stored rejection, when an authorized retry reconstructs it, then the original status is preserved without rerunning the work or incrementing attempts; changed replay status, thrown errors and policy-selected `5xx` statuses roll back.
 - Given identical logical HTTP commands, when object property order, correlation ID or expiry changes, then the factory produces identical key/request hashes; changing payload, method, resource or resolved business changes the request hash without changing the key hash.

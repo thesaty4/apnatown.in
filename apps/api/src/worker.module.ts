@@ -1,6 +1,7 @@
 import { Module, type DynamicModule } from '@nestjs/common';
 import type { RuntimeConfig } from './shared/config/config';
 import { RuntimeModule } from './shared/health/runtime.module';
+import { RuntimeCleanup } from './shared/jobs/runtime-cleanup';
 import {
   OutboxRelay,
   PG_BOSS_FACTORY,
@@ -33,8 +34,9 @@ export class WorkerModule {
           },
         },
         OutboxRelay,
+        RuntimeCleanup,
       ],
-      exports: [OutboxRelay],
+      exports: [OutboxRelay, RuntimeCleanup],
     };
   }
 }

@@ -74,6 +74,10 @@ any domain handler is active or make worker readiness true.
 Structured failure logs and persisted dead-state exist; a metrics exporter and
 operator replay control are still deferred and remain deployment/operations
 gates. Do not invent an admin queue screen to close those gaps.
+The separate worker also runs bounded shared-runtime expiry cleanup; the
+[data-model contract](./data-model.md#shared-runtime-persistence) owns its
+configuration and strict deletion boundaries. The API starts no cleanup loop,
+and in-progress claims, outbox records and domain records are retained.
 The shared `RateLimit` metadata/guard uses one atomic PostgreSQL upsert per
 declared window, DB time, a purpose-separated HMAC of either the trusted
 request IP or the authenticated principal ID, and fails closed with 503 on
