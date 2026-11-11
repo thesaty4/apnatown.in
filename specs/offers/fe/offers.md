@@ -38,20 +38,20 @@ Provider coupon management reuses the owner UI and `Offers` APIs; this does not 
 
 - Screenshots: `d-vendor-voffers.jpg`, `m-vendor-voffers.jpg`.
 - Layout: `DashboardShell` with responsive `DataTable`/mobile cards, status badges and a create/edit sheet; use shared `Input`, `Select`, `Uploader`, `Toggle`, `Button` and `ConfirmDialog`.
-- Data: owner-scoped `GET /businesses/me/offers`, create/edit/status APIs; performance counters are returned by Offers and their semantics remain Q-65.
+- Data: owner-scoped `GET /businesses/me/offers`, create/edit/status APIs; performance counters use Offers' resolved reporting-v1 definitions.
 - Special states: pending approval; no offers; stale version conflict; rejected/ended with reason when supplied.
-- Interactions: create/edit title, discount type/value, validity, targets, `bannerAssetId` and featured flag through versioned commands; submit enters pending approval. Active offers can pause/end; paused offers can resume before expiry. Media `/media/uploads` with `purpose='offer_banner'` returns a synchronous validated/durable `status:'ready'` result; attach only that `assetId`, never a URL/storage key. Progress is local request state, not a persisted pending asset or polling flow. Unconfigured limits disable upload (Q-66); terms authoring remains Q-63.
+- Interactions: create/edit title, discount type/value, validity, targets, `bannerAssetId` and featured flag through versioned commands; submit enters pending approval. Active offers can pause/end; paused offers can resume before expiry. Media `/media/uploads` uses `purpose='offer_banner'` and the resolved public-image policy; attach only a synchronous validated/durable ready asset ID. Progress is local request state, not asset polling. Terms authoring remains Q-63.
 - Rules: F-VD-007/F-OF-005, BR-06/12/17. Only own approved business offers are manageable. The API supports provider-owned service offers as in the prototype, but no provider production route/screen is defined; resolve Q-61 before adding one.
 - Acceptance:
   - Given an owner creates an offer, when submitted, then it appears as pending and cannot be applied publicly or in checkout.
   - Given an active offer is edited, when the versioned save succeeds, then the edited record returns to pending and the old discount is no longer applied.
   - Given an owner pauses, resumes or ends an offer, when the server accepts the transition, then the UI reflects the authoritative state and invalid transitions show a localized error.
   - Given a stale edit version or another business's offer is submitted, when the API rejects it, then the form retains user input and no foreign data is exposed.
-  - Given the Coupons tab is opened, when the owner creates or edits a coupon, then it shows draft/pending/active/paused/ended/rejected accurately; owner edits to live coupons await reapproval, and no UI claims checkout redemption is enabled while Q-67 remains open.
+  - Given the Coupons tab opens, when a coupon is created/edited, then draft/pending/active/paused/ended/rejected match the server; live owner edits await reapproval. Only active eligible product coupons can discount checkout.
 
 ### S-PROV-17 — Provider coupon manager (`/provider/offers`)
 - Reuse the vendor manager's shared responsive form/table and expose the Coupons tab only. Provider identity/business scope is server-derived. Provider service coupons require a selected owned service target and remain enquiry-display only; product-checkout coupons can target eligible products.
-- States and validation match S-VEND-07. Pending owner coupons have no public discount; explicit Q-67 usage/stacking policy keeps all checkout coupon redemption disabled. Service details may show approved active enquiry coupons but never alter service price or create a booking/payment.
+- States and validation match S-VEND-07. Pending owner coupons have no public discount. Active product coupons follow the finite-limit one-code checkout policy; approved service coupons remain informational and never alter price or create booking/payment.
 - Acceptance: Given a provider attempts to target another provider's service/product or another business, when saved, then the server rejects it; given a provider submits a service coupon, when approved and valid, then it appears only on the matching public service.
 
 ### S-ADMN-12 — Promotions
@@ -62,7 +62,7 @@ Provider coupon management reuses the owner UI and `Offers` APIs; this does not 
 - Special states: empty queue/placements, disabled/expired placement, missing activation/content configuration, stale version, target no longer approved, no permission.
 - Interactions: banner editor uses plain localized title/subtitle, internal destination picker and the existing Media `bannerAssetId` field to upload, replace or remove a background; no second banner system is added. Image upload uses the existing `offer_banner` purpose and configured Media validation; unconfigured limits disable upload. Text-only fallback remains. Scope controls expose only permitted cities/areas; global placement is super-admin-only. Show/Featured toggles call authoritative commands, not local business flags; deletion confirms and removes public placement, not financial evidence.
 - Responsive treatment: use the existing token-backed banner image/overlay treatment, preserve the configured title/subtitle locale, crop responsively without distortion, and retain readable text over image and fallback. Supply dimensions and responsive sizes; prioritize only when the banner is the actual LCP image, otherwise lazy-load.
-- Coupons panel creates platform-eligible codes within the creating admin's permitted geography, edits with expected version, and activates/pauses/ends through Offers. Pending vendor/provider coupons use the same scoped approval queue; creator cannot approve their own coupon. Every mutation is audit-logged. Checkout redemption remains unavailable until Q-67 decisions are made.
+- Coupons panel creates platform-eligible codes within the admin's geography, edits with expected version, and activates/pauses/ends through Offers. Pending vendor/provider coupons use the same scoped approval queue; creator cannot approve their own pending coupon. Mutations are audited. Require finite limits, percent cap and platform budget before activation.
 - Rules: full F-AD-011, BR-06, BR-12. Permissions are `promos:view`/`promos:edit`; server checks old/new scope and target business and audits before/after. Paid placement rows cannot mark a payment successful or renew a period through a toggle.
 - Acceptance:
   - Given an area admin views Promotions, when the queue loads, then only offers in assigned scope appear.
@@ -75,6 +75,8 @@ Provider coupon management reuses the owner UI and `Offers` APIs; this does not 
   - Given an area admin creates/edits/approves a coupon, when eligible businesses or coupon ownership cross the assigned area, then the server denies the mutation; a platform-wide super_admin action remains explicit and audited.
 
 ### Offer integrations (owner screen layouts remain in their specs)
+
+The shared Coupon editor uses BE-normalized codes, server eligible-target previews, IST validity dates, total/per-customer limits (defaults 1000/1), mandatory percent cap and platform budget where applicable. Explain one code after item offers and no restored use after cancellation/refund in EN/HI. Code/redemption mode lock after first submission/activation. Service-enquiry coupons hide financial redemption/usage controls. Save errors retain input; exhausted/changed eligibility never receives an optimistic success.
 
 - Product detail `S-CUST-08` uses the shared `OfferBanner` (see [FE products](../../products/fe/products.md)); shop profile `S-CUST-06` uses its Offers tab ([FE businesses](../../businesses/fe/businesses.md)); service detail `S-CUST-09` uses the same offer read contract ([FE services](../../services/fe/services.md)).
 - The product/service owner screens render active, expired and out-of-stock offer states; Offers supplies no duplicate page layout or independent product/service data.

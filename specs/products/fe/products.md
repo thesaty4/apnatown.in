@@ -118,6 +118,8 @@ Shared UX states come from `frontend-shared.md`; use the screen-specific states 
 
 ## Tests
 
+Editor adds optional configured `taxCode` selection and displays orderability/setup-required status; never accepts raw rates/tax amounts. Missing tax configuration does not hide a public product but prevents purchasing. Use [Media's public-image policy](../../media-videos/be/media-videos.md#public-image-policy), maximum five ready assets, responsive variants and prior-image retention on failure. Test wrong-purpose assets, invalid classifications, Hindi messages and truthful out-of-stock metadata under the shared public URL policy.
+
 - Component: variant and quantity bounds, stock state, media viewer keyboard/gestures/focus, row errors, localized editor validation, category pills.
 - E2E: J1 browse-to-order product path; J4 reel-linked product to cart; J7 vendor first product; verify provider list/editor and owner-scope denial.
 - Visual/a11y: required product screenshots at 360px/desktop, light/dark, EN/HI; keyboard-only carousel and forms; axe/WCAG 2.2 AA.

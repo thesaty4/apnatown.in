@@ -88,6 +88,8 @@ Service card is reusable by Search, Explore, business profiles and category page
 
 ## Tests
 
+Use [Media's public-image policy](../../media-videos/be/media-videos.md#public-image-policy) for the five-image service editor: display format/size/dimension limits, consume ready responsive variants, preserve existing images on failure. This adds neither service tax checkout nor bookings/payments. Test oversize/wrong-purpose inputs and EN/HI errors.
+
 - Component: service detail active/paused, enquiry validation/success, service editor price/subcategory validation, inbox status and no-permission.
 - E2E: J2 service discovery-to-enquiry; J14 provider inbox-to-converted proof and Reviews' approved eligibility gate; independent expertise-version conflict and pending-applicant publication denial.
 - Screenshot checks: named mobile/desktop service, manager and inbox images; EN/HI and light/dark.

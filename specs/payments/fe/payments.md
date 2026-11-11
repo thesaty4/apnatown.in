@@ -38,19 +38,23 @@ Backend contract: [BE payments](../be/payments.md) · [Checkout](../../cart-chec
 ### S-PROV-18 — Billing and Premium (`/provider/billing`)
 
 - No dedicated prototype screen exists; reuse the subscription status, plan option, purchase handoff, invoice and confirmation components from S-VEND-16 without adding earnings or promotion-purchase content.
-- Data: `/payments/me/subscription`, plan purchases/retries, and `/payments/me/invoices`; scope every read and mutation to the approved provider's own business and permit plan invoices only.
+- Data: `/payments/me/subscription`, plan purchases/retries, and `/payments/me/invoices`; only the approved provider's own business, including plan and product-order commission documents, never vendor earnings/promotion-purchase panels.
 - Special states: plan/configuration unavailable; no current plan; active with expiry date; cancellation scheduled at paid expiry; expired; purchase pending/failure/reconciliation; invoices unavailable or genuinely absent.
-- Interactions: view current plan/status and expiry, buy or manually renew a configured plan, cancel at the current paid expiry with an explicit confirmation, and open only issued invoices. Cancellation takes effect at `endsAt`, does not refund or immediately remove Premium, and does not trigger automatic renewal. A verified renewal restores effective featuring for retained selections.
+- Interactions: view current plan, paid-through date and at most one prepaid next period; buy/manual-renew one calendar month, with switching only next period. Cancel at final `paidThrough`, including already-paid next periods, with no refund/auto-renew. A verified renewal restores retained eligible selections. Both vendor/provider panels use this same lifecycle and confirmation.
 - Rules: F-PV-008, BR-01/02/12; never show sample plan prices, an invented expiry date, or fabricated invoice/tax information. If the configured period or invoice policy is unavailable, show the explicit unavailable state.
 - Acceptance:
-  - Given an approved provider owns the business, when Billing loads, then only that business's plan status, configured plan options, expiry and plan invoices are returned.
+  - Given an approved provider owns the business, when Billing loads, then only its status, configured options, periods and allowed plan/commission documents are returned.
   - Given a provider supplies another business or purchase ID, when read or changed, then the request is denied without exposing the other business's billing data.
   - Given an active finite plan and current version, when the provider cancels, then cancellation is recorded for the paid expiry, Premium remains effective until that instant, and no refund/payment operation is started.
-  - Given a plan has no configured expiry or a cancellation is replayed with a stale version, when cancellation is requested, then no mutation occurs and a localized error is shown.
+  - Given an unverified expiry or a new cancellation request with a stale version, then no mutation occurs and an error is shown; a same-key lost-response replay returns its original authorized result instead.
   - Given a configured plan renewal is verified, when entitlement becomes active, then retained selected eligible products/services become featured without a listing edit.
   - Given plan/invoice configuration is missing, when the provider opens Billing, then unavailable is shown rather than sample values or fabricated documents.
 
 ### Checkout payment and order refund states
+
+- All payment badges/details inspect `settlementKind`: `no_charge` renders “No payment due” / “भुगतान आवश्यक नहीं”, not Paid by gateway/Cash collected, even though its internal settled status is `paid`. Funding/refund numbers remain zero. Test all-zero/mixed checkout, failed placement, handover without cash controls, and zero-return handling.
+
+Shared billing confirmations show server dates (including month-end clamping), tax-inclusive amount, one-month plan/seven-day promotion term, no automatic renewal and cancellation terms. Submit returned configuration/subscription versions; changed reviewed terms require re-review before payment. Never shorten already-paid time. Invoice rows distinguish preparing, issued and failed; render issued supplier snapshots only. Technical compensation for a never-activated purchase is distinct from non-refundable voluntary cancellation.
 
 - Screens: S-CUST-11, S-CUST-14, S-CUST-15 are specified by their owning Checkout/Orders screens; Payments adds no duplicate route or form.
 - Contract: reflect server-confirmed `pending`, `paid`, `failed`, `collected`, `refunded` and separate ST-refund decision/processing states. `refund.approved`/`refund.declined` are Orders decisions; `payment.refund_completed`/`payment.refund_failed` are execution outcomes. Approval is not returned money; execution failure is not a declined decision.
@@ -79,4 +83,4 @@ Backend contract: [BE payments](../be/payments.md) · [Checkout](../../cart-chec
 
 ## Open questions
 
-Q-01/Q-21 provider/capture, Q-06 invoice/GST, Q-07 refund SLA, Q-17 authority, Q-32 retention, Q-33 saved methods, Q-73 recovery method, Q-74 purchase lifecycle, Q-75 payouts and Q-76/Q-77 partial refunds remain gated; see [BE payments](../be/payments.md). These are unavailable branches, not completed features or sample-data fallbacks.
+Q-06 fiscal documents and Q-74 lifecycle are resolved in [BE payments](../be/payments.md). Missing real price/tax/adapter configuration is setup-required, not an undecided algorithm. Gateway topology, refund operations, retention, saved methods, recovery capability, payouts and general partial-return eligibility remain separately gated; no sample fallback or implemented claim.

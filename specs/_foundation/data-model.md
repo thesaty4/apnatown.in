@@ -81,6 +81,15 @@ catalogue code is a configuration/test failure, not a guessed 200/500 mapping.
 
 This ERD is an ownership/relationship map, not a column specification. Each table's complete columns, constraints and access patterns belong in its owning module BE spec.
 
+Resolved launch-policy additions (full schemas/indexes remain with their owners):
+- Businesses owns one reviewed fiscal profile per business; Geo supplies trusted city state codes and Settings supplies versioned tax classifications.
+- Offers owns coupon reservations keyed by checkout attempt/round, offer-use records keyed by order, and its transient/daily measurement tables.
+- Orders owns supplier documents/counters, linking credits to originals and each order to its frozen primary category; master summaries link the same customer-owned shop orders.
+- Payments owns subscription-chain versions, billing documents/counters and exclusive checkout-or-billing compensation references; no second refund or tax engine.
+- Businesses/Media/Engagement own their specified counters and first-follow attribution. No shared analytics store or Redis is introduced.
+
+Migration/index acceptance: stage nullable additions/backfills before enforcing new constraints; verify supplier-scoped numbering and remove obsolete global-number uniqueness only after reconciliation. Test representative coupon contention, bounded 48-hour cleanup, scoped 366-day reporting and document reads with EXPLAIN/ANALYZE. Additional composite/expiry indexes accelerate these predicates at the cost of write/storage work; use the existing hot-query budgets below, not invented benchmark results.
+
 ```mermaid
 erDiagram
     %% auth

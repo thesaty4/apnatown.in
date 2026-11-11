@@ -30,7 +30,9 @@ Own service listings, provider expertise mappings and service enquiries. Reuse b
 
 `services.media` stores ordered, server-issued image asset references; storage validation and resolution use the shared storage port. Videos and their moderation/consent are owned by `media-videos`. `gallery_visible` follows the service editor prototype and defaults from `business_settings.gallery_media_default`; the mismatch with BR-16 is recorded in Q-50. Do not log enquiry names, phone numbers, or message bodies. Authenticated users' data requests use the users contract; guest enquiry PII retention/deletion remains unresolved in Q-51.
 
-`featured_selected` records owner choice, not public eligibility. `ServiceReadPort` returns effective `featured` only for an active, public service/business with a current Premium subscription at the query's `at` time. New selection requires current entitlement; missing policy fails closed under Q-74. Existing services remain unselected by default.
+Public service images use [Media's image policy](../../media-videos/be/media-videos.md#public-image-policy), including maximum five attachments and server-side size/format validation (Q-53 resolved). Enquiry reporting uses [reporting-v1](../../admin/be/admin.md#reporting-definitions): retain first `converted_at` once, never rewrite it on an idempotent transition. `ServiceOwnerReadPort.enquiryCohort({businessId,from,toExclusive,asOf})` returns `{total,converted,conversionRate,definitionVersion}` from enquiries created in that period, converted by asOf; zero total has null rate. Scope/ownership precedes aggregate reads; no guest phone/name becomes a metric key. Add `(business_id,created_at,id)` for cohorts and `(business_id,converted_at,id)` for conversion activity.
+
+`featured_selected` records owner choice, not public eligibility. `ServiceReadPort` returns effective `featured` only for an active, public service/business with current Premium at query time. New selection requires entitlement under Payments' resolved billing policy; missing configuration fails closed. Existing services remain unselected by default.
 
 ## Endpoints
 

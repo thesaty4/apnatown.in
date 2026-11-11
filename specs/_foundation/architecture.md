@@ -13,6 +13,21 @@
 
 ## Boundaries and ownership
 
+### Decision precedence for implementation
+
+The user's 2026-11-11 authorization resolves the following historical questions with conservative launch defaults. These owning specs supersede older “open” entries in the reference pack **for these decisions only**; this specs-only change does not edit reference documents or waive unrelated gates:
+
+| Resolved contract | Canonical implementation source |
+|---|---|
+| Q-62/Q-64/Q-65/Q-67 coupon/offer price precedence, validity, finite use and refund allocation | [Offers](../offers/be/offers.md#launch-coupon-and-offer-policy) and [Checkout](../cart-checkout/be/cart-checkout.md) |
+| Q-74 paid-plan/promotion period, renewal, cancellation and verified activation | [Payments](../payments/be/payments.md#launch-billing-policy) |
+| Q-06 fiscal documents, tax extraction, supplier/funding separation; commission basis | [Orders](../orders/be/orders.md#invoice-and-tax-policy), [Payments](../payments/be/payments.md), [Settings](../settings/be/settings.md#resolved-launch-configuration) |
+| Q-46/Q-53/Q-66/Q-81 public image limits and transformations | [Media](../media-videos/be/media-videos.md#public-image-policy) |
+| Q-23/Q-24 subcategory and EN/HI public routes | [Frontend shared](./frontend-shared.md#public-url-and-locale-policy) |
+| ADM-Q4/Q-11 existing operational financial, cohort and engagement reports | [Admin](../admin/be/admin.md#reporting-definitions) and its owner-port contracts |
+
+Runtime configuration (real prices, verified supplier tax identities/classifications and configured integration credentials) is required input, not a guessed default or an unresolved implementation algorithm. Only the affected feature is unavailable until its readiness check passes. Tests use explicit fake fiscal data; no spec declares legal registration, actual performance or production readiness already verified.
+
 Modular monolith: NestJS modules own their domain tables and use-cases. Cross-module calls require the purpose-limited owner ports below and in the paired module contracts; state changes use those typed application interfaces or domain events, never another module's repositories. Controllers validate DTOs and call use-cases. Shared contracts live in `packages/shared`.
 
 | Module | Responsibility | Allowed dependencies | Owned tables (names only) |

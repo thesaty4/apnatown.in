@@ -22,16 +22,16 @@ Use [frontend-shared.md](../../_foundation/frontend-shared.md) states; private r
 - Screenshots: `d-customer-cart.jpg`, `m-customer-cart.jpg`.
 - Layout: business-grouped product lines; desktop two-column cart/summary, mobile stacked groups with a clear checkout action.
 - Data: `CartDTO` from `GET /cart`; mutations send cart/line versions. Add uses `{productId,variantId:null|uuid,quantity,expectedCartVersion}`; no synthetic base-variant ID. Catalog actions/reorder use this same contract.
-- Special states: empty cart; invalid/unconfigured offer pricing; coupon redemption policy unavailable (Q-67); saved lines; unavailable shop; label removed/selection required; shared product stock exhausted.
+- Special states: empty cart; unconfigured pricing; coupon unavailable/exhausted or quote expired; saved lines; unavailable shop; label removed/selection required; shared product stock exhausted.
 - Interactions: quantity stepper (1–10/current stock), save/restore/remove, coupon Apply and proceed. Variant labels share product stock; a product without labels has no empty selector, while a nonempty label set requires an active selection. Enter applies coupon; local input retains focus on validation/refetch.
 - Rules: F-CK-001/F-CK-009, BR-01/17/19. Show GST as included; delivery appears at checkout. Never show client-calculated totals as final.
 - Acceptance:
   - Given no active lines, when the cart opens, then the localized empty state links to shopping.
   - Given a customer changes quantity or saves/removes a line, when the server confirms, then grouped totals refresh without exceeding stock or quantity limits.
-  - Given any coupon code is entered while Q-67 remains unresolved, when quote refreshes, then the cart remains unchanged, shows the localized policy-unavailable state, and does not reveal whether the code exists.
+  - Given a logged-in customer enters a coupon, when quote refreshes, then one code's server-computed eligible shares are shown after item offers. Invalid/inactive/exhausted/service-only codes use the same unavailable message without foreign details; a guest first receives the login/return gate.
   - Given a guest proceeds to checkout, when OTP login rotates Auth's cookie, then the independent HttpOnly guest-cart proof survives; the app refreshes CSRF, calls `POST /cart/merge-guest`, shows clipped/unavailable lines for review, and returns to checkout (J12/Q-70). Failed/lost merge responses retry the same key without discarding the guest cart or duplicating quantities.
   - Given a variantless product and two labels of another product, when added/saved/restored, then line keys remain product + nullable variant and server stock conflicts do not create phantom base variants or label-specific stock.
-  - After Q-67 is resolved and checkout redemption is enabled, given a coupon exceeds its server cap, then the UI renders the server-capped discount/nonnegative totals and never recomputes an allocation; this behavior is not enabled before that decision.
+  - Given a coupon exceeds its cap or some shops are ineligible, then UI renders capped server shares only and never reallocates discounts locally. Applying another code replaces, never stacks with, the existing coupon; removal requests a new quote.
 
 ### S-CUST-11 — Checkout (`/checkout`)
 
@@ -43,6 +43,8 @@ Use [frontend-shared.md](../../_foundation/frontend-shared.md) states; private r
 - Interactions: address management remains Users-owned; map has keyboard/form alternative. Choose mode per shop and payment once. Preserve attempt ID through navigation/reload, not credentials. While processing, show the pinned quote; editing inputs requires explicit re-review and cannot amend that attempt's charged inputs. Lost responses retry the same key/payload or read status, not create another attempt.
 - Rules: F-CK-002, F-CK-003, F-CK-004, F-CK-005, F-CK-006, F-CK-007, F-CK-009; BR-01, BR-03, BR-04, BR-17, BR-19, BR-21; ST-payment. Explain fee source: shop flat delivery / ApnaTown slab / zero pickup. Read available methods and `allowedActions` from server; approval and payment flags are rechecked there.
 - Financial recovery: Retry/cash fallback is disabled during pending/unknown capture or compensation. New quote/amount requires confirmation; no silent changed-address retry. Captured/unplaced shows recovery status and support, not “No money was taken”, placed orders or an invented refund ETA. Esc/back never confirms/cancels a provider charge.
+- An exact-zero ready quote shows “No payment due” and Place order, omits payment-method selection/submission and never opens a gateway. Unknown totals are not zero. Mixed checkouts show no-charge shops separately and select a method only for positive allocations. Server zero settlement and the entire order set must commit before success; retry cannot consume a coupon twice.
+- Coupon reservation occurs only on submission, not typing/preview. Show server quote expiry and require re-review after expiry/price changes. Explain that cancelled/refunded placed orders do not restore the coupon use. Show platform-funded discount separately from merchant discount while charging only server customer-payable total; missing supplier tax setup is an unavailable-item reason, never guessed zero GST.
 - Acceptance:
   - Given two eligible shops, when checkout loads, then each has its own mode choice and the total explains the number of resulting orders.
   - Given an address is outside a shop's range or a delivery minimum is unmet, when the quote refreshes, then the issue is labelled and self-pickup is offered only if enabled.
@@ -84,5 +86,5 @@ Use [frontend-shared.md](../../_foundation/frontend-shared.md) states; private r
 - Component: grouped cart, quantity boundaries, coupon policy-unavailable state, per-shop modes, address selection, failure/retry/cash fallback, pending-vs-success guard, long Hindi, dark mode and offline state.
 - Journey: J1 two-shop checkout through success/tracking; J12 login gate returning to checkout; payment failure followed by retry or enabled cash fallback.
 - Visual: required desktop/mobile screenshots in light and dark, English and Hindi; compare with the named prototype screenshots.
-- Map all acceptance bullets to scenarios: null/required variant identity, shared stock errors, fee-source labels, policy-blocked coupon/no code enumeration (and capped coupon only after Q-67), stale quote/address during provider handoff, timeout/reload/late success, blocked COD race and compensation without an order.
+- Map all acceptance bullets to scenarios: null/required variant identity, shared stock errors, fee-source labels, finite/capped coupon shares, no code enumeration, reservation expiry, stale quote/address during provider handoff, timeout/reload/late success, blocked COD race and compensation without an order.
 - Negatives/a11y: foreign attempt/address, expired session, malicious product/coupon text rendered safely, offline submit, duplicate submit, axe, keyboard payment radios/stepper/dialog focus, Hindi at 360px, dark/reduced-motion states. Never cache or log addresses, codes, handoff secrets or raw provider payloads.

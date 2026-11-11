@@ -99,6 +99,8 @@ Prefixes `rider.*`, `admin.live.*`. Analytics: `rider_online_toggled`, `rider_of
 
 ## Tests
 
+For `settlementKind='no_charge'`, show the shared “No payment due” badge and no cash-collected checkbox, while retaining all code, ownership and fulfilment checks. A forged collection or uncommitted zero settlement must fail server-side. Test platform delivery, self-delivery and pickup without any zero-paise collection.
+
 Component/E2E: map every screen criterion to tests; draft→typed KYC→approval/Auth refresh, two-tab accept/expiry/reconnect, item/financial version reset, pickup/self/platform explicit cash, code expiry/reissue/consume/lost response, failed-order case, history/estimate-vs-earned/IST bounds, jobless support receipt and same-city/wrong-area live SSE.
 
 All screens: auth/ownership negatives, malformed/XSS form/asset/ID input, offline retry without duplicate money/mutation, EN/long Hindi, 360 px + desktop, light/dark/reduced motion, Axe/keyboard/focus return, topmost Esc, ≥44 px controls, status text/icons not color alone. No private/code data in analytics or browser caches.

@@ -30,6 +30,7 @@ Own the shared category and subcategory taxonomy, vendor/provider subcategory su
 |---|---|---|---|---|---|---|
 | GET | `/catalog/categories?kind=` | Public; `kind` allow-listed | → active category DTOs | `VALIDATION_ERROR` | Yes | F-HM-003/004, S-CUST-01/04 |
 | GET | `/catalog/categories/{slug}` | Public | → category, active subcategories | `CATEGORY_NOT_FOUND` | Yes | S-CUST-05 |
+| GET | `/catalog/categories/{slug}/subcategories/{subcategorySlug}` | Public; both active and exact parent-child relationship | → localized parent/child DTO, immutable slugs, Media image descriptors and canonical path; Search owns paged results | `SUBCATEGORY_NOT_FOUND` | Yes | S-CUST-05 |
 | GET | Internal `CatalogHomeReadPort.list({at})` | Search public Home composition | Active localized section config with active category/subcategory projections, ordered positions and image descriptors | — | Yes | F-HM-003/004, S-CUST-01/05 |
 | GET | `/catalog/admin/categories` | `admin` + `catalog:view` + active assigned city/area scope; `super_admin` platform-wide | → full tree with `version` | `FORBIDDEN` | Yes | F-AD-005, F-SA-008, S-ADMN-05 |
 | POST | `/catalog/admin/categories` | `super_admin`; platform-wide; audit required | Allow-listed `{kind,slug,nameEn,nameHi,icon?,imageAssetId?,sortOrder?}` → category DTO | `VALIDATION_ERROR`, `CATEGORY_CONFLICT`, `CATALOG_IMAGE_INVALID` | Via `Idempotency-Key` | F-SA-008 |

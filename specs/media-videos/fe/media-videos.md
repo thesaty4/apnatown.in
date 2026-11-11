@@ -40,7 +40,7 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 
 ### S-VEND-11 / S-PROV-12 Gallery and videos manager | `/vendor/media`, `/provider/media` | `d-vendor-vmedia.jpg`, `m-vendor-vmedia.jpg`, `d-provider-smedia.jpg`, `m-provider-smedia.jpg`
 - Layout matches final js26: Videos & Reels / Gallery; link/upload editor, thumbnail, caption, hashtags, linked items and separate Gallery/Reels toggles. Each video has **Move up/Move down**, status/reason, Preview, linked-item editor and Remove confirmation; Gallery photos have arrow/drag ordering.
-- Display source metrics **Views, Likes, Shares, Followers gained, Taps on linked** (comments available in the shared analytics table). Attribution fields include availability/definition metadata; Q-11 unresolved means explicit unavailable, not zero or client-estimated gains.
+- Display **Views, Likes, Shares, Followers gained, Taps on linked** (comments in the shared analytics table) using reporting-v1 and BE first-follow attribution. Coverage/definition metadata distinguishes missing historical evidence from zero; never estimate gains client-side.
 - Data: `/businesses/me/videos`, `/businesses/me/gallery`, `/businesses/me/videos/analytics`, `/media/uploads`, Businesses settings for the default.
 - Reorder GET/PUT `/businesses/me/videos/order` or `/gallery/order` uses canonical ordered IDs and `expectedOrderVersion`; keyboard arrows share the same atomic mutation as drag, rollback/reload on conflicts.
 - Edit GET `/businesses/me/videos/{id}` hydrates source union, thumbnail asset ID, text, links, consent and version. PATCH sends `VideoEdit`; **Edit & resubmit** on rejected content explicitly sends `resubmit:true`. Source replacement validates/re-enters pending; a consent-only change does not pretend to resubmit. Removed owner content remains read-only.
@@ -56,7 +56,7 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 - Reported is a typed **Photo / Video** report list with Open/Resolved badges. Dismiss/Remove calls `/admin/media-reports/{id}/decision` with report and target versions; photo preview/asset ID cannot be confused with a same-title video. Dismiss never approves a rejected/removed item. Photo Remove hides that asset, not the business/product.
 - Comments share this **existing** screen per G-09: `content=comments` selector within Pending/Approved/Removed; map Approved to `status=published`. GET `/admin/comments?status=&cursor=` returns rows and counts; POST `/admin/comments/{id}/decision` with action/reason/version publishes or removes. Video/author/text/status and parent preview are present; no new moderation route.
 - Refresh the affected queue **and counts** after a decision. Removing a published comment also invalidates the video comment count; pending removal does not decrement. Engagement handles duplicate/versioned responses.
-- Engagement table includes **Views, Likes, Shares, Taps on linked, Like rate** from final `js27.js:26`, plus comments where supplied. Like rate is server-defined source rounding; attribution-dependent taps/gains retain Q-11 unavailable state.
+- Engagement table includes **Views, Likes, Shares, Taps on linked, Like rate** from final `js27.js:26`, plus supplied comments. Like rate uses server rounding; taps/gains use first-party dedup/first-follow definitions and coverage metadata.
 - Special states: no permission, empty tab.
 - Acceptance: Given a reason-required decision, when reason is empty, then submission is blocked. Given catalog-only permission, when opening moderation, then no access; reviews:view is read-only. Given a same-city unassigned area, when an ID is pasted, then data/action is denied. Given a published comment removal or photo report dismissal, when successful, then the correct queue/counters change without accidental video approval.
 
@@ -69,5 +69,9 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 Prefixes `reels.*`, `gallery.*`, `vendor.media.*`, `admin.videos.*`. Events: `reel_viewed`, `reel_pill_changed`, `reel_shop_opened`, `reel_linked_item_clicked`, `video_submitted`, `video_moderated`, `gallery_opened`.
 
 ## Tests
+
+All public-image Uploaders follow [Media image policy](../be/media-videos.md#public-image-policy), display accepted format/size/dimensions, and retain the prior image on replacement failure. Consume variant dimensions/URLs for responsive images. Linked-tap POST occurs only on actual target activation. Follow includes `sourceVideoId` only with a recent same-session view; login-return following works without attribution. Prefetch/preload never creates a view.
+
+Responsive renderers import `PublicImageVariantDTO` and use `variant.path` with its width/height; never expect a `url` alias or construct storage paths. Test upload-ready without public placement, authorized public variants, invalid width/version and revoked placement including conditional/range requests.
 
 Component/axe: feed snap/keyboard and player lazy loading, data-saver, ID anchoring, explicit TTL restart, report/photo sheet, source edit/resubmit, reorder arrows/drag, comment queue, focus after action, Hindi/dark layouts. E2E J4/J6: immutable ranking despite counters/approvals, live consent removal, out-of-filter deep link, guest PHOTO report → scoped admin resolution, catalog-only denial, published-comment count decrement and private applicant upload-purpose checks. Account data export/deletion stays Users-owned; clear personal cached media/report state on invalidation.

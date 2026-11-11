@@ -11,6 +11,7 @@ Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../..
 | `/` (category tiles, dedicated and curated sections) | S-CUST-01 | ISR; Catalog taxonomy/section tags and Search-owned public sections | Public | Existing home SEO policy |
 | `/services` | S-CUST-04 | ISR; public category content and featured results | Public | Index |
 | `/category/[slug]` | S-CUST-05 | ISR; category metadata and result list are server-rendered | Public | Index category landing pages; canonical, EN/HI alternates |
+| `/category/[slug]/[subcategorySlug]` | S-CUST-05 reused | SSR scoped subcategory results + taxonomy-tag fragments | Public | Apply shared locale/canonical policy; inactive/mismatched parent-child is noindex 404 |
 | `/vendor/products` (suggestion sheet) | S-VEND-05 | SSR shell; suggestion form is a client island | Vendor, own business | Noindex |
 | `/vendor/services` (taxonomy selector contract) | S-VEND-13 | SSR shell; service form is owned by `services` | Vendor, own business | Noindex |
 | `/admin/categories` | S-ADMN-05 | SSR; authenticated tree and scoped preview | Admin with `catalog:view`; super admin | Noindex |
@@ -57,6 +58,7 @@ Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../..
 - Screenshots: `d-customer-cat-grocery.jpg`, `d-customer-cat-wedding.jpg`, `m-customer-cat-grocery.jpg`, `m-customer-cat-wedding.jpg`.
 - Layout: mobile stacks category header/results and uses the shared filter sheet; tablet uses the shared horizontal filter bar; desktop pairs the category header/results with the filter panel. Services reuse `SubcategoryMultiSelect`.
 - Data: category DTO from catalog; products/shops/services and facet counts from `search`; ISR tags revalidate on taxonomy change.
+- Subcategory route loads `GET /catalog/categories/{slug}/subcategories/{subcategorySlug}` and pins its parent/child in the shared Search query. Breadcrumbs link Home, category and subcategory; localized URLs/alternates follow [the foundation](../../_foundation/frontend-shared.md#public-url-and-locale-policy). This is a reuse of S-CUST-05, not another filter implementation.
 - Images: category header and displayed subcategory cards use Media-authorized category/subcategory images with the same icon/placeholder fallback; do not make filters depend on image availability.
 - Special states: empty category, no matching active subcategory.
 - Interactions: service filters update URL params; Back restores filters and scroll; CTA opens Explore with the same category.

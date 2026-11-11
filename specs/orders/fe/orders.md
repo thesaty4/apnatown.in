@@ -52,16 +52,19 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) states/components, p
 
 ### S-CUST-16 — Invoice (`/orders/:id/invoice`)
 
+- Order, invoice, master-summary and business handover consumers use the shared payment badge's `settlementKind`: no-charge means no customer payment due, not a cash receipt or refund. Supplier invoices may still include platform-funded consideration; show its source separately.
+
 - Screenshots: `d-customer-invoice-AT10198.jpg`, `m-customer-invoice-AT10198.jpg`.
-- Layout: printable tax invoice, business/customer details, immutable item and total rows; print/save action; hide navigation/actions in print view.
+- Layout: supplier document list and printable immutable invoice/bill-of-supply/receipt or linked credit note, labelled with its true document type; print/save hides navigation/actions. Separate shop and platform fee documents, never a shop GST invoice containing another supplier's fees.
 - Data: `GET /orders/{orderId}/invoice`; customer order ownership required; no public cache.
-- Special states: invoice not configured, unavailable order, print failure.
-- Rules/acceptance: Given an owned order and configured issued snapshot, when printed, then names/amounts match its immutable financial revision, not later catalog data. Given a subsequent adjustment, when opened, then it is identified separately and no original invoice is overwritten. Given tax/credit-note policy is unset or another owner's order is requested, when opened, then no fabricated invoice/GST fields or foreign data appear (Q-06).
+- Special states: preparing/signing, issued, failed with retry/support reason, legacy-unverified, unavailable order and print failure. Pending invoice is not an unpaid/failed order.
+- Rules/acceptance: Given an owned issued document, then printing uses frozen supplier/tax amounts and number. Later adjustments link a credit document, never overwrite the original. An unregistered supplier shows a commercial receipt, not a GST tax invoice; an unauthorized order or unverified fiscal setup never reveals fabricated or foreign documents. Follow [BE invoice policy](../be/orders.md#invoice-and-tax-policy).
 
 ### Master checkout summary — linked from S-CUST-12
 - Layout: one non-tax summary for the checkout with each shop order, ordered item/discount/fee/total breakdown, a separately labelled current cancellation/fulfilment/refund status, and a link to each shop's legal invoice when available; print/save action.
 - Data: `GET /checkouts/{checkoutAttemptId}/summary`; customer order ownership is required. Each invoice link opens that shop's own `/orders/{orderId}/invoice`. No public cache.
 - Rules/acceptance: Show each allocated coupon discount and fee once; original checkout totals never change. The summary is not a tax invoice, does not calculate or display a consolidated tax line, and directs customers to the linked shop invoice for tax detail. Given an invoice is not yet available, the summary still loads and labels that invoice unavailable. Given cancellation/refund/adjustment occurs, current status is separate from original totals; only verified returned money is labelled refunded. Unauthorized checkout IDs reveal no shops or amounts.
+- Display `supplierDocumentTotal - platformCouponContribution = customerPayable` when platform funding applies; a larger supplier invoice is explained, not charged again. Pending refunds/credits are separate from verified returned cash. Keep the master document available while a linked supplier invoice is being prepared.
 
 ### S-VEND-03 / S-PROV-04 — Business orders list
 
@@ -109,4 +112,4 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) states/components, p
 
 ## Open questions
 
-Q-06/Q-07, Q-17, Q-76, Q-77, Q-78, Q-79, Q-80 and G-16/G-17 remain gated; see [BE orders](../be/orders.md). No new refund authority, retention, invoice tax or substitution behavior is inferred from a visible prototype button.
+Q-06 invoice/tax rules are resolved in [BE orders](../be/orders.md#invoice-and-tax-policy). Q-07/Q-17, Q-76/Q-77 general return eligibility, Q-78/Q-79/Q-80 and G-16/G-17 remain separate. Defined coupon/tax allocations do not silently authorize a refund, retention change or substitution.

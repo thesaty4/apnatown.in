@@ -92,12 +92,12 @@ Owner API calls set `X-Business-Kind` from the vendor/provider route group; the 
 
 - Screenshots: `d-provider-shome.jpg`, `m-provider-shome.jpg`.
 - Layout: `DashboardShell`, status banner, KPI row, enquiries/chart and coming-soon panel.
-- Data: `GET /businesses/me/overview` provides business status, real enquiry counts/latest records and source-owned rating/follower summaries. Q-11 gates view/conversion metrics only, not already recorded enquiry counts.
+- Data: `GET /businesses/me/overview` provides status, enquiry counts/latest records and source-owned rating/follower summaries; use reporting-v1 view/conversion definitions and coverage metadata.
 - Special states: no enquiries (`business.dashboard.noEnquiries`); analytics unavailable (`business.analytics.unavailable`).
 - Interactions: open inbox via services; booking, quotation and payment remain placeholders with the feature flag off and no API mutation.
 - Rules: F-PV-006, F-PV-007, BR-06; no synthetic analytics. Reviews/followers/gallery/video screens in F-PV-006 are owned by reviews, engagement and media-videos.
 - Given a provider opens the overview, when enquiries load, then only that provider's records are shown.
-- Given Q-11 metrics are unavailable, when the overview renders, then it shows the unavailable state and no synthetic values.
+- Given historical metric evidence is unavailable, when the overview renders, then unavailable is distinct from zero and no synthetic values appear.
 - Given the booking flag is off, when the coming-soon panel renders, then booking, quotation and payment remain non-actionable.
 
 ### S-VEND-12 — Business profile editor
@@ -159,11 +159,11 @@ Owner API calls set `X-Business-Kind` from the vendor/provider route group; the 
 
 - Screenshots: `d-provider-sanalytics.jpg`, `m-provider-sanalytics.jpg`.
 - Layout: KPI cards, views-vs-enquiries chart and enquiry-status mix, with accessible chart table fallback.
-- Data: `GET /businesses/me/analytics?period=30d`; render real daily enquiry/status counts. Profile-view source and conversion formula remain Q-11-gated and render unavailable, not fabricated zeros.
+- Data: `GET /businesses/me/analytics?period=30d`; render daily enquiry/status counts, window-deduplicated profile views and enquiry-cohort conversion from reporting-v1. Zero denominator is not applicable; missing history is unavailable.
 - Special states: empty analytics (`business.analytics.empty`).
 - Interactions: no data mutation; chart tooltips and equivalent table are keyboard accessible.
 - Rules: F-PV-006; no fabricated sample values in production.
-- Given Q-11 defines the metric source, when analytics loads, then only authorized provider metrics are returned.
+- Given reporting-v1 covered records exist, when analytics loads, then only authorized provider metrics are returned.
 - Given the period has no source data, when the screen loads, then the explicit empty state appears without sample counts.
 - Given a chart is rendered, when used by keyboard or assistive technology, then labels and values are available without colour-only cues.
 
@@ -199,10 +199,13 @@ Feature-only: `BusinessOnboardingWizard`, `BusinessProfileHeader`, `BusinessProf
 
 - Key prefixes: `business.profile.*`, `business.onboarding.*`, `business.dashboard.*`, `business.qr.*`, `business.account.*`, `business.analytics.*`.
 - Localize all UI/errors EN/HI; user-entered names retain their supplied locale. Test long Hindi wrapping on both public and dashboard layouts.
-- No new analytics event taxonomy. Dashboard aggregates are read-only and use Q-11-approved events only.
+- Only specified first-party reporting-v1 signals and committed domain facts feed dashboards; no additional marketing taxonomy.
 - In the unified public profile, F-PF-008 is owned by engagement and F-PF-009/010 by media-videos; this spec owns only their profile-tab composition.
 - Within F-PV-006, S-PROV-10 reviews is reviews-owned, S-PROV-11 followers is engagement-owned, and S-PROV-12 media is media-videos-owned; this module owns the overview, QR, analytics and account surfaces.
 
 ## Tests
+
+Add the shared Billing identity section to existing vendor/provider onboarding/profile editors, using `/businesses/me/billing-profile`, its independent version and registration-specific fiscal fields. Save submits review; show pending/rejected/approved and explain the block on new financial quotes/purchases without changing existing invoices. No self-verified checkbox. Admin approvals uses the linked owner contract and exact `approvals:view/edit` scope. Verify EN/HI validation, forbidden evidence reads and stale saves.
+Public profiles record views only after actual display, never SSR/GET/prefetch or owner preview. Label counts as session windows, not unique people.
 
 Component: onboarding step retention/validation, profile preview, document privacy, QR print variants, analytics empty state, account ownership. E2E: J7 onboarding; public shop/provider profile load and unavailable states; vendor/provider profile save; QR share/print; provider analytics empty state.

@@ -65,7 +65,7 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) for standard states,
 - Layout: tabs Orders / Revenue / Vendors / Riders / Enquiries; date range and city filters (URL state); Orders: orders-per-day bar chart + order mix donut; Revenue: GMV per day bar + commission KPI; others: `DataTable`. "Export CSV" button downloads the current tab.
 - Data: `/admin/reports/{tab}` and matching `/export.csv` with identical normalized `from,to,cityId` filters. Display server `definitionVersion`, availability and paise/IST values; paginate rows with `nextCursor`. Do not calculate financial/cohort metrics from visible rows.
 - Special states: no data for range (empty); export too large → toast with range hint.
-- Decision-required metrics show “Not available until defined”, not synthetic figures; dependent export explains the gate. Scope denial clears stale protected results.
+- Use [reporting-v1](../be/admin.md#reporting-definitions) labels/tooltips, `asOf` and coverage metadata. “Data unavailable” is distinct from zero and “No comparison”. Export requires returned `reports:export` plus view; losing scope clears stale protected results.
 - Acceptance: Given a range change, when navigating Back, then URL/rows/chart restore together. Given populated or empty data, when exporting, then the same scope/date filters apply; chart table alternatives remain keyboard accessible.
 
 ### S-ADMN-17 Admin profile | `/admin/profile` | `d-admin-aprofile.jpg`, `m-admin-aprofile.jpg`
@@ -76,9 +76,9 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) for standard states,
 ### S-SUPR-01 Super admin overview | `/super-admin/overview` | `d-super-xhome.jpg`, `m-super-xhome.jpg`
 - Layout: header with "Platform-wide" badge; `KpiCard`s (Total GMV, Active cities, Vendors, Riders, Admins, Waitlist signups); one accessible Graph `ChartCard` with controls Metric (Orders, Revenue, Deliveries), Date range (Last 7/30/90 days), City, plus a screen-reader/keyboard-accessible data-table alternative. Candle view, OHLC legend and tooltip are removed.
 - Data: `/super-admin/overview`, `/super-admin/metrics` (controls in URL).
-- The server returns only `points`, availability and definition version. Order/delivery graph counts use actual records; revenue remains explicitly gated until ADM-Q4. The response has no candle/OHLC shape or synthetic derived series. Existing metric, date-range and city filters remain.
+- The server returns only `points`, availability and definition version. Orders/Deliveries use recorded events; `metric=revenue` is labelled “Platform income (operational)” with the reporting-v1 explanation, not marketplace GMV or statutory accounts. No candle/OHLC shape or synthetic series exists; metric/date/city filters remain.
 - Special states: chart skeleton while loading; empty "No data for {city} yet"; error "We could not load the chart data." + Retry.
-- Acceptance: Given the chart loads, when Orders or Deliveries is selected, then actual graph points and their accessible table use the same range/city filters. Given Revenue is selected before its definition is approved, when metrics return, then the decision-required unavailable state appears rather than a guessed financial series. No Candle control, candle payload, OHLC value or chart-only claim is rendered.
+- Acceptance: Given each metric is selected, then graph and table use identical filters/asOf and reporting-v1 measures. Missing historical evidence shows unavailable, while actual zero remains zero. No Candle/OHLC or statutory-revenue claim is rendered.
 
 ### S-SUPR-02 Admins and areas | `/super-admin/admins` | `d-super-xadmins.jpg`, `m-super-xadmins.jpg`
 - Layout: header + Add admin; search “Search name, phone or email”; desktop filters/mobile sheet (city, **area or zone**, role, status), chips, result count, Clear all. Collapsed cards show name/role/scope/status; expanded cards show **phone with Call, email, last active**, assigned cities/zones/areas, permissions summary, Audit shortcut and actions, matching `js18.js:55–65`.
@@ -98,8 +98,9 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) for standard states,
 ### S-SUPR-07 Platform analytics | `/super-admin/analytics` | `d-super-xanalytics.jpg`, `m-super-xanalytics.jpg`
 - Layout: KPIs GMV (30d), Orders (30d), Avg order value, Repeat customers with deltas; Orders by category bars; Delivery vs pickup donut with legend %; Top vendors table.
 - Data: `/super-admin/analytics?range=&cityId=`; use the BE definitions/availability contract. Financial values, repeat-cohort/category allocation and deltas cannot be inferred client-side.
+- Bind the same server `asOf`, repeatCohort counts/rate and topVendors tie-breaking. Category charts/tables use the returned paginated category counts with Load more and Unclassified; do not recompute global totals from visible rows. Incomplete history stays unavailable.
 - Special states: empty (no orders in range).
-- Acceptance: Given unresolved analytics definitions, when the screen loads, then affected fields are labelled unavailable while known counts remain visible; an actual empty period shows the separate empty state.
+- Acceptance: Given multi-shop repeat purchases, refunds, multiple vendor categories and zero denominators, when the screen loads, then the server's reporting-v1 values/labels are preserved and undefined comparisons are not shown as zero/Infinity.
 
 ## Feature components
 
@@ -111,4 +112,4 @@ Prefixes `admin.*`, `superAdmin.*`. Events: `approval_decided`, `listing_updated
 
 ## Tests
 
-Component: all screen ACs, typed listing/rider hydration, required phone/name, inert report/support text, versions, role matrix normalization, area/zone chips and actor shortcut. Keyboard/axe: Add/Edit/Remove and report sheets, documents, tabs, permission matrix, chart table/tooltip, topmost Esc, Hindi/dark layouts. E2E J7/J10: approval, role reassign/deactivate, report intake → existing alert → detail, rider edit/remove, export filter parity and stale writes. Negatives: same-city unassigned area, destination-only grants, scope revoked while a sheet is open, catalog-only video moderator, forbidden metrics. ADM-Q1/Q2/Q3/Q4 remain visible gates, not passing happy-path fixtures.
+Component: all screen ACs, typed listing/rider hydration, required phone/name, inert report/support text, versions, role matrix normalization, area/zone chips and actor shortcut. Keyboard/axe: Add/Edit/Remove and report sheets, documents, tabs, permission matrix, chart table/tooltip, topmost Esc, Hindi/dark layouts. E2E J7/J10: approval, role reassign/deactivate, report intake → existing alert → detail, rider edit/remove, export filter parity and stale writes. Negatives: same-city unassigned area, destination-only grants, scope revoked while a sheet is open, catalog-only video moderator, forbidden metrics. ADM-Q1/Q2/Q3 remain visible gates, not passing happy-path fixtures; ADM-Q4 is resolved by reporting-v1.

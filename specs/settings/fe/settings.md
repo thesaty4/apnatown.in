@@ -25,9 +25,9 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 ### S-SUPR-06 Global settings | `d-super-xsettings.jpg`, `m-super-xsettings.jpg`
 - Layout: heading; section chips (URL `section`): Branding, Delivery & rider pay, Commission & plans, Payments, Policies & reviews, Notifications & WhatsApp, SEO defaults, Feature flags, Legal pages; one form card per section; link "Manage categories".
 - Delivery: slab rows "Up to (km)" / "Fee (₹)"; rider rule "Base per ride (₹)", "Per km (₹)" with a live example from **configured** values; no demo ₹20/₹7 production fallback.
-- Commission & plans: default commission %, platform fee ₹, plan rows (name, ₹/mo, commission %), promotion fee rows.
-- Payments: Online payments / Cash on delivery toggles; approved configured gateway choices; "Configured"/"Not configured" badge, no key input or silently selected provider.
-- Policies: approved refund window; review rule EN/HI textarea; blocked words chips. Rule copy cannot resolve Reviews' eligibility/re-review gates.
+- Commission & plans: default commission %, platform fee ₹, plan rows (localized name, tax-inclusive ₹/calendar month, commission %, enabled and Premium entitlement), promotion fee rows (tax-inclusive ₹/7 days). Use the server's fixed term rules; no auto-renew/proration controls or sample price fallback.
+- Payments: Online payments / Cash on delivery toggles; approved configured gateway choices; "Configured"/"Not configured" badge, no key input or silently selected provider. A separate versioned Tax configuration card edits verified platform supplier/classifications and displays missing readiness fields; it never infers a GST rate or claims regex validation proves registration.
+- Policies: approved refund window; review rule EN/HI textarea; blocked words chips. Rule copy cannot resolve Reviews' eligibility/re-review gates. A separate Upload policies card shows Media's approved limits/hard ceilings and saves `uploads` independently, without changing `policies_reviews` group semantics.
 - Notifications & WhatsApp: configured sender/status/enable toggle, SMS adapter and email sender; **public support Call and WhatsApp E.164 destinations**. No secrets or example phone number.
 - SEO: default title/description with search-result preview.
 - Feature flags: Customer reviews, Guest browsing, WhatsApp, Maintenance; future Booking/Donations visible **false, disabled, unavailable** until separately implemented.
@@ -39,6 +39,7 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 - Cache invalidates coherent group values and configured contacts; `feature_flag.updated` affects feature availability and `legal.updated` its slug/locale metadata. UI never locally enables a future product.
 - Acceptance: Given non-super admin, when loading/mutating, then route/API are forbidden. Given one invalid/stale group member, when Save is attempted, then no member changes and every local edit survives. Given concurrent flag writes, then version conflict restores current state.
 - Acceptance: Given Hindi/dark mode, when all sections render, then labels/errors stay readable and no credentials appear. Given Booking/Donations, when toggled by forged API/UI, then they stay disabled. Given changed financial settings, then UI does not claim existing orders were repriced.
+- Acceptance: Given incomplete commercial/fiscal settings, when the administrator opens the section, then exact missing fields are shown as setup tasks; enabling a plan requires explicit price, entitlement and valid tax references. Given an image limit above the hard ceiling, then no save succeeds.
 
 ### S-CUST-30 Help and support | `d-customer-help.jpg`, `m-customer-help.jpg`
 - FAQ accordion (`details` keyboard support); public **message-only** form “Your message” → Send, matching final `js7.js`. No required guest phone or login field.

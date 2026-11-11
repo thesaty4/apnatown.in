@@ -55,7 +55,7 @@ Features: F-LC-001, F-LC-002, F-LC-003, F-LC-004, F-LC-005, F-SA-004 | Screens: 
 - Layout: city cards with status, zone/area/admin/waitlist counts, open-city action, enable/disable, and Add city; status always includes icon and text.
 - Data: keyset `GET /geo/admin/cities?cursor=&limit=` and POST creation; append further cards with shared pagination. Assigned-admin counts come from Admin, not geo-owned tables.
 - Special states: empty city list.
-- Interactions: Add city collects English and Hindi names (Q-36/G-12); enable/disable opens impact confirmation with the prototype copy; no direct toggle before confirmation.
+- Interactions: Add city collects English/Hindi names and verified GST state/UT code; show/correct that code in city detail with a separate versioned audited Save. Explain that it affects new fiscal quotes, not issued invoices. Enable/disable keeps the existing impact confirmation.
 - Validation/rules: super admin only; city changes are audited; disabling stops new discovery/orders but open orders continue (BR-12).
 - Acceptance:
   - Given a non-super-admin opens or mutates city management, when authorization runs, then protected city data/actions are denied.
