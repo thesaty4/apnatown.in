@@ -49,6 +49,9 @@ with correlation IDs rather than exception messages or submitted values.
 `withCorrelation` isolates the validated ID across asynchronous HTTP work;
 the shared Pino logger includes that context automatically. Job/relay owners
 must enter it using the persisted event ID context, not a process-global value.
+`EVENT_FACTORY` constructs validated version-1 envelopes with UUIDv7,
+aggregate version, UTC time and bounded JSON; it does not enqueue or imply
+transactional outbox delivery is already available.
 Signed adjustments still require their owning DTO's explicit permission.
 These primitives do not imply that persistence, live authorization or the
 Catalog reference below are implemented. Automated test tooling remains
