@@ -71,6 +71,12 @@ times retry limit plus one. Exhausted or malformed events become `dead` with a
 safe error code, never exception text or event payload in logs. Consumers and
 readiness-manifest registration remain deferred, so this relay does not imply
 any domain handler is active or make worker readiness true.
+`WorkerModule` now exports the `EVENT_CONSUMER` transactional execution port.
+It validates the expected event type/version and deduplicates each named
+consumer/handler/event through `COMMAND_UNIT_OF_WORK`, committing local effects
+and a non-secret receipt together. Its exact boundaries are in the
+[data-model contract](./data-model.md#shared-runtime-persistence); it does not
+register a pg-boss callback, load events or perform external sends.
 Structured failure logs and persisted dead-state exist; a metrics exporter and
 operator replay control are still deferred and remain deployment/operations
 gates. Do not invent an admin queue screen to close those gaps.

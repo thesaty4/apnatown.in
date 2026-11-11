@@ -3,6 +3,10 @@ import type { RuntimeConfig } from './shared/config/config';
 import { RuntimeModule } from './shared/health/runtime.module';
 import { RuntimeCleanup } from './shared/jobs/runtime-cleanup';
 import {
+  EVENT_CONSUMER,
+  TransactionalEventConsumer,
+} from './shared/jobs/event-consumer';
+import {
   OutboxRelay,
   PG_BOSS_FACTORY,
   type PgBossFactory,
@@ -35,8 +39,9 @@ export class WorkerModule {
         },
         OutboxRelay,
         RuntimeCleanup,
+        { provide: EVENT_CONSUMER, useClass: TransactionalEventConsumer },
       ],
-      exports: [OutboxRelay, RuntimeCleanup],
+      exports: [OutboxRelay, RuntimeCleanup, EVENT_CONSUMER],
     };
   }
 }

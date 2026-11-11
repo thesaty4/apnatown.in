@@ -337,6 +337,37 @@ error mapping after commit and endpoint wiring.
 **Outbox/worker semantics:** insert state + outbox (+ required audit/idempotent result) atomically. Relay leases a bounded `FOR UPDATE SKIP LOCKED` batch, commits the lease, then sends `{eventId}` to the pre-provisioned `apnatown.outbox` pg-boss queue outside the transaction using the event ID as the job ID; mark published only after durable enqueue acknowledgement (an existing job with that ID is an idempotent acknowledgement). Crash after enqueue/before mark may deliver twice. Recover expired leases; bounded retry/backoff ends in `dead`; the target contract requires redacted logs/metrics and explicit operator replay, not an invented admin screen. Replays retain event IDs. The relay's implemented runtime bounds are in [backend-shared](./backend-shared.md#shared-layer). Consumer registrations remain deferred; no exactly-once or active-handler guarantee is implied. Metrics export and replay controls are not yet implemented and remain explicit operational gates.
 Consumers load the persisted envelope and claim `idempotency_keys` under `principal_key=consumer:<name>`, `operation=<handler>`, key=event ID; their local state change and receipt commit together. External calls use the owning adapter's idempotency/reconciliation contract and never hold a DB transaction open. No exactly-once promise: a timeout after an external side effect is reconciled, not blindly sent again. Use aggregate version/state guards for stale delivery; cross-consumer/global ordering is not assumed.
 
+The implemented worker-only `EVENT_CONSUMER` port is
+`run(operation, persistedEvent, expiresAt, work(tx, event)): Promise<void>`.
+The server-owned operation declares `consumer`, `handler`, `eventType` and
+`schemaVersion`; consumer/handler names use the existing command identity
+grammar. It validates the bounded JSON envelope and exact type/version before
+opening a transaction. The dispatcher must load the persisted envelope by job
+event ID, never treat a job-supplied payload as that source of truth.
+
+The executor uses purpose-separated HMAC-SHA256 hashes with
+`IDEMPOTENCY_HASH_KEY`: the event ID is the receipt key; the consumer/handler,
+immutable envelope metadata and canonical payload form the request fingerprint.
+Metadata and payload are encoded separately so an otherwise valid maximum-size
+payload is not rejected merely because the envelope adds fields. HTTP hash
+purposes/bytes are unchanged. Identical delivery reuses an unexpired committed
+receipt without running `work`; changed event data under that same identity
+conflicts. The local handler and receipt share the existing command transaction,
+and failures roll both back. Receipt status `204` and JSON `null` are internal
+no-result markers, not an HTTP endpoint; no payload/result is stored in the
+receipt and corrupt non-null receipts fail rather than being accepted.
+
+Work runs with the persisted correlation ID and must perform only local
+transactional effects, with current eligibility and aggregate-version checks
+owned by the handler. Replaying a receipt returns no protected data and performs
+no new effect; it does not authorize an external send. The owner selects expiry
+to cover its retry/replay horizon and retains domain-level stale/duplicate guards
+after receipt expiry. No generic retention default is added. Queue registration,
+persisted-event loading, domain handlers, readiness registration and external
+delivery/reconciliation remain unimplemented; this executor alone activates none
+of them. Runtime/database deduplication remains unverified until service-backed
+validation is permitted.
+
 **HTTP idempotency:** hash the canonical allow-listed payload plus method/resource/operation and **server-resolved business ID/kind** for owner operations, excluding volatile correlation/CSRF fields. A changed `X-Business-Kind` cannot replay a shop result into a provider context. Same principal/key/hash replays the original status/non-secret result; changed payload/context -> 409 `COMMON_CONFLICT` (or module code); concurrent in-progress work returns a bounded retry response with `Retry-After`, never executes a second domain command. Authorization failure cannot become successful replay. For external payment-like workflows, commit reservation/attempt first, release the transaction, call the provider, then finalize through the owning module's reconciliation state machine; never expire an ambiguous attempt and charge again.
 
 The implemented `COMMAND_CONTEXT_FACTORY` (`HttpCommandContextFactory.create`)
@@ -423,6 +454,9 @@ automated test harness was restored.
 
 ## Persistence acceptance
 
+- Given a named consumer/handler and supported persisted event, when local work completes, then its effects and one no-result receipt commit together; identical redelivery before expiry skips the work.
+- Given changed event data under the same receipt identity, an unsupported event type/version, invalid JSON or a corrupt receipt, when consumption is attempted, then it fails without executing fresh effects. A thrown handler error rolls back both effects and the claim.
+- Given independent consumers/handlers or concurrent retries, when they consume the same event, then each identity is independent and each claim uses the shared bounded concurrency rule; external side effects are not covered by this transaction.
 - Given expired and live shared-runtime records, when one cleanup tick runs, then it deletes at most the configured batch size from each eligible table and preserves live buckets, all in-progress receipts and every business/outbox record.
 - Given concurrent cleanup workers or a row locked by replay, when batches run, then locked rows are skipped without double deletion; a failed batch rolls back and the next tick can retry. Shutdown schedules no new cleanup.
 - Given a permitted attempt-counter update and an explicit rejected outcome policy, when the command returns that outcome, then the counter and non-secret `4xx` receipt commit together before the caller maps the domain error.

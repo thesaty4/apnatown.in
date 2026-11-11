@@ -1,9 +1,9 @@
-import { createHmac } from 'node:crypto';
 import { canonicalJson, type JsonValue } from '@apnatown/shared';
 import { CorrelationIdSchema, IdSchema } from '@apnatown/shared/wire';
 import { z } from 'zod';
 import { DomainError } from '../errors/errors';
 import type { CommandContext } from '../persistence/ports';
+import { IdempotencyHasher } from './hasher';
 
 export const COMMAND_CONTEXT_FACTORY = Symbol('COMMAND_CONTEXT_FACTORY');
 
@@ -42,12 +42,10 @@ export interface HttpCommandInput {
 }
 
 export class HttpCommandContextFactory {
-  private readonly hashingKey: Buffer;
+  private readonly hasher: IdempotencyHasher;
 
   constructor(hashingKey: string) {
-    if (!/^[a-f0-9]{64}$/.test(hashingKey))
-      throw new Error('INVALID_IDEMPOTENCY_HASH_KEY');
-    this.hashingKey = Buffer.from(hashingKey, 'hex');
+    this.hasher = new IdempotencyHasher(hashingKey);
   }
 
   create(
@@ -73,7 +71,7 @@ export class HttpCommandContextFactory {
     return Object.freeze({
       actor: Object.freeze({ kind: 'user', id: trusted.data.actorId }),
       operation: policy.data.name,
-      keyHash: this.mac('key', key.data),
+      keyHash: this.hasher.hash('key', key.data),
       requestHash,
       correlationId: trusted.data.correlationId,
       successStatus: policy.data.successStatus,
@@ -101,13 +99,6 @@ export class HttpCommandContextFactory {
         throw new DomainError('COMMON_VALIDATION_FAILED');
       throw error;
     }
-    return this.mac('request', encoded);
-  }
-
-  private mac(purpose: 'key' | 'request', value: string): Buffer {
-    return createHmac('sha256', this.hashingKey)
-      .update(`idempotency-${purpose}-v1\0`)
-      .update(value)
-      .digest();
+    return this.hasher.hash('request', encoded);
   }
 }
