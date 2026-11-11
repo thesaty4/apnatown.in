@@ -34,6 +34,14 @@ Use the module dependency list, main/AppModule/worker composition, public exempt
 
 ## Shared layer
 
+Implementation is incremental: the runtime now binds `CLOCK`/`ID_PROVIDER`
+through `RuntimePrimitivesModule`; `@apnatown/shared` exports checked `Money`.
+Signed adjustments still require their owning DTO's explicit permission.
+These primitives do not imply that persistence, live authorization or the
+Catalog reference below are implemented. Automated test tooling remains
+removed at the user's request; build/static checks are not acceptance evidence
+for those deferred runtime contracts.
+
 | Item | Purpose and usage rule |
 |---|---|
 | Config | Typed env parsing at startup; reject missing/invalid required configuration and never log secrets. |
