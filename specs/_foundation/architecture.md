@@ -119,6 +119,13 @@ Pin exact direct dependency/devDependency versions, Node in `.node-version` and 
 
 **Environment ownership:** root launchers inject only each process's allow-list; Web must never receive API DB/PII/provider secrets. `.env.example` documents names, owner, required/optional status and safe placeholders, never usable credentials. CI injects ephemeral values; production uses approved secret injection, not checked-in env files.
 
+Adding runtime configuration requires updating its validated schema, template
+and owning launcher's explicit allow-list together. Local API and worker entry
+points both use `environmentFor('api', ...)`; retry, lease, relay and cleanup
+tuning must survive that projection unchanged, including allowed zero values.
+Check the projected child environment, not only direct schema parsing; never
+solve missing configuration by forwarding all inherited environment variables.
+
 | Owner | Configuration boundary |
 |---|---|
 | API + worker | `APP_ENV`, `DATABASE_URL`, `WEB_ORIGIN`, `CURSOR_SIGNING_KEY`, `IDEMPOTENCY_HASH_KEY`, API `PORT`, `WORKER_PROBE_PORT`, `LOG_LEVEL` and bounded shutdown/job retry settings; the durable idempotency-key lifecycle is defined in [data-model](./data-model.md#shared-runtime-persistence). Auth/PII key schemas belong to their server owners. Provider-specific keys are validated/read only by the chosen adapter. |

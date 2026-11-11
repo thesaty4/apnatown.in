@@ -5,6 +5,16 @@ Format: see `.github/skills/lessons-learned/SKILL.md`. Newest at the
 top; `bug-fixer` and any agent that catches a reusable mistake adds an
 entry here.
 
+## Keep runtime configuration wired through launcher allow-lists
+
+What: retry, lease and relay settings were declared in the runtime schema and
+environment template, but local launches silently discarded them because the
+API/worker allow-list was incomplete. Defaults hid the missing wiring.
+Rule: update all three surfaces together and inspect the projected child
+environment with non-default values, including allowed zero values; preserve
+owner isolation rather than forwarding the inherited environment wholesale.
+Enforced in: [environment ownership](../../specs/_foundation/architecture.md#reproducible-workspace-and-bootstrap).
+
 ## Server-side OTP verification only
 
 What: client-side OTP/code comparison (or trusting a client "verified"
