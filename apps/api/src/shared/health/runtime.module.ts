@@ -6,6 +6,11 @@ import { RuntimePrimitivesModule } from '../runtime/providers';
 import { CURSOR_CODEC, CursorCodec } from '../pagination/cursor';
 import { createLogger, RUNTIME_LOGGER } from '../logger/logger';
 import { EVENT_FACTORY, SystemEventFactory } from '../events/event-factory';
+import { OUTBOX_WRITER } from '../events/ports';
+import { PrismaDatabase } from '../persistence/prisma-database';
+import { PrismaUnitOfWork } from '../persistence/unit-of-work';
+import { UNIT_OF_WORK } from '../persistence/ports';
+import { PrismaOutboxWriter } from '../persistence/outbox-writer';
 
 @Module({})
 export class RuntimeModule {
@@ -25,6 +30,23 @@ export class RuntimeModule {
         },
         { provide: EVENT_FACTORY, useClass: SystemEventFactory },
         {
+          provide: PrismaDatabase,
+          useFactory: () =>
+            new PrismaDatabase({ connectionString: config.DATABASE_URL }),
+        },
+        {
+          provide: UNIT_OF_WORK,
+          useFactory: (database: PrismaDatabase) =>
+            new PrismaUnitOfWork(database),
+          inject: [PrismaDatabase],
+        },
+        {
+          provide: OUTBOX_WRITER,
+          useFactory: (database: PrismaDatabase) =>
+            new PrismaOutboxWriter(database),
+          inject: [PrismaDatabase],
+        },
+        {
           provide: READINESS_REPOSITORY,
           useFactory: () => new PostgresReadinessRepository(config),
         },
@@ -38,6 +60,9 @@ export class RuntimeModule {
         CURSOR_CODEC,
         RUNTIME_LOGGER,
         EVENT_FACTORY,
+        UNIT_OF_WORK,
+        OUTBOX_WRITER,
+        PrismaDatabase,
       ],
     };
   }

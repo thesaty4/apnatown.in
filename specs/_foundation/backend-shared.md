@@ -50,11 +50,16 @@ with correlation IDs rather than exception messages or submitted values.
 the shared Pino logger includes that context automatically. Job/relay owners
 must enter it using the persisted event ID context, not a process-global value.
 `EVENT_FACTORY` constructs validated version-1 envelopes with UUIDv7,
-aggregate version, UTC time and bounded JSON; it does not enqueue or imply
-transactional outbox delivery is already available.
+aggregate version, UTC time and bounded JSON. `UNIT_OF_WORK` and
+`OUTBOX_WRITER` now join real Prisma transactions through opaque handles;
+repository adapters can inject the exported `PrismaDatabase`. Connections
+open on first unit-of-work use and close on module shutdown, keeping process
+probes reachable when the database is unavailable. Foreign, expired and
+timed-out handles never fall back to a root client. Appending does not enqueue:
+the relay and consumer registrations remain deferred.
 Signed adjustments still require their owning DTO's explicit permission.
-These primitives do not imply that persistence, live authorization or the
-Catalog reference below are implemented. Automated test tooling remains
+These primitives do not imply that command idempotency, live authorization or
+the Catalog reference below are implemented. Automated test tooling remains
 removed at the user's request; build/static checks are not acceptance evidence
 for those deferred runtime contracts.
 
