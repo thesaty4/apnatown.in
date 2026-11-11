@@ -64,7 +64,8 @@ async function main(): Promise<void> {
                 ? {
                     'Retry-After': {
                       schema: { type: 'string', pattern: '^[0-9]+$' },
-                      description: 'Seconds until this rate-limit window resets',
+                      description:
+                        'Seconds until this rate-limit window resets',
                     },
                   }
                 : {}),
