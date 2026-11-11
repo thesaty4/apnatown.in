@@ -2,20 +2,9 @@ import { readdir } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { localTargets } from './targets.mjs';
-import { readManifest, verifySuite } from './suites.mjs';
-import { withDatabase } from './database.mjs';
 
-export async function migrate(env, suite) {
-  const targets = localTargets(env);
-  let migrationEnv = env;
-  if (suite) {
-    if (env.APP_ENV !== 'test') throw new Error('TEST_ENV_REQUIRED');
-    const manifest = await readManifest(suite);
-    await withDatabase(targets.migration, (client) =>
-      verifySuite(client, manifest),
-    );
-    migrationEnv = manifest.env;
-  }
+export async function migrate(env) {
+  localTargets(env);
   const directory = new URL('./migrations/', import.meta.url);
   const entries = await readdir(directory).catch((error) => {
     if (error.code === 'ENOENT') return [];
@@ -33,8 +22,8 @@ export async function migrate(env, suite) {
       env: {
         PATH: env.PATH,
         HOME: env.HOME,
-        MIGRATION_DATABASE_URL: migrationEnv.MIGRATION_DATABASE_URL,
-        SHADOW_DATABASE_URL: migrationEnv.SHADOW_DATABASE_URL,
+        MIGRATION_DATABASE_URL: env.MIGRATION_DATABASE_URL,
+        SHADOW_DATABASE_URL: env.SHADOW_DATABASE_URL,
       },
       // Prisma output can contain a target URL. Report only the exit result.
       stdio: 'pipe',

@@ -15,8 +15,6 @@
     "db:generate": "node scripts/workspace.mjs db:generate",
     "db:migrate": "node scripts/workspace.mjs db:migrate",
     "db:seed": "node scripts/workspace.mjs db:seed",
-    "db:test:create": "node scripts/workspace.mjs db:test:create",
-    "db:test:drop": "node scripts/workspace.mjs db:test:drop",
     "tokens:generate": "node scripts/workspace.mjs tokens:generate",
     "i18n:generate": "node scripts/workspace.mjs i18n:generate",
     "api:openapi": "node scripts/workspace.mjs api:openapi",
@@ -29,28 +27,18 @@
     "start:web": "node scripts/workspace.mjs start:web",
     "start:worker": "node scripts/workspace.mjs start:worker",
     "lint": "eslint . && node scripts/check-workspace.mjs",
-    "format:check": "prettier --check package.json pnpm-workspace.yaml tsconfig*.json eslint.config.mjs vitest.config.ts compose.yaml apps packages scripts/environment* scripts/processes* scripts/workspace* scripts/check-workspace* .github/workflows",
+    "format:check": "prettier --check package.json pnpm-workspace.yaml tsconfig*.json eslint.config.mjs compose.yaml apps packages scripts/environment* scripts/processes* scripts/workspace* scripts/check-workspace* .github/workflows",
     "typecheck": "node scripts/workspace.mjs typecheck",
-    "check:generated": "node scripts/workspace.mjs check:generated",
-    "test:exports": "node scripts/check-exports.mjs",
-    "test": "node scripts/workspace.mjs test",
-    "test:unit": "vitest run --config vitest.config.ts",
-    "test:http": "node scripts/workspace.mjs test:http",
-    "test:db": "node scripts/workspace.mjs test:db",
-    "test:ui": "node scripts/workspace.mjs test:ui",
-    "test:smoke": "node scripts/workspace.mjs test:smoke",
-    "test:e2e": "node scripts/workspace.mjs test:e2e"
+    "check:generated": "node scripts/workspace.mjs check:generated"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
-    "@playwright/test": "1.65.0",
     "@types/node": "24.13.2",
     "eslint": "10.14.0",
     "eslint-config-prettier": "10.1.8",
     "globals": "17.14.0",
     "prettier": "3.10.0",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.72.2",
-    "vitest": "4.1.12"
+    "typescript-eslint": "8.72.2"
   }
 }

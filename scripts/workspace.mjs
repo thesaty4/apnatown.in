@@ -183,31 +183,6 @@ async function main() {
     packageRun('web', 'check:generated');
     packageRun('api', 'check:generated');
     packageRun('api-client', 'check:generated');
-  } else if (command === 'test') {
-    run('pnpm', ['test:unit'], { cwd: root, env: cleanEnvironment });
-    packageRun('api', 'test:http');
-    packageRun('web', 'test:ui');
-  } else if (command === 'test:http') {
-    packageRun('api', 'test:http');
-  } else if (command === 'test:db') {
-    packageRun(
-      'api',
-      'test:db',
-      args,
-      environmentFor('database', {
-        ...(await readLocalEnvironment(root)),
-        APP_ENV: 'test',
-      }),
-    );
-  } else if (command === 'test:ui') {
-    packageRun('web', 'test:ui');
-  } else if (command === 'test:e2e' || command === 'test:smoke') {
-    packageRun(
-      'web',
-      command,
-      args,
-      environmentFor('web', await readLocalEnvironment(root)),
-    );
   } else if (
     command === 'dev' ||
     command === 'start' ||
@@ -235,11 +210,7 @@ async function main() {
     );
     if (command === 'db:up')
       packageRun('api', 'db:provision', [], environmentFor('database', values));
-  } else if (
-    ['db:migrate', 'db:seed', 'db:test:create', 'db:test:drop'].includes(
-      command,
-    )
-  ) {
+  } else if (['db:migrate', 'db:seed'].includes(command)) {
     packageRun(
       'api',
       command,

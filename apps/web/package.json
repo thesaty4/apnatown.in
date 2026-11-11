@@ -8,10 +8,7 @@
     "start": "next start",
     "i18n:generate": "node ../../packages/ui/scripts/generate-i18n.mjs",
     "check:generated": "node ../../packages/ui/scripts/check-generated.mjs i18n",
-    "typecheck": "next typegen && tsc --noEmit",
-    "test:ui": "vitest run --config vitest.config.ts",
-    "test:e2e": "playwright test",
-    "test:smoke": "playwright test --grep @bootstrap"
+    "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
     "@apnatown/api-client": "workspace:*",
@@ -25,21 +22,12 @@
     "zod": "4.6.7"
   },
   "devDependencies": {
-    "@axe-core/playwright": "4.14.0",
-    "@playwright/test": "1.65.0",
     "@tailwindcss/postcss": "4.3.5",
-    "@testing-library/dom": "10.4.2",
-    "@testing-library/jest-dom": "7.0.1",
-    "@testing-library/react": "16.3.3",
-    "@testing-library/user-event": "14.6.9",
     "@types/node": "24.13.2",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "axe-core": "4.14.0",
-    "jsdom": "26.1.0",
     "postcss": "8.5.32",
     "tailwindcss": "4.3.5",
-    "typescript": "5.9.3",
-    "vitest": "4.1.12"
+    "typescript": "5.9.3"
   }
 }

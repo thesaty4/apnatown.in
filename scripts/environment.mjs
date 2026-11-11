@@ -24,7 +24,6 @@ const ownerKeys = {
     'DATABASE_URL',
     'MIGRATION_DATABASE_URL',
     'SHADOW_DATABASE_URL',
-    'TEST_DATABASE_MANIFEST',
   ],
   compose: ['POSTGRES_PASSWORD'],
   build: [],

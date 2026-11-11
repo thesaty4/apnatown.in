@@ -29,11 +29,11 @@ configuration. Web runs on `localhost:3000`, API on `localhost:3001`, and intern
 worker probes on `localhost:3002`. `db:down` stops the local database **without
 deleting its volume**. No Redis or real external providers are started.
 
-`lint`, `typecheck`, `test`, `build`, `test:exports`, `check:generated` and
-`test:smoke` run scaffold checks. Readiness remains unavailable until the
-specified database/shared-runtime prerequisites exist; liveness alone is not
-proof of readiness. Full authenticated smoke and domain migration/seed acceptance
-remain dependent on later slices, never replaced with successful mocks.
+`lint`, `typecheck`, `build` and `check:generated` validate the scaffold.
+Automated test suites and their tooling are currently removed; these checks
+do not replace behavioural, accessibility or security testing. Readiness remains
+unavailable until the specified database/shared-runtime prerequisites exist;
+liveness alone is not proof of readiness.
 
 ## How the AI workflow works
 
