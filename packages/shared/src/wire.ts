@@ -13,6 +13,17 @@ export const CursorSchema = z
   .min(1)
   .max(2048)
   .regex(/^[A-Za-z0-9_-]+$/);
+export const PageQuerySchema = z.strictObject({
+  cursor: CursorSchema.optional(),
+  limit: z.preprocess(
+    (value) =>
+      typeof value === 'string' && /^[1-9]\d{0,2}$/.test(value)
+        ? Number(value)
+        : value,
+    LimitSchema,
+  ),
+});
+export type PageQuery = z.infer<typeof PageQuerySchema>;
 export const CorrelationIdSchema = z
   .string()
   .min(1)

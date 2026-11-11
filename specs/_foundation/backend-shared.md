@@ -36,6 +36,13 @@ Use the module dependency list, main/AppModule/worker composition, public exempt
 
 Implementation is incremental: the runtime now binds `CLOCK`/`ID_PROVIDER`
 through `RuntimePrimitivesModule`; `@apnatown/shared` exports checked `Money`.
+The runtime also binds `CURSOR_CODEC`: HMAC-authenticated keysets bind the
+operation, sort, filter and authorized scope fingerprint; scope/filter values
+are not embedded in plaintext. Endpoint owners supply only non-PII sort keys,
+retain database timestamp precision, and validate their tuple shape before
+building the parameterized keyset predicate. `PageQuerySchema` owns the shared
+20-default/50-cap parsing. `canonicalJson` rejects non-JSON values, cycles and
+unsafe integers, with depth 16, 10,000 nodes and 65,536-character bounds.
 Signed adjustments still require their owning DTO's explicit permission.
 These primitives do not imply that persistence, live authorization or the
 Catalog reference below are implemented. Automated test tooling remains
