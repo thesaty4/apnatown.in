@@ -331,6 +331,16 @@ Retention/lease/backoff settings must be explicit, validated config and cover ea
 
 ## Migrations, seeds and isolation
 
+The initial [reviewed migrations](../../apps/api/prisma/migrations/) now cover
+the three extensions and shared runtime tables only.
+The [local migration launcher](../../apps/api/prisma/migrate.mjs) installs the
+pinned pg-boss schema under the migration role and grants runtime data access
+without DDL. Verification used a fresh disposable PostGIS 17/3.5 database:
+two migration runs, extension function checks and runtime DDL rejection passed.
+This does not mark domain schemas, their seeds or the worker/readiness
+manifest complete. Forward repair remains a new migration; no data reset was
+performed and no automated test harness was restored.
+
 1. API owns the single ordered Prisma migration history; domain owners contribute their tables, shared runtime contributes the three tables above. First reviewed SQL enables `postgis`, `pg_trgm`, `unaccent`; full-text is PostgreSQL built-in, not another extension/service. Verify extension versions via DB queries and PostGIS distance/trigram/unaccent smoke tests.
 2. Use a privileged **migration role** for extensions/schema/grants and a least-privilege **runtime role** for repositories; preserve Audit's INSERT/SELECT-only constraint. The pinned pg-boss schema is installed/upgraded once using its supported migration API under the migration role; workers open with runtime DDL disabled. No migrations or seeding in API startup/readiness.
 3. Development creates a reviewed migration using `prisma migrate dev` with an isolated `SHADOW_DATABASE_URL`; CI/deployment uses `prisma migrate deploy` through `pnpm db:migrate`. Never share shadow/prod URLs, edit an applied migration, use `db push` as evidence, or give application users extension/DDL privileges.

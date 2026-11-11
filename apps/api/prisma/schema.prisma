@@ -1,10 +1,69 @@
-// C00 intentionally has no domain models. C01/C02 own runtime/domain migrations.
 generator client {
-  provider = "prisma-client"
-  output   = "../src/shared/persistence/generated"
-  moduleFormat = "cjs"
+  provider        = "prisma-client"
+  output          = "../src/shared/persistence/generated"
+  moduleFormat    = "cjs"
+  previewFeatures = ["partialIndexes"]
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model OutboxEvent {
+  id               String    @id @db.Uuid
+  type             String
+  schemaVersion    Int       @default(1) @map("schema_version")
+  aggregateType    String    @map("aggregate_type")
+  aggregateId      String    @map("aggregate_id") @db.Uuid
+  aggregateVersion Int       @map("aggregate_version")
+  payload          Json      @db.JsonB
+  correlationId    String    @map("correlation_id")
+  occurredAt       DateTime  @map("occurred_at") @db.Timestamptz(6)
+  availableAt      DateTime  @map("available_at") @db.Timestamptz(6)
+  state            String    @default("pending")
+  attemptCount     Int       @default(0) @map("attempt_count")
+  leaseOwner       String?   @map("lease_owner")
+  leaseExpiresAt   DateTime? @map("lease_expires_at") @db.Timestamptz(6)
+  publishedAt      DateTime? @map("published_at") @db.Timestamptz(6)
+  lastErrorCode    String?   @map("last_error_code")
+
+  @@index([state, availableAt, id], map: "outbox_events_state_available_at_id_idx")
+  @@index([leaseExpiresAt, id], where: raw("\"state\" = 'publishing'"), map: "outbox_events_lease_expires_at_id_idx")
+  @@index([aggregateType, aggregateId, aggregateVersion], map: "outbox_events_aggregate_idx")
+  @@map("outbox_events")
+}
+
+model IdempotencyKey {
+  id              String    @id @db.Uuid
+  principalKey    String    @map("principal_key")
+  operation       String
+  keyHash         Bytes     @map("key_hash")
+  requestHash     Bytes     @map("request_hash")
+  state           String
+  leaseOwner      String?   @map("lease_owner")
+  leaseExpiresAt  DateTime? @map("lease_expires_at") @db.Timestamptz(6)
+  httpStatus      Int?      @map("http_status")
+  responseBody    Json?     @map("response_body") @db.JsonB
+  responseHeaders Json      @default("{}") @map("response_headers") @db.JsonB
+  resourceRef     Json?     @map("resource_ref") @db.JsonB
+  createdAt       DateTime  @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime  @map("updated_at") @db.Timestamptz(6)
+  expiresAt       DateTime  @map("expires_at") @db.Timestamptz(6)
+
+  @@unique([principalKey, operation, keyHash], map: "idempotency_keys_principal_operation_key_hash_key")
+  @@index([expiresAt, id], map: "idempotency_keys_expires_at_id_idx")
+  @@index([state, leaseExpiresAt], map: "idempotency_keys_state_lease_expires_at_idx")
+  @@map("idempotency_keys")
+}
+
+model RateLimitBucket {
+  policyKey   String   @map("policy_key")
+  subjectHash Bytes    @map("subject_hash")
+  bucketStart DateTime @map("bucket_start") @db.Timestamptz(6)
+  hitCount    BigInt   @default(0) @map("hit_count")
+  expiresAt   DateTime @map("expires_at") @db.Timestamptz(6)
+
+  @@id([policyKey, subjectHash, bucketStart])
+  @@index([expiresAt], map: "rate_limit_buckets_expires_at_idx")
+  @@map("rate_limit_buckets")
 }
