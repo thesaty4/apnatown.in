@@ -86,6 +86,13 @@
                   "type": "string"
                 },
                 "description": "Validated or generated request ID"
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds until this rate-limit window resets"
               }
             }
           },
@@ -199,6 +206,13 @@
                   "type": "string"
                 },
                 "description": "Validated or generated request ID"
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds until this rate-limit window resets"
               }
             }
           },

@@ -106,6 +106,8 @@ export interface operations {
             /** @description Probe request limit exceeded */
             429: {
                 headers: {
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -173,6 +175,8 @@ export interface operations {
             /** @description Probe request limit exceeded */
             429: {
                 headers: {
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;

@@ -52,13 +52,22 @@ async function main(): Promise<void> {
             pattern: '^[A-Za-z0-9_-]+$',
           },
         });
-        for (const response of Object.values(operation.responses)) {
+        for (const [status, response] of Object.entries(operation.responses)) {
           if (response && !('$ref' in response))
             response.headers = {
+              ...response.headers,
               'X-Correlation-ID': {
                 schema: { type: 'string' },
                 description: 'Validated or generated request ID',
               },
+              ...(status === '429'
+                ? {
+                    'Retry-After': {
+                      schema: { type: 'string', pattern: '^[0-9]+$' },
+                      description: 'Seconds until this rate-limit window resets',
+                    },
+                  }
+                : {}),
             };
         }
       }
