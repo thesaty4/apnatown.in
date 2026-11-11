@@ -1,0 +1,17 @@
+{
+  "common.language.english": {
+    "en": "English",
+    "hi": "English",
+    "source": "reference/prototype-source/js7.js accountLinks: language endonym"
+  },
+  "common.language.hindi": {
+    "en": "हिन्दी",
+    "hi": "हिन्दी",
+    "source": "reference/prototype-source/js7.js accountLinks: language endonym"
+  },
+  "common.navigation.skipToContent": {
+    "en": "Skip to content",
+    "hi": "मुख्य सामग्री पर जाएँ",
+    "source": "Explicit user approval, 2026-11-11"
+  }
+}

@@ -5,12 +5,12 @@ dist/
 build/
 .next/
 out/
-coverage/
 
 # Environment and secrets
 .env
 .env.local
 .env.*.local
+.local/
 
 # Logs
 *.log
@@ -24,10 +24,7 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 
-# Testing
-playwright-report/
-test-results/
-
 # Misc
 *.tsbuildinfo
 .turbo/
+apps/api/src/shared/persistence/generated/

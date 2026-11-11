@@ -1,0 +1,38 @@
+{
+  "name": "@apnatown/shared",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    },
+    "./wire": {
+      "import": {
+        "types": "./dist/esm/wire.d.ts",
+        "default": "./dist/esm/wire.js"
+      },
+      "require": {
+        "types": "./dist/cjs/wire.d.ts",
+        "default": "./dist/cjs/wire.js"
+      }
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}

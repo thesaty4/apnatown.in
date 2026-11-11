@@ -1,0 +1,52 @@
+{
+  "common": {
+    "actions": {
+      "checkAgain": "Check again",
+      "home": "Go home",
+      "retry": "Try again"
+    },
+    "app": {
+      "welcome": "Welcome to ApnaTown"
+    },
+    "empty": {
+      "message": "Check back soon.",
+      "title": "Nothing here yet"
+    },
+    "error": {
+      "message": "Please check your connection and try again.",
+      "title": "Something went wrong"
+    },
+    "language": {
+      "english": "English",
+      "hindi": "हिन्दी",
+      "label": "Language"
+    },
+    "loading": {
+      "label": "Loading"
+    },
+    "maintenance": {
+      "message": "ApnaTown is under maintenance. Please try again in a few minutes.",
+      "title": "We’ll be right back"
+    },
+    "navigation": {
+      "skipToContent": "Skip to content"
+    },
+    "noPermission": {
+      "message": "This section is not available for your role. Ask a Super Admin for access.",
+      "title": "You don’t have permission"
+    },
+    "notFound": {
+      "message": "The page you are looking for does not exist or has moved.",
+      "title": "Page not found"
+    },
+    "offline": {
+      "title": "No internet connection"
+    },
+    "theme": {
+      "auto": "Auto",
+      "dark": "Dark",
+      "label": "Theme",
+      "light": "Light"
+    }
+  }
+}

@@ -1,0 +1,144 @@
+/* Generated from the Design Context Pack; do not edit. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+@theme inline {
+  --color-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --breakpoint-*: initial;
+  --animate-skeleton: var(--at-skeleton);
+  --animate-spinner: var(--at-spinner);
+  --breakpoint-desktop: 900px;
+  --breakpoint-tablet: 600px;
+  --color-accent: var(--at-accent);
+  --color-accent-ink: var(--at-accent-ink);
+  --color-ap-approved: var(--at-ap-approved);
+  --color-ap-inactive: var(--at-ap-inactive);
+  --color-ap-pending: var(--at-ap-pending);
+  --color-ap-rejected: var(--at-ap-rejected);
+  --color-ap-suspended: var(--at-ap-suspended);
+  --color-bg: var(--at-bg);
+  --color-border: var(--at-border);
+  --color-border-strong: var(--at-border-strong);
+  --color-error: var(--at-error);
+  --color-error-soft: var(--at-error-soft);
+  --color-info: var(--at-info);
+  --color-info-soft: var(--at-info-soft);
+  --color-muted: var(--at-muted);
+  --color-offer: var(--at-offer);
+  --color-offer-soft: var(--at-offer-soft);
+  --color-on-primary: var(--at-on-primary);
+  --color-overlay: var(--at-overlay);
+  --color-primary: var(--at-primary);
+  --color-primary-ink: var(--at-primary-ink);
+  --color-primary-soft: var(--at-primary-soft);
+  --color-secondary: var(--at-secondary);
+  --color-secondary-soft: var(--at-secondary-soft);
+  --color-st-accepted: var(--at-st-accepted);
+  --color-st-cancelled: var(--at-st-cancelled);
+  --color-st-delivered: var(--at-st-delivered);
+  --color-st-out: var(--at-st-out);
+  --color-st-placed: var(--at-st-placed);
+  --color-st-preparing: var(--at-st-preparing);
+  --color-st-ready: var(--at-st-ready);
+  --color-st-refunded: var(--at-st-refunded);
+  --color-star: var(--at-star);
+  --color-success: var(--at-success);
+  --color-success-soft: var(--at-success-soft);
+  --color-surface: var(--at-surface);
+  --color-surface-2: var(--at-surface-2);
+  --color-text: var(--at-text);
+  --color-text-2: var(--at-text-2);
+  --color-warning: var(--at-warning);
+  --color-warning-soft: var(--at-warning-soft);
+  --container-page: var(--at-page);
+  --container-state-copy: var(--at-state-copy);
+  --ease-standard: var(--at-ease);
+  --font-body: var(--at-font-body);
+  --font-devanagari: var(--at-font-devanagari);
+  --font-display: var(--at-font-display);
+  --leading-heading: var(--at-heading);
+  --radius-lg: var(--at-r-lg);
+  --radius-md: var(--at-r-md);
+  --radius-pill: var(--at-r-pill);
+  --radius-sm: var(--at-r-sm);
+  --radius-xs: var(--at-r-xs);
+  --shadow-1: var(--at-sh-1);
+  --shadow-2: var(--at-sh-2);
+  --shadow-3: var(--at-sh-3);
+  --spacing: var(--at-space-unit);
+  --spacing-1: var(--at-1);
+  --spacing-2: var(--at-2);
+  --spacing-3: var(--at-3);
+  --spacing-4: var(--at-4);
+  --spacing-6: var(--at-6);
+  --spacing-8: var(--at-8);
+  --spacing-bottom-tab-height: var(--at-bottom-tab-height);
+  --spacing-button-inline: var(--at-button-inline);
+  --spacing-button-min-height: var(--at-button-min-height);
+  --spacing-icon-max: var(--at-icon-max);
+  --spacing-icon-min: var(--at-icon-min);
+  --spacing-input-min-height: var(--at-input-min-height);
+  --spacing-nav-h: var(--at-nav-h);
+  --spacing-nav-height: var(--at-nav-height);
+  --spacing-otp-height: var(--at-otp-height);
+  --spacing-otp-width: var(--at-otp-width);
+  --spacing-page-gutter: var(--at-page-gutter);
+  --spacing-sab: var(--at-sab);
+  --spacing-sat: var(--at-sat);
+  --spacing-searchbar-min-height: var(--at-searchbar-min-height);
+  --spacing-state-block: var(--at-state-block);
+  --spacing-state-gap: var(--at-state-gap);
+  --spacing-state-icon: var(--at-state-icon);
+  --spacing-state-inline: var(--at-state-inline);
+  --spacing-tab-h: var(--at-tab-h);
+  --spacing-touch: var(--at-touch);
+  --text-big-number: var(--at-big-number);
+  --text-big-number--font-weight: 700;
+  --text-body: var(--at-body);
+  --text-body--font-weight: 400;
+  --text-body--line-height: 1.5;
+  --text-button: var(--at-button);
+  --text-button--font-weight: 600;
+  --text-caption: var(--at-caption);
+  --text-caption-min: var(--at-caption-min);
+  --text-h1: var(--at-h1);
+  --text-h1--font-weight: 700;
+  --text-h1--letter-spacing: -0.01em;
+  --text-h1--line-height: 1.25;
+  --text-h1-desktop: var(--at-h1-desktop);
+  --text-h2: var(--at-h2);
+  --text-h2--font-weight: 700;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h2--line-height: 1.25;
+  --text-h2-desktop: var(--at-h2-desktop);
+  --text-h3: var(--at-h3);
+  --text-h3--font-weight: 700;
+  --text-h3--letter-spacing: -0.01em;
+  --text-h3--line-height: 1.25;
+  --text-h4: var(--at-h4);
+  --text-h4--font-weight: 700;
+  --text-h4--letter-spacing: -0.01em;
+  --text-h4--line-height: 1.25;
+  --text-kpi-value: var(--at-kpi-value);
+  --text-kpi-value--font-weight: 700;
+  --text-mrp: var(--at-mrp);
+  --text-price: var(--at-price);
+  --text-price--font-weight: 700;
+  --text-small: var(--at-small);
+  --text-small-min: var(--at-small-min);
+  --text-state-icon: var(--at-state-icon);
+  --tracking-heading: var(--at-heading);
+  --transition-duration-1: var(--at-dur-1);
+  --transition-duration-2: var(--at-dur-2);
+  --transition-duration-3: var(--at-dur-3);
+}
+@utility ring-focus { outline: var(--at-focus-ring) solid var(--at-primary); outline-offset: 2px; }
+@utility grid-cols-mobile { grid-template-columns: repeat(var(--at-columns-mobile), minmax(0, 1fr)); }
+@utility grid-cols-tablet { grid-template-columns: repeat(var(--at-columns-tablet), minmax(0, 1fr)); }
+@utility grid-cols-desktop { grid-template-columns: repeat(var(--at-columns-desktop), minmax(0, 1fr)); }
+@utility duration-1 { transition-duration: var(--at-dur-1); }
+@utility duration-2 { transition-duration: var(--at-dur-2); }
+@utility duration-3 { transition-duration: var(--at-dur-3); }
+@keyframes apnatown-shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+@keyframes apnatown-spin { to { transform: rotate(360deg); } }
+@utility skeleton-fill { background: linear-gradient(90deg, var(--at-surface-2) 25%, var(--at-border) 37%, var(--at-surface-2) 63%); background-size: 400% 100%; }

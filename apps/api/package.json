@@ -1,0 +1,45 @@
+{
+  "name": "@apnatown/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsc -b tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/main.js",
+    "start:api": "node dist/main.js",
+    "start:worker": "node dist/worker.js",
+    "api:openapi": "pnpm build && node dist/shared/openapi/export.js",
+    "check:generated": "node scripts/check-generated.mjs",
+    "db:generate": "prisma generate --config prisma.config.ts",
+    "db:provision": "node prisma/cli.mjs provision",
+    "db:migrate": "node prisma/cli.mjs migrate",
+    "db:seed": "node prisma/cli.mjs seed"
+  },
+  "dependencies": {
+    "@apnatown/shared": "workspace:*",
+    "@nestjs/common": "11.2.9",
+    "@nestjs/core": "11.2.9",
+    "@nestjs/platform-express": "11.2.9",
+    "@nestjs/swagger": "11.4.8",
+    "@prisma/client": "7.10.1",
+    "cookie-parser": "1.4.7",
+    "express": "5.3.0",
+    "helmet": "8.3.0",
+    "nestjs-zod": "5.6.0",
+    "pg": "8.23.1",
+    "pg-boss": "12.38.2",
+    "pino": "10.4.0",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "1.4.10",
+    "@types/express": "5.0.6",
+    "@types/node": "24.13.2",
+    "@types/pg": "8.23.1",
+    "prisma": "7.10.1",
+    "typescript": "5.9.3"
+  }
+}

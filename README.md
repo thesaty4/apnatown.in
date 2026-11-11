@@ -7,10 +7,33 @@ products or send service enquiries, watch short videos/reels, and rate
 and review everything. See [docs/PROJECT.md](docs/PROJECT.md) for the
 full product context.
 
-> **Status:** this repository currently contains the AI development
-> lifecycle setup only (instructions, agents, skills, specs scaffolding,
-> docs). Application code (`apps/`, `packages/`) is added feature by
-> feature after a spec exists — see [docs/FEATURE_INVENTORY.md](docs/FEATURE_INVENTORY.md).
+> **Status:** C00 workspace and application scaffolds. Domain features,
+> migrations, durable workers, authentication and their end-to-end checks
+> follow in the owning implementation slices. This is not a production-ready
+> marketplace; see the [foundation contracts](specs/_foundation/architecture.md).
+
+## Local development
+
+Use Node from [.node-version](.node-version) and pinned pnpm:
+
+```sh
+npx --yes pnpm@10.34.9 install --frozen-lockfile
+npx --yes pnpm@10.34.9 env:local
+npx --yes pnpm@10.34.9 generate
+npx --yes pnpm@10.34.9 db:up
+npx --yes pnpm@10.34.9 dev
+```
+
+The launcher creates private local-only credentials without overwriting existing
+configuration. Web runs on `localhost:3000`, API on `localhost:3001`, and internal
+worker probes on `localhost:3002`. `db:down` stops the local database **without
+deleting its volume**. No Redis or real external providers are started.
+
+`lint`, `typecheck`, `build` and `check:generated` validate the scaffold.
+Automated test suites and their tooling are currently removed; these checks
+do not replace behavioural, accessibility or security testing. Readiness remains
+unavailable until the specified database/shared-runtime prerequisites exist;
+liveness alone is not proof of readiness.
 
 ## How the AI workflow works
 
@@ -46,10 +69,11 @@ docs/                          product knowledge base, architecture, design, AI 
   PROJECT.md                   index into docs/project/
   project/                     product knowledge base (01-13, see docs/project/README.md)
 specs/                         per-module BE/FE feature specs
-apps/web/                      Next.js frontend              (future)
-apps/api/                      Node.js backend               (future)
-packages/shared/               shared types/schemas/enums    (future)
-packages/ui/                   design-system components      (future)
+apps/web/                      Next.js frontend scaffold
+apps/api/                      NestJS API and worker scaffold
+packages/shared/               shared types and schemas
+packages/ui/                   design tokens and shared primitives
+packages/api-client/           generated OpenAPI client
 .github/copilot-instructions.md  top-priority repo-wide rules
 .github/instructions/          path-specific instructions
 .github/agents/                agent definitions

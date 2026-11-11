@@ -1,0 +1,44 @@
+{
+  "name": "apnatown",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "packageManager": "pnpm@10.34.9",
+  "engines": {
+    "node": "24.13.0",
+    "pnpm": "10.34.9"
+  },
+  "scripts": {
+    "env:local": "node scripts/workspace.mjs env:local",
+    "db:up": "node scripts/workspace.mjs db:up",
+    "db:down": "node scripts/workspace.mjs db:down",
+    "db:generate": "node scripts/workspace.mjs db:generate",
+    "db:migrate": "node scripts/workspace.mjs db:migrate",
+    "db:seed": "node scripts/workspace.mjs db:seed",
+    "tokens:generate": "node scripts/workspace.mjs tokens:generate",
+    "i18n:generate": "node scripts/workspace.mjs i18n:generate",
+    "api:openapi": "node scripts/workspace.mjs api:openapi",
+    "client:generate": "node scripts/workspace.mjs client:generate",
+    "generate": "node scripts/workspace.mjs generate",
+    "build": "node scripts/workspace.mjs build",
+    "dev": "node scripts/workspace.mjs dev",
+    "start": "node scripts/workspace.mjs start",
+    "start:api": "node scripts/workspace.mjs start:api",
+    "start:web": "node scripts/workspace.mjs start:web",
+    "start:worker": "node scripts/workspace.mjs start:worker",
+    "lint": "eslint . && node scripts/check-workspace.mjs",
+    "format:check": "prettier --check package.json pnpm-workspace.yaml tsconfig*.json eslint.config.mjs compose.yaml apps packages scripts/environment* scripts/processes* scripts/workspace* scripts/check-workspace* .github/workflows",
+    "typecheck": "node scripts/workspace.mjs typecheck",
+    "check:generated": "node scripts/workspace.mjs check:generated"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "24.13.2",
+    "eslint": "10.14.0",
+    "eslint-config-prettier": "10.1.8",
+    "globals": "17.14.0",
+    "prettier": "3.10.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.72.2"
+  }
+}

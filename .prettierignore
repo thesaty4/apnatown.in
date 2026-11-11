@@ -1,0 +1,12 @@
+pnpm-lock.yaml
+docs/
+specs/
+dist/
+.next/
+coverage/
+packages/api-client/openapi.json
+packages/api-client/src/schema.d.ts
+**/generated/
+apps/web/next-env.d.ts
+packages/ui/src/tokens.css
+packages/ui/src/tailwind.css

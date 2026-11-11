@@ -1,0 +1,19 @@
+packages:
+  - apps/*
+  - packages/*
+
+strictPeerDependencies: true
+managePackageManagerVersions: false
+
+overrides:
+  'next>@playwright/test': '-'
+
+onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - esbuild
+  - prisma
+  - sharp
+
+ignoredBuiltDependencies:
+  - '@scarf/scarf'

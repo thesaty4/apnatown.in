@@ -1,0 +1,20 @@
+name: apnatown-local
+services:
+  postgres:
+    image: postgis/postgis:17-3.5@sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6
+    environment:
+      POSTGRES_USER: apnatown_migrator
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run pnpm env:local first}
+      POSTGRES_DB: apnatown_local
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U apnatown_migrator -d apnatown_local']
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    stop_grace_period: 30s
+volumes:
+  postgres-data:
