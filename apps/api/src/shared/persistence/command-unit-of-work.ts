@@ -25,7 +25,7 @@ type IdempotencyRow = {
 
 type Claim =
   | { kind: 'claimed'; id: string; leaseOwner: string }
-  | { kind: 'completed'; responseBody: JsonValue }
+  | { kind: 'completed'; responseBody: JsonValue; httpStatus: number }
   | { kind: 'busy' };
 
 function toJsonValue(value: Prisma.JsonValue): JsonValue {
@@ -70,18 +70,45 @@ export class PrismaCommandUnitOfWork implements CommandUnitOfWork {
       if (claim.kind === 'busy')
         throw new DomainError('COMMON_CONFLICT', {}, 1);
       if (claim.kind === 'completed')
-        return resultPolicy.replay(tx, claim.responseBody, command);
+        return this.replay(tx, claim, command, resultPolicy);
 
       const result = await work(tx);
       const stored = resultPolicy.store(result);
       const encoded = canonicalJson(stored);
-      const status = resultPolicy.httpStatus?.(result) ?? command.successStatus;
-      this.validateSuccessStatus(status);
+      const status = this.resultStatus(result, command, resultPolicy);
       if (status === 204 && (result !== null || stored !== null))
         throw new Error('IDEMPOTENCY_NO_CONTENT_RESULT_INVALID');
       await this.complete(this.database.client(tx), claim, status, encoded);
       return result;
     });
+  }
+
+  private async replay<T extends JsonValue>(
+    tx: TxContext,
+    claim: Extract<Claim, { kind: 'completed' }>,
+    command: CommandContext,
+    policy: IdempotencyResultPolicy<T>,
+  ): Promise<T> {
+    const result = await policy.replay(tx, claim.responseBody, command);
+    if (this.resultStatus(result, command, policy) !== claim.httpStatus)
+      throw new Error('IDEMPOTENCY_REPLAY_STATUS_MISMATCH');
+    if (claim.httpStatus === 204 && result !== null)
+      throw new Error('IDEMPOTENCY_NO_CONTENT_RESULT_INVALID');
+    return result;
+  }
+
+  private resultStatus<T extends JsonValue>(
+    result: T,
+    command: CommandContext,
+    policy: IdempotencyResultPolicy<T>,
+  ): number {
+    const status = policy.httpStatus?.(result) ?? command.successStatus;
+    if (
+      !Number.isInteger(status) ||
+      !((status >= 200 && status <= 299) || (status >= 400 && status <= 499))
+    )
+      throw new Error('INVALID_IDEMPOTENCY_STATUS');
+    return status;
   }
 
   private async claim(
@@ -140,6 +167,7 @@ export class PrismaCommandUnitOfWork implements CommandUnitOfWork {
           throw new Error('IDEMPOTENCY_COMPLETED_RESULT_MISSING');
         return {
           kind: 'completed',
+          httpStatus: existing.httpStatus,
           responseBody:
             existing.responseBody === null
               ? null

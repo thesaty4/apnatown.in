@@ -89,6 +89,9 @@ trusted HTTP context/hash builder are implemented, but no HTTP operation is
 registered to use them yet. The factory binds canonical requests to their
 method, resource, actor and resolved business using a dedicated server key;
 its contract is in [data-model](./data-model.md#shared-runtime-persistence).
+The transaction wrapper also supports explicit policy-selected `4xx` rejected
+outcomes and verifies replay status against the stored receipt; the same
+data-model contract defines commit-before-error and rollback boundaries.
 Live authorization, HTTP interceptor wiring and module replay policies remain
 required before an endpoint can claim idempotency support. These primitives do
 not imply live authorization or the Catalog reference below is implemented.
