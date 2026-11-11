@@ -77,6 +77,12 @@ export function configureHttp(
         invalidBody ? 'COMMON_VALIDATION_FAILED' : 'COMMON_INTERNAL_ERROR',
         correlationId(response.getHeader('X-Correlation-ID')),
       );
+      logger[body.status >= 500 ? 'error' : 'warn']({
+        event: 'http.body_rejected',
+        correlationId: body.correlationId,
+        code: body.code,
+        status: body.status,
+      });
       response.status(body.status).json(body);
     },
   );

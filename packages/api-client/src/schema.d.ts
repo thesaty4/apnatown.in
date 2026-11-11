@@ -41,6 +41,7 @@ export interface components {
             code: string;
             correlationId: string;
             details: {
+                field?: string;
                 fields?: string[];
             };
             message_key: string;

@@ -43,6 +43,9 @@ retain database timestamp precision, and validate their tuple shape before
 building the parameterized keyset predicate. `PageQuerySchema` owns the shared
 20-default/50-cap parsing. `canonicalJson` rejects non-JSON values, cycles and
 unsafe integers, with depth 16, 10,000 nodes and 65,536-character bounds.
+The flat-error filter registers the starter invariant catalogue and legacy
+aliases, exposes only allow-listed field paths, and logs technical codes/status
+with correlation IDs rather than exception messages or submitted values.
 Signed adjustments still require their owning DTO's explicit permission.
 These primitives do not imply that persistence, live authorization or the
 Catalog reference below are implemented. Automated test tooling remains

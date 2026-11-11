@@ -4,6 +4,7 @@ import { PostgresReadinessRepository } from '../persistence/readiness-repository
 import { READINESS_REPOSITORY, ReadinessService } from './readiness';
 import { RuntimePrimitivesModule } from '../runtime/providers';
 import { CURSOR_CODEC, CursorCodec } from '../pagination/cursor';
+import { createLogger, RUNTIME_LOGGER } from '../logger/logger';
 
 @Module({})
 export class RuntimeModule {
@@ -13,6 +14,10 @@ export class RuntimeModule {
       imports: [RuntimePrimitivesModule],
       providers: [
         { provide: RUNTIME_CONFIG, useValue: config },
+        {
+          provide: RUNTIME_LOGGER,
+          useFactory: () => createLogger(config.LOG_LEVEL),
+        },
         {
           provide: CURSOR_CODEC,
           useFactory: () => new CursorCodec(config.CURSOR_SIGNING_KEY),
@@ -29,6 +34,7 @@ export class RuntimeModule {
         ReadinessService,
         RuntimePrimitivesModule,
         CURSOR_CODEC,
+        RUNTIME_LOGGER,
       ],
     };
   }

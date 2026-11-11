@@ -4,6 +4,8 @@ import { CorrelationIdSchema } from '@apnatown/shared/wire';
 import pino, { type DestinationStream, type Logger } from 'pino';
 import type { RuntimeConfig } from '../config/config';
 
+export const RUNTIME_LOGGER = Symbol('RUNTIME_LOGGER');
+
 export function correlationId(input: unknown): string {
   const value = CorrelationIdSchema.safeParse(input);
   return value.success ? value.data : randomUUID();

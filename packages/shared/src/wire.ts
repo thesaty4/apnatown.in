@@ -31,13 +31,20 @@ export const CorrelationIdSchema = z
   .regex(/^[A-Za-z0-9_-]+$/);
 export const EmptyRequestSchema = z.strictObject({});
 export const HealthResponseSchema = z.strictObject({ status: z.literal('ok') });
+const fieldPath = z
+  .string()
+  .max(100)
+  .regex(/^[A-Za-z][A-Za-z0-9_.]*$/);
+export const ErrorDetailsSchema = z.strictObject({
+  field: fieldPath.optional(),
+  fields: z.array(fieldPath).max(50).optional(),
+});
+export type ErrorDetails = z.infer<typeof ErrorDetailsSchema>;
 export const ErrorResponseSchema = z.strictObject({
   code: z.string().regex(/^[A-Z][A-Z0-9_]+$/),
   message_key: z.string().regex(/^errors\.[A-Za-z0-9.]+$/),
   status: z.number().int().min(400).max(599),
-  details: z.strictObject({
-    fields: z.array(z.string().max(100)).max(50).optional(),
-  }),
+  details: ErrorDetailsSchema,
   correlationId: CorrelationIdSchema,
 });
 export type ErrorResponse = z.infer<typeof ErrorResponseSchema>;

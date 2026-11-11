@@ -45,6 +45,12 @@ async function main(): Promise<void> {
           error instanceof DomainError ? error.code : 'COMMON_INTERNAL_ERROR',
           id,
         );
+        logger[body.status >= 500 ? 'error' : 'warn']({
+          event: 'worker.probe_failed',
+          correlationId: id,
+          code: body.code,
+          status: body.status,
+        });
         response.statusCode = body.status;
         response.end(JSON.stringify(body));
       });

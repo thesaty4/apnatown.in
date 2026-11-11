@@ -1,4 +1,4 @@
-import type { ErrorResponse } from '@apnatown/shared/wire';
+import type { ErrorDetails, ErrorResponse } from '@apnatown/shared/wire';
 
 const catalogue = {
   COMMON_VALIDATION_FAILED: [400, 'errors.common.validationFailed'],
@@ -9,20 +9,52 @@ const catalogue = {
   COMMON_RATE_LIMITED: [429, 'errors.common.rateLimited'],
   COMMON_UNAVAILABLE: [503, 'errors.common.unavailable'],
   COMMON_INTERNAL_ERROR: [500, 'errors.common.internalError'],
+  VALIDATION_ERROR: [400, 'errors.common.validationFailed'],
+  FORBIDDEN: [403, 'errors.common.forbidden'],
+  AUTH_REQUIRED: [401, 'errors.auth.required'],
+  RATE_LIMITED: [429, 'errors.common.rateLimited'],
+  COMMON_MONEY_INVALID: [422, 'errors.money.invalid'],
+  CHECKOUT_SPLIT_INVALID: [409, 'errors.checkout.splitInvalid'],
+  ORDERS_INVALID_TRANSITION: [409, 'errors.orders.invalidTransition'],
+  DELIVERY_CODE_INVALID: [422, 'errors.delivery.codeInvalid'],
+  USERS_APPROVAL_REQUIRED: [403, 'errors.users.approvalRequired'],
+  CATALOG_CATEGORY_FORBIDDEN: [403, 'errors.catalog.categoryForbidden'],
+  SERVICES_SUBCATEGORY_REQUIRED: [422, 'errors.services.subcategoryRequired'],
+  REVIEWS_NOT_ELIGIBLE: [403, 'errors.reviews.notEligible'],
+  MEDIA_VIDEO_NOT_PUBLISHED: [409, 'errors.media.videoNotPublished'],
+  COMMUNICATIONS_CONSENT_REQUIRED: [
+    422,
+    'errors.communications.consentRequired',
+  ],
+  ADMIN_SCOPE_FORBIDDEN: [403, 'errors.admin.scopeForbidden'],
+  ADMIN_ROLE_IN_USE: [409, 'errors.admin.roleInUse'],
+  USERS_DATA_REQUEST_REQUIRED: [409, 'errors.users.dataRequestRequired'],
+  SEARCH_FILTER_INVALID: [400, 'errors.search.filterInvalid'],
+  MEDIA_SURFACE_CONSENT_REQUIRED: [422, 'errors.media.surfaceConsentRequired'],
+  OFFERS_NOT_ACTIVE: [409, 'errors.offers.notActive'],
+  CHECKOUT_COUPON_INVALID: [422, 'errors.checkout.couponInvalid'],
+  ORDERS_REFUND_WINDOW_CLOSED: [409, 'errors.orders.refundWindowClosed'],
 } as const;
 
-export type CommonCode = keyof typeof catalogue;
+export type ErrorCode = keyof typeof catalogue;
 
 export class DomainError extends Error {
-  constructor(readonly code: CommonCode) {
+  constructor(
+    readonly code: ErrorCode,
+    readonly details: ErrorDetails = {},
+  ) {
     super(code);
+    if (!Object.hasOwn(catalogue, code))
+      throw new Error('UNREGISTERED_DOMAIN_ERROR');
+    this.name = 'DomainError';
   }
 }
 
 export function errorResponse(
-  code: CommonCode,
+  code: ErrorCode,
   correlationId: string,
+  details: ErrorDetails = {},
 ): ErrorResponse {
   const [status, message_key] = catalogue[code];
-  return { code, message_key, status, details: {}, correlationId };
+  return { code, message_key, status, details, correlationId };
 }

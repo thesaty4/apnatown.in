@@ -279,12 +279,18 @@
           "details": {
             "type": "object",
             "properties": {
+              "field": {
+                "type": "string",
+                "maxLength": 100,
+                "pattern": "^[A-Za-z][A-Za-z0-9_.]*$"
+              },
               "fields": {
                 "maxItems": 50,
                 "type": "array",
                 "items": {
                   "type": "string",
-                  "maxLength": 100
+                  "maxLength": 100,
+                  "pattern": "^[A-Za-z][A-Za-z0-9_.]*$"
                 }
               }
             },
