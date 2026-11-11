@@ -79,9 +79,13 @@ and a non-secret receipt together. Its exact boundaries are in the
 `OutboxDispatcher` now loads the persisted envelope by job event ID, selects
 explicitly registered type/version handlers, and invokes that port for each.
 The worker's `OUTBOX_HANDLERS` list is deliberately empty until real module
-handlers are implemented. Neither helper registers a pg-boss callback or
-performs external sends; an unknown event is a failure, not an acknowledged
-no-op. Empty registration never makes worker readiness true.
+handlers are implemented. `OutboxConsumer` registers the pg-boss callback only
+when that list is nonempty, and shares one lazy `OutboxQueue` connection with
+the relay. It dispatches one job at a time; unknown events or partial handler
+failure reject the job with a fixed safe error, not an acknowledged no-op.
+The [data-model contract](./data-model.md#shared-runtime-persistence) owns
+transport retry/recovery and shutdown details. No external send or real domain
+handler is implemented, and empty registration never makes worker readiness true.
 Structured failure logs and persisted dead-state exist; a metrics exporter and
 operator replay control are still deferred and remain deployment/operations
 gates. Do not invent an admin queue screen to close those gaps.

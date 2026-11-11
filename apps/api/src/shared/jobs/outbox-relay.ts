@@ -10,24 +10,20 @@ import {
   OutboxRelayStore,
   type OutboxRecord,
 } from '../persistence/outbox-relay-store';
+import { OUTBOX_QUEUE_NAME, OutboxQueue } from './outbox-queue';
 
-const OUTBOX_QUEUE_NAME = 'apnatown.outbox';
 const OUTBOX_ENQUEUE_FAILED = 'OUTBOX_ENQUEUE_FAILED';
 const OUTBOX_EVENT_INVALID = 'OUTBOX_EVENT_INVALID';
 
-export const PG_BOSS_FACTORY = Symbol('PG_BOSS_FACTORY');
-export type PgBossFactory = () => Promise<PgBoss>;
-
 @Injectable()
 export class OutboxRelay {
-  private boss: PgBoss | undefined;
   private running = false;
   private loop: Promise<void> | undefined;
   private timer: NodeJS.Timeout | undefined;
   private wake: (() => void) | undefined;
 
   constructor(
-    @Inject(PG_BOSS_FACTORY) private readonly createBoss: PgBossFactory,
+    private readonly queue: OutboxQueue,
     private readonly store: OutboxRelayStore,
     @Inject(RUNTIME_CONFIG) private readonly config: RuntimeConfig,
     @Inject(RUNTIME_LOGGER) private readonly logger: Logger,
@@ -39,7 +35,7 @@ export class OutboxRelay {
     this.loop = this.run();
   }
 
-  async onModuleDestroy(): Promise<void> {
+  async stop(): Promise<void> {
     this.running = false;
     if (this.timer) clearTimeout(this.timer);
     this.timer = undefined;
@@ -47,16 +43,18 @@ export class OutboxRelay {
     this.wake = undefined;
     wake?.();
     await this.loop;
-    if (this.boss) {
-      await this.boss.stop({ close: true, graceful: true, timeout: 5000 });
-      this.boss = undefined;
-    }
+  }
+
+  onModuleDestroy(): Promise<void> {
+    return this.stop();
   }
 
   private async run(): Promise<void> {
     while (this.running) {
       try {
-        if (await this.ensureQueue()) await this.relayBatch();
+        const boss = await this.queue.connect();
+        if (!this.running) return;
+        await this.relayBatch(boss);
       } catch {
         this.logger.error({
           event: 'outbox.relay_failed',
@@ -67,39 +65,7 @@ export class OutboxRelay {
     }
   }
 
-  private async ensureQueue(): Promise<boolean> {
-    if (this.boss) return true;
-    const candidate = await this.createBoss();
-    candidate.on('error', () => {
-      this.logger.error({
-        event: 'outbox.queue_error',
-        code: 'OUTBOX_QUEUE_OPERATION_FAILED',
-      });
-    });
-    try {
-      await candidate.start({ attempts: 1 });
-      if (!(await candidate.getQueue(OUTBOX_QUEUE_NAME)))
-        throw new Error('OUTBOX_QUEUE_NOT_PROVISIONED');
-      this.boss = candidate;
-      return true;
-    } catch {
-      this.logger.error({
-        event: 'outbox.queue_unavailable',
-        code: 'OUTBOX_QUEUE_START_FAILED',
-      });
-      try {
-        await candidate.stop({ close: true, graceful: false, timeout: 5000 });
-      } catch {
-        this.logger.warn({
-          event: 'outbox.queue_cleanup_failed',
-          code: 'OUTBOX_QUEUE_CLEANUP_FAILED',
-        });
-      }
-      return false;
-    }
-  }
-
-  private async relayBatch(): Promise<void> {
+  private async relayBatch(boss: PgBoss): Promise<void> {
     const leaseOwner = randomUUID();
     const { records, exhausted } = await this.store.claimBatch(
       leaseOwner,
@@ -110,10 +76,10 @@ export class OutboxRelay {
         event: 'outbox.lease_recovery_exhausted',
         count: exhausted,
       });
-    await Promise.all(records.map((record) => this.publish(record)));
+    await Promise.all(records.map((record) => this.publish(record, boss)));
   }
 
-  private async publish(record: OutboxRecord): Promise<void> {
+  private async publish(record: OutboxRecord, boss: PgBoss): Promise<void> {
     try {
       await withCorrelation(record.correlationId, async () => {
         const envelope = this.eventEnvelope(record);
@@ -133,8 +99,6 @@ export class OutboxRelay {
           Math.ceil(this.config.JOB_RETRY_DELAY_MS / 1000),
         );
         try {
-          const boss = this.boss;
-          if (!boss) throw new Error('OUTBOX_QUEUE_UNAVAILABLE');
           await boss.send(
             OUTBOX_QUEUE_NAME,
             { eventId: envelope.id },

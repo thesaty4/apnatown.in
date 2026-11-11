@@ -6,6 +6,8 @@ import { parseConfig } from './shared/config/config';
 import { DomainError, errorResponse } from './shared/errors/errors';
 import { ReadinessService } from './shared/health/readiness';
 import { OutboxRelay } from './shared/jobs/outbox-relay';
+import { OutboxQueue } from './shared/jobs/outbox-queue';
+import { OutboxConsumer } from './shared/jobs/outbox-consumer';
 import { RuntimeCleanup } from './shared/jobs/runtime-cleanup';
 import { handleSignals, shutdownHandler } from './shared/lifecycle';
 import { withCorrelation } from './shared/logger/context';
@@ -26,6 +28,8 @@ async function main(): Promise<void> {
     },
   );
   const relay = app.get(OutboxRelay);
+  const queue = app.get(OutboxQueue);
+  const consumer = app.get(OutboxConsumer);
   const cleanup = app.get(RuntimeCleanup);
   const health = app.get(ReadinessService);
   const server = createServer({ maxHeaderSize: 8192 }, (request, response) => {
@@ -65,10 +69,21 @@ async function main(): Promise<void> {
     server.listen(config.WORKER_PROBE_PORT, '127.0.0.1', resolve);
   });
   relay.start();
+  consumer.start();
   cleanup.start();
   handleSignals(
-    shutdownHandler(app, server, config.SHUTDOWN_TIMEOUT_MS, logger, () =>
-      cleanup.stop(),
+    shutdownHandler(
+      app,
+      server,
+      config.SHUTDOWN_TIMEOUT_MS,
+      logger,
+      async () => {
+        try {
+          await Promise.all([cleanup.stop(), relay.stop(), consumer.stop()]);
+        } finally {
+          await queue.stop();
+        }
+      },
     ),
     logger,
   );
@@ -76,7 +91,7 @@ async function main(): Promise<void> {
     event: 'worker.listening',
     outboxRelayRegistered: true,
     runtimeCleanupRegistered: true,
-    consumersRegistered: false,
+    consumersRegistered: consumer.registered,
   });
 }
 

@@ -12,10 +12,12 @@ import {
   type OutboxHandler,
 } from './shared/jobs/outbox-dispatcher';
 import {
-  OutboxRelay,
   PG_BOSS_FACTORY,
+  OutboxQueue,
   type PgBossFactory,
-} from './shared/jobs/outbox-relay';
+} from './shared/jobs/outbox-queue';
+import { OutboxRelay } from './shared/jobs/outbox-relay';
+import { OutboxConsumer } from './shared/jobs/outbox-consumer';
 
 @Module({})
 export class WorkerModule {
@@ -26,23 +28,31 @@ export class WorkerModule {
       providers: [
         {
           provide: PG_BOSS_FACTORY,
-          useFactory: async (): Promise<PgBossFactory> => {
+          useFactory: async (
+            dispatcher: OutboxDispatcher,
+          ): Promise<PgBossFactory> => {
             const { PgBoss } = await import('pg-boss');
             return async () =>
               new PgBoss({
                 connectionString: config.DATABASE_URL,
                 connectionTimeoutMillis: 2000,
                 max: 10,
-                application_name: 'apnatown-outbox-relay',
+                application_name: 'apnatown-outbox',
                 schema: 'pgboss',
                 migrate: false,
                 createSchema: false,
                 schedule: false,
-                supervise: false,
+                supervise: dispatcher.handlerCount > 0,
+                reindex: false,
+                persistQueueStats: false,
+                persistWarnings: false,
               });
           },
+          inject: [OutboxDispatcher],
         },
+        OutboxQueue,
         OutboxRelay,
+        OutboxConsumer,
         RuntimeCleanup,
         { provide: EVENT_CONSUMER, useClass: TransactionalEventConsumer },
         {
@@ -51,7 +61,14 @@ export class WorkerModule {
         },
         OutboxDispatcher,
       ],
-      exports: [OutboxRelay, RuntimeCleanup, EVENT_CONSUMER, OutboxDispatcher],
+      exports: [
+        OutboxQueue,
+        OutboxRelay,
+        OutboxConsumer,
+        RuntimeCleanup,
+        EVENT_CONSUMER,
+        OutboxDispatcher,
+      ],
     };
   }
 }

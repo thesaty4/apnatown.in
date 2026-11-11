@@ -387,11 +387,40 @@ Successful handlers are skipped by their receipts on retry; no partial success
 is acknowledged as whole-job success.
 
 The current list is empty because no domain handler has been implemented.
-Queue callback registration/acknowledgement, domain handlers, readiness
-registration and external delivery/reconciliation remain unimplemented.
 The dispatcher starts no loop or connection during construction, and an empty
 handler list never implies worker readiness. No runtime dispatch validation or
 query-plan measurements are claimed.
+
+`OutboxConsumer` now bridges pg-boss to that dispatcher. With a nonempty static
+registry it registers one worker for `apnatown.outbox`, batch size/local
+concurrency 1 and a 1-second poll interval. Successful dispatch resolves the
+callback for pg-boss acknowledgement; a dispatch failure logs and throws only
+`OUTBOX_DISPATCH_FAILED`, so raw database/handler exceptions never become job
+output. pg-boss applies the relay's configured job retry/backoff policy;
+exhausted consumer jobs become pg-boss `failed`, independently of the relay's
+`published` state. Successful effect receipts remain authoritative if completion
+acknowledgement is lost. Registration outages retry after `JOB_RETRY_DELAY_MS`;
+this connection polling is separate from the bounded per-job attempt limit.
+With zero handlers the bridge logs its inactive state and never fetches or
+acknowledges queued events.
+
+Relay and consumer share one lazy `OutboxQueue` client/start promise and one
+bounded pool; failed startup cleans up before retry. Schema creation/migration
+and scheduling remain disabled. When real handlers are configured, pg-boss
+supervision is enabled for abandoned-job recovery and queue-internal retention;
+automatic reindexing, persisted queue-stat partitions and persisted warnings
+are explicitly disabled to avoid runtime DDL or unsanitized warning storage.
+Migration-role queue provisioning remains unchanged. Supervision is disabled
+while the registry is empty. This configuration still requires runtime-role,
+crash/retry and shutdown validation before deployment; library source inspection
+and static checks are not execution evidence.
+
+Shutdown stops relay leases, consumer fetching and cleanup intake together;
+it drains their in-flight work, closes the shared queue, then releases the
+database. The existing process deadline remains armed on drain failure so
+shutdown cannot hang indefinitely. Domain handlers, the exact readiness
+manifest, metrics export, operator replay and external delivery/reconciliation
+remain pending; the bridge does not turn readiness true by itself.
 
 **HTTP idempotency:** hash the canonical allow-listed payload plus method/resource/operation and **server-resolved business ID/kind** for owner operations, excluding volatile correlation/CSRF fields. A changed `X-Business-Kind` cannot replay a shop result into a provider context. Same principal/key/hash replays the original status/non-secret result; changed payload/context -> 409 `COMMON_CONFLICT` (or module code); concurrent in-progress work returns a bounded retry response with `Retry-After`, never executes a second domain command. Authorization failure cannot become successful replay. For external payment-like workflows, commit reservation/attempt first, release the transaction, call the provider, then finalize through the owning module's reconciliation state machine; never expire an ambiguous attempt and charge again.
 
@@ -479,6 +508,9 @@ automated test harness was restored.
 
 ## Persistence acceptance
 
+- Given an empty handler registry, when the worker starts, then no queue fetch callback is registered and queued events are not acknowledged. A configured registry uses one shared client and one-job consumer batches.
+- Given dispatch rejection or lost completion acknowledgement, when pg-boss retries, then only fixed safe failure details reach the queue and committed effects remain deduplicated. Exhausted queue jobs do not rewrite the relay's publication state.
+- Given SIGTERM or a failed drain, when shutdown runs, then no new relay/consumer/cleanup intake starts, in-flight work drains before database release, and the original deadline remains effective on failure.
 - Given a queued event ID, when dispatch runs, then only its persisted envelope is used; injected job payload fields, missing events and unmatched type/version handlers fail rather than being acknowledged.
 - Given several matching handlers and one failure, when dispatch runs, then the others are still attempted in independent transactions, the overall dispatch rejects, and retry skips already committed effects through their receipts.
 - Given duplicate consumer/handler identities, when the worker is composed, then startup fails; an empty declared registry activates no handler and does not change readiness.
