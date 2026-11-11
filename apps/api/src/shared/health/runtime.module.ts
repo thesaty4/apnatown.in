@@ -11,6 +11,7 @@ import { PrismaDatabase } from '../persistence/prisma-database';
 import { PrismaUnitOfWork } from '../persistence/unit-of-work';
 import { UNIT_OF_WORK } from '../persistence/ports';
 import { PrismaOutboxWriter } from '../persistence/outbox-writer';
+import { OutboxRelayStore } from '../persistence/outbox-relay-store';
 import {
   RATE_LIMIT_REPOSITORY,
   PostgresRateLimitRepository,
@@ -50,6 +51,7 @@ export class RuntimeModule {
             new PrismaOutboxWriter(database),
           inject: [PrismaDatabase],
         },
+        OutboxRelayStore,
         {
           provide: RATE_LIMIT_REPOSITORY,
           useClass: PostgresRateLimitRepository,
@@ -70,6 +72,7 @@ export class RuntimeModule {
         EVENT_FACTORY,
         UNIT_OF_WORK,
         OUTBOX_WRITER,
+        OutboxRelayStore,
         PrismaDatabase,
         RATE_LIMIT_REPOSITORY,
       ],

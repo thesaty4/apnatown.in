@@ -9,9 +9,9 @@ full product context.
 
 > **Status:** C00 scaffolds plus incremental C01/C02 shared backend/database
 > foundations: checked money, cursors, errors, correlation, event construction,
-> shared runtime migrations and transactional outbox writes. Domain features,
-> domain migrations/seeds, durable consumers and authentication still follow
-> in the owning slices. This is not a production-ready
+> shared runtime migrations, transactional outbox writes and a bounded
+> pg-boss outbox relay. Domain features, consumers, domain migrations/seeds and
+> authentication still follow in the owning slices. This is not a production-ready
 > marketplace; see the [foundation contracts](specs/_foundation/architecture.md).
 
 ## Local development

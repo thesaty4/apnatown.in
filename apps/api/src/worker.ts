@@ -5,6 +5,7 @@ import { WorkerModule } from './worker.module';
 import { parseConfig } from './shared/config/config';
 import { DomainError, errorResponse } from './shared/errors/errors';
 import { ReadinessService } from './shared/health/readiness';
+import { OutboxRelay } from './shared/jobs/outbox-relay';
 import { handleSignals, shutdownHandler } from './shared/lifecycle';
 import { withCorrelation } from './shared/logger/context';
 import {
@@ -23,9 +24,8 @@ async function main(): Promise<void> {
       abortOnError: false,
     },
   );
+  const relay = app.get(OutboxRelay);
   const health = app.get(ReadinessService);
-  // No queue startup, schema DDL or pretend consumers. C01 owns the relay and
-  // registrations; their absence keeps the real readiness repository false.
   const server = createServer({ maxHeaderSize: 8192 }, (request, response) => {
     const id = correlationId(request.headers['x-correlation-id']);
     response.setHeader('X-Correlation-ID', id);
@@ -62,11 +62,16 @@ async function main(): Promise<void> {
     server.once('error', reject);
     server.listen(config.WORKER_PROBE_PORT, '127.0.0.1', resolve);
   });
+  relay.start();
   handleSignals(
     shutdownHandler(app, server, config.SHUTDOWN_TIMEOUT_MS, logger),
     logger,
   );
-  logger.info({ event: 'worker.listening', consumersRegistered: false });
+  logger.info({
+    event: 'worker.listening',
+    outboxRelayRegistered: true,
+    consumersRegistered: false,
+  });
 }
 
 void main().catch(() => {

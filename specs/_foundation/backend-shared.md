@@ -56,7 +56,23 @@ repository adapters can inject the exported `PrismaDatabase`. Connections
 open on first unit-of-work use and close on module shutdown, keeping process
 probes reachable when the database is unavailable. Foreign, expired and
 timed-out handles never fall back to a root client. Appending does not enqueue:
-the relay and consumer registrations remain deferred.
+the separate worker's `OutboxRelay` leases at most 20 rows per batch with
+`FOR UPDATE SKIP LOCKED`, commits the lease, and enqueues by stable event ID
+outside the transaction. The migration launcher provisions the generic
+`apnatown.outbox` pg-boss queue; worker startup uses the runtime role with
+schema migration and creation disabled. Validated bounds are batch size 1-20
+(default 10), polling interval 100-60,000 ms (default 1,000), lease 10-300
+seconds (default 30), retry limit 0-10 (default 3), and base delay 100-60,000
+ms (default 1,000). Relay retry delay grows linearly by attempt and is capped
+at base delay times retry limit plus one; pg-boss retries use exponential
+backoff with the base rounded up to seconds and capped at that rounded delay
+times retry limit plus one. Exhausted or malformed events become `dead` with a
+safe error code, never exception text or event payload in logs. Consumers and
+readiness-manifest registration remain deferred, so this relay does not imply
+any domain handler is active or make worker readiness true.
+Structured failure logs and persisted dead-state exist; a metrics exporter and
+operator replay control are still deferred and remain deployment/operations
+gates. Do not invent an admin queue screen to close those gaps.
 The shared `RateLimit` metadata/guard uses one atomic PostgreSQL upsert per
 declared window, DB time, a purpose-separated HMAC of either the trusted
 request IP or the authenticated principal ID, and fails closed with 503 on

@@ -53,6 +53,7 @@ export async function migrate(env) {
     await boss.start({ attempts: 1 });
     if (!(await boss.isInstalled()) || !(await boss.schemaVersion()))
       throw new Error('QUEUE_SCHEMA_SETUP_FAILED');
+    await boss.createQueue('apnatown.outbox');
   } finally {
     await boss.stop({ close: true, graceful: false, timeout: 5000 });
   }
