@@ -5,7 +5,7 @@ description: "Recipe for adding/changing an admin action: role+ownership+scope c
 
 # RBAC, scope, and audit
 
-Covers AD16, SA2-SA3, invariants 11-12 in `docs/PROJECT.md`
+Covers AD16, SA2-SA3, BR-12/BR-13 in `docs/project/04-business-rules.md`
 (`domain-accounts-admin.instructions.md`).
 
 ## Steps

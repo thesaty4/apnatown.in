@@ -13,7 +13,7 @@ Covers EX1-EX11, SR7, SR10 (`domain-catalog-search.instructions.md`).
    `/explore?tab=services&category=wedding-events&subcategory=dj-sound,tent-lighting`.
 2. Each filter control reads its current value from the URL (via a
    shared `useExploreFilters()`/`useSearchFilters()` hook — **two
-   separate hooks/stores**, never shared, per invariant 14) and writes
+   separate hooks/stores**, never shared, per BR-15) and writes
    back via router push/replace.
 3. On tab switch, keep each tab's filters in its own URL namespace so
    switching back restores them (EX3).

@@ -1,0 +1,187 @@
+{
+ "_note": "Exact CSS custom-property values from the design. Map every key to Tailwind theme extensions; never hard-code hex values in components.",
+ "light": {
+  "color": {
+   "bg": "#FFFBF5",
+   "surface": "#FFFFFF",
+   "surface-2": "#FAF4EA",
+   "border": "#E7DFD3",
+   "border-strong": "#CFC3B2",
+   "text": "#1F1A14",
+   "text-2": "#5A5045",
+   "muted": "#6F6457",
+   "overlay": "rgba(31,26,20,.55)",
+   "primary": "#C2410C",
+   "on-primary": "#FFFFFF",
+   "primary-soft": "#FFEDD5",
+   "primary-ink": "#7C2D12",
+   "secondary": "#0F766E",
+   "secondary-soft": "#CCFBF1",
+   "accent": "#F59E0B",
+   "accent-ink": "#451A03",
+   "success": "#15803D",
+   "success-soft": "#DCFCE7",
+   "warning": "#B45309",
+   "warning-soft": "#FEF3C7",
+   "error": "#B91C1C",
+   "error-soft": "#FEE2E2",
+   "info": "#1D4ED8",
+   "info-soft": "#DBEAFE",
+   "star": "#F59E0B",
+   "offer": "#A3166B",
+   "offer-soft": "#FCE7F3"
+  },
+  "status-order": {
+   "st-placed": "#1D4ED8",
+   "st-accepted": "#0F766E",
+   "st-preparing": "#B45309",
+   "st-ready": "#6D28D9",
+   "st-out": "#C2410C",
+   "st-delivered": "#15803D",
+   "st-cancelled": "#B91C1C",
+   "st-refunded": "#475569"
+  },
+  "status-approval": {
+   "ap-pending": "#B45309",
+   "ap-approved": "#15803D",
+   "ap-rejected": "#B91C1C",
+   "ap-suspended": "#6D28D9",
+   "ap-inactive": "#57534E"
+  },
+  "font": {
+   "font-display": "\"Poppins\",\"Noto Sans Devanagari\",\"Noto Sans\",system-ui,sans-serif",
+   "font-body": "\"Noto Sans\",\"Noto Sans Devanagari\",system-ui,-apple-system,\"Segoe UI\",Roboto,Arial,sans-serif"
+  },
+  "radius": {
+   "r-xs": "6px",
+   "r-sm": "10px",
+   "r-md": "14px",
+   "r-lg": "20px",
+   "r-pill": "999px"
+  },
+  "shadow": {
+   "sh-1": "0 1px 2px rgba(60,40,20,.08),0 1px 3px rgba(60,40,20,.06)",
+   "sh-2": "0 4px 12px rgba(60,40,20,.10),0 2px 4px rgba(60,40,20,.06)",
+   "sh-3": "0 16px 40px rgba(60,40,20,.18)"
+  },
+  "motion": {
+   "dur-1": "120ms",
+   "dur-2": "220ms",
+   "dur-3": "380ms",
+   "ease": "cubic-bezier(.2,.8,.2,1)"
+  },
+  "layout": {
+   "nav-h": "56px",
+   "tab-h": "60px",
+   "sat": "env(safe-area-inset-top,0px)",
+   "sab": "env(safe-area-inset-bottom,0px)"
+  }
+ },
+ "dark_overrides": {
+  "color": {
+   "bg": "#14110D",
+   "surface": "#1E1913",
+   "surface-2": "#27211A",
+   "border": "#3A3228",
+   "border-strong": "#51463A",
+   "text": "#F6EFE6",
+   "text-2": "#D2C7B9",
+   "muted": "#A89C8B",
+   "overlay": "rgba(0,0,0,.7)",
+   "primary": "#FB923C",
+   "on-primary": "#1F1A14",
+   "primary-soft": "#3B2113",
+   "primary-ink": "#FED7AA",
+   "secondary": "#2DD4BF",
+   "secondary-soft": "#0E2F2B",
+   "accent": "#FBBF24",
+   "success": "#4ADE80",
+   "success-soft": "#10301C",
+   "warning": "#FBBF24",
+   "warning-soft": "#3A2A0B",
+   "error": "#F87171",
+   "error-soft": "#3F1515",
+   "info": "#93C5FD",
+   "info-soft": "#14243F",
+   "offer": "#F472B6",
+   "offer-soft": "#3A1429"
+  },
+  "status-order": {
+   "st-placed": "#93C5FD",
+   "st-accepted": "#2DD4BF",
+   "st-preparing": "#FBBF24",
+   "st-ready": "#C4B5FD",
+   "st-out": "#FB923C",
+   "st-delivered": "#4ADE80",
+   "st-cancelled": "#F87171",
+   "st-refunded": "#CBD5E1"
+  },
+  "status-approval": {
+   "ap-pending": "#FBBF24",
+   "ap-approved": "#4ADE80",
+   "ap-rejected": "#F87171",
+   "ap-suspended": "#C4B5FD",
+   "ap-inactive": "#D6D3D1"
+  },
+  "shadow": {
+   "sh-1": "0 1px 2px rgba(0,0,0,.5)",
+   "sh-2": "0 4px 12px rgba(0,0,0,.5)",
+   "sh-3": "0 16px 40px rgba(0,0,0,.6)"
+  }
+ },
+ "typography": {
+  "families": {
+   "display": "Poppins (headings, prices, KPIs)",
+   "body": "Noto Sans",
+   "devanagari": "Noto Sans Devanagari"
+  },
+  "base": "16px/1.5 body, weight 400",
+  "h1": "1.75rem/700",
+  "h2": "1.4rem/700",
+  "h3": "1.15rem/700",
+  "h4": "1rem/700",
+  "price": "700 1.1rem display",
+  "mrp": "0.85rem line-through muted",
+  "small": "0.8-0.875rem",
+  "caption": "0.75-0.78rem",
+  "button": "600 1rem",
+  "kpi-value": "700 1.5rem display",
+  "big-number": "700 2rem display",
+  "heading-letter-spacing": "-0.01em",
+  "heading-line-height": "1.25"
+ },
+ "spacing": {
+  "base": "4px / 8px grid",
+  "touch-target-min": "48px",
+  "focus-ring": "3px",
+  "gap-scale": "4,8,12,16,24,32"
+ },
+ "layout": {
+  "breakpoints": {
+   "tablet": "600px",
+   "desktop": "900px"
+  },
+  "container-max": "1200px",
+  "columns": {
+   "mobile": 4,
+   "tablet": 8,
+   "desktop": 12
+  },
+  "nav-height": "56px",
+  "bottom-tab-height": "60px",
+  "safe-area": "env(safe-area-inset-top/bottom)"
+ },
+ "components-metrics": {
+  "button-min-height": "48px",
+  "input-min-height": "48px",
+  "otp-box": "46x54px",
+  "searchbar-min-height": "44px",
+  "iconbutton": "44-48px"
+ },
+ "themes": [
+  "light",
+  "dark",
+  "auto (prefers-color-scheme)"
+ ],
+ "reference": "reference/prototype-source/style.css is the complete stylesheet of the design; it is the visual source of truth."
+}

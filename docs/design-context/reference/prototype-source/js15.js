@@ -1,0 +1,50 @@
+/* ===== v2 data layer (idempotent migration) ===== */
+const BRANDS={grocery:['Desi Chakki','Kisan Choice','Ganga Fresh'],medical:['CureWell','HealthPlus'],electronics:['Orbit','Zenith','Crown'],mobile:['Apple','Samsung','Realme'],food:['Kushinagar','Moti Ghar'],clothing:['Durga Weaves','Rangila'],hardware:['BuildMax','ProTool'],stationery:['Classmate','Doms'],furniture:['Shree','HomeNest'],jewellery:['Lakshmi','SilverArt'],electrician:['LubeMax','Volt'],mechanic:['LubeMax','AutoPro']};
+const brandOf=p=>p.brand||((BRANDS[p.cat]||['Local'])[(+String(p.id).slice(1)||0)%(BRANDS[p.cat]||['Local']).length]);
+const fromNum=s=>+(String(s||'').replace(/,/g,'').match(/\d+/)||[0])[0];
+const defImgs=(p)=>[0,1,2].map(i=>({t:'img',e:p.emoji,h:(p.hue||30)+i*25}));
+const YT='aqz-KE-bpKQ';
+function ensureV2(){const d=D(),now=Date.now();
+ d.svc.forEach(s=>{s.del=s.del||{mode:'rider',radius:6,fee:0,min:0,pickup:true,note:'Collect at the provider’s shop.'};s.services=(s.services||[]).map((x,i)=>({id:x.id||s.id+'-sv'+i,n:x.n,p:x.p,from:x.from??fromNum(x.p),desc:x.desc||''}));s.media=s.media||[]});
+ d.biz.forEach(b=>{b.media=b.media||[];if(!b.services)b.services=({b4:[['Mobile screen repair','from ₹499'],['Software update & data transfer','₹149']],b3:[['TV wall-mount installation','₹399'],['Free home demo','₹0']],b7:[['Paint colour consultation','₹0']]})[b.id]?.map((x,i)=>({id:b.id+'-sv'+i,n:x[0],p:x[1],from:fromNum(x[1]),desc:''}))||[]});
+ const addP=(id,bid,en,hi,price,mrp,unit,emoji,stock,sub,extra={})=>{if(d.products.some(p=>p.id===id))return;const o=ent(bid);d.products.push({id,bid,name:{en,hi},cat:o.cat,price,mrp,unit,emoji,hue:o.hue,stock,low:5,variants:[],sku:bid.toUpperCase()+'-'+id,sub,desc:en+' from '+o.name.en+'.',specs:[['Pack size',unit],['Sold by',o.name.en]],tags:[],featured:false,status:'active',avail:stock>0,...extra})};
+ addP('p45','b3','iPhone 16 128 GB','आईफ़ोन 16 128 GB',74900,79900,'1 pc','📱',4,'Phones',{variants:['Black','White','Teal'],brand:'Apple',featured:true,desc:'New iPhone 16 with warranty and GST bill. Free screen guard from Singh Electronics.'});
+ addP('p46','s3','Engine Oil','इंजन ऑयल',450,520,'1 L','🛢️',30,'Spares');addP('p47','s3','Bike Helmet','बाइक हेलमेट',899,1199,'1 pc','⛑️',12,'Safety');
+ addP('p48','s5','LED Bulb 12 W','एलईडी बल्ब 12 W',199,260,'pack of 2','💡',40,'Lighting');addP('p49','s5','Modular Switch Board','मॉड्यूलर स्विच बोर्ड',349,420,'1 pc','🔌',18,'Switches');
+ d.products.forEach(p=>{if(!p.media){p.media=defImgs(p);if(p.id==='p45'){p.media.push({t:'yt',id:'pm1',vid:YT,url:'https://www.youtube.com/watch?v='+YT,title:'iPhone 16 overview (sample video)'},{t:'ig',id:'pm2',vid:'C0sample02',url:'https://www.instagram.com/reel/C0sample02/',title:'Colour options reel (sample)'})}}p.brand=p.brand||brandOf(p)});
+ const sm=(o,m)=>{if(!o.media.length)o.media=m};
+ sm(biz('b4'),[{id:'m1',t:'yt',vid:YT,url:'https://www.youtube.com/watch?v='+YT,title:'Store tour (sample)',tags:['p16','p17','b4-sv0']}]);
+ sm(biz('b5'),[{id:'m2',t:'ig',vid:'C0sample01',url:'https://www.instagram.com/reel/C0sample01/',title:'Kaju katli being made (sample reel)',tags:['p20']}]);
+ sm(biz('b3'),[{id:'m4',t:'yt',vid:YT,url:'https://www.youtube.com/watch?v='+YT,title:'iPhone 16 unboxing (sample)',tags:['p45']}]);
+ sm(svc('s5'),[{id:'m3',t:'yt',vid:YT,url:'https://www.youtube.com/watch?v='+YT,title:'Inverter installation demo (sample)',tags:['p48','s5-sv1']}]);
+ if(!d.subs)d.subs=[{id:'sb1',main:'mobile',en:'Mobile Repair',hi:'मोबाइल रिपेयर',status:'approved',by:'Admin Kavita',byRole:'admin',ts:now-30*DAY},{id:'sb2',main:'grocery',en:'Dairy & Eggs',hi:'डेयरी व अंडे',status:'pending',by:'Shri Ram Kirana Store',byRole:'vendor',bid:'b1',ts:now-6*HR},{id:'sb3',main:'electrician',en:'Inverter & Battery',hi:'इन्वर्टर व बैटरी',status:'pending',by:'Verma Electricals',byRole:'provider',bid:'s5',ts:now-1*DAY},{id:'sb4',main:'clothing',en:'Wedding Wear',hi:'शादी के कपड़े',status:'rejected',reason:'Too broad. Use Men / Women instead.',by:'Maa Durga Cloth House',byRole:'vendor',bid:'b6',ts:now-5*DAY}];
+ if(!d.zones)d.zones=[{id:'z1',city:'padrauna',name:'Core town (up to 3 km)',poly:[[26.9215,83.9655],[26.9215,83.9965],[26.8865,83.9965],[26.8865,83.9655]],slabs:[{upto:2,fee:20},{upto:3,fee:30}],status:'active'},{id:'z2',city:'padrauna',name:'Outer ring (3 to 7 km)',poly:[[26.9330,83.9480],[26.9330,84.0140],[26.8750,84.0140],[26.8750,83.9480]],slabs:[{upto:5,fee:40},{upto:7,fee:55}],status:'active'}];
+ const ll={padrauna:[26.904,83.981],kasia:[26.741,83.888],deoria:[26.502,83.779],gorakhpur:[26.760,83.373]};d.cities.forEach(c=>{if(!c.lat){c.lat=ll[c.id]?.[0]||26.8;c.lng=ll[c.id]?.[1]||83.9}});
+ const ad={ad1:['9876500501','Area Admin',['padrauna'],20*MIN,['city','zone']],ad2:['9876500502','Support',['padrauna'],3*HR,['zone']],ad3:['9876500503','Moderator',['padrauna'],12*DAY,[]]};d.admins.forEach(a=>{const x=ad[a.id];if(x&&!a.phone){a.phone=x[0];a.role=x[1];a.cities=x[2];a.last=now-x[3];a.scopes=x[4]}a.phone=a.phone||'9876500599';a.role=a.role||'Support';a.cities=a.cities||['padrauna'];a.last=a.last||now-DAY;a.scopes=a.scopes||['zone']});
+ {const a1=d.admins.find(a=>a.id==='ad1');if(a1&&!(a1.perms.comms||[]).includes('edit'))a1.perms.comms=['view','edit']}
+ d.liveSyn=d.liveSyn||[{id:'AT10211',rider:'Imran Ansari',st:'Out for delivery',eta:9,city:'padrauna',lat:26.9068,lng:83.9902},{id:'AT10214',rider:'Deepak Maurya',st:'Heading to shop',eta:14,city:'padrauna',lat:26.9011,lng:83.9741},{id:'AT10217',rider:'Imran Ansari',st:'Picked up',eta:11,city:'padrauna',lat:26.9112,lng:83.9818},{id:'AT10219',rider:'Sunil Yadav',st:'Out for delivery',eta:6,city:'padrauna',lat:26.8981,lng:83.9852}];
+ if(!S.roles)S.roles=[{id:'rl1',name:'Area Admin',desc:'Manages approvals, orders and reviews for assigned areas.',system:true,mx:JSON.parse(JSON.stringify(ROLE_MATRIX.Admin))},{id:'rl2',name:'Support',desc:'Handles orders, refunds and customer queries.',system:false,mx:JSON.parse(JSON.stringify(ROLE_MATRIX.Support))},{id:'rl3',name:'Moderator',desc:'Moderates reviews and listings.',system:false,mx:JSON.parse(JSON.stringify(ROLE_MATRIX.Moderator))}];
+ if(!S.hearts)S.hearts=[{id:'ph|b5|1',kind:'photo',owner:'b5',idx:1,title:'Kushinagar Sweets · photo 2',ts:now-2*DAY},{id:'vd|b5|m2',kind:'reel',owner:'b5',mid:'m2',title:'Kaju katli being made (sample reel)',ts:now-1*DAY}];
+ d.v=3;save()}
+ensureV2();
+/* ===== embeds ===== */
+function parseEmbed(u){u=(u||'').trim();if(!u)return{ok:false,err:'Paste a YouTube or Instagram link.'};let m;
+ if((m=u.match(/^https?:\/\/(?:www\.|m\.)?youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)([\w-]{11})/i))||(m=u.match(/^https?:\/\/youtu\.be\/([\w-]{11})/i)))return{ok:true,t:'yt',vid:m[1],reel:/shorts/.test(u),url:u};
+ if(m=u.match(/^https?:\/\/(?:www\.)?instagram\.com\/(reel|reels|p|tv)\/([\w-]{5,})/i))return{ok:true,t:'ig',vid:m[2],reel:m[1]!=='p',url:u};
+ if(/^https?:\/\//i.test(u))return{ok:false,err:'Only YouTube and Instagram links are supported.'};return{ok:false,err:'That does not look like a link.'}}
+const embedSrc=m=>m.t==='yt'?`https://www.youtube-nocookie.com/embed/${m.vid}?rel=0&modestbranding=1`:`https://www.instagram.com/reel/${m.vid}/embed`;
+const mKind=m=>m.t==='ig'||m.reel?'reel':'video';
+const extUrl=m=>m.url||(m.t==='yt'?'https://www.youtube.com/watch?v='+m.vid:'https://www.instagram.com/reel/'+m.vid+'/');
+const mLabel=m=>m.t==='yt'?'YouTube':'Instagram';
+/* hearts */
+const isHeart=id=>S.hearts.some(h=>h.id===id);
+function heartBtn(id,meta,cls=''){const on=isHeart(id);return `<button class="heart ${on?'on':''} ${cls}" data-act="heart" data-hid="${esc(id)}" data-meta="${esc(JSON.stringify(meta))}" aria-pressed="${on}" aria-label="${on?t('Remove from saved'):t('Save to Photos & Videos')}"><svg class="ic ${on?'fill':''}" width="22" height="22" viewBox="0 0 24 24"><path d="${IC.heart}"/></svg></button>`}
+A.heart=el=>{if(needLogin('Log in to save photos and videos you like.'))return;const id=el.dataset.hid,meta=JSON.parse(el.dataset.meta||'{}');const was=isHeart(id);S.hearts=was?S.hearts.filter(h=>h.id!==id):[{id,...meta,ts:Date.now()},...S.hearts];save();
+ const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;$$('[data-hid="'+id.replace(/"/g,'\\"')+'"]').forEach(b=>{b.classList.toggle('on',!was);b.setAttribute('aria-pressed',!was);const sv=b.querySelector('svg');sv.classList.toggle('fill',!was);if(!was&&!calm)b.animate([{transform:'scale(1)'},{transform:'scale(1.45)'},{transform:'scale(1)'}],{duration:340,easing:'cubic-bezier(.2,.8,.2,1)'});if(!was&&calm){b.classList.add('calm');setTimeout(()=>b.classList.remove('calm'),900)}});toast(was?t('Removed from saved'):t('Saved to Photos & Videos'),'heart');if(cur().name==='bookmarks')render(true)};
+/* subcategories */
+const subsFor=main=>[...new Set([...D().products.filter(p=>p.cat===main).map(p=>p.sub),...D().subs.filter(s=>s.main===main&&s.status==='approved').map(s=>s.en)])].filter(Boolean).sort();
+const allSubs=()=>[...new Set([...D().products.map(p=>p.sub),...D().subs.filter(s=>s.status==='approved').map(s=>s.en)])].filter(Boolean).sort();
+const lev=(a,b)=>{a=a.toLowerCase();b=b.toLowerCase();const m=[];for(let i=0;i<=a.length;i++)m[i]=[i];for(let j=1;j<=b.length;j++)m[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return m[a.length][b.length]};
+function similarSub(main,name){const n=(name||'').trim().toLowerCase();if(n.length<3)return null;const pool=[...D().subs.filter(s=>s.status!=='rejected').map(s=>({en:s.en,main:s.main,st:s.status})),...D().products.filter(p=>p.cat===main).map(p=>({en:p.sub,main,st:'approved'}))];return pool.find(x=>{const e=x.en.toLowerCase();return e===n||e.includes(n)||n.includes(e)||lev(e,n)<=Math.max(2,Math.round(Math.min(e.length,n.length)*.25))})||null}
+/* misc ui */
+const segBtn=(act,cur,items)=>`<div class="seg" role="tablist">${items.map(([k,l])=>`<button role="tab" aria-selected="${cur===k}" class="${cur===k?'on':''}" data-act="${act}" data-v="${k}">${t(l)}</button>`).join('')}</div>`;

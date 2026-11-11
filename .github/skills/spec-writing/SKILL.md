@@ -1,38 +1,45 @@
 ---
 name: spec-writing
-description: Step-by-step recipe for turning a docs/FEATURE_INVENTORY.md row into linked BE and FE specs, used by the spec-writer agent.
+description: Lean recipe for writing module BE and FE specs (spec files only, no extra documentation upkeep), used by the spec-writer agent.
 ---
 
 # Spec writing
 
-Used by `.github/agents/spec-writer.agent.md`. Templates:
-`specs/_templates/`.
+Used by `.github/agents/spec-writer.agent.md`. Governing prompt and
+templates: `docs/prompts/LEAN-SPECS.md`.
+
+## Scope (no over-engineering)
+
+- Write **only** the requested spec files in `specs/<module>/{be,fe}/`.
+- Do not update inventories, progress trackers, registers, lessons or
+  other docs unless the user explicitly asks.
+- Build only what the features need; no speculative infrastructure
+  (microservices, CQRS, event sourcing, GraphQL, external search,
+  plugin systems). For cache/queue choices, follow
+  [`specs/_foundation/architecture.md`](../../../specs/_foundation/architecture.md):
+  pg-boss + PostgreSQL outbox is the launch queue, and Redis is not
+  selected at launch. Do not copy the legacy P01 Redis/BullMQ proposal
+  into a feature spec; a Redis proposal needs measured workload evidence
+  and an approved architecture decision.
+- Reference IDs (F-, S-, BR-, ST-, J-) instead of repeating the design
+  pack; standard UX states live in `specs/_foundation/frontend-shared.md`.
 
 ## Steps
 
-1. Locate the feature row in `docs/FEATURE_INVENTORY.md` (ID, module,
-   roles, routes).
-2. Read `docs/PROJECT.md` invariants and the matching
-   `.github/instructions/domain-*.instructions.md` file for this
-   module.
-3. If behaviour is ambiguous, ask a clarifying question or record it in
-   `docs/PROJECT.md` "Open questions" — never guess
-   (`specs-and-docs.instructions.md`).
-4. Copy `specs/_templates/feature-be.md` ->
-   `specs/<module>/be/<id>-<slug>.md` and
-   `specs/_templates/feature-fe.md` -> `specs/<module>/fe/<id>-<slug>.md`.
-5. Write acceptance criteria as Given/When/Then, including at least one
-   negative/authorization case.
-6. Fill states/transitions (if a status model applies), permissions,
-   validation, security notes, i18n keys, and a test plan.
-7. Cross-link the BE and FE spec to each other.
-8. Update the `docs/FEATURE_INVENTORY.md` row: real spec paths, status
-   `spec written`.
+1. Read the module's features/screens in `docs/design-context/01-*`,
+   `02-*`, `07-*`, `08-*` and the prototype in `reference/`.
+2. Write `specs/<module>/be/<module>.md` and `specs/<module>/fe/<module>.md`
+   using the LEAN-SPECS templates; list every F-ID and S-ID explicitly
+   (no ranges).
+3. Ambiguity: note it in the spec as `Open question:` with the
+   assumption used; don't invent behaviour.
+4. Acceptance criteria as Given/When/Then incl. one authorisation
+   negative.
+5. Run `node scripts/check-spec-coverage.mjs`.
 
 ## Checklist
 
-- [ ] Feature row located and context read.
-- [ ] No invented behaviour — ambiguity recorded, not guessed.
-- [ ] Both BE and FE specs created from the templates and cross-linked.
-- [ ] Acceptance criteria are Given/When/Then with a negative case.
-- [ ] `docs/FEATURE_INVENTORY.md` row updated.
+- [ ] Only spec files changed.
+- [ ] BE and FE within ~250 lines each, IDs listed explicitly.
+- [ ] Authorisation = role + ownership + city/area scope + permission.
+- [ ] Given/When/Then with a negative case.

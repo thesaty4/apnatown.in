@@ -26,7 +26,7 @@ start from, and who to ask when stuck.
 
 ## Who to ask
 
-- Product ambiguity -> add to `docs/PROJECT.md` "Open questions" and
+- Product ambiguity -> add to `docs/project/12-decisions-assumptions-open-questions.md` and
   ask a human, don't guess.
 - Design/module-boundary conflict -> `architect`.
 - Security trade-off -> `security-auditor`.

@@ -5,11 +5,12 @@ applyTo: "apps/api/src/modules/{media-videos,engagement}/**,apps/web/src/feature
 # Domain: Media and engagement
 
 Builds on `backend.instructions.md`/`frontend.instructions.md`/
-`security.instructions.md`. Invariants: `docs/PROJECT.md` (8, 9, 15).
+`security.instructions.md`. Rules: `docs/project/04-business-rules.md`
+(BR-09, BR-10, BR-16).
 Journeys J4, J6. Covers `media-videos`, `engagement`, and reels/gallery
 frontend.
 
-## Video link validation and server-rebuilt embeds (RL10, invariant 9)
+## Video link validation and server-rebuilt embeds (RL10, BR-10)
 
 - Accepted video sources: YouTube/Instagram links or direct uploads.
 - A client-supplied link is **never embedded as-is**: the server
@@ -17,7 +18,7 @@ frontend.
   URL; invalid/unsupported links fall back to "Open in
   YouTube/Instagram" instead of an iframe (`security.instructions.md`).
 
-## Approval and moderation states (invariant 9)
+## Approval and moderation states (BR-10)
 
 - Video: `pending -> approved | rejected | removed`; **public only when
   `approved`** — never show a pending/rejected video outside the
@@ -25,7 +26,7 @@ frontend.
 - Reports route to the moderation queue, not an automatic takedown;
   removed content renders as "unavailable", not a broken player/404.
 
-## Media-consent rule (VD13, invariant 15)
+## Media-consent rule (VD13, BR-16)
 
 - Every product/service media upload carries a consent flag; a photo/
   video appears in the business's public **Gallery/Reels only if the

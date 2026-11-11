@@ -1,20 +1,19 @@
 ---
-applyTo: "apps/api/src/**/repositories/**,**/migrations/**"
+applyTo: "apps/api/src/**/infrastructure/**,apps/api/src/shared/persistence/**,apps/api/prisma/**,**/migrations/**"
 ---
 
 # Database
 
-The engine is **undecided** (`docs/adr/0001-tech-stack.md`,
-`docs/PROJECT.md` "Open questions"). These rules apply regardless of
-engine; schema design itself comes in a later stage — this file is
-placeholder guidance that is already valid and enforceable today.
+Use **PostgreSQL + PostGIS, pg_trgm and unaccent**, Prisma Client and
+Prisma Migrate. Canonical ownership, wire types, runtime tables and
+bootstrap: `specs/_foundation/data-model.md`. Each module's BE spec
+defines its domain columns/constraints; don't duplicate that schema here.
 
 ## Repository-only data access
 
-- `apps/api/src/**/repositories/**` is the **only** place that imports
-  a database driver/ORM; services and controllers call repository
-  interfaces only (`backend.instructions.md`,
-  `solid-dry-design.instructions.md`).
+- Only owning repository adapters under module `infrastructure/`
+  and shared persistence infrastructure import Prisma. Services and
+  controllers use ports, never another module's repositories.
 - One repository per aggregate (e.g. `OrderRepository`,
   `ProductRepository`), matching the 21 modules in
   `docs/architecture.md`.
@@ -31,20 +30,22 @@ placeholder guidance that is already valid and enforceable today.
 
 - Migrations only move forward; don't edit a migration already merged
   to `main` — write a new one to fix it.
-- Every migration is reversible in principle (a corresponding down path
-  documented, even if not auto-run in production) and reviewed for data
-  loss risk before merge.
+- API owns `apps/api/prisma/migrations`; reviewed SQL enables extensions.
+  Use a separate migration role; runtime cannot perform DDL or mutate
+  Audit history. Never use `db push` as migration evidence.
+- Document forward repair/restore and data-loss risks; destructive
+  changes require human sign-off. Do not promise automatic down
+  migrations or restoration of irreversibly erased data.
 - Use `.github/skills/db-migration/SKILL.md` for the step-by-step
   recipe and skeleton.
 
 ## Naming
 
-- Tables/collections: `snake_case`, plural (e.g. `orders`,
+- Tables: `snake_case`, plural (e.g. `orders`,
   `delivery_jobs`); columns: `snake_case`; foreign keys:
   `<singular_entity>_id` (e.g. `shop_id`, `rider_id`).
-- Enum-like status columns use the exact string values from
-  `docs/PROJECT.md` "Status and lifecycle models" — don't invent
-  synonyms.
+- Status columns use the owning BE spec/shared schema's exact values,
+  reconciled with the reference state machine; don't invent synonyms.
 
 ## Indexes
 
@@ -60,9 +61,9 @@ placeholder guidance that is already valid and enforceable today.
 - User-facing deletable records (products, services, reviews, videos)
   use a soft-delete flag/timestamp, not a hard delete, so moderation
   history, order history, and audit trails stay intact
-  (`docs/PROJECT.md` invariant 11, 13).
-- Hard delete is reserved for explicit DPDP erasure requests (invariant
-  13), applied narrowly to the requester's own PII, not cascaded
+  (`docs/project/04-business-rules.md` BR-12, BR-14).
+- Hard delete is reserved for explicit DPDP erasure requests (BR-14),
+  applied narrowly to the requester's own PII, not cascaded
   destructively through shared records (e.g. an order a vendor still
   needs for accounting).
 
@@ -80,9 +81,9 @@ placeholder guidance that is already valid and enforceable today.
   method, even if they're read-only and complex — never an inline raw
   query in a controller or a one-off script against production data.
 
-## Next stage
+## Seed and test isolation
 
-Schema design (tables, relations, actual engine choice) is out of
-scope for this setup; it is tracked in
-`docs/PROJECT.md` "Open questions" #1 and will follow in
-`docs/adr/000X-database-engine.md` plus per-module `specs/*/be/*.md`.
+Follow `specs/_foundation/data-model.md` for extension checks, pg-boss
+schema setup, idempotent synthetic seeds and isolated suite databases.
+No seed/reset on API startup; destructive commands must verify an
+explicit local/test target. Never seed real PII or an authentication bypass.

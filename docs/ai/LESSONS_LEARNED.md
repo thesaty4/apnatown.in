@@ -89,7 +89,7 @@ filters set on one screen to silently leak into the other, confusing
 users and breaking shareable links.
 Rule: Explore and Search keep **independent** filter state/hooks, even
 though they reuse the same filter components.
-Enforced in: `docs/PROJECT.md` invariant 14,
+Enforced in: `docs/project/04-business-rules.md` BR-15,
 `domain-catalog-search.instructions.md`,
 `.github/skills/explore-filter-url-state/SKILL.md`.
 

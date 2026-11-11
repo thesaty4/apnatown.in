@@ -1,0 +1,3714 @@
+{
+ "_note": "English source string -> Hindi. Use as the seed for messages/en.json and messages/hi.json (convert to keys). Every user-facing string must exist in both languages.",
+ "count": 927,
+ "strings": [
+  {
+   "en": "About",
+   "hi": "परिचय"
+  },
+  {
+   "en": "About ApnaTown",
+   "hi": "अपना टाउन के बारे में"
+  },
+  {
+   "en": "About us",
+   "hi": "हमारे बारे में"
+  },
+  {
+   "en": "Abusive content",
+   "hi": "गाली-गलौज वाली सामग्री"
+  },
+  {
+   "en": "Accept all",
+   "hi": "सब स्वीकार करें"
+  },
+  {
+   "en": "Account",
+   "hi": "खाता"
+  },
+  {
+   "en": "Active",
+   "hi": "चालू"
+  },
+  {
+   "en": "Active delivery",
+   "hi": "चालू डिलीवरी"
+  },
+  {
+   "en": "Activity monitor",
+   "hi": "गतिविधि मॉनिटर"
+  },
+  {
+   "en": "Add",
+   "hi": "जोड़ें"
+  },
+  {
+   "en": "Add a photo (optional)",
+   "hi": "फोटो जोड़ें (वैकल्पिक)"
+  },
+  {
+   "en": "Add address",
+   "hi": "पता जोड़ें"
+  },
+  {
+   "en": "Add items from nearby shops to get started.",
+   "hi": "शुरू करने के लिए पास की दुकानों से सामान जोड़ें।"
+  },
+  {
+   "en": "Add items to continue.",
+   "hi": "आगे बढ़ने के लिए सामान जोड़ें।"
+  },
+  {
+   "en": "Add more",
+   "hi": "और जोड़ें"
+  },
+  {
+   "en": "Add new address",
+   "hi": "नया पता जोड़ें"
+  },
+  {
+   "en": "Add one to get home delivery.",
+   "hi": "होम डिलीवरी के लिए एक पता जोड़ें।"
+  },
+  {
+   "en": "Add payment method",
+   "hi": "पेमेंट तरीका जोड़ें"
+  },
+  {
+   "en": "Add photos (optional)",
+   "hi": "फोटो जोड़ें (वैकल्पिक)"
+  },
+  {
+   "en": "Add to cart",
+   "hi": "कार्ट में डालें"
+  },
+  {
+   "en": "Add your business",
+   "hi": "अपना बिज़नेस जोड़ें"
+  },
+  {
+   "en": "Added to cart",
+   "hi": "कार्ट में जोड़ा गया"
+  },
+  {
+   "en": "Address",
+   "hi": "पता"
+  },
+  {
+   "en": "Address saved",
+   "hi": "पता सहेजा गया"
+  },
+  {
+   "en": "Admin account",
+   "hi": "एडमिन खाता"
+  },
+  {
+   "en": "Admin and the shop will contact you to resolve every request.",
+   "hi": "हर अनुरोध पर एडमिन और दुकान आपसे संपर्क करेंगे।"
+  },
+  {
+   "en": "Admin and vendor have been notified and will contact you to resolve it.",
+   "hi": "एडमिन और दुकानदार को सूचना दे दी गई है। वे समाधान के लिए आपसे संपर्क करेंगे।"
+  },
+  {
+   "en": "Admin note",
+   "hi": "एडमिन का नोट"
+  },
+  {
+   "en": "Admin overview",
+   "hi": "एडमिन ओवरव्यू"
+  },
+  {
+   "en": "Admin tools",
+   "hi": "एडमिन टूल"
+  },
+  {
+   "en": "Admins & areas",
+   "hi": "एडमिन व क्षेत्र"
+  },
+  {
+   "en": "After an order is delivered you can review the shop, product and rider.",
+   "hi": "ऑर्डर डिलीवर होने के बाद आप दुकान, प्रोडक्ट और राइडर को रेट कर सकते हैं।"
+  },
+  {
+   "en": "All caught up",
+   "hi": "सब देख लिया"
+  },
+  {
+   "en": "All major banks",
+   "hi": "सभी प्रमुख बैंक"
+  },
+  {
+   "en": "All sections",
+   "hi": "सभी सेक्शन"
+  },
+  {
+   "en": "All",
+   "hi": "सभी"
+  },
+  {
+   "en": "Allow location",
+   "hi": "लोकेशन की अनुमति दें"
+  },
+  {
+   "en": "Allow location to see distance and delivery options. You can browse without it.",
+   "hi": "दूरी और डिलीवरी विकल्प देखने के लिए लोकेशन दें। बिना लोकेशन भी देख सकते हैं।"
+  },
+  {
+   "en": "Almost done",
+   "hi": "बस हो गया"
+  },
+  {
+   "en": "Any distance",
+   "hi": "कोई भी दूरी"
+  },
+  {
+   "en": "ApnaTown connects customers with local shops, service providers and riders in Padrauna.",
+   "hi": "अपना टाउन पडरौना के ग्राहकों को स्थानीय दुकानों, सेवा प्रदाताओं और राइडरों से जोड़ता है।"
+  },
+  {
+   "en": "ApnaTown is live in Padrauna. Tell us where you are and we will notify you when we launch there.",
+   "hi": "अपना टाउन अभी पडरौना में चालू है। बताइए आप कहाँ हैं, वहाँ शुरू होते ही हम आपको सूचना देंगे।"
+  },
+  {
+   "en": "ApnaTown is under maintenance. Please try again in a few minutes.",
+   "hi": "अपना टाउन में मरम्मत का काम चल रहा है। कुछ मिनट बाद फिर कोशिश करें।"
+  },
+  {
+   "en": "ApnaTown rider",
+   "hi": "अपना टाउन राइडर"
+  },
+  {
+   "en": "Applies to",
+   "hi": "इन पर लागू"
+  },
+  {
+   "en": "Apply",
+   "hi": "लागू करें"
+  },
+  {
+   "en": "Approved by shop/admin",
+   "hi": "दुकान/एडमिन ने मंज़ूर किया"
+  },
+  {
+   "en": "Arriving in about",
+   "hi": "लगभग पहुँचेगा"
+  },
+  {
+   "en": "As described",
+   "hi": "जैसा बताया वैसा"
+  },
+  {
+   "en": "At checkout",
+   "hi": "चेकआउट पर"
+  },
+  {
+   "en": "Audit log",
+   "hi": "ऑडिट लॉग"
+  },
+  {
+   "en": "Auto",
+   "hi": "ऑटो"
+  },
+  {
+   "en": "Available after approval",
+   "hi": "मंज़ूरी के बाद उपलब्ध"
+  },
+  {
+   "en": "Awaiting review",
+   "hi": "समीक्षा का इंतज़ार"
+  },
+  {
+   "en": "Back",
+   "hi": "वापस"
+  },
+  {
+   "en": "Back to home",
+   "hi": "होम पर वापस"
+  },
+  {
+   "en": "Be the first to list here.",
+   "hi": "यहाँ सबसे पहले आप जुड़िए।"
+  },
+  {
+   "en": "Be the first to review this product.",
+   "hi": "इस प्रोडक्ट की पहली समीक्षा आप लिखें।"
+  },
+  {
+   "en": "Be the first to share your experience.",
+   "hi": "अपना अनुभव सबसे पहले आप बताइए।"
+  },
+  {
+   "en": "Become a rider",
+   "hi": "राइडर बनें"
+  },
+  {
+   "en": "Browse Padrauna instead",
+   "hi": "इसके बजाय पडरौना देखें"
+  },
+  {
+   "en": "Browsing near",
+   "hi": "आसपास देखें"
+  },
+  {
+   "en": "Browsing never needs your location. Pick your area or use GPS.",
+   "hi": "देखने के लिए लोकेशन ज़रूरी नहीं। अपना इलाका चुनें या GPS इस्तेमाल करें।"
+  },
+  {
+   "en": "Business profile",
+   "hi": "बिज़नेस प्रोफ़ाइल"
+  },
+  {
+   "en": "Buy now",
+   "hi": "अभी खरीदें"
+  },
+  {
+   "en": "By continuing you agree to our",
+   "hi": "आगे बढ़कर आप हमारी इन बातों से सहमत हैं:"
+  },
+  {
+   "en": "By distance",
+   "hi": "दूरी के हिसाब से"
+  },
+  {
+   "en": "Call",
+   "hi": "कॉल"
+  },
+  {
+   "en": "Cancel",
+   "hi": "रद्द करें"
+  },
+  {
+   "en": "Cancel or request a refund from the order page. Admin and the shop are notified and will contact you.",
+   "hi": "ऑर्डर पेज से रद्द करें या रिफ़ंड माँगें। एडमिन और दुकान को खबर जाएगी और वे आपसे संपर्क करेंगे।"
+  },
+  {
+   "en": "Cancel order",
+   "hi": "ऑर्डर रद्द करें"
+  },
+  {
+   "en": "Cancel this order?",
+   "hi": "यह ऑर्डर रद्द करें?"
+  },
+  {
+   "en": "Cancelled",
+   "hi": "रद्द"
+  },
+  {
+   "en": "Cart",
+   "hi": "कार्ट"
+  },
+  {
+   "en": "Cash on delivery",
+   "hi": "डिलीवरी पर नकद"
+  },
+  {
+   "en": "Category",
+   "hi": "श्रेणी"
+  },
+  {
+   "en": "Change",
+   "hi": "बदलें"
+  },
+  {
+   "en": "Change location",
+   "hi": "लोकेशन बदलें"
+  },
+  {
+   "en": "Change number",
+   "hi": "नंबर बदलें"
+  },
+  {
+   "en": "Changes requested",
+   "hi": "बदलाव माँगे गए"
+  },
+  {
+   "en": "Check again",
+   "hi": "फिर जाँचें"
+  },
+  {
+   "en": "Check back soon.",
+   "hi": "जल्द फिर देखें।"
+  },
+  {
+   "en": "Choose area",
+   "hi": "इलाका चुनें"
+  },
+  {
+   "en": "Choose area manually",
+   "hi": "इलाका खुद चुनें"
+  },
+  {
+   "en": "Choose self-pickup or another address.",
+   "hi": "सेल्फ-पिकअप या दूसरा पता चुनें।"
+  },
+  {
+   "en": "Choose your language",
+   "hi": "अपनी भाषा चुनें"
+  },
+  {
+   "en": "Choose your location",
+   "hi": "अपनी लोकेशन चुनें"
+  },
+  {
+   "en": "Cities & zones",
+   "hi": "शहर व ज़ोन"
+  },
+  {
+   "en": "Clear all",
+   "hi": "सब हटाएँ"
+  },
+  {
+   "en": "Clear filters",
+   "hi": "फ़िल्टर हटाएँ"
+  },
+  {
+   "en": "Company",
+   "hi": "कंपनी"
+  },
+  {
+   "en": "Completed",
+   "hi": "पूरे हुए"
+  },
+  {
+   "en": "Consent recorded",
+   "hi": "सहमति दर्ज"
+  },
+  {
+   "en": "Contact",
+   "hi": "संपर्क"
+  },
+  {
+   "en": "Contact & Location",
+   "hi": "संपर्क व लोकेशन"
+  },
+  {
+   "en": "Contact & help",
+   "hi": "संपर्क व मदद"
+  },
+  {
+   "en": "Contact rider",
+   "hi": "राइडर से बात करें"
+  },
+  {
+   "en": "Contact shop",
+   "hi": "दुकान से बात करें"
+  },
+  {
+   "en": "Continue",
+   "hi": "आगे बढ़ें"
+  },
+  {
+   "en": "Continue as guest",
+   "hi": "मेहमान के तौर पर जारी रखें"
+  },
+  {
+   "en": "Continue with Google",
+   "hi": "Google से जारी रखें"
+  },
+  {
+   "en": "Continue with email",
+   "hi": "ईमेल से जारी रखें"
+  },
+  {
+   "en": "Cookies & privacy",
+   "hi": "कुकीज़ व गोपनीयता"
+  },
+  {
+   "en": "Copy data",
+   "hi": "डेटा कॉपी करें"
+  },
+  {
+   "en": "Copy link",
+   "hi": "लिंक कॉपी करें"
+  },
+  {
+   "en": "Copy this JSON to keep a backup.",
+   "hi": "बैकअप के लिए यह JSON कॉपी कर लें।"
+  },
+  {
+   "en": "Coupon code",
+   "hi": "कूपन कोड"
+  },
+  {
+   "en": "Coupon discount",
+   "hi": "कूपन छूट"
+  },
+  {
+   "en": "Coupon not valid for this cart.",
+   "hi": "यह कूपन इस कार्ट पर लागू नहीं।"
+  },
+  {
+   "en": "Current location",
+   "hi": "मौजूदा लोकेशन"
+  },
+  {
+   "en": "Customer app",
+   "hi": "ग्राहक ऐप"
+  },
+  {
+   "en": "Customers can’t see it yet.",
+   "hi": "ग्राहक इसे अभी नहीं देख सकते।"
+  },
+  {
+   "en": "Dark",
+   "hi": "डार्क"
+  },
+  {
+   "en": "Debit / credit card",
+   "hi": "डेबिट / क्रेडिट कार्ड"
+  },
+  {
+   "en": "Default",
+   "hi": "डिफ़ॉल्ट"
+  },
+  {
+   "en": "Delete",
+   "hi": "हटाएँ"
+  },
+  {
+   "en": "Delete account",
+   "hi": "खाता हटाएँ"
+  },
+  {
+   "en": "Delete my account",
+   "hi": "मेरा खाता हटाएँ"
+  },
+  {
+   "en": "Delete this review?",
+   "hi": "यह समीक्षा हटाएँ?"
+  },
+  {
+   "en": "Delete your account?",
+   "hi": "अपना खाता हटाएँ?"
+  },
+  {
+   "en": "Delivered by",
+   "hi": "डिलीवरी करेगा"
+  },
+  {
+   "en": "Delivers to my address",
+   "hi": "मेरे पते पर डिलीवरी"
+  },
+  {
+   "en": "Delivers to you",
+   "hi": "आपके यहाँ डिलीवरी"
+  },
+  {
+   "en": "Delivers to your address",
+   "hi": "आपके पते पर डिलीवरी"
+  },
+  {
+   "en": "Delivery",
+   "hi": "डिलीवरी"
+  },
+  {
+   "en": "Delivery & pickup",
+   "hi": "डिलीवरी व पिकअप"
+  },
+  {
+   "en": "Delivery address",
+   "hi": "डिलीवरी का पता"
+  },
+  {
+   "en": "Delivery charge",
+   "hi": "डिलीवरी शुल्क"
+  },
+  {
+   "en": "Delivery is taking too long",
+   "hi": "डिलीवरी में बहुत देर हो रही है"
+  },
+  {
+   "en": "Delivery progress",
+   "hi": "डिलीवरी की स्थिति"
+  },
+  {
+   "en": "Delivery radius",
+   "hi": "डिलीवरी का दायरा"
+  },
+  {
+   "en": "Demo controls",
+   "hi": "डेमो कंट्रोल"
+  },
+  {
+   "en": "Design system",
+   "hi": "डिज़ाइन सिस्टम"
+  },
+  {
+   "en": "Details",
+   "hi": "विवरण"
+  },
+  {
+   "en": "Details (optional)",
+   "hi": "विवरण (वैकल्पिक)"
+  },
+  {
+   "en": "Directions",
+   "hi": "रास्ता"
+  },
+  {
+   "en": "Distance",
+   "hi": "दूरी"
+  },
+  {
+   "en": "Distance radius",
+   "hi": "दूरी का दायरा"
+  },
+  {
+   "en": "Done",
+   "hi": "हो गया"
+  },
+  {
+   "en": "Download my data",
+   "hi": "मेरा डेटा डाउनलोड करें"
+  },
+  {
+   "en": "Drag the pin to your door",
+   "hi": "पिन को अपने दरवाज़े तक खींचें"
+  },
+  {
+   "en": "Each shop prepares and delivers its own order. One checkout, separate order IDs.",
+   "hi": "हर दुकान अपना ऑर्डर तैयार कर भेजती है। चेकआउट एक, ऑर्डर ID अलग-अलग।"
+  },
+  {
+   "en": "Each shop prepares its own order, so one checkout creates one order per shop with separate IDs.",
+   "hi": "हर दुकान अपना ऑर्डर तैयार करती है, इसलिए एक चेकआउट से हर दुकान का अलग ऑर्डर बनता है।"
+  },
+  {
+   "en": "Earnings & plan",
+   "hi": "कमाई व प्लान"
+  },
+  {
+   "en": "Edit",
+   "hi": "बदलें"
+  },
+  {
+   "en": "Edit address",
+   "hi": "पता बदलें"
+  },
+  {
+   "en": "Edit your review",
+   "hi": "अपनी समीक्षा बदलें"
+  },
+  {
+   "en": "Email",
+   "hi": "ईमेल"
+  },
+  {
+   "en": "Email (optional)",
+   "hi": "ईमेल (वैकल्पिक)"
+  },
+  {
+   "en": "Email updates",
+   "hi": "ईमेल अपडेट"
+  },
+  {
+   "en": "Enquiry only for now. Booking and payment will come later.",
+   "hi": "अभी सिर्फ़ पूछताछ। बुकिंग और पेमेंट बाद में आएँगे।"
+  },
+  {
+   "en": "Enquiry replies on WhatsApp",
+   "hi": "पूछताछ के जवाब WhatsApp पर"
+  },
+  {
+   "en": "Enquiry sent",
+   "hi": "पूछताछ भेजी गई"
+  },
+  {
+   "en": "Enter OTP",
+   "hi": "OTP डालें"
+  },
+  {
+   "en": "Enter PIN code (e.g. 274304)",
+   "hi": "पिन कोड डालें (जैसे 274304)"
+  },
+  {
+   "en": "Enter a valid 10-digit number",
+   "hi": "सही 10 अंकों का नंबर डालें"
+  },
+  {
+   "en": "Enter coupon code",
+   "hi": "कूपन कोड डालें"
+  },
+  {
+   "en": "Estimated total",
+   "hi": "अनुमानित कुल"
+  },
+  {
+   "en": "Explore",
+   "hi": "खोजें"
+  },
+  {
+   "en": "Explore nearby",
+   "hi": "आसपास खोजें"
+  },
+  {
+   "en": "Fair price",
+   "hi": "वाजिब दाम"
+  },
+  {
+   "en": "Fair quote",
+   "hi": "सही भाव"
+  },
+  {
+   "en": "Fake or misleading",
+   "hi": "नकली या भ्रामक"
+  },
+  {
+   "en": "Fast delivery",
+   "hi": "तेज़ डिलीवरी"
+  },
+  {
+   "en": "Featured businesses",
+   "hi": "खास दुकानें"
+  },
+  {
+   "en": "Featured products",
+   "hi": "खास प्रोडक्ट"
+  },
+  {
+   "en": "Filters",
+   "hi": "फ़िल्टर"
+  },
+  {
+   "en": "Find shops near you",
+   "hi": "अपने पास की दुकानें खोजें"
+  },
+  {
+   "en": "Finish",
+   "hi": "पूरा करें"
+  },
+  {
+   "en": "For your safety you were logged out. Please log in again.",
+   "hi": "आपकी सुरक्षा के लिए आपको लॉग आउट कर दिया गया। कृपया फिर लॉग इन करें।"
+  },
+  {
+   "en": "Found a better price",
+   "hi": "बेहतर दाम मिल गया"
+  },
+  {
+   "en": "Free delivery",
+   "hi": "फ्री डिलीवरी"
+  },
+  {
+   "en": "Full name",
+   "hi": "पूरा नाम"
+  },
+  {
+   "en": "GPS is not available. Pick your area.",
+   "hi": "GPS उपलब्ध नहीं। अपना इलाका चुनें।"
+  },
+  {
+   "en": "GST included in item prices. This is a sample invoice.",
+   "hi": "GST दामों में शामिल है। यह नमूना इनवॉइस है।"
+  },
+  {
+   "en": "Gallery",
+   "hi": "गैलरी"
+  },
+  {
+   "en": "Gallery & Videos",
+   "hi": "गैलरी व वीडियो"
+  },
+  {
+   "en": "Gallery & media",
+   "hi": "गैलरी व मीडिया"
+  },
+  {
+   "en": "Get directions",
+   "hi": "रास्ता पता करें"
+  },
+  {
+   "en": "Global settings",
+   "hi": "वैश्विक सेटिंग"
+  },
+  {
+   "en": "Go",
+   "hi": "जाएँ"
+  },
+  {
+   "en": "Go back",
+   "hi": "वापस जाएँ"
+  },
+  {
+   "en": "Go home",
+   "hi": "होम पर जाएँ"
+  },
+  {
+   "en": "Good quality",
+   "hi": "अच्छी क्वालिटी"
+  },
+  {
+   "en": "Has offers",
+   "hi": "ऑफ़र वाले"
+  },
+  {
+   "en": "Help & support",
+   "hi": "मदद व सहायता"
+  },
+  {
+   "en": "Helpful",
+   "hi": "काम का"
+  },
+  {
+   "en": "Helpful staff",
+   "hi": "मददगार स्टाफ़"
+  },
+  {
+   "en": "Home",
+   "hi": "होम"
+  },
+  {
+   "en": "Home delivery",
+   "hi": "होम डिलीवरी"
+  },
+  {
+   "en": "House / street",
+   "hi": "मकान / गली"
+  },
+  {
+   "en": "How do I order?",
+   "hi": "ऑर्डर कैसे करूँ?"
+  },
+  {
+   "en": "How do refunds work?",
+   "hi": "रिफ़ंड कैसे काम करता है?"
+  },
+  {
+   "en": "How does delivery OTP work?",
+   "hi": "डिलीवरी OTP कैसे काम करता है?"
+  },
+  {
+   "en": "I am outside Padrauna",
+   "hi": "मैं पडरौना से बाहर हूँ"
+  },
+  {
+   "en": "In review",
+   "hi": "समीक्षा में"
+  },
+  {
+   "en": "In stock",
+   "hi": "स्टॉक में"
+  },
+  {
+   "en": "In-app notifications",
+   "hi": "ऐप नोटिफ़िकेशन"
+  },
+  {
+   "en": "Invoice",
+   "hi": "इनवॉइस"
+  },
+  {
+   "en": "Item damaged",
+   "hi": "सामान खराब"
+  },
+  {
+   "en": "Item missing",
+   "hi": "सामान कम"
+  },
+  {
+   "en": "Item unavailable / substituted",
+   "hi": "सामान उपलब्ध नहीं / बदला गया"
+  },
+  {
+   "en": "Items added to cart",
+   "hi": "सामान कार्ट में जोड़ा गया"
+  },
+  {
+   "en": "Items total",
+   "hi": "सामान का कुल"
+  },
+  {
+   "en": "Join us",
+   "hi": "हमसे जुड़ें"
+  },
+  {
+   "en": "Language",
+   "hi": "भाषा"
+  },
+  {
+   "en": "Late delivery",
+   "hi": "देर से डिलीवरी"
+  },
+  {
+   "en": "Legal",
+   "hi": "कानूनी"
+  },
+  {
+   "en": "Light",
+   "hi": "लाइट"
+  },
+  {
+   "en": "Link copied",
+   "hi": "लिंक कॉपी हुआ"
+  },
+  {
+   "en": "List your service",
+   "hi": "अपनी सेवा जोड़ें"
+  },
+  {
+   "en": "Listing reported",
+   "hi": "लिस्टिंग की शिकायत हुई"
+  },
+  {
+   "en": "Live deliveries",
+   "hi": "लाइव डिलीवरी"
+  },
+  {
+   "en": "Live map",
+   "hi": "लाइव नक्शा"
+  },
+  {
+   "en": "Live tracking",
+   "hi": "लाइव ट्रैकिंग"
+  },
+  {
+   "en": "Local promotions",
+   "hi": "स्थानीय ऑफ़र"
+  },
+  {
+   "en": "Local services",
+   "hi": "स्थानीय सेवाएँ"
+  },
+  {
+   "en": "Local shops",
+   "hi": "स्थानीय दुकानें"
+  },
+  {
+   "en": "Location is off",
+   "hi": "लोकेशन बंद है"
+  },
+  {
+   "en": "Location is optional. We use it only to show nearby shops and calculate delivery.",
+   "hi": "लोकेशन देना ज़रूरी नहीं। इसका उपयोग सिर्फ़ पास की दुकानें दिखाने और डिलीवरी निकालने में होता है।"
+  },
+  {
+   "en": "Location set",
+   "hi": "लोकेशन सेट"
+  },
+  {
+   "en": "Log in",
+   "hi": "लॉग इन"
+  },
+  {
+   "en": "Log in / Sign up",
+   "hi": "लॉग इन / साइन अप"
+  },
+  {
+   "en": "Log in or sign up with your mobile number",
+   "hi": "मोबाइल नंबर से लॉग इन या साइन अप करें"
+  },
+  {
+   "en": "Log in to order, bookmark and review.",
+   "hi": "ऑर्डर, बुकमार्क और समीक्षा के लिए लॉग इन करें।"
+  },
+  {
+   "en": "Log in to place your order",
+   "hi": "ऑर्डर देने के लिए लॉग इन करें"
+  },
+  {
+   "en": "Log in to save your favourite shops and services.",
+   "hi": "पसंदीदा दुकानें और सेवाएँ सहेजने के लिए लॉग इन करें।"
+  },
+  {
+   "en": "Log in to see your orders",
+   "hi": "अपने ऑर्डर देखने के लिए लॉग इन करें"
+  },
+  {
+   "en": "Log in to write a review",
+   "hi": "समीक्षा लिखने के लिए लॉग इन करें"
+  },
+  {
+   "en": "Log in with your mobile number to continue.",
+   "hi": "आगे बढ़ने के लिए मोबाइल नंबर से लॉग इन करें।"
+  },
+  {
+   "en": "Log out",
+   "hi": "लॉग आउट"
+  },
+  {
+   "en": "Log out?",
+   "hi": "लॉग आउट करें?"
+  },
+  {
+   "en": "Logged out",
+   "hi": "लॉग आउट हो गए"
+  },
+  {
+   "en": "Login required",
+   "hi": "लॉग इन ज़रूरी"
+  },
+  {
+   "en": "Mark all read",
+   "hi": "सब पढ़ा हुआ करें"
+  },
+  {
+   "en": "Max available reached",
+   "hi": "उपलब्ध अधिकतम मात्रा"
+  },
+  {
+   "en": "Max price (₹)",
+   "hi": "अधिकतम दाम (₹)"
+  },
+  {
+   "en": "Message",
+   "hi": "संदेश"
+  },
+  {
+   "en": "Message sent. We will reply soon.",
+   "hi": "संदेश भेजा गया। हम जल्द जवाब देंगे।"
+  },
+  {
+   "en": "Min price (₹)",
+   "hi": "न्यूनतम दाम (₹)"
+  },
+  {
+   "en": "Minimum order",
+   "hi": "न्यूनतम ऑर्डर"
+  },
+  {
+   "en": "Minimum order for delivery",
+   "hi": "डिलीवरी के लिए न्यूनतम ऑर्डर"
+  },
+  {
+   "en": "Minimum rating",
+   "hi": "न्यूनतम रेटिंग"
+  },
+  {
+   "en": "Mobile number",
+   "hi": "मोबाइल नंबर"
+  },
+  {
+   "en": "More",
+   "hi": "और"
+  },
+  {
+   "en": "Move to cart",
+   "hi": "कार्ट में लाएँ"
+  },
+  {
+   "en": "My orders",
+   "hi": "मेरे ऑर्डर"
+  },
+  {
+   "en": "My reviews",
+   "hi": "मेरी समीक्षाएँ"
+  },
+  {
+   "en": "Name",
+   "hi": "नाम"
+  },
+  {
+   "en": "Nearby shops",
+   "hi": "पास की दुकानें"
+  },
+  {
+   "en": "Need help?",
+   "hi": "मदद चाहिए?"
+  },
+  {
+   "en": "Net banking",
+   "hi": "नेट बैंकिंग"
+  },
+  {
+   "en": "New",
+   "hi": "नया"
+  },
+  {
+   "en": "New alerts will show here.",
+   "hi": "नई सूचनाएँ यहाँ दिखेंगी।"
+  },
+  {
+   "en": "No internet connection",
+   "hi": "इंटरनेट नहीं है"
+  },
+  {
+   "en": "No listings yet",
+   "hi": "अभी कोई लिस्टिंग नहीं"
+  },
+  {
+   "en": "No offers match",
+   "hi": "कोई ऑफ़र नहीं मिला"
+  },
+  {
+   "en": "No offers right now",
+   "hi": "अभी कोई ऑफ़र नहीं"
+  },
+  {
+   "en": "No orders here",
+   "hi": "यहाँ कोई ऑर्डर नहीं"
+  },
+  {
+   "en": "No problem. You can still browse by choosing your area manually.",
+   "hi": "कोई बात नहीं। इलाका चुनकर भी आप देख सकते हैं।"
+  },
+  {
+   "en": "No products yet",
+   "hi": "अभी कोई प्रोडक्ट नहीं"
+  },
+  {
+   "en": "No recent order",
+   "hi": "हाल का कोई ऑर्डर नहीं"
+  },
+  {
+   "en": "No results found",
+   "hi": "कुछ नहीं मिला"
+  },
+  {
+   "en": "No reviews yet",
+   "hi": "अभी कोई समीक्षा नहीं"
+  },
+  {
+   "en": "No saved addresses",
+   "hi": "कोई सहेजा पता नहीं"
+  },
+  {
+   "en": "Not available",
+   "hi": "उपलब्ध नहीं"
+  },
+  {
+   "en": "Not now",
+   "hi": "अभी नहीं"
+  },
+  {
+   "en": "Nothing saved yet",
+   "hi": "अभी कुछ सहेजा नहीं"
+  },
+  {
+   "en": "Nothing within this distance",
+   "hi": "इस दूरी में कुछ नहीं"
+  },
+  {
+   "en": "Notification & consent",
+   "hi": "सूचना व सहमति"
+  },
+  {
+   "en": "Notification & consent settings",
+   "hi": "सूचना व सहमति सेटिंग"
+  },
+  {
+   "en": "Notification preferences",
+   "hi": "सूचना पसंद"
+  },
+  {
+   "en": "Notifications",
+   "hi": "सूचनाएँ"
+  },
+  {
+   "en": "Notify me",
+   "hi": "मुझे बताएँ"
+  },
+  {
+   "en": "Notify me when available",
+   "hi": "उपलब्ध होने पर बताएँ"
+  },
+  {
+   "en": "OTP sent again",
+   "hi": "OTP फिर भेजा गया"
+  },
+  {
+   "en": "Offers",
+   "hi": "ऑफ़र"
+  },
+  {
+   "en": "Offers & coupon",
+   "hi": "ऑफ़र व कूपन"
+  },
+  {
+   "en": "Offers & deals",
+   "hi": "ऑफ़र व डील"
+  },
+  {
+   "en": "Offers & promotions on WhatsApp",
+   "hi": "ऑफ़र व प्रमोशन WhatsApp पर"
+  },
+  {
+   "en": "On time",
+   "hi": "समय पर"
+  },
+  {
+   "en": "Only customers delivered by this rider can review.",
+   "hi": "सिर्फ़ वही ग्राहक रेट कर सकते हैं जिन्हें इस राइडर ने डिलीवरी दी।"
+  },
+  {
+   "en": "Only customers who bought this product can review it.",
+   "hi": "सिर्फ़ इसे खरीदने वाले ग्राहक समीक्षा लिख सकते हैं।"
+  },
+  {
+   "en": "Only customers who received an order from this shop can review it.",
+   "hi": "सिर्फ़ इस दुकान से ऑर्डर पाने वाले ग्राहक समीक्षा लिख सकते हैं।"
+  },
+  {
+   "en": "Only essential",
+   "hi": "सिर्फ़ ज़रूरी"
+  },
+  {
+   "en": "Only real customers can review.",
+   "hi": "सिर्फ़ असली ग्राहक ही समीक्षा लिख सकते हैं।"
+  },
+  {
+   "en": "Open demo controls",
+   "hi": "डेमो कंट्रोल खोलें"
+  },
+  {
+   "en": "Open now",
+   "hi": "अभी खुला"
+  },
+  {
+   "en": "Open photo",
+   "hi": "फोटो खोलें"
+  },
+  {
+   "en": "Opening hours",
+   "hi": "खुलने का समय"
+  },
+  {
+   "en": "Order ID",
+   "hi": "ऑर्डर ID"
+  },
+  {
+   "en": "Order cancelled",
+   "hi": "ऑर्डर रद्द हुआ"
+  },
+  {
+   "en": "Order placed!",
+   "hi": "ऑर्डर हो गया!"
+  },
+  {
+   "en": "Order soon.",
+   "hi": "जल्दी ऑर्डर करें।"
+  },
+  {
+   "en": "Order total",
+   "hi": "ऑर्डर का कुल"
+  },
+  {
+   "en": "Order updates on WhatsApp",
+   "hi": "ऑर्डर अपडेट WhatsApp पर"
+  },
+  {
+   "en": "Ordered by mistake",
+   "hi": "गलती से ऑर्डर हुआ"
+  },
+  {
+   "en": "Orders",
+   "hi": "ऑर्डर"
+  },
+  {
+   "en": "Orders & disputes",
+   "hi": "ऑर्डर व विवाद"
+  },
+  {
+   "en": "Other cities",
+   "hi": "अन्य शहर"
+  },
+  {
+   "en": "Out of delivery range",
+   "hi": "डिलीवरी दायरे से बाहर"
+  },
+  {
+   "en": "Out of stock",
+   "hi": "स्टॉक खत्म"
+  },
+  {
+   "en": "Outside delivery range",
+   "hi": "डिलीवरी दायरे से बाहर"
+  },
+  {
+   "en": "Outside delivery range. Self-pickup available.",
+   "hi": "डिलीवरी दायरे से बाहर। सेल्फ-पिकअप उपलब्ध।"
+  },
+  {
+   "en": "PIN code",
+   "hi": "पिन कोड"
+  },
+  {
+   "en": "Padrauna areas",
+   "hi": "पडरौना के इलाके"
+  },
+  {
+   "en": "Page not found",
+   "hi": "पेज नहीं मिला"
+  },
+  {
+   "en": "Pay at pickup",
+   "hi": "पिकअप पर दें"
+  },
+  {
+   "en": "Pay later",
+   "hi": "बाद में दें"
+  },
+  {
+   "en": "Pay on delivery instead",
+   "hi": "डिलीवरी पर दें"
+  },
+  {
+   "en": "Pay when you receive",
+   "hi": "मिलने पर पैसे दें"
+  },
+  {
+   "en": "Payment",
+   "hi": "पेमेंट"
+  },
+  {
+   "en": "Payment failed",
+   "hi": "पेमेंट नहीं हुआ"
+  },
+  {
+   "en": "Payment methods",
+   "hi": "पेमेंट के तरीके"
+  },
+  {
+   "en": "Phone",
+   "hi": "फ़ोन"
+  },
+  {
+   "en": "Photo added (demo)",
+   "hi": "फोटो जोड़ी गई (डेमो)"
+  },
+  {
+   "en": "Pick a shop, add items to the cart and choose home delivery or self-pickup. Pay online or in cash.",
+   "hi": "दुकान चुनें, सामान कार्ट में डालें और होम डिलीवरी या सेल्फ-पिकअप चुनें। ऑनलाइन या नकद दें।"
+  },
+  {
+   "en": "Pickup code",
+   "hi": "पिकअप कोड"
+  },
+  {
+   "en": "Pickup progress",
+   "hi": "पिकअप की स्थिति"
+  },
+  {
+   "en": "Place order",
+   "hi": "ऑर्डर करें"
+  },
+  {
+   "en": "Platform fee",
+   "hi": "प्लेटफ़ॉर्म शुल्क"
+  },
+  {
+   "en": "Please choose a star rating",
+   "hi": "कृपया स्टार रेटिंग चुनें"
+  },
+  {
+   "en": "Please do not close or go back.",
+   "hi": "कृपया बंद न करें और वापस न जाएँ।"
+  },
+  {
+   "en": "Please fix the issues the admin listed and submit again.",
+   "hi": "एडमिन ने जो कमियाँ बताई हैं उन्हें ठीक कर फिर भेजें।"
+  },
+  {
+   "en": "Please log in to continue",
+   "hi": "आगे बढ़ने के लिए लॉग इन करें"
+  },
+  {
+   "en": "Popular businesses",
+   "hi": "लोकप्रिय दुकानें"
+  },
+  {
+   "en": "Popular service providers",
+   "hi": "लोकप्रिय सेवा प्रदाता"
+  },
+  {
+   "en": "Popular searches",
+   "hi": "लोकप्रिय खोजें"
+  },
+  {
+   "en": "Preference saved",
+   "hi": "पसंद सहेजी गई"
+  },
+  {
+   "en": "Preferred date",
+   "hi": "पसंदीदा तारीख़"
+  },
+  {
+   "en": "Price",
+   "hi": "दाम"
+  },
+  {
+   "en": "Price details",
+   "hi": "दाम का ब्यौरा"
+  },
+  {
+   "en": "Price: high to low",
+   "hi": "दाम: ज़्यादा से कम"
+  },
+  {
+   "en": "Price: low to high",
+   "hi": "दाम: कम से ज़्यादा"
+  },
+  {
+   "en": "Print / Save PDF",
+   "hi": "प्रिंट / PDF सहेजें"
+  },
+  {
+   "en": "Privacy",
+   "hi": "गोपनीयता"
+  },
+  {
+   "en": "Privacy policy",
+   "hi": "गोपनीयता नीति"
+  },
+  {
+   "en": "Proceed to checkout",
+   "hi": "चेकआउट पर जाएँ"
+  },
+  {
+   "en": "Processing payment",
+   "hi": "पेमेंट हो रहा है"
+  },
+  {
+   "en": "Product categories",
+   "hi": "प्रोडक्ट श्रेणियाँ"
+  },
+  {
+   "en": "Product images",
+   "hi": "प्रोडक्ट की तस्वीरें"
+  },
+  {
+   "en": "Products",
+   "hi": "प्रोडक्ट"
+  },
+  {
+   "en": "Profile",
+   "hi": "प्रोफ़ाइल"
+  },
+  {
+   "en": "Profile & documents",
+   "hi": "प्रोफ़ाइल व दस्तावेज़"
+  },
+  {
+   "en": "Profile & payment methods",
+   "hi": "प्रोफ़ाइल व पेमेंट तरीके"
+  },
+  {
+   "en": "Profile saved",
+   "hi": "प्रोफ़ाइल सहेजी गई"
+  },
+  {
+   "en": "QR & links",
+   "hi": "QR व लिंक"
+  },
+  {
+   "en": "Quality issue",
+   "hi": "क्वालिटी की समस्या"
+  },
+  {
+   "en": "Quick actions",
+   "hi": "तुरंत काम"
+  },
+  {
+   "en": "Quick visit",
+   "hi": "जल्दी आए"
+  },
+  {
+   "en": "Rate product",
+   "hi": "प्रोडक्ट को रेट करें"
+  },
+  {
+   "en": "Rate shop",
+   "hi": "दुकान को रेट करें"
+  },
+  {
+   "en": "Rate your experience",
+   "hi": "अपना अनुभव रेट करें"
+  },
+  {
+   "en": "Rating",
+   "hi": "रेटिंग"
+  },
+  {
+   "en": "Ratings & reviews",
+   "hi": "रेटिंग व समीक्षाएँ"
+  },
+  {
+   "en": "Reactivate to appear in search again.",
+   "hi": "खोज में फिर दिखने के लिए दोबारा चालू करें।"
+  },
+  {
+   "en": "Ready for pickup",
+   "hi": "पिकअप के लिए तैयार"
+  },
+  {
+   "en": "Reason",
+   "hi": "कारण"
+  },
+  {
+   "en": "Recent searches",
+   "hi": "हाल की खोजें"
+  },
+  {
+   "en": "Recently viewed",
+   "hi": "हाल में देखे"
+  },
+  {
+   "en": "Refund & cancellation policy",
+   "hi": "रिफ़ंड व रद्द करने की नीति"
+  },
+  {
+   "en": "Refund completed",
+   "hi": "रिफ़ंड पूरा"
+  },
+  {
+   "en": "Refund policy",
+   "hi": "रिफ़ंड नीति"
+  },
+  {
+   "en": "Refund requested",
+   "hi": "रिफ़ंड माँगा गया"
+  },
+  {
+   "en": "Refund status",
+   "hi": "रिफ़ंड की स्थिति"
+  },
+  {
+   "en": "Refunded",
+   "hi": "रिफ़ंड हुआ"
+  },
+  {
+   "en": "Related products",
+   "hi": "मिलते-जुलते प्रोडक्ट"
+  },
+  {
+   "en": "Remove",
+   "hi": "हटाएँ"
+  },
+  {
+   "en": "Removed from bookmarks",
+   "hi": "बुकमार्क से हटाया"
+  },
+  {
+   "en": "Reorder",
+   "hi": "दोबारा ऑर्डर"
+  },
+  {
+   "en": "Report a problem",
+   "hi": "समस्या बताएँ"
+  },
+  {
+   "en": "Report this business",
+   "hi": "इस दुकान की शिकायत करें"
+  },
+  {
+   "en": "Report this listing",
+   "hi": "इस लिस्टिंग की शिकायत करें"
+  },
+  {
+   "en": "Reported. Thank you.",
+   "hi": "शिकायत दर्ज। धन्यवाद।"
+  },
+  {
+   "en": "Reported. We will contact you.",
+   "hi": "शिकायत दर्ज। हम आपसे संपर्क करेंगे।"
+  },
+  {
+   "en": "Report",
+   "hi": "शिकायत"
+  },
+  {
+   "en": "Request a refund",
+   "hi": "रिफ़ंड माँगें"
+  },
+  {
+   "en": "Request refund",
+   "hi": "रिफ़ंड माँगें"
+  },
+  {
+   "en": "Resend OTP",
+   "hi": "OTP फिर भेजें"
+  },
+  {
+   "en": "Resend OTP in",
+   "hi": "OTP फिर भेजें:"
+  },
+  {
+   "en": "Reset all demo data?",
+   "hi": "सारा डेमो डेटा रीसेट करें?"
+  },
+  {
+   "en": "Reset demo data",
+   "hi": "डेमो डेटा रीसेट"
+  },
+  {
+   "en": "Reset",
+   "hi": "रीसेट"
+  },
+  {
+   "en": "Retry",
+   "hi": "फिर कोशिश"
+  },
+  {
+   "en": "Retry payment",
+   "hi": "पेमेंट फिर करें"
+  },
+  {
+   "en": "Review deleted",
+   "hi": "समीक्षा हटाई गई"
+  },
+  {
+   "en": "Review moderation",
+   "hi": "समीक्षा मॉडरेशन"
+  },
+  {
+   "en": "Review reported",
+   "hi": "समीक्षा की शिकायत"
+  },
+  {
+   "en": "Reviews",
+   "hi": "समीक्षाएँ"
+  },
+  {
+   "en": "Reviews must be honest and based on real orders or enquiries. We may remove abusive content.",
+   "hi": "समीक्षाएँ ईमानदार हों और असली ऑर्डर या पूछताछ पर आधारित हों। अपमानजनक सामग्री हटाई जा सकती है।"
+  },
+  {
+   "en": "Reviews with links or abusive words are checked by our team before they appear.",
+   "hi": "लिंक या अपशब्द वाली समीक्षाएँ दिखने से पहले हमारी टीम जाँचती है।"
+  },
+  {
+   "en": "Roles & permissions",
+   "hi": "भूमिकाएँ व अनुमतियाँ"
+  },
+  {
+   "en": "Rude behaviour",
+   "hi": "बदतमीज़ी"
+  },
+  {
+   "en": "Save",
+   "hi": "सहेजें"
+  },
+  {
+   "en": "Save changes",
+   "hi": "बदलाव सहेजें"
+  },
+  {
+   "en": "Save for later",
+   "hi": "बाद के लिए रखें"
+  },
+  {
+   "en": "Saved",
+   "hi": "सहेजा"
+  },
+  {
+   "en": "Saved addresses",
+   "hi": "सहेजे पते"
+  },
+  {
+   "en": "Saved for later",
+   "hi": "बाद के लिए रखा"
+  },
+  {
+   "en": "Saved shops & services",
+   "hi": "सहेजी दुकानें व सेवाएँ"
+  },
+  {
+   "en": "Saved to bookmarks",
+   "hi": "बुकमार्क में सहेजा"
+  },
+  {
+   "en": "Scan to open this shop",
+   "hi": "इस दुकान को खोलने के लिए स्कैन करें"
+  },
+  {
+   "en": "Search",
+   "hi": "खोजें"
+  },
+  {
+   "en": "Search shops, products, services",
+   "hi": "दुकान, प्रोडक्ट, सेवा खोजें"
+  },
+  {
+   "en": "See all",
+   "hi": "सब देखें"
+  },
+  {
+   "en": "Select address",
+   "hi": "पता चुनें"
+  },
+  {
+   "en": "Self-pickup",
+   "hi": "सेल्फ-पिकअप"
+  },
+  {
+   "en": "Self-pickup available",
+   "hi": "सेल्फ-पिकअप उपलब्ध"
+  },
+  {
+   "en": "Sell on ApnaTown (Vendor signup)",
+   "hi": "अपना टाउन पर बेचें (वेंडर साइनअप)"
+  },
+  {
+   "en": "Send",
+   "hi": "भेजें"
+  },
+  {
+   "en": "Send OTP",
+   "hi": "OTP भेजें"
+  },
+  {
+   "en": "Send enquiry",
+   "hi": "पूछताछ भेजें"
+  },
+  {
+   "en": "Sent to",
+   "hi": "भेजा गया:"
+  },
+  {
+   "en": "Service area",
+   "hi": "सेवा क्षेत्र"
+  },
+  {
+   "en": "Service provider",
+   "hi": "सेवा प्रदाता"
+  },
+  {
+   "en": "Services",
+   "hi": "सेवाएँ"
+  },
+  {
+   "en": "Session expired",
+   "hi": "सत्र समाप्त"
+  },
+  {
+   "en": "Share",
+   "hi": "शेयर"
+  },
+  {
+   "en": "Share a few words about your experience",
+   "hi": "अपने अनुभव के बारे में कुछ शब्द लिखें"
+  },
+  {
+   "en": "Share product",
+   "hi": "प्रोडक्ट शेयर करें"
+  },
+  {
+   "en": "Share this OTP with the rider only at delivery",
+   "hi": "यह OTP सिर्फ़ डिलीवरी के समय राइडर को बताएँ"
+  },
+  {
+   "en": "Shop by category",
+   "hi": "श्रेणी के अनुसार खरीदें"
+  },
+  {
+   "en": "Shop is closed permanently",
+   "hi": "दुकान हमेशा के लिए बंद है"
+  },
+  {
+   "en": "Shop now",
+   "hi": "अभी खरीदें"
+  },
+  {
+   "en": "Shop video tour",
+   "hi": "दुकान का वीडियो टूर"
+  },
+  {
+   "en": "Shops in your area run weekly specials. Check the offers page.",
+   "hi": "आपके इलाके की दुकानें हर हफ़्ते खास ऑफ़र चलाती हैं। ऑफ़र पेज देखें।"
+  },
+  {
+   "en": "Shop’s own delivery",
+   "hi": "दुकान की अपनी डिलीवरी"
+  },
+  {
+   "en": "Simulate payment failure",
+   "hi": "पेमेंट फेल होने का डेमो"
+  },
+  {
+   "en": "Skip for now",
+   "hi": "अभी छोड़ें"
+  },
+  {
+   "en": "Sold by",
+   "hi": "बेचने वाला"
+  },
+  {
+   "en": "Some items were unavailable",
+   "hi": "कुछ सामान उपलब्ध नहीं था"
+  },
+  {
+   "en": "Start shopping",
+   "hi": "खरीदारी शुरू करें"
+  },
+  {
+   "en": "Submit",
+   "hi": "जमा करें"
+  },
+  {
+   "en": "Submit report",
+   "hi": "शिकायत भेजें"
+  },
+  {
+   "en": "Submit request",
+   "hi": "अनुरोध भेजें"
+  },
+  {
+   "en": "Submit review",
+   "hi": "समीक्षा भेजें"
+  },
+  {
+   "en": "Submitted for approval",
+   "hi": "मंज़ूरी के लिए भेजा गया"
+  },
+  {
+   "en": "Submitted for moderation",
+   "hi": "मॉडरेशन के लिए भेजा गया"
+  },
+  {
+   "en": "Subtotal",
+   "hi": "उप-योग"
+  },
+  {
+   "en": "Super Admin",
+   "hi": "सुपर एडमिन"
+  },
+  {
+   "en": "Switch role",
+   "hi": "भूमिका बदलें"
+  },
+  {
+   "en": "Tap the bookmark on any shop or service to save it here.",
+   "hi": "किसी दुकान या सेवा का बुकमार्क दबाएँ, वह यहाँ सहेजी जाएगी।"
+  },
+  {
+   "en": "Tax invoice",
+   "hi": "टैक्स इनवॉइस"
+  },
+  {
+   "en": "Taxes (GST)",
+   "hi": "कर (GST)"
+  },
+  {
+   "en": "Tell the delivery person at your door",
+   "hi": "दरवाज़े पर डिलीवरी वाले को बताएँ"
+  },
+  {
+   "en": "Tell the provider what you need",
+   "hi": "प्रदाता को बताएँ आपको क्या चाहिए"
+  },
+  {
+   "en": "Tell us your name to complete your profile",
+   "hi": "प्रोफ़ाइल पूरी करने के लिए अपना नाम बताएँ"
+  },
+  {
+   "en": "Terms",
+   "hi": "शर्तें"
+  },
+  {
+   "en": "Terms of use",
+   "hi": "उपयोग की शर्तें"
+  },
+  {
+   "en": "Thank you for using ApnaTown. You can still browse as a guest.",
+   "hi": "अपना टाउन इस्तेमाल करने के लिए धन्यवाद। आप मेहमान की तरह देख सकते हैं।"
+  },
+  {
+   "en": "Thanks for your review!",
+   "hi": "आपकी समीक्षा के लिए धन्यवाद!"
+  },
+  {
+   "en": "Thanks. Our team will review it.",
+   "hi": "धन्यवाद। हमारी टीम इसे देखेगी।"
+  },
+  {
+   "en": "The page you are looking for does not exist or has moved.",
+   "hi": "आप जो पेज ढूँढ रहे हैं वह नहीं है या हट गया है।"
+  },
+  {
+   "en": "The provider will call or WhatsApp you soon.",
+   "hi": "प्रदाता जल्द आपको कॉल या WhatsApp करेगा।"
+  },
+  {
+   "en": "The shop has been notified.",
+   "hi": "दुकान को खबर कर दी गई है।"
+  },
+  {
+   "en": "Theme",
+   "hi": "थीम"
+  },
+  {
+   "en": "This cannot be undone.",
+   "hi": "यह वापस नहीं हो सकता।"
+  },
+  {
+   "en": "This listing is not live",
+   "hi": "यह लिस्टिंग अभी चालू नहीं है"
+  },
+  {
+   "en": "This page hit a snag.",
+   "hi": "इस पेज में कुछ गड़बड़ हुई।"
+  },
+  {
+   "en": "This pin is outside our service area.",
+   "hi": "यह पिन हमारे सेवा क्षेत्र से बाहर है।"
+  },
+  {
+   "en": "This section unlocks once your account is approved.",
+   "hi": "खाता मंज़ूर होते ही यह सेक्शन खुल जाएगा।"
+  },
+  {
+   "en": "This shop hasn’t added products.",
+   "hi": "इस दुकान ने अभी प्रोडक्ट नहीं जोड़े।"
+  },
+  {
+   "en": "Total",
+   "hi": "कुल"
+  },
+  {
+   "en": "Total for",
+   "hi": "कुल:"
+  },
+  {
+   "en": "Track orders and reorder in one tap.",
+   "hi": "ऑर्डर ट्रैक करें और एक टैप में दोबारा मँगाएँ।"
+  },
+  {
+   "en": "Trusted services",
+   "hi": "भरोसेमंद सेवाएँ"
+  },
+  {
+   "en": "Try a bigger radius or another category.",
+   "hi": "बड़ा दायरा या दूसरी श्रेणी आज़माएँ।"
+  },
+  {
+   "en": "Try again",
+   "hi": "फिर कोशिश करें"
+  },
+  {
+   "en": "Try another category.",
+   "hi": "दूसरी श्रेणी आज़माएँ।"
+  },
+  {
+   "en": "Try fewer filters or a different word.",
+   "hi": "कम फ़िल्टर या दूसरा शब्द आज़माएँ।"
+  },
+  {
+   "en": "Unsubscribe from all marketing",
+   "hi": "सभी मार्केटिंग से हटें"
+  },
+  {
+   "en": "Update review",
+   "hi": "समीक्षा अपडेट करें"
+  },
+  {
+   "en": "Use my current location",
+   "hi": "मेरी मौजूदा लोकेशन इस्तेमाल करें"
+  },
+  {
+   "en": "Valid till",
+   "hi": "तक मान्य"
+  },
+  {
+   "en": "Value for money",
+   "hi": "पैसा वसूल"
+  },
+  {
+   "en": "Videos play on YouTube. If your connection is slow, tap to open.",
+   "hi": "वीडियो YouTube पर चलते हैं। कनेक्शन धीमा हो तो टैप करके खोलें।"
+  },
+  {
+   "en": "View as",
+   "hi": "इस रूप में देखें"
+  },
+  {
+   "en": "Visit shop",
+   "hi": "दुकान देखें"
+  },
+  {
+   "en": "Voice search",
+   "hi": "आवाज़ से खोजें"
+  },
+  {
+   "en": "Want to change items or address",
+   "hi": "सामान या पता बदलना है"
+  },
+  {
+   "en": "We are live in Padrauna now. Choose “Other cities” in the location picker to join the waitlist.",
+   "hi": "हम अभी पडरौना में चालू हैं। वेटलिस्ट में जुड़ने के लिए लोकेशन में “अन्य शहर” चुनें।"
+  },
+  {
+   "en": "We are not in your city yet",
+   "hi": "हम अभी आपके शहर में नहीं हैं"
+  },
+  {
+   "en": "We collect your mobile number, addresses and order history to run the service.",
+   "hi": "सेवा चलाने के लिए हम आपका मोबाइल नंबर, पते और ऑर्डर का इतिहास रखते हैं।"
+  },
+  {
+   "en": "We need your mobile number to confirm delivery.",
+   "hi": "डिलीवरी पक्की करने के लिए हमें आपका मोबाइल नंबर चाहिए।"
+  },
+  {
+   "en": "We use cookies to remember your language, location and cart. No ads.",
+   "hi": "आपकी भाषा, लोकेशन और कार्ट याद रखने के लिए हम कुकीज़ इस्तेमाल करते हैं। कोई विज्ञापन नहीं।"
+  },
+  {
+   "en": "We will notify you when it is back",
+   "hi": "वापस आते ही हम आपको बताएँगे"
+  },
+  {
+   "en": "We will notify you when we launch",
+   "hi": "शुरू होते ही हम आपको बताएँगे"
+  },
+  {
+   "en": "We will send a 6-digit OTP by SMS",
+   "hi": "हम SMS से 6 अंकों का OTP भेजेंगे"
+  },
+  {
+   "en": "Welcome to ApnaTown",
+   "hi": "अपना टाउन में स्वागत है"
+  },
+  {
+   "en": "We’ll be right back",
+   "hi": "हम जल्द लौटेंगे"
+  },
+  {
+   "en": "What happened?",
+   "hi": "क्या हुआ?"
+  },
+  {
+   "en": "What went well?",
+   "hi": "क्या अच्छा रहा?"
+  },
+  {
+   "en": "Whole shop",
+   "hi": "पूरी दुकान"
+  },
+  {
+   "en": "Why was my order split?",
+   "hi": "मेरा ऑर्डर अलग-अलग क्यों बँटा?"
+  },
+  {
+   "en": "Widen search",
+   "hi": "खोज बढ़ाएँ"
+  },
+  {
+   "en": "Within distance",
+   "hi": "इतनी दूरी में"
+  },
+  {
+   "en": "Working hours",
+   "hi": "काम के घंटे"
+  },
+  {
+   "en": "Write a review",
+   "hi": "समीक्षा लिखें"
+  },
+  {
+   "en": "Wrong OTP. Try 123456 in this demo.",
+   "hi": "OTP गलत है। इस डेमो में 123456 डालें।"
+  },
+  {
+   "en": "Wrong amount charged",
+   "hi": "गलत रकम ली गई"
+  },
+  {
+   "en": "Wrong details",
+   "hi": "गलत जानकारी"
+  },
+  {
+   "en": "Wrong item",
+   "hi": "गलत सामान"
+  },
+  {
+   "en": "You are browsing as a guest",
+   "hi": "आप मेहमान की तरह देख रहे हैं"
+  },
+  {
+   "en": "You are unsubscribed from marketing",
+   "hi": "आपने मार्केटिंग बंद कर दी"
+  },
+  {
+   "en": "You can complete your profile now. Selling, orders and payouts unlock after approval.",
+   "hi": "आप अभी प्रोफ़ाइल पूरी कर सकते हैं। बिक्री, ऑर्डर और पेआउट मंज़ूरी के बाद खुलेंगे।"
+  },
+  {
+   "en": "You can log back in anytime with your mobile number.",
+   "hi": "आप कभी भी मोबाइल नंबर से फिर लॉग इन कर सकते हैं।"
+  },
+  {
+   "en": "You can still choose self-pickup.",
+   "hi": "आप फिर भी सेल्फ-पिकअप चुन सकते हैं।"
+  },
+  {
+   "en": "You can still view saved pages. Reconnect to place orders.",
+   "hi": "सहेजे पेज अब भी देख सकते हैं। ऑर्डर के लिए इंटरनेट जोड़ें।"
+  },
+  {
+   "en": "You can’t review this yet",
+   "hi": "आप अभी इसकी समीक्षा नहीं लिख सकते"
+  },
+  {
+   "en": "You can’t take new orders or edits. Contact support to appeal.",
+   "hi": "आप नए ऑर्डर या बदलाव नहीं कर सकते। अपील के लिए सहायता से संपर्क करें।"
+  },
+  {
+   "en": "You get a 4-digit OTP. Tell it to the rider only when you receive your order.",
+   "hi": "आपको 4 अंकों का OTP मिलता है। ऑर्डर मिलने पर ही राइडर को बताएँ।"
+  },
+  {
+   "en": "You will get a separate order ID for each shop.",
+   "hi": "हर दुकान की अलग ऑर्डर ID मिलेगी।"
+  },
+  {
+   "en": "Your account is inactive",
+   "hi": "आपका खाता निष्क्रिय है"
+  },
+  {
+   "en": "Your account is suspended",
+   "hi": "आपका खाता निलंबित है"
+  },
+  {
+   "en": "Your account was deleted",
+   "hi": "आपका खाता हटा दिया गया"
+  },
+  {
+   "en": "Your application is under review",
+   "hi": "आपका आवेदन समीक्षा में है"
+  },
+  {
+   "en": "Your application was rejected",
+   "hi": "आपका आवेदन अस्वीकार हुआ"
+  },
+  {
+   "en": "Your bookmarks",
+   "hi": "आपके बुकमार्क"
+  },
+  {
+   "en": "Your cart",
+   "hi": "आपका कार्ट"
+  },
+  {
+   "en": "Your cart is empty",
+   "hi": "आपका कार्ट खाली है"
+  },
+  {
+   "en": "Your cart, orders and changes will be cleared.",
+   "hi": "आपका कार्ट, ऑर्डर और बदलाव मिट जाएँगे।"
+  },
+  {
+   "en": "Your data",
+   "hi": "आपका डेटा"
+  },
+  {
+   "en": "Your delivery OTP",
+   "hi": "आपका डिलीवरी OTP"
+  },
+  {
+   "en": "Your message",
+   "hi": "आपका संदेश"
+  },
+  {
+   "en": "Your money is safe. No order was placed. You can retry or pay on delivery.",
+   "hi": "आपका पैसा सुरक्षित है। कोई ऑर्डर नहीं हुआ। फिर कोशिश करें या डिलीवरी पर दें।"
+  },
+  {
+   "en": "Your name",
+   "hi": "आपका नाम"
+  },
+  {
+   "en": "Your order was split into",
+   "hi": "आपका ऑर्डर बँट गया:"
+  },
+  {
+   "en": "Your order will be split into",
+   "hi": "आपका ऑर्डर बँटेगा:"
+  },
+  {
+   "en": "Your orders will appear here.",
+   "hi": "आपके ऑर्डर यहाँ दिखेंगे।"
+  },
+  {
+   "en": "Your placed orders appear here.",
+   "hi": "आपके दिए ऑर्डर यहाँ दिखेंगे।"
+  },
+  {
+   "en": "Your profile, addresses and bookmarks will be erased. Order records are kept for the shop’s accounts.",
+   "hi": "आपकी प्रोफ़ाइल, पते और बुकमार्क मिट जाएँगे। ऑर्डर का रिकॉर्ड दुकान के हिसाब के लिए रखा जाता है।"
+  },
+  {
+   "en": "Your rating",
+   "hi": "आपकी रेटिंग"
+  },
+  {
+   "en": "Your request",
+   "hi": "आपका अनुरोध"
+  },
+  {
+   "en": "Your review",
+   "hi": "आपकी समीक्षा"
+  },
+  {
+   "en": "Your review is now live.",
+   "hi": "आपकी समीक्षा अब दिख रही है।"
+  },
+  {
+   "en": "Your town’s own bazaar, now online",
+   "hi": "आपके शहर का अपना बाज़ार, अब ऑनलाइन"
+  },
+  {
+   "en": "Placed",
+   "hi": "दिया गया"
+  },
+  {
+   "en": "Accepted",
+   "hi": "स्वीकार"
+  },
+  {
+   "en": "Preparing",
+   "hi": "तैयार हो रहा"
+  },
+  {
+   "en": "Ready",
+   "hi": "तैयार"
+  },
+  {
+   "en": "Out for delivery",
+   "hi": "डिलीवरी पर निकला"
+  },
+  {
+   "en": "Delivered",
+   "hi": "डिलीवर हुआ"
+  },
+  {
+   "en": "Picked up",
+   "hi": "ले लिया गया"
+  },
+  {
+   "en": "Pending",
+   "hi": "लंबित"
+  },
+  {
+   "en": "Approved",
+   "hi": "मंज़ूर"
+  },
+  {
+   "en": "Rejected",
+   "hi": "अस्वीकार"
+  },
+  {
+   "en": "Suspended",
+   "hi": "निलंबित"
+  },
+  {
+   "en": "Inactive",
+   "hi": "निष्क्रिय"
+  },
+  {
+   "en": "Verified",
+   "hi": "वेरिफ़ाइड"
+  },
+  {
+   "en": "Closed",
+   "hi": "बंद"
+  },
+  {
+   "en": "Closed today",
+   "hi": "आज बंद"
+  },
+  {
+   "en": "Temporarily closed",
+   "hi": "अस्थायी रूप से बंद"
+  },
+  {
+   "en": "Opens at",
+   "hi": "खुलेगा"
+  },
+  {
+   "en": "Closes",
+   "hi": "बंद होगा"
+  },
+  {
+   "en": "Pickup only here",
+   "hi": "यहाँ सिर्फ़ पिकअप"
+  },
+  {
+   "en": "Enquiry",
+   "hi": "पूछताछ"
+  },
+  {
+   "en": "OFF",
+   "hi": "छूट"
+  },
+  {
+   "en": "Only",
+   "hi": "सिर्फ़"
+  },
+  {
+   "en": "left",
+   "hi": "बचे"
+  },
+  {
+   "en": "Just now",
+   "hi": "अभी"
+  },
+  {
+   "en": "min ago",
+   "hi": "मिनट पहले"
+  },
+  {
+   "en": "hr ago",
+   "hi": "घंटे पहले"
+  },
+  {
+   "en": "out of 5",
+   "hi": "5 में से"
+  },
+  {
+   "en": "reviews",
+   "hi": "समीक्षाएँ"
+  },
+  {
+   "en": "Shops",
+   "hi": "दुकानें"
+  },
+  {
+   "en": "Active ",
+   "hi": "चालू"
+  },
+  {
+   "en": "Open",
+   "hi": "खुला"
+  },
+  {
+   "en": "Close",
+   "hi": "बंद करें"
+  },
+  {
+   "en": "Switch",
+   "hi": "बदलें"
+  },
+  {
+   "en": "Apply ",
+   "hi": "लागू करें"
+  },
+  {
+   "en": "Sort",
+   "hi": "क्रमबद्ध"
+  },
+  {
+   "en": "Relevance",
+   "hi": "प्रासंगिकता"
+  },
+  {
+   "en": "Rating ",
+   "hi": "रेटिंग"
+  },
+  {
+   "en": "Newest",
+   "hi": "नवीनतम"
+  },
+  {
+   "en": "Services ",
+   "hi": "सेवाएँ"
+  },
+  {
+   "en": "Search ",
+   "hi": "खोजें"
+  },
+  {
+   "en": "Voice",
+   "hi": "आवाज़"
+  },
+  {
+   "en": "Copy",
+   "hi": "कॉपी"
+  },
+  {
+   "en": "Sunday",
+   "hi": "रविवार"
+  },
+  {
+   "en": "Monday",
+   "hi": "सोमवार"
+  },
+  {
+   "en": "Tuesday",
+   "hi": "मंगलवार"
+  },
+  {
+   "en": "Wednesday",
+   "hi": "बुधवार"
+  },
+  {
+   "en": "Thursday",
+   "hi": "गुरुवार"
+  },
+  {
+   "en": "Friday",
+   "hi": "शुक्रवार"
+  },
+  {
+   "en": "Saturday",
+   "hi": "शनिवार"
+  },
+  {
+   "en": "Order",
+   "hi": "ऑर्डर"
+  },
+  {
+   "en": "Items",
+   "hi": "सामान"
+  },
+  {
+   "en": "items",
+   "hi": "सामान"
+  },
+  {
+   "en": "shops",
+   "hi": "दुकानें"
+  },
+  {
+   "en": "About ",
+   "hi": "परिचय"
+  },
+  {
+   "en": "Since",
+   "hi": "से"
+  },
+  {
+   "en": "Available",
+   "hi": "उपलब्ध"
+  },
+  {
+   "en": "Delivery fee",
+   "hi": "डिलीवरी शुल्क"
+  },
+  {
+   "en": "Shop subtotal",
+   "hi": "दुकान का उप-योग"
+  },
+  {
+   "en": "Discount",
+   "hi": "छूट"
+  },
+  {
+   "en": "Coupon",
+   "hi": "कूपन"
+  },
+  {
+   "en": "applied",
+   "hi": "लागू"
+  },
+  {
+   "en": "Paid",
+   "hi": "चुकाया"
+  },
+  {
+   "en": "Choose",
+   "hi": "चुनें"
+  },
+  {
+   "en": "Quantity",
+   "hi": "मात्रा"
+  },
+  {
+   "en": "Decrease",
+   "hi": "घटाएँ"
+  },
+  {
+   "en": "Increase",
+   "hi": "बढ़ाएँ"
+  },
+  {
+   "en": "Max",
+   "hi": "अधिकतम"
+  },
+  {
+   "en": "Details ",
+   "hi": "विवरण"
+  },
+  {
+   "en": "Save ",
+   "hi": "सहेजें"
+  },
+  {
+   "en": "Add ",
+   "hi": "जोड़ें"
+  },
+  {
+   "en": "Opens",
+   "hi": "खुलता है"
+  },
+  {
+   "en": "Closes ",
+   "hi": "बंद होता है"
+  },
+  {
+   "en": "Vendor",
+   "hi": "वेंडर"
+  },
+  {
+   "en": "Service provider ",
+   "hi": "सेवा प्रदाता"
+  },
+  {
+   "en": "Rider",
+   "hi": "राइडर"
+  },
+  {
+   "en": "Admin",
+   "hi": "एडमिन"
+  },
+  {
+   "en": "Customer",
+   "hi": "ग्राहक"
+  },
+  {
+   "en": "Sell",
+   "hi": "बेचें"
+  },
+  {
+   "en": "Grow",
+   "hi": "बढ़ाएँ"
+  },
+  {
+   "en": "Overview",
+   "hi": "ओवरव्यू"
+  },
+  {
+   "en": "Inventory",
+   "hi": "इन्वेंटरी"
+  },
+  {
+   "en": "Notifications ",
+   "hi": "सूचनाएँ"
+  },
+  {
+   "en": "Earnings",
+   "hi": "कमाई"
+  },
+  {
+   "en": "Enquiries",
+   "hi": "पूछताछ"
+  },
+  {
+   "en": "Analytics",
+   "hi": "एनालिटिक्स"
+  },
+  {
+   "en": "Work",
+   "hi": "काम"
+  },
+  {
+   "en": "Deliver",
+   "hi": "डिलीवर"
+  },
+  {
+   "en": "Me",
+   "hi": "मैं"
+  },
+  {
+   "en": "Requests",
+   "hi": "अनुरोध"
+  },
+  {
+   "en": "History",
+   "hi": "इतिहास"
+  },
+  {
+   "en": "Feedback",
+   "hi": "फ़ीडबैक"
+  },
+  {
+   "en": "Monitor",
+   "hi": "निगरानी"
+  },
+  {
+   "en": "Manage",
+   "hi": "प्रबंधन"
+  },
+  {
+   "en": "Reports",
+   "hi": "रिपोर्ट"
+  },
+  {
+   "en": "Approvals",
+   "hi": "मंज़ूरियाँ"
+  },
+  {
+   "en": "Users",
+   "hi": "यूज़र"
+  },
+  {
+   "en": "Categories",
+   "hi": "श्रेणियाँ"
+  },
+  {
+   "en": "Listings",
+   "hi": "लिस्टिंग"
+  },
+  {
+   "en": "Promotions",
+   "hi": "प्रमोशन"
+  },
+  {
+   "en": "Communications",
+   "hi": "संचार"
+  },
+  {
+   "en": "System",
+   "hi": "सिस्टम"
+  },
+  {
+   "en": "Platform",
+   "hi": "प्लेटफ़ॉर्म"
+  },
+  {
+   "en": "Control",
+   "hi": "नियंत्रण"
+  },
+  {
+   "en": "Roles & permissions ",
+   "hi": "भूमिकाएँ व अनुमतियाँ"
+  },
+  {
+   "en": "Account ",
+   "hi": "खाता"
+  },
+  {
+   "en": "Orders ",
+   "hi": "ऑर्डर"
+  },
+  {
+   "en": "Namaste",
+   "hi": "नमस्ते"
+  },
+  {
+   "en": "Reviews ",
+   "hi": "समीक्षाएँ"
+  },
+  {
+   "en": "View public page",
+   "hi": "सार्वजनिक पेज देखें"
+  },
+  {
+   "en": "New order(s) waiting",
+   "hi": "नए ऑर्डर इंतज़ार में"
+  },
+  {
+   "en": "Today’s orders",
+   "hi": "आज के ऑर्डर"
+  },
+  {
+   "en": "Revenue today",
+   "hi": "आज की बिक्री"
+  },
+  {
+   "en": "Profile views",
+   "hi": "प्रोफ़ाइल व्यू"
+  },
+  {
+   "en": "QR scans",
+   "hi": "QR स्कैन"
+  },
+  {
+   "en": "New reviews",
+   "hi": "नई समीक्षाएँ"
+  },
+  {
+   "en": "Pending actions",
+   "hi": "लंबित काम"
+  },
+  {
+   "en": "Low-stock alerts",
+   "hi": "कम स्टॉक की चेतावनी"
+  },
+  {
+   "en": "Update stock",
+   "hi": "स्टॉक अपडेट करें"
+  },
+  {
+   "en": "Accept order",
+   "hi": "ऑर्डर स्वीकारें"
+  },
+  {
+   "en": "Reject",
+   "hi": "अस्वीकार"
+  },
+  {
+   "en": "Start preparing",
+   "hi": "तैयारी शुरू करें"
+  },
+  {
+   "en": "Mark ready",
+   "hi": "तैयार करें"
+  },
+  {
+   "en": "Mark ready for pickup",
+   "hi": "पिकअप के लिए तैयार करें"
+  },
+  {
+   "en": "Update status",
+   "hi": "स्थिति बदलें"
+  },
+  {
+   "en": "Print order slip",
+   "hi": "ऑर्डर पर्ची प्रिंट करें"
+  },
+  {
+   "en": "Print",
+   "hi": "प्रिंट"
+  },
+  {
+   "en": "Timeline",
+   "hi": "समय-रेखा"
+  },
+  {
+   "en": "Customer ",
+   "hi": "ग्राहक"
+  },
+  {
+   "en": "Add product",
+   "hi": "प्रोडक्ट जोड़ें"
+  },
+  {
+   "en": "Bulk import",
+   "hi": "थोक इम्पोर्ट"
+  },
+  {
+   "en": "Save product",
+   "hi": "प्रोडक्ट सहेजें"
+  },
+  {
+   "en": "Create offer",
+   "hi": "ऑफ़र बनाएँ"
+  },
+  {
+   "en": "Submit for approval",
+   "hi": "मंज़ूरी के लिए भेजें"
+  },
+  {
+   "en": "Online",
+   "hi": "ऑनलाइन"
+  },
+  {
+   "en": "Offline",
+   "hi": "ऑफ़लाइन"
+  },
+  {
+   "en": "You are online",
+   "hi": "आप ऑनलाइन हैं"
+  },
+  {
+   "en": "You are offline",
+   "hi": "आप ऑफ़लाइन हैं"
+  },
+  {
+   "en": "Delivery requests",
+   "hi": "डिलीवरी अनुरोध"
+  },
+  {
+   "en": "Accept",
+   "hi": "स्वीकार"
+  },
+  {
+   "en": "I reached the shop",
+   "hi": "मैं दुकान पहुँच गया"
+  },
+  {
+   "en": "Picked up ",
+   "hi": "ले लिया"
+  },
+  {
+   "en": "I reached the drop",
+   "hi": "मैं ड्रॉप पर पहुँच गया"
+  },
+  {
+   "en": "Complete delivery",
+   "hi": "डिलीवरी पूरी करें"
+  },
+  {
+   "en": "Navigate",
+   "hi": "नेविगेट"
+  },
+  {
+   "en": "You earn",
+   "hi": "आपकी कमाई"
+  },
+  {
+   "en": "Check the items",
+   "hi": "सामान जाँचें"
+  },
+  {
+   "en": "Delivered!",
+   "hi": "डिलीवर हो गया!"
+  },
+  {
+   "en": "Namaste ",
+   "hi": "नमस्ते"
+  },
+  {
+   "en": "Sign in",
+   "hi": "साइन इन"
+  },
+  {
+   "en": "Step",
+   "hi": "चरण"
+  },
+  {
+   "en": "Next",
+   "hi": "अगला"
+  },
+  {
+   "en": "Exit",
+   "hi": "बाहर"
+  },
+  {
+   "en": "Mobile",
+   "hi": "मोबाइल"
+  },
+  {
+   "en": "Business type",
+   "hi": "बिज़नेस का प्रकार"
+  },
+  {
+   "en": "Basics",
+   "hi": "मूल जानकारी"
+  },
+  {
+   "en": "Location",
+   "hi": "लोकेशन"
+  },
+  {
+   "en": "Hours & delivery",
+   "hi": "समय व डिलीवरी"
+  },
+  {
+   "en": "Documents",
+   "hi": "दस्तावेज़"
+  },
+  {
+   "en": "Review",
+   "hi": "समीक्षा"
+  },
+  {
+   "en": "Platform overview",
+   "hi": "प्लेटफ़ॉर्म ओवरव्यू"
+  },
+  {
+   "en": "Approvals queue",
+   "hi": "मंज़ूरी कतार"
+  },
+  {
+   "en": "Alerts",
+   "hi": "अलर्ट"
+  },
+  {
+   "en": "Live orders",
+   "hi": "लाइव ऑर्डर"
+  },
+  {
+   "en": "Decision",
+   "hi": "निर्णय"
+  },
+  {
+   "en": "Approve",
+   "hi": "मंज़ूर करें"
+  },
+  {
+   "en": "Request changes",
+   "hi": "बदलाव माँगें"
+  },
+  {
+   "en": "History ",
+   "hi": "इतिहास"
+  },
+  {
+   "en": "Super Admin overview",
+   "hi": "सुपर एडमिन ओवरव्यू"
+  },
+  {
+   "en": "Add admin",
+   "hi": "एडमिन जोड़ें"
+  },
+  {
+   "en": "Permission matrix",
+   "hi": "अनुमति मैट्रिक्स"
+  },
+  {
+   "en": "Module",
+   "hi": "मॉड्यूल"
+  },
+  {
+   "en": "View",
+   "hi": "देखें"
+  },
+  {
+   "en": "Add city",
+   "hi": "शहर जोड़ें"
+  },
+  {
+   "en": "Live",
+   "hi": "चालू"
+  },
+  {
+   "en": "Coming soon",
+   "hi": "जल्द आ रहा"
+  },
+  {
+   "en": "Planned",
+   "hi": "योजना में"
+  },
+  {
+   "en": "Delivery & rider pay",
+   "hi": "डिलीवरी व राइडर भुगतान"
+  },
+  {
+   "en": "Commission & plans",
+   "hi": "कमीशन व प्लान"
+  },
+  {
+   "en": "Payments",
+   "hi": "पेमेंट"
+  },
+  {
+   "en": "Policies & reviews",
+   "hi": "नीतियाँ व समीक्षाएँ"
+  },
+  {
+   "en": "Notifications & WhatsApp",
+   "hi": "सूचना व WhatsApp"
+  },
+  {
+   "en": "SEO defaults",
+   "hi": "SEO डिफ़ॉल्ट"
+  },
+  {
+   "en": "Feature flags",
+   "hi": "फ़ीचर फ़्लैग"
+  },
+  {
+   "en": "Legal pages",
+   "hi": "कानूनी पेज"
+  },
+  {
+   "en": "Branding",
+   "hi": "ब्रांडिंग"
+  },
+  {
+   "en": "Platform analytics",
+   "hi": "प्लेटफ़ॉर्म एनालिटिक्स"
+  },
+  {
+   "en": "Send now",
+   "hi": "अभी भेजें"
+  },
+  {
+   "en": "Schedule",
+   "hi": "शेड्यूल"
+  },
+  {
+   "en": "Audience",
+   "hi": "दर्शक वर्ग"
+  },
+  {
+   "en": "Channels",
+   "hi": "चैनल"
+  },
+  {
+   "en": "Preview",
+   "hi": "पूर्वावलोकन"
+  },
+  {
+   "en": "Delivery reports",
+   "hi": "डिलीवरी रिपोर्ट"
+  },
+  {
+   "en": "Customer app ",
+   "hi": "ग्राहक ऐप"
+  },
+  {
+   "en": "Switch demo role",
+   "hi": "डेमो भूमिका बदलें"
+  },
+  {
+   "en": "You don’t have permission",
+   "hi": "आपको अनुमति नहीं है"
+  },
+  {
+   "en": "This section is not available for your role. Ask a Super Admin for access.",
+   "hi": "यह सेक्शन आपकी भूमिका के लिए उपलब्ध नहीं है। सुपर एडमिन से अनुमति माँगें।"
+  },
+  {
+   "en": "Something went wrong",
+   "hi": "कुछ गड़बड़ हो गई"
+  },
+  {
+   "en": "Please check your connection and try again.",
+   "hi": "कृपया इंटरनेट जाँचकर फिर कोशिश करें।"
+  },
+  {
+   "en": "Nothing here yet",
+   "hi": "यहाँ अभी कुछ नहीं"
+  },
+  {
+   "en": "Items will appear here.",
+   "hi": "आइटम यहाँ दिखेंगे।"
+  },
+  {
+   "en": "You are offline. Showing saved data.",
+   "hi": "आप ऑफ़लाइन हैं। सहेजा हुआ डेटा दिख रहा है।"
+  },
+  {
+   "en": "Switch role ",
+   "hi": "भूमिका बदलें"
+  },
+  {
+   "en": "Light ",
+   "hi": "लाइट"
+  },
+  {
+   "en": "Viewing as",
+   "hi": "इस रूप में देख रहे हैं"
+  },
+  {
+   "en": "Language: English",
+   "hi": "भाषा: English"
+  },
+  {
+   "en": "Sell on ApnaTown",
+   "hi": "अपना टाउन पर बेचें"
+  },
+  {
+   "en": "Sunday ",
+   "hi": "रविवार"
+  },
+  {
+   "en": "Opening hours ",
+   "hi": "खुलने का समय"
+  },
+  {
+   "en": "Apna Shehar, Apni Dukaan",
+   "hi": "अपना शहर, अपनी दुकान"
+  },
+  {
+   "en": "Status",
+   "hi": "स्थिति"
+  },
+  {
+   "en": "Promotions ",
+   "hi": "प्रमोशन"
+  },
+  {
+   "en": "Customers",
+   "hi": "ग्राहक"
+  },
+  {
+   "en": "Nothing waiting. Great!",
+   "hi": "कुछ लंबित नहीं। बढ़िया!"
+  },
+  {
+   "en": "Share ",
+   "hi": "शेयर"
+  },
+  {
+   "en": "Business",
+   "hi": "बिज़नेस"
+  },
+  {
+   "en": "Rider ",
+   "hi": "राइडर"
+  },
+  {
+   "en": "Sign up",
+   "hi": "साइन अप"
+  },
+  {
+   "en": "Get started",
+   "hi": "शुरू करें"
+  },
+  {
+   "en": "Offers & coupon ",
+   "hi": "ऑफ़र व कूपन"
+  },
+  {
+   "en": "Copy: ",
+   "hi": "कॉपी: "
+  },
+  {
+   "en": "View all",
+   "hi": "सब देखें"
+  },
+  {
+   "en": "Phone ",
+   "hi": "फ़ोन"
+  },
+  {
+   "en": "View all products",
+   "hi": "सभी प्रोडक्ट देखें"
+  },
+  {
+   "en": "View all businesses",
+   "hi": "सभी दुकानें देखें"
+  },
+  {
+   "en": "View all shops",
+   "hi": "सभी दुकानें देखें"
+  },
+  {
+   "en": "Products & Services",
+   "hi": "प्रोडक्ट व सेवाएँ"
+  },
+  {
+   "en": "Photos & Videos",
+   "hi": "फोटो व वीडियो"
+  },
+  {
+   "en": "Photos",
+   "hi": "फोटो"
+  },
+  {
+   "en": "Videos",
+   "hi": "वीडियो"
+  },
+  {
+   "en": "Reels",
+   "hi": "रील्स"
+  },
+  {
+   "en": "Reel",
+   "hi": "रील"
+  },
+  {
+   "en": "Video",
+   "hi": "वीडियो"
+  },
+  {
+   "en": "Photo",
+   "hi": "फोटो"
+  },
+  {
+   "en": "Product filters",
+   "hi": "प्रोडक्ट फ़िल्टर"
+  },
+  {
+   "en": "Shop filters",
+   "hi": "दुकान फ़िल्टर"
+  },
+  {
+   "en": "Service filters",
+   "hi": "सेवा फ़िल्टर"
+  },
+  {
+   "en": "Reset filters",
+   "hi": "फ़िल्टर रीसेट करें"
+  },
+  {
+   "en": "Remove filter",
+   "hi": "फ़िल्टर हटाएँ"
+  },
+  {
+   "en": "Nothing matches these filters",
+   "hi": "इन फ़िल्टर से कुछ नहीं मिला"
+  },
+  {
+   "en": "Try removing a filter or widening the distance.",
+   "hi": "कोई फ़िल्टर हटाएँ या दूरी बढ़ाएँ।"
+  },
+  {
+   "en": "Min (₹)",
+   "hi": "न्यूनतम (₹)"
+  },
+  {
+   "en": "Max (₹)",
+   "hi": "अधिकतम (₹)"
+  },
+  {
+   "en": "Rating & reviews",
+   "hi": "रेटिंग व समीक्षा"
+  },
+  {
+   "en": "Subcategory",
+   "hi": "उप-श्रेणी"
+  },
+  {
+   "en": "All subcategories",
+   "hi": "सभी उप-श्रेणियाँ"
+  },
+  {
+   "en": "Brand",
+   "hi": "ब्रांड"
+  },
+  {
+   "en": "All brands",
+   "hi": "सभी ब्रांड"
+  },
+  {
+   "en": "Discount / offers",
+   "hi": "छूट / ऑफ़र"
+  },
+  {
+   "en": "In stock only",
+   "hi": "सिर्फ़ स्टॉक में"
+  },
+  {
+   "en": "Featured",
+   "hi": "खास"
+  },
+  {
+   "en": "Delivery or pickup",
+   "hi": "डिलीवरी या पिकअप"
+  },
+  {
+   "en": "Sort by",
+   "hi": "ऐसे क्रम में"
+  },
+  {
+   "en": "Starts from (₹)",
+   "hi": "शुरुआती दाम (₹)"
+  },
+  {
+   "en": "Available now (open)",
+   "hi": "अभी उपलब्ध (खुला)"
+  },
+  {
+   "en": "Offers & availability",
+   "hi": "ऑफ़र व उपलब्धता"
+  },
+  {
+   "en": "Services & products",
+   "hi": "सेवाएँ व प्रोडक्ट"
+  },
+  {
+   "en": "Add service",
+   "hi": "सेवा जोड़ें"
+  },
+  {
+   "en": "Add your first service",
+   "hi": "अपनी पहली सेवा जोड़ें"
+  },
+  {
+   "en": "Service name",
+   "hi": "सेवा का नाम"
+  },
+  {
+   "en": "Save service",
+   "hi": "सेवा सहेजें"
+  },
+  {
+   "en": "Suggest a subcategory",
+   "hi": "उप-श्रेणी सुझाएँ"
+  },
+  {
+   "en": "Send suggestion",
+   "hi": "सुझाव भेजें"
+  },
+  {
+   "en": "Suggest anyway",
+   "hi": "फिर भी सुझाएँ"
+  },
+  {
+   "en": "Similar subcategory already exists",
+   "hi": "मिलती-जुलती उप-श्रेणी पहले से है"
+  },
+  {
+   "en": "Main categories are fixed by ApnaTown. You can suggest subcategories for admin approval.",
+   "hi": "मुख्य श्रेणियाँ अपना टाउन तय करता है। आप उप-श्रेणी सुझा सकते हैं, एडमिन मंज़ूर करेगा।"
+  },
+  {
+   "en": "My suggestions",
+   "hi": "मेरे सुझाव"
+  },
+  {
+   "en": "Merged",
+   "hi": "मिला दिया गया"
+  },
+  {
+   "en": "Subcategory suggestions",
+   "hi": "उप-श्रेणी सुझाव"
+  },
+  {
+   "en": "Merge into existing",
+   "hi": "मौजूदा में मिलाएँ"
+  },
+  {
+   "en": "Reject suggestion",
+   "hi": "सुझाव अस्वीकार करें"
+  },
+  {
+   "en": "Suggested by",
+   "hi": "सुझाया:"
+  },
+  {
+   "en": "Paste a YouTube or Instagram link",
+   "hi": "YouTube या Instagram लिंक डालें"
+  },
+  {
+   "en": "Add video or reel",
+   "hi": "वीडियो या रील जोड़ें"
+  },
+  {
+   "en": "Videos & reels",
+   "hi": "वीडियो व रील्स"
+  },
+  {
+   "en": "Tag products or services",
+   "hi": "प्रोडक्ट या सेवाएँ टैग करें"
+  },
+  {
+   "en": "Save tags",
+   "hi": "टैग सहेजें"
+  },
+  {
+   "en": "In this video",
+   "hi": "इस वीडियो में"
+  },
+  {
+   "en": "View service",
+   "hi": "सेवा देखें"
+  },
+  {
+   "en": "Open in",
+   "hi": "खोलें:"
+  },
+  {
+   "en": "Play",
+   "hi": "चलाएँ"
+  },
+  {
+   "en": "Open full screen viewer",
+   "hi": "फ़ुल-स्क्रीन व्यूअर खोलें"
+  },
+  {
+   "en": "Previous",
+   "hi": "पिछला"
+  },
+  {
+   "en": "Save to Photos & Videos",
+   "hi": "फोटो व वीडियो में सहेजें"
+  },
+  {
+   "en": "Remove from saved",
+   "hi": "सहेजा हुआ हटाएँ"
+  },
+  {
+   "en": "Saved to Photos & Videos",
+   "hi": "फोटो व वीडियो में सहेजा"
+  },
+  {
+   "en": "Removed from saved",
+   "hi": "सहेजा हुआ हटाया"
+  },
+  {
+   "en": "Log in to see saved items",
+   "hi": "सहेजी चीज़ें देखने के लिए लॉग इन करें"
+  },
+  {
+   "en": "No saved shops",
+   "hi": "कोई सहेजी दुकान नहीं"
+  },
+  {
+   "en": "No saved services",
+   "hi": "कोई सहेजी सेवा नहीं"
+  },
+  {
+   "en": "Tap the heart on any photo, video or reel to save it here.",
+   "hi": "किसी फोटो, वीडियो या रील का दिल दबाएँ, वह यहाँ सहेजा जाएगा।"
+  },
+  {
+   "en": "Graph view",
+   "hi": "ग्राफ़ व्यू"
+  },
+  {
+   "en": "Candle view",
+   "hi": "कैंडल व्यू"
+  },
+  {
+   "en": "Metric",
+   "hi": "मीट्रिक"
+  },
+  {
+   "en": "Date range",
+   "hi": "तारीख़ सीमा"
+  },
+  {
+   "en": "City",
+   "hi": "शहर"
+  },
+  {
+   "en": "All cities",
+   "hi": "सभी शहर"
+  },
+  {
+   "en": "Revenue",
+   "hi": "राजस्व"
+  },
+  {
+   "en": "Deliveries",
+   "hi": "डिलीवरी"
+  },
+  {
+   "en": "Last 7 days",
+   "hi": "पिछले 7 दिन"
+  },
+  {
+   "en": "Last 30 days",
+   "hi": "पिछले 30 दिन"
+  },
+  {
+   "en": "Last 90 days",
+   "hi": "पिछले 90 दिन"
+  },
+  {
+   "en": "Up",
+   "hi": "ऊपर"
+  },
+  {
+   "en": "Down",
+   "hi": "नीचे"
+  },
+  {
+   "en": "High",
+   "hi": "उच्च"
+  },
+  {
+   "en": "Low",
+   "hi": "निम्न"
+  },
+  {
+   "en": "Legend",
+   "hi": "संकेत"
+  },
+  {
+   "en": "Search name, phone or email",
+   "hi": "नाम, फ़ोन या ईमेल खोजें"
+  },
+  {
+   "en": "Role",
+   "hi": "भूमिका"
+  },
+  {
+   "en": "Activate",
+   "hi": "चालू करें"
+  },
+  {
+   "en": "Deactivate",
+   "hi": "बंद करें"
+  },
+  {
+   "en": "Confirm deactivate",
+   "hi": "बंद करना पक्का करें"
+  },
+  {
+   "en": "Confirm activate",
+   "hi": "चालू करना पक्का करें"
+  },
+  {
+   "en": "Last active",
+   "hi": "आख़िरी बार सक्रिय"
+  },
+  {
+   "en": "Assigned cities & zones",
+   "hi": "सौंपे गए शहर व ज़ोन"
+  },
+  {
+   "en": "Permissions summary",
+   "hi": "अनुमतियों का सार"
+  },
+  {
+   "en": "Edit areas",
+   "hi": "इलाके बदलें"
+  },
+  {
+   "en": "Permissions",
+   "hi": "अनुमतियाँ"
+  },
+  {
+   "en": "No admins match",
+   "hi": "कोई एडमिन नहीं मिला"
+  },
+  {
+   "en": "Edit role",
+   "hi": "भूमिका बदलें"
+  },
+  {
+   "en": "Unsaved changes",
+   "hi": "बिना सहेजे बदलाव"
+  },
+  {
+   "en": "Review & save",
+   "hi": "देखें व सहेजें"
+  },
+  {
+   "en": "Review changes",
+   "hi": "बदलाव देखें"
+  },
+  {
+   "en": "Before",
+   "hi": "पहले"
+  },
+  {
+   "en": "After",
+   "hi": "बाद में"
+  },
+  {
+   "en": "Confirm & save",
+   "hi": "पक्का करें व सहेजें"
+  },
+  {
+   "en": "Duplicate",
+   "hi": "नक़ल बनाएँ"
+  },
+  {
+   "en": "New role",
+   "hi": "नई भूमिका"
+  },
+  {
+   "en": "System role",
+   "hi": "सिस्टम भूमिका"
+  },
+  {
+   "en": "System roles cannot be deleted",
+   "hi": "सिस्टम भूमिकाएँ हटाई नहीं जा सकतीं"
+  },
+  {
+   "en": "Delete role",
+   "hi": "भूमिका हटाएँ"
+  },
+  {
+   "en": "Reassign & delete role",
+   "hi": "दोबारा सौंपें व भूमिका हटाएँ"
+  },
+  {
+   "en": "Add new city",
+   "hi": "नया शहर जोड़ें"
+  },
+  {
+   "en": "Open city",
+   "hi": "शहर खोलें"
+  },
+  {
+   "en": "Enable",
+   "hi": "चालू करें"
+  },
+  {
+   "en": "Disable",
+   "hi": "बंद करें"
+  },
+  {
+   "en": "Enabled",
+   "hi": "चालू"
+  },
+  {
+   "en": "Disabled",
+   "hi": "बंद"
+  },
+  {
+   "en": "Service area & delivery zones",
+   "hi": "सेवा क्षेत्र व डिलीवरी ज़ोन"
+  },
+  {
+   "en": "Draw new zone",
+   "hi": "नया ज़ोन बनाएँ"
+  },
+  {
+   "en": "Finish zone",
+   "hi": "ज़ोन पूरा करें"
+  },
+  {
+   "en": "Undo point",
+   "hi": "बिंदु वापस"
+  },
+  {
+   "en": "Zones",
+   "hi": "ज़ोन"
+  },
+  {
+   "en": "No zones yet, draw your first zone",
+   "hi": "अभी कोई ज़ोन नहीं, पहला ज़ोन बनाएँ"
+  },
+  {
+   "en": "Draw your first zone",
+   "hi": "पहला ज़ोन बनाएँ"
+  },
+  {
+   "en": "Edit shape",
+   "hi": "आकार बदलें"
+  },
+  {
+   "en": "Name & fees",
+   "hi": "नाम व शुल्क"
+  },
+  {
+   "en": "Save zone",
+   "hi": "ज़ोन सहेजें"
+  },
+  {
+   "en": "Delete zone",
+   "hi": "ज़ोन हटाएँ"
+  },
+  {
+   "en": "Active deliveries",
+   "hi": "चालू डिलीवरी"
+  },
+  {
+   "en": "Search cities",
+   "hi": "शहर खोजें"
+  },
+  {
+   "en": "Review before sending",
+   "hi": "भेजने से पहले देखें"
+  },
+  {
+   "en": "Confirm & send",
+   "hi": "पक्का करें व भेजें"
+  },
+  {
+   "en": "Scope",
+   "hi": "दायरा"
+  },
+  {
+   "en": "Overall",
+   "hi": "कुल मिलाकर"
+  },
+  {
+   "en": "Overall (all cities)",
+   "hi": "कुल (सभी शहर)"
+  },
+  {
+   "en": "City-wise",
+   "hi": "शहर के अनुसार"
+  },
+  {
+   "en": "Zone-wise",
+   "hi": "ज़ोन के अनुसार"
+  },
+  {
+   "en": "Send to customers of",
+   "hi": "इनके ग्राहकों को भेजें"
+  },
+  {
+   "en": "Recipients",
+   "hi": "प्राप्तकर्ता"
+  },
+  {
+   "en": "Search customers, shops or service providers",
+   "hi": "ग्राहक, दुकान या सेवा प्रदाता खोजें"
+  },
+  {
+   "en": "Recent",
+   "hi": "हाल के"
+  },
+  {
+   "en": "Service providers",
+   "hi": "सेवा प्रदाता"
+  },
+  {
+   "en": "No results",
+   "hi": "कोई परिणाम नहीं"
+  },
+  {
+   "en": "Super Admin only",
+   "hi": "सिर्फ़ सुपर एडमिन"
+  },
+  {
+   "en": "Main categories are a fixed, standard list. Only you (Super Admin) can add, rename, reorder or deactivate them. Vendors and providers can only suggest subcategories.",
+   "hi": "मुख्य श्रेणियाँ तय और मानक सूची हैं। इन्हें सिर्फ़ आप (सुपर एडमिन) जोड़, बदल या बंद कर सकते हैं। वेंडर और प्रदाता सिर्फ़ उप-श्रेणी सुझा सकते हैं।"
+  },
+  {
+   "en": "Only Super Admin can change main categories",
+   "hi": "मुख्य श्रेणियाँ सिर्फ़ सुपर एडमिन बदल सकता है"
+  },
+  {
+   "en": "Fixed",
+   "hi": "तय"
+  },
+  {
+   "en": "Subcategories",
+   "hi": "उप-श्रेणियाँ"
+  },
+  {
+   "en": "Breadcrumb",
+   "hi": "ब्रेडक्रम्ब"
+  },
+  {
+   "en": "Send enquiry ",
+   "hi": "पूछताछ भेजें"
+  },
+  {
+   "en": "Nothing listed yet",
+   "hi": "अभी कुछ सूचीबद्ध नहीं"
+  },
+  {
+   "en": "Products and services will appear here.",
+   "hi": "प्रोडक्ट और सेवाएँ यहाँ दिखेंगी।"
+  },
+  {
+   "en": "You are viewing your own profile",
+   "hi": "आप अपनी प्रोफ़ाइल देख रहे हैं"
+  },
+  {
+   "en": "Not loading? Some networks block embeds.",
+   "hi": "नहीं चल रहा? कुछ नेटवर्क एम्बेड रोकते हैं।"
+  },
+  {
+   "en": "You are offline. Use the button below to open it.",
+   "hi": "आप ऑफ़लाइन हैं। नीचे के बटन से खोलें।"
+  },
+  {
+   "en": "Category & subcategory",
+   "hi": "श्रेणी व उप-श्रेणी"
+  },
+  {
+   "en": "Select all",
+   "hi": "सभी चुनें"
+  },
+  {
+   "en": "Clear",
+   "hi": "हटाएँ"
+  },
+  {
+   "en": "Search subcategories",
+   "hi": "उप-श्रेणी खोजें"
+  },
+  {
+   "en": "Pick a category above to see its subcategories.",
+   "hi": "उप-श्रेणियाँ देखने के लिए ऊपर श्रेणी चुनें।"
+  },
+  {
+   "en": "No match",
+   "hi": "कोई मेल नहीं"
+  },
+  {
+   "en": "Explore Services",
+   "hi": "सेवाएँ खोजें"
+  },
+  {
+   "en": "services",
+   "hi": "सेवाएँ"
+  },
+  {
+   "en": "No services match",
+   "hi": "कोई सेवा नहीं मिली"
+  },
+  {
+   "en": "Try removing a subcategory.",
+   "hi": "कोई उप-श्रेणी हटाकर देखें।"
+  },
+  {
+   "en": "Pick every subcategory you work in. Customers can filter by them.",
+   "hi": "जिन उप-श्रेणियों में आप काम करते हैं सब चुनें। ग्राहक इन्हीं से छाँट सकेंगे।"
+  },
+  {
+   "en": "Preview filter",
+   "hi": "फ़िल्टर पूर्वावलोकन"
+  },
+  {
+   "en": "Filter preview",
+   "hi": "फ़िल्टर पूर्वावलोकन"
+  },
+  {
+   "en": "services would match",
+   "hi": "सेवाएँ मेल खाएँगी"
+  },
+  {
+   "en": "This is exactly what customers see in Explore ▸ Services ▸ Filters.",
+   "hi": "ग्राहक खोजें ▸ सेवाएँ ▸ फ़िल्टर में ठीक यही देखते हैं।"
+  },
+  {
+   "en": "Loading",
+   "hi": "लोड हो रहा है"
+  }
+ ]
+}

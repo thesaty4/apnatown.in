@@ -5,8 +5,8 @@ description: "Recipe for implementing or extending the order state machine: per-
 
 # Order state machine
 
-Covers CK2, OR2 (`domain-commerce.instructions.md`, invariants 3-4 in
-`docs/PROJECT.md`).
+Covers CK2, OR2 (`domain-commerce.instructions.md`, BR-03/BR-04 in
+`docs/project/04-business-rules.md`).
 
 ## Steps
 

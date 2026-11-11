@@ -9,8 +9,8 @@
 ## 1. Summary
 
 One paragraph: what this endpoint/service does and why, referencing the
-relevant `docs/FEATURE_INVENTORY.md` row and any product invariant
-(`docs/PROJECT.md`) it must preserve.
+relevant `docs/FEATURE_INVENTORY.md` row and any business rule
+(`docs/project/04-business-rules.md`) it must preserve.
 
 ## 2. API contract
 
@@ -26,8 +26,8 @@ relevant `docs/FEATURE_INVENTORY.md` row and any product invariant
 
 If this feature touches a status model (order, delivery job, approval,
 payment, refund, review, offer, video, enquiry, subcategory suggestion,
-comment, campaign — `docs/PROJECT.md`), state the exact states and
-allowed transitions here.
+comment, campaign — `docs/project/05-domain-model.md`), state the exact
+states and allowed transitions here.
 
 ## 4. Acceptance criteria (Given/When/Then)
 
@@ -64,5 +64,6 @@ drives in the response.
 
 ## 9. Open questions
 
-Anything ambiguous — record here and in `docs/PROJECT.md` "Open
-questions" instead of guessing.
+Anything ambiguous — record here and in
+`docs/project/12-decisions-assumptions-open-questions.md` instead of
+guessing.

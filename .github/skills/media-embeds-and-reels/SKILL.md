@@ -17,8 +17,8 @@ Covers RL1-RL10, PF9-PF10 (`domain-media-engagement.instructions.md`).
    source; provide an "Open in YouTube/Instagram" fallback link for
    unsupported/invalid links.
 3. Default new media to `pending`; only `approved` media is public
-   (invariant 9); respect the per-upload media-consent flag before
-   including it in the public Gallery/Reels (invariant 15,
+   (BR-10); respect the per-upload media-consent flag before
+   including it in the public Gallery/Reels (BR-16,
    `domain-media-engagement.instructions.md`).
 4. Build the reels feed ranking once per session and freeze it; a
    `/videos/:id` deep link resolves against that frozen list (or seeds

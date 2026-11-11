@@ -5,10 +5,10 @@ applyTo: "apps/api/src/modules/{cart-checkout,orders,payments,offers}/**,apps/we
 # Domain: Commerce (cart, checkout, orders, payments, offers)
 
 Builds on `backend.instructions.md`/`frontend.instructions.md`.
-Invariants: `docs/PROJECT.md` (1-4, 9, 16). Journeys J1, J3, J7, J8:
-`docs/PROJECT.md`.
+Rules: `docs/project/04-business-rules.md` (BR-01, BR-02, BR-03, BR-04,
+BR-10, BR-17). Journeys J1, J3, J7, J8: `docs/project/06-user-journeys.md`.
 
-## Per-shop order split (CK2, invariant 3)
+## Per-shop order split (CK2, BR-03)
 
 - One checkout creates **one order per shop**; each has its own status,
   mode (delivery/pickup), payment record, and OTP/pickup code.
@@ -34,9 +34,9 @@ Invariants: `docs/PROJECT.md` (1-4, 9, 16). Journeys J1, J3, J7, J8:
   open/closed); invalid transitions throw `InvalidTransitionError`
   (`backend.instructions.md`).
 - Stock is decremented only on order creation and restored on
-  cancellation before fulfilment; never oversell (invariant 4).
+  cancellation before fulfilment; never oversell (BR-04).
 
-## Refund / cancel / dispute (OR6, OR8, invariant 3)
+## Refund / cancel / dispute (OR6, OR8, BR-03)
 
 - Refund tracker: `requested -> approved -> completed`, independent
   from (but linked to) the order status.
@@ -56,7 +56,7 @@ Invariants: `docs/PROJECT.md` (1-4, 9, 16). Journeys J1, J3, J7, J8:
 - COD/pay-at-pickup orders start payment status `pending`, moving to
   `collected` on handover confirmation, not `paid` at order creation.
 
-## Offer states (OF3, OF5, invariant 16)
+## Offer states (OF3, OF5, BR-17)
 
 - Offer lifecycle: `pending -> active -> paused -> ended`, with admin
   approval required to leave `pending`.

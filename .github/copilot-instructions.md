@@ -1,86 +1,13 @@
-# Copilot instructions — ApnaTown.in
+# Repository instructions for GitHub Copilot - ApnaTown.in
 
-Read `AGENTS.md` first for the full read order, lifecycle and agent
-roster. This file holds only the top-priority, repo-wide rules.
+ApnaTown.in is a hyperlocal marketplace (shops, products, services, riders, reels) launching in Padrauna, Kushinagar, India. **Before any task read `docs/design-context/` (the Design Context Pack) and, for generated specs, `docs/specs/`.** The full standing requirements are in `docs/prompts/STANDING_REQUIREMENTS.md`; the summary below is binding.
 
-## How to work
-
-1. **Plan before coding.** Find or write the spec in
-   `specs/<module>/{be,fe}/` (see `docs/FEATURE_INVENTORY.md`); don't
-   invent product behaviour — ambiguity goes to `docs/PROJECT.md` "Open
-   questions", not a guess.
-2. **Reuse before building.** Check `packages/ui`
-   (`docs/design-system.md`), `packages/shared`, and existing
-   repositories/services in `docs/architecture.md` before adding new
-   ones.
-3. **Small PRs.** One feature/task/bug per PR, linked to its spec.
-4. **Report honestly.** State what you verified (tests run, commands
-   executed) vs. what you assumed.
-
-## SOLID / DRY / KISS
-
-- **SOLID:** one responsibility per service/handler; depend on
-  repository/integration **interfaces**, not concrete implementations;
-  extend via new strategies (e.g. a new payment method), don't branch
-  on type checks. Detail: `solid-dry-design.instructions.md`.
-- **DRY:** state a rule or schema once (`packages/shared` for
-  types/enums, this file set for process rules); link, don't paste.
-- **KISS/YAGNI:** build only what the current spec needs.
-
-## Security non-negotiables
-
-- Parameterized queries only; sort/filter fields are allow-listed, never
-  passed through raw.
-- Server-side validation with an explicit field allow-list on every
-  input (DTOs); never mass-assign a request body to an entity.
-- Authorize every request on **role + ownership + scope** (admins are
-  scoped to assigned cities/areas and module permissions).
-- No secrets or PII in logs, commits, or test fixtures.
-- Embeds, uploads, CSV import/export and webhooks follow
-  `security.instructions.md` (allow-listed hosts, content-based
-  validation, signature verification, idempotency).
-- Full detail: `security.instructions.md` and
-  `docs/security/security-guidelines.md`.
-
-## India and product rules
-
-- Money is integer paise; server computes all totals; display as INR
-  with Indian grouping (`₹1,25,000`).
-- Store UTC, display IST 12-hour.
-- Full bilingual parity (English + Hindi/Devanagari); status is never
-  colour-only.
-- Location is always optional; WhatsApp/marketing needs recorded
-  consent.
-- All 17 invariants: `docs/PROJECT.md` section "Business rules" — these
-  are reviewed on every PR.
-
-## Testing and Definition of Done
-
-- See `testing.instructions.md` for the test pyramid and required
-  negative/security/money/concurrency cases.
-- A change is done only when: spec acceptance criteria pass, product
-  invariants hold, tests exist and pass, docs/specs are updated, and
-  `node scripts/validate-ai-setup.mjs` passes if `.github/`/`docs/`
-  changed.
-
-## Git, PR and merge rule
-
-- Work on a feature branch; open a PR using
-  `.github/pull_request_template.md`.
-- **Humans merge. Agents never merge, force-push `main`, or delete
-  branches other than their own.**
-- `security-auditor` review is required before `pr-creator` for changes
-  touching `auth`, `payments`, uploads/CSV, embeds, admin permissions,
-  or `communications`.
-
-## Memory
-
-Record durable lessons in `docs/ai/LESSONS_LEARNED.md`; read it before
-non-trivial work in a module it covers.
-
-## Everything else
-
-Path-specific rules live in `.github/instructions/*.instructions.md`
-(matched by `applyTo`) — frontend, backend, security, i18n/a11y, each
-domain, testing, specs/docs, integrations, database. Read the ones that
-match the files you're changing before editing them.
+1. **Complete coverage:** every feature (F-ID), screen (S-ID), flow, state and rule from the pack must be covered and traceable to screens, components, APIs, tables and tests. No "etc.".
+2. **UI/behaviour parity:** match the prototype exactly (colours, type, spacing, radius, shadows, icons, EN+HI copy, states) using `04-design-tokens.json` through the Tailwind theme. Never invent styles or behaviour; log conflicts in `11-open-issues-and-assumptions.md`.
+3. **Stack:** Next.js (App Router, TS) + Tailwind; NestJS (TS); PostgreSQL. Choose and justify (2-3 lines, alternative, when to switch) the rest.
+4. **System design per feature:** state machines, outbox, queues, idempotency keys, PostGIS, keyset pagination, denormalised counters, cache invalidation; give a sequence for each critical flow.
+5. **Frontend:** shared components for anything reused; DRY; SOLID; Server Components by default; explicit rendering strategy per route; readable URLs, metadata, JSON-LD, canonical/robots, sitemaps, CWV budgets; feature-based folders; URL state for filters; no business logic in UI.
+6. **Backend:** shared layer for anything reused; modular monolith, controller -> service -> repository, domain events, adapters for third parties; DRY and SOLID; authorisation (role + ownership + city/area scope + module permission) on every endpoint; money in integer paise; stable error codes; OpenAPI from DTOs; idempotency; rate limiting; audit log; parameterised queries only.
+7. **Output:** Markdown with TOC, consistent IDs, tables, code blocks, Mermaid diagrams. Long output: continue in numbered parts, never summarise.
+8. **Never invent requirements;** record Open Issues with the assumption used.
+9. **Quality:** OWASP/DPDP aligned, WCAG 2.2 AA, English + Hindi strings, INR paise, UTC storage / IST display, paginated lists, server-side state machines, tests for every change, humans review and merge.

@@ -61,11 +61,12 @@ screen.
 ## 9. Test plan
 
 - Component tests: <list>
-- Playwright journey(s): <reference J-number from docs/PROJECT.md if
-  applicable>
+- Playwright journey(s): <reference J-number from
+  `docs/project/06-user-journeys.md` if applicable>
 - Screenshots required: 360px + desktop, light + dark, EN + HI.
 
 ## 10. Open questions
 
-Anything ambiguous — record here and in `docs/PROJECT.md` "Open
-questions" instead of guessing.
+Anything ambiguous — record here and in
+`docs/project/12-decisions-assumptions-open-questions.md` instead of
+guessing.

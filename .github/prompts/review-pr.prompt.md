@@ -7,9 +7,9 @@ Review the pull request described below using
 
 1. Read the linked spec(s) in `specs/<module>/` and confirm every
    acceptance criterion is met.
-2. Check the product invariants in `docs/PROJECT.md` relevant to the
-   touched module(s) (`docs/ai/COVERAGE_MATRIX.md` maps invariants to
-   modules).
+2. Check the business rules in `docs/project/04-business-rules.md`
+   relevant to the touched module(s) (`docs/ai/COVERAGE_MATRIX.md`
+   maps invariants to modules).
 3. Check `solid-dry-design.instructions.md` and the relevant
    `frontend`/`backend`/`domain-*` instruction files.
 4. Re-run the tests; don't trust the PR description alone.
