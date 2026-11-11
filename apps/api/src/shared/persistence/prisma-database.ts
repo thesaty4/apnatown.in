@@ -102,6 +102,11 @@ export class PrismaDatabase {
     }
   }
 
+  queryRaw<T>(query: Prisma.Sql): Promise<T> {
+    if (this.closed) throw new Error('DATABASE_CLOSED');
+    return this.clientInstance.$queryRaw<T>(query);
+  }
+
   /** Resolve only live handles created by this instance; never fall back to root. */
   client(tx: TxContext): Prisma.TransactionClient {
     if (this.closed) throw new Error('DATABASE_CLOSED');

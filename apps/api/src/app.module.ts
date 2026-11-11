@@ -6,6 +6,7 @@ import { ErrorFilter } from './shared/errors/exception-filter';
 import { HealthController } from './shared/health/health.controller';
 import { ProbeOnlyGuard } from './shared/health/probe-only.guard';
 import { RuntimeModule } from './shared/health/runtime.module';
+import { RateLimitGuard } from './shared/rate-limit/rate-limit';
 
 @Module({})
 export class AppModule {
@@ -18,6 +19,7 @@ export class AppModule {
         { provide: APP_PIPE, useClass: ZodValidationPipe },
         { provide: APP_FILTER, useClass: ErrorFilter },
         { provide: APP_GUARD, useClass: ProbeOnlyGuard },
+        { provide: APP_GUARD, useClass: RateLimitGuard },
       ],
     };
   }

@@ -57,6 +57,15 @@ open on first unit-of-work use and close on module shutdown, keeping process
 probes reachable when the database is unavailable. Foreign, expired and
 timed-out handles never fall back to a root client. Appending does not enqueue:
 the relay and consumer registrations remain deferred.
+The shared `RateLimit` metadata/guard uses one atomic PostgreSQL upsert per
+declared window, DB time, a purpose-separated HMAC of either the trusted
+request IP or the authenticated principal ID, and fails closed with 503 on
+storage failure. It is registered after session/probe enforcement and has no
+invented route limits; Auth/feature owners must declare their reviewed policies.
+Policies are strict: stable key, 1..100000 hits, 1..86400 seconds, and an
+explicit `ip` or server-populated `principal` subject. Fixed epoch-aligned
+windows saturate at limit+1 and return 429 with rounded-up `Retry-After`;
+only the socket IP is trusted until a proxy policy is explicitly configured.
 Signed adjustments still require their owning DTO's explicit permission.
 These primitives do not imply that command idempotency, live authorization or
 the Catalog reference below are implemented. Automated test tooling remains

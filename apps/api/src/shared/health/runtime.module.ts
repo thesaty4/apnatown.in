@@ -11,6 +11,10 @@ import { PrismaDatabase } from '../persistence/prisma-database';
 import { PrismaUnitOfWork } from '../persistence/unit-of-work';
 import { UNIT_OF_WORK } from '../persistence/ports';
 import { PrismaOutboxWriter } from '../persistence/outbox-writer';
+import {
+  RATE_LIMIT_REPOSITORY,
+  PostgresRateLimitRepository,
+} from '../rate-limit/repository';
 
 @Module({})
 export class RuntimeModule {
@@ -47,6 +51,10 @@ export class RuntimeModule {
           inject: [PrismaDatabase],
         },
         {
+          provide: RATE_LIMIT_REPOSITORY,
+          useClass: PostgresRateLimitRepository,
+        },
+        {
           provide: READINESS_REPOSITORY,
           useFactory: () => new PostgresReadinessRepository(config),
         },
@@ -63,6 +71,7 @@ export class RuntimeModule {
         UNIT_OF_WORK,
         OUTBOX_WRITER,
         PrismaDatabase,
+        RATE_LIMIT_REPOSITORY,
       ],
     };
   }
