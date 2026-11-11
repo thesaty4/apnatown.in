@@ -4,6 +4,7 @@
 
 - [Application structure and dependency rules](#application-structure-and-dependency-rules)
 - [Shared layer](#shared-layer)
+- [Opaque-token helper](#opaque-token-helper)
 - [Error contract](#error-contract)
 - [Catalog reference slice](#catalog-reference-slice)
 
@@ -104,7 +105,7 @@ for those deferred runtime contracts.
 | CSV/slug/UUID pipes | CSV size/row/type validation and formula-safe export; normalize/validate slugs; reject malformed UUIDs before use-cases. |
 | `Money` | Exact integer-paise arithmetic; checked JSON-number serialization per [wire primitives](./data-model.md#json-and-concurrency-representations), never raw BigInt/string coercion. |
 | Clock + ID providers | Inject `Clock.now(): Date` and `IdProvider.uuidv7(): string` (`CLOCK`/`ID_PROVIDER`); tests use deterministic fakes, production uses real time/entropy. |
-| Opaque-token helper | Auth/Users reuse a reviewed CSPRNG token/hash/constant-time verification helper, not custom cryptography. Plaintext is returned only to the authorized flow; owning tables hold scoped hash/expiry. No tokens in logs or idempotency JSON. |
+| Opaque-token helper | `OPAQUE_TOKENS` is exported by `RuntimePrimitivesModule` for Auth/Users. Standard Node cryptography generates, hashes and compares high-entropy credentials; the owning flows enforce authorization/expiry. No tokens in logs or idempotency JSON. |
 | Pagination | Opaque keyset cursor with stable tie-breaker; default limit and hard cap 50; no offset for feeds/queues. |
 | Base repository + unit of work | Shared transaction/pagination primitives only; [opaque transaction contracts](./data-model.md#shared-runtime-persistence) keep Prisma in infrastructure, not use-cases. |
 | `@Roles`, `@Capability`, `@Permission(module, action)`, `@Scoped` | Metadata only; protected handlers declare roles or a named owner-issued application capability plus applicable permission/scope. Guards resolve capabilities server-side; never accept a client list. |
@@ -117,6 +118,36 @@ for those deferred runtime contracts.
 | Settings/feature flags | Typed server-side reads; no client-supplied flag may authorize an action. |
 | OpenAPI | Generate from DTO/Zod schemas; version REST routes deliberately and publish stable error shapes. |
 | i18n message catalogue | `en` and `hi` message keys for user-visible API errors/templates; API returns key and safe parameters, clients render localized copy. |
+
+### Opaque-token helper
+
+`OpaqueTokens` supplies `issue(purpose) -> {token,hash}`,
+`hash(purpose,token)` for owner-repository lookup and
+`verify(purpose,token,expectedHash) -> boolean`. `SystemOpaqueTokens` uses
+Node's `randomBytes(32)` (256 bits), canonical unpadded base64url (43 characters),
+purpose-separated SHA-256 (32-byte stored hash), and `timingSafeEqual`.
+Supported purposes are `session` and `data-request-completion`; they are
+server-selected, never client-controlled. This high-entropy token helper is
+not an OTP/password hasher and does not replace `csrf-sync`.
+
+Malformed/non-canonical tokens throw the safe `InvalidOpaqueTokenError`; owner
+flows map it to their registered authentication/capability error without
+logging the submitted token. A validly encoded mismatch returns `false`.
+Invalid stored-hash length is a configuration/data error, not successful
+verification or an ordinary credential mismatch.
+Only the authorized issuing flow receives plaintext; store the hash in the
+owning session/request row. The owner checks row identity, ownership, scope,
+expiry and revocation and performs any rotation atomically. No expiry defaults,
+session endpoints or deletion-status authentication are implemented by this
+helper.
+
+- Given issuance, when a credential is generated, then it has exactly 32 random
+  bytes represented by 43 base64url characters, and only its 32-byte hash is
+  suitable for persistence.
+- Given the issued token and stored hash, when verification uses the same
+  purpose, then it succeeds; a changed token or purpose fails. Padding,
+  non-canonical encodings, wrong lengths and malformed stored hashes are
+  rejected explicitly.
 
 ### Error contract
 

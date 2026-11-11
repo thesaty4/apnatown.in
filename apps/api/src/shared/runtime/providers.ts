@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import { Inject, Injectable, Module } from '@nestjs/common';
+import { OPAQUE_TOKENS, SystemOpaqueTokens } from './opaque-token';
 
 export const CLOCK = Symbol('CLOCK');
 export const ID_PROVIDER = Symbol('ID_PROVIDER');
@@ -38,7 +39,8 @@ export class SystemIdProvider implements IdProvider {
   providers: [
     { provide: CLOCK, useClass: SystemClock },
     { provide: ID_PROVIDER, useClass: SystemIdProvider },
+    { provide: OPAQUE_TOKENS, useClass: SystemOpaqueTokens },
   ],
-  exports: [CLOCK, ID_PROVIDER],
+  exports: [CLOCK, ID_PROVIDER, OPAQUE_TOKENS],
 })
 export class RuntimePrimitivesModule {}
