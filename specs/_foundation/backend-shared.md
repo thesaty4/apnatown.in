@@ -83,11 +83,15 @@ explicit `ip` or server-populated `principal` subject. Fixed epoch-aligned
 windows saturate at limit+1 and return 429 with rounded-up `Retry-After`;
 only the socket IP is trusted until a proxy policy is explicitly configured.
 Signed adjustments still require their owning DTO's explicit permission.
-The shared `CommandUnitOfWork` claim/store core is implemented, but no HTTP
-operation is registered to use it yet; live authorization, request-context
-construction and module replay policies remain required before an endpoint can
-claim idempotency support. These primitives do not imply live authorization or
-the Catalog reference below is implemented. Automated test tooling remains
+The shared `CommandUnitOfWork` claim/store core and `COMMAND_CONTEXT_FACTORY`
+trusted HTTP context/hash builder are implemented, but no HTTP operation is
+registered to use them yet. The factory binds canonical requests to their
+method, resource, actor and resolved business using a dedicated server key;
+its contract is in [data-model](./data-model.md#shared-runtime-persistence).
+Live authorization, HTTP interceptor wiring and module replay policies remain
+required before an endpoint can claim idempotency support. These primitives do
+not imply live authorization or the Catalog reference below is implemented.
+Automated test tooling remains
 removed at the user's request; build/static checks are not acceptance evidence
 for those deferred runtime contracts.
 

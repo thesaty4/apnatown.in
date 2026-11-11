@@ -325,6 +325,39 @@ Only this foundation defines these tables; shared persistence repositories own t
 Consumers load the persisted envelope and claim `idempotency_keys` under `principal_key=consumer:<name>`, `operation=<handler>`, key=event ID; their local state change and receipt commit together. External calls use the owning adapter's idempotency/reconciliation contract and never hold a DB transaction open. No exactly-once promise: a timeout after an external side effect is reconciled, not blindly sent again. Use aggregate version/state guards for stale delivery; cross-consumer/global ordering is not assumed.
 
 **HTTP idempotency:** hash the canonical allow-listed payload plus method/resource/operation and **server-resolved business ID/kind** for owner operations, excluding volatile correlation/CSRF fields. A changed `X-Business-Kind` cannot replay a shop result into a provider context. Same principal/key/hash replays the original status/non-secret result; changed payload/context -> 409 `COMMON_CONFLICT` (or module code); concurrent in-progress work returns a bounded retry response with `Retry-After`, never executes a second domain command. Authorization failure cannot become successful replay. For external payment-like workflows, commit reservation/attempt first, release the transaction, call the provider, then finalize through the owning module's reconciliation state machine; never expire an ambiguous attempt and charge again.
+
+The implemented `COMMAND_CONTEXT_FACTORY` (`HttpCommandContextFactory.create`)
+takes a server-owned operation policy, a trusted binding and a key/validated
+business-payload projection. The operation declares a stable name, mutation
+method (`POST`, `PUT`, `PATCH`, `DELETE`), success status and explicit
+`principal`/`business` scope. The binding contains the authenticated user UUID,
+correlation ID, canonical resolved resource path (not the raw URL/query),
+server-selected expiry and either a resolved business UUID/kind or explicit
+`null`. A business-scoped operation without its binding fails closed; the
+factory does not authenticate users or resolve ownership.
+
+- `Idempotency-Key` is one case-sensitive 1-128-character string using
+  ASCII letters, digits, `.`, `_`, `:`, `-`. Do not trim, lowercase or join
+  duplicate header values. Missing, malformed or array-valued keys fail
+  `COMMON_VALIDATION_FAILED`; UUID keys are supported.
+- The key hash remains stable when the payload/resource/business changes so
+  the existing principal/operation/key identity produces a conflict rather
+  than another command. The request hash covers operation, method, resource,
+  actor, resolved business and bounded `canonicalJson` payload. Object key
+  ordering is immaterial; array ordering is significant. Correlation and expiry
+  are excluded from the fingerprint. Cookies and CSRF headers never enter the
+  factory input or returned context.
+  Callers supply the owning DTO's validated business fields, never the whole
+  request or authentication-header object.
+- Both hashes are 32-byte HMAC-SHA256 values with separate versioned purpose
+  prefixes. Required API/worker-only `IDEMPOTENCY_HASH_KEY` is a dedicated
+  32-byte secret encoded as 64 lowercase hexadecimal characters, independent
+  of cursor signing. Local generation creates it once; it never goes to Web,
+  the offline build/export process, logs or database rows. Keep it stable
+  across restarts and replicas; rotation requires a coordinated replay-aware
+  migration covering retained keys and unresolved attempts, not automatic
+  regeneration or a cursor-key rotation.
+
 **Users deletion exception:** the confirming session alone receives a status-only `completionToken`; its hash/expiry is Users-owned in `data_requests`. The idempotency row stores only the non-secret request result/reference. An eligible authenticated retry may atomically rotate that capability via its result policy, replacing the hash and returning the new transient token **without another deletion job**; no generic bearer replay or post-revocation re-authentication. Status polling after session revocation discloses only Users' permitted terminal-status DTO, not PII/export data/privileged actions. Use the same reviewed opaque-token helper as Auth; exact lifetime and access gates belong to Users.
 The idempotency claim lease is validated `IDEMPOTENCY_LEASE_MS` configuration (10-300 seconds, default 30 seconds); it bounds recovery of a claim, not the operation's retry horizon. Each operation owns its server-selected record expiry and must cover its documented client/provider retry horizon; do not invent one shared production retention period. Cleanup removes only expired completed records or recoverable leases, not unresolved financial attempts. Bounded cleanup is a separate worker responsibility and is not yet implemented.
 
@@ -356,6 +389,8 @@ automated test harness was restored.
 
 ## Persistence acceptance
 
+- Given identical logical HTTP commands, when object property order, correlation ID or expiry changes, then the factory produces identical key/request hashes; changing payload, method, resource or resolved business changes the request hash without changing the key hash.
+- Given a business-scoped command without a resolved business or a malformed idempotency header, when context creation runs, then it fails before any unit of work and never substitutes an anonymous actor or a default business.
 - Given DB-only command success/failure, when outbox or required audit insert fails, then domain state, version and idempotent result all roll back; a successful command leaves queryable DB rows before a worker runs.
 - Given concurrent identical keys or two decisions on version N, when both write, then one commit occurs; the loser replays or receives the documented conflict, and no duplicate subcategory/outbox/audit row is created.
 - Given a deletion confirmation retry, when an eligible confirming session requests it, then only the capability hash rotates and one deletion job remains; when inspecting idempotency/audit/outbox JSON or logs, then no completion/bearer/OTP/CSRF plaintext exists, and a revoked session cannot obtain a fresh capability.

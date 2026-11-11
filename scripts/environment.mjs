@@ -12,6 +12,7 @@ const ownerKeys = {
     'DATABASE_URL',
     'WEB_ORIGIN',
     'CURSOR_SIGNING_KEY',
+    'IDEMPOTENCY_HASH_KEY',
     'PORT',
     'WORKER_PROBE_PORT',
     'LOG_LEVEL',
@@ -76,6 +77,11 @@ export function validateLocalEnvironment(values) {
   ) {
     throw new Error('Missing or inconsistent generated local credentials.');
   }
+  if (!/^[a-f0-9]{64}$/.test(values.IDEMPOTENCY_HASH_KEY ?? '')) {
+    throw new Error(
+      'Provision IDEMPOTENCY_HASH_KEY with 32 random bytes encoded as lowercase hex. Existing local configuration is never overwritten or automatically rotated.',
+    );
+  }
   for (const key of ['APP_BASE_URL', 'API_INTERNAL_ORIGIN', 'WEB_ORIGIN']) {
     let url;
     try {
@@ -127,6 +133,7 @@ export async function createLocalEnvironment(root, environment = process.env) {
     MIGRATION_DATABASE_URL: `postgresql://apnatown_migrator:${migrationPassword}@127.0.0.1:5432/apnatown_local`,
     SHADOW_DATABASE_URL: `postgresql://apnatown_migrator:${migrationPassword}@127.0.0.1:5432/apnatown_shadow`,
     CURSOR_SIGNING_KEY: randomBytes(32).toString('hex'),
+    IDEMPOTENCY_HASH_KEY: randomBytes(32).toString('hex'),
     SESSION_COOKIE_SECRET: randomBytes(32).toString('hex'),
     ANONYMOUS_SESSION_TTL_SECONDS: '900',
     SHUTDOWN_TIMEOUT_MS: '10000',

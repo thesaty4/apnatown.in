@@ -7,6 +7,7 @@ const schema = z.object({
   DATABASE_URL: z.string().url(),
   WEB_ORIGIN: z.string().url(),
   CURSOR_SIGNING_KEY: z.string().regex(/^[A-Za-z0-9_-]{43,128}$/),
+  IDEMPOTENCY_HASH_KEY: z.string().regex(/^[a-f0-9]{64}$/),
   PORT: integer(1, 65535, 3001),
   WORKER_PROBE_PORT: integer(1, 65535, 3002),
   LOG_LEVEL: z

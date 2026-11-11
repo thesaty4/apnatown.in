@@ -10,8 +10,8 @@ full product context.
 > **Status:** C00 scaffolds plus incremental C01/C02 shared backend/database
 > foundations: checked money, cursors, errors, correlation, event construction,
 > shared runtime migrations, transactional outbox writes, a bounded pg-boss
-> relay and an unregistered command-idempotency core. Domain features,
-> consumers, domain migrations/seeds and authentication still follow in the
+> relay and an unregistered command-idempotency core with trusted request
+> hashing. Domain features, consumers, domain migrations/seeds and authentication still follow in the
 > owning slices. This is not a production-ready
 > marketplace; see the [foundation contracts](specs/_foundation/architecture.md).
 
@@ -31,6 +31,13 @@ The launcher creates private local-only credentials without overwriting existing
 configuration. Web runs on `localhost:3000`, API on `localhost:3001`, and internal
 worker probes on `localhost:3002`. `db:down` stops the local database **without
 deleting its volume**. No Redis or real external providers are started.
+
+New local configuration generates `IDEMPOTENCY_HASH_KEY` once. Existing
+configuration is preserved: provision this required API/worker-only value
+with 32 cryptographically random bytes encoded as 64 lowercase hex characters
+before the next launch. Missing/invalid values fail explicitly; do not reuse
+the cursor key or regenerate it on startup. Retention/rotation rules are in
+the [idempotency contract](specs/_foundation/data-model.md#shared-runtime-persistence).
 
 `lint`, `typecheck`, `build` and `check:generated` validate the scaffold.
 Automated test suites and their tooling are currently removed; these checks

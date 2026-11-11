@@ -121,7 +121,7 @@ Pin exact direct dependency/devDependency versions, Node in `.node-version` and 
 
 | Owner | Configuration boundary |
 |---|---|
-| API + worker | `APP_ENV`, `DATABASE_URL`, `WEB_ORIGIN`, `CURSOR_SIGNING_KEY`, API `PORT`, `WORKER_PROBE_PORT`, `LOG_LEVEL` and bounded shutdown/job retry settings; Auth/PII key schemas belong to their server owners. Provider-specific keys are validated/read only by the chosen adapter. |
+| API + worker | `APP_ENV`, `DATABASE_URL`, `WEB_ORIGIN`, `CURSOR_SIGNING_KEY`, `IDEMPOTENCY_HASH_KEY`, API `PORT`, `WORKER_PROBE_PORT`, `LOG_LEVEL` and bounded shutdown/job retry settings; the durable idempotency-key lifecycle is defined in [data-model](./data-model.md#shared-runtime-persistence). Auth/PII key schemas belong to their server owners. Provider-specific keys are validated/read only by the chosen adapter. |
 | Migration/seed launcher | `MIGRATION_DATABASE_URL`, local/test `SHADOW_DATABASE_URL`, seed environment/database marker. Neither privileged URL is passed to API, worker or Web. |
 | Web server | `API_INTERNAL_ORIGIN` (trusted fixed API origin, local `http://localhost:3001`) and public site origin (local `http://localhost:3000`); locale/theme config. Server-only module access, never `NEXT_PUBLIC_` for these or any secret. Browser base path is the constant `/api`. |
 | Local/test adapters | Explicit fake-port selection, disposable test data and isolated DB identity. Production rejects fake adapters, missing required keys, unsafe cookie/proxy settings or unapproved required integration configuration; no silent fake fallback. |

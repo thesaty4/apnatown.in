@@ -11,6 +11,10 @@ import { PrismaDatabase } from '../persistence/prisma-database';
 import { PrismaUnitOfWork } from '../persistence/unit-of-work';
 import { COMMAND_UNIT_OF_WORK, UNIT_OF_WORK } from '../persistence/ports';
 import { PrismaCommandUnitOfWork } from '../persistence/command-unit-of-work';
+import {
+  COMMAND_CONTEXT_FACTORY,
+  HttpCommandContextFactory,
+} from '../idempotency/context';
 import { PrismaOutboxWriter } from '../persistence/outbox-writer';
 import { OutboxRelayStore } from '../persistence/outbox-relay-store';
 import {
@@ -33,6 +37,11 @@ export class RuntimeModule {
         {
           provide: CURSOR_CODEC,
           useFactory: () => new CursorCodec(config.CURSOR_SIGNING_KEY),
+        },
+        {
+          provide: COMMAND_CONTEXT_FACTORY,
+          useFactory: () =>
+            new HttpCommandContextFactory(config.IDEMPOTENCY_HASH_KEY),
         },
         { provide: EVENT_FACTORY, useClass: SystemEventFactory },
         {
@@ -76,6 +85,7 @@ export class RuntimeModule {
         CURSOR_CODEC,
         RUNTIME_LOGGER,
         EVENT_FACTORY,
+        COMMAND_CONTEXT_FACTORY,
         COMMAND_UNIT_OF_WORK,
         UNIT_OF_WORK,
         OUTBOX_WRITER,
