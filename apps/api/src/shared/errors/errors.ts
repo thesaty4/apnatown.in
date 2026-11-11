@@ -42,10 +42,18 @@ export class DomainError extends Error {
   constructor(
     readonly code: ErrorCode,
     readonly details: ErrorDetails = {},
+    readonly retryAfterSeconds?: number,
   ) {
     super(code);
     if (!Object.hasOwn(catalogue, code))
       throw new Error('UNREGISTERED_DOMAIN_ERROR');
+    if (
+      retryAfterSeconds !== undefined &&
+      (!Number.isInteger(retryAfterSeconds) ||
+        retryAfterSeconds < 1 ||
+        retryAfterSeconds > 60)
+    )
+      throw new Error('INVALID_RETRY_AFTER');
     this.name = 'DomainError';
   }
 }

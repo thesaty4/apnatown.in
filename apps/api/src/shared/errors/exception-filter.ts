@@ -21,11 +21,13 @@ export class ErrorFilter implements ExceptionFilter {
     const response = host.switchToHttp().getResponse<Response>();
     let code: ErrorCode = 'COMMON_INTERNAL_ERROR';
     let details: ErrorDetails = {};
+    let retryAfterSeconds: number | undefined;
     if (exception instanceof DomainError) {
       const parsed = ErrorDetailsSchema.safeParse(exception.details);
       if (parsed.success) {
         code = exception.code;
         details = parsed.data;
+        retryAfterSeconds = exception.retryAfterSeconds;
       }
     } else if (exception instanceof ZodValidationException) {
       code = 'COMMON_VALIDATION_FAILED';
@@ -68,6 +70,8 @@ export class ErrorFilter implements ExceptionFilter {
     else this.logger.warn(metadata);
     response.setHeader('X-Correlation-ID', id);
     response.setHeader('Cache-Control', 'no-store');
+    if (retryAfterSeconds !== undefined)
+      response.setHeader('Retry-After', retryAfterSeconds);
     response.status(body.status).json(body);
   }
 }

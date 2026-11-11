@@ -9,7 +9,8 @@ import { EVENT_FACTORY, SystemEventFactory } from '../events/event-factory';
 import { OUTBOX_WRITER } from '../events/ports';
 import { PrismaDatabase } from '../persistence/prisma-database';
 import { PrismaUnitOfWork } from '../persistence/unit-of-work';
-import { UNIT_OF_WORK } from '../persistence/ports';
+import { COMMAND_UNIT_OF_WORK, UNIT_OF_WORK } from '../persistence/ports';
+import { PrismaCommandUnitOfWork } from '../persistence/command-unit-of-work';
 import { PrismaOutboxWriter } from '../persistence/outbox-writer';
 import { OutboxRelayStore } from '../persistence/outbox-relay-store';
 import {
@@ -45,6 +46,11 @@ export class RuntimeModule {
             new PrismaUnitOfWork(database),
           inject: [PrismaDatabase],
         },
+        PrismaCommandUnitOfWork,
+        {
+          provide: COMMAND_UNIT_OF_WORK,
+          useExisting: PrismaCommandUnitOfWork,
+        },
         {
           provide: OUTBOX_WRITER,
           useFactory: (database: PrismaDatabase) =>
@@ -70,6 +76,7 @@ export class RuntimeModule {
         CURSOR_CODEC,
         RUNTIME_LOGGER,
         EVENT_FACTORY,
+        COMMAND_UNIT_OF_WORK,
         UNIT_OF_WORK,
         OUTBOX_WRITER,
         OutboxRelayStore,

@@ -83,8 +83,11 @@ explicit `ip` or server-populated `principal` subject. Fixed epoch-aligned
 windows saturate at limit+1 and return 429 with rounded-up `Retry-After`;
 only the socket IP is trusted until a proxy policy is explicitly configured.
 Signed adjustments still require their owning DTO's explicit permission.
-These primitives do not imply that command idempotency, live authorization or
-the Catalog reference below are implemented. Automated test tooling remains
+The shared `CommandUnitOfWork` claim/store core is implemented, but no HTTP
+operation is registered to use it yet; live authorization, request-context
+construction and module replay policies remain required before an endpoint can
+claim idempotency support. These primitives do not imply live authorization or
+the Catalog reference below is implemented. Automated test tooling remains
 removed at the user's request; build/static checks are not acceptance evidence
 for those deferred runtime contracts.
 
@@ -102,7 +105,7 @@ for those deferred runtime contracts.
 | Base repository + unit of work | Shared transaction/pagination primitives only; [opaque transaction contracts](./data-model.md#shared-runtime-persistence) keep Prisma in infrastructure, not use-cases. |
 | `@Roles`, `@Capability`, `@Permission(module, action)`, `@Scoped` | Metadata only; protected handlers declare roles or a named owner-issued application capability plus applicable permission/scope. Guards resolve capabilities server-side; never accept a client list. |
 | Guards + ownership policy | Verify live role/capability, module/action permission, city/area and ownership. Resolve `X-Business-Kind` against the user's businesses; it grants no privilege, and ambiguous dual ownership is `BUSINESS_CONTEXT_REQUIRED`. Super-admin scope is platform-wide only where specified. |
-| Idempotency interceptor | Validate key/hash and prepare `CommandContext`; application invokes `CommandUnitOfWork` with the endpoint's non-secret result policy. Reauthorize/rehydrate capabilities atomically on replay; never persist bearer/OTP/CSRF/completion plaintext or finish idempotency after the response. |
+| Idempotency interceptor | Not yet implemented. The shared transaction claim/store core is available as `COMMAND_UNIT_OF_WORK`; the future interceptor must validate key/hash and prepare server-owned `CommandContext`, and each operation must provide its explicit non-secret result/replay policy. Reauthorize/rehydrate capabilities atomically on replay; never persist bearer/OTP/CSRF/completion plaintext or finish idempotency after the response. |
 | Audit interceptor/context | Collect trusted actor/correlation/action metadata only. Application calls Audit-owned `record(tx, entry)` inside the state transaction; an after-response log is not the required audit. |
 | Rate-limit guard | Atomic PostgreSQL buckets defined in data-model; shared across API processes, no Redis; Auth attempt/cooldown policy remains authoritative. |
 | Outbox publisher + job runner | Application appends outbox in its transaction; a separate relay sends to pg-boss at least once. Consumers deduplicate/reconcile; repositories do not publish. |
