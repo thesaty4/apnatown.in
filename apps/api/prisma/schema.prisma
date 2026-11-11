@@ -82,6 +82,7 @@ model User {
   createdAt       DateTime   @map("created_at") @db.Timestamptz(6)
   updatedAt       DateTime   @map("updated_at") @db.Timestamptz(6)
   roles           UserRole[]
+  sessions        Session[]
 
   @@index([deletedAt], where: raw("\"deleted_at\" IS NULL"), map: "users_active_deleted_at_idx")
   @@map("users")
@@ -96,4 +97,38 @@ model UserRole {
   @@id([userId, role], map: "user_roles_pkey")
   @@index([role, userId], map: "user_roles_role_user_id_idx")
   @@map("user_roles")
+}
+
+model OtpChallenge {
+  id              String    @id @db.Uuid
+  phoneCiphertext String    @map("phone_ciphertext")
+  phoneLookupHash Bytes     @map("phone_lookup_hash")
+  codeHash        String    @map("code_hash")
+  attemptCount    Int       @default(0) @map("attempt_count")
+  expiresAt       DateTime  @map("expires_at") @db.Timestamptz(6)
+  resendAfter     DateTime  @map("resend_after") @db.Timestamptz(6)
+  verifiedAt      DateTime? @map("verified_at") @db.Timestamptz(6)
+  supersededAt    DateTime? @map("superseded_at") @db.Timestamptz(6)
+  createdAt       DateTime  @map("created_at") @db.Timestamptz(6)
+
+  @@index([phoneLookupHash, createdAt(sort: Desc)], map: "otp_challenges_phone_created_at_idx")
+  @@index([expiresAt], map: "otp_challenges_expires_at_idx")
+  @@map("otp_challenges")
+}
+
+model Session {
+  id         String    @id @db.Uuid
+  kind       String
+  userId     String?   @map("user_id") @db.Uuid
+  tokenHash  Bytes     @unique(map: "sessions_token_hash_key") @map("token_hash")
+  csrfToken  String    @map("csrf_token")
+  createdAt  DateTime  @map("created_at") @db.Timestamptz(6)
+  expiresAt  DateTime  @map("expires_at") @db.Timestamptz(6)
+  revokedAt  DateTime? @map("revoked_at") @db.Timestamptz(6)
+  lastSeenAt DateTime  @map("last_seen_at") @db.Timestamptz(6)
+  user       User?     @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "sessions_user_id_fkey")
+
+  @@index([userId, revokedAt, expiresAt], map: "sessions_user_revoked_expires_at_idx")
+  @@index([expiresAt], map: "sessions_expires_at_idx")
+  @@map("sessions")
 }

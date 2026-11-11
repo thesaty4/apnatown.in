@@ -17,6 +17,42 @@ Issue and verify login challenges, create and revoke server-side sessions, and e
 
 Phone uniqueness and challenge concurrency are enforced in the repository transaction; clear OTPs and bearer session-cookie values are never persisted. `csrf_token` is the synchronizer library's private server-side state, not a bearer login credential; never expose the session row, log this field or put it in audit/outbox/idempotency data.
 
+### Persistence implementation
+
+The Prisma `OtpChallenge`/`Session` models and additive
+[`20261111173739_auth_storage`](../../../apps/api/prisma/migrations/20261111173739_auth_storage/migration.sql)
+migration supply these tables after the Users identity migration. OTP challenges
+remain pre-account records without a user FK. Session ownership restricts user
+deletion/ID updates, never cascades or silently converts an authenticated row to
+anonymous. SQL enforces the kind/user pairing, non-negative attempt counts,
+expiry after creation, resend time not before creation and the shared opaque-token
+helper's 32-byte session digest. It does not impose a new TTL or attempt limit.
+
+The phone/creation B-tree supports latest-challenge/cooldown reads; expiry
+B-trees support future bounded Auth cleanup; the unique token digest index
+supports session resolution; and `(user_id,revoked_at,expires_at)` supports
+active-session reads/revocation. Each adds insert/update/storage cost for its
+query, not an index for every field. Plans and runtime-role behavior still need
+verification with representative non-PII data before rollout.
+
+The transaction-wrapped migration inserts no challenges, credentials or users.
+Runtime DML grants cover only these Auth tables. A failed migration requires
+inspection of its record/schema before resolution or retry; later repair is a
+new migration or approved restore, not an automatic destructive down migration.
+Client generation and schema validation are offline; no database application,
+constraint/grant execution or session/OTP flow has been verified.
+
+Encryption, code hashing, delivery, challenge concurrency/cooldown enforcement,
+cookie/CSRF middleware, live-principal checks, endpoints and Auth cleanup remain
+unimplemented. Hash/ciphertext column names do not implement those protections.
+
+- Given invalid kind/user pairing, a missing user, a wrong-length session digest
+  or duplicate digest, when a session is persisted, then its constraints reject it.
+- Given negative attempts or invalid creation/expiry/resend ordering, when a
+  challenge is persisted, then it is rejected; no implicit account is created.
+- Given this migration alone, when the application starts, then no login
+  endpoint, credential seed, session authentication or expiry-cleanup job is enabled.
+
 ## Endpoints
 
 | Method | Path | Auth / scope | Request → response | Errors | Idempotent | Features |
