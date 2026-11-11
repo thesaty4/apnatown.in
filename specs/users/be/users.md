@@ -20,6 +20,40 @@ Own user profiles, roles, saved addresses, account-level preferences, consent re
 
 Q-32 still gates approved retention, export expiry, deletion boundaries and re-registration policy, not the processing/status contract below. Anonymous consent identity/purpose granularity remains Q-31. Saved payment-method data is owned by [Payments](../../payments/be/payments.md) (Q-33); disabled/unconfigured methods return an explicit unavailable state.
 
+### Identity persistence implementation
+
+The Prisma `User`/`UserRole` models and additive
+[`20261111172454_users_identity`](../../../apps/api/prisma/migrations/20261111172454_users_identity/migration.sql)
+migration cover only `users` and `user_roles`, the identity prerequisites for
+Auth. No accounts or privileged memberships are seeded, and no endpoint, live
+principal lookup, encryption adapter or role-grant use-case is implemented yet.
+Addresses, consent and data-request persistence remain separate slices.
+
+SQL CHECK constraints enforce locale/theme/status/role values, positive version,
+optional 2-60-character display names and paired phone fields. Non-deleted rows
+require both phone fields; only a tombstone may hold both as NULL. This storage
+capability does not approve Q-32 erasure or re-registration. The nullable unique
+B-tree on `phone_lookup_hash` reserves every retained non-null identity, not only
+active accounts, while allowing multiple NULL tombstones. The partial B-tree on
+`deleted_at WHERE deleted_at IS NULL` serves live-identity filtering; the
+`user_roles(role,user_id)` B-tree serves role-first lookups, complementing the
+user-first composite primary key. These add write/storage cost on their indexed
+fields; representative query plans remain required before rollout.
+
+The membership FK restricts physical user deletion and ID updates. Runtime
+privileges are Users `SELECT/INSERT/UPDATE` (no hard delete), memberships
+`SELECT/INSERT/DELETE` (grant/revoke, not in-place identity rewriting).
+Owning application authorization/audit is still required; table privileges
+alone never authorize a role grant.
+
+The migration is transactional and forward-only, without data backfill. On
+failure, inspect the migration record and actual schema before resolving or
+retrying; never mark an unconfirmed migration applied. Once data exists,
+preserve it and repair through a new migration or an approved restore, not by
+dropping identity tables. SQL was generated offline then supplemented with
+CHECK constraints and grants. Database application, permission/constraint
+execution and runtime queries have not been verified; no database was started.
+
 ## Endpoints
 
 | Method | Path | Auth / scope | Request → response | Errors | Idempotent | Features |
@@ -105,6 +139,9 @@ Open question: Q-32 must also approve a verified request channel for suspended u
 8. Given a deletion has an unapproved retention policy or a blocked owner receipt, when processed, then it stays explicitly blocked and neither sessions nor financial records are silently destroyed.
 9. Given approved deletion processing completes, when sessions are revoked, then only the request-bound completion capability can confirm the terminal result, `/goodbye` becomes truthful, and a replay cannot expose personal data.
 10. Given a processing crash or expired export, when retried/downloaded, then receipts prevent duplicate erasure and expired/private artifacts cannot be fetched through another user's session.
+11. Given identity rows, when invalid locale/theme/status/role values, non-positive versions, invalid display-name lengths or an incomplete phone pair are written, then the database rejects them; a live identity cannot lose its phone fields.
+12. Given a retained phone hash or membership, when a duplicate is inserted, then its unique key rejects it; unrelated NULL tombstones remain possible, and a membership cannot reference a missing user.
+13. Given the runtime role, when physical user deletion or in-place membership rewriting is attempted, then database privileges deny it; adding the schema itself creates no users or role grants.
 
 ## Tests
 
