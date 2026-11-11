@@ -52,13 +52,14 @@ into the list below (one is now resolved).
 | Q-17 | SMS/OTP provider and its failover provider. | Open |
 | Q-18 | Hosting/infra target for CI runner (`copilot-setup-steps.yml`). | Open |
 | Q-19 | Dark-mode colour-token shades need an AA-contrast pass before launch (see [08-design-system.md](./08-design-system.md)). | Open |
-| Q-74 | Subscription plan and promotion purchase rules: billing period, renewals, proration, price changes, cancellation, activation and invoice/tax evidence. | Open |
+| Q-74 | Subscription/promotion purchase rules: plan periods/prices, renewal timing, proration, vendor cancellation, promotion activation/duration and invoice/tax evidence. | Partly resolved: provider cancellation ends at paid expiry with no refund; owner selections persist but are inactive after Premium expiry and reactivate after verified renewal. Expiry notices go to the owner, authorized area `promos:view` admins and super_admin. No automatic renewal. Plan configuration, renewal timing, vendor cancellation, promotion lifecycle and tax/legal invoice rules remain open. |
 | Q-75 | Vendor payout eligibility, calculation, schedule, status, failure/retry and dispute rules for earnings and next payout. | Open |
 | Q-76 | Full/partial refund amount and approval policy, fee/tax reversal, and interaction with ST-payment's no-partial-refund state. | Open |
 | Q-77 | Unavailable-item replacement/substitution approval, repricing, discount recalculation and refund behavior. | Open |
 | Q-78 | Customer/vendor/admin visibility, retention and redaction rules for dispute/case notes and evidence. | Open |
 | Q-79 | Refund eligibility/window start for pickup, cancelled and vendor-rejected orders. | Open |
 | Q-80 | File format, limits, retention and visibility for optional order-refund evidence photos. | Open |
+| Q-81 | Image formats, dimensions, limits and compression variants for category/subcategory images. | Open; uploads remain disabled until a Media `catalog_taxonomy` policy is configured. |
 
 ## 4. Resolved (for traceability — don't re-open without new evidence)
 

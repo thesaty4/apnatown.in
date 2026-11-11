@@ -97,9 +97,16 @@ erDiagram
     cities |o--o{ service_area_waitlist : receives
     areas |o--o{ businesses : locates
     users ||--o{ businesses : owns
+    businesses ||--o{ business_categories : categorized_as
+    categories ||--o{ business_categories : category_membership
 
     %% catalog and listings
     categories ||--o{ subcategories : groups
+    media_assets |o--o{ categories : category_image
+    media_assets |o--o{ subcategories : subcategory_image
+    categories |o--o{ catalog_home_sections : dedicated_section
+    catalog_home_sections ||--o{ catalog_home_section_categories : curated_pills
+    categories ||--o{ catalog_home_section_categories : selected_category
     categories ||--o{ category_relations : source
     categories ||--o{ category_relations : related_target
     keyword_mappings ||--o{ keyword_mapping_terms : matches
@@ -138,8 +145,15 @@ erDiagram
     users |o--o{ checkout_quotes : owns
     addresses |o--o{ checkout_quotes : pins_revision
     checkout_quotes ||--o{ checkout_attempts : confirms
+    checkout_attempts ||--o| master_checkout_summaries : summarizes
+    master_checkout_summaries ||--|{ master_checkout_summary_orders : links
+    orders ||--o| master_checkout_summary_orders : appears_in_summary
     businesses ||--o{ offers : publishes
     offers ||--o{ offer_targets : targets
+    coupons ||--o{ coupon_targets : targets
+    businesses |o--o{ coupons : owns_coupon
+    products |o--o{ coupon_targets : product_target
+    services |o--o{ coupon_targets : service_target
     businesses |o--o{ promotion_placements : promotes
     media_assets |o--o{ promotion_placements : banner
     cities |o--o{ promotion_placements : scopes
@@ -263,8 +277,20 @@ Nullable session/cart/consent owners represent explicit anonymous state, never a
 | Customer orders and business order queues | `(customer_user_id, placed_at DESC, id DESC)` and `(business_id, status, placed_at DESC, id DESC)`; add only indexes required by documented filters. |
 | Admin approval/moderation queues | `(status, created_at, id)` plus city/area scope columns used by the authorized query. |
 | Idempotency, rate limits and outbox | Unique principal/operation/key hash; expiry indexes for cleanup; outbox state/availability/lease indexes with stable ID ordering; atomic rate-limit bucket PK as below. |
+| Business category discovery | `business_categories(category_id,business_id)` serves category-to-business lookup; PK `(business_id,category_id)` prevents duplicate memberships; partial unique `(business_id) WHERE is_primary` enforces one primary. Category joins use `EXISTS` and distinct business counts; extra write/index cost is limited to the relationship table. |
+| Curated Home section reads | Partial `catalog_home_sections(position,id) WHERE active`, `catalog_home_section_categories(section_id,position,category_id)`, and reverse `(category_id,section_id)` support ordered sections, pills and invalidation. Inactive configuration is not included in the partial read index; the two relationship/order indexes add storage and update cost only when configuration changes. |
+| Featured-first product/service Explore | Partial `products(category_id,featured_selected DESC,created_at DESC,id DESC) WHERE published AND deleted_at IS NULL` and `services(category_id,featured_selected DESC,created_at DESC,id DESC) WHERE status='active' AND deleted_at IS NULL` support default candidate ordering; effective Premium/business visibility remains an owner projection and may require a join/sort. These indexes add listing write/storage cost; do not add plan state to listing rows or a broader index without plan verification. |
+| Bell-enabled follower fan-out | Partial `follows(business_id,user_id) WHERE unfollowed_at IS NULL AND bell_on` serves bounded recipient batches; the separate active-follow index serves counts/Following. The write cost is one relationship update and two partial indexes; keep fan-out keyset-bounded. |
+| Coupon eligibility/redemption lookup | Offers' unique normalized code and partial active-scope index serve code uniqueness and eligibility by scope/time; target indexes support business/product/service hydration. The uniqueness/partial indexes add coupon write cost; redemption remains gated until its rules are approved, so do not add reservation indexes early. |
+| Master checkout documents | Unique `master_checkout_summaries(checkout_attempt_id)` enforces one summary/checkout; `(customer_user_id,created_at DESC,id DESC)` serves customer history; `master_checkout_summary_orders(summary_id,order_id)` and unique `order_id` serve reconciliation and prevent cross-summary duplicate links. Summary writes pay the extra history/link index cost once per checkout; do not index snapshot JSON fields. |
 
 Index definitions are finalized with owning module specs and migrations; avoid speculative indexes and verify them with query plans before rollout.
+
+## Query-plan verification
+
+For each hot-query index above and each new module-spec index, record the owning table, exact ordered columns, partial predicate/index type, parameterized query served and expected write/storage trade-off in that module's spec. Before rollout, run `EXPLAIN (ANALYZE, BUFFERS)` against representative non-PII data with realistic category/business skew, geographic density, follower counts and page sizes; record the plan, actual rows/loops and buffer reads, but do not claim a threshold or result that was not measured. Check that filters and eligibility run before counts/keyset limits, no query fetches an unbounded page, and no repeated per-card lookup creates N+1 behavior. A sequential scan is acceptable for small tables when measured and documented.
+
+Index migrations are forward-only and reviewed with the owning module. For large live tables, prefer a concurrently built index when the migration runner supports it; account for uniqueness validation, write amplification, storage and lock/recovery behavior. Verify the resulting plan after the index exists; do not add indexes solely because a field is filterable.
 
 ## Shared runtime persistence
 

@@ -19,15 +19,18 @@ Standard default, skeleton, empty, error+retry, offline and no-permission behavi
 ### S-CUST-01 — Home
 
 - Screenshots: `d-customer-home.jpg`, `m-customer-home.jpg`.
-- Layout: sticky header with location, SearchBar, notification/cart badges and Videos link; responsive hero carousel; category tiles; offer, nearby-shop, featured/popular business/product/provider and promotion sections; recently viewed and saved shortcut. Desktop includes the specified footer; mobile uses the customer navigation.
-- Data: `GET /search/home` composes Offers-owned banners/placements and owner public cards; `GET /search/popular`, Catalog categories, Settings legal content, Geo and Engagement supply their own data. Recently viewed uses device-local state. Fetch location-specific discovery with `no-store`; cache only location-free sections. Header badges/footer links remain with their owners. Unavailable Q-57 popularity data is not a fabricated zero or sample ranking.
+- Layout: sticky header with location, SearchBar, notification/cart badges and Videos link; responsive hero carousel; category tiles; dedicated category sections; curated category-pill sections; offer, nearby-shop, featured/popular business/product/provider and promotion sections; recently viewed and saved shortcut. Desktop includes the specified footer; mobile uses the customer navigation.
+- Data: `GET /search/home` composes Catalog-owned homepage sections, Offers-owned banners/placements and owner public cards; `GET /search/popular`, Catalog categories, Settings legal content, Geo and Engagement supply their own data. Recently viewed uses device-local state. Fetch location-specific discovery with `no-store`; cache only location-free sections. Header badges/footer links remain with their owners. Unavailable Q-57 popularity data is not a fabricated zero or sample ranking.
 - Special states: location denied and outside-service-area banner; empty individual sections are omitted without collapsing unrelated sections. Voice input behavior remains open under Q-59; typed Search remains available.
 - Interactions: category tiles open Explore with category state; offer cards follow their owner-provided target; “View all” links open the corresponding Explore tab/sort; search suggestions open `/search?q=...`; hero controls support keyboard, pause on hover/focus and reduced motion. Location is optional. Bookmark actions use Engagement and login return-to-origin where required (BR-21).
+- Homepage category sections: dedicated sections use the localized category heading/supporting text and all eligible active subcategories. Curated sections show localized heading/supporting text and ordered category pills of one kind; initial selection is the configured active category. Switching pills updates only the section's cards, not Explore/Search URL or shared filters; reload returns to configured initial selection. Subcategory cards use category-owned images and link to Explore with the matching category/subcategory.
 - Rules: F-HM-001, F-HM-002, F-HM-005–014; catalog owns F-HM-003/004; BR-11, BR-15, BR-21.
 - Acceptance:
   - Given a customer denies location, when Home loads, then non-location sections remain usable and no precise location is persisted.
   - Given a category tile is selected, when navigation completes, then Explore opens with the category URL state and J1/J2 behavior.
   - Given a banner is focused or hovered, when the carousel would auto-advance, then it pauses; reduced-motion users are not forced to watch motion.
+  - Given a curated section is opened, when it renders, then the configured eligible initial pill is selected; switching pills updates only that section and keyboard state is announced.
+  - Given a configured section or all its subcategories become unavailable, when Home reloads, then the section is omitted and no inactive destination is exposed.
   - Given an offer, saved item, recent view, badge or footer link is rendered, when acted on, then the owning module handles it and Search does not duplicate its data.
   - Given English or Hindi and mobile/tablet/desktop are used, when Home renders, then text wraps without clipping and all controls meet the shared accessibility/token rules.
 
@@ -37,7 +40,8 @@ Standard default, skeleton, empty, error+retry, offline and no-permission behavi
 - Layout: Products/Shops/Services tabs with counts; category pill; mobile filter sheet, tablet filter bar and desktop sidebar; responsive result cards; list/map toggle. Reuse shared `ShopCard`, `ProductCard`, `ServiceCard`, `FilterPanel`, `ActiveFilterChips`, `MapView`, and the one `SubcategoryMultiSelect`.
 - Data: `GET /explore`; filter option counts and results update from the same API contract. Public cards use owner-module fields; map pins include shops and service providers only.
 - Special states: per-tab empty state with Clear category and suggested categories/counts; skeleton while facet counts update.
-- Interactions: use the exact typed query/namespace contract in [BE Search](../be/search.md), including both price directions, brand/stock/delivery/pickup, verified/featured and enquiry/availability controls. Active filters retain the reference's unprefixed URL; inactive tabs use `products.`, `shops.`, `services.`. `contextCategory` preserves the shared Home pill/related-category initialization; per-tab Reset differs from Clear shared category. `useUrlState`/`useBackScroll` restore URL/filter/scroll; Copy link excludes private location headers. Mobile sheet has draft-only controls and sticky “Show N results”, Reset/Apply; cancel discards drafts; desktop commits live without one history entry per slider pixel.
+- Interactions: use the exact typed query/namespace contract in [BE Search](../be/search.md), including both price directions, brand/stock/delivery/pickup, verified/featured and enquiry/availability controls. Services Explore subcategories use the shared `SubcategoryMultiSelect` rendered as token-based selectable pills, preserving real checkbox semantics, OR multi-select, counts, selected/disabled state and clear actions. Active filters retain the reference's unprefixed URL; inactive tabs use `products.`, `shops.`, `services.`. `contextCategory` preserves the shared Home pill/related-category initialization; per-tab Reset differs from Clear shared category. `useUrlState`/`useBackScroll` restore URL/filter/scroll; Copy link excludes private location headers. Mobile sheet has draft-only controls and sticky “Show N results”, Reset/Apply; cancel discards drafts; desktop commits live without one history entry per slider pixel.
+- Featured cards: effective featured results render the shared `FeaturedBadge` with visible EN/HI text plus an icon; do not rely on color alone. Apply only to active featured businesses/products/services returned by their owner projections.
 - Rules: F-EX-001–012, BR-15, BR-18. Service category/subcategory selection uses OR logic; removing a category removes its subcategories.
 - Acceptance:
   - Given `/explore?tab=services&category=wedding-events&subcategory=dj-sound,tent-lighting`, when loaded or shared, then the same selected tab, filters and counts are restored.
@@ -47,6 +51,8 @@ Standard default, skeleton, empty, error+retry, offline and no-permission behavi
   - Given a service filter is used on Explore, Search, or a service category page, when rendered, then the same `SubcategoryMultiSelect` behavior and long-Hindi layout are used.
   - Given more than eight subcategories exist, when the filter opens, then inner search and Show more are available; grouped headings, Select all/Clear per group, collapsed unselected groups and selected chips use the same component everywhere.
   - Given an unselected option has zero results, when facets refresh, then it is disabled; a selected zero-count option remains removable. Removing a category removes its selected subcategories.
+  - Given a service subcategory filter is rendered, when the customer uses keyboard or touch, then each pill exposes native checkbox checked/disabled semantics, visible focus, localized label and count; changing its visual style does not change URL, count, Back or scroll behavior.
+  - Given featured and non-featured results match relevance, when returned, then featured appears first with a text-labelled badge; an explicit sort instead follows its selected order.
   - Given a slower response belongs to a previous URL/draft, when it arrives, then it cannot overwrite current cards/counts; responses are keyed by normalized filters and stale requests are cancelled/ignored explicitly.
   - Given no location is available, when Distance/Delivers-to-me is selected, then the Geo picker explains the requirement while ordinary browsing still works; never invent a pin or silently ignore the filter.
 
@@ -69,7 +75,7 @@ Standard default, skeleton, empty, error+retry, offline and no-permission behavi
 ## Feature components and shared components
 
 - Feature-local: `HomeDiscoverySections`, `ExploreResults`, `SearchResults`, `GroupedAutocomplete`; no duplicate card, filter, map or state-view component.
-- Shared: `SearchBar`, `ShopCard`, `ProductCard`, `ServiceCard`, `OfferCard`, `CategoryTile`, `SearchResultGroup`, `FilterPanel`, `ActiveFilterChips`, `SubcategoryMultiSelect`, `MapView`, `useUrlState`, `useBackScroll`, and standard state components.
+- Shared: `SearchBar`, `ShopCard`, `ProductCard`, `ServiceCard`, `OfferCard`, `CategoryTile`, `FeaturedBadge`, `SearchResultGroup`, `FilterPanel`, `ActiveFilterChips`, `SubcategoryMultiSelect`, `MapView`, `useUrlState`, `useBackScroll`, and standard state components.
 
 ## i18n and analytics
 

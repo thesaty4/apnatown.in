@@ -176,6 +176,7 @@ Depends on: platform foundations
 | F-OF-003 | Offer states | Customer | Active, pending approval, paused, ended/expired, out-of-stock. | P0 |
 | F-OF-004 | Featured offers on home | Customer | Featured offers surface on Home. | P0 |
 | F-OF-005 | Offer lifecycle | Vendor, Admin | Vendor creates/edits/pauses/ends; admin approves before live. | P0 |
+| F-OF-006 | Coupon management | Admin, Vendor, Provider, Customer | Scoped creator ownership and approval; product checkout coupons remain unavailable until redemption policy is resolved; provider service coupons are enquiry-display only. | P0 |
 
 ## CK - Cart and checkout
 
@@ -207,6 +208,7 @@ Depends on: CK, RD, 07 state machines
 | F-OR-006 | Cancellation and refund flow | Customer | Reason picker; 'Admin and vendor have been notified'; refund tracker requested/approved/completed. | P0 |
 | F-OR-007 | Partial fulfilment and substitution | Customer, Vendor | Vendor marks item unavailable; bill updated; customer notified. | P0 |
 | F-OR-008 | Dispute visibility | Customer | Case status visible to customer. | P0 |
+| F-OR-009 | Master checkout summary | Customer, Admin | One immutable non-tax summary per checkout links the per-shop orders and legal invoices; vendors see only their own invoice. | P0 |
 
 ## RV - Reviews
 
@@ -314,6 +316,7 @@ Depends on: AD2 approval
 | F-PV-005 | Provider products and orders | Provider | A provider can also list products and handle orders. | P0 |
 | F-PV-006 | Provider reviews, QR, analytics, followers, media | Provider | Reviews, QR/share link, analytics (views, enquiries, conversion), followers, videos/gallery managers, notifications, account. | P0 |
 | F-PV-007 | Booking placeholders | Provider | Booking/appointment/quotation/payment behind feature flag (off). | P0 |
+| F-PV-008 | Provider Premium billing | Provider | Buy and manually renew configured Premium plans, cancel at paid expiry, view plan status/expiry and issued invoices. | P0 |
 
 ## RD - Rider app
 
@@ -359,7 +362,7 @@ Depends on: X14 audit
 
 | ID | Feature | Roles | Description | Pri |
 |---|---|---|---|---|
-| F-SA-001 | Super admin overview with chart | Super admin | KPIs and tabbed Graph/Candle chart (shared metric, date range, city; candle fill/hollow plus words Up/Down; skeleton, empty, error). | P0 |
+| F-SA-001 | Super admin overview with chart | Super admin | KPIs and Graph chart with shared metric/date-range/city filters, accessible table, skeleton, empty and error states; Candle/OHLC removed per G-18. | P0 |
 | F-SA-002 | Admins and areas | Super admin | Collapsible cards, search, filters (city, area/zone, role, status) with chips, count, clear all; activate/deactivate with impact confirmation; area assignment; per-admin permission matrix. | P0 |
 | F-SA-003 | Roles and permissions | Super admin | Create, edit with unsaved indicator and before/after summary, duplicate, delete blocked with reassign picker, system roles locked. | P0 |
 | F-SA-004 | Cities and zones | Super admin | City cards (Enabled/Disabled/Coming soon), enable/disable confirm, add city, city detail with polygon editor, zones with fee slabs, assigned admins, empty state. | P0 |
@@ -367,4 +370,3 @@ Depends on: X14 audit
 | F-SA-006 | Platform analytics | Super admin | GMV, orders, AOV, repeat customers, orders by category, delivery vs pickup, top vendors. | P0 |
 | F-SA-007 | Activity monitor | Super admin | Audit trail with filters, before/after diff, export. | P0 |
 | F-SA-008 | Main-category management and tree | Super admin | Only super admin edits main categories; category tree with keyword/synonym mapping. | P0 |
-

@@ -317,6 +317,7 @@ Roles: R-03 provider. Default rules: BR-06, BR-08. Entities: Owner, Service, Enq
 | PV5 | can list products and handle orders | can list products and handle orders | BR-06, BR-08 | S-PV-2 |
 | PV6 | reviews | reviews, QR and share link, analytics (profile views, enquiries, conversion), followers, videos/reels and gallery managers, notifications, account | BR-06, BR-08 | S-PV-4 |
 | PV7 | placeholders for booking/appointment/quotation/payment | placeholders for booking/appointment/quotation/payment (feature flag off) | BR-06, BR-08 | n/a (feature flag off) |
+| PV8 | provider Premium billing | buy and manually renew configured plans, cancel at paid expiry without refund, view plan status/expiry and issued invoices | BR-01, BR-02, BR-12 | S-PV-5 |
 
 ## RD. Rider (mobile-first PWA)
 
@@ -362,7 +363,7 @@ Roles: R-06 super_admin. Default rules: BR-12, BR-13, BR-07. Entities: Admin, Ro
 
 | ID | Feature | Key behaviour / acceptance hints | Rules (BR) | Screens |
 |---|---|---|---|---|
-| SA1 | overview with KPIs and a tabbed chart card | overview with KPIs and a tabbed chart card (Graph view and Candle view in the same card; shared date range, metric orders/revenue/deliveries, and city filter; candle shows open/high/low/close with legend and tooltip; up = filled, down = hollow, tooltip says "Up"/"Down"; skeleton, empty (non-live city) and error states) | BR-07, BR-12, BR-13 | S-SA-1 |
+| SA1 | overview with KPIs and a Graph chart card | overview with KPIs and a Graph chart (shared date range, metric orders/revenue/deliveries, city filter, accessible table; skeleton, empty non-live city and error states); Candle/OHLC removed by explicit product decision G-18 | BR-07, BR-12, BR-13 | S-SA-1 |
 | SA2 | admins and areas | admins and areas: collapsible cards (collapsed: name, role, city/area chips, status badge, chevron; expanded: phone, email, assigned cities and zones, permissions summary, last active, audit shortcut, actions); search by name/phone/email; filters city, area/zone, role, status (Active/Inactive); removable chips, result count, Clear all, no-results; filters in a bottom sheet on mobile and toolbar on desktop; activate/deactivate with a confirmation dialog naming who is affected and the impact (for example "will lose access immediately"), text-labelled confirm button, success toast; area assignment; per-admin permission matrix | BR-07, BR-12, BR-13 | S-SA-2 |
 | SA3 | roles and permissions | roles and permissions: create, edit (name, description, modules x actions matrix, "unsaved changes" indicator, before/after summary on save), duplicate, delete (blocked with "Reassign N admins first" and a reassign picker; system roles locked) | BR-07, BR-12, BR-13 | S-SA-3 |
 | SA4 | cities and zones | cities and zones: city cards (status Enabled/Disabled/Coming soon, zones, areas, admins, waitlist); enable/disable with confirmation; add city; city detail with the "Service area & delivery zones" map and polygon drawing/editing (add corners, drag, remove), zone list (name, fee slabs, status), assigned admins, empty state "No zones yet, draw your first zone" | BR-07, BR-12, BR-13 | S-SA-4 |

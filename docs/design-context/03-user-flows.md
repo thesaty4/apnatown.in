@@ -5,7 +5,7 @@
 - **Related:** 01-feature-inventory.md, 02-screen-inventory.md
 - **Last updated:** 2026-11-10
 
-Each flow is runnable in the prototype (`reference/apnatown-prototype.html` -> Account -> Design system -> "Patterns & flows" and the Round 2 flows tab).
+Source flows are runnable in the prototype (`reference/apnatown-prototype.html` -> Account -> Design system -> "Patterns & flows" and the Round 2 flows tab). J15 is the product-owner-requested provider billing flow and has no prototype screen.
 
 ## J1 Browse -> category -> Explore -> product -> cart -> split checkout -> track -> OTP delivery -> review
 Features: F-HM-003, F-EX-001..002, F-PD-001..003, F-CK-001..008, F-OR-001..003, F-RV-001..003
@@ -84,3 +84,7 @@ Features: F-AU-003..006.
 Features: F-X-001..002.
 ## J14 Customer enquiry -> provider inbox -> contacted -> converted -> review eligibility
 Features: F-SV-005, F-PV-004, F-RV-002. Statuses: new -> contacted -> converted -> closed. An enquirer becomes review-eligible for that provider.
+
+## J15 Provider Premium purchase, expiry and renewal
+Features: F-PV-003, F-PV-005, F-PV-008, F-NT-001.
+Provider views own plan status/expiry at S-PROV-18; a configured plan is purchased or manually renewed and entitlement changes only after verified payment. Cancellation records end-at-paid-expiry without a refund or immediate featuring change. At expiry, retained product/service selections become ineffective, owner and scoped admin notices are queued once, and public caches are invalidated. A later verified renewal restores effective featuring for still-selected eligible listings.

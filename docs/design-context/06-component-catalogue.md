@@ -58,7 +58,7 @@ Conventions: all components accept `className`, forward refs, are keyboard acces
 | AdminCollapsibleCard | `title, chips, status, expanded` | collapsed summary, expanded details and actions | super admin admins list |
 | DataTable | `columns, rows` | collapses to labelled cards on mobile; sort, empty | admin, reports |
 | Timeline | `steps, current` | delivery vs pickup sets; icon + text + colour | order tracking, disputes |
-| Charts | Bar, Line, Donut, Sparkline, Candlestick (fill=up, hollow=down; tooltip says Up/Down; legend; skeleton/empty/error) | SVG, accessible table fallback | dashboards |
+| Charts | Bar, Line, Donut, Sparkline; legend; skeleton/empty/error | SVG, accessible table fallback | dashboards |
 | KeyValue (dl) / Accordion | | | details |
 ## E. Commerce and discovery
 | Component | Purpose / props | States |
@@ -93,6 +93,6 @@ Conventions: all components accept `className`, forward refs, are keyboard acces
 | ShareSheet | WhatsApp, copy link, native share | - |
 | **SearchResultGroup** | header with count, See all, explanation label | - |
 ## G. Admin components
-PermissionMatrix (modules x actions, unsaved indicator, before/after), RoleForm, ConfirmImpactDialog, ReviewBeforeSendSummary (communications), ApprovalDocumentViewer, AuditDiff, ChartCard with Graph/Candle tabs, CityCard, ZoneEditor (polygon), ModerationQueueItem, KeywordMappingForm + PreviewPanel.
+PermissionMatrix (modules x actions, unsaved indicator, before/after), RoleForm, ConfirmImpactDialog, ReviewBeforeSendSummary (communications), ApprovalDocumentViewer, AuditDiff, ChartCard with supported Graph metrics and an accessible table alternative (no Candle/OHLC controls), CityCard, ZoneEditor (polygon), ModerationQueueItem, KeywordMappingForm + PreviewPanel.
 ## H. Hooks and utilities (shared)
 `useUrlState` (schema-validated query params), `useBackScroll` (scroll restoration), `useDebounce`, `useMediaQuery`, `useCart`, `useAuthGate` (login prompt + return), `useFollow`, `useLike`, `useI18n`, `formatInr(paise)`, `formatDateIst`, `formatTimeIst`, `formatDistanceKm`, `formatPhone`, `slugify`, `buildEmbedUrl` (server), zod schemas shared with API.

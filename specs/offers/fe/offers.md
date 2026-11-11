@@ -1,6 +1,6 @@
 # FE: offers
 
-Features: F-OF-001, F-OF-002, F-OF-003, F-OF-004, F-OF-005, F-PD-004, F-VD-007, F-AD-011 | Screens: S-CUST-20, S-VEND-07, S-ADMN-12 | Flows: J3
+Features: F-OF-001, F-OF-002, F-OF-003, F-OF-004, F-OF-005, F-OF-006, F-PD-004, F-VD-007, F-AD-011 | Screens: S-CUST-20, S-VEND-07, S-PROV-17, S-ADMN-12 | Flows: J3
 
 Backend contract: [BE offers](../be/offers.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
 
@@ -10,9 +10,10 @@ Backend contract: [BE offers](../be/offers.md) · [Feature inventory](../../../d
 |---|---|---|---|---|
 | `/offers` | S-CUST-20 | ISR; revalidate on offer publish/pause/end/expiry | Public | Index landing; filtered query combinations are `noindex,follow` |
 | `/vendor/offers` | S-VEND-07 | SSR owner/approval gate; manager and editor are client islands | Approved vendor, own business | Noindex |
+| `/provider/offers` | S-PROV-17 | SSR owner gate; shared Coupons tab/client island only | Approved provider, own business | Noindex |
 | `/admin/promotions` | S-ADMN-12 | SSR role/permission/scope gate; queue and decision controls are client islands | Admin with `promos:view/edit` in assigned area; super admin platform-wide | Noindex |
 
-No provider offer screen/production route appears in the screen inventory; the prototype route is tracked in Q-61. Shared UX states come from [frontend-shared.md](../../_foundation/frontend-shared.md). Status is text + icon + color (BR-22). API errors use the flat foundation contract; JSON money is safe-integer paise, formatted by shared utilities.
+Provider coupon management reuses the owner UI and `Offers` APIs; this does not add provider service-targeted offer CRUD, which remains Q-61. Shared UX states come from [frontend-shared.md](../../_foundation/frontend-shared.md). Status is text + icon + color (BR-22). API errors use the flat foundation contract; JSON money is safe-integer paise, formatted by shared utilities.
 
 ## Screens
 
@@ -31,6 +32,7 @@ No provider offer screen/production route appears in the screen inventory; the p
   - Given Hindi or dark mode is active, when offer terms and validity render, then localized text wraps without clipping and uses design tokens.
   - Given a product is opened directly after offer expiry, when its target-state read completes, then the expired banner/regular price appears without a previous card click.
   - Given an expired multi-product link or unavailable pricing policy, when opened, then the state is explicit and the UI neither broadens to unrelated products nor calculates an invented discount.
+  - Given an approved service-enquiry coupon targets a visible service, when its detail is rendered, then only its informational terms/code and the normal enquiry action appear; no price deduction, booking or payment is offered.
 
 ### S-VEND-07 — Vendor offers
 
@@ -45,22 +47,32 @@ No provider offer screen/production route appears in the screen inventory; the p
   - Given an active offer is edited, when the versioned save succeeds, then the edited record returns to pending and the old discount is no longer applied.
   - Given an owner pauses, resumes or ends an offer, when the server accepts the transition, then the UI reflects the authoritative state and invalid transitions show a localized error.
   - Given a stale edit version or another business's offer is submitted, when the API rejects it, then the form retains user input and no foreign data is exposed.
+  - Given the Coupons tab is opened, when the owner creates or edits a coupon, then it shows draft/pending/active/paused/ended/rejected accurately; owner edits to live coupons await reapproval, and no UI claims checkout redemption is enabled while Q-67 remains open.
+
+### S-PROV-17 — Provider coupon manager (`/provider/offers`)
+- Reuse the vendor manager's shared responsive form/table and expose the Coupons tab only. Provider identity/business scope is server-derived. Provider service coupons require a selected owned service target and remain enquiry-display only; product-checkout coupons can target eligible products.
+- States and validation match S-VEND-07. Pending owner coupons have no public discount; explicit Q-67 usage/stacking policy keeps all checkout coupon redemption disabled. Service details may show approved active enquiry coupons but never alter service price or create a booking/payment.
+- Acceptance: Given a provider attempts to target another provider's service/product or another business, when saved, then the server rejects it; given a provider submits a service coupon, when approved and valid, then it appears only on the matching public service.
 
 ### S-ADMN-12 — Promotions
 
 - Screenshots: `d-admin-apromos.jpg`, `m-admin-apromos.jpg`.
-- Layout: final `js11.js:75–78` three panels: offer queue, homepage banners (title/subtitle, Add and Show toggle) and featured businesses (Featured toggle). Reuse the editor sheet for content corrections/removal; do not add a Search/Payments admin.
+- Layout: offer queue, homepage banners (title/subtitle, Add and Show toggle), featured businesses (Featured toggle), and a Coupons panel. Reuse shared editor/table patterns; do not add a Search/Payments admin.
 - Data: `/admin/promotions/offers` + decision API; `/admin/promotions/placements` GET/POST and `/{id}` PATCH/DELETE; `/{id}/status` for activate/pause/end. Use `PlacementAdminDTO`, expected version and idempotency key.
 - Special states: empty queue/placements, disabled/expired placement, missing activation/content configuration, stale version, target no longer approved, no permission.
-- Interactions: banner editor uses plain localized title/subtitle, internal destination picker and optional Media `assetId`; text-only banners need no fabricated image. Scope controls expose only permitted cities/areas; global placement is super-admin-only. Show/Featured toggles call authoritative commands, not local business flags; deletion confirms and removes public placement, not financial evidence.
+- Interactions: banner editor uses plain localized title/subtitle, internal destination picker and the existing Media `bannerAssetId` field to upload, replace or remove a background; no second banner system is added. Image upload uses the existing `offer_banner` purpose and configured Media validation; unconfigured limits disable upload. Text-only fallback remains. Scope controls expose only permitted cities/areas; global placement is super-admin-only. Show/Featured toggles call authoritative commands, not local business flags; deletion confirms and removes public placement, not financial evidence.
+- Responsive treatment: use the existing token-backed banner image/overlay treatment, preserve the configured title/subtitle locale, crop responsively without distortion, and retain readable text over image and fallback. Supply dimensions and responsive sizes; prioritize only when the banner is the actual LCP image, otherwise lazy-load.
+- Coupons panel creates platform-eligible codes within the creating admin's permitted geography, edits with expected version, and activates/pauses/ends through Offers. Pending vendor/provider coupons use the same scoped approval queue; creator cannot approve their own coupon. Every mutation is audit-logged. Checkout redemption remains unavailable until Q-67 decisions are made.
 - Rules: full F-AD-011, BR-06, BR-12. Permissions are `promos:view`/`promos:edit`; server checks old/new scope and target business and audits before/after. Paid placement rows cannot mark a payment successful or renew a period through a toggle.
 - Acceptance:
   - Given an area admin views Promotions, when the queue loads, then only offers in assigned scope appear.
   - Given an admin lacks `promos:edit` or is outside the offer's area, when they attempt a decision, then the server denies it and the UI presents no success state.
   - Given an authorized admin decides a pending offer, when the decision succeeds, then the queue and status update and an audit record is present.
   - Given a scoped admin creates/edits a banner or toggles a featured business, when the command succeeds, then only approved, in-window public content changes and refresh preserves it.
+  - Given an authorized scoped admin removes a banner background, when the versioned edit commits, then the text-only banner remains visible and the public Home tag is revalidated; invalid upload/replacement preserves the previous image.
   - Given another admin edits the placement or expiry wins a race, when a stale save/toggle arrives, then it conflicts and refetches without reviving it.
   - Given a suspended target, foreign asset, or different assigned area in the same city, when activation is attempted, then the panel shows rejection, not success.
+  - Given an area admin creates/edits/approves a coupon, when eligible businesses or coupon ownership cross the assigned area, then the server denies the mutation; a platform-wide super_admin action remains explicit and audited.
 
 ### Offer integrations (owner screen layouts remain in their specs)
 
@@ -87,4 +99,4 @@ No provider offer screen/production route appears in the screen inventory; the p
 
 ## Open questions
 
-The [BE policy gates](../be/offers.md#open-questions-and-handoff) govern provider routing, pricing/stacking, dates/terms/metrics, banner limits, coupons/reapproval and paid periods. No disabled branch is replaced with sample values or another module's speculative control.
+The [BE policy gates](../be/offers.md#open-questions-and-handoff) govern provider service-offer routing, pricing/stacking, dates/terms/metrics, banner limits, coupon checkout redemption and paid periods. No disabled branch is replaced with sample values or another module's speculative control.

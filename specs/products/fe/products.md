@@ -59,11 +59,13 @@ Shared UX states come from `frontend-shared.md`; use the screen-specific states 
 - Screenshots: `d-vendor-vprod-new.jpg`, `d-vendor-vprod-p1.jpg`, `m-vendor-vprod-new.jpg`, `m-vendor-vprod-p1.jpg`.
 - Layout: desktop two-column form/media and consent cards; mobile stacked sections. Use `Input`, `Select`, `Uploader`, `MediaSorter`, `Toggle`, `Button`.
 - Data: POST/PATCH `/businesses/me/products` uses the explicit product DTO; submit inventory's separate expected version whenever stock fields change. Images use ready Media asset IDs; product-linked video add/moderation uses media-videos; gallery default comes from businesses.
-- Special states: validation errors; image rejected/preview failed; stale edit version; add/edit.
-- Interactions: EN name required; HI name, description, subcategory, brand, INR price/MRP, unit, SKU, stock threshold, variants, tags, specs, image sort, availability, featured and per-item gallery toggle; video links use media-videos and appear only after approval; save preserves image order; generate/copy/share product link.
+- Special states: validation errors; image rejected/preview failed; stale edit version; add/edit; Premium expired with retained-but-inactive featured selection.
+- Interactions: EN name required; HI name, description, subcategory, brand, INR price/MRP, unit, SKU, stock threshold, variants, tags, specs, image sort, availability, Premium featured selection and per-item gallery toggle; a stored selection remains visible but inactive after Premium expiry and automatically becomes effective after a verified renewal; changing selection requires active Premium entitlement; video links use media-videos and appear only after approval; save preserves image order; generate/copy/share product link.
 - Rules: BR-01/04/06/10/16; price is displayed in INR but submitted as integer paise; max five photo items; no direct user URL embed.
 - Given valid product fields and media, when the owner saves, then the product is saved once and its stable public URL is available.
 - Given MRP is below price, an invalid taxonomy pair or a non-owned image asset is submitted, when save runs, then field errors appear and no product update is persisted.
+- Given no active Premium entitlement exists, when the owner edits featuring, then the control cannot save a new selection and the product remains unfeatured.
+- Given a selected product's Premium entitlement expires and is later renewed, when its public projection is read, then the selection remains stored, the product is not featured during the gap, and it becomes featured again only after verified renewal and current listing eligibility.
 - Given Hindi is selected or longer copy is entered, when the form renders at 360 px and desktop, then labels wrap without clipping and all controls remain keyboard accessible.
 
 ### S-VEND-08 — Inventory

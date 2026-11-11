@@ -50,6 +50,7 @@ Cross-cutting Auth/live-principal, Admin authorization, Audit append and Setting
 | Migrations | Prisma Migrate; reviewed SQL migrations for PostgreSQL extensions | One versioned migration path with explicit extension setup | A required extension or online migration cannot be safely represented |
 | Database | PostgreSQL + PostGIS, `pg_trgm`, `unaccent`, full-text search | Explicit target in this prompt; supports geo and local search without another service | Human-approved stack ADR changes |
 | Queue | `pg-boss` + transactional outbox; no Redis at launch | Explicit LEAN SPECS default; supersedes P01's Redis/BullMQ proposal ([Q-29](../../docs/design-context/11-open-issues-and-assumptions.md)) | Measured throughput or availability needs justify a separately operated broker |
+| Cache | PostgreSQL remains authoritative; public read fragments use existing Next.js ISR/tag boundaries; no Redis use is selected for launch | Existing query-plan, indexing and public-cache contracts cover the specified workloads; no workload measurements justify another service | Consider Redis only after production-like measurements show a named hot-read workload misses existing p95 budgets after query/index/cache-boundary review, and a reviewed ADR defines owner, key/scope, TTL, invalidation, memory bounds, stampede protection, observability and outage behavior |
 | Search | PostgreSQL keyword mappings, `pg_trgm`, `unaccent`, full-text indexes | Matches SR2/SR3 and avoids an external search engine | Product requirements exceed PostgreSQL's measured capability |
 | Realtime | SSE for order tracking, rider requests and live map | One-way updates fit the required live views | A feature requires bidirectional realtime |
 | Object storage | `StoragePort`; recommend S3-compatible storage with private uploads and signed access; vendor open (Q-22) | Keeps credentials and provider-specific logic in an adapter | Provider selection or measured media needs require a different adapter |
@@ -62,6 +63,8 @@ Cross-cutting Auth/live-principal, Admin authorization, Audit append and Setting
 | CI | GitHub Actions | Existing stack ADR and repository workflow | Repository hosting or org policy changes |
 
 The decisions above are the scaffold target, not permission to select vendors or provision production infrastructure. See the alignment gates below.
+
+Redis workload evaluation for this specification: taxonomy/home/profile reads use public ISR tags; relationship/rate-limit state remains in PostgreSQL; durable notification/media work uses the outbox and `pg-boss`; local search remains PostgreSQL-backed. None has a measured launch workload justifying Redis. Before reconsidering, measure p95/p99 read latency, PostgreSQL CPU/IO, query plans, request/cache hit rates and queue throughput under representative launch traffic; Redis is a proposal until an ADR approves a specific use and its operational contract.
 
 ## Reproducible workspace and bootstrap
 
@@ -145,7 +148,7 @@ Nest HTTP tests instantiate this same bootstrap/guard/filter/pipe composition; u
 | Vitest Node | Shared Zod/wire/formatters, rules, clocks, errors and use-cases with deterministic port fakes. Test money overflow and cursor/version boundaries, not only happy paths. |
 | Nest HTTP + PostgreSQL | Real bootstrap with Supertest/HTTP driver, migrated isolated DB and real guards; exact DTO/OpenAPI/error parity, malformed input, missing CSRF, wrong role/owner/city/area/permission, live suspension, idempotency races and actual DB outbox/audit commit/rollback. Use compiled Nest code or a pinned test transformer that preserves decorator metadata; plain TS transpilation without it is not sufficient. |
 | RTL + axe | Vitest jsdom setup imports jest-dom matchers and cleanup; keyboard/user-event tests for both reference controls, all standard states, Hindi/theme and reduced motion. Automated a11y plus manual keyboard/contrast checks; no fake pass by disabling accessibility rules. |
-| Playwright | Production-built Web + API + worker, isolated DB and fake external delivery/payment ports only. Browser-to-API smoke must use the generated client/rewrite/cookies, not route-intercepted success bodies; critical module journeys reference J1-J14. |
+| Playwright | Production-built Web + API + worker, isolated DB and fake external delivery/payment ports only. Browser-to-API smoke must use the generated client/rewrite/cookies, not route-intercepted success bodies; critical module journeys reference J1-J15. |
 
 Clean-checkout CI order (future scaffold commands, **not executions in this spec repair**):
 The complete pipeline assumes the relevant owner slices exist: migrations/shared runtime before DB HTTP tests, Auth/Users and Business ownership before the Catalog protected reference, and Web transport before browser authentication smoke. C00 alone proves workspace/probes, not all later journeys. C01-C04 are scope groupings, not permission to bypass these dependencies or substitute fake guards; build their prerequisites in small changes.

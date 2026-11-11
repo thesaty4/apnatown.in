@@ -19,29 +19,29 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) for standard states,
 ## Screens
 
 ### S-CUST-19 Saved | `/saved` | `d-customer-bookmarks.jpg`, `m-customer-bookmarks.jpg`
-- Layout: tabs Shops / Services / Photos & Videos; media tab filter chips Photos / Videos / Reels; cards (`ShopCard`, `ServiceCard`, media tiles) with Remove.
-- Data: `GET /engagement/me/saved`.
-- Remove calls DELETE on the stored bookmark/heart type+ID, **not** a public-target lookup. Photo hearts use canonical Media `assetId`, videos use video ID; array positions/gallery indices never identify saved data.
+- Layout: tabs Following (businesses/providers) / Services / Photos & Videos; media tab filter chips Photos / Videos / Reels; cards (`ShopCard`, `ServiceCard`, media tiles) with Remove.
+- Data: `GET /engagement/me/saved`; Following is the canonical active follow relationship and includes each business bell state. A business/provider is never stored in a second bookmark relationship.
+- Remove calls unfollow for a business/provider or DELETE on the service bookmark/media heart, **not** a public-target lookup. Photo hearts use canonical Media `assetId`, videos use video ID; array positions/gallery indices never identify saved data.
 - Special states: empty per tab (browse CTA); guest login prompt (returns to `/saved`); unavailable item ("No longer available" + Remove).
 - Acceptance: Given a suspended/deleted/hidden target, when Remove is tapped, then the server deletes the caller's relationship and the tombstone disappears after reload. Given `?tab=services`, when opening/returning with Back, then that tab restores. Given a guest, when opening Saved, then the login prompt preserves the return URL. Do not promise Undo that recreates a now-private target.
 
 ### S-VEND-15 / S-PROV-11 Followers | `/vendor/followers`, `/provider/followers` | `d-vendor-vfollow.jpg`, `m-vendor-vfollow.jpg`, `d-provider-sfollow.jpg`, `m-provider-sfollow.jpg`
-- Layout matches final `js26.js:31–35`: **Followers**, **Gained this week**, **Videos** KPI cards; **Follower growth, last 8 weeks** bar chart with accessible table; Announce to followers form with required message and **New offer / New video** radio choices, then latest three announcements. No 30/90-day selector, generic message kind, mandatory target picker or invented owner campaign wizard.
+- Layout retains the **Followers**, **Gained this week**, **Videos** KPI cards; **Follower growth, last 8 weeks** bar chart with accessible table; Announce to followers form with required message and **New product / New service / New offer / New video** radio choices, then latest three announcements. No 30/90-day selector, mandatory target picker or invented owner campaign wizard.
 - Data: `GET /businesses/me/followers`, `POST /businesses/me/announcements`.
 - Bind `{followers,gainedThisWeek,approvedVideos,growth,unavailable,asOf}`; the eight server-supplied intervals/values are not computed from fake client series. Q-11-dependent values show definition-pending copy, distinct from zero.
-- Message form submits `{kind,messageEn,messageHi?}` (optional target only if provided by an existing originating offer/video action). Success uses returned queued/eligible count, never claims all followers were delivered messages; actual delivery honors bell and current preferences/consent.
+- Message form submits `{kind,messageEn,messageHi?,targetId?}`; target selection remains optional and is supplied when launched from the corresponding listing action. Untargeted notices link to `/explore?tab=products`, `/explore?tab=services`, `/offers` or `/videos`. Success uses returned queued/eligible count, never claims all followers were delivered messages; actual delivery honors bell, current preferences and explicit marketing consent.
 - Special states: zero eligible followers, definition unavailable, rate-limited/retry and failed send preserving draft. No “next allowed in 24 h” product quota.
-- Acceptance: Given empty text, when Send is pressed, then show required-field validation. Given a valid offer/video announcement, when accepted, then acknowledgement uses the server count/status and history refreshes. Given final followers data, when rendered in Hindi/dark mode, then all three KPIs/eight-week chart/table remain readable.
+- Acceptance: Given empty text, when Send is pressed, then show required-field validation. Given a valid announcement of any of the four kinds with or without a target, when accepted, then acknowledgement uses the server count/status, the target/path is correct and history refreshes. Given final followers data, when rendered in Hindi/dark mode, then all three KPIs/eight-week chart/table remain readable.
 - Acceptance: Given disabled bell or withdrawn consent, when a queued announcement is dispatched, then the recipient is suppressed; the UI does not promise unconditional in-app delivery.
 
 ## Feature components (used across modules)
 
 | Component | Behaviour | Used in |
 |---|---|---|
-| `FollowButton` (shared) | Follow / Following + separate bell; new/refollow bell **off/unset**, explicit PUT `{bellOn}` toggles it; unfollow confirmation clears bell (PF8, EG3); login gate | profiles, Reels overlay, Videos tab |
+| `FollowButton` (shared) | Follow / Following + separate bell; following alone sends no follower notifications; new/refollow bell **off/unset**, explicit PUT `{bellOn}` toggles it; unfollow confirmation clears bell; login gate | profiles, cards, Reels overlay, Videos tab |
 | `HeartButton` | Heart with scale animation; reduced-motion → instant fill + text change (EG2) | gallery lightbox, Reels, media tiles |
 | `LikeButton` | Toggle with count (EG4) | Reels overlay |
-| `BookmarkButton` | Save/Saved for shops, providers, services (EG7) | cards, profile, service details |
+| `BookmarkButton` | Save/Saved for services only (EG7); shop/provider cards use the canonical FollowButton relationship | cards, service details |
 | `ShareSheet` | WhatsApp (`wa.me` with encoded canonical URL), Copy link (toast), native `navigator.share` when available (EG6); posts `/engagement/shares` | Reels, profiles, products, services |
 | `CommentsPanel` | Public list + composer (required 1–500 trimmed chars), own pending “Awaiting moderation”, own DELETE; reconcile server count on removal, rollback failed writes | Reels |
 

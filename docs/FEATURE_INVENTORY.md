@@ -181,6 +181,7 @@ Roles: customer, vendor, provider, admin. Backend module(s): `offers`. Frontend 
 | OF3 | states: active, pending admin approval, paused, ended/expired, out-of-stock | `specs/offers/be/offers.md` | `specs/offers/fe/offers.md` | spec written |
 | OF4 | featured offers on home | `specs/offers/be/offers.md` | `specs/offers/fe/offers.md` | spec written |
 | OF5 | vendor offer lifecycle pending -> active -> paused -> ended; admin approval | `specs/offers/be/offers.md` | `specs/offers/fe/offers.md` | spec written |
+| OF6 | admin/vendor/provider coupons with scoped eligibility, moderation, service-enquiry display and gated checkout redemption | `specs/offers/be/offers.md` | `specs/offers/fe/offers.md` | spec written; redemption policy open |
 
 ## CK. Cart and checkout
 
@@ -212,6 +213,7 @@ Roles: customer, rider, vendor, provider, admin. Backend module(s): `orders, del
 | OR6 | cancellation/refund flow with reasons, message "Admin and vendor have been notified and will contact you", refund tracker `requested -> approved -> completed` | `specs/orders/be/orders.md` | `specs/orders/fe/orders.md` | spec written |
 | OR7 | partial fulfilment/substitution (vendor marks item unavailable) | `specs/orders/be/orders.md` | `specs/orders/fe/orders.md` | spec written |
 | OR8 | dispute case workflow visible to customer | `specs/orders/be/orders.md` | `specs/orders/fe/orders.md` | spec written |
+| OR9 | one non-tax master checkout summary links each per-shop order and legal invoice | `specs/orders/be/orders.md` | `specs/orders/fe/orders.md` | spec written |
 
 ## RV. Reviews
 
@@ -310,7 +312,7 @@ Roles: vendor. Backend module(s): `businesses, products, services, offers, order
 
 ## PV. Provider dashboard
 
-Roles: provider. Backend module(s): `businesses, services, engagement`. Frontend route/screen: `/provider`.
+Roles: provider. Backend module(s): `businesses, services, engagement, payments`. Frontend route/screen: `/provider, /provider/billing`.
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
@@ -321,6 +323,7 @@ Roles: provider. Backend module(s): `businesses, services, engagement`. Frontend
 | PV5 | can also list products and handle orders | `specs/orders/be/orders.md` | `specs/orders/fe/orders.md` | spec written |
 | PV6 | reviews, QR, analytics (views, enquiries, conversion), followers, videos/reels and gallery managers | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
 | PV7 | placeholders for booking/quotation/payment (feature flag off) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
+| PV8 | Premium billing, manual plan renewal, cancellation at paid expiry, status and invoices | `specs/payments/be/payments.md` | `specs/payments/fe/payments.md` | spec written |
 
 ## RD. Rider (mobile-first PWA)
 
@@ -366,7 +369,7 @@ Roles: super_admin. Backend module(s): `admin, geo, settings, audit, catalog`. F
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| SA1 | overview with KPIs and tabbed Graph/Candle chart (shared date range, metric orders/revenue/deliveries, city filter; candles differ by fill/hollow + words "Up/Down" in tooltip; skeleton/empty/error) | `specs/admin/be/sa1-overview-with-kpis-and-tabbed-graph-.md` | `specs/admin/fe/sa1-overview-with-kpis-and-tabbed-graph-.md` | not started |
+| SA1 | overview with KPIs and Graph chart (orders/revenue/deliveries, date range and city filters; accessible table; skeleton/empty/error; no Candle/OHLC) | `specs/admin/be/admin.md` | `specs/admin/fe/admin.md` | spec written |
 | SA2 | admins and areas (collapsible cards, search by name/phone/email, filters city/area-zone/role/status with removable chips and count, activate/deactivate with confirmation naming the impact, area assignment, per-admin permission matrix) | `specs/admin/be/sa2-admins-and-areas.md` | `specs/admin/fe/sa2-admins-and-areas.md` | not started |
 | SA3 | roles and permissions (create, edit with unsaved indicator and before/after summary, duplicate, delete blocked while admins assigned with reassign picker, system roles locked) | `specs/admin/be/sa3-roles-and-permissions.md` | `specs/admin/fe/sa3-roles-and-permissions.md` | not started |
 | SA4 | cities and zones (city cards, enable/disable with confirmation, city detail with polygon editor, zone list with delivery fee slabs, assigned admins, add city, waitlist) | `specs/geo/be/geo.md` | `specs/geo/fe/geo.md` | spec written |

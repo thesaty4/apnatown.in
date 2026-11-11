@@ -47,6 +47,17 @@ packages/shared/src/         # shared Zod schemas, types, enums, formatters
 
 Public caching is a data-fragment optimization, not publication authority: the dynamic request shell checks current owner visibility before returning cached content/metadata. Do not serve full-route/CDN HTML that bypasses that check. Resolve revocable media/embeds through current Media eligibility; denial or an unavailable authority check must not fall back to a previously approved cached object. Tag invalidation refreshes data but is not the security gate.
 
+| Public fragment / tag | Owner and invalidation |
+|---|---|
+| `catalog-taxonomy` | Catalog category/subcategory names, order, active state and image references; invalidate on `catalog.taxonomy.changed`, `photo.removed` and `media.visibility_changed`. |
+| `catalog-home-sections` | Catalog dedicated/curated section configuration and order; invalidate on `catalog.home_sections.changed`. |
+| `promotion-placements` | Offers banners/featured placements; invalidate on `promotion.placement_changed` / `.expired`, including background asset changes. |
+| `business:{id}` | Businesses profile, category membership, approval/suspension and public visibility; invalidate on the corresponding committed business events. |
+| `product:{id}` / `service:{id}` | Owner listing content, publication, inventory/service visibility, media and target eligibility; invalidate from Products/Services and owning Offers/Media events. |
+| `featured:{businessId}` | Effective featured status for that business's public listings; invalidate on subscription-eligibility and business/listing changes. Reads and cursors bind to current entitlement version/expiry; cached freshness cannot extend beyond the earliest relevant subscription/placement end. |
+
+Location-specific, personalized, scoped-admin, account, checkout and bill responses remain `no-store`; public tags never contain user-specific state. Home/Explore composition batches owner projections and bounded page data; never issue one API/database lookup per rendered card. A public cache hit still rechecks the current publication/authorization authority.
+
 | Public page type / URL | EN / HI title and description template | JSON-LD | Canonical and indexing |
 |---|---|---|---|
 | Home `/` | EN: `ApnaTown \| {home.seoTitleEn}`; HI: `ApnaTown \| {home.seoTitleHi}`; description uses locale-specific `home.seoDescription` key | `Organization`, `WebSite` | Self canonical; index |
@@ -55,9 +66,11 @@ Public caching is a data-fragment optimization, not publication authority: the d
 | Product `/product/:slug` | EN: `{product.name} at {business.name} \| ApnaTown`; HI: `{product.nameHi}, {business.nameHi} \| ApnaTown`; description uses approved localized product summary | `Product`, `BreadcrumbList` | Self canonical if public/available; unavailable/removed -> noindex |
 | Service `/service/:slug` | EN: `{service.name} by {provider.name} \| ApnaTown`; HI: `{service.nameHi}, {provider.nameHi} \| ApnaTown`; description uses approved localized service summary | `Service`, `BreadcrumbList` | Self canonical if public/active; otherwise noindex |
 | Explore/Search/filter combinations | EN/HI title and description use localized discovery keys | None | `noindex,follow`; never canonicalize arbitrary filter combinations to landing pages |
-| Category/subcategory landing | EN/HI title and summary use localized category/subcategory SEO keys | `CollectionPage`, `ItemList` | Index only an explicit canonical landing URL. The inventory defines `/category/:slug` but no distinct subcategory route; keep subcategory filters noindex until Q-23 is resolved. |
+| Category/subcategory landing | EN/HI title and summary use localized category/subcategory SEO keys | `CollectionPage`, `ItemList`, `BreadcrumbList` | Index only an explicitly defined canonical landing URL. The inventory defines `/category/:slug` but no distinct subcategory route; do not invent one. Keep subcategory filters noindex until Q-23 is resolved. |
 
 All SEO copy is localized; emit `hreflang` alternates for `en` and `hi` using next-intl locale routing, plus `x-default`. Exact locale-prefix/cookie behavior remains open under Q-24; do not invent a second content URL shape. Generate XML sitemaps only from approved, public, canonical pages; remove noindex/removed/expired targets and update `lastmod`. Localized SEO copy uses catalogue keys until EN/HI titles and descriptions are approved.
+
+Public entity pages also emit localized Open Graph/social-preview title, description and image from the same authorized public DTO. Never invent rating, price, stock/availability, hours, location or business facts in metadata/JSON-LD; omit unavailable values. Use only currently approved/resolvable Media assets for social images. Public routes have one canonical route per entity kind; slug fields are immutable in current write contracts. Query filters/cursors are `noindex,follow` and do not create duplicate sitemap URLs. Unpublished, suspended, deleted or removed entities resolve as unavailable/not-found with `noindex`, leave sitemaps on owner-event invalidation, and do not expose stale metadata. Protected account, admin, checkout, order and bill routes are `noindex` and `no-store`.
 
 ## Tokens and typography
 
@@ -115,7 +128,7 @@ Owner paths are under `packages/ui/src`; grouped names share the stated file unl
 | AdminCollapsibleCard | title, chips, status, expanded | `admin/AdminCollapsibleCard.tsx` |
 | DataTable | columns, rows; sort/empty and mobile labelled cards | `data/DataTable.tsx` |
 | Timeline | steps, current; delivery/pickup sequence | `data/Timeline.tsx` |
-| Charts | Bar/Line/Donut/Sparkline/Candlestick; tooltip, legend, accessible table fallback | `data/Charts.tsx` |
+| Charts | Bar/Line/Donut/Sparkline; tooltip, legend, accessible table fallback | `data/Charts.tsx` |
 | KeyValue / Accordion | definition list / expandable details | `data/KeyValue.tsx`, `data/Accordion.tsx` |
 | FilterPanel | filter content/count; mobile sheet/tablet bar/desktop sidebar | `discovery/FilterPanel.tsx` |
 | SubcategoryMultiSelect | `categories,selectedCats,selectedSubs,counts,onChange`; search/show-more/group select; default/selected/empty/loading | `discovery/SubcategoryMultiSelect.tsx` |
@@ -148,7 +161,7 @@ Owner paths are under `packages/ui/src`; grouped names share the stated file unl
 | ReviewBeforeSendSummary | audience/channel/template send summary | `admin/ReviewBeforeSendSummary.tsx` |
 | ApprovalDocumentViewer | permission-gated document view | `admin/ApprovalDocumentViewer.tsx` |
 | AuditDiff | before/after display | `admin/AuditDiff.tsx` |
-| ChartCard | Graph/Candle tabs | `admin/ChartCard.tsx` |
+| ChartCard | Graph-only series, supported metric/date/city filters, accessible table alternative | `admin/ChartCard.tsx` |
 | CityCard | city status and summary | `admin/CityCard.tsx` |
 | ZoneEditor | polygon editing with draggable corners | `admin/ZoneEditor.tsx` |
 | ModerationQueueItem | content, status and permitted actions | `admin/ModerationQueueItem.tsx` |
@@ -176,10 +189,10 @@ Owner paths are under `packages/ui/src`; grouped names share the stated file unl
 
 ## Performance, media and PWA
 
-- Budgets: LCP < 2.5 s on slow 4G, route JS approximately 170 KB gzip, CLS < 0.1. Measure production routes; split client islands and lazy-load below-fold media.
-- Use responsive image sizes, lazy-load offscreen images, reserve aspect ratio, and show skeleton/poster before media. Video never autoplays in data-saver/Save-Data mode; show tap-to-play poster and respect reduced motion.
+- Budgets: retain the existing LCP <2.5 s on slow 4G, route JS approximately 170 KB gzip and CLS <0.1 targets; verify the full API/INP/TTFB budgets in [product NFR](../../docs/specs/01-product/06-non-functional-requirements.md). Do not add targets or claim measurements without production-like verification.
+- Use intrinsic dimensions/aspect ratio plus responsive `sizes`; prioritize only the actual LCP image and lazy-load below-fold/category/subcategory cards. Batch owner projections and cap every rendered section/page using its module's cursor limit. Preserve skeleton/poster geometry before media. Video never autoplays in data-saver/Save-Data mode; show tap-to-play poster and respect reduced motion.
 - Link embeds only from approved hosts; API rebuilds embed URLs. Uploads use the storage port, content/size validation and EXIF/GPS stripping; use short-lived authorized media access where required.
-- Revocable uploaded images use Media's revalidated public-content URLs. Do not let Next's image optimizer/CDN cache bypass their current publication check; use `unoptimized` with supplied dimensions/responsive layout until an equally authorized optimization path exists. Static design assets may use ordinary image caching.
+- Revocable uploaded images use Media's revalidated public-content URLs. Do not let Next's image optimizer/CDN cache bypass their current publication check; use `unoptimized` with supplied dimensions/responsive layout until an equally authorized optimization path exists. Media's configured upload policy owns byte/dimension limits, EXIF removal and any approved compressed/responsive variants; no image format, quality or variant breakpoints are selected by this foundation. If no approved compressed variant exists, serve the validated source and measure it against the existing LCP budget; do not claim a compression gain. Static design assets may use ordinary image caching.
 - Cache the static app shell for offline rendering; do not cache private API, KYC, session or payment data. Show offline state and retry. Rider actions remain server-authoritative; countdowns use server timestamps and cannot be accepted/delivered offline.
 - PWA supports install prompt and weak connections. Data-saver disables autoplay and requests smaller media variants; all controls remain operable without motion.
 

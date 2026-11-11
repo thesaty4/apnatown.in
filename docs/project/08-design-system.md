@@ -111,7 +111,7 @@ Purpose, key props, states and do/don't live with the component in
   sheet.
 - **Data display:** tables that collapse to labelled cards, timeline,
   accordion, key-value, charts (bar, line, donut, sparkline,
-  **candlestick** with fill/hollow + legend + tooltip — SA1).
+  graph chart with an accessible table alternative — SA1; do not specify Candle/OHLC.
 - **Feedback:** skeleton, progress, spinner, empty/error/no-permission/
   success states, offline banner.
 - **Map components:** schematic map with pins, clusters, you-are-here,

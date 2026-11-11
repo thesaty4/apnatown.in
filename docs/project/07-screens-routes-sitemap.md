@@ -63,6 +63,7 @@ used hash routes — do not carry that forward). Screen IDs are
 | S-PV-2 | `/provider/services`, `/provider/products`, `/provider/orders` | PV3, PV5 |
 | S-PV-3 | `/provider/profile`, `/provider/media`, `/provider/account`, `/provider/notifications` | PV2, PV6 |
 | S-PV-4 | `/provider/reviews`, `/provider/followers`, `/provider/qr`, `/provider/analytics` | PV6 |
+| S-PV-5 | `/provider/billing` | PV8 Provider Premium billing |
 
 ## 4. Rider PWA (`/rider/...`)
 
@@ -97,7 +98,7 @@ used hash routes — do not carry that forward). Screen IDs are
 
 | Screen ID | Route | Covers |
 |---|---|---|
-| S-SA-1 | `/super-admin/overview` | SA1 tabbed Graph/Candle chart |
+| S-SA-1 | `/super-admin/overview` | SA1 graph-only chart with accessible table |
 | S-SA-2 | `/super-admin/admins` | SA2 admins and areas |
 | S-SA-3 | `/super-admin/roles` | SA3 roles and permissions |
 | S-SA-4 | `/super-admin/cities`, `/super-admin/cities/:id` | SA4 cities and zones |

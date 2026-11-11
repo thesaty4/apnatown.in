@@ -27,6 +27,8 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) for standard states,
 - Special states: empty ("You're all caught up").
 - Interactions: tap navigates to `link_path` (internal only) and marks read; keyboard Enter opens.
 - Links follow the BE matrix, including review replies/moderation, applicant decisions and admin support/listing reports. Scope/role is checked again at destination; unavailable/permission-changed links show shared feedback, not sensitive cached content.
+- Follower updates use the same feed item/accessibility states as other notifications; none appears unless active follow, bell, in-app preference and explicit marketing consent are current. External channel preference/consent and all send-time checks follow the BE policy.
+- Premium expiry uses the ordinary localized system-notice feed: the owner sees that selected listings are retained but no longer featured until a verified renewal, and scoped administrators see only the business and expiry status. Current in-app/email preferences apply; no WhatsApp or marketing opt-in is implied.
 - SSE deduplicates notification IDs, reconnect refetches role count/feed, and Mark all read applies only to the current authorized role. Never merge customer and vendor deliveries because the user ID matches.
 - Acceptance: Given an unread item, when opened/retried, then badge/read state changes once. Given role=vendor for a multi-role user, when loaded, then customer notices are absent. Given a WhatsApp-only or suppressed campaign, when receipts arrive, then no in-app item/badge is fabricated. Given Hindi and an empty feed, when rendered, then IST labels/empty copy use the approved catalogue.
 

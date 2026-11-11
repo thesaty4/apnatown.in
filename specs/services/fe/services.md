@@ -30,9 +30,10 @@ Standard default, skeleton, empty, error+retry, offline and no-permission behavi
 
 - Screenshots: `d-customer-service-b4-sv2.jpg`, `d-customer-service-s11-sv1.jpg`, `d-customer-service-s7-sv0.jpg`, `m-customer-service-b4-sv2.jpg`.
 - Layout: mobile stacks breadcrumb, image carousel, details and enquiry form; tablet/desktop use two-column media/details, then inclusions, availability, provider, videos, previous work, reviews, FAQs and related sections. Reuse `Breadcrumbs`, `MediaCarousel`, `ServiceCard`, `Avatar`, `Rating`, `FollowButton`, `IconButton`, `ShareSheet`, `Accordion`, `OfferBanner`, `GalleryGrid`, `EmbedCard`, `ReviewForm`, `RatingBreakdown`, `EnquiryForm`, and `Input` textarea mode.
-- Data: `GET /services/{slug}`, `/services/{slug}/related`, `/services/{slug}/similar-providers`; public business tabs use `/businesses/public/{slug}/services` with counted category/subcategory pills. Offers, reviews, follow/bookmark, directions and approved videos come from owning modules. ISR tags are invalidated by their owners.
+- Data: `GET /services/{slug}`, `/services/{slug}/related`, `/services/{slug}/similar-providers`; public business tabs use `/businesses/public/{slug}/services` with counted category/subcategory pills. Offers, enquiry-only coupons, reviews, follow/bookmark, directions and approved videos come from owning modules. ISR tags are invalidated by their owners.
 - Special states: enquiry success; paused service; no reference videos; no reviews; empty related services.
 - Interactions: carousel is keyboard operable; breadcrumb links open Explore Services with category/subcategory; call, WhatsApp and Directions are explicit user-initiated links. Guest enquiry submits without login; Save/Follow prompts login and returns to this service. Booking/payment placeholder is disabled. Enquiry form fields are name, 10-digit phone, message and optional non-past preferred date.
+- Approved service-targeted coupons may render as informational content with the standard enquiry action. Do not calculate a service price, apply a discount to an enquiry, transmit a redemption claim, or enable booking/payment.
 - Rules: F-SV-001, F-SV-002, F-SV-003, F-SV-004, F-SV-005, F-SV-006, F-SV-007, F-SV-008 (catalog-owned), F-LC-003, F-RV-005 and F-X-010 (owning modules); BR-06/08/09/10/14/18/21; reviews become available only after verified-enquirer eligibility.
 - Given an active service is opened, when the page loads, then its single subcategory and breadcrumb/filter links match.
 - Given a service is paused, when its direct URL is opened, then the paused state is shown and enquiry submission is disabled.
@@ -45,12 +46,14 @@ Standard default, skeleton, empty, error+retry, offline and no-permission behavi
 - Screenshots: `d-vendor-vservices.jpg`, `m-vendor-vservices.jpg`.
 - Layout: `DashboardShell` with responsive service list, `StatusBadge`, and `Sheet` editor; use `Select`, `Input`, `Uploader`, `MediaSorter`, `MediaConsentToggle`, `Toggle`, `Button` and `ConfirmDialog`.
 - Data: owner-scoped service list and mutations from BE services; approved video submission uses media-videos. Cache by business ID and invalidate after mutation.
-- Special states: no services; stale version conflict.
-- Interactions: editor fields follow the prototype (title, category, one subcategory, description, price type/amount/unit, included/excluded, service area, photos, optional video link, Gallery toggle and active toggle). Confirm delete; copy link reports success. The service-level Gallery control and FAQ behavior remain subject to Q-50/Q-52.
+- Special states: no services; stale version conflict; Premium expired with retained-but-inactive featured selection.
+- Interactions: editor fields follow the prototype (title, category, one subcategory, description, price type/amount/unit, included/excluded, service area, photos, optional video link, Gallery toggle, active toggle and Premium featured selection). A stored selection remains visible but inactive after Premium expiry and becomes effective after verified renewal; changing selection requires active Premium entitlement. Confirm delete; copy link reports success. The service-level Gallery control and FAQ behavior remain subject to Q-50/Q-52.
 - Rules: F-VD-014, BR-06/08/16; only one subcategory per service. Supported units follow the service editor contract.
 - Given a vendor edits a service outside their business, when saved, then show no-permission and preserve all data.
 - Given a vendor submits an invalid category/subcategory pair or price range, when saved, then show field errors and do not close the editor.
 - Given a vendor pauses a service, when saved, then the status label updates and public enquiry is unavailable.
+- Given no active Premium entitlement exists, when the owner edits featuring, then the control cannot save a new selection and the service remains unfeatured.
+- Given a selected service's Premium entitlement expires and is later renewed, when its public projection is read, then the selection remains stored, the service is not featured during the gap, and it becomes featured again only after verified renewal and current service/business eligibility.
 
 ### S-VEND-14 / S-PROV-03 — Enquiries inbox and detail
 

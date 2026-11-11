@@ -37,7 +37,7 @@ Write one section for **every Super admin screen** in `02-screen-inventory.md` (
 7. **Analytics events, SEO (if public), i18n keys, tokens used** (token names only).
 8. **Acceptance criteria** in Given/When/Then (happy, negative, permission, empty/error, Hindi/long text, dark mode).
 9. **Test plan** (component, integration, e2e) and a **visual parity checklist** against the screenshots (colours, spacing, radius, shadows, icons, copy).
-Include the Graph/Candle chart card (shared metric/date/city, fill vs hollow candles with Up/Down in tooltip, skeleton/empty/error), admins list collapsible cards with filters/chips/impact confirmation, roles matrix with unsaved indicator and before/after summary and reassign-before-delete, cities and zones with polygon editor and fee slabs, global settings sections, platform analytics, activity monitor.
+Include the Graph-only chart card (supported metric/date/city filters, accessible table, skeleton/empty/error; no Candle/OHLC controls or payload), admins list collapsible cards with filters/chips/impact confirmation, roles matrix with unsaved indicator and before/after summary and reassign-before-delete, cities and zones with polygon editor and fee slabs, global settings sections, platform analytics, activity monitor.
 
 ## STANDING REQUIREMENTS (apply every one; they are binding)
 

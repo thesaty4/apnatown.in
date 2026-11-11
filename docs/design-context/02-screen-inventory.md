@@ -96,6 +96,8 @@ Standard states for every screen: default; loading (skeleton); empty; error (ret
 | S-PROV-14 | Provider analytics | `/provider/analytics` | `#sanalytics` | Views, enquiries, conversion charts. | empty | F-PV-006 | `d-provider-sanalytics.jpg`, `m-provider-sanalytics.jpg` |
 | S-PROV-15 | Provider notifications | `/provider/notifications` | `#snotif` | Feed. | empty | F-NT-001 | `d-provider-snotif.jpg`, `m-provider-snotif.jpg` |
 | S-PROV-16 | Provider account | `/provider/account` | `#saccount` | Owner, payout, security, language. | - | F-PV-006 | `d-provider-saccount.jpg`, `m-provider-saccount.jpg` |
+| S-PROV-17 | Provider coupons | `/provider/offers` | New shared Coupons tab; no separate prototype screen | Shared coupon manager, provider-owned product coupons and service-targeted enquiry-only coupons. | empty; pending approval; policy unavailable | F-OF-006 | Reuses vendor coupon manager |
+| S-PROV-18 | Provider Billing and Premium | `/provider/billing` | New requested screen; reuse subscription components from vendor earnings | Plan status/expiry, configured purchase or renewal, cancel at paid expiry, issued plan invoices. | unavailable; active; cancellation scheduled; expired; pending/failure | F-PV-008 | No prototype screenshot; follows S-VEND-16 components |
 
 ## Rider screens
 
@@ -136,7 +138,7 @@ Standard states for every screen: default; loading (skeleton); empty; error (ret
 
 | Screen ID | Name | Production route | Prototype route | Purpose, data, components, actions | Special states | Features | Screenshot |
 |---|---|---|---|---|---|---|---|
-| S-SUPR-01 | Super admin overview | `/super-admin/overview` | `#xhome` | KPIs; tabbed Graph/Candle chart card with metric/date/city controls. | chart skeleton/empty/error | F-SA-001 | `d-super-xhome.jpg`, `m-super-xhome.jpg` |
+| S-SUPR-01 | Super admin overview | `/super-admin/overview` | `#xhome` | KPIs; Graph chart and accessible table with metric/date/city controls; no Candle view. | chart skeleton/empty/error | F-SA-001 | `d-super-xhome.jpg`, `m-super-xhome.jpg` |
 | S-SUPR-02 | Admins and areas | `/super-admin/admins` | `#xadmins` | Collapsible cards; search; filters with chips; activate/deactivate confirm; area assignment; permissions. | no results | F-SA-002 | `d-super-xadmins.jpg`, `m-super-xadmins.jpg` |
 | S-SUPR-03 | Roles and permissions | `/super-admin/roles` | `#xroles` | Create/edit/duplicate/delete; unsaved indicator; before/after; reassign picker; system roles locked. | delete blocked | F-SA-003 | `d-super-xroles.jpg`, `m-super-xroles.jpg` |
 | S-SUPR-04 | Cities | `/super-admin/cities` | `#xgeo` | City cards; enable/disable confirm; add city. | empty | F-SA-004 | `d-super-xgeo.jpg`, `m-super-xgeo.jpg` |
@@ -242,6 +244,8 @@ Standard states for every screen: default; loading (skeleton); empty; error (ret
 | F-OR-006 | S-CUST-14, S-CUST-15 |
 | F-OR-007 | S-CUST-14, S-VEND-04 |
 | F-OR-008 | S-CUST-14 |
+| F-OR-009 | S-CUST-12 |
+| F-OF-006 | S-VEND-07, S-PROV-17, S-ADMN-12, S-CUST-09 |
 | F-PD-001 | S-CUST-08 |
 | F-PD-002 | S-CUST-08 |
 | F-PD-003 | S-CUST-08 |
@@ -271,6 +275,7 @@ Standard states for every screen: default; loading (skeleton); empty; error (ret
 | F-PV-005 | S-PROV-04, S-PROV-05, S-PROV-06, S-PROV-07 |
 | F-PV-006 | S-PROV-02, S-PROV-10, S-PROV-11, S-PROV-12, S-PROV-13, S-PROV-14, S-PROV-16 |
 | F-PV-007 | S-PROV-08 |
+| F-PV-008 | S-PROV-18 |
 | F-RD-001 | S-RIDE-01 |
 | F-RD-002 | S-RIDE-02 |
 | F-RD-003 | S-RIDE-03 |

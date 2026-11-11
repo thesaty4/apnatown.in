@@ -14,8 +14,13 @@ templates: `docs/prompts/LEAN-SPECS.md`.
 - Do not update inventories, progress trackers, registers, lessons or
   other docs unless the user explicitly asks.
 - Build only what the features need; no speculative infrastructure
-  (microservices, CQRS, event sourcing, GraphQL, external search, Redis
-  at launch, plugin systems).
+  (microservices, CQRS, event sourcing, GraphQL, external search,
+  plugin systems). For cache/queue choices, follow
+  [`specs/_foundation/architecture.md`](../../../specs/_foundation/architecture.md):
+  pg-boss + PostgreSQL outbox is the launch queue, and Redis is not
+  selected at launch. Do not copy the legacy P01 Redis/BullMQ proposal
+  into a feature spec; a Redis proposal needs measured workload evidence
+  and an approved architecture decision.
 - Reference IDs (F-, S-, BR-, ST-, J-) instead of repeating the design
   pack; standard UX states live in `specs/_foundation/frontend-shared.md`.
 

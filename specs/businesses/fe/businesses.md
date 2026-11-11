@@ -16,8 +16,8 @@ Backend contract: [BE businesses](../be/businesses.md) · [Feature inventory](..
 | `/provider/overview` | S-PROV-02 | SSR, private module summaries | Owned provider applicant/provider; current capabilities | Noindex |
 | `/vendor/profile` | S-VEND-12 | SSR initial data; edit/preview client island | Owned shop applicant/vendor; editable profile capability | Noindex |
 | `/provider/profile` | S-PROV-09 | SSR initial data; edit/preview client island | Owned provider applicant/provider; editable profile capability | Noindex |
-| `/vendor/qr` | S-VEND-10 | SSR profile; local QR/print client island | Vendor, own approved business | Noindex |
-| `/provider/qr` | S-PROV-13 | SSR profile; local QR/print client island | Provider, own approved business | Noindex |
+| `/vendor/qr` | S-VEND-10 | SSR profile; local QR/print client island | Owner/applicant capability for own business with assigned slug | Noindex |
+| `/provider/qr` | S-PROV-13 | SSR profile; local QR/print client island | Owner/applicant capability for own business with assigned slug | Noindex |
 | `/provider/analytics` | S-PROV-14 | SSR private data; charts client island | Provider, own business | Noindex |
 | `/vendor/account` | S-VEND-18 | SSR private account shell; forms client island | Vendor, own account | Noindex |
 | `/provider/account` | S-PROV-16 | SSR private account shell; forms client island | Provider, own account | Noindex |
@@ -128,11 +128,12 @@ Owner API calls set `X-Business-Kind` from the vendor/provider route group; the 
 
 - Screenshots: `d-vendor-vqr.jpg`, `m-vendor-vqr.jpg`.
 - Layout: responsive preview with poster/table-tent/sticker selector, share link and product links.
-- Data: own approved business URL; product links from products. Generate QR locally; no CDN request or QR persistence.
-- Special states: non-approved business cannot share a live listing (`business.qr.notLive`); print unavailable offline (`business.qr.offline`).
+- Data: the business slug is assigned once when its application is submitted; generate its `/shop/{slug}` QR locally, with no CDN request or persisted QR asset. Product links come from Products.
+- Special states: before approval, the owner can preview/copy the QR but sees `business.qr.notLive`; scanning resolves to the unavailable public state. Renderer failure offers Retry; print unavailable offline (`business.qr.offline`).
 - Interactions: copy/share link; select template; browser print / Save as PDF. Invoice and order-slip templates are owned by orders, not this screen.
 - Rules: F-VD-011, F-X-011; print output hides dashboard chrome.
-- Given an approved vendor selects a template, when the QR is scanned, then it resolves to the canonical shop URL.
+- Given an owner has submitted an application, when the QR screen renders, then the local renderer deterministically encodes the immutable canonical shop URL without a server-side QR record.
+- Given a pending, suspended, inactive or deleted business QR is scanned, when the public route resolves, then no unpublished profile information is exposed; approved profiles resolve normally.
 - Given the vendor prints poster, table tent or sticker, when the print dialog opens, then only the selected template prints without dashboard chrome.
 - Given a different owner requests links, when the route loads, then no protected product/business links are returned.
 
@@ -140,13 +141,19 @@ Owner API calls set `X-Business-Kind` from the vendor/provider route group; the 
 
 - Screenshots: `d-provider-sqr.jpg`, `m-provider-sqr.jpg`.
 - Layout: provider QR card and share controls; use provider logo/name where available.
-- Data: own approved provider URL; no API write.
-- Special states: non-approved provider cannot share a live listing (`business.qr.notLive`).
+- Data: own submitted provider URL; no API write or persisted QR asset.
+- Special states: pre-approval public target is unavailable (`business.qr.notLive`); local renderer failure offers Retry.
 - Interactions: local QR, copy/share, browser print.
 - Rules: F-PV-006, F-X-011.
-- Given an approved provider opens QR, when it is generated, then the target is its canonical provider URL.
+- Given an owner opens QR after submission, when it is generated, then the target is its canonical provider URL and retries do not create new assets.
 - Given QR is rendered, when the screen loads, then generation uses a local library and makes no CDN request.
 - Given Hindi is selected, when the QR print view is generated, then all supporting text remains readable.
+
+### Business category selection
+
+- On S-VEND-01/S-PROV-01 onboarding and S-VEND-12/S-PROV-09 profile editing, select one or more active product categories and exactly one primary category. Provider expertise stays a separate Services-owned multi-select.
+- Given a submitted category selection omits its primary, duplicates an ID or includes a service category, when saved, then validation identifies the field and retains the draft.
+- Given a category is removed from an existing business, when discovery refreshes, then category memberships/counts update once and products/services retain their own taxonomy.
 
 ### S-PROV-14 — Provider analytics
 

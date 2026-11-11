@@ -9,6 +9,7 @@ Backend contract: [BE orders](../be/orders.md) · [Feature inventory](../../../d
 | Route (production) | Screen ID | Rendering + reason | Auth / role | Index policy |
 |---|---|---|---|---|
 | `/orders`, `/orders/:id`, `/orders/:id/refund`, `/orders/:id/invoice` | S-CUST-13, S-CUST-14, S-CUST-15, S-CUST-16 | SSR shell; owner-scoped client islands | Customer; login returns to requested order | `noindex` |
+| `/orders/checkouts/:checkoutAttemptId/summary` | S-CUST-12 extension | SSR private summary; print view, no public cache | Customer owns checkout; scoped admin read only | `noindex` |
 | `/vendor/orders`, `/vendor/orders/:id` | S-VEND-03, S-VEND-04 | SSR owner queue/detail; typed client commands | Approved vendor; own business | `noindex` |
 | `/provider/orders`, `/provider/orders/:id` | S-PROV-04, S-PROV-05 | Shared business views; product orders only | Approved provider; own business | `noindex` |
 | `/admin/orders`, `/admin/orders/:id` | S-ADMN-07, S-ADMN-08 | SSR scoped queue/detail; permission-gated client controls | Admin `orders:view/edit` + area; super_admin platform-wide | `noindex` |
@@ -56,6 +57,11 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) states/components, p
 - Data: `GET /orders/{orderId}/invoice`; customer order ownership required; no public cache.
 - Special states: invoice not configured, unavailable order, print failure.
 - Rules/acceptance: Given an owned order and configured issued snapshot, when printed, then names/amounts match its immutable financial revision, not later catalog data. Given a subsequent adjustment, when opened, then it is identified separately and no original invoice is overwritten. Given tax/credit-note policy is unset or another owner's order is requested, when opened, then no fabricated invoice/GST fields or foreign data appear (Q-06).
+
+### Master checkout summary — linked from S-CUST-12
+- Layout: one non-tax summary for the checkout with each shop order, ordered item/discount/fee/total breakdown, a separately labelled current cancellation/fulfilment/refund status, and a link to each shop's legal invoice when available; print/save action.
+- Data: `GET /checkouts/{checkoutAttemptId}/summary`; customer order ownership is required. Each invoice link opens that shop's own `/orders/{orderId}/invoice`. No public cache.
+- Rules/acceptance: Show each allocated coupon discount and fee once; original checkout totals never change. The summary is not a tax invoice, does not calculate or display a consolidated tax line, and directs customers to the linked shop invoice for tax detail. Given an invoice is not yet available, the summary still loads and labels that invoice unavailable. Given cancellation/refund/adjustment occurs, current status is separate from original totals; only verified returned money is labelled refunded. Unauthorized checkout IDs reveal no shops or amounts.
 
 ### S-VEND-03 / S-PROV-04 — Business orders list
 

@@ -64,8 +64,8 @@ The fixed stack is binding. The remainder below are P01 proposals only, not appr
 | Concern | P01 proposal | Alternative and switch condition |
 |---|---|---|
 | ORM/repositories | Prisma + PostgreSQL; repository ports and parameterized SQL for PostGIS/query gaps. | TypeORM/Kysely; switch if complex queries/migrations need a SQL-first layer. |
-| Cache | Redis only for measured hot reads/short-lived counters; PostgreSQL remains source of truth with explicit invalidation. | No distributed cache until metrics justify it; add Redis when latency/load proves need. |
-| Queue | BullMQ on Redis for retryable media/notification/campaign jobs; transactional outbox is durable source. | PostgreSQL pg-boss; switch to dedicated broker if throughput/isolation requires. |
+| Cache | No Redis at launch; PostgreSQL remains authoritative and public read fragments use the approved Next.js ISR/tag boundary. No current use is selected because no workload measurement justifies another service. | Reconsider Redis only when production-like metrics show a named hot-read workload misses existing p95 budgets after indexing/query/cache review; an ADR must specify ownership, key/scope, TTL, invalidation, memory bounds, stampede protection, observability and outage behavior. |
+| Queue | PostgreSQL `pg-boss` plus transactional outbox is the binding launch choice; do not adopt BullMQ/Redis for these jobs. | A separate broker requires measured throughput/isolation need and an approved architecture decision; Redis adoption alone does not select BullMQ. |
 | Search | PostgreSQL FTS + pg_trgm with explicit Hindi/Hinglish keyword map. | OpenSearch if measured quality/volume cannot meet p95. |
 | Storage | S3-compatible private object storage behind storage port; provider pending residency/retention. | Provider selection changes if residency/cost/lifecycle constraints require. |
 | Realtime | SSE for server-to-client status; polling fallback on weak network. No high-frequency bidirectional location contract assumed. | WebSockets only if confirmed rider live-location needs demand bidirectional updates. |

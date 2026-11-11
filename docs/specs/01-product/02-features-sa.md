@@ -25,7 +25,7 @@
 ### Requirement and scope
 - **Roles:** Super admin. **Priority:** P0.
 - **Area dependencies:** X14 audit. No additional feature dependency is stated in the source pack.
-- **Source requirement (preserved):** KPIs and tabbed Graph/Candle chart (shared metric, date range, city; candle fill/hollow plus words Up/Down; skeleton, empty, error).
+- **Prototype deviation (G-18):** the prototype includes a Graph/Candle toggle, but the approved behavior is graph-only because no candle/OHLC data definition exists. Preserve the supported metric, date-range and city filters, plus skeleton, empty, error and accessible table states.
 - **Preconditions:** The linked screen is reachable and the actor satisfies the listed role, ownership/scope, approval and source-state requirements. Presentation-only behavior creates no persistent business data.
 
 ### Main flow

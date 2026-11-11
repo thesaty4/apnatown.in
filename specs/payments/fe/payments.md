@@ -1,6 +1,6 @@
 # FE: payments
 
-Features: F-CK-006, F-CK-007, F-OR-006, F-VD-017, F-AC-001 (gated integration) | Screens: S-CUST-11, S-CUST-14, S-CUST-15, S-CUST-24, S-VEND-16 | Flows: J1
+Features: F-CK-006, F-CK-007, F-OR-006, F-VD-017, F-PV-008, F-AC-001 (gated integration) | Screens: S-CUST-11, S-CUST-14, S-CUST-15, S-CUST-24, S-VEND-16, S-PROV-18 | Flows: J1, J15
 
 Backend contract: [BE payments](../be/payments.md) · [Checkout](../../cart-checkout/fe/cart-checkout.md) owns customer selection/retry; [Orders](../../orders/fe/orders.md) owns refund requests/decisions. Use flat foundation errors and safe-integer paise JSON; do not parse numeric strings/float rupees or nested error envelopes.
 
@@ -9,6 +9,7 @@ Backend contract: [BE payments](../be/payments.md) · [Checkout](../../cart-chec
 | Route (production) | Screen ID | Rendering + reason | Auth / role | Index policy |
 |---|---|---|---|---|
 | `/vendor/earnings` | S-VEND-16 | SSR shell and owner-scoped initial read; client island only for plan/promotion payment handoffs | Approved vendor; own business | `noindex` |
+| `/provider/billing` | S-PROV-18 | SSR shell and owner-scoped initial read; reuse subscription components from S-VEND-16; client island only for plan purchase/cancellation handoffs | Approved provider; own business | `noindex` |
 | `/checkout` | S-CUST-11 | Owned by Cart/Checkout; renders payment methods, pending/failure and retry from its contract | Customer | `noindex` |
 | `/orders/:id` and `/orders/:id/refund` | S-CUST-14, S-CUST-15 | Owned by Orders; reflects the payment/refund status supplied by the owning APIs | Customer; order owner | `noindex` |
 
@@ -34,6 +35,21 @@ Backend contract: [BE payments](../be/payments.md) · [Checkout](../../cart-chec
   - Given a successful promotion charge has blocked activation, when displayed, then “paid” and placement availability are separate; the UI neither marks it live nor invents a refund.
   - Given a suspended business, disabled online flag, stale purchase version or unknown provider outcome, when Retry/Buy is attempted, then no optimistic financial/activation state appears and the server reason remains actionable.
 
+### S-PROV-18 — Billing and Premium (`/provider/billing`)
+
+- No dedicated prototype screen exists; reuse the subscription status, plan option, purchase handoff, invoice and confirmation components from S-VEND-16 without adding earnings or promotion-purchase content.
+- Data: `/payments/me/subscription`, plan purchases/retries, and `/payments/me/invoices`; scope every read and mutation to the approved provider's own business and permit plan invoices only.
+- Special states: plan/configuration unavailable; no current plan; active with expiry date; cancellation scheduled at paid expiry; expired; purchase pending/failure/reconciliation; invoices unavailable or genuinely absent.
+- Interactions: view current plan/status and expiry, buy or manually renew a configured plan, cancel at the current paid expiry with an explicit confirmation, and open only issued invoices. Cancellation takes effect at `endsAt`, does not refund or immediately remove Premium, and does not trigger automatic renewal. A verified renewal restores effective featuring for retained selections.
+- Rules: F-PV-008, BR-01/02/12; never show sample plan prices, an invented expiry date, or fabricated invoice/tax information. If the configured period or invoice policy is unavailable, show the explicit unavailable state.
+- Acceptance:
+  - Given an approved provider owns the business, when Billing loads, then only that business's plan status, configured plan options, expiry and plan invoices are returned.
+  - Given a provider supplies another business or purchase ID, when read or changed, then the request is denied without exposing the other business's billing data.
+  - Given an active finite plan and current version, when the provider cancels, then cancellation is recorded for the paid expiry, Premium remains effective until that instant, and no refund/payment operation is started.
+  - Given a plan has no configured expiry or a cancellation is replayed with a stale version, when cancellation is requested, then no mutation occurs and a localized error is shown.
+  - Given a configured plan renewal is verified, when entitlement becomes active, then retained selected eligible products/services become featured without a listing edit.
+  - Given plan/invoice configuration is missing, when the provider opens Billing, then unavailable is shown rather than sample values or fabricated documents.
+
 ### Checkout payment and order refund states
 
 - Screens: S-CUST-11, S-CUST-14, S-CUST-15 are specified by their owning Checkout/Orders screens; Payments adds no duplicate route or form.
@@ -56,7 +72,8 @@ Backend contract: [BE payments](../be/payments.md) · [Checkout](../../cart-chec
 ## Tests
 
 - Component: configured/unconfigured summary, ledger empty/error, pending/failed purchase without optimistic activation, invoice rows, keyboard/dialog operation, Hindi and dark mode.
-- Journey: J1 payment failure then retry or enabled cash fallback; vendor owner views S-VEND-16 and completes a configured purchase only after the verified-success response.
+- Journey: J1 payment failure then retry or enabled cash fallback; vendor owner views S-VEND-16; provider follows J15 on S-PROV-18, including cancellation-at-expiry and retained-selection reactivation after verified renewal.
+- Provider component: status/expiry, plan option, cancellation confirmation, issued invoice and unavailable states reuse S-VEND-16 components; no provider prototype screenshot or vendor earnings/promotion content is assumed.
 - Visual: `d-vendor-vearn.jpg` and `m-vendor-vearn.jpg`, 360px/mobile and desktop, light/dark, EN/HI. Never compare against seeded invoice amounts as live data.
 - Map every acceptance bullet to component/contract/E2E scenarios: reload/status/retry, duplicate tap, stale/new-price review, late capture, paid-but-blocked placement, null-policy vs authoritative zero, decision-vs-execution, current COD payable and Q-33 unavailable. Axe/keyboard chart/dialog focus, malicious labels, redacted telemetry and IST month-boundary rendering are required.
 

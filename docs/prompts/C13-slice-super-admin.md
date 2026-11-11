@@ -29,7 +29,7 @@ Use only this slice; legacy `docs/specs/` outputs are not prerequisites.
 - Code in `apps/web`, `apps/api`, `packages/*` as defined by the specs, with tests and Storybook stories
 
 ## REQUIRED CONTENTS
-Build SA features: overview with Graph/Candle chart, admins and areas, roles and permissions (reassign rule), cities and zones with polygon editor, global settings, analytics, activity monitor, main-category management.
+Build SA features: overview with Graph-only chart and accessible table (no Candle/OHLC controls or payload), admins and areas, roles and permissions (reassign rule), cities and zones with polygon editor, global settings, analytics, activity monitor, main-category management.
 
 ## IMPLEMENTATION RULES (in addition to the standing requirements)
 - Follow the current foundation/module specs above and the Design Context Pack. Keep changes slice-scoped; ask about a blocking ambiguity and fix its owning spec, not missing legacy documents or trackers.

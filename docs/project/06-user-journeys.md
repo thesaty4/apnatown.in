@@ -161,3 +161,23 @@ involved, the success path, and the main failure path(s).
 - **Success:** review eligible and submittable after `converted`.
 - **Failure:** enquiry `closed` without conversion -> customer remains
   ineligible to review that provider via this path.
+
+## J15 — Provider Premium purchase, expiry and renewal
+
+- **Actor:** R-03 provider; scoped promotions admins receive the expiry
+  notice.
+- **Steps:** open Provider Billing (PV8, S-PROV-18) -> view only the
+  configured plan and current status/expiry -> purchase or manually
+  renew -> wait for verified payment -> Payments updates entitlement ->
+  Products/Services/Search invalidate effective-featured caches.
+- **Expiry:** selections are retained but no longer featured after
+  `endsAt`; Notifications sends one system notice to the provider and
+  currently authorized area `promos:view` admins plus `super_admin`.
+- **Cancellation:** provider confirms cancellation; access remains
+  active until the paid `endsAt`, with no refund and no automatic
+  renewal.
+- **Success:** verified renewal makes still-selected eligible products
+  and services featured again without listing edits.
+- **Failure paths:** missing plan period/price or invoice policy shows
+  unavailable; failed/unknown payment never changes entitlement; a
+  duplicate expiry job/event never duplicates notices.

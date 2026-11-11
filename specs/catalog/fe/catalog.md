@@ -8,7 +8,7 @@ Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../..
 
 | Route | Screen ID | Rendering + reason | Auth / role | Index policy |
 |---|---|---|---|---|
-| `/` (category tiles only) | S-CUST-01 | ISR; category data tagged for revalidation | Public | Existing home SEO policy |
+| `/` (category tiles, dedicated and curated sections) | S-CUST-01 | ISR; Catalog taxonomy/section tags and Search-owned public sections | Public | Existing home SEO policy |
 | `/services` | S-CUST-04 | ISR; public category content and featured results | Public | Index |
 | `/category/[slug]` | S-CUST-05 | ISR; category metadata and result list are server-rendered | Public | Index category landing pages; canonical, EN/HI alternates |
 | `/vendor/products` (suggestion sheet) | S-VEND-05 | SSR shell; suggestion form is a client island | Vendor, own business | Noindex |
@@ -23,13 +23,19 @@ Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../..
 
 - Screenshots: `d-customer-home.jpg`, `m-customer-home.jpg`.
 - Layout: shared `CategoryTile` grids in the home content; mobile-first, tablet and desktop columns match the home screenshots/design system.
-- Data: `GET /catalog/categories?kind=product` and `GET /catalog/categories?kind=service`; home layout/results are owned by `search`.
+- Data: `GET /catalog/categories?kind=product` and `GET /catalog/categories?kind=service`; Search composes Catalog-owned homepage section config and public subcategories.
 - Special states: no active categories hides only the empty tile group; do not show inactive categories.
 - Interactions: product tile opens `/explore?tab=products&category={slug}`; service tile opens `/explore?tab=services&category={slug}`; preserve URL state and Back behavior.
+- Section patterns: a dedicated section uses the category's localized heading/supporting text and every active subcategory card; a curated section uses editable localized heading/supporting text, keyboard-operable category pills, initially selected configured pill, and that category's active subcategory cards. Switching pills updates only that section; reload restores its configured initial selection. Clicking a subcategory navigates to Explore with the matching kind, category and subcategory URL filters.
+- Empty states: a dedicated section with no active subcategories is omitted. A curated section with no active category pills is omitted; an active selected pill with no active subcategories keeps its heading/pills and shows the shared localized empty state.
+- Images: uploaded taxonomy image takes precedence over the existing icon; missing/unavailable image falls back to icon then the shared placeholder. The localized category/subcategory name labels the card; image is decorative when the same name is visible. Preserve aspect ratio, supply dimensions/responsive sizes, and lazy-load below-fold section images.
 - Rules: F-HM-003/004, BR-15.
 - Acceptance:
   - Given an active product or service category, when its tile is selected, then it opens Explore with the matching category in the URL.
   - Given a category is inactive, when home loads, then it is absent from the selectable tile groups.
+  - Given a dedicated section has no eligible active subcategories or a curated section has no active category pills, when Home loads, then that section is omitted without affecting the others; a curated active pill with no subcategories shows the localized empty state.
+  - Given a curated section, when a keyboard user changes its category pill, then the active pill is announced and the corresponding subcategory cards replace the previous set without changing Explore/Search filters.
+  - Given a category/subcategory has no available image, when a tile renders, then icon/placeholder fallback and the accessible localized label remain available.
   - Given Hindi or dark mode, when tiles render at mobile/tablet/desktop sizes, then localized labels wrap and use design tokens.
 
 ### S-CUST-04 — Services home
@@ -37,6 +43,7 @@ Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../..
 - Screenshots: `d-customer-services.jpg`, `m-customer-services.jpg`.
 - Layout: category grid and featured-provider sections; category cards use shared `CategoryTile`.
 - Data: catalog categories plus search-owned featured providers.
+- Images: category cards use the uploaded taxonomy image before the existing icon; retain the shared fallback and localized label.
 - Special states: empty category group.
 - Interactions: category opens Explore Services with its category in the URL; keyboard users can activate each tile.
 - Rules: F-HM-004, BR-15, BR-18.
@@ -50,6 +57,7 @@ Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../..
 - Screenshots: `d-customer-cat-grocery.jpg`, `d-customer-cat-wedding.jpg`, `m-customer-cat-grocery.jpg`, `m-customer-cat-wedding.jpg`.
 - Layout: mobile stacks category header/results and uses the shared filter sheet; tablet uses the shared horizontal filter bar; desktop pairs the category header/results with the filter panel. Services reuse `SubcategoryMultiSelect`.
 - Data: category DTO from catalog; products/shops/services and facet counts from `search`; ISR tags revalidate on taxonomy change.
+- Images: category header and displayed subcategory cards use Media-authorized category/subcategory images with the same icon/placeholder fallback; do not make filters depend on image availability.
 - Special states: empty category, no matching active subcategory.
 - Interactions: service filters update URL params; Back restores filters and scroll; CTA opens Explore with the same category.
 - Rules: F-X-010, BR-15, BR-18; filter combinations remain `noindex`.
@@ -86,15 +94,19 @@ Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../..
 ### S-ADMN-05 — Categories
 
 - Screenshots: `d-admin-acats.jpg`, `m-admin-acats.jpg`.
-- Layout: mobile uses stacked tree/cards; tablet and desktop use the shared tree/preview regions and `DataTable`; main categories are visibly fixed for area admins.
-- Data: `GET /catalog/admin/categories`; filter preview uses `POST /search/admin/preview` with selected taxonomy IDs and the permitted scope; edits follow BE role constraints.
-- Special states: no permission; empty subcategory tree; duplicate warning; preview with no results.
+- Layout: mobile uses stacked tree/cards; tablet and desktop use the shared tree/preview regions and `DataTable`; main categories are visibly fixed for area admins. Show image preview/placeholder beside category and subcategory labels.
+- Data: `GET /catalog/admin/categories`; filter preview uses `POST /search/admin/preview` with selected taxonomy IDs and the permitted scope; category/subcategory image uploads use Media's `catalog_taxonomy` purpose; Home section configuration uses `/catalog/admin/home-sections`.
+- Special states: no permission; empty subcategory tree; duplicate warning; preview with no results; image upload/validation and preview failure; empty Home section; unsaved version conflict.
 - Interactions: expand/collapse category; preview filter; add/edit is available only to super admin pending Q-39; area admins use the suggestion queue.
+- Home sections: a super admin can create, reorder, edit, activate/deactivate or remove a dedicated-category or curated-pills section. EN/HI heading and supporting text are edited together; category kind cannot mix products and services. No date scheduling or arbitrary page-builder blocks.
 - Rules: F-AD-005/F-SA-008, BR-07, BR-12; no destructive category delete.
 - Acceptance:
   - Given an area admin, when opening the tree, then global categories are read-only and scope is enforced on preview.
   - Given a super admin, when saving a category, then validation/version conflicts are localized without losing form values.
   - Given a category with subcategories, when previewed, then the search-owned preview reflects the selected taxonomy.
+  - Given an area admin, when they try to upload or change a taxonomy image or Home section, then write controls are absent and server authorization remains authoritative.
+  - Given a super admin removes an image, when the form saves, then the tile falls back to its icon/placeholder and the form version is updated.
+  - Given a curated section has an initial category not in its selected category pills, when saved or activated, then a localized validation error preserves the user's form values.
 
 ### S-ADMN-06 — Subcategory suggestions
 
@@ -125,7 +137,7 @@ Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../..
 
 ## Components and i18n
 
-- Feature-only: `SubcategorySuggestionSheet`, `DuplicateMatchPanel`, `KeywordTargetEditor`.
+- Feature-only: `SubcategorySuggestionSheet`, `DuplicateMatchPanel`, `KeywordTargetEditor`, `HomeSectionEditor`.
 - Shared: `CategoryTile`, `SubcategoryMultiSelect`, `FilterPanel`, `Breadcrumbs`, `Sheet`, `DataTable`, `Tabs`, `StatusBadge`, `Input`, `Select`, `Button`, `ConfirmDialog`, standard state views.
 - Keys: `catalog.categories.*`, `catalog.subcategorySuggestion.*`, `catalog.admin.suggestions.*`, `catalog.admin.keywords.*`; all visible copy EN/HI, with long Hindi labels wrapping.
 - Analytics: no new events until the shared event plan in Q-11 is approved.
