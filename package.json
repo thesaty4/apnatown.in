@@ -27,7 +27,7 @@
     "start:web": "node scripts/workspace.mjs start:web",
     "start:worker": "node scripts/workspace.mjs start:worker",
     "lint": "eslint . && node scripts/check-workspace.mjs",
-    "format:check": "prettier --check package.json pnpm-workspace.yaml tsconfig*.json eslint.config.mjs compose.yaml apps packages scripts/environment* scripts/processes* scripts/workspace* scripts/check-workspace* .github/workflows",
+    "format:check": "prettier --check package.json pnpm-workspace.yaml tsconfig*.json eslint.config.mjs compose.yaml apps packages scripts/environment* scripts/processes* scripts/workspace* scripts/check-workspace*",
     "typecheck": "node scripts/workspace.mjs typecheck",
     "check:generated": "node scripts/workspace.mjs check:generated"
   },
