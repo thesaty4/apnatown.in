@@ -11,6 +11,42 @@
       "types": "./dist/primitives/Button.d.ts",
       "import": "./dist/primitives/Button.js"
     },
+    "./primitives/Input": {
+      "types": "./dist/primitives/Input.d.ts",
+      "import": "./dist/primitives/Input.js"
+    },
+    "./primitives/TextArea": {
+      "types": "./dist/primitives/TextArea.d.ts",
+      "import": "./dist/primitives/TextArea.js"
+    },
+    "./primitives/Select": {
+      "types": "./dist/primitives/Select.d.ts",
+      "import": "./dist/primitives/Select.js"
+    },
+    "./primitives/Selection": {
+      "types": "./dist/primitives/Selection.d.ts",
+      "import": "./dist/primitives/Selection.js"
+    },
+    "./primitives/Chip": {
+      "types": "./dist/primitives/Chip.d.ts",
+      "import": "./dist/primitives/Chip.js"
+    },
+    "./primitives/Pill": {
+      "types": "./dist/primitives/Pill.d.ts",
+      "import": "./dist/primitives/Pill.js"
+    },
+    "./primitives/Badge": {
+      "types": "./dist/primitives/Badge.d.ts",
+      "import": "./dist/primitives/Badge.js"
+    },
+    "./cards/Card": {
+      "types": "./dist/cards/Card.d.ts",
+      "import": "./dist/cards/Card.js"
+    },
+    "./data/Avatar": {
+      "types": "./dist/data/Avatar.d.ts",
+      "import": "./dist/data/Avatar.js"
+    },
     "./feedback/Skeleton": {
       "types": "./dist/feedback/Skeleton.d.ts",
       "import": "./dist/feedback/Skeleton.js"

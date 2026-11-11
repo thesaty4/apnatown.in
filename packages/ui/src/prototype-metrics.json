@@ -1,6 +1,29 @@
 {
-  "source": "docs/design-context/reference/prototype-source/style.css: .wrap, .state, .btn, .skel, h1/h2 desktop overrides",
+  "source": "docs/design-context/reference/prototype-source/style.css: .wrap, .state, .btn, .skel, h1/h2 desktop overrides; .field/.input/.hint/.errmsg (125-138), .chip/.badge (144-146), .art (160-165), .mini (248), .sfn (284)",
   "tokens": {
+    "color": {
+      "switch-thumb": "#FFFFFF"
+    },
+    "border-width": {
+      "chip-border": "1.5px"
+    },
+    "opacity": {
+      "art-brightness": ".78"
+    },
+    "drop-shadow": {
+      "art-shadow": "0 2px 2px rgba(0,0,0,.18)"
+    },
+    "background": {
+      "badge-fill": "color-mix(in srgb,currentColor 12%,var(--at-surface))"
+    },
+    "art": {
+      "art-hue-default": "25",
+      "art-angle": "135deg",
+      "art-start-saturation": "85%",
+      "art-start-lightness": "90%",
+      "art-end-saturation": "70%",
+      "art-end-lightness": "76%"
+    },
     "animate": {
       "skeleton": "apnatown-shimmer 1.3s infinite",
       "spinner": "apnatown-spin .7s linear infinite"
@@ -11,7 +34,22 @@
       "state-inline": "18px",
       "state-block": "36px",
       "state-icon": "92px",
-      "button-inline": "20px"
+      "button-inline": "20px",
+      "field-gap": "6px",
+      "field-block": "10px",
+      "field-inline": "14px",
+      "textarea-min-height": "96px",
+      "selection-control": "22px",
+      "selection-gap": "10px",
+      "switch-width": "52px",
+      "switch-height": "30px",
+      "switch-inset": "3px",
+      "switch-travel": "22px",
+      "badge-inline": "9px",
+      "badge-block": "2px",
+      "count": "28px",
+      "count-block": "1px",
+      "avatar-mini": "56px"
     },
     "container": {
       "state-copy": "38ch"
@@ -19,7 +57,12 @@
     "text": {
       "state-icon": "2.6rem",
       "h1-desktop": "2.2rem",
-      "h2-desktop": "1.65rem"
+      "h2-desktop": "1.65rem",
+      "field-label": ".9rem",
+      "field-error": ".82rem",
+      "chip": ".9rem",
+      "art": "2.4rem",
+      "art-mini": "1.6rem"
     }
   }
 }

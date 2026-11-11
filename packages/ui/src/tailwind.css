@@ -7,6 +7,14 @@
   --breakpoint-*: initial;
   --animate-skeleton: var(--at-skeleton);
   --animate-spinner: var(--at-spinner);
+  --art-art-angle: var(--at-art-angle);
+  --art-art-end-lightness: var(--at-art-end-lightness);
+  --art-art-end-saturation: var(--at-art-end-saturation);
+  --art-art-hue-default: var(--at-art-hue-default);
+  --art-art-start-lightness: var(--at-art-start-lightness);
+  --art-art-start-saturation: var(--at-art-start-saturation);
+  --background-badge-fill: var(--at-badge-fill);
+  --border-width-chip-border: var(--at-chip-border);
   --breakpoint-desktop: 900px;
   --breakpoint-tablet: 600px;
   --color-accent: var(--at-accent);
@@ -46,17 +54,20 @@
   --color-success-soft: var(--at-success-soft);
   --color-surface: var(--at-surface);
   --color-surface-2: var(--at-surface-2);
+  --color-switch-thumb: var(--at-switch-thumb);
   --color-text: var(--at-text);
   --color-text-2: var(--at-text-2);
   --color-warning: var(--at-warning);
   --color-warning-soft: var(--at-warning-soft);
   --container-page: var(--at-page);
   --container-state-copy: var(--at-state-copy);
+  --drop-shadow-art-shadow: var(--at-art-shadow);
   --ease-standard: var(--at-ease);
   --font-body: var(--at-font-body);
   --font-devanagari: var(--at-font-devanagari);
   --font-display: var(--at-font-display);
   --leading-heading: var(--at-heading);
+  --opacity-art-brightness: var(--at-art-brightness);
   --radius-lg: var(--at-r-lg);
   --radius-md: var(--at-r-md);
   --radius-pill: var(--at-r-pill);
@@ -72,9 +83,17 @@
   --spacing-4: var(--at-4);
   --spacing-6: var(--at-6);
   --spacing-8: var(--at-8);
+  --spacing-avatar-mini: var(--at-avatar-mini);
+  --spacing-badge-block: var(--at-badge-block);
+  --spacing-badge-inline: var(--at-badge-inline);
   --spacing-bottom-tab-height: var(--at-bottom-tab-height);
   --spacing-button-inline: var(--at-button-inline);
   --spacing-button-min-height: var(--at-button-min-height);
+  --spacing-count: var(--at-count);
+  --spacing-count-block: var(--at-count-block);
+  --spacing-field-block: var(--at-field-block);
+  --spacing-field-gap: var(--at-field-gap);
+  --spacing-field-inline: var(--at-field-inline);
   --spacing-icon-max: var(--at-icon-max);
   --spacing-icon-min: var(--at-icon-min);
   --spacing-input-min-height: var(--at-input-min-height);
@@ -86,12 +105,21 @@
   --spacing-sab: var(--at-sab);
   --spacing-sat: var(--at-sat);
   --spacing-searchbar-min-height: var(--at-searchbar-min-height);
+  --spacing-selection-control: var(--at-selection-control);
+  --spacing-selection-gap: var(--at-selection-gap);
   --spacing-state-block: var(--at-state-block);
   --spacing-state-gap: var(--at-state-gap);
   --spacing-state-icon: var(--at-state-icon);
   --spacing-state-inline: var(--at-state-inline);
+  --spacing-switch-height: var(--at-switch-height);
+  --spacing-switch-inset: var(--at-switch-inset);
+  --spacing-switch-travel: var(--at-switch-travel);
+  --spacing-switch-width: var(--at-switch-width);
   --spacing-tab-h: var(--at-tab-h);
+  --spacing-textarea-min-height: var(--at-textarea-min-height);
   --spacing-touch: var(--at-touch);
+  --text-art: var(--at-art);
+  --text-art-mini: var(--at-art-mini);
   --text-big-number: var(--at-big-number);
   --text-big-number--font-weight: 700;
   --text-body: var(--at-body);
@@ -101,6 +129,9 @@
   --text-button--font-weight: 600;
   --text-caption: var(--at-caption);
   --text-caption-min: var(--at-caption-min);
+  --text-chip: var(--at-chip);
+  --text-field-error: var(--at-field-error);
+  --text-field-label: var(--at-field-label);
   --text-h1: var(--at-h1);
   --text-h1--font-weight: 700;
   --text-h1--letter-spacing: -0.01em;
@@ -142,3 +173,7 @@
 @keyframes apnatown-shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
 @keyframes apnatown-spin { to { transform: rotate(360deg); } }
 @utility skeleton-fill { background: linear-gradient(90deg, var(--at-surface-2) 25%, var(--at-border) 37%, var(--at-surface-2) 63%); background-size: 400% 100%; }
+@utility badge-fill { background: var(--at-badge-fill); }
+@utility art-fill { background: linear-gradient(var(--at-art-angle), hsl(var(--at-art-hue, var(--at-art-hue-default)) var(--at-art-start-saturation) var(--at-art-start-lightness)), hsl(var(--at-art-hue, var(--at-art-hue-default)) var(--at-art-end-saturation) var(--at-art-end-lightness))); }
+@utility art-shadow { filter: drop-shadow(var(--at-art-shadow)); }
+@utility art-dim { :root[data-theme="dark"] & { filter: brightness(var(--at-art-brightness)); } @media (prefers-color-scheme: dark) { :root[data-theme="auto"] & { filter: brightness(var(--at-art-brightness)); } } }

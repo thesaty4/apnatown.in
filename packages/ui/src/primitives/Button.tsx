@@ -1,11 +1,16 @@
 import type { ComponentPropsWithRef } from 'react';
 
+/** Shared native-button behavior; Chip has its own catalogue appearance. */
+export const buttonInteractionClassName =
+  'focus-visible:ring-focus disabled:cursor-not-allowed disabled:opacity-50 ' +
+  'motion-reduce:transition-none';
+
 export const buttonClassName =
   'inline-flex min-h-button-min-height max-w-full items-center justify-center gap-2 ' +
   'rounded-md border-2 border-transparent bg-primary px-button-inline py-2 ' +
   'text-button font-semibold text-on-primary whitespace-normal break-words text-center ' +
-  'transition-colors duration-2 ease-standard hover:brightness-95 focus-visible:ring-focus ' +
-  'disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none';
+  'transition-colors duration-2 ease-standard hover:brightness-95 ' +
+  buttonInteractionClassName;
 
 export type ButtonProps = ComponentPropsWithRef<'button'> & {
   loading?: boolean;
