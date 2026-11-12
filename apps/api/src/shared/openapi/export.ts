@@ -25,6 +25,11 @@ import {
   DataRequestsController,
 } from '../../modules/users/presentation/data-requests.controller';
 import { DataRequestService } from '../../modules/users/application/data-request.service';
+import { AdminMeController } from '../../modules/admin/presentation/admin-me.controller';
+import { SuperAdminAdminsController } from '../../modules/admin/presentation/super-admin-admins.controller';
+import { SuperAdminRolesController } from '../../modules/admin/presentation/super-admin-roles.controller';
+import { AdminAccountsService } from '../../modules/admin/application/admin-accounts.service';
+import { RolesService } from '../../modules/admin/application/roles.service';
 
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
@@ -39,6 +44,9 @@ import { DataRequestService } from '../../modules/users/application/data-request
     AnonymousConsentsController,
     DataRequestsController,
     DataRequestCompletionController,
+    AdminMeController,
+    SuperAdminAdminsController,
+    SuperAdminRolesController,
   ],
   providers: [
     ReadinessService,
@@ -50,6 +58,8 @@ import { DataRequestService } from '../../modules/users/application/data-request
     AddressService,
     ConsentService,
     DataRequestService,
+    AdminAccountsService,
+    RolesService,
   ].map((provide) => ({ provide, useValue: Object.freeze({}) })),
 })
 class OpenApiModule {}
@@ -116,7 +126,7 @@ async function main(): Promise<void> {
               'Cache-Control': {
                 schema: { type: 'string' },
                 description:
-                  'Auth and own-account responses are private, no-store.',
+                  'Auth, own-account and admin responses are private, no-store.',
               },
               ...(status === '429'
                 ? {

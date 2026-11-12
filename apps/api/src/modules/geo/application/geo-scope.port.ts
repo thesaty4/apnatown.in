@@ -1,3 +1,4 @@
+import type { AreaRef, CityRef } from '@apnatown/shared/admin';
 import type { TxContext } from '../../../shared/persistence/ports';
 
 export const GEO_SCOPE = Symbol('GEO_SCOPE');
@@ -8,4 +9,10 @@ export interface GeoScopePort {
     input: { cityId: string; areaIds: readonly string[] },
     tx?: TxContext,
   ): Promise<void>;
+  /** Existing areas among `areaIds` (any city), share-locked inside a UoW. */
+  describeAreas(areaIds: readonly string[], tx?: TxContext): Promise<AreaRef[]>;
+  describeCities(
+    cityIds: readonly string[],
+    tx?: TxContext,
+  ): Promise<CityRef[]>;
 }

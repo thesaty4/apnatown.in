@@ -41,8 +41,9 @@ export class AuthGuard implements CanActivate {
       if (read) return true;
       throw new DomainError('COMMON_FORBIDDEN');
     }
-    // New routes need an explicit policy; own-account access grants no cross-module authority.
-    if (!policy || !['csrf', 'guest', 'own'].includes(policy))
+    // New routes need an explicit policy; own-account access grants no cross-module
+    // authority. `role` routes are further checked by AdminAccessGuard.
+    if (!policy || !['csrf', 'guest', 'own', 'role'].includes(policy))
       throw new DomainError('COMMON_FORBIDDEN');
     response.setHeader('Cache-Control', 'private, no-store');
     response.setHeader('Vary', 'Cookie, Origin');
@@ -64,7 +65,7 @@ export class AuthGuard implements CanActivate {
     if (!read) this.csrf.protect(request, response);
     if (policy === 'guest' && resolved.session.kind !== 'anonymous')
       throw new DomainError('COMMON_FORBIDDEN');
-    if (policy === 'own') {
+    if (policy === 'own' || policy === 'role') {
       if (!resolved.principal) throw new DomainError('SESSION_EXPIRED');
       request.principal = resolved.principal;
       request.rateLimitPrincipalId = resolved.principal.userId;

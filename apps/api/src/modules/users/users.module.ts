@@ -28,6 +28,10 @@ import {
   DataRequestCompletionController,
   DataRequestsController,
 } from './presentation/data-requests.controller';
+import { USER_ROLES_REPOSITORY } from './domain/user-roles';
+import { PrismaUserRolesRepository } from './infrastructure/user-roles.repository';
+import { UserRolesService } from './application/user-roles.service';
+import { USER_ADMIN_READ, USER_ROLES } from './application/user-role-port';
 
 @Module({})
 export class UsersModule {
@@ -65,8 +69,19 @@ export class UsersModule {
         privateStorageProvider,
         DataRequestEvents,
         DataRequestService,
+        { provide: USER_ROLES_REPOSITORY, useClass: PrismaUserRolesRepository },
+        UserRolesService,
+        { provide: USER_ROLES, useExisting: UserRolesService },
+        { provide: USER_ADMIN_READ, useExisting: UserRolesService },
       ],
-      exports: [USER_IDENTITY, USERS_ADDRESS, CONSENT_READ, CONSENT_WRITE],
+      exports: [
+        USER_IDENTITY,
+        USERS_ADDRESS,
+        CONSENT_READ,
+        CONSENT_WRITE,
+        USER_ROLES,
+        USER_ADMIN_READ,
+      ],
     };
   }
 }

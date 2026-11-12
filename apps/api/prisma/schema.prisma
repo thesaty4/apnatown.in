@@ -69,23 +69,26 @@ model RateLimitBucket {
 }
 
 model User {
-  id              String        @id @db.Uuid
-  phoneCiphertext String?       @map("phone_ciphertext")
-  phoneLookupHash Bytes?        @unique(map: "users_phone_lookup_hash_key") @map("phone_lookup_hash")
-  emailCiphertext String?       @map("email_ciphertext")
-  displayName     String?       @map("display_name")
-  preferredLocale String        @default("en") @map("preferred_locale")
-  themePreference String        @default("light") @map("theme_preference")
-  accountStatus   String        @default("active") @map("account_status")
-  version         Int           @default(1)
-  deletedAt       DateTime?     @map("deleted_at") @db.Timestamptz(6)
-  createdAt       DateTime      @map("created_at") @db.Timestamptz(6)
-  updatedAt       DateTime      @map("updated_at") @db.Timestamptz(6)
+  id              String         @id @db.Uuid
+  phoneCiphertext String?        @map("phone_ciphertext")
+  phoneLookupHash Bytes?         @unique(map: "users_phone_lookup_hash_key") @map("phone_lookup_hash")
+  emailCiphertext String?        @map("email_ciphertext")
+  displayName     String?        @map("display_name")
+  preferredLocale String         @default("en") @map("preferred_locale")
+  themePreference String         @default("light") @map("theme_preference")
+  accountStatus   String         @default("active") @map("account_status")
+  version         Int            @default(1)
+  deletedAt       DateTime?      @map("deleted_at") @db.Timestamptz(6)
+  createdAt       DateTime       @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime       @map("updated_at") @db.Timestamptz(6)
   roles           UserRole[]
   sessions        Session[]
   addresses       Address[]
   consents        Consent[]
   dataRequests    DataRequest[]
+  auditLogs       AuditLog[]
+  adminAccount    AdminAccount?  @relation("AdminAccountUser")
+  adminsCreated   AdminAccount[] @relation("AdminAccountCreator")
 
   @@index([deletedAt], where: raw("\"deleted_at\" IS NULL"), map: "users_active_deleted_at_idx")
   @@map("users")
@@ -204,36 +207,38 @@ model Session {
 }
 
 model City {
-  id        String                @id @db.Uuid
-  slug      String                @unique(map: "cities_slug_key")
-  nameEn    String                @map("name_en")
-  nameHi    String                @map("name_hi")
-  stateCode String                @map("state_code") @db.Char(2)
-  status    String
-  version   Int                   @default(1)
-  createdAt DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime              @default(now()) @map("updated_at") @db.Timestamptz(6)
-  areas     Area[]
-  zones     Zone[]
-  waitlist  ServiceAreaWaitlist[]
-  addresses Address[]
+  id          String                @id @db.Uuid
+  slug        String                @unique(map: "cities_slug_key")
+  nameEn      String                @map("name_en")
+  nameHi      String                @map("name_hi")
+  stateCode   String                @map("state_code") @db.Char(2)
+  status      String
+  version     Int                   @default(1)
+  createdAt   DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime              @default(now()) @map("updated_at") @db.Timestamptz(6)
+  areas       Area[]
+  zones       Zone[]
+  waitlist    ServiceAreaWaitlist[]
+  addresses   Address[]
+  adminScopes AdminScope[]
 
   @@index([status, nameEn, id], map: "cities_status_name_en_id_idx")
   @@map("cities")
 }
 
 model Area {
-  id        String                                @id @db.Uuid
-  cityId    String                                @map("city_id") @db.Uuid
-  slug      String
-  nameEn    String                                @map("name_en")
-  nameHi    String                                @map("name_hi")
-  pinCode   String?                               @map("pin_code")
-  centroid  Unsupported("geography(Point,4326)")?
-  createdAt DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime                              @default(now()) @map("updated_at") @db.Timestamptz(6)
-  city      City                                  @relation(fields: [cityId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "areas_city_id_fkey")
-  addresses Address[]
+  id          String                                @id @db.Uuid
+  cityId      String                                @map("city_id") @db.Uuid
+  slug        String
+  nameEn      String                                @map("name_en")
+  nameHi      String                                @map("name_hi")
+  pinCode     String?                               @map("pin_code")
+  centroid    Unsupported("geography(Point,4326)")?
+  createdAt   DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime                              @default(now()) @map("updated_at") @db.Timestamptz(6)
+  city        City                                  @relation(fields: [cityId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "areas_city_id_fkey")
+  addresses   Address[]
+  adminScopes AdminScope[]
 
   @@unique([id, cityId], map: "areas_id_city_id_key")
   @@unique([cityId, slug], map: "areas_city_slug_key")
@@ -284,4 +289,108 @@ model ServiceAreaWaitlist {
 
   @@index([cityId, requestedAt(sort: Desc)], map: "service_area_waitlist_city_requested_at_idx")
   @@map("service_area_waitlist")
+}
+
+/// Append-only (runtime INSERT, SELECT). The GIN full-text expression index
+/// `audit_logs_search_idx` lives in the migration only.
+model AuditLog {
+  id            String   @id @db.Uuid
+  occurredAt    DateTime @default(now()) @map("occurred_at") @db.Timestamptz(6)
+  actorUserId   String?  @map("actor_user_id") @db.Uuid
+  actorRole     String   @map("actor_role")
+  actorLabel    String   @map("actor_label")
+  action        String
+  entityType    String   @map("entity_type")
+  entityId      String?  @map("entity_id") @db.Uuid
+  cityId        String?  @map("city_id") @db.Uuid
+  areaId        String?  @map("area_id") @db.Uuid
+  relatedScopes Json     @default("[]") @map("related_scopes") @db.JsonB
+  summary       String
+  before        Json?    @db.JsonB
+  after         Json?    @db.JsonB
+  correlationId String   @map("correlation_id")
+  ipHash        Bytes?   @map("ip_hash")
+  actor         User?    @relation(fields: [actorUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "audit_logs_actor_user_id_fkey")
+
+  @@index([occurredAt(sort: Desc), id(sort: Desc)], map: "audit_logs_feed_idx")
+  @@index([entityType, entityId, occurredAt(sort: Desc), id(sort: Desc)], map: "audit_logs_entity_history_idx")
+  @@index([actorUserId, occurredAt(sort: Desc), id(sort: Desc)], map: "audit_logs_actor_feed_idx")
+  @@index([cityId, areaId, occurredAt(sort: Desc), id(sort: Desc)], map: "audit_logs_scope_feed_idx")
+  @@map("audit_logs")
+}
+
+model Role {
+  id          String           @id @db.Uuid
+  name        String           @unique(map: "roles_name_key")
+  description String?
+  isSystem    Boolean          @default(false) @map("is_system")
+  version     Int              @default(1)
+  createdAt   DateTime         @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime         @map("updated_at") @db.Timestamptz(6)
+  permissions RolePermission[]
+  admins      AdminAccount[]
+
+  @@map("roles")
+}
+
+model RolePermission {
+  roleId String @map("role_id") @db.Uuid
+  module String
+  action String
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "role_permissions_role_id_fkey")
+
+  @@id([roleId, module, action], map: "role_permissions_pkey")
+  @@map("role_permissions")
+}
+
+model AdminAccount {
+  userId              String            @id @map("user_id") @db.Uuid
+  displayName         String            @map("display_name")
+  emailCiphertext     String            @map("email_ciphertext")
+  roleId              String            @map("role_id") @db.Uuid
+  status              String
+  communicationScopes String[]          @default([]) @map("communication_scopes")
+  lastActiveAt        DateTime?         @map("last_active_at") @db.Timestamptz(6)
+  version             Int               @default(1)
+  createdBy           String?           @map("created_by") @db.Uuid
+  createdAt           DateTime          @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime          @map("updated_at") @db.Timestamptz(6)
+  user                User              @relation("AdminAccountUser", fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "admin_accounts_user_id_fkey")
+  role                Role              @relation(fields: [roleId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "admin_accounts_role_id_fkey")
+  creator             User?             @relation("AdminAccountCreator", fields: [createdBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "admin_accounts_created_by_fkey")
+  permissions         AdminPermission[]
+  scopes              AdminScope[]
+
+  @@index([roleId], map: "admin_accounts_role_id_idx")
+  @@index([status], map: "admin_accounts_status_idx")
+  @@index([createdAt(sort: Desc), userId(sort: Desc)], map: "admin_accounts_created_page_idx")
+  @@map("admin_accounts")
+}
+
+model AdminPermission {
+  userId  String       @map("user_id") @db.Uuid
+  module  String
+  action  String
+  account AdminAccount @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Restrict, map: "admin_permissions_user_id_fkey")
+
+  @@id([userId, module, action], map: "admin_permissions_pkey")
+  @@map("admin_permissions")
+}
+
+model AdminScope {
+  id        String       @id @db.Uuid
+  userId    String       @map("user_id") @db.Uuid
+  authority String
+  areaId    String?      @map("area_id") @db.Uuid
+  cityId    String       @map("city_id") @db.Uuid
+  account   AdminAccount @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Restrict, map: "admin_scopes_user_id_fkey")
+  city      City         @relation(fields: [cityId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "admin_scopes_city_id_fkey")
+  area      Area?        @relation(fields: [areaId, cityId], references: [id, cityId], onDelete: Restrict, onUpdate: Restrict, map: "admin_scopes_area_city_fkey")
+
+  @@unique([userId, areaId], where: raw("\"authority\" = 'area'"), map: "admin_scopes_area_grant_key")
+  @@unique([userId, cityId], where: raw("\"authority\" = 'city'"), map: "admin_scopes_city_grant_key")
+  @@index([userId, authority, cityId, areaId], map: "admin_scopes_guard_idx")
+  @@index([cityId], map: "admin_scopes_city_id_idx")
+  @@index([areaId, cityId], map: "admin_scopes_area_city_idx")
+  @@map("admin_scopes")
 }

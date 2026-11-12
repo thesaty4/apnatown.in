@@ -23,6 +23,7 @@ import {
   RATE_LIMIT_REPOSITORY,
   PostgresRateLimitRepository,
 } from '../rate-limit/repository';
+import { ScopeRegistry } from '../auth/scope-registry';
 
 @Module({})
 export class RuntimeModule {
@@ -80,6 +81,7 @@ export class RuntimeModule {
           useFactory: () => new PostgresReadinessRepository(config),
         },
         ReadinessService,
+        ScopeRegistry,
       ],
       exports: [
         RUNTIME_CONFIG,
@@ -98,6 +100,7 @@ export class RuntimeModule {
         RuntimeCleanupStore,
         PrismaDatabase,
         RATE_LIMIT_REPOSITORY,
+        ScopeRegistry,
       ],
     };
   }

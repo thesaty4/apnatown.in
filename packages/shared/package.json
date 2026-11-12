@@ -14,6 +14,16 @@
         "default": "./dist/cjs/index.js"
       }
     },
+    "./admin": {
+      "import": {
+        "types": "./dist/esm/admin.d.ts",
+        "default": "./dist/esm/admin.js"
+      },
+      "require": {
+        "types": "./dist/cjs/admin.d.ts",
+        "default": "./dist/cjs/admin.js"
+      }
+    },
     "./geo": {
       "import": {
         "types": "./dist/esm/geo.d.ts",

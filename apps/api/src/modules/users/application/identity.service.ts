@@ -17,6 +17,10 @@ import {
   type UsersRepository,
   type UserIdentity,
 } from '../domain/identity';
+import {
+  USER_ROLES_REPOSITORY,
+  type UserRolesRepository,
+} from '../domain/user-roles';
 import type { UserIdentityPort } from './identity-port';
 
 @Injectable()
@@ -26,6 +30,7 @@ export class IdentityService implements UserIdentityPort {
     @Inject(IDENTITY_CRYPTO) private readonly crypto: IdentityCrypto,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(ID_PROVIDER) private readonly ids: IdProvider,
+    @Inject(USER_ROLES_REPOSITORY) private readonly roles: UserRolesRepository,
   ) {}
   async resolveVerifiedPhone(
     tx: TxContext,
@@ -61,6 +66,20 @@ export class IdentityService implements UserIdentityPort {
     userId: string,
   ): Promise<Principal | null> {
     return this.principal(await this.users.lock(tx, userId));
+  }
+  findByPhone(tx: TxContext, phone: string): Promise<string | null> {
+    return this.roles.findIdByPhoneHash(
+      tx,
+      this.crypto.phoneHash(normalizePhone(phone)),
+    );
+  }
+  describe(
+    tx: TxContext,
+    userIds: readonly string[],
+  ): Promise<
+    { userId: string; displayName: string | null; locale: 'en' | 'hi' }[]
+  > {
+    return this.roles.describe(tx, [...new Set(userIds)].slice(0, 500));
   }
   private principal(user: UserIdentity | null): Principal | null {
     if (!user || user.deletedAt || user.accountStatus !== 'active') return null;

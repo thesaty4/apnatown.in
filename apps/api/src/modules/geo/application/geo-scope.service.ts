@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import type { AreaRef, CityRef } from '@apnatown/shared/admin';
 import { DomainError } from '../../../shared/errors/errors';
 import {
   UNIT_OF_WORK,
@@ -34,5 +35,27 @@ export class GeoScopeService implements GeoScopePort {
         throw new DomainError('AREA_NOT_FOUND');
     };
     return tx ? validate(tx) : this.uow.run(validate);
+  }
+
+  describeAreas(
+    areaIds: readonly string[],
+    tx?: TxContext,
+  ): Promise<AreaRef[]> {
+    const ids = [...new Set(areaIds)].sort();
+    if (!ids.length) return Promise.resolve([]);
+    const read = (transaction: TxContext) =>
+      this.scopes.findAreas(transaction, ids);
+    return tx ? read(tx) : this.uow.run(read);
+  }
+
+  describeCities(
+    cityIds: readonly string[],
+    tx?: TxContext,
+  ): Promise<CityRef[]> {
+    const ids = [...new Set(cityIds)].sort();
+    if (!ids.length) return Promise.resolve([]);
+    const read = (transaction: TxContext) =>
+      this.scopes.findCities(transaction, ids);
+    return tx ? read(tx) : this.uow.run(read);
   }
 }

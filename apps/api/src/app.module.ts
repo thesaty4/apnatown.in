@@ -5,6 +5,9 @@ import type { RuntimeConfig } from './shared/config/config';
 import { ErrorFilter } from './shared/errors/exception-filter';
 import { HealthController } from './shared/health/health.controller';
 import { AuthGuard } from './shared/auth/auth.guard';
+import { AdminAccessGuard } from './shared/auth/admin-access.guard';
+import { AdminModule } from './modules/admin/admin.module';
+import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { GeoModule } from './modules/geo/geo.module';
 import { UsersModule } from './modules/users/users.module';
@@ -17,15 +20,25 @@ export class AppModule {
     const runtime = RuntimeModule.forRoot(config);
     const geo = GeoModule.forRoot(runtime);
     const users = UsersModule.forRoot(runtime, geo);
+    const audit = AuditModule.forRoot(runtime);
+    const admin = AdminModule.forRoot(runtime, geo, users, audit);
     return {
       module: AppModule,
-      imports: [runtime, AuthModule.forRoot(runtime, config, users), geo],
+      imports: [
+        runtime,
+        AuthModule.forRoot(runtime, config, users),
+        geo,
+        audit,
+        admin,
+      ],
       controllers: [HealthController],
       providers: [
         { provide: APP_PIPE, useClass: ZodValidationPipe },
         { provide: APP_FILTER, useClass: ErrorFilter },
         { provide: APP_GUARD, useClass: AuthGuard },
         { provide: APP_GUARD, useClass: RateLimitGuard },
+        // Role/permission/scope checks run after authentication and rate limits.
+        { provide: APP_GUARD, useClass: AdminAccessGuard },
       ],
     };
   }
