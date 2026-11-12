@@ -108,7 +108,7 @@
       "preferences": "Language & theme",
       "profile": "Profile",
       "title": "Account",
-      "unavailable": "Payment methods, notifications and privacy requests are not available yet."
+      "unavailable": "Payment methods and notifications are not available yet."
     },
     "preferences": {
       "cookiesUnavailable": "Cookie choices are not available yet. Saving language or theme does not grant consent.",
@@ -1196,6 +1196,66 @@
       "saved": "Choice saved",
       "saving": "Saving your choice…",
       "title": "Notification & consent"
+    }
+  },
+  "privacy": {
+    "account": {
+      "delete": "Delete my account",
+      "export": "Download my data",
+      "title": "Privacy"
+    },
+    "common": {
+      "back": "Back to account",
+      "cancel": "Cancel",
+      "checkAgain": "Check again",
+      "close": "Close",
+      "home": "Back to home",
+      "requestAgain": "Request again",
+      "retry": "Try again"
+    },
+    "delete": {
+      "blocked": "Your account cannot be deleted right now.",
+      "completed": "Your account was deleted",
+      "confirm": "Delete account",
+      "failed": "Account deletion did not finish. You can request it again from your account.",
+      "heading": "Account deletion",
+      "impact": "Your profile, addresses and bookmarks will be erased. Order records are kept for the shop’s accounts.",
+      "policyPending": "Account deletion is not available yet because its privacy policy is pending approval. Nothing has been deleted.",
+      "processing": "Your deletion request is being processed. Your account has not been deleted yet.",
+      "title": "Delete your account?",
+      "unconfirmed": "We cannot confirm the deletion status in this browser. Your account is not shown as deleted until the deletion is confirmed."
+    },
+    "errors": {
+      "checkFailed": "We could not check the status of your request.",
+      "conflict": "This request cannot start while another privacy request is running.",
+      "inProgress": "This request is already being sent. Please try again in a moment.",
+      "notFound": "This request could not be found."
+    },
+    "export": {
+      "blocked": "Your data cannot be prepared right now.",
+      "copied": "Data copied",
+      "copy": "Copy data",
+      "copyFailed": "Could not copy. Select the text and copy it yourself.",
+      "documentLabel": "Your data as JSON",
+      "download": "Download file",
+      "expired": "This data download has expired. Please request it again.",
+      "failed": "Your data could not be prepared. Please request it again.",
+      "hint": "Copy this JSON to keep a backup.",
+      "loading": "Loading your data…",
+      "notReady": "Your data is not ready yet. Please try again in a moment.",
+      "policyPending": "Data download is not available yet because its privacy policy is pending approval.",
+      "preparing": "Preparing your data…",
+      "ready": "Your data is ready.",
+      "sheetTitle": "Your data",
+      "unavailable": "Your data cannot be loaded right now. Please try again.",
+      "view": "View my data"
+    },
+    "goodbye": {
+      "home": "Back to home",
+      "message": "Thank you for using ApnaTown. You can still browse as a guest.",
+      "neutralMessage": "There is nothing to show on this page. You can continue browsing ApnaTown.",
+      "neutralTitle": "Welcome to ApnaTown",
+      "title": "Your account was deleted"
     }
   }
 }

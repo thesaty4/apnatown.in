@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { DehydratedState } from '@tanstack/react-query';
 import { useLocale, useTranslations } from 'next-intl';
 import { Card } from '@apnatown/ui/cards/Card';
@@ -12,8 +12,10 @@ import { useSession, useLogout } from '../../shared/auth/SessionProvider';
 import { AccessState, Failure } from '../../shared/auth/AccessState';
 import { failureCode } from '../../shared/api/result';
 import { publicHref } from '../../shared/i18n/preferences';
+import { accountScope } from '../../shared/api/query-keys';
 import { profileOptions } from './api';
 import { OwnResource } from './OwnResource';
+import { DeletionProgress, PrivacyActions, type Deletion } from './Privacy';
 
 export function Account({
   initial,
@@ -22,12 +24,34 @@ export function Account({
   initial: DehydratedState;
   owner?: string | undefined;
 }) {
-  const { state } = useSession();
+  const { state, epoch } = useSession();
   const t = useTranslations('account.menu');
+  // An active deletion outlives session revocation: it is tracked here, above
+  // the session gate, with its capability only in this component's memory.
+  const [deletion, setDeletion] = useState<Deletion>();
+  const completed = useCallback(
+    () =>
+      setDeletion(
+        (current) =>
+          current && {
+            requestId: current.requestId,
+            userId: current.userId,
+            completed: true,
+          },
+      ),
+    [],
+  );
+  const dismiss = useCallback(() => setDeletion(undefined), []);
   return (
     <div className="grid gap-4">
       <h1 className="text-h1">{t('title')}</h1>
-      {state.kind !== 'ready' ? (
+      {deletion ? (
+        <DeletionProgress
+          deletion={deletion}
+          onCompleted={completed}
+          onDismiss={dismiss}
+        />
+      ) : state.kind !== 'ready' ? (
         <AccessState guest />
       ) : (
         <>
@@ -77,6 +101,11 @@ export function Account({
               </Link>
             </nav>
           </Card>
+          <PrivacyActions
+            key={`${state.data.userId}:${epoch}`}
+            scope={accountScope(state.data, epoch)}
+            onDeletionStarted={setDeletion}
+          />
           {state.data.roles.some((role) => role !== 'customer') && (
             <p role="status" className="text-text-2">
               {t('operationsUnavailable')}

@@ -23,6 +23,14 @@ export const queryKeys = {
     ['private', 'login-preferences', epoch] as const,
   addresses: (scope: AccountScope) => ['private', scope, 'addresses'] as const,
   consents: (scope: AccountScope) => ['private', scope, 'consents'] as const,
+  dataRequest: (scope: AccountScope, requestId: string) =>
+    ['private', scope, 'data-requests', requestId] as const,
+  dataExport: (scope: AccountScope, requestId: string) =>
+    ['private', scope, 'data-exports', requestId] as const,
+  // Survives session revocation by design; the request ID only, never the
+  // completion capability.
+  deletionCompletion: (requestId: string) =>
+    ['data-request-completion', requestId] as const,
   // Public reference data: both EN and HI names are in every response.
   geoCities: ['geo', 'cities'] as const,
   geoAreas: (cityId: string) => ['geo', 'cities', cityId, 'areas'] as const,

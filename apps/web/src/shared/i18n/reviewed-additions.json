@@ -204,8 +204,8 @@
     "hi": "कारोबार के डैशबोर्ड और मंज़ूरी की जाँच यहाँ उपलब्ध नहीं हैं। आपकी भूमिका से इस स्क्रीन पर कारोबार संबंधी पहुँच नहीं मिलती है।"
   },
   "account.menu.unavailable": {
-    "en": "Payment methods, notifications and privacy requests are not available yet.",
-    "hi": "भुगतान के तरीके, सूचनाएँ और गोपनीयता संबंधी अनुरोध अभी उपलब्ध नहीं हैं।"
+    "en": "Payment methods and notifications are not available yet.",
+    "hi": "भुगतान के तरीके और सूचनाएँ अभी उपलब्ध नहीं हैं।"
   },
   "account.profile.title": { "en": "Profile", "hi": "प्रोफ़ाइल" },
   "account.profile.completeTitle": { "en": "Almost done", "hi": "बस हो गया" },
@@ -653,5 +653,173 @@
     "en": "Skip to content",
     "hi": "मुख्य सामग्री पर जाएँ",
     "source": "Explicit user approval, 2026-11-11"
+  },
+  "privacy.account.title": {
+    "en": "Privacy",
+    "hi": "गोपनीयता",
+    "source": "reference/prototype-source/js7.js account: Privacy"
+  },
+  "privacy.account.export": {
+    "en": "Download my data",
+    "hi": "मेरा डेटा डाउनलोड करें",
+    "source": "reference/prototype-source/js7.js account: myData"
+  },
+  "privacy.account.delete": {
+    "en": "Delete my account",
+    "hi": "मेरा खाता हटाएँ",
+    "source": "reference/prototype-source/js7.js account: delAcct"
+  },
+  "privacy.common.retry": { "en": "Try again", "hi": "फिर कोशिश करें" },
+  "privacy.common.checkAgain": { "en": "Check again", "hi": "फिर से जाँचें" },
+  "privacy.common.requestAgain": { "en": "Request again", "hi": "फिर से माँगें" },
+  "privacy.common.close": { "en": "Close", "hi": "बंद करें" },
+  "privacy.common.cancel": { "en": "Cancel", "hi": "रद्द करें" },
+  "privacy.common.back": { "en": "Back to account", "hi": "खाते पर वापस जाएँ" },
+  "privacy.common.home": {
+    "en": "Back to home",
+    "hi": "होम पर वापस",
+    "source": "reference/prototype-source/js7.js bye"
+  },
+  "privacy.errors.conflict": {
+    "en": "This request cannot start while another privacy request is running.",
+    "hi": "दूसरा गोपनीयता अनुरोध चलते समय यह अनुरोध शुरू नहीं हो सकता।"
+  },
+  "privacy.errors.inProgress": {
+    "en": "This request is already being sent. Please try again in a moment.",
+    "hi": "यह अनुरोध पहले से भेजा जा रहा है। कृपया थोड़ी देर बाद फिर कोशिश करें।"
+  },
+  "privacy.errors.notFound": {
+    "en": "This request could not be found.",
+    "hi": "यह अनुरोध नहीं मिला।"
+  },
+  "privacy.errors.checkFailed": {
+    "en": "We could not check the status of your request.",
+    "hi": "आपके अनुरोध की स्थिति जाँची नहीं जा सकी।"
+  },
+  "privacy.export.preparing": {
+    "en": "Preparing your data…",
+    "hi": "आपका डेटा तैयार किया जा रहा है…"
+  },
+  "privacy.export.ready": {
+    "en": "Your data is ready.",
+    "hi": "आपका डेटा तैयार है।"
+  },
+  "privacy.export.view": { "en": "View my data", "hi": "मेरा डेटा देखें" },
+  "privacy.export.policyPending": {
+    "en": "Data download is not available yet because its privacy policy is pending approval.",
+    "hi": "डेटा डाउनलोड अभी उपलब्ध नहीं है, क्योंकि इसकी गोपनीयता नीति की मंज़ूरी बाकी है।"
+  },
+  "privacy.export.blocked": {
+    "en": "Your data cannot be prepared right now.",
+    "hi": "आपका डेटा अभी तैयार नहीं किया जा सकता।"
+  },
+  "privacy.export.failed": {
+    "en": "Your data could not be prepared. Please request it again.",
+    "hi": "आपका डेटा तैयार नहीं हो सका। कृपया इसे फिर से माँगें।"
+  },
+  "privacy.export.expired": {
+    "en": "This data download has expired. Please request it again.",
+    "hi": "यह डेटा डाउनलोड समाप्त हो गया है। कृपया इसे फिर से माँगें।"
+  },
+  "privacy.export.notReady": {
+    "en": "Your data is not ready yet. Please try again in a moment.",
+    "hi": "आपका डेटा अभी तैयार नहीं है। कृपया थोड़ी देर बाद फिर कोशिश करें।"
+  },
+  "privacy.export.unavailable": {
+    "en": "Your data cannot be loaded right now. Please try again.",
+    "hi": "आपका डेटा अभी लोड नहीं हो सकता। कृपया फिर कोशिश करें।"
+  },
+  "privacy.export.loading": {
+    "en": "Loading your data…",
+    "hi": "आपका डेटा लोड हो रहा है…"
+  },
+  "privacy.export.sheetTitle": {
+    "en": "Your data",
+    "hi": "आपका डेटा",
+    "source": "reference/prototype-source/js7.js myData sheet"
+  },
+  "privacy.export.hint": {
+    "en": "Copy this JSON to keep a backup.",
+    "hi": "बैकअप के लिए यह JSON कॉपी कर लें।",
+    "source": "reference/prototype-source/js7.js myData sheet"
+  },
+  "privacy.export.documentLabel": {
+    "en": "Your data as JSON",
+    "hi": "JSON में आपका डेटा"
+  },
+  "privacy.export.copy": {
+    "en": "Copy data",
+    "hi": "डेटा कॉपी करें",
+    "source": "reference/prototype-source/js7.js myData sheet"
+  },
+  "privacy.export.copied": { "en": "Data copied", "hi": "डेटा कॉपी हो गया" },
+  "privacy.export.copyFailed": {
+    "en": "Could not copy. Select the text and copy it yourself.",
+    "hi": "कॉपी नहीं हो सका। टेक्स्ट चुनकर खुद कॉपी करें।"
+  },
+  "privacy.export.download": { "en": "Download file", "hi": "फ़ाइल डाउनलोड करें" },
+  "privacy.delete.title": {
+    "en": "Delete your account?",
+    "hi": "अपना खाता हटाएँ?",
+    "source": "reference/prototype-source/js7.js delAcct"
+  },
+  "privacy.delete.impact": {
+    "en": "Your profile, addresses and bookmarks will be erased. Order records are kept for the shop’s accounts.",
+    "hi": "आपकी प्रोफ़ाइल, पते और बुकमार्क मिट जाएँगे। ऑर्डर का रिकॉर्ड दुकान के हिसाब के लिए रखा जाता है।",
+    "source": "reference/prototype-source/js7.js delAcct"
+  },
+  "privacy.delete.confirm": {
+    "en": "Delete account",
+    "hi": "खाता हटाएँ",
+    "source": "reference/prototype-source/js7.js delAcct"
+  },
+  "privacy.delete.heading": { "en": "Account deletion", "hi": "खाता हटाना" },
+  "privacy.delete.processing": {
+    "en": "Your deletion request is being processed. Your account has not been deleted yet.",
+    "hi": "खाता हटाने का आपका अनुरोध प्रोसेस हो रहा है। आपका खाता अभी हटाया नहीं गया है।"
+  },
+  "privacy.delete.policyPending": {
+    "en": "Account deletion is not available yet because its privacy policy is pending approval. Nothing has been deleted.",
+    "hi": "खाता हटाना अभी उपलब्ध नहीं है, क्योंकि इसकी गोपनीयता नीति की मंज़ूरी बाकी है। कुछ भी हटाया नहीं गया है।"
+  },
+  "privacy.delete.blocked": {
+    "en": "Your account cannot be deleted right now.",
+    "hi": "आपका खाता अभी हटाया नहीं जा सकता।"
+  },
+  "privacy.delete.failed": {
+    "en": "Account deletion did not finish. You can request it again from your account.",
+    "hi": "खाता हटाना पूरा नहीं हुआ। आप अपने खाते से इसे फिर से माँग सकते हैं।"
+  },
+  "privacy.delete.unconfirmed": {
+    "en": "We cannot confirm the deletion status in this browser. Your account is not shown as deleted until the deletion is confirmed.",
+    "hi": "इस ब्राउज़र में खाता हटने की स्थिति की पुष्टि नहीं हो सकती। पुष्टि होने तक आपका खाता हटाया हुआ नहीं दिखाया जाता।"
+  },
+  "privacy.delete.completed": {
+    "en": "Your account was deleted",
+    "hi": "आपका खाता हटा दिया गया",
+    "source": "reference/prototype-source/js7.js bye"
+  },
+  "privacy.goodbye.title": {
+    "en": "Your account was deleted",
+    "hi": "आपका खाता हटा दिया गया",
+    "source": "reference/prototype-source/js7.js bye"
+  },
+  "privacy.goodbye.message": {
+    "en": "Thank you for using ApnaTown. You can still browse as a guest.",
+    "hi": "अपना टाउन इस्तेमाल करने के लिए धन्यवाद। आप मेहमान की तरह देख सकते हैं।",
+    "source": "reference/prototype-source/js7.js bye"
+  },
+  "privacy.goodbye.home": {
+    "en": "Back to home",
+    "hi": "होम पर वापस",
+    "source": "reference/prototype-source/js7.js bye"
+  },
+  "privacy.goodbye.neutralTitle": {
+    "en": "Welcome to ApnaTown",
+    "hi": "अपना टाउन में स्वागत है"
+  },
+  "privacy.goodbye.neutralMessage": {
+    "en": "There is nothing to show on this page. You can continue browsing ApnaTown.",
+    "hi": "इस पेज पर दिखाने के लिए कुछ नहीं है। आप अपना टाउन देखना जारी रख सकते हैं।"
   }
 }

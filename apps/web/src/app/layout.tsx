@@ -38,7 +38,13 @@ export default async function RootLayout({
   // Only this slice's messages cross the RSC boundary, not the full prototype catalogue.
   const catalogue = locale === 'hi' ? hi : en;
   const { copy: _unused, ...common } = catalogue.common;
-  const messages = { common, auth: catalogue.auth, account: catalogue.account };
+  const messages = {
+    common,
+    auth: catalogue.auth,
+    account: catalogue.account,
+    consent: catalogue.consent,
+    privacy: catalogue.privacy,
+  };
   return (
     <html lang={locale} data-theme={theme} className={fontVariables}>
       <body>
