@@ -264,6 +264,7 @@ export class VideoService {
   private dto(row: StoredVideo): Video {
     return VideoSchema.parse({
       id: row.id,
+      businessId: row.businessId,
       provider: row.provider,
       kind: row.kind,
       providerId: row.providerId,

@@ -67,6 +67,15 @@ authoritative write, gates guests to login with a return to the same video, and
 shows loading, unavailable, retry, write-error and non-customer states. Photo
 hearts and the Saved tab remain separate features.
 
+### EG3 video-detail implementation slice
+
+The public video detail uses `FollowButton` for its owning business. Follow
+state shares the same batched React Query request as video likes/hearts. New
+follows start with notifications off; the customer can toggle the bell, and
+unfollow requires confirmation and clears the bell. Guest actions preserve the
+video return path. Business profile/cards, the Reels feed, Saved/Following and
+notification fan-out remain separate work.
+
 ### EG6 implementation slice
 
 The video detail page uses `ShareSheet` with WhatsApp, Copy link, and native

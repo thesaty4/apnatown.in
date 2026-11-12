@@ -52,8 +52,11 @@ export type {
 export {
   VideoLikeResultSchema,
   EngagementTargetSchema,
+  EngagementBusinessStateSchema,
   EngagementStateQuerySchema,
   EngagementStateSchema,
+  FollowUpdateSchema,
+  FollowResultSchema,
   VideoHeartTargetTypeSchema,
   VideoHeartResultSchema,
   VideoShareChannelSchema,
@@ -75,6 +78,8 @@ export {
 export type {
   VideoLikeResult,
   EngagementTarget,
+  FollowUpdate,
+  FollowResult,
   EngagementStateQuery,
   EngagementState,
   VideoHeartResult,

@@ -1,5 +1,6 @@
 import {
   EngagementStateSchema,
+  FollowResultSchema,
   VideoHeartResultSchema,
   VideoLikeResultSchema,
 } from '@apnatown/shared';
@@ -9,20 +10,48 @@ import { unwrap } from '../../shared/api/result';
 export async function getEngagementState(
   api: BrowserApi,
   videoIds: readonly string[],
+  businessIds: readonly string[],
   signal: AbortSignal,
 ) {
   return unwrap(
     await api.GET('/engagement/me/state', {
       params: {
         query: {
-          videoIds: videoIds.join(','),
-          targets: videoIds.map((id) => `video:${id}`).join(','),
+          ...(videoIds.length > 0 && {
+            videoIds: videoIds.join(','),
+            targets: videoIds.map((id) => `video:${id}`).join(','),
+          }),
+          ...(businessIds.length > 0 && { businessIds: businessIds.join(',') }),
         },
       },
       signal,
     }),
     EngagementStateSchema,
   );
+}
+
+export async function setBusinessFollow(
+  api: BrowserApi,
+  businessId: string,
+  sourceVideoId: string,
+  input: { following: boolean; bellOn: boolean },
+  assertCurrent: () => void,
+) {
+  const headers = await api.mutationHeaders();
+  assertCurrent();
+  const options = {
+    params: {
+      path: { businessId },
+      header: headers,
+    },
+  };
+  const result = input.following
+    ? await api.PUT('/engagement/follows/{businessId}', {
+        ...options,
+        body: { sourceVideoId, bellOn: input.bellOn },
+      })
+    : await api.DELETE('/engagement/follows/{businessId}', options);
+  return unwrap(result, FollowResultSchema);
 }
 
 export async function setVideoHeart(

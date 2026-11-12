@@ -15,6 +15,10 @@ import {
   type VideoHeartRepository,
 } from '../domain/hearts';
 import {
+  FOLLOW_REPOSITORY,
+  type FollowRepository,
+} from '../domain/follows';
+import {
   VIDEO_LIKE_REPOSITORY,
   type VideoLikeRepository,
   type VideoLikeRequest,
@@ -27,6 +31,7 @@ export class VideoLikesService {
     @Inject(SESSION_ACCESS) private readonly sessions: SessionAccess,
     @Inject(VIDEO_LIKE_REPOSITORY) private readonly likes: VideoLikeRepository,
     @Inject(VIDEO_HEART_REPOSITORY) private readonly hearts: VideoHeartRepository,
+    @Inject(FOLLOW_REPOSITORY) private readonly follows: FollowRepository,
     @Inject(MEDIA_COMMENT_TARGET) private readonly media: MediaCommentTargetPort,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(EVENT_FACTORY) private readonly events: EventFactory,
@@ -38,6 +43,7 @@ export class VideoLikesService {
     return this.uow.run(async (tx) => {
       const principal = session ? await this.sessions.requirePrincipal(tx, session) : null;
       const userId = principal?.roles.includes('customer') ? principal.userId : null;
+      const businessIds = [...new Set(query.businessIds?.toLowerCase().split(',') ?? [])].sort();
       const publicVideoIds: string[] = [];
       for (const id of videoIds) {
         const target = await this.media.find(tx, id);
@@ -54,12 +60,14 @@ export class VideoLikesService {
         userId,
         [...new Set(heartVideoIds)],
       );
+      const businessStates = await this.follows.state(tx, userId, businessIds);
       return {
         ...state,
         heartedTargets: heartedVideoIds.map((targetId) => ({
           targetType: 'video' as const,
           targetId,
         })),
+        businessStates,
       };
     });
   }

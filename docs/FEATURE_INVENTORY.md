@@ -237,7 +237,7 @@ Roles: customer. Backend module(s): `engagement`. Frontend route/screen: `/saved
 |---|---|---|---|---|
 | EG1 | Saved: tabs Shops \| Services \| Photos & Videos (filters Photos/Videos/Reels, remove) | `specs/engagement/be/eg1-saved-tabs-shops-services-photos-vid.md` | `specs/engagement/fe/eg1-saved-tabs-shops-services-photos-vid.md` | not started |
 | EG2 | heart on any photo/video/reel | `specs/engagement/be/engagement.md` | `specs/engagement/fe/engagement.md` | implemented for videos: DB/API/React Query HeartButton on video detail; photo/gallery hearts pending |
-| EG3 | follow/unfollow with confirmation and bell | `specs/engagement/be/eg3-follow-unfollow-with-confirmation-an.md` | `specs/engagement/fe/eg3-follow-unfollow-with-confirmation-an.md` | not started |
+| EG3 | follow/unfollow with confirmation and bell | `specs/engagement/be/engagement.md` | `specs/engagement/fe/engagement.md` | implemented on video detail: DB/API/React Query FollowButton with bell + unfollow confirmation; profiles, Reels feed and notification fan-out remain pending |
 | EG4 | like on videos | `specs/engagement/be/engagement.md` | `specs/engagement/fe/engagement.md` | implemented on video detail: DB/API/React Query LikeButton; Reels feed remains separate |
 | EG5 | comments (moderated, "awaiting moderation") | `specs/engagement/be/engagement.md` | `specs/engagement/fe/engagement.md` | implemented: moderated comments and admin queue on video detail/admin videos |
 | EG6 | share sheet (WhatsApp, copy link, native share) | `specs/engagement/be/engagement.md` | `specs/engagement/fe/engagement.md` | implemented for videos: DB/API/React Query ShareSheet on video detail; other targets remain pending |

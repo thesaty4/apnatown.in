@@ -32,22 +32,41 @@ const EngagementTargetQuerySchema = z.string().min(1).max(2149).refine(
   'Expected at most 50 comma-separated typed target IDs',
 );
 
+const EngagementBusinessQuerySchema = z.string().min(1).max(1849).refine(
+  (value) => z.array(IdSchema).min(1).max(50).safeParse(value.split(',')).success,
+  'Expected at most 50 comma-separated business IDs',
+);
+
 export const EngagementStateQuerySchema = z.strictObject({
   videoIds: z.string().max(1849).refine(
     (value) => z.array(IdSchema).min(1).max(50).safeParse(value.split(',')).success,
     'Expected at most 50 comma-separated video IDs',
   ).optional(),
   targets: EngagementTargetQuerySchema.optional(),
+  businessIds: EngagementBusinessQuerySchema.optional(),
 }).superRefine((query, context) => {
   const videoIds = query.videoIds?.toLowerCase().split(',') ?? [];
   const targets = query.targets?.toLowerCase().split(',').map((target) => {
     const [targetType, targetId] = target.split(':');
     return `${targetType}:${targetId}`;
   }) ?? [];
-  if (new Set([...videoIds.map((id) => `video:${id}`), ...targets]).size > 50)
+  const businessIds = query.businessIds?.toLowerCase().split(',') ?? [];
+  if (
+    new Set([
+      ...videoIds.map((id) => `video:${id}`),
+      ...targets,
+      ...businessIds.map((id) => `business:${id}`),
+    ]).size > 50
+  )
     context.addIssue({ code: 'custom', path: ['targets'], message: 'At most 50 engagement targets are allowed' });
 });
 export type EngagementStateQuery = z.infer<typeof EngagementStateQuerySchema>;
+
+export const EngagementBusinessStateSchema = z.strictObject({
+  businessId: IdSchema,
+  following: z.boolean(),
+  bellOn: z.boolean(),
+});
 
 export const EngagementStateSchema = z.strictObject({
   likedVideoIds: z.array(IdSchema).max(50),
@@ -56,8 +75,22 @@ export const EngagementStateSchema = z.strictObject({
     likeCount: CountSchema,
   })).max(50),
   heartedTargets: z.array(EngagementTargetSchema).max(50).default([]),
+  businessStates: z.array(EngagementBusinessStateSchema).max(50).default([]),
 });
 export type EngagementState = z.infer<typeof EngagementStateSchema>;
+
+export const FollowUpdateSchema = z.strictObject({
+  sourceVideoId: IdSchema,
+  bellOn: z.boolean().optional(),
+});
+export type FollowUpdate = z.infer<typeof FollowUpdateSchema>;
+
+export const FollowResultSchema = z.strictObject({
+  following: z.boolean(),
+  bellOn: z.boolean(),
+  followerCount: CountSchema,
+});
+export type FollowResult = z.infer<typeof FollowResultSchema>;
 
 export const VideoHeartTargetTypeSchema = z.literal('video');
 export const VideoHeartResultSchema = z.strictObject({ hearted: z.boolean() });

@@ -1,10 +1,14 @@
 import { Module, type DynamicModule } from '@nestjs/common';
 import { VideoLikesService } from './application/video-likes.service';
+import { FollowsService } from './application/follows.service';
 import { VIDEO_LIKE_REPOSITORY } from './domain/likes';
 import { PrismaVideoLikeRepository } from './infrastructure/prisma-video-like.repository';
 import { VIDEO_HEART_REPOSITORY } from './domain/hearts';
 import { PrismaVideoHeartRepository } from './infrastructure/prisma-video-heart.repository';
+import { FOLLOW_REPOSITORY } from './domain/follows';
+import { PrismaFollowRepository } from './infrastructure/prisma-follow.repository';
 import { VideoLikesController } from './presentation/video-likes.controller';
+import { VideoFollowsController } from './presentation/video-follows.controller';
 import { VideoSharesService } from './application/video-shares.service';
 import { VIDEO_SHARE_REPOSITORY } from './domain/shares';
 import { PrismaVideoShareRepository } from './infrastructure/prisma-video-share.repository';
@@ -34,6 +38,7 @@ export class EngagementModule {
       imports: [runtime, admin, audit, settings, media],
       controllers: [
         VideoLikesController,
+        VideoFollowsController,
         VideoSharesController,
         PublicVideoCommentsController,
         VideoCommentsController,
@@ -42,7 +47,9 @@ export class EngagementModule {
       providers: [
         { provide: VIDEO_LIKE_REPOSITORY, useClass: PrismaVideoLikeRepository },
         { provide: VIDEO_HEART_REPOSITORY, useClass: PrismaVideoHeartRepository },
+        { provide: FOLLOW_REPOSITORY, useClass: PrismaFollowRepository },
         VideoLikesService,
+        FollowsService,
         { provide: VIDEO_SHARE_REPOSITORY, useClass: PrismaVideoShareRepository },
         VideoSharesService,
         { provide: VIDEO_COMMENT_REPOSITORY, useClass: PrismaVideoCommentRepository },

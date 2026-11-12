@@ -10,11 +10,17 @@ import { AccessState, Failure } from '../../shared/auth/AccessState';
 import { useSession } from '../../shared/auth/SessionProvider';
 import { useVideoHeartActions, useVideoLikes } from './likes-queries';
 
-export function HeartButton({ videoId }: { videoId: string }) {
+export function HeartButton({
+  videoId,
+  businessId,
+}: {
+  videoId: string;
+  businessId: string;
+}) {
   const t = useTranslations('engagement.heart');
   const { state } = useSession();
-  const { query } = useVideoLikes([videoId]);
-  const heart = useVideoHeartActions(videoId);
+  const { query } = useVideoLikes([videoId], [businessId]);
+  const heart = useVideoHeartActions(videoId, [businessId]);
   const [loginPrompt, setLoginPrompt] = useState(false);
 
   if (state.kind === 'loading') return <Skeleton label={t('loading')} />;

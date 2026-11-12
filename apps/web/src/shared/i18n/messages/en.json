@@ -1812,6 +1812,24 @@
       "title": "Comments",
       "validation": "Enter a comment of 1 to 500 characters."
     },
+    "follow": {
+      "bellOff": "Notifications off",
+      "bellOn": "Notifications on",
+      "cancel": "Cancel",
+      "failed": "Could not update your follow status. Please try again.",
+      "follow": "Follow",
+      "following": "Following",
+      "loading": "Loading follow status",
+      "loginPrompt": "Log in to follow this business. You will return to this video after login.",
+      "rateLimited": "Too many changes. Wait a moment, then try again.",
+      "restrictedMessage": "Only customer accounts can follow businesses.",
+      "restrictedTitle": "Customer access required",
+      "unavailableMessage": "This business is no longer available to follow.",
+      "unavailableTitle": "Business unavailable",
+      "unfollow": "Unfollow",
+      "unfollowImpact": "You will stop seeing its videos in Following.",
+      "unfollowTitle": "Unfollow this business?"
+    },
     "heart": {
       "failed": "Could not update your saved status. Please try again.",
       "loading": "Loading saved status",

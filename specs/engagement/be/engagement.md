@@ -29,12 +29,12 @@ All customer writes require login; guest calls return `AUTH_REQUIRED` so the FE 
 
 | Method | Path | Auth, role, permission, scope | Request → response | Errors | Idempotent | Features / screens |
 |---|---|---|---|---|---|---|
-| PUT / DELETE | `/engagement/follows/{businessId}` | Customer; own relationship | PUT `{bellOn?}` → `{following,bellOn,followerCount}`; new/refollow defaults bell false; DELETE never needs target public | `ENGAGEMENT_TARGET_NOT_FOUND` on create | Yes | F-EG-003, F-PF-008 |
+| PUT / DELETE | `/engagement/follows/{businessId}` | Customer; own relationship | Current PUT requires `{sourceVideoId,bellOn?}` and validates that the public video belongs to the business; returns `{following,bellOn,followerCount}`. New/refollow defaults bell false. DELETE never needs target public. | `MEDIA_VIDEO_NOT_PUBLISHED` on create | Yes | F-EG-003 |
 | PUT / DELETE | `/engagement/likes/{videoId}` | Customer; PUT requires approved/public video; DELETE own relationship only | → `{liked,likeCount}` | `MEDIA_VIDEO_NOT_PUBLISHED` on create | Yes | F-EG-004 |
 | PUT / DELETE | `/engagement/hearts/{targetType}/{targetId}` | Current slice: customer; video only, PUT requires public video, DELETE own relationship even if unavailable | → `{hearted}` | `MEDIA_VIDEO_NOT_PUBLISHED` on create | Yes | F-EG-002 |
 | PUT / DELETE | `/engagement/bookmarks/{targetType}/{targetId}` | Customer; `targetType=service` only; PUT requires public target, DELETE own existing relationship | → `{bookmarked}` | `ENGAGEMENT_TARGET_NOT_FOUND` on create | Yes | F-EG-007 |
 | GET | `/engagement/me/saved?tab=shops\|services\|media&mediaFilter=photos\|videos\|reels&cursor=` | Customer; own | `shops` is the Following list from active follows, including bell state; Services remains service bookmarks; media remains hearts. Unavailable targets remain removable. | `VALIDATION_ERROR` | Yes | F-EG-001, S-CUST-19 |
-| GET | `/engagement/me/state?videoIds=&businessIds=&targets=` | Customer (guest → empty) | batch → liked/hearted/service-bookmarked flags and business `{following,bellOn}` (max 50 IDs); no separately stored shop/provider bookmark state | — | Yes | overlays, cards |
+| GET | `/engagement/me/state?videoIds=&businessIds=&targets=` | Customer (guest → empty) | batch → liked/hearted/service-bookmarked flags and business `{following,bellOn}` (max 50 unique targets); no separately stored shop/provider bookmark state | — | Yes | overlays, cards |
 | GET | `/videos/{videoId}/comments?cursor=` | Public | → published comments + caller's own pending ones; `canDelete` is server-derived per item and never exposes the author ID | — | Yes | F-EG-005 |
 | POST | `/videos/{videoId}/comments` | Customer | `{text}` → comment with status | `VALIDATION_ERROR`, `RATE_LIMITED` | Required key | F-EG-005 |
 | DELETE | `/videos/{videoId}/comments/{id}` | Author | → 204 | `ENGAGEMENT_TARGET_NOT_FOUND` | Yes | F-EG-005 |
@@ -45,6 +45,21 @@ All customer writes require login; guest calls return `AUTH_REQUIRED` so the FE 
 | POST | `/admin/comments/{id}/decision` | Admin **`reviews:edit`** + same scope; audited | `{action:'publish'\|'remove',reason?,expectedVersion}` → comment and counters; require reason for removal | `COMMENT_INVALID_TRANSITION`, `COMMENT_VERSION_CONFLICT` | Required key | F-EG-005, S-ADMN-11 |
 
 ## Rules and use-cases
+
+### EG3 video-detail implementation slice
+
+- `follows` stores one `(user_id,business_id)` relationship, including
+  `bell_on` and `unfollowed_at`; retries do not duplicate or change counts.
+  Unfollow clears the bell. Refollow starts with the bell off unless the
+  customer explicitly enables it in the request.
+- The public video response supplies `businessId`. In this current slice,
+  follow and bell updates require a `sourceVideoId` that is still public and
+  belongs to that business. Unfollow is relationship-only and works even when
+  the video/business is no longer public.
+- Batched engagement state returns `businessStates`; follower counts are read
+  from active follow rows. This slice does not implement follower analytics,
+  follow outbox events or notification fan-out, public profile/card buttons,
+  or Following-feed reads.
 
 ### EG4 implementation slice
 

@@ -28,7 +28,13 @@ import {
 import { failureCode } from '../../shared/api/result';
 import { AccessState, Failure } from '../../shared/auth/AccessState';
 import { useSession } from '../../shared/auth/SessionProvider';
-import { CommentsPanel, HeartButton, LikeButton, ShareSheet } from '../engagement';
+import {
+  CommentsPanel,
+  FollowButton,
+  HeartButton,
+  LikeButton,
+  ShareSheet,
+} from '../engagement';
 import { EmbedCard } from './EmbedCard';
 import {
   useCreateOwnerVideo,
@@ -329,8 +335,9 @@ export function PublicVideo({ id, nonce }: { id: string; nonce: string }) {
       {video.caption && (
         <p className="m-0 [overflow-wrap:anywhere]">{video.caption}</p>
       )}
-      <LikeButton videoId={video.id} />
-      <HeartButton videoId={video.id} />
+      <FollowButton videoId={video.id} businessId={video.businessId} />
+      <LikeButton videoId={video.id} businessId={video.businessId} />
+      <HeartButton videoId={video.id} businessId={video.businessId} />
       <ShareSheet videoId={video.id} />
       <CommentsPanel videoId={video.id} />
       <div className="flex flex-wrap items-center gap-3">

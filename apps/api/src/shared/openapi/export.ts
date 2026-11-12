@@ -76,6 +76,8 @@ import {
 
 import { VideoLikesController } from '../../modules/engagement/presentation/video-likes.controller';
 import { VideoLikesService } from '../../modules/engagement/application/video-likes.service';
+import { VideoFollowsController } from '../../modules/engagement/presentation/video-follows.controller';
+import { FollowsService } from '../../modules/engagement/application/follows.service';
 import { VideoSharesController } from '../../modules/engagement/presentation/video-shares.controller';
 import { VideoSharesService } from '../../modules/engagement/application/video-shares.service';
 
@@ -84,6 +86,7 @@ import { VideoSharesService } from '../../modules/engagement/application/video-s
 @Module({
   controllers: [
     VideoLikesController,
+    VideoFollowsController,
     VideoSharesController,
     ImageController,
     OwnerVideoController,
@@ -119,6 +122,7 @@ import { VideoSharesService } from '../../modules/engagement/application/video-s
   ],
   providers: [
     VideoLikesService,
+    FollowsService,
     VideoSharesService,
     ImageService,
     ImageDeliveryService,

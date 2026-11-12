@@ -127,6 +127,7 @@ export const VideoStatusSchema = z.enum([
 
 const VideoBaseSchema = z.strictObject({
   id: IdSchema,
+  businessId: IdSchema,
   provider: z.enum(['youtube', 'instagram']),
   kind: z.enum(['watch', 'shorts', 'share', 'reel', 'p']),
   providerId: z.string().min(1).max(64).regex(/^[A-Za-z0-9_-]+$/),

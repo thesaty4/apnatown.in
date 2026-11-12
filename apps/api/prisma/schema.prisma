@@ -107,6 +107,7 @@ model User {
   videoComments        VideoComment[]
   likes                Like[]
   hearts               Heart[]
+  follows              Follow[]
 
   @@index([deletedAt], where: raw("\"deleted_at\" IS NULL"), map: "users_active_deleted_at_idx")
   @@map("users")
@@ -766,6 +767,7 @@ model Business {
   suggestions    SubcategorySuggestion[]
   videos         Video[]
   mediaReports   MediaReport[]
+  follows        Follow[]
 
   @@unique([ownerUserId, kind], map: "businesses_owner_kind_key")
   @@index([ownerUserId, status], map: "businesses_owner_status_idx")
@@ -833,6 +835,22 @@ model Heart {
   @@id([userId, targetType, targetId], map: "hearts_pkey")
   @@index([userId, createdAt(sort: Desc), targetId], map: "hearts_user_created_target_idx")
   @@map("hearts")
+}
+
+model Follow {
+  userId         String    @map("user_id") @db.Uuid
+  businessId     String    @map("business_id") @db.Uuid
+  bellOn         Boolean   @default(false) @map("bell_on")
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  lastFollowedAt DateTime  @default(now()) @map("last_followed_at") @db.Timestamptz(6)
+  unfollowedAt   DateTime? @map("unfollowed_at") @db.Timestamptz(6)
+  user           User      @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "follows_user_id_fkey")
+  business       Business  @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "follows_business_id_fkey")
+
+  @@id([userId, businessId], map: "follows_pkey")
+  @@index([businessId, userId], where: raw("\"unfollowed_at\" IS NULL"), map: "follows_business_user_active_idx")
+  @@index([userId], where: raw("\"unfollowed_at\" IS NULL"), map: "follows_user_active_idx")
+  @@map("follows")
 }
 
 model VideoEngagementCounts {

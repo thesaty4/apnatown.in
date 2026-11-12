@@ -3,6 +3,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type {
   EngagementState,
+  FollowResult,
   VideoHeartResult,
   VideoLikeResult,
 } from '@apnatown/shared';
@@ -11,7 +12,12 @@ import { privateQueryOptions } from '../../shared/api/private-query';
 import { ApiFailure } from '../../shared/api/result';
 import { usePrivateMutation } from '../../shared/api/use-private-mutation';
 import { useSession } from '../../shared/auth/SessionProvider';
-import { getEngagementState, setVideoHeart, setVideoLike } from './likes-api';
+import {
+  getEngagementState,
+  setBusinessFollow,
+  setVideoHeart,
+  setVideoLike,
+} from './likes-api';
 
 function withLike(
   state: EngagementState,
@@ -21,6 +27,7 @@ function withLike(
   const likedVideoIds = state.likedVideoIds.filter((id) => id !== videoId);
   if (result.liked) likedVideoIds.push(videoId);
   return {
+    ...state,
     likedVideoIds,
     videoCounts: state.videoCounts.map((count) =>
       count.videoId === videoId ? { ...count, likeCount: result.likeCount } : count,
@@ -29,16 +36,20 @@ function withLike(
   };
 }
 
-export function useVideoLikes(videoIds: readonly string[]) {
+export function useVideoLikes(
+  videoIds: readonly string[],
+  businessIds: readonly string[] = [],
+) {
   const { api, lifecycle, state, epoch } = useSession();
   const client = useQueryClient();
   const scope = state.kind === 'ready' ? accountScope(state.data, epoch) : null;
   const ids = [...new Set(videoIds)].sort();
+  const businesses = [...new Set(businessIds)].sort();
   const rootKey = queryKeys.engagementStateRoot(scope, epoch);
-  const queryKey = queryKeys.engagementState(scope, epoch, ids);
+  const queryKey = queryKeys.engagementState(scope, epoch, ids, businesses);
   const query = useQuery({
     ...privateQueryOptions(queryKey, epoch, lifecycle, (signal) =>
-      getEngagementState(api, ids, signal),
+      getEngagementState(api, ids, businesses, signal),
     ),
     enabled: ids.length > 0 && (
       state.kind === 'ready' ||
@@ -81,11 +92,15 @@ export function useVideoLikes(videoIds: readonly string[]) {
   return { query, mutation };
 }
 
-export function useVideoHeartActions(videoId: string) {
+export function useVideoHeartActions(
+  videoId: string,
+  businessIds: readonly string[] = [],
+) {
   const { api, lifecycle, state, epoch } = useSession();
   const client = useQueryClient();
   const scope = state.kind === 'ready' ? accountScope(state.data, epoch) : null;
-  const queryKey = queryKeys.engagementState(scope, epoch, [videoId]);
+  const businesses = [...new Set(businessIds)].sort();
+  const queryKey = queryKeys.engagementState(scope, epoch, [videoId], businesses);
   const mutation = usePrivateMutation(
     lifecycle,
     async (input: { hearted: boolean }, assertCurrent) => {
@@ -115,6 +130,78 @@ export function useVideoHeartActions(videoId: string) {
       void mutation.run({ hearted });
     },
   };
+}
+
+export function useBusinessFollowActions(
+  videoId: string,
+  businessId: string,
+) {
+  const { api, lifecycle, state, epoch } = useSession();
+  const client = useQueryClient();
+  const scope = state.kind === 'ready' ? accountScope(state.data, epoch) : null;
+  const rootKey = queryKeys.engagementStateRoot(scope, epoch);
+  const queryKey = queryKeys.engagementState(scope, epoch, [videoId], [businessId]);
+  const mutation = usePrivateMutation(
+    lifecycle,
+    async (
+      input: { following: boolean; bellOn: boolean },
+      assertCurrent,
+    ): Promise<FollowResult> => {
+      await client.cancelQueries({ queryKey, exact: true });
+      assertCurrent();
+      const previous = client.getQueryData<EngagementState>(queryKey);
+      if (!previous?.businessStates.some((item) => item.businessId === businessId))
+        throw new ApiFailure('MEDIA_VIDEO_NOT_PUBLISHED');
+      client.setQueryData<EngagementState>(queryKey, (current) =>
+        current
+          ? {
+              ...current,
+              businessStates: current.businessStates.map((item) =>
+                item.businessId === businessId
+                  ? { ...item, following: input.following, bellOn: input.following && input.bellOn }
+                  : item,
+              ),
+            }
+          : current,
+      );
+      try {
+        const result = await setBusinessFollow(
+          api,
+          businessId,
+          videoId,
+          input,
+          assertCurrent,
+        );
+        assertCurrent();
+        await client.cancelQueries({ queryKey, exact: true });
+        assertCurrent();
+        client.setQueryData<EngagementState>(queryKey, (current) =>
+          current
+            ? {
+                ...current,
+                businessStates: current.businessStates.map((item) =>
+                  item.businessId === businessId
+                    ? {
+                        ...item,
+                        following: result.following,
+                        bellOn: result.bellOn,
+                      }
+                    : item,
+                ),
+              }
+            : current,
+        );
+        await client.invalidateQueries({ queryKey: rootKey });
+        return result;
+      } catch (error) {
+        lifecycle.assert(epoch);
+        client.setQueryData(queryKey, previous);
+        void client.invalidateQueries({ queryKey: rootKey });
+        throw error;
+      }
+    },
+  );
+  return { mutation };
 }
 
 function withHeart(

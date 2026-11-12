@@ -45,10 +45,16 @@ function LikeControl({
   );
 }
 
-export function LikeButton({ videoId }: { videoId: string }) {
+export function LikeButton({
+  videoId,
+  businessId,
+}: {
+  videoId: string;
+  businessId: string;
+}) {
   const t = useTranslations('engagement.likes');
   const { state } = useSession();
-  const { query, mutation } = useVideoLikes([videoId]);
+  const { query, mutation } = useVideoLikes([videoId], [businessId]);
   const [loginPrompt, setLoginPrompt] = useState(false);
   if (state.kind === 'loading') return <Skeleton label={t('loading')} />;
   if (state.kind === 'error' && state.code !== 'SESSION_EXPIRED') return <AccessState guest />;

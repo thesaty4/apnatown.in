@@ -5426,6 +5426,70 @@
     "en": "Could not update your saved status. Please try again.",
     "hi": "सहेजी गई स्थिति अपडेट नहीं हो सकी। कृपया फिर कोशिश करें।"
   },
+  "engagement.follow.loading": {
+    "en": "Loading follow status",
+    "hi": "फ़ॉलो की स्थिति लोड हो रही है"
+  },
+  "engagement.follow.follow": {
+    "en": "Follow",
+    "hi": "फ़ॉलो करें"
+  },
+  "engagement.follow.following": {
+    "en": "Following",
+    "hi": "फ़ॉलो कर रहे हैं"
+  },
+  "engagement.follow.bellOn": {
+    "en": "Notifications on",
+    "hi": "सूचनाएँ चालू हैं"
+  },
+  "engagement.follow.bellOff": {
+    "en": "Notifications off",
+    "hi": "सूचनाएँ बंद हैं"
+  },
+  "engagement.follow.loginPrompt": {
+    "en": "Log in to follow this business. You will return to this video after login.",
+    "hi": "इस कारोबार को फ़ॉलो करने के लिए लॉग इन करें। लॉग इन के बाद आप इसी वीडियो पर लौटेंगे।"
+  },
+  "engagement.follow.restrictedTitle": {
+    "en": "Customer access required",
+    "hi": "ग्राहक की अनुमति ज़रूरी है"
+  },
+  "engagement.follow.restrictedMessage": {
+    "en": "Only customer accounts can follow businesses.",
+    "hi": "केवल ग्राहक खाते कारोबार को फ़ॉलो कर सकते हैं।"
+  },
+  "engagement.follow.unavailableTitle": {
+    "en": "Business unavailable",
+    "hi": "कारोबार उपलब्ध नहीं है"
+  },
+  "engagement.follow.unavailableMessage": {
+    "en": "This business is no longer available to follow.",
+    "hi": "यह कारोबार अब फ़ॉलो करने के लिए उपलब्ध नहीं है।"
+  },
+  "engagement.follow.unfollowTitle": {
+    "en": "Unfollow this business?",
+    "hi": "इस कारोबार को अनफ़ॉलो करें?"
+  },
+  "engagement.follow.unfollowImpact": {
+    "en": "You will stop seeing its videos in Following.",
+    "hi": "इसके वीडियो आपको Following में नहीं दिखेंगे।"
+  },
+  "engagement.follow.cancel": {
+    "en": "Cancel",
+    "hi": "रद्द करें"
+  },
+  "engagement.follow.unfollow": {
+    "en": "Unfollow",
+    "hi": "अनफ़ॉलो करें"
+  },
+  "engagement.follow.rateLimited": {
+    "en": "Too many changes. Wait a moment, then try again.",
+    "hi": "बहुत अधिक बदलाव किए गए हैं। थोड़ी देर रुककर फिर कोशिश करें।"
+  },
+  "engagement.follow.failed": {
+    "en": "Could not update your follow status. Please try again.",
+    "hi": "आपकी फ़ॉलो स्थिति अपडेट नहीं हो सकी। कृपया फिर कोशिश करें।"
+  },
   "engagement.share.open": {
     "en": "Share",
     "hi": "साझा करें"
