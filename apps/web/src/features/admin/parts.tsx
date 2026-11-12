@@ -43,6 +43,13 @@ const errors: Record<string, string> = {
   SETTINGS_GROUP_REQUIRED: 'settingsInvalid',
   FEATURE_NOT_AVAILABLE: 'featureUnavailable',
   LEGAL_PAGE_NOT_FOUND: 'legalNotFound',
+  CITY_SLUG_CONFLICT: 'citySlugConflict',
+  CITY_TRANSITION_INVALID: 'cityTransition',
+  CITY_NOT_FOUND: 'cityNotFound',
+  ZONE_NOT_FOUND: 'zoneNotFound',
+  ZONE_INVALID: 'zoneInvalid',
+  FEE_SLAB_INVALID: 'feeSlabInvalid',
+  GEO_VERSION_CONFLICT: 'conflict',
   MAINTENANCE: 'maintenance',
 };
 /** `admin.errors` key for a normalized code; never server text. */

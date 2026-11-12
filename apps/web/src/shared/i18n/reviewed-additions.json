@@ -3537,5 +3537,903 @@
     "en": "Uses design tokens only — no raw colours or sizes.",
     "hi": "सिर्फ़ डिज़ाइन टोकन — कोई सीधा रंग या साइज़ नहीं।",
     "source": "docs/design-system.md"
+  },
+  "admin.shell.cities": {
+    "en": "Cities & zones",
+    "hi": "शहर व ज़ोन",
+    "source": "reference/prototype-source/js19.js"
+  },
+  "admin.errors.citySlugConflict": {
+    "en": "A city with this name already exists.",
+    "hi": "इस नाम का शहर पहले से मौजूद है।"
+  },
+  "admin.errors.cityTransition": {
+    "en": "This city’s status already changed. The latest status is loaded — review and try again.",
+    "hi": "इस शहर की स्थिति पहले ही बदल चुकी है। नई स्थिति लोड हो गई है — देखकर फिर कोशिश करें।"
+  },
+  "admin.errors.cityNotFound": {
+    "en": "This city no longer exists.",
+    "hi": "यह शहर अब मौजूद नहीं है।"
+  },
+  "admin.errors.zoneNotFound": {
+    "en": "This zone no longer exists. The list has been refreshed.",
+    "hi": "यह ज़ोन अब मौजूद नहीं है। सूची ताज़ा कर दी गई है।"
+  },
+  "admin.errors.zoneInvalid": {
+    "en": "The zone shape is not valid. Check the corners — edges must not cross.",
+    "hi": "ज़ोन का आकार सही नहीं है। कोने जाँचें — किनारे एक-दूसरे को काटने नहीं चाहिए।"
+  },
+  "admin.errors.feeSlabInvalid": {
+    "en": "Check the fee slabs: 1 to 3 slabs, each distance higher than the one before.",
+    "hi": "शुल्क स्लैब जाँचें: 1 से 3 स्लैब, हर दूरी पिछली से ज़्यादा हो।"
+  },
+  "geo.location.title": {
+    "en": "Choose your location",
+    "hi": "अपनी लोकेशन चुनें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.barLabel": {
+    "en": "Location",
+    "hi": "लोकेशन",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.optional": {
+    "en": "Optional — browse without it",
+    "hi": "ज़रूरी नहीं — इसके बिना भी देखें"
+  },
+  "geo.location.browsingNear": {
+    "en": "Browsing near",
+    "hi": "आसपास देखें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.changeNamed": {
+    "en": "Change location, currently {place}",
+    "hi": "लोकेशन बदलें, अभी {place}"
+  },
+  "geo.location.currentLocation": {
+    "en": "Current location",
+    "hi": "मौजूदा लोकेशन",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.locationSet": {
+    "en": "Location set: {place}",
+    "hi": "लोकेशन सेट: {place}",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.close": {
+    "en": "Close",
+    "hi": "बंद करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.intro": {
+    "en": "Browsing never needs your location. Pick your area or use GPS.",
+    "hi": "देखने के लिए लोकेशन ज़रूरी नहीं। अपना इलाका चुनें या GPS इस्तेमाल करें।",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.offline": {
+    "en": "You’re offline. Connect to the internet to set your location.",
+    "hi": "आप ऑफ़लाइन हैं। लोकेशन सेट करने के लिए इंटरनेट से जुड़ें।"
+  },
+  "geo.location.useGps": {
+    "en": "Use my current location",
+    "hi": "मेरी मौजूदा लोकेशन इस्तेमाल करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.locating": {
+    "en": "Finding your location…",
+    "hi": "आपकी लोकेशन ढूँढ रहे हैं…"
+  },
+  "geo.location.deniedTitle": {
+    "en": "Location is off",
+    "hi": "लोकेशन बंद है",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.deniedMessage": {
+    "en": "No problem. You can still browse by choosing your area manually.",
+    "hi": "कोई बात नहीं। इलाका चुनकर भी आप देख सकते हैं।",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.gpsUnavailable": {
+    "en": "GPS is not available. Pick your area.",
+    "hi": "GPS उपलब्ध नहीं। अपना इलाका चुनें।",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.pinLabel": {
+    "en": "PIN code",
+    "hi": "पिन कोड",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.pinPlaceholder": {
+    "en": "Enter PIN code (e.g. 274304)",
+    "hi": "पिन कोड डालें (जैसे 274304)",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.pinInvalid": {
+    "en": "Enter a valid 6-digit PIN code.",
+    "hi": "सही 6 अंकों का पिन कोड डालें।"
+  },
+  "geo.location.pinGo": {
+    "en": "Go",
+    "hi": "जाएँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.resolveFailed": {
+    "en": "We couldn’t set your location. Please try again.",
+    "hi": "आपकी लोकेशन सेट नहीं हो सकी। कृपया फिर कोशिश करें।"
+  },
+  "geo.location.areaGone": {
+    "en": "This area is no longer available. Please choose again.",
+    "hi": "यह इलाका अब उपलब्ध नहीं है। कृपया फिर से चुनें।"
+  },
+  "geo.location.rateLimited": {
+    "en": "Too many attempts. Please wait a few minutes and try again.",
+    "hi": "बहुत ज़्यादा कोशिशें हुईं। कुछ मिनट रुककर फिर कोशिश करें।"
+  },
+  "geo.location.sessionInvalid": {
+    "en": "Your session needs a refresh. Reload the page and try again.",
+    "hi": "आपका सेशन रिफ़्रेश करना होगा। पेज दोबारा लोड करके फिर कोशिश करें।"
+  },
+  "geo.location.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.resolving": {
+    "en": "Setting your location…",
+    "hi": "आपकी लोकेशन सेट हो रही है…"
+  },
+  "geo.location.skip": {
+    "en": "Skip for now",
+    "hi": "अभी छोड़ें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.clear": {
+    "en": "Clear location",
+    "hi": "लोकेशन हटाएँ"
+  },
+  "geo.location.cities": {
+    "en": "Cities",
+    "hi": "शहर"
+  },
+  "geo.location.citiesLoading": {
+    "en": "Loading cities",
+    "hi": "शहर लोड हो रहे हैं"
+  },
+  "geo.location.citiesFailed": {
+    "en": "Cities couldn’t load. You can still enter your PIN code.",
+    "hi": "शहर लोड नहीं हो सके। आप फिर भी पिन कोड डाल सकते हैं।"
+  },
+  "geo.location.citiesEmpty": {
+    "en": "No cities are listed yet.",
+    "hi": "अभी कोई शहर सूची में नहीं है।"
+  },
+  "geo.location.moreCities": {
+    "en": "More cities",
+    "hi": "और शहर"
+  },
+  "geo.location.noEnabledCity": {
+    "en": "We are not live in any city yet. Choose a city to join its waitlist.",
+    "hi": "हम अभी किसी शहर में शुरू नहीं हुए हैं। वेटलिस्ट से जुड़ने के लिए शहर चुनें।"
+  },
+  "geo.location.status.enabled": {
+    "en": "Available",
+    "hi": "उपलब्ध"
+  },
+  "geo.location.status.disabled": {
+    "en": "Not available",
+    "hi": "उपलब्ध नहीं"
+  },
+  "geo.location.status.comingSoon": {
+    "en": "Coming soon",
+    "hi": "जल्द आ रहा",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.areasOf": {
+    "en": "Areas in {city}",
+    "hi": "{city} के इलाके"
+  },
+  "geo.location.areasLoading": {
+    "en": "Loading areas",
+    "hi": "इलाके लोड हो रहे हैं"
+  },
+  "geo.location.areasFailed": {
+    "en": "Areas couldn’t load.",
+    "hi": "इलाके लोड नहीं हो सके।"
+  },
+  "geo.location.areasEmpty": {
+    "en": "No areas are listed for this city yet. Try your PIN code.",
+    "hi": "इस शहर के लिए अभी कोई इलाका सूची में नहीं है। पिन कोड आज़माएँ।"
+  },
+  "geo.location.moreAreas": {
+    "en": "More areas",
+    "hi": "और इलाके"
+  },
+  "geo.location.waitlistTitle": {
+    "en": "We are not in your city yet",
+    "hi": "हम अभी आपके शहर में नहीं हैं",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.outsideMessage": {
+    "en": "ApnaTown doesn’t deliver in {city} yet. You can still browse.",
+    "hi": "ApnaTown अभी {city} में डिलीवरी नहीं करता। आप फिर भी देख सकते हैं।"
+  },
+  "geo.location.waitlistCity": {
+    "en": "ApnaTown isn’t available in {city} yet. Leave your mobile number to join the waitlist.",
+    "hi": "ApnaTown अभी {city} में उपलब्ध नहीं है। वेटलिस्ट से जुड़ने के लिए अपना मोबाइल नंबर दें।"
+  },
+  "geo.location.waitlistUnknown": {
+    "en": "We couldn’t find a service area for this place yet. Leave your mobile number to join the waitlist.",
+    "hi": "इस जगह के लिए अभी कोई सेवा क्षेत्र नहीं मिला। वेटलिस्ट से जुड़ने के लिए अपना मोबाइल नंबर दें।"
+  },
+  "geo.location.phone": {
+    "en": "Mobile number",
+    "hi": "मोबाइल नंबर",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.phoneHint": {
+    "en": "10-digit Indian mobile number",
+    "hi": "10 अंकों का भारतीय मोबाइल नंबर"
+  },
+  "geo.location.phoneInvalid": {
+    "en": "Enter a valid 10-digit mobile number starting with 6, 7, 8 or 9.",
+    "hi": "6, 7, 8 या 9 से शुरू होने वाला सही 10 अंकों का मोबाइल नंबर डालें।"
+  },
+  "geo.location.waitlistNote": {
+    "en": "We use this number only for the waitlist of this city.",
+    "hi": "हम यह नंबर सिर्फ़ इस शहर की वेटलिस्ट के लिए इस्तेमाल करते हैं।"
+  },
+  "geo.location.notifyMe": {
+    "en": "Notify me",
+    "hi": "मुझे बताएँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.location.chooseAnother": {
+    "en": "Choose another location",
+    "hi": "दूसरी लोकेशन चुनें"
+  },
+  "geo.location.waitlistInProgress": {
+    "en": "Your request is still being processed. Please wait a moment.",
+    "hi": "आपका अनुरोध अभी प्रोसेस हो रहा है। कृपया थोड़ा रुकें।"
+  },
+  "geo.location.waitlistCityGone": {
+    "en": "This city is no longer listed. Please choose again.",
+    "hi": "यह शहर अब सूची में नहीं है। कृपया फिर से चुनें।"
+  },
+  "geo.location.waitlistFailed": {
+    "en": "We couldn’t save your request. Please try again.",
+    "hi": "आपका अनुरोध सहेजा नहीं जा सका। कृपया फिर कोशिश करें।"
+  },
+  "geo.location.waitlistDoneTitle": {
+    "en": "Request received",
+    "hi": "अनुरोध मिल गया"
+  },
+  "geo.location.waitlistDoneCity": {
+    "en": "Your number is on the waitlist for {city}.",
+    "hi": "आपका नंबर {city} की वेटलिस्ट में है।"
+  },
+  "geo.location.waitlistDone": {
+    "en": "Your number is on the waitlist.",
+    "hi": "आपका नंबर वेटलिस्ट में है।"
+  },
+  "geo.location.done": {
+    "en": "Done",
+    "hi": "हो गया"
+  },
+  "geo.directions.action": {
+    "en": "Directions",
+    "hi": "रास्ता",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.directions.named": {
+    "en": "Get directions to {place}",
+    "hi": "{place} तक रास्ता पता करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json (Get directions)"
+  },
+  "geo.explore.viewLabel": {
+    "en": "Show results as",
+    "hi": "नतीजे ऐसे दिखाएँ"
+  },
+  "geo.explore.list": {
+    "en": "List",
+    "hi": "सूची"
+  },
+  "geo.explore.map": {
+    "en": "Map",
+    "hi": "मैप"
+  },
+  "geo.explore.radius": {
+    "en": "Within {km} km",
+    "hi": "{km} किमी के अंदर"
+  },
+  "geo.explore.mapUnavailable": {
+    "en": "The map isn’t available yet. Places are listed below with their distance.",
+    "hi": "मैप अभी उपलब्ध नहीं है। जगहें नीचे दूरी के साथ दी गई हैं।"
+  },
+  "geo.explore.locationOff": {
+    "en": "Set your location to see distances. You can still browse every place.",
+    "hi": "दूरी देखने के लिए लोकेशन सेट करें। आप फिर भी हर जगह देख सकते हैं।"
+  },
+  "geo.explore.noPins": {
+    "en": "No places within this distance. Try a larger radius.",
+    "hi": "इस दूरी में कोई जगह नहीं। दूरी बढ़ाकर देखें।"
+  },
+  "geo.explore.pinsLabel": {
+    "en": "Places on the map",
+    "hi": "मैप पर जगहें"
+  },
+  "geo.explore.youAreHere": {
+    "en": "You are here",
+    "hi": "आप यहाँ हैं"
+  },
+  "geo.explore.distance": {
+    "en": "{km} km away",
+    "hi": "{km} किमी दूर"
+  },
+  "geo.explore.delivers": {
+    "en": "Delivers to your address",
+    "hi": "आपके पते पर डिलीवरी",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.explore.noDelivery": {
+    "en": "Doesn’t deliver to your address",
+    "hi": "आपके पते पर डिलीवरी नहीं"
+  },
+  "geo.cities.title": {
+    "en": "Cities & zones",
+    "hi": "शहर व ज़ोन",
+    "source": "reference/prototype-source/js19.js"
+  },
+  "geo.cities.intro": {
+    "en": "Open a city to manage its service area, delivery zones and admins.",
+    "hi": "किसी शहर का सेवा क्षेत्र, डिलीवरी ज़ोन और एडमिन संभालने के लिए उसे खोलें।",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.cities.add": {
+    "en": "Add new city",
+    "hi": "नया शहर जोड़ें",
+    "source": "reference/prototype-source/js19.js"
+  },
+  "geo.cities.loading": {
+    "en": "Loading cities",
+    "hi": "शहर लोड हो रहे हैं"
+  },
+  "geo.cities.detailLoading": {
+    "en": "Loading city",
+    "hi": "शहर लोड हो रहा है"
+  },
+  "geo.cities.forbiddenTitle": {
+    "en": "Super Admin only",
+    "hi": "सिर्फ़ सुपर एडमिन",
+    "source": "reference/prototype-source/js19.js"
+  },
+  "geo.cities.checkAgain": {
+    "en": "Check again",
+    "hi": "फिर जाँचें"
+  },
+  "geo.cities.errorTitle": {
+    "en": "Cities couldn’t load",
+    "hi": "शहर लोड नहीं हो सके"
+  },
+  "geo.cities.detailErrorTitle": {
+    "en": "This city couldn’t load",
+    "hi": "यह शहर लोड नहीं हो सका"
+  },
+  "geo.cities.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.cities.emptyTitle": {
+    "en": "No cities yet",
+    "hi": "अभी कोई शहर नहीं"
+  },
+  "geo.cities.emptyMessage": {
+    "en": "Add your first city, then draw its delivery zones.",
+    "hi": "अपना पहला शहर जोड़ें, फिर उसके डिलीवरी ज़ोन बनाएँ।"
+  },
+  "geo.cities.loadMore": {
+    "en": "Load more",
+    "hi": "और दिखाएँ"
+  },
+  "geo.cities.zoneCount": {
+    "en": "{count, plural, one {# zone} other {# zones}}",
+    "hi": "{count, plural, one {# ज़ोन} other {# ज़ोन}}",
+    "source": "reference/prototype-source/js19.js"
+  },
+  "geo.cities.areaCount": {
+    "en": "{count, plural, one {# area} other {# areas}}",
+    "hi": "{count, plural, one {# इलाका} other {# इलाके}}",
+    "source": "reference/prototype-source/js19.js"
+  },
+  "geo.cities.waitlistCount": {
+    "en": "Waitlist: {count, number}",
+    "hi": "वेटलिस्ट: {count, number}",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.cities.open": {
+    "en": "Open city",
+    "hi": "शहर खोलें",
+    "source": "reference/prototype-source/js19.js"
+  },
+  "geo.cities.openName": {
+    "en": "Open city {city}",
+    "hi": "शहर {city} खोलें"
+  },
+  "geo.cities.enable": {
+    "en": "Enable",
+    "hi": "चालू करें",
+    "source": "reference/prototype-source/js19.js"
+  },
+  "geo.cities.disable": {
+    "en": "Disable",
+    "hi": "बंद करें",
+    "source": "reference/prototype-source/js19.js"
+  },
+  "geo.cities.enableName": {
+    "en": "Enable {city}",
+    "hi": "{city} चालू करें"
+  },
+  "geo.cities.disableName": {
+    "en": "Disable {city}",
+    "hi": "{city} बंद करें"
+  },
+  "geo.cities.enableCity": {
+    "en": "Enable city",
+    "hi": "शहर चालू करें",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.cities.disableCity": {
+    "en": "Disable city",
+    "hi": "शहर बंद करें",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.cities.enableTitle": {
+    "en": "Enable {city}?",
+    "hi": "{city} चालू करें?",
+    "source": "reference/prototype-source/js19.js"
+  },
+  "geo.cities.disableTitle": {
+    "en": "Disable {city}?",
+    "hi": "{city} बंद करें?",
+    "source": "reference/prototype-source/js19.js"
+  },
+  "geo.cities.enableImpact": {
+    "en": "Customers in this city will be able to browse and order. Make sure zones and admins are set up.",
+    "hi": "इस शहर के ग्राहक ब्राउज़ और ऑर्डर कर सकेंगे। पक्का करें कि ज़ोन और एडमिन तैयार हैं।",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.cities.disableImpact": {
+    "en": "Customers in this city will see “We are not in your city yet”. Open orders continue, new orders stop.",
+    "hi": "इस शहर के ग्राहकों को “हम अभी आपके शहर में नहीं हैं” दिखेगा। चल रहे ऑर्डर जारी रहेंगे, नए ऑर्डर रुक जाएँगे।",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.cities.confirmEnable": {
+    "en": "Confirm enable",
+    "hi": "चालू करना पक्का करें",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.cities.confirmDisable": {
+    "en": "Confirm disable",
+    "hi": "बंद करना पक्का करें",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.cities.enabled": {
+    "en": "{city} is now enabled",
+    "hi": "{city} अब चालू है",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.cities.disabled": {
+    "en": "{city} was disabled and shows as coming soon",
+    "hi": "{city} बंद कर दिया गया और ‘जल्द आ रहा’ दिखेगा",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.cities.created": {
+    "en": "City added: {city}",
+    "hi": "शहर जोड़ा गया: {city}",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.cities.cancel": {
+    "en": "Cancel",
+    "hi": "रद्द करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.cities.close": {
+    "en": "Close",
+    "hi": "बंद करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.cities.create": {
+    "en": "Add city",
+    "hi": "शहर जोड़ें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.cities.createTitle": {
+    "en": "Add new city",
+    "hi": "नया शहर जोड़ें",
+    "source": "reference/prototype-source/js19.js"
+  },
+  "geo.cities.nameEn": {
+    "en": "City name (English)",
+    "hi": "शहर का नाम (अंग्रेज़ी)"
+  },
+  "geo.cities.nameHi": {
+    "en": "City name (Hindi)",
+    "hi": "शहर का नाम (हिंदी)"
+  },
+  "geo.cities.nameInvalid": {
+    "en": "Enter a name of up to 60 characters, without < or >.",
+    "hi": "60 अक्षरों तक का नाम डालें, < या > के बिना।"
+  },
+  "geo.cities.slugTaken": {
+    "en": "A city with this name already exists. Use a different name.",
+    "hi": "इस नाम का शहर पहले से है। कोई दूसरा नाम डालें।"
+  },
+  "geo.cities.state": {
+    "en": "GST state",
+    "hi": "GST राज्य"
+  },
+  "geo.cities.stateHint": {
+    "en": "Used to work out GST on orders in this city.",
+    "hi": "इस शहर के ऑर्डर पर GST तय करने के लिए इस्तेमाल होता है।"
+  },
+  "geo.cities.stateEditHint": {
+    "en": "Applies to new quotes only. Existing orders and invoices keep their state.",
+    "hi": "सिर्फ़ नए कोटेशन पर लागू। मौजूदा ऑर्डर और इनवॉइस में पुराना राज्य रहेगा।"
+  },
+  "geo.cities.statePlaceholder": {
+    "en": "Choose a state",
+    "hi": "राज्य चुनें"
+  },
+  "geo.cities.stateOption": {
+    "en": "{code} · {name}",
+    "hi": "{code} · {name}"
+  },
+  "geo.cities.stateRequired": {
+    "en": "Choose the GST state.",
+    "hi": "GST राज्य चुनें।"
+  },
+  "geo.cities.statusLabel": {
+    "en": "Status",
+    "hi": "स्थिति",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.cities.statusHint": {
+    "en": "Start as Coming soon until zones and admins are set up.",
+    "hi": "ज़ोन और एडमिन तैयार होने तक ‘जल्द आ रहा’ से शुरू करें।"
+  },
+  "geo.cities.status.enabled": {
+    "en": "Enabled",
+    "hi": "चालू",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.cities.status.disabled": {
+    "en": "Disabled",
+    "hi": "बंद",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.cities.status.comingSoon": {
+    "en": "Coming soon",
+    "hi": "जल्द आ रहा",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.cities.allCities": {
+    "en": "All cities",
+    "hi": "सभी शहर",
+    "source": "reference/prototype-source/js19.js"
+  },
+  "geo.cities.notFoundTitle": {
+    "en": "City not found",
+    "hi": "शहर नहीं मिला"
+  },
+  "geo.cities.notFoundMessage": {
+    "en": "This city may have been removed. Go back to all cities.",
+    "hi": "यह शहर हटाया जा चुका हो सकता है। सभी शहरों पर वापस जाएँ।"
+  },
+  "geo.cities.stateTitle": {
+    "en": "Tax state",
+    "hi": "टैक्स राज्य"
+  },
+  "geo.cities.saveState": {
+    "en": "Save state",
+    "hi": "राज्य सहेजें"
+  },
+  "geo.cities.reset": {
+    "en": "Undo change",
+    "hi": "बदलाव वापस लें"
+  },
+  "geo.cities.stateSaved": {
+    "en": "GST state saved",
+    "hi": "GST राज्य सहेजा गया"
+  },
+  "geo.cities.areasTitle": {
+    "en": "Areas",
+    "hi": "इलाके"
+  },
+  "geo.cities.areasEmpty": {
+    "en": "No areas in this city yet.",
+    "hi": "इस शहर में अभी कोई इलाका नहीं।"
+  },
+  "geo.cities.areasHint": {
+    "en": "Areas are added through the area import; they can’t be edited here yet.",
+    "hi": "इलाके एरिया इम्पोर्ट से जोड़े जाते हैं; अभी इन्हें यहाँ बदला नहीं जा सकता।"
+  },
+  "geo.cities.showing": {
+    "en": "Showing {shown, number} of {total, number}",
+    "hi": "{total, number} में से {shown, number} दिखाए गए"
+  },
+  "geo.cities.adminsTitle": {
+    "en": "Admins",
+    "hi": "एडमिन"
+  },
+  "geo.cities.adminsHint": {
+    "en": "See and manage the admins assigned to this city.",
+    "hi": "इस शहर को सौंपे गए एडमिन देखें और संभालें।"
+  },
+  "geo.cities.manageAdmins": {
+    "en": "Manage admins",
+    "hi": "एडमिन संभालें"
+  },
+  "geo.zones.title": {
+    "en": "Service area & delivery zones",
+    "hi": "सेवा क्षेत्र व डिलीवरी ज़ोन",
+    "source": "reference/prototype-source/js19.js"
+  },
+  "geo.zones.drawNew": {
+    "en": "Draw new zone",
+    "hi": "नया ज़ोन बनाएँ",
+    "source": "reference/prototype-source/js19.js"
+  },
+  "geo.zones.drawFirst": {
+    "en": "Draw your first zone",
+    "hi": "पहला ज़ोन बनाएँ",
+    "source": "reference/prototype-source/js19.js"
+  },
+  "geo.zones.emptyTitle": {
+    "en": "No zones yet",
+    "hi": "अभी कोई ज़ोन नहीं",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.zones.emptyMessage": {
+    "en": "Draw your first zone to set where deliveries go and what they cost.",
+    "hi": "डिलीवरी कहाँ होगी और कितना शुल्क लगेगा, यह तय करने के लिए पहला ज़ोन बनाएँ।"
+  },
+  "geo.zones.outlineAlt": {
+    "en": "Simple outline of the zones, not a map. The corner list is the exact shape.",
+    "hi": "ज़ोन की सामान्य रूपरेखा, यह मैप नहीं है। सटीक आकार कोनों की सूची में है।"
+  },
+  "geo.zones.showing": {
+    "en": "Showing {shown, number} of {total, number}",
+    "hi": "{total, number} में से {shown, number} दिखाए गए"
+  },
+  "geo.zones.active": {
+    "en": "Active",
+    "hi": "चालू",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.zones.paused": {
+    "en": "Paused",
+    "hi": "रुका हुआ",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.zones.noSlabs": {
+    "en": "No fee slabs set.",
+    "hi": "कोई शुल्क स्लैब तय नहीं।"
+  },
+  "geo.zones.slabs": {
+    "en": "Delivery fee slabs",
+    "hi": "डिलीवरी शुल्क स्लैब",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.zones.slabSummary": {
+    "en": "Up to {km} km: {fee}",
+    "hi": "{km} किमी तक: {fee}"
+  },
+  "geo.zones.edit": {
+    "en": "Edit zone",
+    "hi": "ज़ोन बदलें",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.zones.editName": {
+    "en": "Edit zone {zone}",
+    "hi": "ज़ोन {zone} बदलें"
+  },
+  "geo.zones.delete": {
+    "en": "Delete zone",
+    "hi": "ज़ोन हटाएँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.zones.deleteName": {
+    "en": "Delete zone {zone}",
+    "hi": "ज़ोन {zone} हटाएँ"
+  },
+  "geo.zones.deleteTitle": {
+    "en": "Delete this zone? ({zone})",
+    "hi": "यह ज़ोन हटाएँ? ({zone})",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.zones.deleteImpact": {
+    "en": "Deliveries inside it will fall back to the city default fees.",
+    "hi": "इसके अंदर की डिलीवरी पर शहर का सामान्य शुल्क लगेगा।",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.zones.deleted": {
+    "en": "Zone deleted",
+    "hi": "ज़ोन हटाया गया",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.zones.saved": {
+    "en": "Zone saved",
+    "hi": "ज़ोन सहेजा गया",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.zones.cancel": {
+    "en": "Cancel",
+    "hi": "रद्द करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.zones.back": {
+    "en": "Back to zones",
+    "hi": "ज़ोन पर वापस"
+  },
+  "geo.zones.newTitle": {
+    "en": "New zone",
+    "hi": "नया ज़ोन",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.zones.editTitle": {
+    "en": "Edit zone",
+    "hi": "ज़ोन बदलें",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.zones.name": {
+    "en": "Zone name",
+    "hi": "ज़ोन का नाम",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.zones.nameInvalid": {
+    "en": "Enter a zone name of up to 80 characters, without < or >.",
+    "hi": "80 अक्षरों तक का ज़ोन नाम डालें, < या > के बिना।"
+  },
+  "geo.zones.status": {
+    "en": "Status",
+    "hi": "स्थिति",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.zones.shape": {
+    "en": "Zone shape",
+    "hi": "ज़ोन का आकार"
+  },
+  "geo.zones.noMap": {
+    "en": "The map editor isn’t available yet. Enter the zone corners as latitude and longitude, in order around the boundary.",
+    "hi": "मैप एडिटर अभी उपलब्ध नहीं है। ज़ोन के कोने सीमा के क्रम में अक्षांश और देशांतर के रूप में डालें।"
+  },
+  "geo.zones.cornersHint": {
+    "en": "You need at least {min} corners. The shape closes automatically.",
+    "hi": "कम से कम {min} कोने चाहिए। आकार अपने-आप बंद हो जाता है।",
+    "source": "reference/prototype-source/js19.js (EN only, adapted)"
+  },
+  "geo.zones.holesKept": {
+    "en": "{count, plural, one {# cut-out area inside this zone is kept unchanged.} other {# cut-out areas inside this zone are kept unchanged.}}",
+    "hi": "{count, plural, one {इस ज़ोन के अंदर का # छोड़ा गया हिस्सा जैसा है वैसा रहेगा।} other {इस ज़ोन के अंदर के # छोड़े गए हिस्से जैसे हैं वैसे रहेंगे।}}"
+  },
+  "geo.zones.tooFewCorners": {
+    "en": "A zone needs at least 3 corners",
+    "hi": "ज़ोन के लिए कम से कम 3 कोने चाहिए",
+    "source": "reference/prototype-source/js19.js (EN only)"
+  },
+  "geo.zones.shapeInvalid": {
+    "en": "This shape isn’t valid. Check the corners — use at least 3 different points and edges that don’t cross.",
+    "hi": "यह आकार सही नहीं है। कोने जाँचें — कम से कम 3 अलग बिंदु और ऐसे किनारे जो एक-दूसरे को न काटें।"
+  },
+  "geo.zones.noCorners": {
+    "en": "No corners yet. Add the first corner.",
+    "hi": "अभी कोई कोना नहीं। पहला कोना जोड़ें।"
+  },
+  "geo.zones.cornerLat": {
+    "en": "Corner {n} latitude",
+    "hi": "कोना {n} अक्षांश",
+    "source": "reference/prototype-source/js19.js (Corner, EN only)"
+  },
+  "geo.zones.cornerLng": {
+    "en": "Corner {n} longitude",
+    "hi": "कोना {n} देशांतर",
+    "source": "reference/prototype-source/js19.js (Corner, EN only)"
+  },
+  "geo.zones.latInvalid": {
+    "en": "Enter a latitude between -90 and 90 (up to 7 decimals).",
+    "hi": "-90 से 90 के बीच अक्षांश डालें (7 दशमलव तक)।"
+  },
+  "geo.zones.lngInvalid": {
+    "en": "Enter a longitude between -180 and 180 (up to 7 decimals).",
+    "hi": "-180 से 180 के बीच देशांतर डालें (7 दशमलव तक)।"
+  },
+  "geo.zones.removeCorner": {
+    "en": "Remove corner {n}",
+    "hi": "कोना {n} हटाएँ"
+  },
+  "geo.zones.remove": {
+    "en": "Remove",
+    "hi": "हटाएँ"
+  },
+  "geo.zones.addCorner": {
+    "en": "Add corner",
+    "hi": "कोना जोड़ें"
+  },
+  "geo.zones.undo": {
+    "en": "Undo point",
+    "hi": "बिंदु वापस",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.zones.slabsHint": {
+    "en": "Add 1 to {max} slabs. Each “up to” distance must be higher than the one before.",
+    "hi": "1 से {max} स्लैब जोड़ें। हर “तक” दूरी पिछली से ज़्यादा होनी चाहिए।"
+  },
+  "geo.zones.slabsInvalid": {
+    "en": "Distances must increase from one slab to the next.",
+    "hi": "हर अगले स्लैब में दूरी बढ़नी चाहिए।"
+  },
+  "geo.zones.upTo": {
+    "en": "Slab {n}: up to (km)",
+    "hi": "स्लैब {n}: तक (किमी)",
+    "source": "reference/prototype-source/js19.js (Up to (km), EN only)"
+  },
+  "geo.zones.fee": {
+    "en": "Slab {n}: fee (₹)",
+    "hi": "स्लैब {n}: शुल्क (₹)",
+    "source": "reference/prototype-source/js19.js (Fee (₹), EN only)"
+  },
+  "geo.zones.feePreview": {
+    "en": "Customers see {fee}",
+    "hi": "ग्राहकों को {fee} दिखेगा"
+  },
+  "geo.zones.kmInvalid": {
+    "en": "Enter a distance from 0 to 999.99 km (up to 2 decimals).",
+    "hi": "0 से 999.99 किमी तक दूरी डालें (2 दशमलव तक)।"
+  },
+  "geo.zones.feeInvalid": {
+    "en": "Enter an amount in rupees, up to 2 decimals.",
+    "hi": "रुपये में राशि डालें, 2 दशमलव तक।"
+  },
+  "geo.zones.removeSlab": {
+    "en": "Remove slab {n}",
+    "hi": "स्लैब {n} हटाएँ"
+  },
+  "geo.zones.addSlab": {
+    "en": "Add slab",
+    "hi": "स्लैब जोड़ें"
+  },
+  "geo.zones.unsaved": {
+    "en": "Unsaved changes",
+    "hi": "बिना सहेजे बदलाव",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.zones.save": {
+    "en": "Save zone",
+    "hi": "ज़ोन सहेजें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "geo.zones.notFoundTitle": {
+    "en": "Zone not found",
+    "hi": "ज़ोन नहीं मिला"
+  },
+  "geo.zones.notFoundMessage": {
+    "en": "This zone may have been deleted.",
+    "hi": "यह ज़ोन शायद हटा दिया गया है।"
+  },
+  "geo.zones.discardTitle": {
+    "en": "Discard unsaved changes?",
+    "hi": "बिना सहेजे बदलाव छोड़ दें?"
+  },
+  "geo.zones.discardMessage": {
+    "en": "Your edits to this zone will be lost.",
+    "hi": "इस ज़ोन में किए गए आपके बदलाव मिट जाएँगे।"
+  },
+  "geo.zones.keepEditing": {
+    "en": "Keep editing",
+    "hi": "बदलाव जारी रखें"
+  },
+  "geo.zones.discard": {
+    "en": "Discard",
+    "hi": "छोड़ दें"
   }
 }

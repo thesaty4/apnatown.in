@@ -190,7 +190,7 @@ function Shell({ me, children }: { me: AdminMe; children: ReactNode }) {
     href,
     label,
     icon,
-    current: path === href,
+    current: path === href || path.startsWith(`${href}/`),
   });
   // Only implemented screens appear; entries never grant access.
   const canAudit = me.isSuper || me.permissions.reports.includes('view');
@@ -199,7 +199,10 @@ function Shell({ me, children }: { me: AdminMe; children: ReactNode }) {
       ? [
           {
             label: t('platform'),
-            items: [item('/super-admin/activity', t('activity'), '📄')],
+            items: [
+              item('/super-admin/activity', t('activity'), '📄'),
+              item('/super-admin/cities', t('cities'), '🏙️'),
+            ],
           },
           {
             label: t('control'),

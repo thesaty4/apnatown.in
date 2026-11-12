@@ -61,6 +61,12 @@ export const queryKeys = {
   adminImpact: (scope: AccountScope, adminId: string) =>
     ['private', scope, 'admin', 'admins', adminId, 'impact'] as const,
   roles: (scope: AccountScope) => ['private', scope, 'admin', 'roles'] as const,
+  // Super-admin city management (platform-wide; the detail key sits under the
+  // list key so a list invalidation also refreshes any open city).
+  adminGeoCities: (scope: AccountScope) =>
+    ['private', scope, 'admin', 'geo', 'cities'] as const,
+  adminGeoCity: (scope: AccountScope, cityId: string) =>
+    ['private', scope, 'admin', 'geo', 'cities', cityId] as const,
   // All super-admin settings, flags, legal versions and integration status.
   settings: (scope: AccountScope) =>
     ['private', scope, 'admin', 'settings'] as const,

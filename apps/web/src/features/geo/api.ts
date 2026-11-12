@@ -2,14 +2,19 @@ import { infiniteQueryOptions } from '@tanstack/react-query';
 import {
   AreaPageSchema,
   CityPageSchema,
+  LocationResolutionSchema,
+  WaitlistAcceptedSchema,
   type City,
 } from '@apnatown/shared/geo';
+import type { components } from '@apnatown/api-client';
 import type { BrowserApi } from '../../shared/api/browser';
 import { normalizeFailure, unwrap } from '../../shared/api/result';
 import { queryKeys } from '../../shared/api/query-keys';
 import type { Locale } from '../../shared/i18n/preferences';
 
 type Reader = Pick<BrowserApi, 'GET'>;
+export type LocationResolveBody = components['schemas']['LocationResolveDto'];
+export type WaitlistBody = components['schemas']['WaitlistRequestDto'];
 const referenceStaleTime = 5 * 60_000;
 
 async function guarded<T>(read: () => Promise<T>, signal: AbortSignal) {
@@ -74,4 +79,37 @@ export function geoName(
   locale: Locale,
 ) {
   return locale === 'hi' ? place.nameHi : place.nameEn;
+}
+
+/** Read-only resolve of exactly one selector. Coordinates travel in this body
+ * only; they never enter a query key, cache or storage. */
+export async function resolveLocation(
+  api: BrowserApi,
+  body: LocationResolveBody,
+  assertCurrent: () => void,
+) {
+  const header = await api.mutationHeaders();
+  assertCurrent();
+  return unwrap(
+    await api.POST('/geo/location/resolve', { params: { header }, body }),
+    LocationResolutionSchema,
+  );
+}
+
+/** Explicit notify-me request; the caller owns the per-payload command key. */
+export async function joinWaitlist(
+  api: BrowserApi,
+  body: WaitlistBody,
+  key: string,
+  assertCurrent: () => void,
+) {
+  const header = await api.mutationHeaders();
+  assertCurrent();
+  return unwrap(
+    await api.POST('/geo/waitlist', {
+      params: { header: { ...header, 'Idempotency-Key': key } },
+      body,
+    }),
+    WaitlistAcceptedSchema,
+  );
 }

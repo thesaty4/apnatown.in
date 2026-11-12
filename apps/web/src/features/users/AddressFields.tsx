@@ -6,7 +6,13 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@apnatown/ui/primitives/Button';
 import { Select } from '@apnatown/ui/primitives/Select';
 import { useSession } from '../../shared/auth/SessionProvider';
-import { areaOptions, cityOptions, geoName } from '../geo/api';
+import {
+  areaOptions,
+  cityOptions,
+  deviceFailure,
+  geoName,
+  requestDeviceLocation,
+} from '../geo';
 import { InlineAlert } from './address-parts';
 
 export type Draft = {
@@ -151,7 +157,6 @@ const status: Record<Exclude<Locating, 'idle'>, string> = {
   unavailable: 'locationUnavailable',
   unsupported: 'locationUnsupported',
 };
-const round = (value: number) => Math.round(value * 1e6) / 1e6;
 
 /** No map provider is configured: the keyboard/form alternative is an explicit
  * device-location request (only on click) that can be cleared. Coordinates are
@@ -167,18 +172,13 @@ export function LocationField({
   const [locating, setLocating] = useState<Locating>('idle');
   const pinned = draft.lat !== null && draft.lng !== null;
   function locate() {
-    if (!('geolocation' in navigator)) return setLocating('unsupported');
     setLocating('locating');
-    navigator.geolocation.getCurrentPosition(
-      ({ coords }) => {
-        update({ lat: round(coords.latitude), lng: round(coords.longitude) });
+    requestDeviceLocation().then(
+      (position) => {
+        update(position);
         setLocating('idle');
       },
-      (failure) =>
-        setLocating(
-          failure.code === failure.PERMISSION_DENIED ? 'denied' : 'unavailable',
-        ),
-      { enableHighAccuracy: true, timeout: 15_000, maximumAge: 0 },
+      (error: unknown) => setLocating(deviceFailure(error)),
     );
   }
   return (

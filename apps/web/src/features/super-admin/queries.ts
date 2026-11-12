@@ -87,6 +87,10 @@ const refreshCodes = new Set([
   'SETTINGS_VERSION_CONFLICT',
   'FEATURE_NOT_AVAILABLE',
   'LEGAL_PAGE_NOT_FOUND',
+  'GEO_VERSION_CONFLICT',
+  'CITY_NOT_FOUND',
+  'CITY_TRANSITION_INVALID',
+  'ZONE_NOT_FOUND',
 ]);
 
 /** One super-admin command. No automatic retry; the caller supplies the
