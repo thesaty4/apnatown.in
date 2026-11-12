@@ -85,8 +85,10 @@ API integration: [shared React Query contract](../../_foundation/frontend-shared
 - Key prefixes: `geo.location.*`, `geo.cities.*`, `geo.zones.*`; use approved EN/HI catalogue; do not auto-translate city names or invent legal/consent copy.
 - Auth/permission, offline, skeleton, error/retry and no-permission use the shared state set; no business or permission logic lives in UI.
 
-## Analytics and tests
+## Analytics and verification
+
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Analytics: no feature-specific events are prescribed.
-- Component: location picker validation/permission denial; map/list/radius controls; city status confirmation; zone editor geometry, slab validation and keyboard operation.
-- E2E: location optional/manual fallback and J10 city/zone admin journey; permission-negative, long Hindi, dark mode and 360px viewport.
+- Manual UI: location picker validation/permission denial; map/list/radius controls; city status confirmation; zone editor geometry, slab validation and keyboard operation.
+- Manual journey: location optional/manual fallback and J10 city/zone admin journey; permission-negative, long Hindi, dark mode and 360px viewport.

@@ -79,7 +79,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1
 - **Shared components:** Breadcrumbs, MediaCarousel, FullScreenViewer, OfferBanner, LinkedItemsStrip, ReviewForm, FilterPanel.
 - **API/data handles:** `P04/F-PD-001`; `P03/F-PD-001`.
-- **Test handles:** F-PD-001-HAPPY, F-PD-001-NEGATIVE, F-PD-001-AUTHZ, F-PD-001-EMPTY-ERROR, F-PD-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PD-001-HAPPY, F-PD-001-NEGATIVE, F-PD-001-AUTHZ, F-PD-001-EMPTY-ERROR, F-PD-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -142,7 +142,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1
 - **Shared components:** Breadcrumbs, MediaCarousel, FullScreenViewer, OfferBanner, LinkedItemsStrip, ReviewForm, GalleryGrid.
 - **API/data handles:** `P04/F-PD-002`; `P03/F-PD-002`.
-- **Test handles:** F-PD-002-HAPPY, F-PD-002-NEGATIVE, F-PD-002-AUTHZ, F-PD-002-EMPTY-ERROR, F-PD-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PD-002-HAPPY, F-PD-002-NEGATIVE, F-PD-002-AUTHZ, F-PD-002-EMPTY-ERROR, F-PD-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -205,7 +205,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1
 - **Shared components:** Breadcrumbs, MediaCarousel, FullScreenViewer, OfferBanner, LinkedItemsStrip, ReviewForm, ProductCard.
 - **API/data handles:** `P04/F-PD-003`; `P03/F-PD-003`.
-- **Test handles:** F-PD-003-HAPPY, F-PD-003-NEGATIVE, F-PD-003-AUTHZ, F-PD-003-EMPTY-ERROR, F-PD-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PD-003-HAPPY, F-PD-003-NEGATIVE, F-PD-003-AUTHZ, F-PD-003-EMPTY-ERROR, F-PD-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -268,7 +268,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J3
 - **Shared components:** Breadcrumbs, MediaCarousel, FullScreenViewer, OfferBanner, LinkedItemsStrip, ReviewForm, OfferCard.
 - **API/data handles:** `P04/F-PD-004`; `P03/F-PD-004`.
-- **Test handles:** F-PD-004-HAPPY, F-PD-004-NEGATIVE, F-PD-004-AUTHZ, F-PD-004-EMPTY-ERROR, F-PD-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PD-004-HAPPY, F-PD-004-NEGATIVE, F-PD-004-AUTHZ, F-PD-004-EMPTY-ERROR, F-PD-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -331,7 +331,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Breadcrumbs, MediaCarousel, FullScreenViewer, OfferBanner, LinkedItemsStrip, ReviewForm, GalleryGrid.
 - **API/data handles:** `P04/F-PD-005`; `P03/F-PD-005`.
-- **Test handles:** F-PD-005-HAPPY, F-PD-005-NEGATIVE, F-PD-005-AUTHZ, F-PD-005-EMPTY-ERROR, F-PD-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PD-005-HAPPY, F-PD-005-NEGATIVE, F-PD-005-AUTHZ, F-PD-005-EMPTY-ERROR, F-PD-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -394,7 +394,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Breadcrumbs, MediaCarousel, FullScreenViewer, OfferBanner, LinkedItemsStrip, ReviewForm, OrderCard.
 - **API/data handles:** `P04/F-PD-006`; `P03/F-PD-006`.
-- **Test handles:** F-PD-006-HAPPY, F-PD-006-NEGATIVE, F-PD-006-AUTHZ, F-PD-006-EMPTY-ERROR, F-PD-006-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PD-006-HAPPY, F-PD-006-NEGATIVE, F-PD-006-AUTHZ, F-PD-006-EMPTY-ERROR, F-PD-006-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -457,7 +457,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Breadcrumbs, MediaCarousel, FullScreenViewer, OfferBanner, LinkedItemsStrip, ReviewForm, RatingBreakdown.
 - **API/data handles:** `P04/F-PD-007`; `P03/F-PD-007`.
-- **Test handles:** F-PD-007-HAPPY, F-PD-007-NEGATIVE, F-PD-007-AUTHZ, F-PD-007-EMPTY-ERROR, F-PD-007-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PD-007-HAPPY, F-PD-007-NEGATIVE, F-PD-007-AUTHZ, F-PD-007-EMPTY-ERROR, F-PD-007-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -520,7 +520,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Breadcrumbs, MediaCarousel, FullScreenViewer, OfferBanner, LinkedItemsStrip, ReviewForm, FilterPanel.
 - **API/data handles:** `P04/F-PD-008`; `P03/F-PD-008`.
-- **Test handles:** F-PD-008-HAPPY, F-PD-008-NEGATIVE, F-PD-008-AUTHZ, F-PD-008-EMPTY-ERROR, F-PD-008-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PD-008-HAPPY, F-PD-008-NEGATIVE, F-PD-008-AUTHZ, F-PD-008-EMPTY-ERROR, F-PD-008-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -583,13 +583,13 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Breadcrumbs, MediaCarousel, FullScreenViewer, OfferBanner, LinkedItemsStrip, ReviewForm, GalleryGrid.
 - **API/data handles:** `P04/F-PD-009`; `P03/F-PD-009`.
-- **Test handles:** F-PD-009-HAPPY, F-PD-009-NEGATIVE, F-PD-009-AUTHZ, F-PD-009-EMPTY-ERROR, F-PD-009-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PD-009-HAPPY, F-PD-009-NEGATIVE, F-PD-009-AUTHZ, F-PD-009-EMPTY-ERROR, F-PD-009-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-PD-001 | S-CUST-08 | J1 | products, offers, reviews, media-videos, engagement | Product, Offer, Review | Breadcrumbs, MediaCarousel, FullScreenViewer, OfferBanner, LinkedItemsStrip, ReviewForm, FilterPanel | F-PD-001-HAPPY, F-PD-001-NEGATIVE, F-PD-001-AUTHZ, F-PD-001-EMPTY-ERROR, F-PD-001-I18N-HI-LONG |
 | F-PD-002 | S-CUST-08 | J1 | products, offers, reviews, media-videos, engagement | Product, Offer, Review | Breadcrumbs, MediaCarousel, FullScreenViewer, OfferBanner, LinkedItemsStrip, ReviewForm, GalleryGrid | F-PD-002-HAPPY, F-PD-002-NEGATIVE, F-PD-002-AUTHZ, F-PD-002-EMPTY-ERROR, F-PD-002-I18N-HI-LONG |

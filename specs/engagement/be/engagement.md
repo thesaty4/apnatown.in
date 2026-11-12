@@ -100,9 +100,11 @@ Consume `video.removed` and **`business.application.decision_changed`** to inval
 13. Given a customer follows without enabling the bell, or withdraws channel consent before delivery, when fan-out runs, then no follower notification is delivered through that ineligible channel.
 12. Given repeated account-erasure calls, when policy is approved, then receipts and counter changes are idempotent; without Q-32 policy they remain blocked.
 
-## Tests
+## Verification
 
-Unit: AC1/2/5/10 relationship transitions, typed target IDs, comment state/counter deltas. Integration: Saved tombstone removal, moderation queue/counts, out-of-order counter reconciliation, announcement worker restart/withdrawal, account receipts. Authorization negatives: guest writes, foreign saved relation/followers, non-author comment deletion, same-city foreign area, catalog-only moderator. Malicious text/IDs and duplicate/retried POSTs are bounded/inert.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Rules: AC1/2/5/10 relationship transitions, typed target IDs, comment state/counter deltas. Manual API/DB: Saved tombstone removal, moderation queue/counts, out-of-order counter reconciliation, announcement worker restart/withdrawal, account receipts. Authorization negatives: guest writes, foreign saved relation/followers, non-author comment deletion, same-city foreign area, catalog-only moderator. Malicious text/IDs and duplicate/retried POSTs are bounded/inert.
 
 ## Open questions
 

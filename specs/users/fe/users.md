@@ -93,8 +93,10 @@ This does not mark the address, consent or privacy frontend journeys implemented
 - Key prefixes: `account.*`, `consent.*`, `privacy.*`; use approved EN/HI catalogue; do not invent legal or consent copy.
 - Payment methods, legal-page content, login and notification preferences use their owning modules' contracts; no duplicate data fetching or business rules.
 
-## Tests
+## Verification
 
-- Component: profile validation, address empty/default/delete states, consent toggles, keyboard/map alternative, long Hindi.
-- E2E: J12 profile completion; J13 locale/theme preference; Your data/Copy data, owner-denied/expired export, blocked deletion, completion after session revocation and consent withdrawal. Destructive production deletion remains Q-32-gated.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Manual UI: profile validation, address empty/default/delete states, consent toggles, keyboard/map alternative, long Hindi.
+- Manual journey: J12 profile completion; J13 locale/theme preference; Your data/Copy data, owner-denied/expired export, blocked deletion, completion after session revocation and consent withdrawal. Destructive production deletion remains Q-32-gated.
 - Visual: 360px and desktop, EN/HI, light/dark.

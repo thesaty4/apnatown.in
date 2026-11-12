@@ -144,6 +144,8 @@ Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../..
 - Keys: `catalog.categories.*`, `catalog.subcategorySuggestion.*`, `catalog.admin.suggestions.*`, `catalog.admin.keywords.*`; all visible copy EN/HI, with long Hindi labels wrapping.
 - Analytics: no new events until the shared event plan in Q-11 is approved.
 
-## Tests
+## Verification
 
-Component: category selection, exact/fuzzy duplicate states, queue decisions, target editor keyboard/RTL-independent Hindi wrapping. E2E: J1/J2 category navigation and J9 suggestion-to-decision; test denied scope, permission state, light/dark, mobile/desktop.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Manual UI: category selection, exact/fuzzy duplicate states, queue decisions, target editor keyboard/RTL-independent Hindi wrapping. Manual journey: J1/J2 category navigation and J9 suggestion-to-decision; check denied scope, permission state, light/dark, mobile/desktop.

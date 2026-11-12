@@ -125,10 +125,12 @@ Reuse `COMMON_UNAUTHENTICATED`, `COMMON_FORBIDDEN`, `COMMON_VALIDATION_FAILED`, 
 16. Given an export/erase request with unknown policy or unfinished payment, when processed, then it returns a durable blocked receipt without deleting financial records or another cart.
 17. Given an approved provider with `deliveryMethod=null,pickupEnabled=false`, when quoting or placing its products, then fulfilment is unavailable; no free/rider/pickup defaults or stock/payment side effects appear.
 
-## Tests
+## Verification
+
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Given an unpersisted cart, when concurrent first adds use version 0, then one owner cart is created and the losing version conflicts; given login rotates Auth state, when guest merge succeeds or its response is lost, then the independent guest proof is consumed once and same-key retry cannot double quantities.
-- Unit/integration map AC1–AC17 to grouping, null-variant identity, shared-stock aggregation, 1-paise/capped coupon allocation, fee precedence/unconfigured provider, revision validation, rollback, code-free projections and privacy receipts.
+- Rules and manual API/DB checks map AC1–AC17 to grouping, null-variant identity, shared-stock aggregation, 1-paise/capped coupon allocation, fee precedence/unconfigured provider, revision validation, rollback, code-free projections and privacy receipts.
 - Concurrency/fault injection: two checkouts/last unit across labels; duplicate callback/key; failure-before-success and success-before-failure; address deletion; mutation during payment; provider timeout/crash after capture; retry-vs-COD; recovery replay. Assert money conservation and no duplicate stock movement/order/coupon use.
 - Negatives: anonymous placement; foreign line/address/quote/attempt; false flags/client totals; unknown/malicious filters/enum/oversized payload; unsafe JSON integers; foreign product variant. Verify flat error fields/redaction.
 

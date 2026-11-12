@@ -197,9 +197,11 @@ Public resolved-image DTOs expose intrinsic `{width,height}` and the canonical `
 15. Given an authorized super_admin uploads a valid taxonomy image, when Catalog attaches it, then only an exact `catalog_category`/`catalog_subcategory` placement on an active record resolves publicly; an invalid purpose, foreign attachment, inactive taxonomy or removed asset is denied.
 16. Given an image purpose has no configured content/size policy, when a category or homepage banner upload is attempted, then `MEDIA_UPLOAD_POLICY_REQUIRED` is returned and no attachable asset is created.
 
-## Tests
+## Verification
 
-Unit: source URL parser/host suffix attacks and provider-specific IDs; action table, source-union DTO, exact score/2.5 km boundary, immutable cursor/session/TTL. Integration: configured MIME/size sniff + EXIF, applicant/private AssetPort consumers, PHOTO report → existing queue → remove, reorder conflicts, mutable counters between pages, live consent/publication rechecks, deep-link seeding and event replay. Negatives: foreign asset/purpose/application, catalog-only moderator, same-city foreign area, signed URL leakage/SSRF. Account export/erase validates references and repeat receipts; Q-11 metrics never use invented attribution.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Rules: source URL parser/host suffix attacks and provider-specific IDs; action table, source-union DTO, exact score/2.5 km boundary, immutable cursor/session/TTL. Manual API/DB: configured MIME/size sniff + EXIF, applicant/private AssetPort consumers, PHOTO report → existing queue → remove, reorder conflicts, mutable counters between pages, live consent/publication rechecks, deep-link seeding and event replay. Negatives: foreign asset/purpose/application, catalog-only moderator, same-city foreign area, signed URL leakage/SSRF. Account export/erase validates references and repeat receipts; Q-11 metrics never use invented attribution.
 
 ## Open questions
 

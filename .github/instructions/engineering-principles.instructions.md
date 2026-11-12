@@ -21,7 +21,7 @@ before implementing any feature.
    repositories/services in `docs/architecture.md` before adding new
    ones.
 3. **Small PRs.** One feature/task/bug per PR, linked to its spec.
-4. **Report honestly.** State what you verified (tests run, commands
+4. **Report honestly.** State what you verified (manual checks, commands
    executed) vs. what you assumed.
 
 ## SOLID / DRY / KISS
@@ -61,12 +61,12 @@ before implementing any feature.
 - All business rules: `docs/project/04-business-rules.md` (BR-01..
   BR-22) — these are reviewed on every PR.
 
-## Testing and Definition of Done
+## Verification and Definition of Done
 
-- See `testing.instructions.md` for the test pyramid and required
-  negative/security/money/concurrency cases.
+- Follow `testing.instructions.md`: no automated test-file generation
+  for FE, BE or DB; use existing non-test checks and manual evidence.
 - A change is done only when: spec acceptance criteria pass, product
-  invariants hold, tests exist and pass, docs/specs are updated, and
+  invariants hold, verification evidence is recorded, docs/specs are updated, and
   `node scripts/validate-ai-setup.mjs` passes if `.github/`/`docs/`
   changed.
 

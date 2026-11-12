@@ -93,11 +93,13 @@ The shared Coupon editor uses BE-normalized codes, server eligible-target previe
 - Key prefixes: `offers.*`, `admin.promotions.*`; EN/HI for titles, discount labels, terms when supplied, validity, statuses, validation, approval decisions and empty/error copy.
 - Analytics: `offers.list_view` (page visible), `offers.select` (card opened), `offers.create` (submit), `offers.edit` (save), `admin.offer_decision` (decision succeeds). Do not send raw coupon codes, private business data or customer identifiers.
 
-## Tests
+## Verification
 
-- Component: offer filters/cards, expired and out-of-stock states, vendor editor validation and pending state, scoped admin queue, no-permission state, long Hindi and dark mode.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Manual UI: offer filters/cards, expired and out-of-stock states, vendor editor validation and pending state, scoped admin queue, no-permission state, long Hindi and dark mode.
 - Journey: J3 offer → product/service/filtered Explore/shop destination; vendor create → pending approval → admin decision → public listing; rejected/expired offers never appear as active.
-- Map every acceptance bullet to component/contract/E2E scenarios: direct expired target read, removable offer URL, same-city/wrong-area placement CRUD, duplicate paid activation, stale toggle/expiry, foreign/private asset and malicious destination rejection. Axe, keyboard-only editor/confirmation focus, long Hindi, dark mode and reduced motion cover all three panels.
+- Map every acceptance bullet to component/contract/manual journey scenarios: direct expired target read, removable offer URL, same-city/wrong-area placement CRUD, duplicate paid activation, stale toggle/expiry, foreign/private asset and malicious destination rejection. Accessibility inspection, keyboard-only editor/confirmation focus, long Hindi, dark mode and reduced motion cover all three panels.
 
 ## Open questions
 

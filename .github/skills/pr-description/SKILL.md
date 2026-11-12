@@ -22,8 +22,8 @@ Used by the owning `.github/agents/developer-backend.agent.md` or
    feature ID(s)/spec path(s).
 2. Acceptance criteria: list each Given/When/Then from the spec and
    mark it met.
-3. Test evidence: paste the **actual** commands run and their output/
-   summary — never claim a test passed without having run it.
+3. Verification evidence: paste the **actual** commands run and their output/
+   summary plus manual observations and gaps; never claim an unrun check passed.
 4. Security notes: state what was checked
    (`secure-coding-review` skill) and, if required, quote the
    `security-auditor` verdict.
@@ -50,6 +50,6 @@ claiming the PR was created.
 
 - [ ] Every section of the PR template is filled, none left as
   placeholder text.
-- [ ] Test evidence is real (commands + output), not asserted.
+- [ ] Verification evidence is real (commands + output), not asserted.
 - [ ] Screenshots attached for frontend UI changes.
 - [ ] Both required agent verdicts are quoted, not summarized away.

@@ -31,7 +31,7 @@ section.
 
 ## 3. Integration ports and responsibilities
 
-Each is a port with a fake for tests (`integrations.instructions.md`);
+Each is a port with an approved local verification adapter (`integrations.instructions.md`);
 provider choice is `[ASSUMPTION]`/`[OPEN]` — see
 [12-decisions-assumptions-open-questions.md](./12-decisions-assumptions-open-questions.md).
 

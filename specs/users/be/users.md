@@ -175,8 +175,10 @@ Open question: Q-32 must also approve a verified request channel for suspended u
 12. Given a retained phone hash or membership, when a duplicate is inserted, then its unique key rejects it; unrelated NULL tombstones remain possible, and a membership cannot reference a missing user.
 13. Given the runtime role, when physical user deletion or in-place membership rewriting is attempted, then database privileges deny it; adding the schema itself creates no users or role grants.
 
-## Tests
+## Verification
 
-- Unit: profile/address allow-lists; default-address transaction; consent append-only behavior; request idempotency.
-- Integration: owner CRUD; consent revocation visible to sender query; paginated export completeness, artifact expiry, policy-blocked deletion, interrupted/retried owner erasure and session-revocation completion race.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Rules: profile/address allow-lists; default-address transaction; consent append-only behavior; request idempotency.
+- Manual API/DB: owner CRUD; consent revocation visible to sender query; paginated export completeness, artifact expiry, policy-blocked deletion, interrupted/retried owner erasure and session-revocation completion race.
 - Authorization negatives: cross-user address ID; anonymous account access; unknown fields; stale consent; attempts to read another user's payment methods.

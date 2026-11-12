@@ -9,7 +9,7 @@
 - [Events and jobs](#events-and-jobs)
 - [Errors](#errors)
 - [Acceptance criteria](#acceptance-criteria)
-- [Tests](#tests)
+- [Verification](#verification)
 
 Features: F-SV-001, F-SV-002, F-SV-003, F-SV-004, F-SV-005, F-SV-006, F-SV-007, F-VD-014, F-VD-016, F-PV-003, F-PV-004 | Rules: BR-02, BR-06, BR-08, BR-09, BR-10, BR-14, BR-16, BR-18 | State machines: ST-enquiry | Depends on: businesses, catalog, geo | Used by: search, businesses, offers, reviews, engagement, media-videos, notifications
 
@@ -119,9 +119,11 @@ Common authentication, authorization, validation and rate-limit failures use the
 - Given a paused service or suspended owner, when related/profile lists and facets are read, then it is absent; directly opened paused details retain the documented unavailable-enquiry state.
 - Given an owner selects a service for featuring without active Premium entitlement, when saved, then the write is rejected and no featured status is exposed; after expiry, the effective public status is false while the selection remains stored; after verified renewal, a still-eligible selected service is featured again without altering enquiry-only pricing or requiring a service write.
 
-## Tests
+## Verification
 
-- Unit: price-type constraints, category/subcategory match, enquiry transition graph and version conflict.
-- Integration: public active/paused/unapproved visibility, enquiry persistence/outbox, provider expertise save, and service search invalidation.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Rules: price-type constraints, category/subcategory match, enquiry transition graph and version conflict.
+- Manual API/DB: public active/paused/unapproved visibility, enquiry persistence/outbox, provider expertise save, and service search invalidation.
 - Authorization negatives: cross-business service/enquiry IDs, vendor attempting provider expertise, and guest attempting inbox access.
 - Privacy: encrypted phone at rest; no phone/message in logs, events, or public DTOs.

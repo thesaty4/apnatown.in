@@ -78,7 +78,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1
 - **Shared components:** OrderCard, Timeline, DeliveryCard, Button, FilterPanel, SubcategoryMultiSelect, ActiveFilterChips.
 - **API/data handles:** `P04/F-OR-001`; `P03/F-OR-001`.
-- **Test handles:** F-OR-001-HAPPY, F-OR-001-NEGATIVE, F-OR-001-AUTHZ, F-OR-001-EMPTY-ERROR, F-OR-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-OR-001-HAPPY, F-OR-001-NEGATIVE, F-OR-001-AUTHZ, F-OR-001-EMPTY-ERROR, F-OR-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -141,7 +141,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1
 - **Shared components:** OrderCard, Timeline, DeliveryCard, Button.
 - **API/data handles:** `P04/F-OR-002`; `P03/F-OR-002`.
-- **Test handles:** F-OR-002-HAPPY, F-OR-002-NEGATIVE, F-OR-002-AUTHZ, F-OR-002-EMPTY-ERROR, F-OR-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-OR-002-HAPPY, F-OR-002-NEGATIVE, F-OR-002-AUTHZ, F-OR-002-EMPTY-ERROR, F-OR-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -204,7 +204,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1
 - **Shared components:** OrderCard, Timeline, DeliveryCard, Button, PhoneInput, OtpInput, Sheet.
 - **API/data handles:** `P04/F-OR-003`; `P03/F-OR-003`.
-- **Test handles:** F-OR-003-HAPPY, F-OR-003-NEGATIVE, F-OR-003-AUTHZ, F-OR-003-EMPTY-ERROR, F-OR-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-OR-003-HAPPY, F-OR-003-NEGATIVE, F-OR-003-AUTHZ, F-OR-003-EMPTY-ERROR, F-OR-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -267,7 +267,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** OrderCard, Timeline, DeliveryCard, Button, MapView, AddressForm.
 - **API/data handles:** `P04/F-OR-004`; `P03/F-OR-004`.
-- **Test handles:** F-OR-004-HAPPY, F-OR-004-NEGATIVE, F-OR-004-AUTHZ, F-OR-004-EMPTY-ERROR, F-OR-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-OR-004-HAPPY, F-OR-004-NEGATIVE, F-OR-004-AUTHZ, F-OR-004-EMPTY-ERROR, F-OR-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -330,7 +330,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J8
 - **Shared components:** OrderCard, Timeline, DeliveryCard, Button, DataTable, PermissionMatrix, AuditDiff.
 - **API/data handles:** `P04/F-OR-005`; `P03/F-OR-005`.
-- **Test handles:** F-OR-005-HAPPY, F-OR-005-NEGATIVE, F-OR-005-AUTHZ, F-OR-005-EMPTY-ERROR, F-OR-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-OR-005-HAPPY, F-OR-005-NEGATIVE, F-OR-005-AUTHZ, F-OR-005-EMPTY-ERROR, F-OR-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -393,7 +393,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J8
 - **Shared components:** OrderCard, Timeline, DeliveryCard, Button, DataTable, PermissionMatrix, AuditDiff.
 - **API/data handles:** `P04/F-OR-006`; `P03/F-OR-006`.
-- **Test handles:** F-OR-006-HAPPY, F-OR-006-NEGATIVE, F-OR-006-AUTHZ, F-OR-006-EMPTY-ERROR, F-OR-006-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-OR-006-HAPPY, F-OR-006-NEGATIVE, F-OR-006-AUTHZ, F-OR-006-EMPTY-ERROR, F-OR-006-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -456,7 +456,7 @@ Restrict operations to the listed roles (Customer, Vendor); apply customer authe
 - **Journeys:** J8
 - **Shared components:** OrderCard, Timeline, DeliveryCard, Button.
 - **API/data handles:** `P04/F-OR-007`; `P03/F-OR-007`.
-- **Test handles:** F-OR-007-HAPPY, F-OR-007-NEGATIVE, F-OR-007-AUTHZ, F-OR-007-EMPTY-ERROR, F-OR-007-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-OR-007-HAPPY, F-OR-007-NEGATIVE, F-OR-007-AUTHZ, F-OR-007-EMPTY-ERROR, F-OR-007-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -519,13 +519,13 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J8
 - **Shared components:** OrderCard, Timeline, DeliveryCard, Button.
 - **API/data handles:** `P04/F-OR-008`; `P03/F-OR-008`.
-- **Test handles:** F-OR-008-HAPPY, F-OR-008-NEGATIVE, F-OR-008-AUTHZ, F-OR-008-EMPTY-ERROR, F-OR-008-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-OR-008-HAPPY, F-OR-008-NEGATIVE, F-OR-008-AUTHZ, F-OR-008-EMPTY-ERROR, F-OR-008-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-OR-001 | S-CUST-13, S-CUST-14 | J1 | orders, delivery, payments, notifications | Order, OrderItem, Payment, DeliveryJob, Refund | OrderCard, Timeline, DeliveryCard, Button, FilterPanel, SubcategoryMultiSelect, ActiveFilterChips | F-OR-001-HAPPY, F-OR-001-NEGATIVE, F-OR-001-AUTHZ, F-OR-001-EMPTY-ERROR, F-OR-001-I18N-HI-LONG |
 | F-OR-002 | S-CUST-14 | J1 | orders, delivery, payments, notifications | Order, OrderItem, Payment, DeliveryJob, Refund | OrderCard, Timeline, DeliveryCard, Button | F-OR-002-HAPPY, F-OR-002-NEGATIVE, F-OR-002-AUTHZ, F-OR-002-EMPTY-ERROR, F-OR-002-I18N-HI-LONG |

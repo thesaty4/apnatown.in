@@ -25,8 +25,8 @@ Use the foundation's pnpm workspace/package and version-pinning contracts:
   CSS with design tokens from `docs/design-system.md`, mandatory
   TanStack React Query (`@tanstack/react-query`) for client API integration
   per the [shared contract](../../specs/_foundation/frontend-shared.md#api-integration-with-react-query),
-  `react-hook-form` + `zod`, `next-intl` for EN/HI, Playwright + React
-  Testing Library for tests.
+  `react-hook-form` + `zod`, `next-intl` for EN/HI; manual UI/API verification and existing
+  lint/type-check/build checks, not automated test files.
 - `apps/api`: NestJS + TypeScript, layered (controller -> service ->
   repository -> integration port, see `docs/architecture.md`), REST +
   OpenAPI from shared `zod` DTOs, pg-boss plus transactional outbox for background
@@ -38,7 +38,7 @@ Use the foundation's pnpm workspace/package and version-pinning contracts:
   repository adapters and reviewed Prisma migrations. Ports isolate
   persistence from domain logic; there is no multi-engine requirement.
 - Auth: mobile OTP + httpOnly cookie sessions.
-- Integrations as ports with fakes for tests: payments, SMS/OTP,
+- Integrations as ports with approved local adapters: payments, SMS/OTP,
   WhatsApp Business, email, storage, maps, media processing
   (`integrations.instructions.md`).
 - CI: GitHub Actions.
@@ -47,8 +47,8 @@ Use the foundation's pnpm workspace/package and version-pinning contracts:
 
 - Positive: strong typing end-to-end via shared zod schemas; clear
   module boundaries make per-module specs and `applyTo` globs
-  straightforward; repository/integration ports support deterministic
-  tests and defer unchosen external providers without blocking the
+  straightforward; repository/integration ports support safe local
+  verification and defer unchosen external providers without blocking the
   local scaffold.
 - Negative: Next.js App Router and the chosen state/query libraries add
   learning overhead; a layered Node.js API is more boilerplate than a

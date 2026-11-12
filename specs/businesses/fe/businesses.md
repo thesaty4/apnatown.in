@@ -203,9 +203,11 @@ Feature-only: `BusinessOnboardingWizard`, `BusinessProfileHeader`, `BusinessProf
 - In the unified public profile, F-PF-008 is owned by engagement and F-PF-009/010 by media-videos; this spec owns only their profile-tab composition.
 - Within F-PV-006, S-PROV-10 reviews is reviews-owned, S-PROV-11 followers is engagement-owned, and S-PROV-12 media is media-videos-owned; this module owns the overview, QR, analytics and account surfaces.
 
-## Tests
+## Verification
+
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Add the shared Billing identity section to existing vendor/provider onboarding/profile editors, using `/businesses/me/billing-profile`, its independent version and registration-specific fiscal fields. Save submits review; show pending/rejected/approved and explain the block on new financial quotes/purchases without changing existing invoices. No self-verified checkbox. Admin approvals uses the linked owner contract and exact `approvals:view/edit` scope. Verify EN/HI validation, forbidden evidence reads and stale saves.
 Public profiles record views only after actual display, never SSR/GET/prefetch or owner preview. Label counts as session windows, not unique people.
 
-Component: onboarding step retention/validation, profile preview, document privacy, QR print variants, analytics empty state, account ownership. E2E: J7 onboarding; public shop/provider profile load and unavailable states; vendor/provider profile save; QR share/print; provider analytics empty state.
+Manual UI: onboarding step retention/validation, profile preview, document privacy, QR print variants, analytics empty state, account ownership. Manual journey: J7 onboarding; public shop/provider profile load and unavailable states; vendor/provider profile save; QR share/print; provider analytics empty state.

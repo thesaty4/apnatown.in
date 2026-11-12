@@ -20,12 +20,14 @@ regardless of provider.
   and implements exactly one port; no module imports a concrete
   provider SDK directly.
 
-## Fakes for tests
+## Local verification adapters
 
-- Every port has an in-memory fake used by unit/integration tests
-  (`testing.instructions.md`) — deterministic, no network calls, and
-  able to simulate failure modes (timeout, rejection, invalid webhook
-  signature) for negative tests.
+- Preserve existing approved local adapters for safe manual verification
+  without real network sends. Where required by the spec, support explicit
+  failure modes (timeout, rejection, invalid webhook signature).
+- Never generate test-only mocks, fixtures or suites; follow
+  `testing.instructions.md`. Local adapters must not bypass runtime guards
+  or be selectable in production.
 
 ## Timeouts, retries, circuit breaker
 

@@ -103,12 +103,14 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) states/components, p
 - Keys: `orders.list.*`, `orders.detail.*`, `orders.cancel.*`, `orders.refund.*`, `orders.case.*`, `orders.invoice.*`, `vendor.orders.*`, `admin.orders.*`; complete EN/HI, no concatenated sentences. Test long Hindi, dark tokens, reduced motion and keyboard/Esc behavior.
 - Analytics: `orders.list_view`, `orders.detail_view`, `orders.cancel_submit`, `orders.refund_submit`, `orders.case_submit`, `orders.invoice_print`, `business.orders_transition`; no address, phone, OTP, notes or payment details.
 
-## Tests
+## Verification
 
-- Component: every role-specific list/detail, tabs/filters, timeline branches, cancel/refund guards, case note visibility, printable invoice, unavailable item and cash-collected state.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Manual UI: every role-specific list/detail, tabs/filters, timeline branches, cancel/refund guards, case note visibility, printable invoice, unavailable item and cash-collected state.
 - Journeys: J1 split checkout through order tracking; J7 vendor accepts through delivery; J8 cancel/refund/dispute; J13 EN/HI and dark mode.
-- E2E: wrong owner/scope, empty/error/offline, duplicate submit, stale status/version, keyboard-only sheets, and order code absent from order API responses.
-- Map every acceptance bullet to scenarios: five-tab/count API, explicit vendor transitions, self/pickup cash with no job, unchanged ordered vs adjusted fulfilled/current amounts, paid-partial gate, failed-delivery exception, concrete case/note intake, decision-vs-execution event order, refund-window/IST boundary and secure code reload/expiry. Axe, malicious note/label text, long Hindi, dark/reduced-motion and topmost Esc/focus apply to all actions.
+- Manual journey: wrong owner/scope, empty/error/offline, duplicate submit, stale status/version, keyboard-only sheets, and order code absent from order API responses.
+- Map every acceptance bullet to scenarios: five-tab/count API, explicit vendor transitions, self/pickup cash with no job, unchanged ordered vs adjusted fulfilled/current amounts, paid-partial gate, failed-delivery exception, concrete case/note intake, decision-vs-execution event order, refund-window/IST boundary and secure code reload/expiry. Accessibility inspection, malicious note/label text, long Hindi, dark/reduced-motion and topmost Esc/focus apply to all actions.
 
 ## Open questions
 

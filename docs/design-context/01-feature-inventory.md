@@ -1,6 +1,6 @@
 # 01 Feature inventory
 
-- **Purpose:** Every feature with a unique ID. Specs, code and tests must reference these IDs.
+- **Purpose:** Every feature with a unique ID. Specs, code and verification evidence must reference these IDs.
 - **Audience:** Copilot agents and developers
 - **Related:** 02-screen-inventory.md, 03-user-flows.md, 07-state-machines-and-business-rules.md
 - **Last updated:** 2026-11-10

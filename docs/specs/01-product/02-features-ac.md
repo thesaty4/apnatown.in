@@ -76,7 +76,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Input, AddressForm, Toggle, Button, MapView.
 - **API/data handles:** `P04/F-AC-001`; `P03/F-AC-001`.
-- **Test handles:** F-AC-001-HAPPY, F-AC-001-NEGATIVE, F-AC-001-AUTHZ, F-AC-001-EMPTY-ERROR, F-AC-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AC-001-HAPPY, F-AC-001-NEGATIVE, F-AC-001-AUTHZ, F-AC-001-EMPTY-ERROR, F-AC-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -139,7 +139,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Input, AddressForm, Toggle, Button, ProductCard, QuantityStepper, PaymentMethodPicker.
 - **API/data handles:** `P04/F-AC-002`; `P03/F-AC-002`.
-- **Test handles:** F-AC-002-HAPPY, F-AC-002-NEGATIVE, F-AC-002-AUTHZ, F-AC-002-EMPTY-ERROR, F-AC-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AC-002-HAPPY, F-AC-002-NEGATIVE, F-AC-002-AUTHZ, F-AC-002-EMPTY-ERROR, F-AC-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -202,7 +202,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Input, AddressForm, Toggle, Button, NotificationCard.
 - **API/data handles:** `P04/F-AC-003`; `P03/F-AC-003`.
-- **Test handles:** F-AC-003-HAPPY, F-AC-003-NEGATIVE, F-AC-003-AUTHZ, F-AC-003-EMPTY-ERROR, F-AC-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AC-003-HAPPY, F-AC-003-NEGATIVE, F-AC-003-AUTHZ, F-AC-003-EMPTY-ERROR, F-AC-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -265,7 +265,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Input, AddressForm, Toggle, Button, NotificationCard.
 - **API/data handles:** `P04/F-AC-004`; `P03/F-AC-004`.
-- **Test handles:** F-AC-004-HAPPY, F-AC-004-NEGATIVE, F-AC-004-AUTHZ, F-AC-004-EMPTY-ERROR, F-AC-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AC-004-HAPPY, F-AC-004-NEGATIVE, F-AC-004-AUTHZ, F-AC-004-EMPTY-ERROR, F-AC-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -328,7 +328,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Input, AddressForm, Toggle, Button.
 - **API/data handles:** `P04/F-AC-005`; `P03/F-AC-005`.
-- **Test handles:** F-AC-005-HAPPY, F-AC-005-NEGATIVE, F-AC-005-AUTHZ, F-AC-005-EMPTY-ERROR, F-AC-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AC-005-HAPPY, F-AC-005-NEGATIVE, F-AC-005-AUTHZ, F-AC-005-EMPTY-ERROR, F-AC-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -391,13 +391,13 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Input, AddressForm, Toggle, Button, OrderCard, Timeline, DeliveryCard.
 - **API/data handles:** `P04/F-AC-006`; `P03/F-AC-006`.
-- **Test handles:** F-AC-006-HAPPY, F-AC-006-NEGATIVE, F-AC-006-AUTHZ, F-AC-006-EMPTY-ERROR, F-AC-006-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AC-006-HAPPY, F-AC-006-NEGATIVE, F-AC-006-AUTHZ, F-AC-006-EMPTY-ERROR, F-AC-006-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-AC-001 | S-CUST-24, S-CUST-25, S-CUST-26 | None specified | users, auth, geo | User, Address, Consent | Input, AddressForm, Toggle, Button, MapView | F-AC-001-HAPPY, F-AC-001-NEGATIVE, F-AC-001-AUTHZ, F-AC-001-EMPTY-ERROR, F-AC-001-I18N-HI-LONG |
 | F-AC-002 | S-CUST-24 | None specified | users, auth, geo | User, Address, Consent | Input, AddressForm, Toggle, Button, ProductCard, QuantityStepper, PaymentMethodPicker | F-AC-002-HAPPY, F-AC-002-NEGATIVE, F-AC-002-AUTHZ, F-AC-002-EMPTY-ERROR, F-AC-002-I18N-HI-LONG |

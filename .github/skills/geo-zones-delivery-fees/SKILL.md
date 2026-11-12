@@ -24,7 +24,7 @@ Covers SA4, CK3/CK5, RD6 (`domain-accounts-admin.instructions.md`,
 4. Super admin city/zone screens (SA4): enable/disable a city requires
    a confirmation naming the impact (active orders/riders); the polygon
    editor persists valid, non-self-intersecting polygons only.
-5. Test: address inside/outside a zone, address outside all zones
+5. Manually verify (`verify-change`; no automated test files): address inside/outside a zone, address outside all zones
    ("We are not in your city yet" + notify-me, LC5), fee slab boundary
    values, earning calculation stability after a settings change.
 

@@ -55,9 +55,9 @@ This contract applies to **all module FE specs**, including public client island
 | Privacy and lifecycle | Private data is memory-only where its owning contract permits it; HTTP `no-store` and existing no-cache rules still apply. Do not persist query/mutation caches to browser storage or service workers, or dehydrate secrets/private documents. Clear sensitive mutation variables/results after the flow no longer needs them. On logout, expiry, account/business/scope change or revocation, cancel affected reads, clear affected query/mutation state, and prevent old in-flight completions from repopulating it before rendering the new context. Cached state never grants permission. |
 | UX | Map query/mutation pending, error and paused/offline states to the shared state views, retaining permitted drafts and surfacing localized errors. Initial loading differs from background refresh; show an empty state only after a successful empty response. Preserve the login/session-expired flow for 401 and no-permission handling for 403. Never keep displaying revoked content as stale data. |
 
-### API integration acceptance and tests
+### API integration acceptance and verification
 
-Use a fresh `QueryClient`/provider per RTL test; disable retries unless testing retry behavior and clean up outstanding queries/mutations. Mock typed transport boundaries in component tests, not query hooks; real browser-to-API journeys still follow the [architecture test contract](./architecture.md#verification-and-clean-checkout-ci).
+Follow the [verification policy](../../.github/instructions/testing.instructions.md): manually exercise these scenarios in the local app using its real query hooks and typed transport, without generating automated tests or mocks. Inspect network activity and visible state; record expected/observed results and any gaps. Browser-to-API verification follows [architecture](./architecture.md#verification-and-clean-checkout-ci).
 
 | Given | When | Then |
 |---|---|---|
@@ -338,35 +338,4 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 
 Input IDs use `useId` unless an explicit unique ID is supplied, **not `name`** (repeated names are valid). External descriptions are merged with hint/error IDs and caller invalid state is preserved. The same contract covers text/tel/number/email/search/date/time and textarea; textarea retains the prototype's 96px minimum height/vertical resize.
 
-```tsx
-// packages/ui/src/primitives/controls.test.tsx
-import { expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { Button } from './Button';
-import { Input } from './Input';
-
-it('Given loading, When clicked, Then semantic native Button stays disabled', async () => {
-  const user = userEvent.setup();
-  let clicked = false;
-  render(<Button loading onClick={() => { clicked = true; }}>Save</Button>);
-  const button = screen.getByRole('button', { name: 'Save' });
-  expect(button).toHaveClass('bg-primary');
-  expect(button).toHaveAttribute('type', 'button');
-  expect(button).toHaveAttribute('aria-busy', 'true');
-  expect(button).toBeDisabled();
-  await user.click(button);
-  expect(clicked).toBe(false);
-});
-
-it('Given repeated names and external help, When rendered, Then IDs and descriptions remain correct', () => {
-  render(<><p id="help">Name</p><Input name="name" label="Shop" required hint="Name" error="Enter a name" aria-describedby="help" /><Input name="name" label="Provider" /></>);
-  const input = screen.getByRole('textbox', { name: /Shop/ });
-  expect(input.id).not.toBe(screen.getByRole('textbox', { name: 'Provider' }).id);
-  expect(input).toHaveAttribute('aria-invalid', 'true');
-  expect(input).toHaveAttribute('aria-describedby', `help ${input.id}-hint ${input.id}-error`);
-  expect(screen.getByRole('alert')).toHaveTextContent('Enter a name');
-});
-```
-
-Acceptance/tests: Given a form, when a default Button is clicked, then it does not submit; explicit `type="submit"` does. Given reduced-motion emulation, when loading/pressing, then computed animation/transform is absent but loading remains accessible. Given a caller ID/invalid/description, when an Input hint/error changes, then label association and external descriptions survive without ID collision. RTL + axe cover keyboard/ref/disabled/error and Hindi/light/dark; Playwright checks real generated CSS, root hydration/error recovery, EN/HI parity and the browser-to-API smoke in [architecture](./architecture.md#verification-and-clean-checkout-ci). No app/component test is claimed executed in this spec-only repair.
+Manual acceptance: Given a form, when a default Button is clicked, then it does not submit; explicit `type="submit"` does. Given reduced-motion emulation, when loading/pressing, then computed animation/transform is absent but loading remains accessible. Given a caller ID/invalid/description, when an Input hint/error changes, then label association and external descriptions survive without ID collision. Given a loading Button, when clicked, then it remains disabled, retains `aria-busy` and does not invoke the action. Manually inspect keyboard/ref/disabled/error behavior, Hindi/light/dark, generated CSS, hydration/error recovery and the browser-to-API flow in [architecture](./architecture.md#verification-and-clean-checkout-ci). These are acceptance scenarios, not claimed executions.

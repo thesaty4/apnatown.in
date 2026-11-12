@@ -11,7 +11,7 @@ and lifecycle.
 2. Implement with `developer-backend` and/or `developer-frontend`
    (`.github/agents/developer-backend.agent.md`,
    `.github/agents/developer-frontend.agent.md`), using the relevant
-   skills (`api-endpoint`, `ui-component`, `write-tests`, and any
+   skills (`api-endpoint`, `ui-component`, `verify-change`, and any
    domain skill that matches the module).
 3. If the task touches auth, payments, uploads/CSV, embeds, admin
    permissions, or communications, run `security-auditor` before

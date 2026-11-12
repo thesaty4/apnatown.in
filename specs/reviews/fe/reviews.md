@@ -4,7 +4,7 @@ Features: F-RV-001, F-RV-002, F-RV-003, F-RV-004, F-RV-005, F-RV-006, F-RV-007, 
 
 Backend contract: [BE reviews](../be/reviews.md)
 
-Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Tests](#tests)
+Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Verification](#verification)
 
 ## Routes and rendering
 
@@ -65,6 +65,8 @@ Public review sections (product F-PD-007, shop/provider/service) use `ReviewsSec
 
 Prefix `reviews.*`, `admin.reviews.*`. Events: `review_submitted`, `review_helpful_marked`, `review_reported`, `review_replied`, `review_moderated`.
 
-## Tests
+## Verification
 
-Component/axe: rating keyboard, required text, provider versus service tags, Helpful pressed/count state, report/reply sheets, owner Reported filter, topmost Esc, Hindi/dark layouts. E2E J1/J14 use approved eligibility-policy fixtures; unresolved fixtures assert blocked writes, not presumed converted eligibility. Cover existing-ID edit hydration, wrong-owner/proof denial, report → hide → restore with exact counts, duplicate votes/reports, failed upload/retry and malicious plain text. Account deletion/export UI remains Users-owned; clear personal cached review state on session invalidation.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Manual UI/accessibility: rating keyboard, required text, provider versus service tags, Helpful pressed/count state, report/reply sheets, owner Reported filter, topmost Esc, Hindi/dark layouts. Manual journey J1/J14 use approved eligibility-policy synthetic scenarios; unresolved synthetic scenarios assert blocked writes, not presumed converted eligibility. Cover existing-ID edit hydration, wrong-owner/proof denial, report → hide → restore with exact counts, duplicate votes/reports, failed upload/retry and malicious plain text. Account deletion/export UI remains Users-owned; clear personal cached review state on session invalidation.

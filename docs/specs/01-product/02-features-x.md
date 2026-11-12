@@ -85,7 +85,7 @@ Enforce the authenticated role and module scope for each operation; guest access
 - **Journeys:** J13
 - **Shared components:** Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge.
 - **API/data handles:** `P04/F-X-001`; `P03/F-X-001`.
-- **Test handles:** F-X-001-HAPPY, F-X-001-NEGATIVE, F-X-001-AUTHZ, F-X-001-EMPTY-ERROR, F-X-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-X-001-HAPPY, F-X-001-NEGATIVE, F-X-001-AUTHZ, F-X-001-EMPTY-ERROR, F-X-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -148,7 +148,7 @@ Enforce the authenticated role and module scope for each operation; guest access
 - **Journeys:** J13
 - **Shared components:** Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge.
 - **API/data handles:** `P04/F-X-002`; `P03/F-X-002`.
-- **Test handles:** F-X-002-HAPPY, F-X-002-NEGATIVE, F-X-002-AUTHZ, F-X-002-EMPTY-ERROR, F-X-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-X-002-HAPPY, F-X-002-NEGATIVE, F-X-002-AUTHZ, F-X-002-EMPTY-ERROR, F-X-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -211,7 +211,7 @@ Enforce the authenticated role and module scope for each operation; guest access
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge.
 - **API/data handles:** `P04/F-X-003`; `P03/F-X-003`.
-- **Test handles:** F-X-003-HAPPY, F-X-003-NEGATIVE, F-X-003-AUTHZ, F-X-003-EMPTY-ERROR, F-X-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-X-003-HAPPY, F-X-003-NEGATIVE, F-X-003-AUTHZ, F-X-003-EMPTY-ERROR, F-X-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -274,7 +274,7 @@ Enforce the authenticated role and module scope for each operation; guest access
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge.
 - **API/data handles:** `P04/F-X-004`; `P03/F-X-004`.
-- **Test handles:** F-X-004-HAPPY, F-X-004-NEGATIVE, F-X-004-AUTHZ, F-X-004-EMPTY-ERROR, F-X-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-X-004-HAPPY, F-X-004-NEGATIVE, F-X-004-AUTHZ, F-X-004-EMPTY-ERROR, F-X-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -337,7 +337,7 @@ Enforce the authenticated role and module scope for each operation; guest access
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge.
 - **API/data handles:** `P04/F-X-005`; `P03/F-X-005`.
-- **Test handles:** F-X-005-HAPPY, F-X-005-NEGATIVE, F-X-005-AUTHZ, F-X-005-EMPTY-ERROR, F-X-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-X-005-HAPPY, F-X-005-NEGATIVE, F-X-005-AUTHZ, F-X-005-EMPTY-ERROR, F-X-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -400,7 +400,7 @@ Enforce the authenticated role and module scope for each operation; guest access
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge.
 - **API/data handles:** `P04/F-X-006`; `P03/F-X-006`.
-- **Test handles:** F-X-006-HAPPY, F-X-006-NEGATIVE, F-X-006-AUTHZ, F-X-006-EMPTY-ERROR, F-X-006-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-X-006-HAPPY, F-X-006-NEGATIVE, F-X-006-AUTHZ, F-X-006-EMPTY-ERROR, F-X-006-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -463,7 +463,7 @@ Enforce the authenticated role and module scope for each operation; guest access
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge.
 - **API/data handles:** `P04/F-X-007`; `P03/F-X-007`.
-- **Test handles:** F-X-007-HAPPY, F-X-007-NEGATIVE, F-X-007-AUTHZ, F-X-007-EMPTY-ERROR, F-X-007-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-X-007-HAPPY, F-X-007-NEGATIVE, F-X-007-AUTHZ, F-X-007-EMPTY-ERROR, F-X-007-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -526,7 +526,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge.
 - **API/data handles:** `P04/F-X-008`; `P03/F-X-008`.
-- **Test handles:** F-X-008-HAPPY, F-X-008-NEGATIVE, F-X-008-AUTHZ, F-X-008-EMPTY-ERROR, F-X-008-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-X-008-HAPPY, F-X-008-NEGATIVE, F-X-008-AUTHZ, F-X-008-EMPTY-ERROR, F-X-008-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -589,7 +589,7 @@ Enforce the authenticated role and module scope for each operation; guest access
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge.
 - **API/data handles:** `P04/F-X-009`; `P03/F-X-009`.
-- **Test handles:** F-X-009-HAPPY, F-X-009-NEGATIVE, F-X-009-AUTHZ, F-X-009-EMPTY-ERROR, F-X-009-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-X-009-HAPPY, F-X-009-NEGATIVE, F-X-009-AUTHZ, F-X-009-EMPTY-ERROR, F-X-009-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -652,7 +652,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge.
 - **API/data handles:** `P04/F-X-010`; `P03/F-X-010`.
-- **Test handles:** F-X-010-HAPPY, F-X-010-NEGATIVE, F-X-010-AUTHZ, F-X-010-EMPTY-ERROR, F-X-010-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-X-010-HAPPY, F-X-010-NEGATIVE, F-X-010-AUTHZ, F-X-010-EMPTY-ERROR, F-X-010-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -715,7 +715,7 @@ Restrict operations to the listed roles (Vendor, Provider, Admin); apply custome
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge.
 - **API/data handles:** `P04/F-X-011`; `P03/F-X-011`.
-- **Test handles:** F-X-011-HAPPY, F-X-011-NEGATIVE, F-X-011-AUTHZ, F-X-011-EMPTY-ERROR, F-X-011-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-X-011-HAPPY, F-X-011-NEGATIVE, F-X-011-AUTHZ, F-X-011-EMPTY-ERROR, F-X-011-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -778,7 +778,7 @@ Enforce the authenticated role and module scope for each operation; guest access
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge.
 - **API/data handles:** `P04/F-X-012`; `P03/F-X-012`.
-- **Test handles:** F-X-012-HAPPY, F-X-012-NEGATIVE, F-X-012-AUTHZ, F-X-012-EMPTY-ERROR, F-X-012-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-X-012-HAPPY, F-X-012-NEGATIVE, F-X-012-AUTHZ, F-X-012-EMPTY-ERROR, F-X-012-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -841,7 +841,7 @@ Enforce the authenticated role and module scope for each operation; guest access
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge.
 - **API/data handles:** `P04/F-X-013`; `P03/F-X-013`.
-- **Test handles:** F-X-013-HAPPY, F-X-013-NEGATIVE, F-X-013-AUTHZ, F-X-013-EMPTY-ERROR, F-X-013-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-X-013-HAPPY, F-X-013-NEGATIVE, F-X-013-AUTHZ, F-X-013-EMPTY-ERROR, F-X-013-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -906,7 +906,7 @@ Admin actions require granted modules and assigned city/area/zone; Super Admin a
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge.
 - **API/data handles:** `P04/F-X-014`; `P03/F-X-014`.
-- **Test handles:** F-X-014-HAPPY, F-X-014-NEGATIVE, F-X-014-AUTHZ, F-X-014-EMPTY-ERROR, F-X-014-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-X-014-HAPPY, F-X-014-NEGATIVE, F-X-014-AUTHZ, F-X-014-EMPTY-ERROR, F-X-014-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -969,13 +969,13 @@ Approved, authenticated Rider, restricted to assigned jobs; customer contact is 
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge.
 - **API/data handles:** `P04/F-X-015`; `P03/F-X-015`.
-- **Test handles:** F-X-015-HAPPY, F-X-015-NEGATIVE, F-X-015-AUTHZ, F-X-015-EMPTY-ERROR, F-X-015-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-X-015-HAPPY, F-X-015-NEGATIVE, F-X-015-AUTHZ, F-X-015-EMPTY-ERROR, F-X-015-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-X-001 | S-CUST-01, S-CUST-38 | J13 | packages/shared, packages/ui | UserPreference | Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge | F-X-001-HAPPY, F-X-001-NEGATIVE, F-X-001-AUTHZ, F-X-001-EMPTY-ERROR, F-X-001-I18N-HI-LONG |
 | F-X-002 | S-CUST-01, S-CUST-38 | J13 | packages/shared, packages/ui | None (presentation preference) | Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge | F-X-002-HAPPY, F-X-002-NEGATIVE, F-X-002-AUTHZ, F-X-002-EMPTY-ERROR, F-X-002-I18N-HI-LONG |

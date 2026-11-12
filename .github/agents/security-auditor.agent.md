@@ -19,6 +19,11 @@ Review against `security.instructions.md` and the full detail in
 `docs/security/security-guidelines.md`, mapped to the actual ApnaTown
 flow being changed:
 
+Follow [the verification policy](../instructions/testing.instructions.md):
+review code and available manual/non-test evidence without requesting new
+automated tests. Record security coverage gaps; absence of test files alone
+does not relax runtime controls or justify a security finding.
+
 1. **OTP** (login AU4, delivery OTP RD4/OR3, pickup code OR4): server-
    side generation/verification, attempt limits, no logging.
 2. **Checkout/payments** (CK, `domain-commerce.instructions.md`):

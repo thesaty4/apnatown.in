@@ -284,8 +284,15 @@ export const DATA_EXPORT_SECTIONS = Object.freeze([
   'orders',
   'bookmarks',
   'reviews',
+  'support_messages',
 ] as const);
 export type DataExportSection = (typeof DATA_EXPORT_SECTIONS)[number];
+/** Own support intake (Settings owner); plain text, no reporter/contact data. */
+export const SupportMessageExportSchema = z.strictObject({
+  id: IdSchema,
+  message: z.string(),
+  createdAt: TimestampSchema,
+});
 const UnavailableExportSectionSchema = z.strictObject({
   status: z.literal('unavailable'),
   reasonCode: z.literal('OWNER_NOT_IMPLEMENTED'),
@@ -306,6 +313,7 @@ export const DataExportSchema = z.strictObject({
     orders: UnavailableExportSectionSchema,
     bookmarks: UnavailableExportSectionSchema,
     reviews: UnavailableExportSectionSchema,
+    support_messages: includedSection(SupportMessageExportSchema),
   }),
 });
 export type DataRequestType = z.infer<typeof DataRequestTypeSchema>;

@@ -1,7 +1,7 @@
 ---
 name: developer-backend
-description: Implements backend features and regression fixes with layered architecture, security self-review and tests; opens PRs only after architect and required security approval.
-tools: [read, search, edit, bash, tests]
+description: Implements backend features and fixes with layered architecture, security self-review and non-test verification; never generates automated test files.
+tools: [read, search, edit, bash]
 handoffs: [architect, security-auditor]
 ---
 
@@ -28,25 +28,25 @@ non-trivial spec goes to `architect` before implementation.
    integration port`, `.github/skills/api-endpoint/SKILL.md`), reusing
    existing ports/schemas; add new ones only if none fit.
 4. Security self-review using
-   `.github/skills/secure-coding-review/SKILL.md` before writing tests.
-5. Write tests per `testing.instructions.md`
-   (`.github/skills/write-tests/SKILL.md`) — unit + integration,
-   including authorization-negative and malicious-input cases — for
-   every acceptance criterion in the spec.
+   `.github/skills/secure-coding-review/SKILL.md`.
+5. Follow `testing.instructions.md` and the `verify-change` skill:
+   run existing non-test checks and manually verify relevant API/DB
+   acceptance, authorization-negative and malicious-input cases.
+   Do not create unit, integration, DB, Playwright or other test files.
 6. Update the spec's status and `docs/FEATURE_INVENTORY.md` row.
 7. Write a hand-off note: what was implemented, what was tested, any
    deviations from the spec and why, any assumptions.
 
 ## Output format
 
-Hand-off note (above) + list of changed files + test run summary
+Hand-off note (above) + list of changed files + verification summary
 (commands and results, honestly reported per `AGENTS.md`).
 
 ## Bug fixes
 
-Invoke `.github/skills/bug-triage/SKILL.md`; reproduce and write a failing
-regression test before the smallest correct fix. Verify the relevant suite,
-never remove/weaken a test to pass, and invoke the `lessons-learned` skill
+Invoke `.github/skills/bug-triage/SKILL.md`; capture the failing reproduction
+before the smallest correct fix, then repeat it and run relevant non-test
+checks. Do not generate regression test files. Invoke the `lessons-learned` skill
 for reusable findings. Then use the same security/review gates as features.
 
 ## PR creation
@@ -54,7 +54,7 @@ for reusable findings. Then use the same security/review gates as features.
 After `architect` returns `APPROVE` and `security-auditor` returns `PASS`
 when required, invoke `.github/skills/pr-description/SKILL.md` and open
 the PR for human review. For joint BE/FE work, agree one developer PR owner.
-Never fabricate approval/test evidence or approve/merge the PR yourself.
+Never fabricate approval/verification evidence or approve/merge the PR yourself.
 
 ## Hard limits
 

@@ -1,5 +1,7 @@
 # How to run this (setup and order)
 
+**Verification policy:** Follow [the repository policy](../../.github/instructions/testing.instructions.md). Do not create automated test files or test-runner scaffolding for FE, BE or DB. Preserve acceptance scenarios as manual checks and report existing non-test command results and gaps.
+
 ## 1. Put the files in the repository
 Unzip `apnatown-copilot-pack.zip` at the repository root. You get:
 ```
@@ -50,8 +52,8 @@ C08 delivery; C09 reviews/engagement/offers; C10 media; C11 dashboards;
 C12 administration/notifications/communications; C13 super admin;
 C14 hardening. These are scope groupings, not a strict dependency order:
 migrations and real Auth/owner ports precede the protected Catalog
-reference tests; Web/API slices precede authenticated browser smoke.
-The foundation defines exact future setup/build/start/test commands.
+reference verification; Web/API slices precede authenticated browser smoke.
+The foundation defines exact future setup/build/start/verification commands.
 Humans review and merge every PR.
 
 ## 4. Human decisions needed early

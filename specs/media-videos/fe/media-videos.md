@@ -6,7 +6,7 @@ Backend contract: [BE media-videos](../be/media-videos.md)
 
 API integration: [shared React Query contract](../../_foundation/frontend-shared.md#api-integration-with-react-query), preserving the frozen feed snapshot.
 
-Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Tests](#tests)
+Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Verification](#verification)
 
 ## Routes and rendering
 
@@ -70,10 +70,12 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 
 Prefixes `reels.*`, `gallery.*`, `vendor.media.*`, `admin.videos.*`. Events: `reel_viewed`, `reel_pill_changed`, `reel_shop_opened`, `reel_linked_item_clicked`, `video_submitted`, `video_moderated`, `gallery_opened`.
 
-## Tests
+## Verification
+
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 All public-image Uploaders follow [Media image policy](../be/media-videos.md#public-image-policy), display accepted format/size/dimensions, and retain the prior image on replacement failure. Consume variant dimensions/URLs for responsive images. Linked-tap POST occurs only on actual target activation. Follow includes `sourceVideoId` only with a recent same-session view; login-return following works without attribution. Prefetch/preload never creates a view.
 
-Responsive renderers import `PublicImageVariantDTO` and use `variant.path` with its width/height; never expect a `url` alias or construct storage paths. Test upload-ready without public placement, authorized public variants, invalid width/version and revoked placement including conditional/range requests.
+Responsive renderers import `PublicImageVariantDTO` and use `variant.path` with its width/height; never expect a `url` alias or construct storage paths. Manually verify upload-ready without public placement, authorized public variants, invalid width/version and revoked placement including conditional/range requests.
 
-Component/axe: feed snap/keyboard and player lazy loading, data-saver, ID anchoring, explicit TTL restart, report/photo sheet, source edit/resubmit, reorder arrows/drag, comment queue, focus after action, Hindi/dark layouts. E2E J4/J6: immutable ranking despite counters/approvals, live consent removal, out-of-filter deep link, guest PHOTO report → scoped admin resolution, catalog-only denial, published-comment count decrement and private applicant upload-purpose checks. Account data export/deletion stays Users-owned; clear personal cached media/report state on invalidation.
+Manual UI/accessibility: feed snap/keyboard and player lazy loading, data-saver, ID anchoring, explicit TTL restart, report/photo sheet, source edit/resubmit, reorder arrows/drag, comment queue, focus after action, Hindi/dark layouts. Manual journey J4/J6: immutable ranking despite counters/approvals, live consent removal, out-of-filter deep link, guest PHOTO report → scoped admin resolution, catalog-only denial, published-comment count decrement and private applicant upload-purpose checks. Account data export/deletion stays Users-owned; clear personal cached media/report state on invalidation.

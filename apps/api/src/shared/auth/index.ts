@@ -1,4 +1,11 @@
-export { PublicRoute, OwnAccount, Roles, Permission, Scoped } from './metadata';
+export {
+  PublicRoute,
+  OwnAccount,
+  Roles,
+  Permission,
+  Scoped,
+  SessionRoute,
+} from './metadata';
 export { SESSION_ACCESS, AUTH_SESSION_PORT, ADMIN_SCOPE } from './ports';
 export type {
   SessionAccess,

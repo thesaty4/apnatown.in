@@ -86,7 +86,7 @@ Admin only; each request requires the granted module action and assigned city/ar
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ConfirmImpactDialog, ApprovalDocumentViewer, AuditDiff, OrderCard.
 - **API/data handles:** `P04/F-AD-001`; `P03/F-AD-001`.
-- **Test handles:** F-AD-001-HAPPY, F-AD-001-NEGATIVE, F-AD-001-AUTHZ, F-AD-001-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AD-001-HAPPY, F-AD-001-NEGATIVE, F-AD-001-AUTHZ, F-AD-001-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -149,7 +149,7 @@ Admin only; each request requires the granted module action and assigned city/ar
 - **Journeys:** J7
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ConfirmImpactDialog, ApprovalDocumentViewer, AuditDiff, NotificationCard.
 - **API/data handles:** `P04/F-AD-002`; `P03/F-AD-002`.
-- **Test handles:** F-AD-002-HAPPY, F-AD-002-NEGATIVE, F-AD-002-AUTHZ, F-AD-002-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AD-002-HAPPY, F-AD-002-NEGATIVE, F-AD-002-AUTHZ, F-AD-002-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -212,7 +212,7 @@ Admin only; each request requires the granted module action and assigned city/ar
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ConfirmImpactDialog, ApprovalDocumentViewer, AuditDiff, ProductCard.
 - **API/data handles:** `P04/F-AD-003`; `P03/F-AD-003`.
-- **Test handles:** F-AD-003-HAPPY, F-AD-003-NEGATIVE, F-AD-003-AUTHZ, F-AD-003-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AD-003-HAPPY, F-AD-003-NEGATIVE, F-AD-003-AUTHZ, F-AD-003-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -275,7 +275,7 @@ Admin only; each request requires the granted module action and assigned city/ar
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ConfirmImpactDialog, ApprovalDocumentViewer, AuditDiff, FilterPanel.
 - **API/data handles:** `P04/F-AD-004`; `P03/F-AD-004`.
-- **Test handles:** F-AD-004-HAPPY, F-AD-004-NEGATIVE, F-AD-004-AUTHZ, F-AD-004-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AD-004-HAPPY, F-AD-004-NEGATIVE, F-AD-004-AUTHZ, F-AD-004-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -338,7 +338,7 @@ Admin only; each request requires the granted module action and assigned city/ar
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ConfirmImpactDialog, ApprovalDocumentViewer, AuditDiff, FilterPanel.
 - **API/data handles:** `P04/F-AD-005`; `P03/F-AD-005`.
-- **Test handles:** F-AD-005-HAPPY, F-AD-005-NEGATIVE, F-AD-005-AUTHZ, F-AD-005-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AD-005-HAPPY, F-AD-005-NEGATIVE, F-AD-005-AUTHZ, F-AD-005-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -401,7 +401,7 @@ Admin only; each request requires the granted module action and assigned city/ar
 - **Journeys:** J9
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ConfirmImpactDialog, ApprovalDocumentViewer, AuditDiff, FilterPanel.
 - **API/data handles:** `P04/F-AD-006`; `P03/F-AD-006`.
-- **Test handles:** F-AD-006-HAPPY, F-AD-006-NEGATIVE, F-AD-006-AUTHZ, F-AD-006-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AD-006-HAPPY, F-AD-006-NEGATIVE, F-AD-006-AUTHZ, F-AD-006-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -464,7 +464,7 @@ Admin only; each request requires the granted module action and assigned city/ar
 - **Journeys:** J8
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ConfirmImpactDialog, ApprovalDocumentViewer, AuditDiff, ReviewForm.
 - **API/data handles:** `P04/F-AD-007`; `P03/F-AD-007`.
-- **Test handles:** F-AD-007-HAPPY, F-AD-007-NEGATIVE, F-AD-007-AUTHZ, F-AD-007-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AD-007-HAPPY, F-AD-007-NEGATIVE, F-AD-007-AUTHZ, F-AD-007-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -527,7 +527,7 @@ Admin only; each request requires the granted module action and assigned city/ar
 - **Journeys:** J10
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ConfirmImpactDialog, ApprovalDocumentViewer, AuditDiff, FilterPanel.
 - **API/data handles:** `P04/F-AD-008`; `P03/F-AD-008`.
-- **Test handles:** F-AD-008-HAPPY, F-AD-008-NEGATIVE, F-AD-008-AUTHZ, F-AD-008-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AD-008-HAPPY, F-AD-008-NEGATIVE, F-AD-008-AUTHZ, F-AD-008-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -590,7 +590,7 @@ Admin only; each request requires the granted module action and assigned city/ar
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ConfirmImpactDialog, ApprovalDocumentViewer, AuditDiff, ReviewForm.
 - **API/data handles:** `P04/F-AD-009`; `P03/F-AD-009`.
-- **Test handles:** F-AD-009-HAPPY, F-AD-009-NEGATIVE, F-AD-009-AUTHZ, F-AD-009-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AD-009-HAPPY, F-AD-009-NEGATIVE, F-AD-009-AUTHZ, F-AD-009-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -653,7 +653,7 @@ Admin only; each request requires the granted module action and assigned city/ar
 - **Journeys:** J6
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ConfirmImpactDialog, ApprovalDocumentViewer, AuditDiff, MediaCarousel.
 - **API/data handles:** `P04/F-AD-010`; `P03/F-AD-010`.
-- **Test handles:** F-AD-010-HAPPY, F-AD-010-NEGATIVE, F-AD-010-AUTHZ, F-AD-010-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AD-010-HAPPY, F-AD-010-NEGATIVE, F-AD-010-AUTHZ, F-AD-010-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -716,7 +716,7 @@ Admin only; each request requires the granted module action and assigned city/ar
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ConfirmImpactDialog, ApprovalDocumentViewer, AuditDiff, OfferCard.
 - **API/data handles:** `P04/F-AD-011`; `P03/F-AD-011`.
-- **Test handles:** F-AD-011-HAPPY, F-AD-011-NEGATIVE, F-AD-011-AUTHZ, F-AD-011-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AD-011-HAPPY, F-AD-011-NEGATIVE, F-AD-011-AUTHZ, F-AD-011-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -779,7 +779,7 @@ Admin only; each request requires the granted module action and assigned city/ar
 - **Journeys:** J10
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ConfirmImpactDialog, ApprovalDocumentViewer, AuditDiff, FilterPanel.
 - **API/data handles:** `P04/F-AD-012`; `P03/F-AD-012`.
-- **Test handles:** F-AD-012-HAPPY, F-AD-012-NEGATIVE, F-AD-012-AUTHZ, F-AD-012-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AD-012-HAPPY, F-AD-012-NEGATIVE, F-AD-012-AUTHZ, F-AD-012-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -842,7 +842,7 @@ Admin only; each request requires the granted module action and assigned city/ar
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ConfirmImpactDialog, ApprovalDocumentViewer, AuditDiff, OrderCard.
 - **API/data handles:** `P04/F-AD-013`; `P03/F-AD-013`.
-- **Test handles:** F-AD-013-HAPPY, F-AD-013-NEGATIVE, F-AD-013-AUTHZ, F-AD-013-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AD-013-HAPPY, F-AD-013-NEGATIVE, F-AD-013-AUTHZ, F-AD-013-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -905,7 +905,7 @@ Admin only; each request requires the granted module action and assigned city/ar
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ConfirmImpactDialog, ApprovalDocumentViewer, AuditDiff, FilterPanel.
 - **API/data handles:** `P04/F-AD-014`; `P03/F-AD-014`.
-- **Test handles:** F-AD-014-HAPPY, F-AD-014-NEGATIVE, F-AD-014-AUTHZ, F-AD-014-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AD-014-HAPPY, F-AD-014-NEGATIVE, F-AD-014-AUTHZ, F-AD-014-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -968,7 +968,7 @@ Admin only; each request requires the granted module action and assigned city/ar
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ConfirmImpactDialog, ApprovalDocumentViewer, AuditDiff, FilterPanel.
 - **API/data handles:** `P04/F-AD-015`; `P03/F-AD-015`.
-- **Test handles:** F-AD-015-HAPPY, F-AD-015-NEGATIVE, F-AD-015-AUTHZ, F-AD-015-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AD-015-HAPPY, F-AD-015-NEGATIVE, F-AD-015-AUTHZ, F-AD-015-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -1031,13 +1031,13 @@ Admin only; each request requires the granted module action and assigned city/ar
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ConfirmImpactDialog, ApprovalDocumentViewer, AuditDiff.
 - **API/data handles:** `P04/F-AD-016`; `P03/F-AD-016`.
-- **Test handles:** F-AD-016-HAPPY, F-AD-016-NEGATIVE, F-AD-016-AUTHZ, F-AD-016-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AD-016-HAPPY, F-AD-016-NEGATIVE, F-AD-016-AUTHZ, F-AD-016-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-AD-001 | S-ADMN-01 | None specified | admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search | Admin, AuditLog, SubcategorySuggestion, Review, Video, Campaign | DashboardShell, DataTable, PermissionMatrix, ConfirmImpactDialog, ApprovalDocumentViewer, AuditDiff, OrderCard | F-AD-001-HAPPY, F-AD-001-NEGATIVE, F-AD-001-AUTHZ, F-AD-001-EMPTY-ERROR, F-AD-001-I18N-HI-LONG |
 | F-AD-002 | S-ADMN-02 | J7 | admin, users, catalog, orders, delivery, reviews, media-videos, communications, audit, search | Admin, AuditLog, SubcategorySuggestion, Review, Video, Campaign | DashboardShell, DataTable, PermissionMatrix, ConfirmImpactDialog, ApprovalDocumentViewer, AuditDiff, NotificationCard | F-AD-002-HAPPY, F-AD-002-NEGATIVE, F-AD-002-AUTHZ, F-AD-002-EMPTY-ERROR, F-AD-002-I18N-HI-LONG |

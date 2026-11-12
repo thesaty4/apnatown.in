@@ -175,12 +175,14 @@ Use shared `COMMON_FORBIDDEN`, `COMMON_VALIDATION_FAILED` and `ADMIN_SCOPE_FORBI
 - Given activation policy/content is missing, payments are disabled, or the business is suspended, when a purchase is prepared, then purchasing is unavailable and no charge is initiated.
 - Given an asset belongs to another business, is private KYC, or a destination contains a script/external URL, when submitted, then validation rejects it without publishing.
 
-## Tests
+## Verification
 
-- Unit: offer precedence, integer rounding, validity boundaries, coupon creator/scope/target constraints, finite limits/budget and immutable refund allocations.
-- Integration: approved-only public reads; active/expired/out-of-stock detail; own-business CRUD; keyset queue scope; cache/outbox writes in the same transaction.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Rules: offer precedence, integer rounding, validity boundaries, coupon creator/scope/target constraints, finite limits/budget and immutable refund allocations.
+- Manual API/DB: approved-only public reads; active/expired/out-of-stock detail; own-business CRUD; keyset queue scope; cache/outbox writes in the same transaction.
 - Authorization negatives: missing `promos:view/edit`, admin outside assigned city/area, vendor modifying another business's offer, and provider target mismatch.
-- Map each acceptance bullet to a scenario; add same-city/wrong-area placement reads/writes, platform-scope escalation, 1-paise/zero/oversized coupon inputs, unsafe JSON money, stale activation vs expiry, and target approval changes during purchase. Contract-test deep-link/target DTOs with Search and Media asset purpose with fakes.
+- Map each acceptance bullet to a scenario; add same-city/wrong-area placement reads/writes, platform-scope escalation, 1-paise/zero/oversized coupon inputs, unsafe JSON money, stale activation vs expiry, and target approval changes during purchase. Manually check deep-link/target DTOs with Search and Media asset purpose with fakes.
 
 ## Open questions and handoff
 

@@ -1,6 +1,6 @@
 ---
 name: order-state-machine
-description: "Recipe for implementing or extending the order state machine: per-shop split, explicit transition handlers, and required tests."
+description: "Recipe for implementing or extending the order state machine: per-shop split, explicit transition handlers and manual verification."
 ---
 
 # Order state machine
@@ -24,9 +24,10 @@ Covers CK2, OR2 (`domain-commerce.instructions.md`, BR-03/BR-04 in
    transaction.
 4. Invalid transitions throw `InvalidTransitionError`
    (`backend.instructions.md` error contract) — never silently no-op.
-5. Add a test per transition (happy path) plus at least one invalid
-   transition test and one concurrency test (two simultaneous
-   transition attempts on the same order).
+5. Invoke `verify-change`: manually exercise every changed transition,
+   an invalid transition and concurrent attempts on the same order in
+   isolated local data. Record unavailable concurrency evidence explicitly;
+   do not generate automated test files.
 
 ## Skeleton
 
@@ -52,5 +53,5 @@ function transition(order: Order, event: OrderEvent): Order {
 - [ ] Transitions are explicit handlers, not a growing switch/if-chain.
 - [ ] Invalid transitions throw, never no-op.
 - [ ] Stock/delivery-job side effects happen in the same transaction.
-- [ ] Tests cover each transition, an invalid one, and a concurrency
+- [ ] Verification covers each changed transition, an invalid one, and a concurrency
   case.

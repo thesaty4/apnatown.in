@@ -23,10 +23,12 @@ Builds on `.github/copilot-instructions.md`. Design tokens/components:
   Server-only reads stay in Server Components; do not make routes client-only.
   Follow the [shared API contract](../../specs/_foundation/frontend-shared.md#api-integration-with-react-query)
   for provider/hydration, typed errors, scoped keys, retries, invalidation,
-  privacy and tests. No `useEffect` fetching, SWR or duplicate API-response
+  privacy and verification. No `useEffect` fetching, SWR or duplicate API-response
   stores; keep form/UI and URL state separate.
 - Pages/routes stay thin; business logic (filter resolution, cart
-  totals display) lives in hooks/services, is unit-tested.
+  totals display) lives in hooks/services.
+- Follow `testing.instructions.md`: manual acceptance checks and existing
+  lint/type-check/build commands, never automated test-file generation.
 
 ## Five UX states (X7)
 

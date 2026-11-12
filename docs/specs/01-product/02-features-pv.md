@@ -77,7 +77,7 @@ Authenticated Provider, restricted to the owner’s own profile and records; app
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, Input, ServiceCard, EnquiryForm, MediaConsentToggle.
 - **API/data handles:** `P04/F-PV-001`; `P03/F-PV-001`.
-- **Test handles:** F-PV-001-HAPPY, F-PV-001-NEGATIVE, F-PV-001-AUTHZ, F-PV-001-EMPTY-ERROR, F-PV-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PV-001-HAPPY, F-PV-001-NEGATIVE, F-PV-001-AUTHZ, F-PV-001-EMPTY-ERROR, F-PV-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -140,7 +140,7 @@ Authenticated Provider, restricted to the owner’s own profile and records; app
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, Input, ServiceCard, EnquiryForm, MediaConsentToggle, FilterPanel.
 - **API/data handles:** `P04/F-PV-002`; `P03/F-PV-002`.
-- **Test handles:** F-PV-002-HAPPY, F-PV-002-NEGATIVE, F-PV-002-AUTHZ, F-PV-002-EMPTY-ERROR, F-PV-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PV-002-HAPPY, F-PV-002-NEGATIVE, F-PV-002-AUTHZ, F-PV-002-EMPTY-ERROR, F-PV-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -203,7 +203,7 @@ Authenticated Provider, restricted to the owner’s own profile and records; app
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, Input, ServiceCard, EnquiryForm, MediaConsentToggle.
 - **API/data handles:** `P04/F-PV-003`; `P03/F-PV-003`.
-- **Test handles:** F-PV-003-HAPPY, F-PV-003-NEGATIVE, F-PV-003-AUTHZ, F-PV-003-EMPTY-ERROR, F-PV-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PV-003-HAPPY, F-PV-003-NEGATIVE, F-PV-003-AUTHZ, F-PV-003-EMPTY-ERROR, F-PV-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -266,7 +266,7 @@ Authenticated Provider, restricted to the owner’s own profile and records; app
 - **Journeys:** J14
 - **Shared components:** DashboardShell, DataTable, Input, ServiceCard, EnquiryForm, MediaConsentToggle, FilterPanel.
 - **API/data handles:** `P04/F-PV-004`; `P03/F-PV-004`.
-- **Test handles:** F-PV-004-HAPPY, F-PV-004-NEGATIVE, F-PV-004-AUTHZ, F-PV-004-EMPTY-ERROR, F-PV-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PV-004-HAPPY, F-PV-004-NEGATIVE, F-PV-004-AUTHZ, F-PV-004-EMPTY-ERROR, F-PV-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -329,7 +329,7 @@ Authenticated Provider, restricted to the owner’s own profile and records; app
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, Input, ServiceCard, EnquiryForm, MediaConsentToggle, OrderCard.
 - **API/data handles:** `P04/F-PV-005`; `P03/F-PV-005`.
-- **Test handles:** F-PV-005-HAPPY, F-PV-005-NEGATIVE, F-PV-005-AUTHZ, F-PV-005-EMPTY-ERROR, F-PV-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PV-005-HAPPY, F-PV-005-NEGATIVE, F-PV-005-AUTHZ, F-PV-005-EMPTY-ERROR, F-PV-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -392,7 +392,7 @@ Authenticated Provider, restricted to the owner’s own profile and records; app
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, Input, ServiceCard, EnquiryForm, MediaConsentToggle, ReviewForm.
 - **API/data handles:** `P04/F-PV-006`; `P03/F-PV-006`.
-- **Test handles:** F-PV-006-HAPPY, F-PV-006-NEGATIVE, F-PV-006-AUTHZ, F-PV-006-EMPTY-ERROR, F-PV-006-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PV-006-HAPPY, F-PV-006-NEGATIVE, F-PV-006-AUTHZ, F-PV-006-EMPTY-ERROR, F-PV-006-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -455,13 +455,13 @@ Authenticated Provider, restricted to the owner’s own profile and records; app
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, Input, ServiceCard, EnquiryForm, MediaConsentToggle, ProductCard.
 - **API/data handles:** `P04/F-PV-007`; `P03/F-PV-007`.
-- **Test handles:** F-PV-007-HAPPY, F-PV-007-NEGATIVE, F-PV-007-AUTHZ, F-PV-007-EMPTY-ERROR, F-PV-007-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PV-007-HAPPY, F-PV-007-NEGATIVE, F-PV-007-AUTHZ, F-PV-007-EMPTY-ERROR, F-PV-007-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-PV-001 | S-PROV-01 | None specified | users, businesses, services, orders, reviews, media-videos, engagement | Owner, Service, Enquiry, Video | DashboardShell, DataTable, Input, ServiceCard, EnquiryForm, MediaConsentToggle | F-PV-001-HAPPY, F-PV-001-NEGATIVE, F-PV-001-AUTHZ, F-PV-001-EMPTY-ERROR, F-PV-001-I18N-HI-LONG |
 | F-PV-002 | S-PROV-09 | None specified | users, businesses, services, orders, reviews, media-videos, engagement | Owner, Service, Enquiry, Video | DashboardShell, DataTable, Input, ServiceCard, EnquiryForm, MediaConsentToggle, FilterPanel | F-PV-002-HAPPY, F-PV-002-NEGATIVE, F-PV-002-AUTHZ, F-PV-002-EMPTY-ERROR, F-PV-002-I18N-HI-LONG |

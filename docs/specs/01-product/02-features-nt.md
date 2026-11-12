@@ -73,7 +73,7 @@ Enforce the authenticated role and module scope for each operation; guest access
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** NotificationCard, Toggle, Badge, ReviewForm, RatingBreakdown, ReviewCard, OfferCard.
 - **API/data handles:** `P04/F-NT-001`; `P03/F-NT-001`.
-- **Test handles:** F-NT-001-HAPPY, F-NT-001-NEGATIVE, F-NT-001-AUTHZ, F-NT-001-EMPTY-ERROR, F-NT-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-NT-001-HAPPY, F-NT-001-NEGATIVE, F-NT-001-AUTHZ, F-NT-001-EMPTY-ERROR, F-NT-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -136,7 +136,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** NotificationCard, Toggle, Badge, OfferCard, OfferBanner, OrderCard, Timeline.
 - **API/data handles:** `P04/F-NT-002`; `P03/F-NT-002`.
-- **Test handles:** F-NT-002-HAPPY, F-NT-002-NEGATIVE, F-NT-002-AUTHZ, F-NT-002-EMPTY-ERROR, F-NT-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-NT-002-HAPPY, F-NT-002-NEGATIVE, F-NT-002-AUTHZ, F-NT-002-EMPTY-ERROR, F-NT-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -199,13 +199,13 @@ Restrict operations to the listed roles (Vendor, Provider); apply customer authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** NotificationCard, Toggle, Badge, OfferCard, OfferBanner, MediaCarousel, GalleryGrid.
 - **API/data handles:** `P04/F-NT-003`; `P03/F-NT-003`.
-- **Test handles:** F-NT-003-HAPPY, F-NT-003-NEGATIVE, F-NT-003-AUTHZ, F-NT-003-EMPTY-ERROR, F-NT-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-NT-003-HAPPY, F-NT-003-NEGATIVE, F-NT-003-AUTHZ, F-NT-003-EMPTY-ERROR, F-NT-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-NT-001 | S-CUST-22, S-VEND-17, S-PROV-15 | None specified | notifications, communications | Notification, NotificationPreference | NotificationCard, Toggle, Badge, ReviewForm, RatingBreakdown, ReviewCard, OfferCard | F-NT-001-HAPPY, F-NT-001-NEGATIVE, F-NT-001-AUTHZ, F-NT-001-EMPTY-ERROR, F-NT-001-I18N-HI-LONG |
 | F-NT-002 | S-CUST-23 | None specified | notifications, communications | Notification, NotificationPreference | NotificationCard, Toggle, Badge, OfferCard, OfferBanner, OrderCard, Timeline | F-NT-002-HAPPY, F-NT-002-NEGATIVE, F-NT-002-AUTHZ, F-NT-002-EMPTY-ERROR, F-NT-002-I18N-HI-LONG |

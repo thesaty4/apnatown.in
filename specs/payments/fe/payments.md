@@ -73,13 +73,15 @@ Shared billing confirmations show server dates (including month-end clamping), t
 - Keys: `payments.earnings.*`, `payments.plan.*`, `payments.promotion.*`, `payments.invoice.*`, `payments.state.*`; EN/HI required. Format money from integer paise; check long Hindi labels at 360px and desktop.
 - Analytics: `payments.earnings_view`, `payments.plan_purchase_start`, `payments.promotion_purchase_start`, `payments.purchase_result`; never include payment credentials, provider payloads, bank/UPI details or phone.
 
-## Tests
+## Verification
 
-- Component: configured/unconfigured summary, ledger empty/error, pending/failed purchase without optimistic activation, invoice rows, keyboard/dialog operation, Hindi and dark mode.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Manual UI: configured/unconfigured summary, ledger empty/error, pending/failed purchase without optimistic activation, invoice rows, keyboard/dialog operation, Hindi and dark mode.
 - Journey: J1 payment failure then retry or enabled cash fallback; vendor owner views S-VEND-16; provider follows J15 on S-PROV-18, including cancellation-at-expiry and retained-selection reactivation after verified renewal.
 - Provider component: status/expiry, plan option, cancellation confirmation, issued invoice and unavailable states reuse S-VEND-16 components; no provider prototype screenshot or vendor earnings/promotion content is assumed.
 - Visual: `d-vendor-vearn.jpg` and `m-vendor-vearn.jpg`, 360px/mobile and desktop, light/dark, EN/HI. Never compare against seeded invoice amounts as live data.
-- Map every acceptance bullet to component/contract/E2E scenarios: reload/status/retry, duplicate tap, stale/new-price review, late capture, paid-but-blocked placement, null-policy vs authoritative zero, decision-vs-execution, current COD payable and Q-33 unavailable. Axe/keyboard chart/dialog focus, malicious labels, redacted telemetry and IST month-boundary rendering are required.
+- Map every acceptance bullet to component/contract/manual journey scenarios: reload/status/retry, duplicate tap, stale/new-price review, late capture, paid-but-blocked placement, null-policy vs authoritative zero, decision-vs-execution, current COD payable and Q-33 unavailable. Accessibility/keyboard chart/dialog focus, malicious labels, redacted telemetry and IST month-boundary rendering are required.
 
 ## Open questions
 

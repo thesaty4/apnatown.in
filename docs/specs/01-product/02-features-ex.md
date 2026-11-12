@@ -82,7 +82,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1, J2
 - **Shared components:** FilterPanel, SubcategoryMultiSelect, CategoryMultiSelect, ActiveFilterChips, MapView, Tabs, ServiceCard.
 - **API/data handles:** `P04/F-EX-001`; `P03/F-EX-001`.
-- **Test handles:** F-EX-001-HAPPY, F-EX-001-NEGATIVE, F-EX-001-AUTHZ, F-EX-001-EMPTY-ERROR, F-EX-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EX-001-HAPPY, F-EX-001-NEGATIVE, F-EX-001-AUTHZ, F-EX-001-EMPTY-ERROR, F-EX-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -145,7 +145,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1, J2
 - **Shared components:** FilterPanel, SubcategoryMultiSelect, CategoryMultiSelect, ActiveFilterChips, MapView, Tabs, ServiceCard.
 - **API/data handles:** `P04/F-EX-002`; `P03/F-EX-002`.
-- **Test handles:** F-EX-002-HAPPY, F-EX-002-NEGATIVE, F-EX-002-AUTHZ, F-EX-002-EMPTY-ERROR, F-EX-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EX-002-HAPPY, F-EX-002-NEGATIVE, F-EX-002-AUTHZ, F-EX-002-EMPTY-ERROR, F-EX-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -208,7 +208,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J2
 - **Shared components:** FilterPanel, SubcategoryMultiSelect, CategoryMultiSelect, ActiveFilterChips, MapView, Tabs.
 - **API/data handles:** `P04/F-EX-003`; `P03/F-EX-003`.
-- **Test handles:** F-EX-003-HAPPY, F-EX-003-NEGATIVE, F-EX-003-AUTHZ, F-EX-003-EMPTY-ERROR, F-EX-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EX-003-HAPPY, F-EX-003-NEGATIVE, F-EX-003-AUTHZ, F-EX-003-EMPTY-ERROR, F-EX-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -271,7 +271,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J2
 - **Shared components:** FilterPanel, SubcategoryMultiSelect, CategoryMultiSelect, ActiveFilterChips, MapView, Tabs, AddressForm.
 - **API/data handles:** `P04/F-EX-004`; `P03/F-EX-004`.
-- **Test handles:** F-EX-004-HAPPY, F-EX-004-NEGATIVE, F-EX-004-AUTHZ, F-EX-004-EMPTY-ERROR, F-EX-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EX-004-HAPPY, F-EX-004-NEGATIVE, F-EX-004-AUTHZ, F-EX-004-EMPTY-ERROR, F-EX-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -334,7 +334,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J2
 - **Shared components:** FilterPanel, SubcategoryMultiSelect, CategoryMultiSelect, ActiveFilterChips, MapView, Tabs, AddressForm.
 - **API/data handles:** `P04/F-EX-005`; `P03/F-EX-005`.
-- **Test handles:** F-EX-005-HAPPY, F-EX-005-NEGATIVE, F-EX-005-AUTHZ, F-EX-005-EMPTY-ERROR, F-EX-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EX-005-HAPPY, F-EX-005-NEGATIVE, F-EX-005-AUTHZ, F-EX-005-EMPTY-ERROR, F-EX-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -397,7 +397,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J2
 - **Shared components:** FilterPanel, SubcategoryMultiSelect, CategoryMultiSelect, ActiveFilterChips, MapView, Tabs, AddressForm.
 - **API/data handles:** `P04/F-EX-006`; `P03/F-EX-006`.
-- **Test handles:** F-EX-006-HAPPY, F-EX-006-NEGATIVE, F-EX-006-AUTHZ, F-EX-006-EMPTY-ERROR, F-EX-006-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EX-006-HAPPY, F-EX-006-NEGATIVE, F-EX-006-AUTHZ, F-EX-006-EMPTY-ERROR, F-EX-006-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -460,7 +460,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J2
 - **Shared components:** FilterPanel, SubcategoryMultiSelect, CategoryMultiSelect, ActiveFilterChips, MapView, Tabs.
 - **API/data handles:** `P04/F-EX-007`; `P03/F-EX-007`.
-- **Test handles:** F-EX-007-HAPPY, F-EX-007-NEGATIVE, F-EX-007-AUTHZ, F-EX-007-EMPTY-ERROR, F-EX-007-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EX-007-HAPPY, F-EX-007-NEGATIVE, F-EX-007-AUTHZ, F-EX-007-EMPTY-ERROR, F-EX-007-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -523,7 +523,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J2
 - **Shared components:** FilterPanel, SubcategoryMultiSelect, CategoryMultiSelect, ActiveFilterChips, MapView, Tabs, MediaCarousel.
 - **API/data handles:** `P04/F-EX-008`; `P03/F-EX-008`.
-- **Test handles:** F-EX-008-HAPPY, F-EX-008-NEGATIVE, F-EX-008-AUTHZ, F-EX-008-EMPTY-ERROR, F-EX-008-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EX-008-HAPPY, F-EX-008-NEGATIVE, F-EX-008-AUTHZ, F-EX-008-EMPTY-ERROR, F-EX-008-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -586,7 +586,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J2
 - **Shared components:** FilterPanel, SubcategoryMultiSelect, CategoryMultiSelect, ActiveFilterChips, MapView, Tabs.
 - **API/data handles:** `P04/F-EX-009`; `P03/F-EX-009`.
-- **Test handles:** F-EX-009-HAPPY, F-EX-009-NEGATIVE, F-EX-009-AUTHZ, F-EX-009-EMPTY-ERROR, F-EX-009-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EX-009-HAPPY, F-EX-009-NEGATIVE, F-EX-009-AUTHZ, F-EX-009-EMPTY-ERROR, F-EX-009-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -649,7 +649,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J2
 - **Shared components:** FilterPanel, SubcategoryMultiSelect, CategoryMultiSelect, ActiveFilterChips, MapView, Tabs.
 - **API/data handles:** `P04/F-EX-010`; `P03/F-EX-010`.
-- **Test handles:** F-EX-010-HAPPY, F-EX-010-NEGATIVE, F-EX-010-AUTHZ, F-EX-010-EMPTY-ERROR, F-EX-010-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EX-010-HAPPY, F-EX-010-NEGATIVE, F-EX-010-AUTHZ, F-EX-010-EMPTY-ERROR, F-EX-010-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -712,7 +712,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J2
 - **Shared components:** FilterPanel, SubcategoryMultiSelect, CategoryMultiSelect, ActiveFilterChips, MapView, Tabs, AddressForm.
 - **API/data handles:** `P04/F-EX-011`; `P03/F-EX-011`.
-- **Test handles:** F-EX-011-HAPPY, F-EX-011-NEGATIVE, F-EX-011-AUTHZ, F-EX-011-EMPTY-ERROR, F-EX-011-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EX-011-HAPPY, F-EX-011-NEGATIVE, F-EX-011-AUTHZ, F-EX-011-EMPTY-ERROR, F-EX-011-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -775,13 +775,13 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J2
 - **Shared components:** FilterPanel, SubcategoryMultiSelect, CategoryMultiSelect, ActiveFilterChips, MapView, Tabs, ServiceCard.
 - **API/data handles:** `P04/F-EX-012`; `P03/F-EX-012`.
-- **Test handles:** F-EX-012-HAPPY, F-EX-012-NEGATIVE, F-EX-012-AUTHZ, F-EX-012-EMPTY-ERROR, F-EX-012-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EX-012-HAPPY, F-EX-012-NEGATIVE, F-EX-012-AUTHZ, F-EX-012-EMPTY-ERROR, F-EX-012-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-EX-001 | S-CUST-02 | J1, J2 | search, catalog | Category, Subcategory, Product, Service, Owner | FilterPanel, SubcategoryMultiSelect, CategoryMultiSelect, ActiveFilterChips, MapView, Tabs, ServiceCard | F-EX-001-HAPPY, F-EX-001-NEGATIVE, F-EX-001-AUTHZ, F-EX-001-EMPTY-ERROR, F-EX-001-I18N-HI-LONG |
 | F-EX-002 | S-CUST-02 | J1, J2 | search, catalog | Category, Subcategory, Product, Service, Owner | FilterPanel, SubcategoryMultiSelect, CategoryMultiSelect, ActiveFilterChips, MapView, Tabs, ServiceCard | F-EX-002-HAPPY, F-EX-002-NEGATIVE, F-EX-002-AUTHZ, F-EX-002-EMPTY-ERROR, F-EX-002-I18N-HI-LONG |

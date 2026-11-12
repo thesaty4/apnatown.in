@@ -40,8 +40,10 @@ the cursor key or regenerate it on startup. Retention/rotation rules are in
 the [idempotency contract](specs/_foundation/data-model.md#shared-runtime-persistence).
 
 `lint`, `typecheck`, `build` and `check:generated` validate the scaffold.
-Automated test suites and their tooling are currently removed; these checks
-do not replace behavioural, accessibility or security testing. Readiness remains
+Follow the [verification policy](.github/instructions/testing.instructions.md):
+do not create FE/BE/DB automated test files or runners. Existing suites and
+test-only support files have been removed. These commands do not replace
+manual behavioral, accessibility or security verification. Readiness remains
 unavailable until the specified database/shared-runtime prerequisites exist;
 liveness alone is not proof of readiness.
 

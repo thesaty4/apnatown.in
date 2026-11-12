@@ -195,10 +195,12 @@ Reuse `COMMON_UNAUTHENTICATED`, `COMMON_FORBIDDEN`, `COMMON_VALIDATION_FAILED`, 
 20. Given a provider owns a verified finite Premium subscription, when they cancel with the current version, then cancellation is recorded for the paid expiry instant, entitlement remains active until that instant, and no refund/payment operation occurs; stale, expired, foreign, or no-expiry subscriptions are rejected without mutation.
 21. Given an expiry job is replayed or a verified renewal covers the expiry boundary, when the job runs, then it emits at most one expiry event only for a real eligibility loss; a later verified renewal restores still-selected public listings and invalidates their cached featured state.
 
-## Tests
+## Verification
 
-- Unit: exact ST-payment/ST-refund transitions, integer-paise caps, current plan lookup/cancellation state, event deduplication and immutable ledger insertion.
-- Integration: provider fake success/failure/timeout, signed webhook verification, checkout event replay, cash collection, refund retries, subscription expiry boundary/renewal, delayed-job replay and ledger queries with keyset pagination.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Rules: exact ST-payment/ST-refund transitions, integer-paise caps, current plan lookup/cancellation state, event deduplication and immutable ledger insertion.
+- Manual API/DB: provider fake success/failure/timeout, signed webhook verification, checkout event replay, cash collection, refund retries, subscription expiry boundary/renewal, delayed-job replay and ledger queries with keyset pagination.
 - Authorization negatives: wrong role, non-owner vendor/provider, cross-business record identifier, inactive/unapproved business purchase, invalid internal event identity; assert 403/404 and no leaked records.
 - Concurrency: duplicate webhook/refund event and simultaneous refund requests cannot exceed the remaining captured amount or create duplicate entries.
 - Security: signatures checked before mutation; credentials/payment details excluded from logs and responses; plan/promotion keys allow-listed.

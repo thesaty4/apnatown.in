@@ -4,7 +4,7 @@ Features: F-NT-001, F-NT-002, F-X-012 | Screens: S-CUST-22, S-CUST-23 (channel s
 
 Backend contract: [BE notifications](../be/notifications.md)
 
-Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Tests](#tests)
+Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Verification](#verification)
 
 ## Routes and rendering
 
@@ -53,6 +53,8 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) for standard states,
 
 Prefixes `notifications.*`; template copy is rendered server-side. Events: `notification_opened`, `notifications_mark_all_read`, `notification_pref_changed`.
 
-## Tests
+## Verification
 
-Component/axe: five exact toggle bindings, pending/conflict rollback, no mandatory in-app, purpose copy, role-isolated badges, keyboard focus/labels, EN/HI/dark and unsubscribe confirmation. E2E: order.created → correct role feed; BR-20 admin/vendor notices scoped by area; reply/moderation/support links reach existing authorized destinations; marketing opt-out preserves transactional WhatsApp choices; verified STOP refetch; external-only/suppressed campaign produces no feed row. Retry/receipt mechanics and account export/erase are BE/Users contracts, not invented frontend controls.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Manual UI/accessibility: five exact toggle bindings, pending/conflict rollback, no mandatory in-app, purpose copy, role-isolated badges, keyboard focus/labels, EN/HI/dark and unsubscribe confirmation. Manual journey: order.created → correct role feed; BR-20 admin/vendor notices scoped by area; reply/moderation/support links reach existing authorized destinations; marketing opt-out preserves transactional WhatsApp choices; verified STOP refetch; external-only/suppressed campaign produces no feed row. Retry/receipt mechanics and account export/erase are BE/Users contracts, not invented frontend controls.

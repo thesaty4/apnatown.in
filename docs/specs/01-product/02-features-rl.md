@@ -80,7 +80,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J4
 - **Shared components:** ReelsPlayer, VideoCard, LinkedItemsStrip, FollowButton, ShareSheet.
 - **API/data handles:** `P04/F-RL-001`; `P03/F-RL-001`.
-- **Test handles:** F-RL-001-HAPPY, F-RL-001-NEGATIVE, F-RL-001-AUTHZ, F-RL-001-EMPTY-ERROR, F-RL-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RL-001-HAPPY, F-RL-001-NEGATIVE, F-RL-001-AUTHZ, F-RL-001-EMPTY-ERROR, F-RL-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -143,7 +143,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J4
 - **Shared components:** ReelsPlayer, VideoCard, LinkedItemsStrip, FollowButton, ShareSheet, FilterPanel, SubcategoryMultiSelect.
 - **API/data handles:** `P04/F-RL-002`; `P03/F-RL-002`.
-- **Test handles:** F-RL-002-HAPPY, F-RL-002-NEGATIVE, F-RL-002-AUTHZ, F-RL-002-EMPTY-ERROR, F-RL-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RL-002-HAPPY, F-RL-002-NEGATIVE, F-RL-002-AUTHZ, F-RL-002-EMPTY-ERROR, F-RL-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -206,7 +206,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J4
 - **Shared components:** ReelsPlayer, VideoCard, LinkedItemsStrip, FollowButton, ShareSheet.
 - **API/data handles:** `P04/F-RL-003`; `P03/F-RL-003`.
-- **Test handles:** F-RL-003-HAPPY, F-RL-003-NEGATIVE, F-RL-003-AUTHZ, F-RL-003-EMPTY-ERROR, F-RL-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RL-003-HAPPY, F-RL-003-NEGATIVE, F-RL-003-AUTHZ, F-RL-003-EMPTY-ERROR, F-RL-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -269,7 +269,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J4
 - **Shared components:** ReelsPlayer, VideoCard, LinkedItemsStrip, FollowButton, ShareSheet, ProductCard, QuantityStepper.
 - **API/data handles:** `P04/F-RL-004`; `P03/F-RL-004`.
-- **Test handles:** F-RL-004-HAPPY, F-RL-004-NEGATIVE, F-RL-004-AUTHZ, F-RL-004-EMPTY-ERROR, F-RL-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RL-004-HAPPY, F-RL-004-NEGATIVE, F-RL-004-AUTHZ, F-RL-004-EMPTY-ERROR, F-RL-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -332,7 +332,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J4
 - **Shared components:** ReelsPlayer, VideoCard, LinkedItemsStrip, FollowButton, ShareSheet, MapView, AddressForm.
 - **API/data handles:** `P04/F-RL-005`; `P03/F-RL-005`.
-- **Test handles:** F-RL-005-HAPPY, F-RL-005-NEGATIVE, F-RL-005-AUTHZ, F-RL-005-EMPTY-ERROR, F-RL-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RL-005-HAPPY, F-RL-005-NEGATIVE, F-RL-005-AUTHZ, F-RL-005-EMPTY-ERROR, F-RL-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -395,7 +395,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J4
 - **Shared components:** ReelsPlayer, VideoCard, LinkedItemsStrip, FollowButton, ShareSheet, MediaCarousel, GalleryGrid.
 - **API/data handles:** `P04/F-RL-006`; `P03/F-RL-006`.
-- **Test handles:** F-RL-006-HAPPY, F-RL-006-NEGATIVE, F-RL-006-AUTHZ, F-RL-006-EMPTY-ERROR, F-RL-006-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RL-006-HAPPY, F-RL-006-NEGATIVE, F-RL-006-AUTHZ, F-RL-006-EMPTY-ERROR, F-RL-006-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -458,7 +458,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J4
 - **Shared components:** ReelsPlayer, VideoCard, LinkedItemsStrip, FollowButton, ShareSheet, PhoneInput, OtpInput.
 - **API/data handles:** `P04/F-RL-007`; `P03/F-RL-007`.
-- **Test handles:** F-RL-007-HAPPY, F-RL-007-NEGATIVE, F-RL-007-AUTHZ, F-RL-007-EMPTY-ERROR, F-RL-007-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RL-007-HAPPY, F-RL-007-NEGATIVE, F-RL-007-AUTHZ, F-RL-007-EMPTY-ERROR, F-RL-007-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -521,7 +521,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J4
 - **Shared components:** ReelsPlayer, VideoCard, LinkedItemsStrip, FollowButton, ShareSheet, MediaCarousel, GalleryGrid.
 - **API/data handles:** `P04/F-RL-008`; `P03/F-RL-008`.
-- **Test handles:** F-RL-008-HAPPY, F-RL-008-NEGATIVE, F-RL-008-AUTHZ, F-RL-008-EMPTY-ERROR, F-RL-008-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RL-008-HAPPY, F-RL-008-NEGATIVE, F-RL-008-AUTHZ, F-RL-008-EMPTY-ERROR, F-RL-008-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -584,7 +584,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J4
 - **Shared components:** ReelsPlayer, VideoCard, LinkedItemsStrip, FollowButton, ShareSheet, PhoneInput, OtpInput.
 - **API/data handles:** `P04/F-RL-009`; `P03/F-RL-009`.
-- **Test handles:** F-RL-009-HAPPY, F-RL-009-NEGATIVE, F-RL-009-AUTHZ, F-RL-009-EMPTY-ERROR, F-RL-009-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RL-009-HAPPY, F-RL-009-NEGATIVE, F-RL-009-AUTHZ, F-RL-009-EMPTY-ERROR, F-RL-009-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -647,13 +647,13 @@ Restrict operations to the listed roles (Customer, Vendor, Provider); apply cust
 - **Journeys:** J6
 - **Shared components:** ReelsPlayer, VideoCard, LinkedItemsStrip, FollowButton, ShareSheet, MediaCarousel, GalleryGrid.
 - **API/data handles:** `P04/F-RL-010`; `P03/F-RL-010`.
-- **Test handles:** F-RL-010-HAPPY, F-RL-010-NEGATIVE, F-RL-010-AUTHZ, F-RL-010-EMPTY-ERROR, F-RL-010-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RL-010-HAPPY, F-RL-010-NEGATIVE, F-RL-010-AUTHZ, F-RL-010-EMPTY-ERROR, F-RL-010-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-RL-001 | S-CUST-21 | J4 | media-videos, engagement, products, services | Video, VideoComment, Follow, Like | ReelsPlayer, VideoCard, LinkedItemsStrip, FollowButton, ShareSheet | F-RL-001-HAPPY, F-RL-001-NEGATIVE, F-RL-001-AUTHZ, F-RL-001-EMPTY-ERROR, F-RL-001-I18N-HI-LONG |
 | F-RL-002 | S-CUST-21 | J4 | media-videos, engagement, products, services | Video, VideoComment, Follow, Like | ReelsPlayer, VideoCard, LinkedItemsStrip, FollowButton, ShareSheet, FilterPanel, SubcategoryMultiSelect | F-RL-002-HAPPY, F-RL-002-NEGATIVE, F-RL-002-AUTHZ, F-RL-002-EMPTY-ERROR, F-RL-002-I18N-HI-LONG |

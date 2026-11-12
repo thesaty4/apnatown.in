@@ -80,7 +80,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J5
 - **Shared components:** SearchBar, SearchResultGroup, FilterPanel, SubcategoryMultiSelect, ActiveFilterChips, MediaCarousel, GalleryGrid.
 - **API/data handles:** `P04/F-SR-001`; `P03/F-SR-001`.
-- **Test handles:** F-SR-001-HAPPY, F-SR-001-NEGATIVE, F-SR-001-AUTHZ, F-SR-001-EMPTY-ERROR, F-SR-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SR-001-HAPPY, F-SR-001-NEGATIVE, F-SR-001-AUTHZ, F-SR-001-EMPTY-ERROR, F-SR-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -143,7 +143,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J5
 - **Shared components:** SearchBar, SearchResultGroup, FilterPanel, SubcategoryMultiSelect, ActiveFilterChips, MapView, AddressForm.
 - **API/data handles:** `P04/F-SR-002`; `P03/F-SR-002`.
-- **Test handles:** F-SR-002-HAPPY, F-SR-002-NEGATIVE, F-SR-002-AUTHZ, F-SR-002-EMPTY-ERROR, F-SR-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SR-002-HAPPY, F-SR-002-NEGATIVE, F-SR-002-AUTHZ, F-SR-002-EMPTY-ERROR, F-SR-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -206,7 +206,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J5
 - **Shared components:** SearchBar, SearchResultGroup, FilterPanel, SubcategoryMultiSelect.
 - **API/data handles:** `P04/F-SR-003`; `P03/F-SR-003`.
-- **Test handles:** F-SR-003-HAPPY, F-SR-003-NEGATIVE, F-SR-003-AUTHZ, F-SR-003-EMPTY-ERROR, F-SR-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SR-003-HAPPY, F-SR-003-NEGATIVE, F-SR-003-AUTHZ, F-SR-003-EMPTY-ERROR, F-SR-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -269,7 +269,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J5
 - **Shared components:** SearchBar, SearchResultGroup, FilterPanel, SubcategoryMultiSelect, ActiveFilterChips, ServiceCard, EnquiryForm.
 - **API/data handles:** `P04/F-SR-004`; `P03/F-SR-004`.
-- **Test handles:** F-SR-004-HAPPY, F-SR-004-NEGATIVE, F-SR-004-AUTHZ, F-SR-004-EMPTY-ERROR, F-SR-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SR-004-HAPPY, F-SR-004-NEGATIVE, F-SR-004-AUTHZ, F-SR-004-EMPTY-ERROR, F-SR-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -332,7 +332,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J5
 - **Shared components:** SearchBar, SearchResultGroup, FilterPanel, SubcategoryMultiSelect, ActiveFilterChips.
 - **API/data handles:** `P04/F-SR-005`; `P03/F-SR-005`.
-- **Test handles:** F-SR-005-HAPPY, F-SR-005-NEGATIVE, F-SR-005-AUTHZ, F-SR-005-EMPTY-ERROR, F-SR-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SR-005-HAPPY, F-SR-005-NEGATIVE, F-SR-005-AUTHZ, F-SR-005-EMPTY-ERROR, F-SR-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -395,7 +395,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J5
 - **Shared components:** SearchBar, SearchResultGroup, FilterPanel, SubcategoryMultiSelect, ServiceCard, EnquiryForm.
 - **API/data handles:** `P04/F-SR-006`; `P03/F-SR-006`.
-- **Test handles:** F-SR-006-HAPPY, F-SR-006-NEGATIVE, F-SR-006-AUTHZ, F-SR-006-EMPTY-ERROR, F-SR-006-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SR-006-HAPPY, F-SR-006-NEGATIVE, F-SR-006-AUTHZ, F-SR-006-EMPTY-ERROR, F-SR-006-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -458,7 +458,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J5
 - **Shared components:** SearchBar, SearchResultGroup, FilterPanel, SubcategoryMultiSelect, ActiveFilterChips, ServiceCard, EnquiryForm.
 - **API/data handles:** `P04/F-SR-007`; `P03/F-SR-007`.
-- **Test handles:** F-SR-007-HAPPY, F-SR-007-NEGATIVE, F-SR-007-AUTHZ, F-SR-007-EMPTY-ERROR, F-SR-007-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SR-007-HAPPY, F-SR-007-NEGATIVE, F-SR-007-AUTHZ, F-SR-007-EMPTY-ERROR, F-SR-007-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -521,7 +521,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J5
 - **Shared components:** SearchBar, SearchResultGroup, FilterPanel, SubcategoryMultiSelect, ActiveFilterChips, MapView, AddressForm.
 - **API/data handles:** `P04/F-SR-008`; `P03/F-SR-008`.
-- **Test handles:** F-SR-008-HAPPY, F-SR-008-NEGATIVE, F-SR-008-AUTHZ, F-SR-008-EMPTY-ERROR, F-SR-008-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SR-008-HAPPY, F-SR-008-NEGATIVE, F-SR-008-AUTHZ, F-SR-008-EMPTY-ERROR, F-SR-008-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -584,7 +584,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J5
 - **Shared components:** SearchBar, SearchResultGroup, FilterPanel, SubcategoryMultiSelect, ActiveFilterChips.
 - **API/data handles:** `P04/F-SR-009`; `P03/F-SR-009`.
-- **Test handles:** F-SR-009-HAPPY, F-SR-009-NEGATIVE, F-SR-009-AUTHZ, F-SR-009-EMPTY-ERROR, F-SR-009-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SR-009-HAPPY, F-SR-009-NEGATIVE, F-SR-009-AUTHZ, F-SR-009-EMPTY-ERROR, F-SR-009-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -647,13 +647,13 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J5
 - **Shared components:** SearchBar, SearchResultGroup, FilterPanel, SubcategoryMultiSelect, ActiveFilterChips.
 - **API/data handles:** `P04/F-SR-010`; `P03/F-SR-010`.
-- **Test handles:** F-SR-010-HAPPY, F-SR-010-NEGATIVE, F-SR-010-AUTHZ, F-SR-010-EMPTY-ERROR, F-SR-010-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SR-010-HAPPY, F-SR-010-NEGATIVE, F-SR-010-AUTHZ, F-SR-010-EMPTY-ERROR, F-SR-010-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-SR-001 | S-CUST-03 | J5 | search, catalog | Keyword, Product, Service, Owner, Video | SearchBar, SearchResultGroup, FilterPanel, SubcategoryMultiSelect, ActiveFilterChips, MediaCarousel, GalleryGrid | F-SR-001-HAPPY, F-SR-001-NEGATIVE, F-SR-001-AUTHZ, F-SR-001-EMPTY-ERROR, F-SR-001-I18N-HI-LONG |
 | F-SR-002 | S-CUST-03 | J5 | search, catalog | Keyword, Product, Service, Owner, Video | SearchBar, SearchResultGroup, FilterPanel, SubcategoryMultiSelect, ActiveFilterChips, MapView, AddressForm | F-SR-002-HAPPY, F-SR-002-NEGATIVE, F-SR-002-AUTHZ, F-SR-002-EMPTY-ERROR, F-SR-002-I18N-HI-LONG |

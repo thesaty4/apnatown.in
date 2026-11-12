@@ -6,13 +6,25 @@ export const AUTH_ROUTE = 'apnatown:auth-route';
 export const ROLES_ROUTE = 'apnatown:roles';
 export const PERMISSION_ROUTE = 'apnatown:permission';
 export const SCOPED_ROUTE = 'apnatown:scoped';
-export type AuthRoutePolicy = 'public-read' | 'csrf' | 'guest' | 'own' | 'role';
+export type AuthRoutePolicy =
+  | 'public-read'
+  | 'csrf'
+  | 'guest'
+  | 'session'
+  | 'own'
+  | 'role';
 /** Public reads only; this NEVER exempts a mutation from authorization or CSRF. */
 export const PublicRoute = () => SetMetadata(AUTH_ROUTE, 'public-read');
 /** Own-account access, not an admin/seller/rider permission grant. */
 export const OwnAccount = () => SetMetadata(AUTH_ROUTE, 'own');
 export const LoginRoute = () => SetMetadata(AUTH_ROUTE, 'guest');
 export const CsrfBootstrap = () => SetMetadata(AUTH_ROUTE, 'csrf');
+/**
+ * Any live session (anonymous guest or authenticated) with Origin/CSRF
+ * protection. The principal is attached only when authenticated; it grants
+ * no role, ownership or admin authority.
+ */
+export const SessionRoute = () => SetMetadata(AUTH_ROUTE, 'session');
 /**
  * Authenticated session holding at least one listed role. Admin principals
  * additionally pass the Admin scope port (active account, grants read per

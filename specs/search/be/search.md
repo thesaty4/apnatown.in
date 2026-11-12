@@ -106,8 +106,10 @@ Other malformed query values use `COMMON_VALIDATION_FAILED`; an empty result is 
 - Given a business belongs to multiple product categories, when it matches one or several selected category predicates, then it appears and counts once.
 - Given Home has dedicated and curated category sections, when public config changes or a selected category becomes inactive, then the current ordered configuration and only eligible category cards are returned.
 
-## Tests
+## Verification
 
-- Unit: query normalization and mapped target resolution for `एसी`, `plumbr`, and `iPhone 15`; filter allowlists; OR semantics; stable sort tie-breaks.
-- Integration: facet counts equal the result predicate under combinations of filters; non-public listings/videos are excluded; keyset pagination has no duplicates.
-- Negative/security: malformed/unknown namespaced filters and cursor mismatches are rejected; text/sorts remain parameterized; preview tests cover missing permission and a different area within the same city; no private records, raw queries or precise coordinates leak into logs/share links.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Rules: query normalization and mapped target resolution for `एसी`, `plumbr`, and `iPhone 15`; filter allowlists; OR semantics; stable sort tie-breaks.
+- Manual API/DB: facet counts equal the result predicate under combinations of filters; non-public listings/videos are excluded; keyset pagination has no duplicates.
+- Negative/security: malformed/unknown namespaced filters and cursor mismatches are rejected; text/sorts remain parameterized; preview checks cover missing permission and a different area within the same city; no private records, raw queries or precise coordinates leak into logs/share links.

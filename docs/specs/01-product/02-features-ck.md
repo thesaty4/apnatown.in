@@ -79,7 +79,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1
 - **Shared components:** QuantityStepper, AddressForm, PaymentMethodPicker, CouponField, Button, OfferCard, OfferBanner.
 - **API/data handles:** `P04/F-CK-001`; `P03/F-CK-001`.
-- **Test handles:** F-CK-001-HAPPY, F-CK-001-NEGATIVE, F-CK-001-AUTHZ, F-CK-001-EMPTY-ERROR, F-CK-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-CK-001-HAPPY, F-CK-001-NEGATIVE, F-CK-001-AUTHZ, F-CK-001-EMPTY-ERROR, F-CK-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -142,7 +142,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1
 - **Shared components:** QuantityStepper, AddressForm, PaymentMethodPicker, CouponField, Button, PhoneInput, OtpInput.
 - **API/data handles:** `P04/F-CK-002`; `P03/F-CK-002`.
-- **Test handles:** F-CK-002-HAPPY, F-CK-002-NEGATIVE, F-CK-002-AUTHZ, F-CK-002-EMPTY-ERROR, F-CK-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-CK-002-HAPPY, F-CK-002-NEGATIVE, F-CK-002-AUTHZ, F-CK-002-EMPTY-ERROR, F-CK-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -205,7 +205,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1
 - **Shared components:** QuantityStepper, AddressForm, PaymentMethodPicker, CouponField, Button, OrderCard, Timeline.
 - **API/data handles:** `P04/F-CK-003`; `P03/F-CK-003`.
-- **Test handles:** F-CK-003-HAPPY, F-CK-003-NEGATIVE, F-CK-003-AUTHZ, F-CK-003-EMPTY-ERROR, F-CK-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-CK-003-HAPPY, F-CK-003-NEGATIVE, F-CK-003-AUTHZ, F-CK-003-EMPTY-ERROR, F-CK-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -268,7 +268,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1
 - **Shared components:** QuantityStepper, AddressForm, PaymentMethodPicker, CouponField, Button, MapView.
 - **API/data handles:** `P04/F-CK-004`; `P03/F-CK-004`.
-- **Test handles:** F-CK-004-HAPPY, F-CK-004-NEGATIVE, F-CK-004-AUTHZ, F-CK-004-EMPTY-ERROR, F-CK-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-CK-004-HAPPY, F-CK-004-NEGATIVE, F-CK-004-AUTHZ, F-CK-004-EMPTY-ERROR, F-CK-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -331,7 +331,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1
 - **Shared components:** QuantityStepper, AddressForm, PaymentMethodPicker, CouponField, Button, OrderCard, Timeline.
 - **API/data handles:** `P04/F-CK-005`; `P03/F-CK-005`.
-- **Test handles:** F-CK-005-HAPPY, F-CK-005-NEGATIVE, F-CK-005-AUTHZ, F-CK-005-EMPTY-ERROR, F-CK-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-CK-005-HAPPY, F-CK-005-NEGATIVE, F-CK-005-AUTHZ, F-CK-005-EMPTY-ERROR, F-CK-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -394,7 +394,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1
 - **Shared components:** QuantityStepper, AddressForm, PaymentMethodPicker, CouponField, Button, ProductCard.
 - **API/data handles:** `P04/F-CK-006`; `P03/F-CK-006`.
-- **Test handles:** F-CK-006-HAPPY, F-CK-006-NEGATIVE, F-CK-006-AUTHZ, F-CK-006-EMPTY-ERROR, F-CK-006-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-CK-006-HAPPY, F-CK-006-NEGATIVE, F-CK-006-AUTHZ, F-CK-006-EMPTY-ERROR, F-CK-006-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -457,7 +457,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1
 - **Shared components:** QuantityStepper, AddressForm, PaymentMethodPicker, CouponField, Button, OrderCard, Timeline.
 - **API/data handles:** `P04/F-CK-007`; `P03/F-CK-007`.
-- **Test handles:** F-CK-007-HAPPY, F-CK-007-NEGATIVE, F-CK-007-AUTHZ, F-CK-007-EMPTY-ERROR, F-CK-007-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-CK-007-HAPPY, F-CK-007-NEGATIVE, F-CK-007-AUTHZ, F-CK-007-EMPTY-ERROR, F-CK-007-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -520,7 +520,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1
 - **Shared components:** QuantityStepper, AddressForm, PaymentMethodPicker, CouponField, Button, OrderCard, Timeline.
 - **API/data handles:** `P04/F-CK-008`; `P03/F-CK-008`.
-- **Test handles:** F-CK-008-HAPPY, F-CK-008-NEGATIVE, F-CK-008-AUTHZ, F-CK-008-EMPTY-ERROR, F-CK-008-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-CK-008-HAPPY, F-CK-008-NEGATIVE, F-CK-008-AUTHZ, F-CK-008-EMPTY-ERROR, F-CK-008-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -583,13 +583,13 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** QuantityStepper, AddressForm, PaymentMethodPicker, CouponField, Button, OfferCard, OfferBanner.
 - **API/data handles:** `P04/F-CK-009`; `P03/F-CK-009`.
-- **Test handles:** F-CK-009-HAPPY, F-CK-009-NEGATIVE, F-CK-009-AUTHZ, F-CK-009-EMPTY-ERROR, F-CK-009-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-CK-009-HAPPY, F-CK-009-NEGATIVE, F-CK-009-AUTHZ, F-CK-009-EMPTY-ERROR, F-CK-009-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-CK-001 | S-CUST-10 | J1 | cart-checkout, products, businesses, payments, orders | Cart, CartLine, Address, Coupon | QuantityStepper, AddressForm, PaymentMethodPicker, CouponField, Button, OfferCard, OfferBanner | F-CK-001-HAPPY, F-CK-001-NEGATIVE, F-CK-001-AUTHZ, F-CK-001-EMPTY-ERROR, F-CK-001-I18N-HI-LONG |
 | F-CK-002 | S-CUST-10, S-CUST-11 | J1 | cart-checkout, products, businesses, payments, orders | Cart, CartLine, Address, Coupon | QuantityStepper, AddressForm, PaymentMethodPicker, CouponField, Button, PhoneInput, OtpInput | F-CK-002-HAPPY, F-CK-002-NEGATIVE, F-CK-002-AUTHZ, F-CK-002-EMPTY-ERROR, F-CK-002-I18N-HI-LONG |

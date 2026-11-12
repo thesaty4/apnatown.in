@@ -2,7 +2,7 @@
 
 ApnaTown.in is a hyperlocal marketplace (shops, products, services, riders, reels) launching in Padrauna, Kushinagar, India. **Before any task read `docs/design-context/` (the Design Context Pack) and, for generated specs, `docs/specs/`.** The full standing requirements are in `docs/prompts/STANDING_REQUIREMENTS.md`; the summary below is binding.
 
-1. **Complete coverage:** every feature (F-ID), screen (S-ID), flow, state and rule from the pack must be covered and traceable to screens, components, APIs, tables and tests. No "etc.".
+1. **Complete coverage:** every feature (F-ID), screen (S-ID), flow, state and rule from the pack must be covered and traceable to screens, components, APIs, tables and verification evidence. No "etc.".
 2. **UI/behaviour parity:** match the prototype exactly (colours, type, spacing, radius, shadows, icons, EN+HI copy, states) using `04-design-tokens.json` through the Tailwind theme. Never invent styles or behaviour; log conflicts in `11-open-issues-and-assumptions.md`.
 3. **Stack:** Next.js (App Router, TS) + Tailwind + TanStack React Query (`@tanstack/react-query`) for frontend API integration; NestJS (TS); PostgreSQL. Follow [the API integration contract](../specs/_foundation/frontend-shared.md#api-integration-with-react-query). Choose and justify (2-3 lines, alternative, when to switch) the rest.
 4. **System design per feature:** state machines, outbox, queues, idempotency keys, PostGIS, keyset pagination, denormalised counters, cache invalidation; give a sequence for each critical flow.
@@ -10,4 +10,4 @@ ApnaTown.in is a hyperlocal marketplace (shops, products, services, riders, reel
 6. **Backend:** shared layer for anything reused; modular monolith, controller -> service -> repository, domain events, adapters for third parties; DRY and SOLID; authorisation (role + ownership + city/area scope + module permission) on every endpoint; money in integer paise; stable error codes; OpenAPI from DTOs; idempotency; rate limiting; audit log; parameterised queries only.
 7. **Output:** Markdown with TOC, consistent IDs, tables, code blocks, Mermaid diagrams. Long output: continue in numbered parts, never summarise.
 8. **Never invent requirements;** record Open Issues with the assumption used.
-9. **Quality:** OWASP/DPDP aligned, WCAG 2.2 AA, English + Hindi strings, INR paise, UTC storage / IST display, paginated lists, server-side state machines, tests for every change, humans review and merge.
+9. **Quality:** OWASP/DPDP aligned, WCAG 2.2 AA, English + Hindi strings, INR paise, UTC storage / IST display, paginated lists, server-side state machines, verification for every change, humans review and merge. **Do not write automated test files for FE, BE or DB**, including unit and Playwright tests; follow [the verification policy](instructions/testing.instructions.md).

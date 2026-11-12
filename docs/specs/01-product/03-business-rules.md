@@ -9,9 +9,9 @@
 
 ## Business rules
 
-All rules retain their IDs and wording; rationales/enforcement/test ideas are grounded in the Design Context Pack. Candidate error codes need P04 confirmation.
+All rules retain their IDs and wording; rationales/enforcement/verification scenarios are grounded in the Design Context Pack. Candidate error codes need P04 confirmation.
 
-| ID | Binding rule | Rationale | Enforcement | Candidate error code | Test idea |
+| ID | Binding rule | Rationale | Enforcement | Candidate error code | Manual verification scenario |
 |---|---|---|---|---|---|
 | BR-01 | Money is integer paise; INR/Indian grouping; server computes totals. | Avoid float errors and client-side price tampering. | API services + DB constraints + shared formatter. | BUSINESS_RULE_VIOLATION (ruleId). | Reject invalid money; prove server total authoritative. |
 | BR-02 | Persist UTC; display IST 12-hour. | Consistent instants and correct local display. | All repositories/shared formatters. | VALIDATION_ERROR for invalid timestamp. | Round-trip known UTC instants to expected IST. |
@@ -34,7 +34,7 @@ All rules retain their IDs and wording; rationales/enforcement/test ideas are gr
 | BR-19 | Distribute coupon discount proportionally across eligible shop orders. | Correct per-shop accounting. | Checkout transaction and deterministic paise rounding. | BUSINESS_RULE_VIOLATION. | Allocations sum exactly to discount and honor cap/minimum. |
 | BR-20 | Cancellation/refund request notifies both admin and vendor. | All resolution owners informed. | Orders event + durable outbox/notifications. | DEPENDENCY_UNAVAILABLE if notification intent not durable. | Durable intents for both audiences; retry does not duplicate. |
 | BR-21 | Guest gated actions prompt login and return to same place. | Preserve context. | Auth gate and safe return-route validation. | UNAUTHENTICATED. | Same-origin return restored; open redirect rejected. |
-| BR-22 | Status is icon + text + colour, never colour alone. | Accessible semantic status. | Shared StatusBadge/Timeline/accessibility tests. | N/A. | Every status exposes accessible text/name. |
+| BR-22 | Status is icon + text + colour, never colour alone. | Accessible semantic status. | Shared StatusBadge/Timeline/manual accessibility checks. | N/A. | Every status exposes accessible text/name. |
 
 ## Formulas and defaults
 

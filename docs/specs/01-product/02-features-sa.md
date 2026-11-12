@@ -78,7 +78,7 @@ Super Admin only, platform-wide; protect administrative and global-setting mutat
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ChartCard, CityCard, ZoneEditor, MapView.
 - **API/data handles:** `P04/F-SA-001`; `P03/F-SA-001`.
-- **Test handles:** F-SA-001-HAPPY, F-SA-001-NEGATIVE, F-SA-001-AUTHZ, F-SA-001-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SA-001-HAPPY, F-SA-001-NEGATIVE, F-SA-001-AUTHZ, F-SA-001-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -141,7 +141,7 @@ Super Admin only, platform-wide; protect administrative and global-setting mutat
 - **Journeys:** J10
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ChartCard, CityCard, ZoneEditor, FilterPanel.
 - **API/data handles:** `P04/F-SA-002`; `P03/F-SA-002`.
-- **Test handles:** F-SA-002-HAPPY, F-SA-002-NEGATIVE, F-SA-002-AUTHZ, F-SA-002-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SA-002-HAPPY, F-SA-002-NEGATIVE, F-SA-002-AUTHZ, F-SA-002-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -204,7 +204,7 @@ Super Admin only, platform-wide; protect administrative and global-setting mutat
 - **Journeys:** J10
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ChartCard, CityCard, ZoneEditor, AuditDiff.
 - **API/data handles:** `P04/F-SA-003`; `P03/F-SA-003`.
-- **Test handles:** F-SA-003-HAPPY, F-SA-003-NEGATIVE, F-SA-003-AUTHZ, F-SA-003-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SA-003-HAPPY, F-SA-003-NEGATIVE, F-SA-003-AUTHZ, F-SA-003-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -267,7 +267,7 @@ Super Admin only, platform-wide; protect administrative and global-setting mutat
 - **Journeys:** J10
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ChartCard, CityCard, ZoneEditor, MapView.
 - **API/data handles:** `P04/F-SA-004`; `P03/F-SA-004`.
-- **Test handles:** F-SA-004-HAPPY, F-SA-004-NEGATIVE, F-SA-004-AUTHZ, F-SA-004-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SA-004-HAPPY, F-SA-004-NEGATIVE, F-SA-004-AUTHZ, F-SA-004-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -330,7 +330,7 @@ Super Admin only, platform-wide; protect administrative and global-setting mutat
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ChartCard, CityCard, ZoneEditor, ReviewForm.
 - **API/data handles:** `P04/F-SA-005`; `P03/F-SA-005`.
-- **Test handles:** F-SA-005-HAPPY, F-SA-005-NEGATIVE, F-SA-005-AUTHZ, F-SA-005-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SA-005-HAPPY, F-SA-005-NEGATIVE, F-SA-005-AUTHZ, F-SA-005-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -393,7 +393,7 @@ Super Admin only, platform-wide; protect administrative and global-setting mutat
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ChartCard, CityCard, ZoneEditor, FilterPanel.
 - **API/data handles:** `P04/F-SA-006`; `P03/F-SA-006`.
-- **Test handles:** F-SA-006-HAPPY, F-SA-006-NEGATIVE, F-SA-006-AUTHZ, F-SA-006-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SA-006-HAPPY, F-SA-006-NEGATIVE, F-SA-006-AUTHZ, F-SA-006-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -456,7 +456,7 @@ Super Admin only, platform-wide; protect administrative and global-setting mutat
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ChartCard, CityCard, ZoneEditor, FilterPanel.
 - **API/data handles:** `P04/F-SA-007`; `P03/F-SA-007`.
-- **Test handles:** F-SA-007-HAPPY, F-SA-007-NEGATIVE, F-SA-007-AUTHZ, F-SA-007-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SA-007-HAPPY, F-SA-007-NEGATIVE, F-SA-007-AUTHZ, F-SA-007-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -519,13 +519,13 @@ Super Admin only, platform-wide; protect administrative and global-setting mutat
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, PermissionMatrix, ChartCard, CityCard, ZoneEditor, FilterPanel.
 - **API/data handles:** `P04/F-SA-008`; `P03/F-SA-008`.
-- **Test handles:** F-SA-008-HAPPY, F-SA-008-NEGATIVE, F-SA-008-AUTHZ, F-SA-008-EMPTY-ERROR, -I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SA-008-HAPPY, F-SA-008-NEGATIVE, F-SA-008-AUTHZ, F-SA-008-EMPTY-ERROR, -I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-SA-001 | S-SUPR-01 | None specified | admin, settings, geo, audit, catalog | Admin, Role, City, Zone, Setting, Category | DashboardShell, DataTable, PermissionMatrix, ChartCard, CityCard, ZoneEditor, MapView | F-SA-001-HAPPY, F-SA-001-NEGATIVE, F-SA-001-AUTHZ, F-SA-001-EMPTY-ERROR, F-SA-001-I18N-HI-LONG |
 | F-SA-002 | S-SUPR-02 | J10 | admin, settings, geo, audit, catalog | Admin, Role, City, Zone, Setting, Category | DashboardShell, DataTable, PermissionMatrix, ChartCard, CityCard, ZoneEditor, FilterPanel | F-SA-002-HAPPY, F-SA-002-NEGATIVE, F-SA-002-AUTHZ, F-SA-002-EMPTY-ERROR, F-SA-002-I18N-HI-LONG |

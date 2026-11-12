@@ -241,7 +241,9 @@ export class AdminAccountsService {
           tx,
           input.phone,
         );
-        if (!principal) throw new DomainError('ACCOUNT_UNAVAILABLE');
+        // Never ACCOUNT_UNAVAILABLE here: clients treat it as the caller's own session ending.
+        if (!principal)
+          throw new DomainError('USER_NOT_FOUND', { field: 'phone' });
         const userId = principal.userId;
         if (
           principal.roles.includes('super_admin') ||

@@ -78,7 +78,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** PhoneInput, OtpInput, Input, Sheet, Button, NotificationCard, Toggle.
 - **API/data handles:** `P04/F-AU-001`; `P03/F-AU-001`.
-- **Test handles:** F-AU-001-HAPPY, F-AU-001-NEGATIVE, F-AU-001-AUTHZ, F-AU-001-EMPTY-ERROR, F-AU-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AU-001-HAPPY, F-AU-001-NEGATIVE, F-AU-001-AUTHZ, F-AU-001-EMPTY-ERROR, F-AU-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -141,7 +141,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** PhoneInput, OtpInput, Input, Sheet, Button, MapView, AddressForm.
 - **API/data handles:** `P04/F-AU-002`; `P03/F-AU-002`.
-- **Test handles:** F-AU-002-HAPPY, F-AU-002-NEGATIVE, F-AU-002-AUTHZ, F-AU-002-EMPTY-ERROR, F-AU-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AU-002-HAPPY, F-AU-002-NEGATIVE, F-AU-002-AUTHZ, F-AU-002-EMPTY-ERROR, F-AU-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -204,7 +204,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J12
 - **Shared components:** PhoneInput, OtpInput, Input, Sheet, Button, ReviewForm, RatingBreakdown.
 - **API/data handles:** `P04/F-AU-003`; `P03/F-AU-003`.
-- **Test handles:** F-AU-003-HAPPY, F-AU-003-NEGATIVE, F-AU-003-AUTHZ, F-AU-003-EMPTY-ERROR, F-AU-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AU-003-HAPPY, F-AU-003-NEGATIVE, F-AU-003-AUTHZ, F-AU-003-EMPTY-ERROR, F-AU-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -267,7 +267,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J12
 - **Shared components:** PhoneInput, OtpInput, Input, Sheet, Button.
 - **API/data handles:** `P04/F-AU-004`; `P03/F-AU-004`.
-- **Test handles:** F-AU-004-HAPPY, F-AU-004-NEGATIVE, F-AU-004-AUTHZ, F-AU-004-EMPTY-ERROR, F-AU-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AU-004-HAPPY, F-AU-004-NEGATIVE, F-AU-004-AUTHZ, F-AU-004-EMPTY-ERROR, F-AU-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -330,7 +330,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J12
 - **Shared components:** PhoneInput, OtpInput, Input, Sheet, Button.
 - **API/data handles:** `P04/F-AU-005`; `P03/F-AU-005`.
-- **Test handles:** F-AU-005-HAPPY, F-AU-005-NEGATIVE, F-AU-005-AUTHZ, F-AU-005-EMPTY-ERROR, F-AU-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AU-005-HAPPY, F-AU-005-NEGATIVE, F-AU-005-AUTHZ, F-AU-005-EMPTY-ERROR, F-AU-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -393,7 +393,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J12
 - **Shared components:** PhoneInput, OtpInput, Input, Sheet, Button, MediaCarousel, GalleryGrid.
 - **API/data handles:** `P04/F-AU-006`; `P03/F-AU-006`.
-- **Test handles:** F-AU-006-HAPPY, F-AU-006-NEGATIVE, F-AU-006-AUTHZ, F-AU-006-EMPTY-ERROR, F-AU-006-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AU-006-HAPPY, F-AU-006-NEGATIVE, F-AU-006-AUTHZ, F-AU-006-EMPTY-ERROR, F-AU-006-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -456,7 +456,7 @@ Enforce the authenticated role and module scope for each operation; guest access
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** PhoneInput, OtpInput, Input, Sheet, Button.
 - **API/data handles:** `P04/F-AU-007`; `P03/F-AU-007`.
-- **Test handles:** F-AU-007-HAPPY, F-AU-007-NEGATIVE, F-AU-007-AUTHZ, F-AU-007-EMPTY-ERROR, F-AU-007-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AU-007-HAPPY, F-AU-007-NEGATIVE, F-AU-007-AUTHZ, F-AU-007-EMPTY-ERROR, F-AU-007-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -519,13 +519,13 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** PhoneInput, OtpInput, Input, Sheet, Button, ServiceCard, EnquiryForm.
 - **API/data handles:** `P04/F-AU-008`; `P03/F-AU-008`.
-- **Test handles:** F-AU-008-HAPPY, F-AU-008-NEGATIVE, F-AU-008-AUTHZ, F-AU-008-EMPTY-ERROR, F-AU-008-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-AU-008-HAPPY, F-AU-008-NEGATIVE, F-AU-008-AUTHZ, F-AU-008-EMPTY-ERROR, F-AU-008-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-AU-001 | S-CUST-01 | None specified | auth, users | User, Consent | PhoneInput, OtpInput, Input, Sheet, Button, NotificationCard, Toggle | F-AU-001-HAPPY, F-AU-001-NEGATIVE, F-AU-001-AUTHZ, F-AU-001-EMPTY-ERROR, F-AU-001-I18N-HI-LONG |
 | F-AU-002 | S-CUST-01 | None specified | auth, users | User, Consent | PhoneInput, OtpInput, Input, Sheet, Button, MapView, AddressForm | F-AU-002-HAPPY, F-AU-002-NEGATIVE, F-AU-002-AUTHZ, F-AU-002-EMPTY-ERROR, F-AU-002-I18N-HI-LONG |

@@ -88,7 +88,7 @@ Authenticated Vendor, restricted to the owner’s own business and records; appr
 - **Journeys:** J7
 - **Shared components:** DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, PhoneInput.
 - **API/data handles:** `P04/F-VD-001`; `P03/F-VD-001`.
-- **Test handles:** F-VD-001-HAPPY, F-VD-001-NEGATIVE, F-VD-001-AUTHZ, F-VD-001-EMPTY-ERROR, F-VD-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-VD-001-HAPPY, F-VD-001-NEGATIVE, F-VD-001-AUTHZ, F-VD-001-EMPTY-ERROR, F-VD-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -151,7 +151,7 @@ Authenticated Vendor, restricted to the owner’s own business and records; appr
 - **Journeys:** J7
 - **Shared components:** DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, ProductCard.
 - **API/data handles:** `P04/F-VD-002`; `P03/F-VD-002`.
-- **Test handles:** F-VD-002-HAPPY, F-VD-002-NEGATIVE, F-VD-002-AUTHZ, F-VD-002-EMPTY-ERROR, F-VD-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-VD-002-HAPPY, F-VD-002-NEGATIVE, F-VD-002-AUTHZ, F-VD-002-EMPTY-ERROR, F-VD-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -214,7 +214,7 @@ Authenticated Vendor, restricted to the owner’s own business and records; appr
 - **Journeys:** J7
 - **Shared components:** DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, MapView.
 - **API/data handles:** `P04/F-VD-003`; `P03/F-VD-003`.
-- **Test handles:** F-VD-003-HAPPY, F-VD-003-NEGATIVE, F-VD-003-AUTHZ, F-VD-003-EMPTY-ERROR, F-VD-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-VD-003-HAPPY, F-VD-003-NEGATIVE, F-VD-003-AUTHZ, F-VD-003-EMPTY-ERROR, F-VD-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -277,7 +277,7 @@ Authenticated Vendor, restricted to the owner’s own business and records; appr
 - **Journeys:** J7
 - **Shared components:** DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, FilterPanel.
 - **API/data handles:** `P04/F-VD-004`; `P03/F-VD-004`.
-- **Test handles:** F-VD-004-HAPPY, F-VD-004-NEGATIVE, F-VD-004-AUTHZ, F-VD-004-EMPTY-ERROR, F-VD-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-VD-004-HAPPY, F-VD-004-NEGATIVE, F-VD-004-AUTHZ, F-VD-004-EMPTY-ERROR, F-VD-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -340,7 +340,7 @@ Authenticated Vendor, restricted to the owner’s own business and records; appr
 - **Journeys:** J7
 - **Shared components:** DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, FilterPanel.
 - **API/data handles:** `P04/F-VD-005`; `P03/F-VD-005`.
-- **Test handles:** F-VD-005-HAPPY, F-VD-005-NEGATIVE, F-VD-005-AUTHZ, F-VD-005-EMPTY-ERROR, F-VD-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-VD-005-HAPPY, F-VD-005-NEGATIVE, F-VD-005-AUTHZ, F-VD-005-EMPTY-ERROR, F-VD-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -403,7 +403,7 @@ Authenticated Vendor, restricted to the owner’s own business and records; appr
 - **Journeys:** J7, J9
 - **Shared components:** DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, FilterPanel.
 - **API/data handles:** `P04/F-VD-006`; `P03/F-VD-006`.
-- **Test handles:** F-VD-006-HAPPY, F-VD-006-NEGATIVE, F-VD-006-AUTHZ, F-VD-006-EMPTY-ERROR, F-VD-006-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-VD-006-HAPPY, F-VD-006-NEGATIVE, F-VD-006-AUTHZ, F-VD-006-EMPTY-ERROR, F-VD-006-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -466,7 +466,7 @@ Authenticated Vendor, restricted to the owner’s own business and records; appr
 - **Journeys:** J7
 - **Shared components:** DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, OfferCard.
 - **API/data handles:** `P04/F-VD-007`; `P03/F-VD-007`.
-- **Test handles:** F-VD-007-HAPPY, F-VD-007-NEGATIVE, F-VD-007-AUTHZ, F-VD-007-EMPTY-ERROR, F-VD-007-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-VD-007-HAPPY, F-VD-007-NEGATIVE, F-VD-007-AUTHZ, F-VD-007-EMPTY-ERROR, F-VD-007-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -529,7 +529,7 @@ Authenticated Vendor, restricted to the owner’s own business and records; appr
 - **Journeys:** J7, J8
 - **Shared components:** DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, PhoneInput.
 - **API/data handles:** `P04/F-VD-008`; `P03/F-VD-008`.
-- **Test handles:** F-VD-008-HAPPY, F-VD-008-NEGATIVE, F-VD-008-AUTHZ, F-VD-008-EMPTY-ERROR, F-VD-008-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-VD-008-HAPPY, F-VD-008-NEGATIVE, F-VD-008-AUTHZ, F-VD-008-EMPTY-ERROR, F-VD-008-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -592,7 +592,7 @@ Authenticated Vendor, restricted to the owner’s own business and records; appr
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, ProductCard.
 - **API/data handles:** `P04/F-VD-009`; `P03/F-VD-009`.
-- **Test handles:** F-VD-009-HAPPY, F-VD-009-NEGATIVE, F-VD-009-AUTHZ, F-VD-009-EMPTY-ERROR, F-VD-009-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-VD-009-HAPPY, F-VD-009-NEGATIVE, F-VD-009-AUTHZ, F-VD-009-EMPTY-ERROR, F-VD-009-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -655,7 +655,7 @@ Authenticated Vendor, restricted to the owner’s own business and records; appr
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, FilterPanel.
 - **API/data handles:** `P04/F-VD-010`; `P03/F-VD-010`.
-- **Test handles:** F-VD-010-HAPPY, F-VD-010-NEGATIVE, F-VD-010-AUTHZ, F-VD-010-EMPTY-ERROR, F-VD-010-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-VD-010-HAPPY, F-VD-010-NEGATIVE, F-VD-010-AUTHZ, F-VD-010-EMPTY-ERROR, F-VD-010-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -718,7 +718,7 @@ Authenticated Vendor, restricted to the owner’s own business and records; appr
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, MediaCarousel.
 - **API/data handles:** `P04/F-VD-011`; `P03/F-VD-011`.
-- **Test handles:** F-VD-011-HAPPY, F-VD-011-NEGATIVE, F-VD-011-AUTHZ, F-VD-011-EMPTY-ERROR, F-VD-011-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-VD-011-HAPPY, F-VD-011-NEGATIVE, F-VD-011-AUTHZ, F-VD-011-EMPTY-ERROR, F-VD-011-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -781,7 +781,7 @@ Authenticated Vendor, restricted to the owner’s own business and records; appr
 - **Journeys:** J6
 - **Shared components:** DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, NotificationCard.
 - **API/data handles:** `P04/F-VD-012`; `P03/F-VD-012`.
-- **Test handles:** F-VD-012-HAPPY, F-VD-012-NEGATIVE, F-VD-012-AUTHZ, F-VD-012-EMPTY-ERROR, F-VD-012-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-VD-012-HAPPY, F-VD-012-NEGATIVE, F-VD-012-AUTHZ, F-VD-012-EMPTY-ERROR, F-VD-012-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -844,7 +844,7 @@ Authenticated Vendor, restricted to the owner’s own business and records; appr
 - **Journeys:** J6
 - **Shared components:** DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, NotificationCard.
 - **API/data handles:** `P04/F-VD-013`; `P03/F-VD-013`.
-- **Test handles:** F-VD-013-HAPPY, F-VD-013-NEGATIVE, F-VD-013-AUTHZ, F-VD-013-EMPTY-ERROR, F-VD-013-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-VD-013-HAPPY, F-VD-013-NEGATIVE, F-VD-013-AUTHZ, F-VD-013-EMPTY-ERROR, F-VD-013-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -907,7 +907,7 @@ Authenticated Vendor, restricted to the owner’s own business and records; appr
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, FilterPanel.
 - **API/data handles:** `P04/F-VD-014`; `P03/F-VD-014`.
-- **Test handles:** F-VD-014-HAPPY, F-VD-014-NEGATIVE, F-VD-014-AUTHZ, F-VD-014-EMPTY-ERROR, F-VD-014-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-VD-014-HAPPY, F-VD-014-NEGATIVE, F-VD-014-AUTHZ, F-VD-014-EMPTY-ERROR, F-VD-014-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -970,7 +970,7 @@ Authenticated Vendor, restricted to the owner’s own business and records; appr
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm.
 - **API/data handles:** `P04/F-VD-015`; `P03/F-VD-015`.
-- **Test handles:** F-VD-015-HAPPY, F-VD-015-NEGATIVE, F-VD-015-AUTHZ, F-VD-015-EMPTY-ERROR, F-VD-015-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-VD-015-HAPPY, F-VD-015-NEGATIVE, F-VD-015-AUTHZ, F-VD-015-EMPTY-ERROR, F-VD-015-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -1033,7 +1033,7 @@ Authenticated Vendor, restricted to the owner’s own business and records; appr
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, ServiceCard.
 - **API/data handles:** `P04/F-VD-016`; `P03/F-VD-016`.
-- **Test handles:** F-VD-016-HAPPY, F-VD-016-NEGATIVE, F-VD-016-AUTHZ, F-VD-016-EMPTY-ERROR, F-VD-016-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-VD-016-HAPPY, F-VD-016-NEGATIVE, F-VD-016-AUTHZ, F-VD-016-EMPTY-ERROR, F-VD-016-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -1096,7 +1096,7 @@ Authenticated Vendor, restricted to the owner’s own business and records; appr
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, OfferCard.
 - **API/data handles:** `P04/F-VD-017`; `P03/F-VD-017`.
-- **Test handles:** F-VD-017-HAPPY, F-VD-017-NEGATIVE, F-VD-017-AUTHZ, F-VD-017-EMPTY-ERROR, F-VD-017-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-VD-017-HAPPY, F-VD-017-NEGATIVE, F-VD-017-AUTHZ, F-VD-017-EMPTY-ERROR, F-VD-017-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -1159,13 +1159,13 @@ Authenticated Vendor, restricted to the owner’s own business and records; appr
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, NotificationCard.
 - **API/data handles:** `P04/F-VD-018`; `P03/F-VD-018`.
-- **Test handles:** F-VD-018-HAPPY, F-VD-018-NEGATIVE, F-VD-018-AUTHZ, F-VD-018-EMPTY-ERROR, F-VD-018-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-VD-018-HAPPY, F-VD-018-NEGATIVE, F-VD-018-AUTHZ, F-VD-018-EMPTY-ERROR, F-VD-018-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-VD-001 | S-VEND-01 | J7 | users, businesses, products, services, offers, orders, reviews, media-videos, engagement | Owner, Product, Service, Offer, Order, Video | DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, PhoneInput | F-VD-001-HAPPY, F-VD-001-NEGATIVE, F-VD-001-AUTHZ, F-VD-001-EMPTY-ERROR, F-VD-001-I18N-HI-LONG |
 | F-VD-002 | S-VEND-02 | J7 | users, businesses, products, services, offers, orders, reviews, media-videos, engagement | Owner, Product, Service, Offer, Order, Video | DashboardShell, DataTable, Input, MediaSorter, MediaConsentToggle, EnquiryForm, ProductCard | F-VD-002-HAPPY, F-VD-002-NEGATIVE, F-VD-002-AUTHZ, F-VD-002-EMPTY-ERROR, F-VD-002-I18N-HI-LONG |

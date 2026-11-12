@@ -75,7 +75,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J3
 - **Shared components:** OfferCard, OfferBanner, FilterPanel, SubcategoryMultiSelect, ActiveFilterChips.
 - **API/data handles:** `P04/F-OF-001`; `P03/F-OF-001`.
-- **Test handles:** F-OF-001-HAPPY, F-OF-001-NEGATIVE, F-OF-001-AUTHZ, F-OF-001-EMPTY-ERROR, F-OF-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-OF-001-HAPPY, F-OF-001-NEGATIVE, F-OF-001-AUTHZ, F-OF-001-EMPTY-ERROR, F-OF-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -138,7 +138,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J3
 - **Shared components:** OfferCard, OfferBanner, FilterPanel, SubcategoryMultiSelect, ActiveFilterChips, ServiceCard, EnquiryForm.
 - **API/data handles:** `P04/F-OF-002`; `P03/F-OF-002`.
-- **Test handles:** F-OF-002-HAPPY, F-OF-002-NEGATIVE, F-OF-002-AUTHZ, F-OF-002-EMPTY-ERROR, F-OF-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-OF-002-HAPPY, F-OF-002-NEGATIVE, F-OF-002-AUTHZ, F-OF-002-EMPTY-ERROR, F-OF-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -201,7 +201,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J3
 - **Shared components:** OfferCard, OfferBanner, FilterPanel, ProductCard, QuantityStepper, PaymentMethodPicker, DataTable.
 - **API/data handles:** `P04/F-OF-003`; `P03/F-OF-003`.
-- **Test handles:** F-OF-003-HAPPY, F-OF-003-NEGATIVE, F-OF-003-AUTHZ, F-OF-003-EMPTY-ERROR, F-OF-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-OF-003-HAPPY, F-OF-003-NEGATIVE, F-OF-003-AUTHZ, F-OF-003-EMPTY-ERROR, F-OF-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -264,7 +264,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J3
 - **Shared components:** OfferCard, OfferBanner, FilterPanel.
 - **API/data handles:** `P04/F-OF-004`; `P03/F-OF-004`.
-- **Test handles:** F-OF-004-HAPPY, F-OF-004-NEGATIVE, F-OF-004-AUTHZ, F-OF-004-EMPTY-ERROR, F-OF-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-OF-004-HAPPY, F-OF-004-NEGATIVE, F-OF-004-AUTHZ, F-OF-004-EMPTY-ERROR, F-OF-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -327,13 +327,13 @@ Restrict operations to the listed roles (Vendor, Admin); apply customer authenti
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** OfferCard, OfferBanner, FilterPanel, DataTable, PermissionMatrix, AuditDiff.
 - **API/data handles:** `P04/F-OF-005`; `P03/F-OF-005`.
-- **Test handles:** F-OF-005-HAPPY, F-OF-005-NEGATIVE, F-OF-005-AUTHZ, F-OF-005-EMPTY-ERROR, F-OF-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-OF-005-HAPPY, F-OF-005-NEGATIVE, F-OF-005-AUTHZ, F-OF-005-EMPTY-ERROR, F-OF-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-OF-001 | S-CUST-20 | J3 | offers, products, services | Offer, Product, Service | OfferCard, OfferBanner, FilterPanel, SubcategoryMultiSelect, ActiveFilterChips | F-OF-001-HAPPY, F-OF-001-NEGATIVE, F-OF-001-AUTHZ, F-OF-001-EMPTY-ERROR, F-OF-001-I18N-HI-LONG |
 | F-OF-002 | S-CUST-08, S-CUST-20 | J3 | offers, products, services | Offer, Product, Service | OfferCard, OfferBanner, FilterPanel, SubcategoryMultiSelect, ActiveFilterChips, ServiceCard, EnquiryForm | F-OF-002-HAPPY, F-OF-002-NEGATIVE, F-OF-002-AUTHZ, F-OF-002-EMPTY-ERROR, F-OF-002-I18N-HI-LONG |

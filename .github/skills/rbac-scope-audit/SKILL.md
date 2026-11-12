@@ -25,7 +25,7 @@ Covers AD16, SA2-SA3, BR-12/BR-13 in `docs/project/04-business-rules.md`
 5. Write the audit entry: actor, timestamp, action, before/after values
    — for any action that changes data (approval decisions, settings,
    role/permission edits, suspensions).
-6. Test: authorized admin succeeds; admin outside scope is denied;
+6. Manually verify (`verify-change`; no automated test files): authorized admin succeeds; admin outside scope is denied;
    admin without the permission action is denied; system-role
    deletion is denied; role deletion while assigned is denied until
    reassigned.
@@ -51,4 +51,4 @@ async function updateRole(ctx: AdminContext, roleId: string, dto: UpdateRoleDto)
   first.
 - [ ] Permission-aware UI hides/disables with the standard message.
 - [ ] Audit entry written with before/after for every data change.
-- [ ] Tests cover denied-by-scope and denied-by-permission separately.
+- [ ] Manual checks cover denied-by-scope and denied-by-permission separately.

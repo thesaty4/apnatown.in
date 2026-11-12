@@ -6,7 +6,7 @@
 - [Screens](#screens)
 - [Feature components and ownership](#feature-components-and-ownership)
 - [i18n and analytics](#i18n-and-analytics)
-- [Tests](#tests)
+- [Verification](#verification)
 
 Features: F-PD-001, F-PD-002, F-PD-003, F-PD-006, F-PD-008, F-PD-009, F-VD-004, F-VD-005, F-VD-009, F-PV-005 (product list/editor only) | Screens: S-CUST-08, S-VEND-05, S-VEND-06, S-VEND-08, S-PROV-06, S-PROV-07 | Flows: J1, J4, J7
 
@@ -116,10 +116,12 @@ Shared UX states come from `frontend-shared.md`; use the screen-specific states 
 - Reuse EN/HI catalogue copy; add missing keys to both locales. Never truncate meaningful Hindi names; check dark/light and 360px layouts.
 - Analytics names only: `product_view` (detail visible), `product_add_to_cart` (cart confirms), `product_buy_now` (cart confirms), `product_share` (share invoked), `inventory_update` (save succeeds). Do not add product analytics payload beyond the event plan in Q-11.
 
-## Tests
+## Verification
 
-Editor adds optional configured `taxCode` selection and displays orderability/setup-required status; never accepts raw rates/tax amounts. Missing tax configuration does not hide a public product but prevents purchasing. Use [Media's public-image policy](../../media-videos/be/media-videos.md#public-image-policy), maximum five ready assets, responsive variants and prior-image retention on failure. Test wrong-purpose assets, invalid classifications, Hindi messages and truthful out-of-stock metadata under the shared public URL policy.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
-- Component: variant and quantity bounds, stock state, media viewer keyboard/gestures/focus, row errors, localized editor validation, category pills.
-- E2E: J1 browse-to-order product path; J4 reel-linked product to cart; J7 vendor first product; verify provider list/editor and owner-scope denial.
-- Visual/a11y: required product screenshots at 360px/desktop, light/dark, EN/HI; keyboard-only carousel and forms; axe/WCAG 2.2 AA.
+Editor adds optional configured `taxCode` selection and displays orderability/setup-required status; never accepts raw rates/tax amounts. Missing tax configuration does not hide a public product but prevents purchasing. Use [Media's public-image policy](../../media-videos/be/media-videos.md#public-image-policy), maximum five ready assets, responsive variants and prior-image retention on failure. Manually verify wrong-purpose assets, invalid classifications, Hindi messages and truthful out-of-stock metadata under the shared public URL policy.
+
+- Manual UI: variant and quantity bounds, stock state, media viewer keyboard/gestures/focus, row errors, localized editor validation, category pills.
+- Manual journey: J1 browse-to-order product path; J4 reel-linked product to cart; J7 vendor first product; verify provider list/editor and owner-scope denial.
+- Visual/a11y: required product screenshots at 360px/desktop, light/dark, EN/HI; keyboard-only carousel and forms; manual WCAG 2.2 AA.

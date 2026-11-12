@@ -69,14 +69,19 @@ Then <outcome>
 Any lazy-loading, pagination, or data-saver behaviour specific to this
 screen.
 
-## 9. Test plan
+## 9. Verification plan
 
-- Component tests: <list>
-- React Query cases: shared contract acceptance tests relevant to these
+Follow the [verification policy](../../.github/instructions/testing.instructions.md);
+adjust the relative link when copying this template. No automated test files.
+
+- Existing non-test commands and expected results: <list>
+- Manual component and accessibility checks: <list>
+- React Query cases: shared contract acceptance checks relevant to these
   operations (errors, key isolation, hydration, invalidation/rollback, retries).
-- Playwright journey(s): <reference J-number from
+- Manual browser journey(s): <reference J-number from
   `docs/project/06-user-journeys.md` if applicable>
 - Screenshots required: 360px + desktop, light + dark, EN + HI.
+- Unverified scenarios and evidence limitations: <list>
 
 ## 10. Open questions
 

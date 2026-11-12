@@ -6,7 +6,7 @@ Backend contract: [BE audit](../be/audit.md)
 
 API integration: [shared React Query contract](../../_foundation/frontend-shared.md#api-integration-with-react-query).
 
-Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Tests](#tests)
+Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Verification](#verification)
 
 ## Routes and rendering
 
@@ -38,6 +38,8 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Tests](#tes
 
 Prefix `admin.audit.*`, `superAdmin.activity.*`. Events: `audit_searched`, `audit_exported`.
 
-## Tests
+## Verification
 
-Component: URL state including `actorId`, redacted diff rendered as inert text, stale detail clearing. Keyboard/axe: filter chips, expansion, CSV feedback, Hindi/dark text and focus restoration. E2E J10: card → actor filter → pages → matching CSV; area-only versus city-wide/global log access; permission revoked with an expanded row. No export or caching bypasses the BE predicate.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Manual UI: URL state including `actorId`, redacted diff rendered as inert text, stale detail clearing. Keyboard/accessibility: filter chips, expansion, CSV feedback, Hindi/dark text and focus restoration. Manual journey J10: card → actor filter → pages → matching CSV; area-only versus city-wide/global log access; permission revoked with an expanded row. No export or caching bypasses the BE predicate.

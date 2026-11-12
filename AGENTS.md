@@ -50,7 +50,7 @@ docs/FEATURE_INVENTORY.md (not started)
 ```
 
 Existing regressions enter at the relevant developer agent: reproduce ->
-failing test -> minimal fix -> verify -> reusable lesson, then the same
+recorded failure -> minimal fix -> repeat verification -> reusable lesson, then the same
 security/review/PR gates. For combined BE/FE work, choose one developer as
 PR owner. Spec writing and read-only code review are separate architect
 modes; release preparation is only performed when requested after merge.
@@ -77,6 +77,10 @@ The four agents in `.github/agents/` are:
 - **No secrets, tokens, or real PII** in code, commits, logs, or test
   fixtures. Use `.env.example` and fakes (`integrations.instructions.md`).
 - **Small PRs.** One feature/task/bug per PR; link its spec.
+- **No automated test files** for frontend, backend or database work.
+  Follow the [verification policy](.github/instructions/testing.instructions.md):
+  existing non-test checks and manual acceptance evidence, not unit,
+  integration, component, DB or Playwright test generation.
 - **Security-auditor is required**, not optional, before PR creation
   for sensitive changes defined in `security.instructions.md`.
 - **Don't invent product behaviour.** If section 2 of the original

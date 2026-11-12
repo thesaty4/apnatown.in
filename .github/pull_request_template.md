@@ -13,10 +13,11 @@
 
 - [ ] Given ... When ... Then ...
 
-## Real test evidence
+## Real verification evidence
 
 <!-- Paste actual commands run and their output/summary. Never claim a
-test passed without having run it — see AGENTS.md "how to work". -->
+check passed without having run it. Include manual acceptance evidence and
+unverified gaps; no automated test files — see testing.instructions.md. -->
 
 ```
 $ <command>
@@ -61,7 +62,8 @@ commit, forward-fix migration or documented recovery). -->
 
 - [ ] Spec acceptance criteria met
 - [ ] Product invariants preserved (`docs/project/04-business-rules.md`)
-- [ ] Tests added/passing (including negative/security cases)
+- [ ] Existing non-test checks and manual acceptance evidence recorded
+- [ ] Negative/security cases reviewed; no automated test files added
 - [ ] `docs/FEATURE_INVENTORY.md` status updated
 - [ ] `node scripts/validate-ai-setup.mjs` passes (if `.github/`/`docs/`
   changed)

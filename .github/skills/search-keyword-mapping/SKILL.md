@@ -22,7 +22,7 @@ Covers SR2-SR3, AD15, SA8 (`domain-catalog-search.instructions.md`).
    (`search-result-groups` component, `docs/design-system.md`).
 4. Before saving a new/edited mapping, show the admin a **preview** of
    what it will match (AD15) so they can catch an unintended match.
-5. Test with real Hindi/Hinglish/typo examples from `docs/glossary.md`
+5. Manually verify with real Hindi/Hinglish/typo examples from `docs/glossary.md`
    and the product brief ("एसी", "plumbr", "iPhone 15").
 
 ## Skeleton
@@ -41,4 +41,4 @@ async function resolveSearchTargets(query: string): Promise<SearchTarget[]> {
   per-language branching.
 - [ ] A query resolves to all relevant target types, grouped.
 - [ ] Admin sees a preview before saving a mapping.
-- [ ] Tested against real Hindi/Hinglish/typo examples.
+- [ ] Manually verified against real Hindi/Hinglish/typo examples.

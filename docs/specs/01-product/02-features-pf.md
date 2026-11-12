@@ -83,7 +83,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** ShopCard, ServiceCard, Tabs, CategoryPillRow, SubcategoryPillRow, FollowButton, GalleryGrid.
 - **API/data handles:** `P04/F-PF-001`; `P03/F-PF-001`.
-- **Test handles:** F-PF-001-HAPPY, F-PF-001-NEGATIVE, F-PF-001-AUTHZ, F-PF-001-EMPTY-ERROR, F-PF-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PF-001-HAPPY, F-PF-001-NEGATIVE, F-PF-001-AUTHZ, F-PF-001-EMPTY-ERROR, F-PF-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -146,7 +146,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** ShopCard, ServiceCard, Tabs, CategoryPillRow, SubcategoryPillRow, FollowButton, GalleryGrid.
 - **API/data handles:** `P04/F-PF-002`; `P03/F-PF-002`.
-- **Test handles:** F-PF-002-HAPPY, F-PF-002-NEGATIVE, F-PF-002-AUTHZ, F-PF-002-EMPTY-ERROR, F-PF-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PF-002-HAPPY, F-PF-002-NEGATIVE, F-PF-002-AUTHZ, F-PF-002-EMPTY-ERROR, F-PF-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -209,7 +209,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** ShopCard, ServiceCard, Tabs, CategoryPillRow, SubcategoryPillRow, FollowButton, GalleryGrid.
 - **API/data handles:** `P04/F-PF-003`; `P03/F-PF-003`.
-- **Test handles:** F-PF-003-HAPPY, F-PF-003-NEGATIVE, F-PF-003-AUTHZ, F-PF-003-EMPTY-ERROR, F-PF-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PF-003-HAPPY, F-PF-003-NEGATIVE, F-PF-003-AUTHZ, F-PF-003-EMPTY-ERROR, F-PF-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -272,7 +272,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** ShopCard, ServiceCard, Tabs, CategoryPillRow, SubcategoryPillRow, FollowButton, GalleryGrid.
 - **API/data handles:** `P04/F-PF-004`; `P03/F-PF-004`.
-- **Test handles:** F-PF-004-HAPPY, F-PF-004-NEGATIVE, F-PF-004-AUTHZ, F-PF-004-EMPTY-ERROR, F-PF-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PF-004-HAPPY, F-PF-004-NEGATIVE, F-PF-004-AUTHZ, F-PF-004-EMPTY-ERROR, F-PF-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -335,7 +335,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** ShopCard, ServiceCard, Tabs, CategoryPillRow, SubcategoryPillRow, FollowButton, GalleryGrid.
 - **API/data handles:** `P04/F-PF-005`; `P03/F-PF-005`.
-- **Test handles:** F-PF-005-HAPPY, F-PF-005-NEGATIVE, F-PF-005-AUTHZ, F-PF-005-EMPTY-ERROR, F-PF-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PF-005-HAPPY, F-PF-005-NEGATIVE, F-PF-005-AUTHZ, F-PF-005-EMPTY-ERROR, F-PF-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -398,7 +398,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** ShopCard, ServiceCard, Tabs, CategoryPillRow, SubcategoryPillRow, FollowButton, GalleryGrid.
 - **API/data handles:** `P04/F-PF-006`; `P03/F-PF-006`.
-- **Test handles:** F-PF-006-HAPPY, F-PF-006-NEGATIVE, F-PF-006-AUTHZ, F-PF-006-EMPTY-ERROR, F-PF-006-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PF-006-HAPPY, F-PF-006-NEGATIVE, F-PF-006-AUTHZ, F-PF-006-EMPTY-ERROR, F-PF-006-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -461,7 +461,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** ShopCard, ServiceCard, Tabs, CategoryPillRow, SubcategoryPillRow, FollowButton, GalleryGrid.
 - **API/data handles:** `P04/F-PF-007`; `P03/F-PF-007`.
-- **Test handles:** F-PF-007-HAPPY, F-PF-007-NEGATIVE, F-PF-007-AUTHZ, F-PF-007-EMPTY-ERROR, F-PF-007-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PF-007-HAPPY, F-PF-007-NEGATIVE, F-PF-007-AUTHZ, F-PF-007-EMPTY-ERROR, F-PF-007-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -524,7 +524,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** ShopCard, ServiceCard, Tabs, CategoryPillRow, SubcategoryPillRow, FollowButton, GalleryGrid.
 - **API/data handles:** `P04/F-PF-008`; `P03/F-PF-008`.
-- **Test handles:** F-PF-008-HAPPY, F-PF-008-NEGATIVE, F-PF-008-AUTHZ, F-PF-008-EMPTY-ERROR, F-PF-008-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PF-008-HAPPY, F-PF-008-NEGATIVE, F-PF-008-AUTHZ, F-PF-008-EMPTY-ERROR, F-PF-008-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -587,7 +587,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J6
 - **Shared components:** ShopCard, ServiceCard, Tabs, CategoryPillRow, SubcategoryPillRow, FollowButton, GalleryGrid.
 - **API/data handles:** `P04/F-PF-009`; `P03/F-PF-009`.
-- **Test handles:** F-PF-009-HAPPY, F-PF-009-NEGATIVE, F-PF-009-AUTHZ, F-PF-009-EMPTY-ERROR, F-PF-009-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PF-009-HAPPY, F-PF-009-NEGATIVE, F-PF-009-AUTHZ, F-PF-009-EMPTY-ERROR, F-PF-009-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -650,7 +650,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J6
 - **Shared components:** ShopCard, ServiceCard, Tabs, CategoryPillRow, SubcategoryPillRow, FollowButton, GalleryGrid.
 - **API/data handles:** `P04/F-PF-010`; `P03/F-PF-010`.
-- **Test handles:** F-PF-010-HAPPY, F-PF-010-NEGATIVE, F-PF-010-AUTHZ, F-PF-010-EMPTY-ERROR, F-PF-010-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PF-010-HAPPY, F-PF-010-NEGATIVE, F-PF-010-AUTHZ, F-PF-010-EMPTY-ERROR, F-PF-010-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -713,7 +713,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** ShopCard, ServiceCard, Tabs, CategoryPillRow, SubcategoryPillRow, FollowButton, GalleryGrid.
 - **API/data handles:** `P04/F-PF-011`; `P03/F-PF-011`.
-- **Test handles:** F-PF-011-HAPPY, F-PF-011-NEGATIVE, F-PF-011-AUTHZ, F-PF-011-EMPTY-ERROR, F-PF-011-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PF-011-HAPPY, F-PF-011-NEGATIVE, F-PF-011-AUTHZ, F-PF-011-EMPTY-ERROR, F-PF-011-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -776,7 +776,7 @@ Restrict operations to the listed roles (Vendor, Provider); apply customer authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** ShopCard, ServiceCard, Tabs, CategoryPillRow, SubcategoryPillRow, FollowButton, GalleryGrid.
 - **API/data handles:** `P04/F-PF-012`; `P03/F-PF-012`.
-- **Test handles:** F-PF-012-HAPPY, F-PF-012-NEGATIVE, F-PF-012-AUTHZ, F-PF-012-EMPTY-ERROR, F-PF-012-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PF-012-HAPPY, F-PF-012-NEGATIVE, F-PF-012-AUTHZ, F-PF-012-EMPTY-ERROR, F-PF-012-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -839,13 +839,13 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** ShopCard, ServiceCard, Tabs, CategoryPillRow, SubcategoryPillRow, FollowButton, GalleryGrid.
 - **API/data handles:** `P04/F-PF-013`; `P03/F-PF-013`.
-- **Test handles:** F-PF-013-HAPPY, F-PF-013-NEGATIVE, F-PF-013-AUTHZ, F-PF-013-EMPTY-ERROR, F-PF-013-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-PF-013-HAPPY, F-PF-013-NEGATIVE, F-PF-013-AUTHZ, F-PF-013-EMPTY-ERROR, F-PF-013-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-PF-001 | S-CUST-06, S-CUST-07 | None specified | businesses, products, services, offers, engagement, media-videos | Owner, Product, Service, Video | ShopCard, ServiceCard, Tabs, CategoryPillRow, SubcategoryPillRow, FollowButton, GalleryGrid | F-PF-001-HAPPY, F-PF-001-NEGATIVE, F-PF-001-AUTHZ, F-PF-001-EMPTY-ERROR, F-PF-001-I18N-HI-LONG |
 | F-PF-002 | S-CUST-06, S-CUST-07 | None specified | businesses, products, services, offers, engagement, media-videos | Owner, Product, Service, Video | ShopCard, ServiceCard, Tabs, CategoryPillRow, SubcategoryPillRow, FollowButton, GalleryGrid | F-PF-002-HAPPY, F-PF-002-NEGATIVE, F-PF-002-AUTHZ, F-PF-002-EMPTY-ERROR, F-PF-002-I18N-HI-LONG |

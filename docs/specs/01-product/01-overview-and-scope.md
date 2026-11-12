@@ -522,7 +522,11 @@ sequenceDiagram
 
 ## Feature traceability
 
-| Feature ID | Screen IDs | Journey IDs | API/module handle | Logical data concepts | Shared component refs | Test handles |
+Verification handles below identify manual acceptance scenarios under the
+[verification policy](../../../.github/instructions/testing.instructions.md),
+not automated test-file deliverables. Preserve these IDs when recording evidence.
+
+| Feature ID | Screen IDs | Journey IDs | API/module handle | Logical data concepts | Shared component refs | Verification handles |
 |---|---|---|---|---|---|---|
 | F-X-001 | S-CUST-01, S-CUST-38 | J13 | packages/shared, packages/ui | UserPreference | Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge | F-X-001-HAPPY, F-X-001-NEGATIVE, F-X-001-AUTHZ, F-X-001-EMPTY-ERROR, F-X-001-I18N-HI-LONG |
 | F-X-002 | S-CUST-01, S-CUST-38 | J13 | packages/shared, packages/ui | None (presentation preference) | Button, IconButton, AppShell, DashboardShell, EmptyState, OfflineBanner, StatusBadge | F-X-002-HAPPY, F-X-002-NEGATIVE, F-X-002-AUTHZ, F-X-002-EMPTY-ERROR, F-X-002-I18N-HI-LONG |

@@ -64,4 +64,4 @@
 
 ## Completion gates
 
-All 206 feature sections and trace references are in the 22 area docs and aggregate matrix in [01-overview-and-scope.md](./01-overview-and-scope.md). P03 maps logical concepts to PostgreSQL tables, P04 maps module handles to endpoints/DTOs, P10 maps tests to executable suites. Those prompts are not executed in P01.
+All 206 feature sections and trace references are in the 22 area docs and aggregate matrix in [01-overview-and-scope.md](./01-overview-and-scope.md). P03 maps logical concepts to PostgreSQL tables, P04 maps module handles to endpoints/DTOs, P10 maps acceptance scenarios to manual evidence and existing non-test checks under the [verification policy](../../../.github/instructions/testing.instructions.md). Those prompts are not executed in P01.

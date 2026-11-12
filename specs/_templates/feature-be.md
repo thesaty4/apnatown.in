@@ -56,11 +56,15 @@ verification).
 Any money/date/distance formatting or EN/HI message keys this endpoint
 drives in the response.
 
-## 8. Test plan
+## 8. Verification plan
 
-- Unit tests: <list>
-- Integration tests: <list>
-- Negative/authorization tests: <list>
+Follow the [verification policy](../../.github/instructions/testing.instructions.md);
+adjust the relative link when copying this template. No automated test files.
+
+- Existing non-test commands and expected results: <list>
+- Manual API/DB acceptance scenarios: <list>
+- Negative/authorization and concurrency checks: <list>
+- Unverified scenarios and evidence limitations: <list>
 
 ## 9. Open questions
 

@@ -1,7 +1,7 @@
 # 06 — User Journeys
 
 **Purpose:** Numbered end-to-end journeys: actors, steps, features/screens/rules used, success and failure paths.
-**Audience:** `architect` in specification/code-review modes, `developer-frontend`, QA (Playwright journey coverage).
+**Audience:** `architect` in specification/code-review modes, `developer-frontend`, QA (manual journey verification).
 **Related files:** [docs/PROJECT.md](../PROJECT.md) (index) · [03-feature-catalog.md](./03-feature-catalog.md) · [07-screens-routes-sitemap.md](./07-screens-routes-sitemap.md) · [`testing.instructions.md`](../../.github/instructions/testing.instructions.md)
 **Last updated:** 2026-11-09
 **Owner:** Product

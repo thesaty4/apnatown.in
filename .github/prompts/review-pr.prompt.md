@@ -12,7 +12,8 @@ Review the pull request described below using
    maps invariants to modules).
 3. Check `solid-dry-design.instructions.md` and the relevant
    `frontend`/`backend`/`domain-*` instruction files.
-4. Re-run the tests; don't trust the PR description alone.
+4. Re-run relevant non-test checks and inspect manual acceptance evidence;
+   don't trust the PR description alone or request automated test files.
 5. If the change touches auth, payments, uploads/CSV, embeds, admin
    permissions, or communications and no `security-auditor` `PASS` is
    attached, that is a Blocker by itself — request it before

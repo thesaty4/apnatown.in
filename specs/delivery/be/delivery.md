@@ -163,10 +163,12 @@ Jobs: `delivery.offer_expire`, code expiry cleanup and bounded outbox retry/reco
 19. Given a job-linked or jobless dispute, when duplicated, then exactly one actual Orders case or Settings support message is returned; foreign job/case notes and staff-only notes remain inaccessible.
 20. Given location/call provider unavailable or permission revoked, when reconnecting/reading tracking/history, then stale/unavailable metadata replaces fabricated ETA; no raw phone, historical live address, location trail or cross-scope pin leaks.
 
-## Tests
+## Verification
 
-- Map AC1–AC20 to domain/PostgreSQL/outbox tests with deterministic Clock/Maps/Media/Payments/Users/Reviews/Support fakes. Race tests use separate real DB transactions, including unique active-rider constraint, accept-vs-expiry/offline/suspension and cancellation-vs-cash/code.
-- Security: encrypt/decrypt + HMAC/key rotation fixtures, exact-boundary expiry, failed-attempt persistence, reissue/verify/replay races, rollback and lost-response retry; inspect ordinary DTOs, idempotency records, SSE and logs for code/KYC/phone leakage.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Map AC1–AC20 to domain/PostgreSQL/outbox checks with deterministic Clock/Maps/Media/Payments/Users/Reviews/Support fakes. Race checks use separate real DB transactions, including unique active-rider constraint, accept-vs-expiry/offline/suspension and cancellation-vs-cash/code.
+- Security: encrypt/decrypt + HMAC/key rotation synthetic scenarios, exact-boundary expiry, failed-attempt persistence, reissue/verify/replay races, rollback and lost-response retry; inspect ordinary DTOs, idempotency records, SSE and logs for code/KYC/phone leakage.
 - Input negatives: forged role/scope/price, NaN/out-of-range coordinates, oversized/pasted XSS notes/names, malformed/unregistered asset IDs, failed KYC upload, foreign job/code/case, rate limiting and stale private stream sessions. DTO money remains checked integer-paise JSON.
 
 ## Open questions

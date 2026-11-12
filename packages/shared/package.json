@@ -44,6 +44,16 @@
         "default": "./dist/cjs/auth.js"
       }
     },
+    "./settings": {
+      "import": {
+        "types": "./dist/esm/settings.d.ts",
+        "default": "./dist/esm/settings.js"
+      },
+      "require": {
+        "types": "./dist/cjs/settings.d.ts",
+        "default": "./dist/cjs/settings.js"
+      }
+    },
     "./users": {
       "import": {
         "types": "./dist/esm/users.d.ts",

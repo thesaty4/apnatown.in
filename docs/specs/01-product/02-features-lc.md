@@ -75,7 +75,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** MapView, AddressForm, Select, Sheet, PhoneInput, OtpInput.
 - **API/data handles:** `P04/F-LC-001`; `P03/F-LC-001`.
-- **Test handles:** F-LC-001-HAPPY, F-LC-001-NEGATIVE, F-LC-001-AUTHZ, F-LC-001-EMPTY-ERROR, F-LC-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-LC-001-HAPPY, F-LC-001-NEGATIVE, F-LC-001-AUTHZ, F-LC-001-EMPTY-ERROR, F-LC-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -138,7 +138,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** MapView, AddressForm, Select, Sheet.
 - **API/data handles:** `P04/F-LC-002`; `P03/F-LC-002`.
-- **Test handles:** F-LC-002-HAPPY, F-LC-002-NEGATIVE, F-LC-002-AUTHZ, F-LC-002-EMPTY-ERROR, F-LC-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-LC-002-HAPPY, F-LC-002-NEGATIVE, F-LC-002-AUTHZ, F-LC-002-EMPTY-ERROR, F-LC-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -201,7 +201,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** MapView, AddressForm, Select, Sheet.
 - **API/data handles:** `P04/F-LC-003`; `P03/F-LC-003`.
-- **Test handles:** F-LC-003-HAPPY, F-LC-003-NEGATIVE, F-LC-003-AUTHZ, F-LC-003-EMPTY-ERROR, F-LC-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-LC-003-HAPPY, F-LC-003-NEGATIVE, F-LC-003-AUTHZ, F-LC-003-EMPTY-ERROR, F-LC-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -264,7 +264,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** MapView, AddressForm, Select, Sheet.
 - **API/data handles:** `P04/F-LC-004`; `P03/F-LC-004`.
-- **Test handles:** F-LC-004-HAPPY, F-LC-004-NEGATIVE, F-LC-004-AUTHZ, F-LC-004-EMPTY-ERROR, F-LC-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-LC-004-HAPPY, F-LC-004-NEGATIVE, F-LC-004-AUTHZ, F-LC-004-EMPTY-ERROR, F-LC-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -327,13 +327,13 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** MapView, AddressForm, Select, Sheet, ServiceCard, EnquiryForm, DataTable.
 - **API/data handles:** `P04/F-LC-005`; `P03/F-LC-005`.
-- **Test handles:** F-LC-005-HAPPY, F-LC-005-NEGATIVE, F-LC-005-AUTHZ, F-LC-005-EMPTY-ERROR, F-LC-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-LC-005-HAPPY, F-LC-005-NEGATIVE, F-LC-005-AUTHZ, F-LC-005-EMPTY-ERROR, F-LC-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-LC-001 | S-CUST-01 | None specified | geo | Address, Zone, City | MapView, AddressForm, Select, Sheet, PhoneInput, OtpInput | F-LC-001-HAPPY, F-LC-001-NEGATIVE, F-LC-001-AUTHZ, F-LC-001-EMPTY-ERROR, F-LC-001-I18N-HI-LONG |
 | F-LC-002 | S-CUST-02 | None specified | geo | Address, Zone, City | MapView, AddressForm, Select, Sheet | F-LC-002-HAPPY, F-LC-002-NEGATIVE, F-LC-002-AUTHZ, F-LC-002-EMPTY-ERROR, F-LC-002-I18N-HI-LONG |

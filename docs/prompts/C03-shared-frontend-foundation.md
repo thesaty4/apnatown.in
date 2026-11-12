@@ -1,5 +1,7 @@
 # C03: Shared frontend foundation and UI library
 
+**Verification policy:** Follow [the repository policy](../../.github/instructions/testing.instructions.md). Do not create automated test files or test-runner scaffolding for FE, BE or DB. Preserve acceptance scenarios as manual checks and report existing non-test command results and gaps.
+
 > Paste this prompt into the GitHub Copilot agent. It is self-contained.
 
 You are a principal engineer and technical writer working in the ApnaTown.in repository. You have no memory of earlier work. Everything you need is in this prompt and in the repository files named below. Read the Design Context Pack files first; do not rely on assumptions or outside knowledge of the product.
@@ -27,11 +29,11 @@ and the owning module FE/BE specs for the components being built.
 
 ## OUTPUT FILES (exact paths)
 - Web shared shell/hooks/transport, `packages/ui` components and shared
-  formatters/catalogues, with component/a11y/visual tests and required stories.
+  formatters/catalogues, with manual component/a11y/visual verification and required stories.
   No duplicated API DTOs or unrelated documentation.
 
 ## REQUIRED CONTENTS
-Implement [frontend-shared.md](../../specs/_foundation/frontend-shared.md): deterministic token/Tailwind and semantic EN/HI catalogue generation, the specified fonts/theme, Server Component root and bounded client providers, standard loading/error/offline/empty/disabled states, shared primitives and typed hooks. Implement the mandatory [React Query API integration contract](../../specs/_foundation/frontend-shared.md#api-integration-with-react-query) over the generated API client and common browser/server cookie/CSRF wrappers, including its provider, hydration and acceptance tests; no handwritten duplicate DTOs or business logic in UI.
+Implement [frontend-shared.md](../../specs/_foundation/frontend-shared.md): deterministic token/Tailwind and semantic EN/HI catalogue generation, the specified fonts/theme, Server Component root and bounded client providers, standard loading/error/offline/empty/disabled states, shared primitives and typed hooks. Implement the mandatory [React Query API integration contract](../../specs/_foundation/frontend-shared.md#api-integration-with-react-query) over the generated API client and common browser/server cookie/CSRF wrappers, including its provider, hydration and acceptance checks; no handwritten duplicate DTOs or business logic in UI.
 
 Build the catalogued components in small owner-linked batches, reusing Button/Input and URL/Back-scroll contracts. Apply the specified rendering, metadata, accessibility, low-bandwidth and PWA rules. Keep unapproved route/copy/button metrics explicit rather than inventing them. Verify real transport only after its API dependencies exist; otherwise report the check as pending, not passed with intercepted success responses.
 
@@ -39,13 +41,13 @@ Build the catalogued components in small owner-linked batches, reusing Button/In
 - Read the current foundation and owning FE/BE specs plus the Design Context Pack. Record a blocking ambiguity inline in its owning spec and ask; no legacy shared-UI document generation or progress trackers.
 - Work in small pull requests (about 400 changed lines or fewer), one concern each. Branch `feat/<scope>-<name>`; Conventional Commits. Never merge; humans review and merge.
 - Reuse shared components, hooks, utilities, guards and base classes; if you copy code a second time, extract it to the shared layer first.
-- Every change includes tests (unit, integration, component, e2e as specified), lint and type-check clean, English and Hindi strings, accessibility checks, and a screenshot comparison (mobile 390px and desktop 1280px, light and dark) against `docs/design-context/screenshots/` for UI work.
+- Every change includes manual acceptance evidence and passing existing lint/type-check/build commands. Do not generate automated test files. Include English and Hindi strings, accessibility checks, and a screenshot comparison (mobile 390px and desktop 1280px, light and dark) against `docs/design-context/screenshots/` for UI work.
 - Security: parameterised queries only; validate input; enforce authorisation on every endpoint; no secrets in code; no PII in logs.
-- At the end report: what was built (IDs), tests run with real results, screenshots, deviations from the spec, and open issues.
+- At the end report: what was built (IDs), verification performed with real results and explicit gaps, screenshots, deviations from the spec, and open issues.
 
 ## STANDING REQUIREMENTS (apply every one; they are binding)
 
-1. **Complete coverage within this scope.** Cover the shared frontend/component contracts and their tests. Feature screens remain in their module tasks; do not build unrelated dashboards or maintain duplicate inventories as part of the shared foundation.
+1. **Complete coverage within this scope.** Cover the shared frontend/component contracts and manual acceptance scenarios. Feature screens remain in their module tasks; do not build unrelated dashboards or maintain duplicate inventories as part of the shared foundation.
 2. **UI and behaviour parity.** The built UI and functionality must match the design exactly: colours, typography, spacing, radius, shadows, icons, copy in English and Hindi, states and interactions. Use only the tokens in `docs/design-context/04-design-tokens.json` (and the prototype stylesheet) through the Tailwind theme. Never invent styles or behaviour. When the pack and the prototype disagree, the prototype wins and you record the conflict in `docs/design-context/11-open-issues-and-assumptions.md`.
 3. **Tech stack (fixed).** Next.js (App Router, TypeScript) with Tailwind CSS; NestJS (TypeScript); PostgreSQL. For everything else (ORM, cache, queue, search, storage, realtime, payments, OTP/SMS, WhatsApp, maps, video processing, hosting) choose the option most suitable for each feature and justify it in 2 to 3 lines: the alternative considered and when to switch. Prefer proven, low-cost choices suited to a Padrauna launch that can scale to more cities.
 4. **System design per feature.** Use the design approach suited to each feature, for example: state machines for orders, deliveries, approvals, offers and videos; transactional outbox for notifications and webhooks; queues for media processing and campaigns; idempotency keys for payments, orders, refunds and messages; PostGIS geospatial indexing for nearby search; cursor (keyset) pagination for feeds and lists; denormalised counters for likes, followers and views; caching with explicit invalidation; optimistic locking for stock and status. Give a sequence description (Mermaid sequence diagram plus numbered steps) for each critical flow.
@@ -60,7 +62,7 @@ Build the catalogued components in small owner-linked batches, reusing Button/In
 If the output is too long for one response, continue in numbered parts (Part 1, Part 2, ...). Never summarise, never skip, never write "and so on". At the end of every part list: (a) what is covered so far (IDs), and (b) what remains. Continue until everything is covered, then end with "ALL PARTS COMPLETE" and the final coverage table.
 
 ## DONE WHEN (tick every box before you finish and paste the ticked list)
-- [ ] Every component in 06 exists with stories and tests
+- [ ] Every component in 06 exists with stories and manual acceptance evidence
 - [ ] Visual parity checked in light, dark and Hindi
 - [ ] Every ID listed in the coverage table at the end exists in the output (no empty cells)
 - [ ] All standing requirements above were applied; assumptions are recorded as Open Issues

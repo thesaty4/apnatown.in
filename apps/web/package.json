@@ -8,7 +8,6 @@
     "start": "next start",
     "i18n:generate": "node ../../packages/ui/scripts/generate-i18n.mjs",
     "check:generated": "node ../../packages/ui/scripts/check-generated.mjs i18n",
-    "test:auth": "node --import ./tests/register.mjs --test --test-timeout=15000 tests/auth.test.mjs tests/query.test.mjs",
     "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {

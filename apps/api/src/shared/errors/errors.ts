@@ -72,6 +72,13 @@ const catalogue = {
   OFFERS_NOT_ACTIVE: [409, 'errors.offers.notActive'],
   CHECKOUT_COUPON_INVALID: [422, 'errors.checkout.couponInvalid'],
   ORDERS_REFUND_WINDOW_CLOSED: [409, 'errors.orders.refundWindowClosed'],
+  SETTINGS_INVALID: [422, 'errors.settings.invalid'],
+  SETTINGS_VERSION_CONFLICT: [409, 'errors.settings.versionConflict'],
+  LEGAL_PAGE_NOT_FOUND: [404, 'errors.legal.notFound'],
+  MAINTENANCE: [503, 'errors.system.maintenance'],
+  SETTINGS_GROUP_REQUIRED: [422, 'errors.settings.groupRequired'],
+  FEATURE_NOT_AVAILABLE: [409, 'errors.settings.featureNotAvailable'],
+  SUPPORT_MESSAGE_NOT_FOUND: [404, 'errors.support.messageNotFound'],
 } as const;
 
 export type ErrorCode = keyof typeof catalogue;

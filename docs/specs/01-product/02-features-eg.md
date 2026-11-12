@@ -77,7 +77,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** BookmarkCard, HeartButton, FollowButton, LikeButton, ShareSheet, FilterPanel, SubcategoryMultiSelect.
 - **API/data handles:** `P04/F-EG-001`; `P03/F-EG-001`.
-- **Test handles:** F-EG-001-HAPPY, F-EG-001-NEGATIVE, F-EG-001-AUTHZ, F-EG-001-EMPTY-ERROR, F-EG-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EG-001-HAPPY, F-EG-001-NEGATIVE, F-EG-001-AUTHZ, F-EG-001-EMPTY-ERROR, F-EG-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -140,7 +140,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** BookmarkCard, HeartButton, FollowButton, LikeButton, ShareSheet, PhoneInput, OtpInput.
 - **API/data handles:** `P04/F-EG-002`; `P03/F-EG-002`.
-- **Test handles:** F-EG-002-HAPPY, F-EG-002-NEGATIVE, F-EG-002-AUTHZ, F-EG-002-EMPTY-ERROR, F-EG-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EG-002-HAPPY, F-EG-002-NEGATIVE, F-EG-002-AUTHZ, F-EG-002-EMPTY-ERROR, F-EG-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -203,7 +203,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J4
 - **Shared components:** BookmarkCard, HeartButton, FollowButton, LikeButton, ShareSheet, NotificationCard, Toggle.
 - **API/data handles:** `P04/F-EG-003`; `P03/F-EG-003`.
-- **Test handles:** F-EG-003-HAPPY, F-EG-003-NEGATIVE, F-EG-003-AUTHZ, F-EG-003-EMPTY-ERROR, F-EG-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EG-003-HAPPY, F-EG-003-NEGATIVE, F-EG-003-AUTHZ, F-EG-003-EMPTY-ERROR, F-EG-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -266,7 +266,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J4
 - **Shared components:** BookmarkCard, HeartButton, FollowButton, LikeButton, ShareSheet, MediaCarousel, GalleryGrid.
 - **API/data handles:** `P04/F-EG-004`; `P03/F-EG-004`.
-- **Test handles:** F-EG-004-HAPPY, F-EG-004-NEGATIVE, F-EG-004-AUTHZ, F-EG-004-EMPTY-ERROR, F-EG-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EG-004-HAPPY, F-EG-004-NEGATIVE, F-EG-004-AUTHZ, F-EG-004-EMPTY-ERROR, F-EG-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -329,7 +329,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J4
 - **Shared components:** BookmarkCard, HeartButton, FollowButton, LikeButton, ShareSheet.
 - **API/data handles:** `P04/F-EG-005`; `P03/F-EG-005`.
-- **Test handles:** F-EG-005-HAPPY, F-EG-005-NEGATIVE, F-EG-005-AUTHZ, F-EG-005-EMPTY-ERROR, F-EG-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EG-005-HAPPY, F-EG-005-NEGATIVE, F-EG-005-AUTHZ, F-EG-005-EMPTY-ERROR, F-EG-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -392,7 +392,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J4
 - **Shared components:** BookmarkCard, HeartButton, FollowButton, LikeButton, ShareSheet, MediaCarousel, GalleryGrid.
 - **API/data handles:** `P04/F-EG-006`; `P03/F-EG-006`.
-- **Test handles:** F-EG-006-HAPPY, F-EG-006-NEGATIVE, F-EG-006-AUTHZ, F-EG-006-EMPTY-ERROR, F-EG-006-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EG-006-HAPPY, F-EG-006-NEGATIVE, F-EG-006-AUTHZ, F-EG-006-EMPTY-ERROR, F-EG-006-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -455,13 +455,13 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** BookmarkCard, HeartButton, FollowButton, LikeButton, ShareSheet, ServiceCard, EnquiryForm.
 - **API/data handles:** `P04/F-EG-007`; `P03/F-EG-007`.
-- **Test handles:** F-EG-007-HAPPY, F-EG-007-NEGATIVE, F-EG-007-AUTHZ, F-EG-007-EMPTY-ERROR, F-EG-007-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-EG-007-HAPPY, F-EG-007-NEGATIVE, F-EG-007-AUTHZ, F-EG-007-EMPTY-ERROR, F-EG-007-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-EG-001 | S-CUST-19 | None specified | engagement, media-videos | Follow, Like, Heart | BookmarkCard, HeartButton, FollowButton, LikeButton, ShareSheet, FilterPanel, SubcategoryMultiSelect | F-EG-001-HAPPY, F-EG-001-NEGATIVE, F-EG-001-AUTHZ, F-EG-001-EMPTY-ERROR, F-EG-001-I18N-HI-LONG |
 | F-EG-002 | S-CUST-19 | None specified | engagement, media-videos | Follow, Like, Heart | BookmarkCard, HeartButton, FollowButton, LikeButton, ShareSheet, PhoneInput, OtpInput | F-EG-002-HAPPY, F-EG-002-NEGATIVE, F-EG-002-AUTHZ, F-EG-002-EMPTY-ERROR, F-EG-002-I18N-HI-LONG |

@@ -1,5 +1,7 @@
 # C00: Monorepo, tooling and local environment
 
+**Verification policy:** Follow [the repository policy](../../.github/instructions/testing.instructions.md). Do not create automated test files or test-runner scaffolding for FE, BE or DB. Preserve acceptance scenarios as manual checks and report existing non-test command results and gaps.
+
 > Paste this prompt into the GitHub Copilot agent. It is self-contained.
 
 You are a principal engineer and technical writer working in the ApnaTown.in repository. You have no memory of earlier work. Everything you need is in this prompt and in the repository files named below. Read the Design Context Pack files first; do not rely on assumptions or outside knowledge of the product.
@@ -28,10 +30,10 @@ generation outputs are not scaffold prerequisites.
 ## OUTPUT FILES (exact paths)
 - Workspace/tooling files and the `apps/web`, `apps/api`, `packages/shared`,
   `packages/ui`, `packages/api-client` skeletons specified by the foundations,
-  with bootstrap tests. No feature implementations or progress registers.
+  with non-test bootstrap checks. No feature implementations or progress registers.
 
 ## REQUIRED CONTENTS
-Implement the workspace/bootstrap contracts in [architecture.md](../../specs/_foundation/architecture.md): exact compatible toolchain pins, package exports and build order, strict TypeScript, lint/format boundaries, owner-specific env validation, PostgreSQL/PostGIS Compose, API/worker entry points and health probes, Next root/error/loading shells, same-origin `/api` transport, generated OpenAPI client, and the named root commands/CI stages. Use Vitest, RTL and Playwright as specified. No Redis, compulsory Turborepo/config package, commit-hook stack or real external-provider service; add tooling only when a current contract needs it.
+Implement the workspace/bootstrap contracts in [architecture.md](../../specs/_foundation/architecture.md): exact compatible toolchain pins, package exports and build order, strict TypeScript, lint/format boundaries, owner-specific env validation, PostgreSQL/PostGIS Compose, API/worker entry points and health probes, Next root/error/loading shells, same-origin `/api` transport, generated OpenAPI client, and the named root commands/CI stages. Use existing lint/type-check/build commands and manual verification; do not add automated test tooling. No Redis, compulsory Turborepo/config package, commit-hook stack or real external-provider service; add tooling only when a current contract needs it.
 
 C00 verifies workspace exports/build and bootstrap probes. Database migrations/shared runtime are C01-C02 dependencies; the authenticated browser smoke additionally requires real Auth and Catalog slices. Do not add login bypasses, mock successful APIs or mark those later checks passed before their dependencies exist.
 
@@ -39,9 +41,9 @@ C00 verifies workspace exports/build and bootstrap probes. Database migrations/s
 - Read the current `specs/_foundation/` contracts and the Design Context Pack; implement only this scaffold scope. Record a blocking ambiguity inline in the owning spec and ask, rather than inventing behavior or maintaining extra trackers.
 - Work in small pull requests (about 400 changed lines or fewer), one concern each. Branch `feat/<scope>-<name>`; Conventional Commits. Never merge; humans review and merge.
 - Reuse shared components, hooks, utilities, guards and base classes; if you copy code a second time, extract it to the shared layer first.
-- Every change includes tests (unit, integration, component, e2e as specified), lint and type-check clean, English and Hindi strings, accessibility checks, and a screenshot comparison (mobile 390px and desktop 1280px, light and dark) against `docs/design-context/screenshots/` for UI work.
+- Every change includes manual acceptance evidence and passing existing lint/type-check/build commands. Do not generate automated test files. Include English and Hindi strings, accessibility checks, and a screenshot comparison (mobile 390px and desktop 1280px, light and dark) against `docs/design-context/screenshots/` for UI work.
 - Security: parameterised queries only; validate input; enforce authorisation on every endpoint; no secrets in code; no PII in logs.
-- At the end report: what was built (IDs), tests run with real results, screenshots, deviations from the spec, and open issues.
+- At the end report: what was built (IDs), verification performed with real results and explicit gaps, screenshots, deviations from the spec, and open issues.
 
 ## STANDING REQUIREMENTS (apply every one; they are binding)
 
@@ -60,7 +62,7 @@ C00 verifies workspace exports/build and bootstrap probes. Database migrations/s
 If the output is too long for one response, continue in numbered parts (Part 1, Part 2, ...). Never summarise, never skip, never write "and so on". At the end of every part list: (a) what is covered so far (IDs), and (b) what remains. Continue until everything is covered, then end with "ALL PARTS COMPLETE" and the final coverage table.
 
 ## DONE WHEN (tick every box before you finish and paste the ticked list)
-- [ ] `pnpm dev`, `pnpm lint`, `pnpm typecheck`, `pnpm test` and `pnpm build` work
+- [ ] `pnpm dev`, `pnpm lint`, `pnpm typecheck` and `pnpm build` work
 - [ ] CI green
 - [ ] Every ID listed in the coverage table at the end exists in the output (no empty cells)
 - [ ] All standing requirements above were applied; assumptions are recorded as Open Issues

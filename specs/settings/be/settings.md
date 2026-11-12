@@ -140,9 +140,11 @@ Blocked responses use the shared envelope + configured `Retry-After`, no stack/P
 11. Given `/health` during maintenance, when Check again polls, then HTTP 200 reports maintenance and later ok, without requiring an authenticated super-admin session.
 12. Given grouped settings/flag changes, when consumers read, then coherent new values/cache events appear, existing financial snapshots remain unchanged, and booking/donations cannot be enabled.
 
-## Tests
+## Verification
 
-Unit: all group memberships/version failures, money/contacts/markup validation, maintenance admission matrix and future-flag denial. Integration: AC3 atomic concurrency/replay; settings/group/flag/legal cache events; guest support→outbox→scoped existing alert/detail; health/auth recovery; signed callback and in-flight financial correctness under maintenance. Negatives: same-city foreign support area, non-super settings/group writes, forged callback or body-selected bypass, stale flags before send, secrets/sample contacts in DTOs. Existing order snapshots and Q-32 retention gates are asserted.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Rules: all group memberships/version failures, money/contacts/markup validation, maintenance admission matrix and future-flag denial. Manual API/DB: AC3 atomic concurrency/replay; settings/group/flag/legal cache events; guest support→outbox→scoped existing alert/detail; health/auth recovery; signed callback and in-flight financial correctness under maintenance. Negatives: same-city foreign support area, non-super settings/group writes, forged callback or body-selected bypass, stale flags before send, secrets/sample contacts in DTOs. Existing order snapshots and Q-32 retention gates are asserted.
 
 ## Open questions
 

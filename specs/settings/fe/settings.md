@@ -4,7 +4,7 @@ Features: F-SA-005, F-AC-005, F-AC-006, F-X-009 | Screens: S-SUPR-06, S-CUST-30,
 
 Backend contract: [BE settings](../be/settings.md)
 
-Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Tests](#tests)
+Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Verification](#verification)
 
 ## Routes and rendering
 
@@ -80,6 +80,8 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 
 Prefixes `superAdmin.settings.*`, `help.*`, `legal.*`, `system.*`. Events: `settings_saved`, `feature_flag_toggled`, `support_message_sent`, `error_page_shown`.
 
-## Tests
+## Verification
 
-Component/axe: atomic group payloads/versions, error focus and retained drafts, keyboard tabs/toggles/FAQ, paise/bps transforms, Hindi/dark, legal sanitisation, message-only support and null contacts. E2E J10: grouped Save versus stale-member rollback; future flags remain false; support→real admin alert/detail with scope denial; flag/legal cache refresh; maintenance→Auth recovery→disable→health recovery without new-charge replay. Verify signed callbacks and admitted in-flight correctness are not intercepted by the frontend redirect.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Manual UI/accessibility: atomic group payloads/versions, error focus and retained drafts, keyboard tabs/toggles/FAQ, paise/bps transforms, Hindi/dark, legal sanitisation, message-only support and null contacts. Manual journey J10: grouped Save versus stale-member rollback; future flags remain false; support→real admin alert/detail with scope denial; flag/legal cache refresh; maintenance→Auth recovery→disable→health recovery without new-charge replay. Verify signed callbacks and admitted in-flight correctness are not intercepted by the frontend redirect.

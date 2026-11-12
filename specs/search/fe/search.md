@@ -82,7 +82,9 @@ Standard default, skeleton, empty, error+retry, offline and no-permission behavi
 - Key prefixes: `home.*`, `explore.*`, `search.*`; provide EN/HI for headings, filters, counts, sort labels, category explanations, validation, empty/error states, and accessibility labels.
 - Analytics: `home.discovery_view` (Home visible), `search.query_submit` (submitted), `search.suggestion_select` (suggestion selected), `explore.filter_apply` (filter committed), `explore.view_toggle` (map/list changed). Do not send raw query text, precise coordinates, or personal data.
 
-## Tests
+## Verification
 
-- Component: Home section skeleton/empty/error behavior, carousel keyboard/reduced motion, grouped autocomplete announcements, filter count updates, long Hindi, dark theme and no-result actions.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Manual UI: Home section skeleton/empty/error behavior, carousel keyboard/reduced motion, grouped autocomplete announcements, filter count updates, long Hindi, dark theme and no-result actions.
 - Journey: J1 category → Explore → product; J2 services category → Explore Services → filters; direct URL + browser Back/scroll restore; Search ↔ Explore state isolation; keyboard search and filter flow.

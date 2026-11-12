@@ -6,7 +6,7 @@ Backend contract: [BE communications](../be/communications.md)
 
 API integration: [shared React Query contract](../../_foundation/frontend-shared.md#api-integration-with-react-query).
 
-Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Tests](#tests)
+Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Verification](#verification)
 
 ## Routes and rendering
 
@@ -44,6 +44,8 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 
 Prefix `admin.comms.*`. Events: `campaign_reviewed`, `campaign_scheduled`, `campaign_sent`, `campaign_cancelled`.
 
-## Tests
+## Verification
 
-Component/axe: stored scope allowlist, searchable combobox/chips with keyboard and focus restoration, EN/HI draft isolation, complete summary/expiry, no-channel/zero/policy-required states, topmost Esc, IST schedule, Hindi/dark. E2E J10: preview→token→confirm→report, zone-only versus city-enabled, same-count target/scope edits, expired/cross-admin token, withdrawal after enqueue/before retry, WhatsApp-only campaign, interrupted dispatch and duplicate delivered receipts. Malicious text/variable/link previews stay inert; no action bypasses BE authorization.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Manual UI/accessibility: stored scope allowlist, searchable combobox/chips with keyboard and focus restoration, EN/HI draft isolation, complete summary/expiry, no-channel/zero/policy-required states, topmost Esc, IST schedule, Hindi/dark. Manual journey J10: preview→token→confirm→report, zone-only versus city-enabled, same-count target/scope edits, expired/cross-admin token, withdrawal after enqueue/before retry, WhatsApp-only campaign, interrupted dispatch and duplicate delivered receipts. Malicious text/variable/link previews stay inert; no action bypasses BE authorization.

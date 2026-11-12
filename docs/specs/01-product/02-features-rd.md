@@ -78,7 +78,7 @@ Approved, authenticated Rider, restricted to assigned jobs; customer contact is 
 - **Journeys:** J7, J11
 - **Shared components:** DashboardShell, DeliveryCard, Timeline, MapView, StatusBadge, OrderCard, DataTable.
 - **API/data handles:** `P04/F-RD-001`; `P03/F-RD-001`.
-- **Test handles:** F-RD-001-HAPPY, F-RD-001-NEGATIVE, F-RD-001-AUTHZ, F-RD-001-EMPTY-ERROR, F-RD-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RD-001-HAPPY, F-RD-001-NEGATIVE, F-RD-001-AUTHZ, F-RD-001-EMPTY-ERROR, F-RD-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -141,7 +141,7 @@ Approved, authenticated Rider, restricted to assigned jobs; customer contact is 
 - **Journeys:** J7, J11
 - **Shared components:** DashboardShell, DeliveryCard, Timeline, MapView, StatusBadge, OrderCard.
 - **API/data handles:** `P04/F-RD-002`; `P03/F-RD-002`.
-- **Test handles:** F-RD-002-HAPPY, F-RD-002-NEGATIVE, F-RD-002-AUTHZ, F-RD-002-EMPTY-ERROR, F-RD-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RD-002-HAPPY, F-RD-002-NEGATIVE, F-RD-002-AUTHZ, F-RD-002-EMPTY-ERROR, F-RD-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -204,7 +204,7 @@ Approved, authenticated Rider, restricted to assigned jobs; customer contact is 
 - **Journeys:** J7, J11
 - **Shared components:** DashboardShell, DeliveryCard, Timeline, MapView, StatusBadge, AddressForm, OrderCard.
 - **API/data handles:** `P04/F-RD-003`; `P03/F-RD-003`.
-- **Test handles:** F-RD-003-HAPPY, F-RD-003-NEGATIVE, F-RD-003-AUTHZ, F-RD-003-EMPTY-ERROR, F-RD-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RD-003-HAPPY, F-RD-003-NEGATIVE, F-RD-003-AUTHZ, F-RD-003-EMPTY-ERROR, F-RD-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -267,7 +267,7 @@ Approved, authenticated Rider, restricted to assigned jobs; customer contact is 
 - **Journeys:** J7, J11
 - **Shared components:** DashboardShell, DeliveryCard, Timeline, MapView, StatusBadge, PhoneInput, OtpInput.
 - **API/data handles:** `P04/F-RD-004`; `P03/F-RD-004`.
-- **Test handles:** F-RD-004-HAPPY, F-RD-004-NEGATIVE, F-RD-004-AUTHZ, F-RD-004-EMPTY-ERROR, F-RD-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RD-004-HAPPY, F-RD-004-NEGATIVE, F-RD-004-AUTHZ, F-RD-004-EMPTY-ERROR, F-RD-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -330,7 +330,7 @@ Approved, authenticated Rider, restricted to assigned jobs; customer contact is 
 - **Journeys:** J7, J11
 - **Shared components:** DashboardShell, DeliveryCard, Timeline, MapView, StatusBadge, FilterPanel, SubcategoryMultiSelect.
 - **API/data handles:** `P04/F-RD-005`; `P03/F-RD-005`.
-- **Test handles:** F-RD-005-HAPPY, F-RD-005-NEGATIVE, F-RD-005-AUTHZ, F-RD-005-EMPTY-ERROR, F-RD-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RD-005-HAPPY, F-RD-005-NEGATIVE, F-RD-005-AUTHZ, F-RD-005-EMPTY-ERROR, F-RD-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -393,7 +393,7 @@ Approved, authenticated Rider, restricted to assigned jobs; customer contact is 
 - **Journeys:** J7, J11
 - **Shared components:** DashboardShell, DeliveryCard, Timeline, MapView, StatusBadge, OrderCard.
 - **API/data handles:** `P04/F-RD-006`; `P03/F-RD-006`.
-- **Test handles:** F-RD-006-HAPPY, F-RD-006-NEGATIVE, F-RD-006-AUTHZ, F-RD-006-EMPTY-ERROR, F-RD-006-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RD-006-HAPPY, F-RD-006-NEGATIVE, F-RD-006-AUTHZ, F-RD-006-EMPTY-ERROR, F-RD-006-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -456,7 +456,7 @@ Approved, authenticated Rider, restricted to assigned jobs; customer contact is 
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DeliveryCard, Timeline, MapView, StatusBadge, ReviewForm, RatingBreakdown.
 - **API/data handles:** `P04/F-RD-007`; `P03/F-RD-007`.
-- **Test handles:** F-RD-007-HAPPY, F-RD-007-NEGATIVE, F-RD-007-AUTHZ, F-RD-007-EMPTY-ERROR, F-RD-007-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RD-007-HAPPY, F-RD-007-NEGATIVE, F-RD-007-AUTHZ, F-RD-007-EMPTY-ERROR, F-RD-007-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -519,13 +519,13 @@ Approved, authenticated Rider, restricted to assigned jobs; customer contact is 
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** DashboardShell, DeliveryCard, Timeline, MapView, StatusBadge, NotificationCard, Toggle.
 - **API/data handles:** `P04/F-RD-008`; `P03/F-RD-008`.
-- **Test handles:** F-RD-008-HAPPY, F-RD-008-NEGATIVE, F-RD-008-AUTHZ, F-RD-008-EMPTY-ERROR, F-RD-008-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RD-008-HAPPY, F-RD-008-NEGATIVE, F-RD-008-AUTHZ, F-RD-008-EMPTY-ERROR, F-RD-008-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-RD-001 | S-RIDE-01 | J7, J11 | delivery, users, orders, geo | Rider, DeliveryJob | DashboardShell, DeliveryCard, Timeline, MapView, StatusBadge, OrderCard, DataTable | F-RD-001-HAPPY, F-RD-001-NEGATIVE, F-RD-001-AUTHZ, F-RD-001-EMPTY-ERROR, F-RD-001-I18N-HI-LONG |
 | F-RD-002 | S-RIDE-02 | J7, J11 | delivery, users, orders, geo | Rider, DeliveryJob | DashboardShell, DeliveryCard, Timeline, MapView, StatusBadge, OrderCard | F-RD-002-HAPPY, F-RD-002-NEGATIVE, F-RD-002-AUTHZ, F-RD-002-EMPTY-ERROR, F-RD-002-I18N-HI-LONG |

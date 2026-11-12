@@ -1,5 +1,7 @@
 # C04: Slice - Auth, profile, consent, account
 
+**Verification policy:** Follow [the repository policy](../../.github/instructions/testing.instructions.md). Do not create automated test files or test-runner scaffolding for FE, BE or DB. Preserve acceptance scenarios as manual checks and report existing non-test command results and gaps.
+
 > Paste this prompt into the GitHub Copilot agent. It is self-contained.
 
 You are a principal engineer and technical writer working in the ApnaTown.in repository. You have no memory of earlier work. Everything you need is in this prompt and in the repository files named below. Read the Design Context Pack files first; do not rely on assumptions or outside knowledge of the product.
@@ -26,7 +28,7 @@ Also read `specs/_foundation/` and the BE/FE pairs in `specs/auth/`,
 Use only this slice; legacy `docs/specs/` outputs are not prerequisites.
 
 ## OUTPUT FILES (exact paths)
-- Code in `apps/web`, `apps/api`, `packages/*` as defined by the specs, with tests and Storybook stories
+- Code in `apps/web`, `apps/api`, `packages/*` as defined by the specs, with manual verification evidence and Storybook stories
 
 ## REQUIRED CONTENTS
 Build AU, AC, X8, NT2 features end to end (OTP login, session, guest return-to-origin, profile completion, addresses, preferences, privacy export/delete, consent records, system pages). Auth/Users own identity and data requests; Notifications owns notification preferences, Settings owns legal/support content. Preserve every explicit policy/provider gate; no fake privacy completion or inferred consent.
@@ -35,13 +37,13 @@ Build AU, AC, X8, NT2 features end to end (OTP login, session, guest return-to-o
 - Follow the current foundation/module specs above and the Design Context Pack. Keep changes slice-scoped; ask about a blocking ambiguity and fix its owning spec, not missing legacy documents or trackers.
 - Work in small pull requests (about 400 changed lines or fewer), one concern each. Branch `feat/<scope>-<name>`; Conventional Commits. Never merge; humans review and merge.
 - Reuse shared components, hooks, utilities, guards and base classes; if you copy code a second time, extract it to the shared layer first.
-- Every change includes tests (unit, integration, component, e2e as specified), lint and type-check clean, English and Hindi strings, accessibility checks, and a screenshot comparison (mobile 390px and desktop 1280px, light and dark) against `docs/design-context/screenshots/` for UI work.
+- Every change includes manual acceptance evidence and passing existing lint/type-check/build commands. Do not generate automated test files. Include English and Hindi strings, accessibility checks, and a screenshot comparison (mobile 390px and desktop 1280px, light and dark) against `docs/design-context/screenshots/` for UI work.
 - Security: parameterised queries only; validate input; enforce authorisation on every endpoint; no secrets in code; no PII in logs.
-- At the end report: what was built (IDs), tests run with real results, screenshots, deviations from the spec, and open issues.
+- At the end report: what was built (IDs), verification performed with real results and explicit gaps, screenshots, deviations from the spec, and open issues.
 
 ## STANDING REQUIREMENTS (apply every one; they are binding)
 
-1. **Complete coverage.** Every feature, screen, flow, state and rule from the Design Context Pack must appear in your output. No "etc.", no "similar to above", no deferred items. Every feature ID (F-...) must be traceable to screens (S-...), components, APIs, tables and tests. Do not drop anything from the later additions: category tiles that deep-link to Explore (pre-selected in Products, Shops and Services tabs), offers that open product/service/list, the Explore Services filter with category + subcategory multi-select and URL state, Products & Services section with pills, Videos/Reels (feed, follow, like, share, comments, report, linked items, moderation), videos on product/service pages, service cards and service details, smart search with keyword mapping, gallery and media-consent rules, keyword mapping tool, and the dashboards for every role.
+1. **Complete coverage.** Every feature, screen, flow, state and rule from the Design Context Pack must appear in your output. No "etc.", no "similar to above", no deferred items. Every feature ID (F-...) must be traceable to screens (S-...), components, APIs, tables and verification evidence. Do not drop anything from the later additions: category tiles that deep-link to Explore (pre-selected in Products, Shops and Services tabs), offers that open product/service/list, the Explore Services filter with category + subcategory multi-select and URL state, Products & Services section with pills, Videos/Reels (feed, follow, like, share, comments, report, linked items, moderation), videos on product/service pages, service cards and service details, smart search with keyword mapping, gallery and media-consent rules, keyword mapping tool, and the dashboards for every role.
 2. **UI and behaviour parity.** The built UI and functionality must match the design exactly: colours, typography, spacing, radius, shadows, icons, copy in English and Hindi, states and interactions. Use only the tokens in `docs/design-context/04-design-tokens.json` (and the prototype stylesheet) through the Tailwind theme. Never invent styles or behaviour. When the pack and the prototype disagree, the prototype wins and you record the conflict in `docs/design-context/11-open-issues-and-assumptions.md`.
 3. **Tech stack (fixed).** Next.js (App Router, TypeScript) with Tailwind CSS; NestJS (TypeScript); PostgreSQL. For everything else (ORM, cache, queue, search, storage, realtime, payments, OTP/SMS, WhatsApp, maps, video processing, hosting) choose the option most suitable for each feature and justify it in 2 to 3 lines: the alternative considered and when to switch. Prefer proven, low-cost choices suited to a Padrauna launch that can scale to more cities.
 4. **System design per feature.** Use the design approach suited to each feature, for example: state machines for orders, deliveries, approvals, offers and videos; transactional outbox for notifications and webhooks; queues for media processing and campaigns; idempotency keys for payments, orders, refunds and messages; PostGIS geospatial indexing for nearby search; cursor (keyset) pagination for feeds and lists; denormalised counters for likes, followers and views; caching with explicit invalidation; optimistic locking for stock and status. Give a sequence description (Mermaid sequence diagram plus numbered steps) for each critical flow.

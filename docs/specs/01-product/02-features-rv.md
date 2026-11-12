@@ -77,7 +77,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1
 - **Shared components:** ReviewForm, RatingBreakdown, ReviewCard, Button, OrderCard, Timeline, DeliveryCard.
 - **API/data handles:** `P04/F-RV-001`; `P03/F-RV-001`.
-- **Test handles:** F-RV-001-HAPPY, F-RV-001-NEGATIVE, F-RV-001-AUTHZ, F-RV-001-EMPTY-ERROR, F-RV-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RV-001-HAPPY, F-RV-001-NEGATIVE, F-RV-001-AUTHZ, F-RV-001-EMPTY-ERROR, F-RV-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -140,7 +140,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1, J14
 - **Shared components:** ReviewForm, RatingBreakdown, ReviewCard, Button, ServiceCard, EnquiryForm.
 - **API/data handles:** `P04/F-RV-002`; `P03/F-RV-002`.
-- **Test handles:** F-RV-002-HAPPY, F-RV-002-NEGATIVE, F-RV-002-AUTHZ, F-RV-002-EMPTY-ERROR, F-RV-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RV-002-HAPPY, F-RV-002-NEGATIVE, F-RV-002-AUTHZ, F-RV-002-EMPTY-ERROR, F-RV-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -203,7 +203,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1
 - **Shared components:** ReviewForm, RatingBreakdown, ReviewCard, Button, MediaCarousel, GalleryGrid, ReelsPlayer.
 - **API/data handles:** `P04/F-RV-003`; `P03/F-RV-003`.
-- **Test handles:** F-RV-003-HAPPY, F-RV-003-NEGATIVE, F-RV-003-AUTHZ, F-RV-003-EMPTY-ERROR, F-RV-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RV-003-HAPPY, F-RV-003-NEGATIVE, F-RV-003-AUTHZ, F-RV-003-EMPTY-ERROR, F-RV-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -266,7 +266,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** ReviewForm, RatingBreakdown, ReviewCard, Button.
 - **API/data handles:** `P04/F-RV-004`; `P03/F-RV-004`.
-- **Test handles:** F-RV-004-HAPPY, F-RV-004-NEGATIVE, F-RV-004-AUTHZ, F-RV-004-EMPTY-ERROR, F-RV-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RV-004-HAPPY, F-RV-004-NEGATIVE, F-RV-004-AUTHZ, F-RV-004-EMPTY-ERROR, F-RV-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -329,7 +329,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** ReviewForm, RatingBreakdown, ReviewCard, Button, DataTable, PermissionMatrix, AuditDiff.
 - **API/data handles:** `P04/F-RV-005`; `P03/F-RV-005`.
-- **Test handles:** F-RV-005-HAPPY, F-RV-005-NEGATIVE, F-RV-005-AUTHZ, F-RV-005-EMPTY-ERROR, F-RV-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RV-005-HAPPY, F-RV-005-NEGATIVE, F-RV-005-AUTHZ, F-RV-005-EMPTY-ERROR, F-RV-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -392,7 +392,7 @@ Admin only; each request requires the granted module action and assigned city/ar
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** ReviewForm, RatingBreakdown, ReviewCard, Button.
 - **API/data handles:** `P04/F-RV-006`; `P03/F-RV-006`.
-- **Test handles:** F-RV-006-HAPPY, F-RV-006-NEGATIVE, F-RV-006-AUTHZ, F-RV-006-EMPTY-ERROR, F-RV-006-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RV-006-HAPPY, F-RV-006-NEGATIVE, F-RV-006-AUTHZ, F-RV-006-EMPTY-ERROR, F-RV-006-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -455,13 +455,13 @@ Restrict operations to the listed roles (Vendor, Provider); apply customer authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** ReviewForm, RatingBreakdown, ReviewCard, Button, DataTable, PermissionMatrix, AuditDiff.
 - **API/data handles:** `P04/F-RV-007`; `P03/F-RV-007`.
-- **Test handles:** F-RV-007-HAPPY, F-RV-007-NEGATIVE, F-RV-007-AUTHZ, F-RV-007-EMPTY-ERROR, F-RV-007-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-RV-007-HAPPY, F-RV-007-NEGATIVE, F-RV-007-AUTHZ, F-RV-007-EMPTY-ERROR, F-RV-007-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-RV-001 | S-CUST-18 | J1 | reviews, media-videos | Review | ReviewForm, RatingBreakdown, ReviewCard, Button, OrderCard, Timeline, DeliveryCard | F-RV-001-HAPPY, F-RV-001-NEGATIVE, F-RV-001-AUTHZ, F-RV-001-EMPTY-ERROR, F-RV-001-I18N-HI-LONG |
 | F-RV-002 | S-CUST-18 | J1, J14 | reviews, media-videos | Review | ReviewForm, RatingBreakdown, ReviewCard, Button, ServiceCard, EnquiryForm | F-RV-002-HAPPY, F-RV-002-NEGATIVE, F-RV-002-AUTHZ, F-RV-002-EMPTY-ERROR, F-RV-002-I18N-HI-LONG |

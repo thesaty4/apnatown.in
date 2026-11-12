@@ -32,7 +32,7 @@ templates: `docs/prompts/LEAN-SPECS.md`.
    using the LEAN-SPECS templates; list every F-ID and S-ID explicitly
    (no ranges). FE specs follow the [mandatory React Query contract](../../../specs/_foundation/frontend-shared.md#api-integration-with-react-query):
    map endpoints to queries/mutations, define key scope, freshness/retries,
-   invalidation, SSR hydration where needed and relevant acceptance tests.
+   invalidation, SSR hydration where needed and relevant manual acceptance checks; never generate automated test files.
 3. Ambiguity: note it in the spec as `Open question:` with the
    assumption used; don't invent behaviour.
 4. Acceptance criteria as Given/When/Then incl. one authorisation

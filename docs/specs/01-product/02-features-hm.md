@@ -84,7 +84,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** TopBar, CategoryTile, ShopCard, ProductCard, ServiceCard, OfferCard, FilterPanel.
 - **API/data handles:** `P04/F-HM-001`; `P03/F-HM-001`.
-- **Test handles:** F-HM-001-HAPPY, F-HM-001-NEGATIVE, F-HM-001-AUTHZ, F-HM-001-EMPTY-ERROR, F-HM-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-HM-001-HAPPY, F-HM-001-NEGATIVE, F-HM-001-AUTHZ, F-HM-001-EMPTY-ERROR, F-HM-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -147,7 +147,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** TopBar, CategoryTile, ShopCard, ProductCard, ServiceCard, OfferCard, DataTable.
 - **API/data handles:** `P04/F-HM-002`; `P03/F-HM-002`.
-- **Test handles:** F-HM-002-HAPPY, F-HM-002-NEGATIVE, F-HM-002-AUTHZ, F-HM-002-EMPTY-ERROR, F-HM-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-HM-002-HAPPY, F-HM-002-NEGATIVE, F-HM-002-AUTHZ, F-HM-002-EMPTY-ERROR, F-HM-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -210,7 +210,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J1
 - **Shared components:** TopBar, CategoryTile, ShopCard, ProductCard, ServiceCard, OfferCard, FilterPanel.
 - **API/data handles:** `P04/F-HM-003`; `P03/F-HM-003`.
-- **Test handles:** F-HM-003-HAPPY, F-HM-003-NEGATIVE, F-HM-003-AUTHZ, F-HM-003-EMPTY-ERROR, F-HM-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-HM-003-HAPPY, F-HM-003-NEGATIVE, F-HM-003-AUTHZ, F-HM-003-EMPTY-ERROR, F-HM-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -273,7 +273,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J2
 - **Shared components:** TopBar, CategoryTile, ShopCard, ProductCard, ServiceCard, OfferCard, FilterPanel.
 - **API/data handles:** `P04/F-HM-004`; `P03/F-HM-004`.
-- **Test handles:** F-HM-004-HAPPY, F-HM-004-NEGATIVE, F-HM-004-AUTHZ, F-HM-004-EMPTY-ERROR, F-HM-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-HM-004-HAPPY, F-HM-004-NEGATIVE, F-HM-004-AUTHZ, F-HM-004-EMPTY-ERROR, F-HM-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -336,7 +336,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J3
 - **Shared components:** TopBar, CategoryTile, ShopCard, ProductCard, ServiceCard, OfferCard, FilterPanel.
 - **API/data handles:** `P04/F-HM-005`; `P03/F-HM-005`.
-- **Test handles:** F-HM-005-HAPPY, F-HM-005-NEGATIVE, F-HM-005-AUTHZ, F-HM-005-EMPTY-ERROR, F-HM-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-HM-005-HAPPY, F-HM-005-NEGATIVE, F-HM-005-AUTHZ, F-HM-005-EMPTY-ERROR, F-HM-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -399,7 +399,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** TopBar, CategoryTile, ShopCard, ProductCard, ServiceCard, OfferCard, FilterPanel.
 - **API/data handles:** `P04/F-HM-006`; `P03/F-HM-006`.
-- **Test handles:** F-HM-006-HAPPY, F-HM-006-NEGATIVE, F-HM-006-AUTHZ, F-HM-006-EMPTY-ERROR, F-HM-006-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-HM-006-HAPPY, F-HM-006-NEGATIVE, F-HM-006-AUTHZ, F-HM-006-EMPTY-ERROR, F-HM-006-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -462,7 +462,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** TopBar, CategoryTile, ShopCard, ProductCard, ServiceCard, OfferCard, FilterPanel.
 - **API/data handles:** `P04/F-HM-007`; `P03/F-HM-007`.
-- **Test handles:** F-HM-007-HAPPY, F-HM-007-NEGATIVE, F-HM-007-AUTHZ, F-HM-007-EMPTY-ERROR, F-HM-007-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-HM-007-HAPPY, F-HM-007-NEGATIVE, F-HM-007-AUTHZ, F-HM-007-EMPTY-ERROR, F-HM-007-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -525,7 +525,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** TopBar, CategoryTile, ShopCard, ProductCard, ServiceCard, OfferCard.
 - **API/data handles:** `P04/F-HM-008`; `P03/F-HM-008`.
-- **Test handles:** F-HM-008-HAPPY, F-HM-008-NEGATIVE, F-HM-008-AUTHZ, F-HM-008-EMPTY-ERROR, F-HM-008-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-HM-008-HAPPY, F-HM-008-NEGATIVE, F-HM-008-AUTHZ, F-HM-008-EMPTY-ERROR, F-HM-008-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -588,7 +588,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** TopBar, CategoryTile, ShopCard, ProductCard, ServiceCard, OfferCard, FilterPanel.
 - **API/data handles:** `P04/F-HM-009`; `P03/F-HM-009`.
-- **Test handles:** F-HM-009-HAPPY, F-HM-009-NEGATIVE, F-HM-009-AUTHZ, F-HM-009-EMPTY-ERROR, F-HM-009-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-HM-009-HAPPY, F-HM-009-NEGATIVE, F-HM-009-AUTHZ, F-HM-009-EMPTY-ERROR, F-HM-009-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -651,7 +651,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** TopBar, CategoryTile, ShopCard, ProductCard, ServiceCard, OfferCard, EnquiryForm.
 - **API/data handles:** `P04/F-HM-010`; `P03/F-HM-010`.
-- **Test handles:** F-HM-010-HAPPY, F-HM-010-NEGATIVE, F-HM-010-AUTHZ, F-HM-010-EMPTY-ERROR, F-HM-010-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-HM-010-HAPPY, F-HM-010-NEGATIVE, F-HM-010-AUTHZ, F-HM-010-EMPTY-ERROR, F-HM-010-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -714,7 +714,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** TopBar, CategoryTile, ShopCard, ProductCard, ServiceCard, OfferCard, OfferBanner.
 - **API/data handles:** `P04/F-HM-011`; `P03/F-HM-011`.
-- **Test handles:** F-HM-011-HAPPY, F-HM-011-NEGATIVE, F-HM-011-AUTHZ, F-HM-011-EMPTY-ERROR, F-HM-011-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-HM-011-HAPPY, F-HM-011-NEGATIVE, F-HM-011-AUTHZ, F-HM-011-EMPTY-ERROR, F-HM-011-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -777,7 +777,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** TopBar, CategoryTile, ShopCard, ProductCard, ServiceCard, OfferCard, EnquiryForm.
 - **API/data handles:** `P04/F-HM-012`; `P03/F-HM-012`.
-- **Test handles:** F-HM-012-HAPPY, F-HM-012-NEGATIVE, F-HM-012-AUTHZ, F-HM-012-EMPTY-ERROR, F-HM-012-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-HM-012-HAPPY, F-HM-012-NEGATIVE, F-HM-012-AUTHZ, F-HM-012-EMPTY-ERROR, F-HM-012-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -840,7 +840,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** TopBar, CategoryTile, ShopCard, ProductCard, ServiceCard, OfferCard.
 - **API/data handles:** `P04/F-HM-013`; `P03/F-HM-013`.
-- **Test handles:** F-HM-013-HAPPY, F-HM-013-NEGATIVE, F-HM-013-AUTHZ, F-HM-013-EMPTY-ERROR, F-HM-013-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-HM-013-HAPPY, F-HM-013-NEGATIVE, F-HM-013-AUTHZ, F-HM-013-EMPTY-ERROR, F-HM-013-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -903,13 +903,13 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** TopBar, CategoryTile, ShopCard, ProductCard, ServiceCard, OfferCard, NotificationCard.
 - **API/data handles:** `P04/F-HM-014`; `P03/F-HM-014`.
-- **Test handles:** F-HM-014-HAPPY, F-HM-014-NEGATIVE, F-HM-014-AUTHZ, F-HM-014-EMPTY-ERROR, F-HM-014-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-HM-014-HAPPY, F-HM-014-NEGATIVE, F-HM-014-AUTHZ, F-HM-014-EMPTY-ERROR, F-HM-014-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-HM-001 | S-CUST-01 | None specified | catalog, businesses, products, services, offers, engagement | Product, Service, Offer, Owner | TopBar, CategoryTile, ShopCard, ProductCard, ServiceCard, OfferCard, FilterPanel | F-HM-001-HAPPY, F-HM-001-NEGATIVE, F-HM-001-AUTHZ, F-HM-001-EMPTY-ERROR, F-HM-001-I18N-HI-LONG |
 | F-HM-002 | S-CUST-01 | None specified | catalog, businesses, products, services, offers, engagement | Product, Service, Offer, Owner | TopBar, CategoryTile, ShopCard, ProductCard, ServiceCard, OfferCard, DataTable | F-HM-002-HAPPY, F-HM-002-NEGATIVE, F-HM-002-AUTHZ, F-HM-002-EMPTY-ERROR, F-HM-002-I18N-HI-LONG |

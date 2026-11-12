@@ -62,9 +62,11 @@ None published. A future privileged `audit.retention` job requires an approved p
 10. Given two admins share a name, when the Admin-card actor shortcut is exported, then only the chosen `actorId` matches across pages and CSV.
 11. Given no approved retention policy, when cleanup or account erasure runs, then audit history is not deleted by an assumed retention period.
 
-## Tests
+## Verification
 
-Unit: AC4/8/9 scope matrix, recursive redaction and CSV/formula payloads. Integration: AC1/2 transactional rollback/replay, DB permission denial, scope before keyset/full-text, actor-filter export parity and IST bounds. Authorization negatives: same city/different area, city-only/global records, revoked grant on next page, forged entity-history purpose, admin on super routes. Retention test AC11 blocks destructive jobs.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Rules: AC4/8/9 scope matrix, recursive redaction and CSV/formula payloads. Manual API/DB: AC1/2 transactional rollback/replay, DB permission denial, scope before keyset/full-text, actor-filter export parity and IST bounds. Authorization negatives: same city/different area, city-only/global records, revoked grant on next page, forged entity-history purpose, admin on super routes. Retention check AC11 blocks destructive jobs.
 
 ## Open questions
 

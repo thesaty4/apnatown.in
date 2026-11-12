@@ -39,7 +39,7 @@ These are shared Zod/OpenAPI/client primitives (`@apnatown/shared/wire`), not di
 
 `Money.toPaiseNumber()` checks bounds **before** conversion; inbound schemas use `.int().safe()` plus the field's sign/range. Arithmetic, sums, coupon allocation and audit/outbox serialization must all use these conversions. Never register `BigInt.prototype.toJSON` or stringify every bigint globally: that would silently change module DTOs.
 An out-of-wire-range persisted/result value fails safely with a logged, redacted `COMMON_INTERNAL_ERROR` 500; invalid client amounts fail the declared validation code. No rounding/truncation/string fallback. This is a technical JSON-safety limit, not a new product price cap.
-Successful mutation DTOs and idempotent replays have the same schema; capability-bearing fields may be freshly issued only under the explicit secret-excluded replay policy below. The flat error envelope is defined in [backend-shared](./backend-shared.md#error-contract). OpenAPI examples, HTTP tests, generated clients, audit JSON and outbox payloads must agree.
+Successful mutation DTOs and idempotent replays have the same schema; capability-bearing fields may be freshly issued only under the explicit secret-excluded replay policy below. The flat error envelope is defined in [backend-shared](./backend-shared.md#error-contract). OpenAPI examples, observed HTTP responses, generated clients, audit JSON and outbox payloads must agree.
 
 ## Starter invariant error catalogue
 
@@ -50,7 +50,7 @@ Existing common spellings remain registered: `VALIDATION_ERROR` is 400 /
 `errors.common.forbidden`, `AUTH_REQUIRED` is 401 /
 `errors.auth.required`, and the existing `RATE_LIMITED` is 429 /
 `errors.common.rateLimited` with `Retry-After`. They use the same flat envelope; an undeclared
-catalogue code is a configuration/test failure, not a guessed 200/500 mapping.
+catalogue code is a configuration/verification failure, not a guessed 200/500 mapping.
 
 | Rule | Starter code | HTTP | Message key |
 |---|---|---:|---|
@@ -484,6 +484,10 @@ verification before rollout; no measurements are claimed by this implementation.
 
 ## Migrations, seeds and isolation
 
+Follow the [verification policy](../../.github/instructions/testing.instructions.md):
+manual DB checks and existing migration/build tooling only; no automated
+database test files, suite provisioners or test-only fixtures.
+
 The initial [reviewed migrations](../../apps/api/prisma/migrations/) now cover
 the three extensions and shared runtime tables only.
 The [local migration launcher](../../apps/api/prisma/migrate.mjs) installs the
@@ -500,8 +504,8 @@ automated test harness was restored.
 3. Development creates a reviewed migration using `prisma migrate dev` with an isolated `SHADOW_DATABASE_URL`; CI/deployment uses `prisma migrate deploy` through `pnpm db:migrate`. Never share shadow/prod URLs, edit an applied migration, use `db push` as evidence, or give application users extension/DDL privileges.
 4. `pnpm db:seed` adapts [10-sample-data.json](../../docs/design-context/10-sample-data.json) into the module schemas in FK order (geo/users/catalog before businesses/listings). Maintain a deterministic fixture alias -> valid UUIDv7 mapping, explicit EN/HI values, paise conversions and approved/pending/scoped test actors. Seeds are synthetic, versioned and idempotent by stable keys; repeat produces no duplicate taxonomy/users/rows and no external sends.
 5. Seed uses fixed test clock/ID fixtures, not a production ID generator change. Never seed usable passwords/session tokens/OTP bypasses, real phone recipients, KYC or payment details. Demo defaults are not production fees/legal/provider decisions; production bootstrap data requires a separate reviewed input, not the sample-data script.
-6. Every CI run allocates a separately named disposable DB; parallel HTTP/worker/Playwright suites get distinct databases and pg-boss namespaces/instances, not one shared public schema. Provision extensions, migrations and seed in each; all API/worker/Web test processes point to that same suite DB. Transaction rollback-only tests are insufficient for HTTP/outbox workers that use separate connections.
-7. Test harness verifies local/test environment, explicit database marker and runtime target before any reset/drop. It refuses an unmarked/shared/production URL, even with a “force” flag. A privileged test provisioner creates/drops only its recorded DB names; application credentials cannot drop databases. Cleanup stops workers/connections before dropping; parallel jobs cannot delete each other's DB.
+6. Manual verification uses a separately named disposable local DB; independent runs get distinct databases and pg-boss namespaces/instances, not one shared public schema. Provision extensions, migrations and synthetic seed only for the explicit target; API/worker/Web for that run use that same DB. Inspect committed state across connections because HTTP/outbox workers use separate connections.
+7. Before any approved reset/drop, verify local environment, explicit database marker, ownership and runtime target. Refuse unmarked/shared/production URLs, even with a “force” flag. Migration/provisioning credentials operate only on recorded disposable names; application credentials cannot drop databases. Stop owned workers/connections before cleanup; independent runs cannot delete each other's DB. Do not introduce test harnesses for this procedure.
 8. Apply changes **forward only**. Every migration documents its recovery/down procedure and data-loss risk for review, but no automatic production down/reset. Use expand/backfill/validate/contract for incompatible changes, bounded backfills and measured lock timeouts; protect older app/worker readers during rollout.
 9. A failed migration keeps readiness false; inspect the migration ledger and data, restore a verified backup into a **new** DB if necessary, then repair forward. `migrate resolve` only after a human verifies the recorded state matches actual SQL effects; never mark failed SQL applied to bypass a gate. Test upgrade from the preceding schema, empty install, duplicate deploy and recovery on disposable copies.
 10. Production backup retention/RPO/RTO/provider approval remains Q-25; no destructive migration is ready to deploy without an approved backup/restore test. Local/test recovery proves mechanics, not production disaster-recovery readiness.
@@ -529,4 +533,4 @@ automated test harness was restored.
 - Given enqueue acknowledgement followed by relay death, when the lease expires, then repeated delivery with the same event ID does not repeat the consumer's persisted side effect.
 - Given two API processes and one rate-limit subject/window, when requests race, then the configured total cannot be exceeded; a forged proxy header does not create a fresh subject.
 - Given maximum-safe paise/UUID/version and a signed keyset cursor, when DTOs round-trip through HTTP/client/outbox, then types and integer values survive exactly; unsafe integers/tampered cursors fail, not stringify or round.
-- Given two clean isolated test DBs, when migrations and seed run twice and one suite is dropped, then constraints/extensions/fixtures remain valid and the other suite is unaffected; production/unmarked reset attempts are refused.
+- Given two clean isolated disposable DBs, when migrations and seed run twice and one owned DB is explicitly cleaned up, then constraints/extensions/seed data remain valid and the other DB is unaffected; production/unmarked reset attempts are refused.

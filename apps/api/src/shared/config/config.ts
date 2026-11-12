@@ -33,6 +33,8 @@ const schema = z.object({
   OUTBOX_RELAY_POLL_INTERVAL_MS: integer(100, 60000, 1000),
   OUTBOX_RELAY_BATCH_SIZE: integer(1, 20, 10),
   OUTBOX_RELAY_LEASE_MS: integer(10000, 300000, 30000),
+  // Retry-After on 503 MAINTENANCE (settings maintenance admission matrix).
+  MAINTENANCE_RETRY_AFTER_SECONDS: integer(1, 60, 30),
   // Approved consent notice copy version (Q-31). Unset keeps grants unavailable.
   CONSENT_NOTICE_VERSION: z.preprocess(
     blank,

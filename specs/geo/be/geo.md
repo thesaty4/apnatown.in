@@ -115,8 +115,10 @@ The fee port is for `apna_town_rider` delivery only. Self-delivery uses the busi
 12. Given self-delivery or pickup is selected, when checkout computes the fee, then it uses the business flat fee or zero respectively, not platform-rider slabs.
 13. Given unknown zone-area relationships, when an area-only admin requests broader zone authority, then no same-city/centroid inference grants it; scoped options paginate without broadening access.
 
-## Tests
+## Verification
 
-- Unit: PIN/coordinate/phone validation, city-status mapping/edges, point-to-zone lookup, zone/default fee boundaries and beyond-last-band behavior.
-- Integration: public location resolution, city/zone CRUD and default-fee fallback, PostGIS overlap validation, outbox cache invalidation, waitlist encryption/count.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Rules: PIN/coordinate/phone validation, city-status mapping/edges, point-to-zone lookup, zone/default fee boundaries and beyond-last-band behavior.
+- Manual API/DB: public location resolution, city/zone CRUD and default-fee fallback, PostGIS overlap validation, outbox cache invalidation, waitlist encryption/count.
 - Authorization negatives: customer and area-scoped admin attempting every geo admin mutation; cross-city area IDs; stale version; duplicate idempotency key.

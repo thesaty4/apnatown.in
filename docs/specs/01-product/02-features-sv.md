@@ -78,7 +78,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J2
 - **Shared components:** ServiceCard, MediaCarousel, EnquiryForm, FollowButton, ReviewForm, FilterPanel, SubcategoryMultiSelect.
 - **API/data handles:** `P04/F-SV-001`; `P03/F-SV-001`.
-- **Test handles:** F-SV-001-HAPPY, F-SV-001-NEGATIVE, F-SV-001-AUTHZ, F-SV-001-EMPTY-ERROR, F-SV-001-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SV-001-HAPPY, F-SV-001-NEGATIVE, F-SV-001-AUTHZ, F-SV-001-EMPTY-ERROR, F-SV-001-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -141,7 +141,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J2
 - **Shared components:** ServiceCard, MediaCarousel, EnquiryForm, FollowButton, ReviewForm, FilterPanel, SubcategoryMultiSelect.
 - **API/data handles:** `P04/F-SV-002`; `P03/F-SV-002`.
-- **Test handles:** F-SV-002-HAPPY, F-SV-002-NEGATIVE, F-SV-002-AUTHZ, F-SV-002-EMPTY-ERROR, F-SV-002-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SV-002-HAPPY, F-SV-002-NEGATIVE, F-SV-002-AUTHZ, F-SV-002-EMPTY-ERROR, F-SV-002-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 ---
@@ -204,7 +204,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J2
 - **Shared components:** ServiceCard, MediaCarousel, EnquiryForm, FollowButton, ReviewForm, MapView, AddressForm.
 - **API/data handles:** `P04/F-SV-003`; `P03/F-SV-003`.
-- **Test handles:** F-SV-003-HAPPY, F-SV-003-NEGATIVE, F-SV-003-AUTHZ, F-SV-003-EMPTY-ERROR, F-SV-003-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SV-003-HAPPY, F-SV-003-NEGATIVE, F-SV-003-AUTHZ, F-SV-003-EMPTY-ERROR, F-SV-003-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** M (relative scope only; not a delivery commitment).
 
 ---
@@ -267,7 +267,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J2
 - **Shared components:** ServiceCard, MediaCarousel, EnquiryForm, FollowButton, ReviewForm, GalleryGrid, ReelsPlayer.
 - **API/data handles:** `P04/F-SV-004`; `P03/F-SV-004`.
-- **Test handles:** F-SV-004-HAPPY, F-SV-004-NEGATIVE, F-SV-004-AUTHZ, F-SV-004-EMPTY-ERROR, F-SV-004-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SV-004-HAPPY, F-SV-004-NEGATIVE, F-SV-004-AUTHZ, F-SV-004-EMPTY-ERROR, F-SV-004-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -330,7 +330,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J2, J14
 - **Shared components:** ServiceCard, MediaCarousel, EnquiryForm, FollowButton, ReviewForm, ProductCard, QuantityStepper.
 - **API/data handles:** `P04/F-SV-005`; `P03/F-SV-005`.
-- **Test handles:** F-SV-005-HAPPY, F-SV-005-NEGATIVE, F-SV-005-AUTHZ, F-SV-005-EMPTY-ERROR, F-SV-005-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SV-005-HAPPY, F-SV-005-NEGATIVE, F-SV-005-AUTHZ, F-SV-005-EMPTY-ERROR, F-SV-005-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -393,7 +393,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J2
 - **Shared components:** ServiceCard, MediaCarousel, EnquiryForm, FollowButton, ReviewForm, RatingBreakdown, ReviewCard.
 - **API/data handles:** `P04/F-SV-006`; `P03/F-SV-006`.
-- **Test handles:** F-SV-006-HAPPY, F-SV-006-NEGATIVE, F-SV-006-AUTHZ, F-SV-006-EMPTY-ERROR, F-SV-006-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SV-006-HAPPY, F-SV-006-NEGATIVE, F-SV-006-AUTHZ, F-SV-006-EMPTY-ERROR, F-SV-006-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -456,7 +456,7 @@ Customer public reads may be available to guests; gated actions require an authe
 - **Journeys:** J2
 - **Shared components:** ServiceCard, MediaCarousel, EnquiryForm, FollowButton, ReviewForm, FilterPanel, SubcategoryMultiSelect.
 - **API/data handles:** `P04/F-SV-007`; `P03/F-SV-007`.
-- **Test handles:** F-SV-007-HAPPY, F-SV-007-NEGATIVE, F-SV-007-AUTHZ, F-SV-007-EMPTY-ERROR, F-SV-007-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SV-007-HAPPY, F-SV-007-NEGATIVE, F-SV-007-AUTHZ, F-SV-007-EMPTY-ERROR, F-SV-007-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** L (relative scope only; not a delivery commitment).
 
 ---
@@ -519,13 +519,13 @@ Restrict operations to the listed roles (Vendor, Provider, Admin); apply custome
 - **Journeys:** None explicitly linked in the source pack.
 - **Shared components:** ServiceCard, MediaCarousel, EnquiryForm, FollowButton, ReviewForm, FilterPanel, SubcategoryMultiSelect.
 - **API/data handles:** `P04/F-SV-008`; `P03/F-SV-008`.
-- **Test handles:** F-SV-008-HAPPY, F-SV-008-NEGATIVE, F-SV-008-AUTHZ, F-SV-008-EMPTY-ERROR, F-SV-008-I18N-HI-LONG; P10 assigns executable suites.
+- **Verification handles:** F-SV-008-HAPPY, F-SV-008-NEGATIVE, F-SV-008-AUTHZ, F-SV-008-EMPTY-ERROR, F-SV-008-I18N-HI-LONG; P10 records manual verification evidence under the repository verification policy.
 - **Estimate:** S (relative scope only; not a delivery commitment).
 
 
 ## Area coverage matrix
 
-| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Test IDs |
+| Feature ID | Screen IDs | Journey IDs | API owner modules | Data concepts (P03) | Shared component refs | Verification IDs |
 |---|---|---|---|---|---|---|
 | F-SV-001 | S-CUST-04, S-CUST-09 | J2 | services, businesses, offers, reviews, media-videos, engagement | Service, Owner, Enquiry | ServiceCard, MediaCarousel, EnquiryForm, FollowButton, ReviewForm, FilterPanel, SubcategoryMultiSelect | F-SV-001-HAPPY, F-SV-001-NEGATIVE, F-SV-001-AUTHZ, F-SV-001-EMPTY-ERROR, F-SV-001-I18N-HI-LONG |
 | F-SV-002 | S-CUST-09 | J2 | services, businesses, offers, reviews, media-videos, engagement | Service, Owner, Enquiry | ServiceCard, MediaCarousel, EnquiryForm, FollowButton, ReviewForm, FilterPanel, SubcategoryMultiSelect | F-SV-002-HAPPY, F-SV-002-NEGATIVE, F-SV-002-AUTHZ, F-SV-002-EMPTY-ERROR, F-SV-002-I18N-HI-LONG |

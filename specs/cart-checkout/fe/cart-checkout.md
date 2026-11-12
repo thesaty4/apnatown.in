@@ -81,10 +81,12 @@ Use [frontend-shared.md](../../_foundation/frontend-shared.md) states; private r
 - Key prefixes: `cart.*`, `checkout.*`, `checkout.payment.*`, `checkout.validation.*`, `checkout.success.*`; provide EN/HI for fee labels, pickup/delivery, coupon results, errors and payment states. Check long Hindi in responsive cards and dialogs.
 - Analytics: `cart.view`, `cart.line_update`, `cart.coupon_apply`, `checkout.start`, `checkout.mode_select`, `checkout.payment_select`, `checkout.submit`, `checkout.payment_result`, `checkout.success_view`. Never send raw address, coupon code, payment credentials, phone or OTP.
 
-## Tests
+## Verification
 
-- Component: grouped cart, quantity boundaries, coupon policy-unavailable state, per-shop modes, address selection, failure/retry/cash fallback, pending-vs-success guard, long Hindi, dark mode and offline state.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Manual UI: grouped cart, quantity boundaries, coupon policy-unavailable state, per-shop modes, address selection, failure/retry/cash fallback, pending-vs-success guard, long Hindi, dark mode and offline state.
 - Journey: J1 two-shop checkout through success/tracking; J12 login gate returning to checkout; payment failure followed by retry or enabled cash fallback.
 - Visual: required desktop/mobile screenshots in light and dark, English and Hindi; compare with the named prototype screenshots.
 - Map all acceptance bullets to scenarios: null/required variant identity, shared stock errors, fee-source labels, finite/capped coupon shares, no code enumeration, reservation expiry, stale quote/address during provider handoff, timeout/reload/late success, blocked COD race and compensation without an order.
-- Negatives/a11y: foreign attempt/address, expired session, malicious product/coupon text rendered safely, offline submit, duplicate submit, axe, keyboard payment radios/stepper/dialog focus, Hindi at 360px, dark/reduced-motion states. Never cache or log addresses, codes, handoff secrets or raw provider payloads.
+- Negatives/a11y: foreign attempt/address, expired session, malicious product/coupon text rendered safely, offline submit, duplicate submit, accessibility inspection, keyboard payment radios/stepper/dialog focus, Hindi at 360px, dark/reduced-motion states. Never cache or log addresses, codes, handoff secrets or raw provider payloads.

@@ -32,7 +32,8 @@ Use when implementing a FE spec (`frontend.instructions.md`,
 6. Keyboard and ARIA pass: tab order, focus ring, roles/labels,
    `prefers-reduced-motion` (`i18n-a11y.instructions.md`).
 7. Verify in light and dark themes.
-8. Write component tests including relevant shared API acceptance cases;
+8. Invoke `verify-change` for manual shared API acceptance checks;
+   do not generate component, Playwright or other automated test files;
    take screenshots (360px + desktop, light +
    dark, EN + HI) for the PR.
 
@@ -59,7 +60,7 @@ export function ShopCard({ shopId }: { shopId: string }) {
 - [ ] Reuses a `packages/ui` component or is a justified new one.
 - [ ] All five UX states implemented.
 - [ ] Client API operations use React Query and pass the relevant
-  [integration acceptance cases](../../../specs/_foundation/frontend-shared.md#api-integration-acceptance-and-tests).
+  [integration acceptance cases](../../../specs/_foundation/frontend-shared.md#api-integration-acceptance-and-verification).
 - [ ] EN+HI keys added, Hindi wrapping checked.
 - [ ] Keyboard-operable, visible focus, reduced-motion respected.
 - [ ] Verified in light and dark.

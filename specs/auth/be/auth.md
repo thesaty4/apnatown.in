@@ -124,9 +124,11 @@ No domain event/job is required by the source pack. OTP delivery uses the `OtpDe
 12. Given an anonymous CSRF session, when it calls `/auth/session` or a protected endpoint, then it receives 401; its cookie does not grant a customer or applicant role.
 13. Given two API processes and concurrent tabs, when they bootstrap/use the same session token or an API restarts, then CSRF remains valid through PostgreSQL state; login/logout invalidates the old binding everywhere.
 
-## Tests
+## Verification
+
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Given a wrong OTP or a valid OTP for a blocked account, when verification returns its non-2xx error, then the committed attempt/lock or challenge consumption survives a new database connection, no session exists, and unexpected transaction failure still rolls back.
-- Unit: phone normalization; cooldown; attempt count; expiry; session rotation and revocation.
-- Integration: challenge/verify with deterministic OTP fake; logout invalidates cookie; concurrent verification, attempt-limit and resend races; live status/role changes; anonymous-to-authenticated CSRF rotation.
+- Rules: phone normalization; cooldown; attempt count; expiry; session rotation and revocation.
+- Manual API/DB: challenge/verify with deterministic OTP fake; logout invalidates cookie; concurrent verification, attempt-limit and resend races; live status/role changes; anonymous-to-authenticated CSRF rotation.
 - Authorization negatives: expired/revoked cookie; invalid CSRF; unknown challenge; provider outage; no OTP disclosure or account-enumeration response.

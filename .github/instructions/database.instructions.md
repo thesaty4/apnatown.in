@@ -81,9 +81,10 @@ defines its domain columns/constraints; don't duplicate that schema here.
   method, even if they're read-only and complex — never an inline raw
   query in a controller or a one-off script against production data.
 
-## Seed and test isolation
+## Seed and verification isolation
 
 Follow `specs/_foundation/data-model.md` for extension checks, pg-boss
-schema setup, idempotent synthetic seeds and isolated suite databases.
+schema setup, idempotent synthetic seeds and isolated disposable databases.
 No seed/reset on API startup; destructive commands must verify an
 explicit local/test target. Never seed real PII or an authentication bypass.
+Follow `testing.instructions.md`; do not generate database tests or harnesses.

@@ -106,6 +106,8 @@ Suggestion events carry `{suggestionId,categoryId,businessId,submitterUserId,cit
 - Given an area-scoped moderator previews an unsaved mapping, when another area has matches, then those results/counts are excluded and no live mapping changes.
 - Given an owned editable pending application with a resolved area but no approved seller role, when suggesting taxonomy, then its narrow capability permits the request without enabling selling; a non-owner or suspended application is denied.
 
-## Tests
+## Verification
 
-Unit: normalization, duplicate candidates, typed target validation, transition guards. Integration: unique constraints, cursor ordering, version races, outbox atomicity. Authorization negatives: owner spoofing, non-super-admin category write, missing `catalog` permission, out-of-area queue decision. Journey: J9 suggestion-to-decision and cache invalidation.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Rules: normalization, duplicate candidates, typed target validation, transition guards. Manual API/DB: unique constraints, cursor ordering, version races, outbox atomicity. Authorization negatives: owner spoofing, non-super-admin category write, missing `catalog` permission, out-of-area queue decision. Journey: J9 suggestion-to-decision and cache invalidation.

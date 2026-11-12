@@ -110,8 +110,7 @@ export class SuperAdminAdminsController {
   })
   @ApiCreatedResponse({ type: AdminCardDto })
   @AdminErrors({
-    403: 'ACCOUNT_UNAVAILABLE when the phone belongs to an unavailable account.',
-    404: 'ROLE_NOT_FOUND or AREA_NOT_FOUND.',
+    404: 'ROLE_NOT_FOUND, AREA_NOT_FOUND, or USER_NOT_FOUND when the phone has no usable verified account.',
     409: 'ADMIN_EXISTS when the user already has an admin account or is super_admin.',
   })
   @RateLimit(WRITE_LIMIT)

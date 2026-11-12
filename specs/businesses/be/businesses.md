@@ -120,6 +120,8 @@ Open question: provider product ordering is required by F-PV-005, but the provid
 - Given one user owns a shop and a provider profile, when an owner API omits its business-kind context, then it returns an explicit context error rather than reading or editing the wrong business.
 - Given a provider sells products but has no fulfilment configuration, when checkout asks for eligibility, then no fee or mode is invented and ordering is explicitly unavailable until configured.
 
-## Tests
+## Verification
 
-Unit: state transition guards, DTO allow-list, paise/settings validation, and public-field projection. Integration: PostGIS optional point, owner/document isolation, outbox commit/retry, and version conflicts. Authorization negatives: cross-owner access, missing `approvals:view/edit`, and out-of-area admin; never use real PII or document files.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Rules: state transition guards, DTO allow-list, paise/settings validation, and public-field projection. Manual API/DB: PostGIS optional point, owner/document isolation, outbox commit/retry, and version conflicts. Authorization negatives: cross-owner access, missing `approvals:view/edit`, and out-of-area admin; never use real PII or document files.

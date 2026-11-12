@@ -120,9 +120,11 @@ Implement Users' internal `UserDataPort.exportPage({userId,cursor,limit})` as `R
 11. Given a public review card, when Helpful is retried or removed, then only that subject's vote changes and counts stay correct; hidden content cannot gain new votes.
 12. Given an account-erasure request without approved Q-32 policy, when `erase` runs, then it returns a durable blocked receipt and keeps authored counts/history unchanged.
 
-## Tests
+## Verification
 
-Unit: AC1/9/10 target/proof matrix, boundary statuses and decision gates; required text/tags; hidden restoration and aggregate deltas. Integration: POST/PATCH hydration consistency after policy decision, report → owner/admin queues → restoration, reply/moderation notifications, asset-purpose rejection, account receipts/counters. Negatives: non-author edit, wrong proof owner/target, service versus provider ID, same-city foreign area, city-only rider. Concurrency: duplicate votes/reports/restores and repeat purchases; malicious text/photo IDs remain inert/rejected.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Rules: AC1/9/10 target/proof matrix, boundary statuses and decision gates; required text/tags; hidden restoration and aggregate deltas. Manual API/DB: POST/PATCH hydration consistency after policy decision, report → owner/admin queues → restoration, reply/moderation notifications, asset-purpose rejection, account receipts/counters. Negatives: non-author edit, wrong proof owner/target, service versus provider ID, same-city foreign area, city-only rider. Concurrency: duplicate votes/reports/restores and repeat purchases; malicious text/photo IDs remain inert/rejected.
 
 ## Open questions
 

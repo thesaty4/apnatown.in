@@ -69,26 +69,30 @@ model RateLimitBucket {
 }
 
 model User {
-  id              String         @id @db.Uuid
-  phoneCiphertext String?        @map("phone_ciphertext")
-  phoneLookupHash Bytes?         @unique(map: "users_phone_lookup_hash_key") @map("phone_lookup_hash")
-  emailCiphertext String?        @map("email_ciphertext")
-  displayName     String?        @map("display_name")
-  preferredLocale String         @default("en") @map("preferred_locale")
-  themePreference String         @default("light") @map("theme_preference")
-  accountStatus   String         @default("active") @map("account_status")
-  version         Int            @default(1)
-  deletedAt       DateTime?      @map("deleted_at") @db.Timestamptz(6)
-  createdAt       DateTime       @map("created_at") @db.Timestamptz(6)
-  updatedAt       DateTime       @map("updated_at") @db.Timestamptz(6)
+  id              String           @id @db.Uuid
+  phoneCiphertext String?          @map("phone_ciphertext")
+  phoneLookupHash Bytes?           @unique(map: "users_phone_lookup_hash_key") @map("phone_lookup_hash")
+  emailCiphertext String?          @map("email_ciphertext")
+  displayName     String?          @map("display_name")
+  preferredLocale String           @default("en") @map("preferred_locale")
+  themePreference String           @default("light") @map("theme_preference")
+  accountStatus   String           @default("active") @map("account_status")
+  version         Int              @default(1)
+  deletedAt       DateTime?        @map("deleted_at") @db.Timestamptz(6)
+  createdAt       DateTime         @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime         @map("updated_at") @db.Timestamptz(6)
   roles           UserRole[]
   sessions        Session[]
   addresses       Address[]
   consents        Consent[]
   dataRequests    DataRequest[]
   auditLogs       AuditLog[]
-  adminAccount    AdminAccount?  @relation("AdminAccountUser")
-  adminsCreated   AdminAccount[] @relation("AdminAccountCreator")
+  adminAccount    AdminAccount?    @relation("AdminAccountUser")
+  adminsCreated   AdminAccount[]   @relation("AdminAccountCreator")
+  settingsUpdated Setting[]
+  flagsUpdated    FeatureFlag[]
+  legalUpdated    LegalPage[]
+  supportMessages SupportMessage[]
 
   @@index([deletedAt], where: raw("\"deleted_at\" IS NULL"), map: "users_active_deleted_at_idx")
   @@map("users")
@@ -221,6 +225,7 @@ model City {
   waitlist    ServiceAreaWaitlist[]
   addresses   Address[]
   adminScopes AdminScope[]
+  support     SupportMessage[]
 
   @@index([status, nameEn, id], map: "cities_status_name_en_id_idx")
   @@map("cities")
@@ -239,6 +244,7 @@ model Area {
   city        City                                  @relation(fields: [cityId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "areas_city_id_fkey")
   addresses   Address[]
   adminScopes AdminScope[]
+  support     SupportMessage[]
 
   @@unique([id, cityId], map: "areas_id_city_id_key")
   @@unique([cityId, slug], map: "areas_city_slug_key")
@@ -393,4 +399,63 @@ model AdminScope {
   @@index([cityId], map: "admin_scopes_city_id_idx")
   @@index([areaId, cityId], map: "admin_scopes_area_city_idx")
   @@map("admin_scopes")
+}
+
+model Setting {
+  key       String   @id
+  value     Json     @db.JsonB
+  version   Int      @default(1)
+  updatedBy String?  @map("updated_by") @db.Uuid
+  updatedAt DateTime @map("updated_at") @db.Timestamptz(6)
+  updater   User?    @relation(fields: [updatedBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "settings_updated_by_fkey")
+
+  @@index([updatedBy], map: "settings_updated_by_idx")
+  @@map("settings")
+}
+
+model FeatureFlag {
+  key       String   @id
+  enabled   Boolean
+  version   Int      @default(1)
+  updatedBy String?  @map("updated_by") @db.Uuid
+  updatedAt DateTime @map("updated_at") @db.Timestamptz(6)
+  updater   User?    @relation(fields: [updatedBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "feature_flags_updated_by_fkey")
+
+  @@index([updatedBy], map: "feature_flags_updated_by_idx")
+  @@map("feature_flags")
+}
+
+model LegalPage {
+  slug        String   @id
+  titleEn     String   @map("title_en")
+  titleHi     String   @map("title_hi")
+  bodyEn      String   @map("body_en")
+  bodyHi      String   @map("body_hi")
+  version     Int      @default(1)
+  publishedAt DateTime @map("published_at") @db.Timestamptz(6)
+  updatedBy   String?  @map("updated_by") @db.Uuid
+  updater     User?    @relation(fields: [updatedBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "legal_pages_updated_by_fkey")
+
+  @@index([updatedBy], map: "legal_pages_updated_by_idx")
+  @@map("legal_pages")
+}
+
+model SupportMessage {
+  id        String   @id @db.Uuid
+  userId    String?  @map("user_id") @db.Uuid
+  message   String
+  source    String
+  sourceKey String?  @map("source_key")
+  cityId    String?  @map("city_id") @db.Uuid
+  areaId    String?  @map("area_id") @db.Uuid
+  createdAt DateTime @map("created_at") @db.Timestamptz(6)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "support_messages_user_id_fkey")
+  city      City?    @relation(fields: [cityId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "support_messages_city_id_fkey")
+  area      Area?    @relation(fields: [areaId, cityId], references: [id, cityId], onDelete: Restrict, onUpdate: Restrict, map: "support_messages_area_city_fkey")
+
+  @@unique([source, sourceKey], map: "support_messages_source_key_key")
+  @@index([cityId, areaId, createdAt(sort: Desc), id(sort: Desc)], map: "support_messages_scope_feed_idx")
+  @@index([userId, createdAt, id], map: "support_messages_user_idx")
+  @@index([areaId, cityId], map: "support_messages_area_city_idx")
+  @@map("support_messages")
 }

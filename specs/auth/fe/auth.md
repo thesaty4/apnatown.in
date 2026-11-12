@@ -23,9 +23,11 @@ Request-local SSR caches hydrate already-read results through
 `HydrationBoundary`; no server cache is shared across requests. Logout, expiry
 or identity changes cancel/remove private data and fence stale callbacks.
 
-The focused offline Auth/query suite covers hydration, deduplication, errors,
-scope changes, invalidation and stale read/mutation races. Mounted browser
-journeys, cross-tab/BFCache events and interactive accessibility remain unverified.
+The automated Auth/query suite has been removed under the repository policy.
+Hydration, deduplication, errors, scope changes, invalidation and stale
+read/mutation races remain acceptance scenarios, not current automated coverage.
+Mounted browser journeys, cross-tab/BFCache events and interactive accessibility
+remain unverified.
 
 ## Routes and rendering
 
@@ -76,8 +78,10 @@ journeys, cross-tab/BFCache events and interactive accessibility remain unverifi
 - Key prefix: `auth.login.*`, `auth.sessionExpired.*`; reuse the approved EN/HI catalogue.
 - Session cookies are never read by client JavaScript or stored in browser storage. CSRF tokens stay in the shared client's memory; reload bootstraps them again. A session-invalidating response clears private query caches before a new account logs in.
 
-## Tests
+## Verification
 
-- Component: phone validation, OTP paste/auto-advance, cooldown, locked/error state, keyboard and screen-reader labels.
-- E2E: J12 login then return to origin; J4 guest Reels action returns to same video.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Manual UI: phone validation, OTP paste/auto-advance, cooldown, locked/error state, keyboard and screen-reader labels.
+- Manual journey: J12 login then return to origin; J4 guest Reels action returns to same video.
 - Visual: 360px and desktop, EN/HI, light/dark.

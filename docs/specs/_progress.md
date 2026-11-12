@@ -49,7 +49,7 @@ Status applies to the actual prompt files and outputs. Step 0 and P01 are comple
 | [P08e](../../docs/prompts/P08e-screens-admin.md) | Admin screen specs | `docs/specs/08-screens/` | Not started |
 | [P08f](../../docs/prompts/P08f-screens-super-admin.md) | Super-admin screen specs | `docs/specs/08-screens/` | Not started |
 | [P09](../../docs/prompts/P09-infrastructure-security-operations.md) | Infrastructure, security and operations | `docs/specs/09-infra-security-ops/` | Not started |
-| [P10](../../docs/prompts/P10-testing-delivery-traceability.md) | Testing, delivery and traceability | `docs/specs/10-delivery/` | Not started |
+| [P10](../../docs/prompts/P10-testing-delivery-traceability.md) | Verification, delivery and traceability | `docs/specs/10-delivery/` | Not started |
 | [P11](../../docs/prompts/P11-coverage-audit.md) | Coverage audit and fixes | `docs/specs/11-coverage-audit.md` | Not started |
 
 ## LEAN SPECS progress

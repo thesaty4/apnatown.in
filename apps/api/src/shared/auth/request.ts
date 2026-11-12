@@ -9,6 +9,8 @@ export interface AuthRequest extends Request {
   adminContext?: AdminReadContext;
   csrfState?: string;
   rateLimitPrincipalId?: string;
+  /** Live session ID for `session` rate-limit subjects (anonymous intake). */
+  rateLimitSessionId?: string;
 }
 export function sessionBinding(request: AuthRequest): SessionBinding {
   if (!request.authSession) throw new DomainError('SESSION_EXPIRED');

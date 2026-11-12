@@ -213,9 +213,11 @@ Reuse `COMMON_UNAUTHENTICATED`, `COMMON_FORBIDDEN`, `COMMON_VALIDATION_FAILED`, 
 19. Given refund decisions/outcomes are duplicated/reordered, when reconciled, then one authorized decision/execution occurs, approval is not completion, and partial completion cannot refund the whole order.
 20. Given unknown privacy policy or unfinished accounting obligations, when erase/export runs, then restricted fields/financial facts are retained appropriately and a blocked receipt cannot masquerade as completion.
 
-## Tests
+## Verification
 
-- Unit/integration: map AC1–AC20 to business transitions, mode/failure exception, group/count, refund-window boundaries, immutable amount revisions and invoices; transactional stock allocation/operation + Payments adjustment tests prove rollback/replay.
+Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Rules and manual API/DB checks: map AC1–AC20 to business transitions, mode/failure exception, group/count, refund-window boundaries, immutable amount revisions and invoices; transactional stock allocation/operation + Payments adjustment checks prove rollback/replay.
 - Authorization negatives: non-owner customer, different business owner, unapproved vendor/provider, admin without `orders:view`/`orders:edit`, admin outside assigned city/area, rider accessing order instead of Delivery projection.
 - Concurrency: last unit across labels; duplicate creation; accept-vs-cancel; ready-vs-adjustment; release-vs-cancel; handover-vs-adjustment/current COD; double refund decision/out-of-order outcome. Assert unique source operations and financial/stock conservation, not just endpoint status.
 - Security/privacy: no OTP in API/logs/vendor/admin output; internal case notes excluded from customer DTO; addresses and attachments restricted/encrypted; injected sort/filter and unknown DTO fields rejected.
