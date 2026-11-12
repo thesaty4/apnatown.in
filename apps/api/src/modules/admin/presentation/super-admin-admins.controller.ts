@@ -78,13 +78,12 @@ export class SuperAdminAdminsController {
   @ApiOperation({
     summary: 'List admin accounts',
     description:
-      'super_admin only. q matches display name or an exact verified phone (email is encrypted and not searchable). areaId matches an exact area grant or a whole-city grant of its city; zoneId is mutually exclusive with areaId and is COMMON_UNAVAILABLE until Geo exposes a zone→area mapping. Cards include full contact fields for the management purpose; zones are reported in `unavailable`. Ordered newest first; total counts the filtered set. private, no-store.',
+      'super_admin only. q matches display name or an exact verified phone (email is encrypted and not searchable). areaId matches an exact area grant or a whole-city grant of its city; zoneId is mutually exclusive with areaId and matches a whole-city grant of the zone city (Geo supplies no authoritative zone→area mapping, so area-only grants never match by same-city inference). Cards include full contact fields for the management purpose; zones lists the zones of whole-city grants, and `unavailable` includes zones when the admin has area grants whose zone coverage is unknown. Ordered newest first; total counts the filtered set. private, no-store.',
   })
   @ApiQuery({ type: AdminListQueryDto })
   @ApiOkResponse({ type: AdminPageDto })
   @AdminErrors({
-    404: 'AREA_NOT_FOUND for an unknown areaId.',
-    503: 'COMMON_UNAVAILABLE for zoneId until Geo exposes a zone→area mapping.',
+    404: 'AREA_NOT_FOUND for an unknown areaId; ZONE_NOT_FOUND for an unknown zoneId.',
   })
   @RateLimit({
     key: 'super-admin.admins.read',

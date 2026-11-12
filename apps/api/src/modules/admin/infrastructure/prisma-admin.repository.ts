@@ -329,6 +329,15 @@ export class PrismaAdminRepository implements AdminRepository {
           areaId: filters.area.areaId,
         }),
       );
+    if (filters.zone) {
+      const areaClause = filters.zone.areaIds.length
+        ? Prisma.sql`OR (s.authority = 'area'
+            AND s.area_id IN (${uuids(filters.zone.areaIds)}))`
+        : Prisma.empty;
+      clauses.push(Prisma.sql`EXISTS (SELECT 1 FROM admin_scopes s
+        WHERE s.user_id = a.user_id AND s.city_id = ${filters.zone.cityId}::uuid
+          AND (s.authority = 'city' ${areaClause}))`);
+    }
     if (filters.roleId)
       clauses.push(Prisma.sql`a.role_id = ${filters.roleId}::uuid`);
     if (filters.status) clauses.push(Prisma.sql`a.status = ${filters.status}`);

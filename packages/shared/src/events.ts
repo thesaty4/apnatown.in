@@ -12,6 +12,7 @@ import {
   DataRequestFailureCodeSchema,
   DataRequestTypeSchema,
 } from './users.js';
+import { CityStatusSchema, ZoneStatusSchema } from './geo.js';
 
 export const EventEnvelopeSchema = z.strictObject({
   id: IdSchema,
@@ -91,3 +92,28 @@ export type DataRequestFailedEventPayload = z.infer<
 export type UserAccountEventPayload = z.infer<
   typeof UserAccountEventPayloadSchema
 >;
+
+// Geo (F-SA-004). Consumers invalidate city/serviceability and checkout quote
+// caches and deduplicate by event ID; checkout still rechecks current state.
+export const GEO_EVENT_TYPES = Object.freeze({
+  cityStatusChanged: 'geo.city.status_changed',
+  zoneChanged: 'geo.zone.changed',
+} as const);
+export const GeoCityStatusChangedPayloadSchema = z.strictObject({
+  cityId: IdSchema,
+  previousStatus: CityStatusSchema,
+  status: CityStatusSchema,
+  version: VersionSchema,
+});
+export const GeoZoneChangedPayloadSchema = z.strictObject({
+  zoneId: IdSchema,
+  cityId: IdSchema,
+  change: z.enum(['created', 'updated', 'deleted']),
+  /** null after deletion. */
+  status: ZoneStatusSchema.nullable(),
+  version: VersionSchema,
+});
+export type GeoCityStatusChangedPayload = z.infer<
+  typeof GeoCityStatusChangedPayloadSchema
+>;
+export type GeoZoneChangedPayload = z.infer<typeof GeoZoneChangedPayloadSchema>;

@@ -16,6 +16,11 @@ import {
   type GeoScopePort,
 } from '../../geo/application/geo-scope.port';
 import {
+  GEO_ADMIN_READ,
+  type GeoAdminReadPort,
+  type ZoneRef,
+} from '../../geo/application/geo-admin-read.port';
+import {
   USER_ADMIN_READ,
   type UserAdminReadPort,
 } from '../../users/application/user-role-port';
@@ -29,6 +34,7 @@ export class AdminProjection {
   constructor(
     @Inject(IDENTITY_CRYPTO) private readonly crypto: IdentityCrypto,
     @Inject(GEO_SCOPE) private readonly geo: GeoScopePort,
+    @Inject(GEO_ADMIN_READ) private readonly geoAdmin: GeoAdminReadPort,
     @Inject(USER_ADMIN_READ) private readonly contacts: UserAdminReadPort,
   ) {}
 
@@ -67,6 +73,16 @@ export class AdminProjection {
         city,
       ]),
     );
+    // Zones are known only through whole-city grants (no zone→area mapping).
+    const zonesByCity = new Map<string, ZoneRef[]>();
+    for (const zone of await this.geoAdmin.zonesInCities(
+      list.flatMap((grants) => grants.cityWideIds),
+      tx,
+    ))
+      zonesByCity.set(zone.cityId, [
+        ...(zonesByCity.get(zone.cityId) ?? []),
+        zone,
+      ]);
     const phones = new Map(
       (
         await this.contacts.adminContacts(
@@ -100,15 +116,21 @@ export class AdminProjection {
           const city = cities.get(id);
           return city ? [city] : [];
         }),
-        // No authoritative Geo zone→area mapping exists yet.
-        zones: [],
+        zones: grants.cityWideIds.flatMap((id) =>
+          (zonesByCity.get(id) ?? []).map((zone) => ({
+            id: zone.id,
+            cityId: zone.cityId,
+            name: zone.name,
+          })),
+        ),
         cityWideIds: grants.cityWideIds,
         communicationScopes: account.communicationScopes,
         permissions: grants.permissions,
         lastActiveAt: account.lastActiveAt,
         version: account.version,
         createdAt: account.createdAt,
-        unavailable: ['zones'],
+        // Area-only grants cannot be mapped to zones authoritatively.
+        unavailable: grants.areaGrants.length ? ['zones'] : [],
       });
     });
   }

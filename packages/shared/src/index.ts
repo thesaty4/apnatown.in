@@ -11,6 +11,9 @@ export {
   DataRequestEventPayloadSchema,
   DataRequestFailedEventPayloadSchema,
   EventEnvelopeSchema,
+  GEO_EVENT_TYPES,
+  GeoCityStatusChangedPayloadSchema,
+  GeoZoneChangedPayloadSchema,
   USER_ACCOUNT_EVENT_TYPES,
   UserAccountEventPayloadSchema,
 } from './events.js';
@@ -20,5 +23,7 @@ export type {
   DataRequestEventPayload,
   DataRequestFailedEventPayload,
   EventEnvelope,
+  GeoCityStatusChangedPayload,
+  GeoZoneChangedPayload,
   UserAccountEventPayload,
 } from './events.js';

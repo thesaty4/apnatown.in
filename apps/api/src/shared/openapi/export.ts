@@ -15,6 +15,9 @@ import { ProfileService } from '../../modules/users/application/profile.service'
 import { SessionCookie } from '../auth/cookie';
 import { GeoController } from '../../modules/geo/presentation/geo.controller';
 import { GeoReadService } from '../../modules/geo/application/geo-read.service';
+import { GeoLocationService } from '../../modules/geo/application/geo-location.service';
+import { GeoAdminService } from '../../modules/geo/application/geo-admin.service';
+import { SuperAdminGeoController } from '../../modules/geo/presentation/super-admin-geo.controller';
 import { AddressesController } from '../../modules/users/presentation/addresses.controller';
 import { AddressService } from '../../modules/users/application/address.service';
 import { ConsentsController } from '../../modules/users/presentation/consents.controller';
@@ -51,6 +54,7 @@ import { SupportService } from '../../modules/settings/application/support.servi
     AuthController,
     UsersController,
     GeoController,
+    SuperAdminGeoController,
     AddressesController,
     ConsentsController,
     AnonymousConsentsController,
@@ -73,6 +77,8 @@ import { SupportService } from '../../modules/settings/application/support.servi
     ProfileService,
     SessionCookie,
     GeoReadService,
+    GeoLocationService,
+    GeoAdminService,
     AddressService,
     ConsentService,
     DataRequestService,

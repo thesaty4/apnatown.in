@@ -9,6 +9,7 @@ import { AdminAccessGuard } from './shared/auth/admin-access.guard';
 import { AdminModule } from './modules/admin/admin.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { GeoAdminModule } from './modules/geo/geo-admin.module';
 import { GeoModule } from './modules/geo/geo.module';
 import { MaintenanceGuard } from './modules/settings/application/maintenance.guard';
 import { SettingsModule } from './modules/settings/settings.module';
@@ -25,6 +26,7 @@ export class AppModule {
     const audit = AuditModule.forApi(runtime, users);
     const admin = AdminModule.forRoot(runtime, geo, users, audit);
     const settings = SettingsModule.forRoot(runtime, users, audit, admin);
+    const geoAdmin = GeoAdminModule.forRoot(runtime, audit, admin, settings);
     return {
       module: AppModule,
       imports: [
@@ -34,6 +36,7 @@ export class AppModule {
         audit,
         admin,
         settings,
+        geoAdmin,
       ],
       controllers: [HealthController],
       providers: [

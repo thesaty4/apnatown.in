@@ -38,6 +38,11 @@ export interface AdminListFilters {
   cityId?: string | undefined;
   /** Exact area grant or whole-city grant of the area's (Geo-resolved) city. */
   area?: AreaGrant;
+  /**
+   * Whole-city grant of the zone's city, or an area grant among the zone's
+   * authoritative areas (Geo supplies none yet; never inferred by city).
+   */
+  zone?: { cityId: string; areaIds: readonly string[] };
   roleId?: string | undefined;
   status?: AdminStatus | undefined;
 }

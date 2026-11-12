@@ -268,6 +268,7 @@ model Zone {
 
   @@index([polygon], type: Gist, map: "zones_polygon_idx")
   @@index([cityId, status], map: "zones_city_status_idx")
+  @@index([cityId, name, id], map: "zones_city_name_id_idx")
   @@map("zones")
 }
 

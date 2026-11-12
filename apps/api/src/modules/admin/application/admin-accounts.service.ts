@@ -50,6 +50,10 @@ import {
   type GeoScopePort,
 } from '../../geo/application/geo-scope.port';
 import {
+  GEO_ADMIN_READ,
+  type GeoAdminReadPort,
+} from '../../geo/application/geo-admin-read.port';
+import {
   USER_IDENTITY,
   type UserIdentityPort,
 } from '../../users/application/identity-port';
@@ -114,6 +118,7 @@ export class AdminAccountsService {
     @Inject(USER_IDENTITY) private readonly identity: UserIdentityPort,
     @Inject(USER_ROLES) private readonly userRoles: UserRolePort,
     @Inject(GEO_SCOPE) private readonly geo: GeoScopePort,
+    @Inject(GEO_ADMIN_READ) private readonly geoAdmin: GeoAdminReadPort,
     @Inject(AUTH_SESSION_PORT) private readonly sessions: AuthSessionPort,
     @Inject(AUDIT_WRITER) private readonly audit: AuditWriter,
     @Inject(CURSOR_CODEC) private readonly cursors: CursorCodec,
@@ -162,9 +167,6 @@ export class AdminAccountsService {
 
   list(ctx: AdminReadContext, query: AdminListQuery): Promise<AdminPage> {
     if (!ctx.isSuper) throw new DomainError('COMMON_FORBIDDEN');
-    // No authoritative Geo zone→area mapping exists; never guess by city.
-    if (query.zoneId)
-      throw new DomainError('COMMON_UNAVAILABLE', { field: 'zoneId' });
     return this.uow.run(async (tx) => {
       const filters: AdminListFilters = {
         cityId: query.cityId,
@@ -185,6 +187,17 @@ export class AdminAccountsService {
         if (!area) throw new DomainError('AREA_NOT_FOUND', { field: 'areaId' });
         filters.area = { areaId: area.id, cityId: area.cityId };
       }
+      if (query.zoneId) {
+        // Whole-city grants of the zone's city plus area grants among the
+        // zone's authoritative areas only; never guessed by same city.
+        const { zones } = await this.geoAdmin.resolveZoneScope(
+          { zoneIds: [query.zoneId] },
+          tx,
+        );
+        const [zone] = zones;
+        if (!zone) throw new DomainError('ZONE_NOT_FOUND', { field: 'zoneId' });
+        filters.zone = { cityId: zone.cityId, areaIds: zone.areaIds };
+      }
       const binding: CursorBinding = {
         operation: 'super-admin.admins',
         sort: 'createdAt-userId-desc',
@@ -192,6 +205,7 @@ export class AdminAccountsService {
           q: query.q ?? null,
           cityId: query.cityId ?? null,
           areaId: query.areaId ?? null,
+          zoneId: query.zoneId ?? null,
           roleId: query.roleId ?? null,
           status: query.status ?? null,
         },
