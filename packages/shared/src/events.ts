@@ -13,6 +13,7 @@ import {
   DataRequestTypeSchema,
 } from './users.js';
 import { CityStatusSchema, ZoneStatusSchema } from './geo.js';
+import { SuggestionStatusSchema } from './catalog.js';
 
 export const EventEnvelopeSchema = z.strictObject({
   id: IdSchema,
@@ -117,3 +118,56 @@ export type GeoCityStatusChangedPayload = z.infer<
   typeof GeoCityStatusChangedPayloadSchema
 >;
 export type GeoZoneChangedPayload = z.infer<typeof GeoZoneChangedPayloadSchema>;
+
+/** Catalog taxonomy, Home section, suggestion and keyword-mapping events. */
+export const CATALOG_EVENT_TYPES = Object.freeze({
+  suggestionSubmitted: 'catalog.subcategory_suggestion.submitted',
+  suggestionApproved: 'catalog.subcategory_suggestion.approved',
+  suggestionRejected: 'catalog.subcategory_suggestion.rejected',
+  suggestionMerged: 'catalog.subcategory_suggestion.merged',
+  taxonomyChanged: 'catalog.taxonomy.changed',
+  keywordMappingChanged: 'catalog.keyword_mapping.changed',
+  homeSectionsChanged: 'catalog.home_sections.changed',
+} as const);
+
+export const CatalogSuggestionEventPayloadSchema = z.strictObject({
+  suggestionId: IdSchema,
+  categoryId: IdSchema,
+  businessId: IdSchema,
+  submitterUserId: IdSchema,
+  cityId: IdSchema,
+  areaId: IdSchema,
+  status: SuggestionStatusSchema,
+  version: VersionSchema,
+  subcategoryId: IdSchema.nullable(),
+  mergedIntoSubcategoryId: IdSchema.nullable(),
+});
+export type CatalogSuggestionEventPayload = z.infer<
+  typeof CatalogSuggestionEventPayloadSchema
+>;
+export const CatalogTaxonomyChangedPayloadSchema = z.strictObject({
+  entity: z.enum(['category', 'subcategory']),
+  entityId: IdSchema,
+  categoryId: IdSchema,
+  change: z.enum(['created', 'updated']),
+  version: VersionSchema,
+});
+export type CatalogTaxonomyChangedPayload = z.infer<
+  typeof CatalogTaxonomyChangedPayloadSchema
+>;
+export const CatalogKeywordMappingChangedPayloadSchema = z.strictObject({
+  mappingId: IdSchema,
+  change: z.enum(['created', 'updated', 'deleted']),
+  version: VersionSchema,
+});
+export type CatalogKeywordMappingChangedPayload = z.infer<
+  typeof CatalogKeywordMappingChangedPayloadSchema
+>;
+export const CatalogHomeSectionsChangedPayloadSchema = z.strictObject({
+  sectionId: IdSchema,
+  change: z.enum(['created', 'updated', 'activated', 'deactivated', 'removed']),
+  version: VersionSchema,
+});
+export type CatalogHomeSectionsChangedPayload = z.infer<
+  typeof CatalogHomeSectionsChangedPayloadSchema
+>;

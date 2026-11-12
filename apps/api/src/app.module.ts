@@ -9,6 +9,7 @@ import { AdminAccessGuard } from './shared/auth/admin-access.guard';
 import { AdminModule } from './modules/admin/admin.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { CatalogModule } from './modules/catalog/catalog.module';
 import { GeoAdminModule } from './modules/geo/geo-admin.module';
 import { GeoModule } from './modules/geo/geo.module';
 import { MaintenanceGuard } from './modules/settings/application/maintenance.guard';
@@ -37,6 +38,7 @@ export class AppModule {
         admin,
         settings,
         geoAdmin,
+        CatalogModule.forRoot(runtime, users, audit, admin),
       ],
       controllers: [HealthController],
       providers: [

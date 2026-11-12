@@ -69,30 +69,34 @@ model RateLimitBucket {
 }
 
 model User {
-  id              String           @id @db.Uuid
-  phoneCiphertext String?          @map("phone_ciphertext")
-  phoneLookupHash Bytes?           @unique(map: "users_phone_lookup_hash_key") @map("phone_lookup_hash")
-  emailCiphertext String?          @map("email_ciphertext")
-  displayName     String?          @map("display_name")
-  preferredLocale String           @default("en") @map("preferred_locale")
-  themePreference String           @default("light") @map("theme_preference")
-  accountStatus   String           @default("active") @map("account_status")
-  version         Int              @default(1)
-  deletedAt       DateTime?        @map("deleted_at") @db.Timestamptz(6)
-  createdAt       DateTime         @map("created_at") @db.Timestamptz(6)
-  updatedAt       DateTime         @map("updated_at") @db.Timestamptz(6)
-  roles           UserRole[]
-  sessions        Session[]
-  addresses       Address[]
-  consents        Consent[]
-  dataRequests    DataRequest[]
-  auditLogs       AuditLog[]
-  adminAccount    AdminAccount?    @relation("AdminAccountUser")
-  adminsCreated   AdminAccount[]   @relation("AdminAccountCreator")
-  settingsUpdated Setting[]
-  flagsUpdated    FeatureFlag[]
-  legalUpdated    LegalPage[]
-  supportMessages SupportMessage[]
+  id                   String                  @id @db.Uuid
+  phoneCiphertext      String?                 @map("phone_ciphertext")
+  phoneLookupHash      Bytes?                  @unique(map: "users_phone_lookup_hash_key") @map("phone_lookup_hash")
+  emailCiphertext      String?                 @map("email_ciphertext")
+  displayName          String?                 @map("display_name")
+  preferredLocale      String                  @default("en") @map("preferred_locale")
+  themePreference      String                  @default("light") @map("theme_preference")
+  accountStatus        String                  @default("active") @map("account_status")
+  version              Int                     @default(1)
+  deletedAt            DateTime?               @map("deleted_at") @db.Timestamptz(6)
+  createdAt            DateTime                @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime                @map("updated_at") @db.Timestamptz(6)
+  roles                UserRole[]
+  sessions             Session[]
+  addresses            Address[]
+  consents             Consent[]
+  dataRequests         DataRequest[]
+  auditLogs            AuditLog[]
+  adminAccount         AdminAccount?           @relation("AdminAccountUser")
+  adminsCreated        AdminAccount[]          @relation("AdminAccountCreator")
+  settingsUpdated      Setting[]
+  flagsUpdated         FeatureFlag[]
+  legalUpdated         LegalPage[]
+  supportMessages      SupportMessage[]
+  homeSectionsCreated  CatalogHomeSection[]    @relation("CatalogHomeSectionCreator")
+  homeSectionsUpdated  CatalogHomeSection[]    @relation("CatalogHomeSectionUpdater")
+  suggestionsSubmitted SubcategorySuggestion[] @relation("SuggestionSubmitter")
+  suggestionsReviewed  SubcategorySuggestion[] @relation("SuggestionReviewer")
 
   @@index([deletedAt], where: raw("\"deleted_at\" IS NULL"), map: "users_active_deleted_at_idx")
   @@map("users")
@@ -211,21 +215,22 @@ model Session {
 }
 
 model City {
-  id          String                @id @db.Uuid
-  slug        String                @unique(map: "cities_slug_key")
-  nameEn      String                @map("name_en")
-  nameHi      String                @map("name_hi")
-  stateCode   String                @map("state_code") @db.Char(2)
+  id          String                  @id @db.Uuid
+  slug        String                  @unique(map: "cities_slug_key")
+  nameEn      String                  @map("name_en")
+  nameHi      String                  @map("name_hi")
+  stateCode   String                  @map("state_code") @db.Char(2)
   status      String
-  version     Int                   @default(1)
-  createdAt   DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime              @default(now()) @map("updated_at") @db.Timestamptz(6)
+  version     Int                     @default(1)
+  createdAt   DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime                @default(now()) @map("updated_at") @db.Timestamptz(6)
   areas       Area[]
   zones       Zone[]
   waitlist    ServiceAreaWaitlist[]
   addresses   Address[]
   adminScopes AdminScope[]
   support     SupportMessage[]
+  suggestions SubcategorySuggestion[]
 
   @@index([status, nameEn, id], map: "cities_status_name_en_id_idx")
   @@map("cities")
@@ -245,6 +250,7 @@ model Area {
   addresses   Address[]
   adminScopes AdminScope[]
   support     SupportMessage[]
+  suggestions SubcategorySuggestion[]
 
   @@unique([id, cityId], map: "areas_id_city_id_key")
   @@unique([cityId, slug], map: "areas_city_slug_key")
@@ -459,4 +465,199 @@ model SupportMessage {
   @@index([userId, createdAt, id], map: "support_messages_user_idx")
   @@index([areaId, cityId], map: "support_messages_area_city_idx")
   @@map("support_messages")
+}
+
+// Catalog taxonomy (F-SA-008). `imageAssetId` gains its media_assets FK in
+// the Media migration; there is no Prisma relation until then.
+model Category {
+  id                 String                       @id @db.Uuid
+  kind               String
+  slug               String                       @unique(map: "categories_slug_key")
+  nameEn             String                       @map("name_en")
+  nameHi             String                       @map("name_hi")
+  icon               String?
+  imageAssetId       String?                      @map("image_asset_id") @db.Uuid
+  active             Boolean                      @default(true)
+  sortOrder          Int                          @default(0) @map("sort_order")
+  version            Int                          @default(1)
+  createdAt          DateTime                     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime                     @default(now()) @map("updated_at") @db.Timestamptz(6)
+  subcategories      Subcategory[]
+  relatedTo          CategoryRelation[]           @relation("CategoryRelationSource")
+  relatedFrom        CategoryRelation[]           @relation("CategoryRelationRelated")
+  dedicatedSections  CatalogHomeSection[]         @relation("CatalogHomeSectionCategory")
+  initialForSections CatalogHomeSection[]         @relation("CatalogHomeSectionInitial")
+  sectionPills       CatalogHomeSectionCategory[]
+  suggestions        SubcategorySuggestion[]
+  keywordTargets     KeywordMappingTarget[]
+
+  @@index([kind, active, sortOrder, id], map: "categories_kind_active_sort_idx")
+  @@map("categories")
+}
+
+model CategoryRelation {
+  sourceCategoryId  String   @map("source_category_id") @db.Uuid
+  relatedCategoryId String   @map("related_category_id") @db.Uuid
+  sortOrder         Int      @map("sort_order")
+  source            Category @relation("CategoryRelationSource", fields: [sourceCategoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "category_relations_source_fkey")
+  related           Category @relation("CategoryRelationRelated", fields: [relatedCategoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "category_relations_related_fkey")
+
+  @@id([sourceCategoryId, relatedCategoryId], map: "category_relations_pkey")
+  @@unique([sourceCategoryId, sortOrder], map: "category_relations_source_sort_key")
+  @@index([relatedCategoryId], map: "category_relations_related_idx")
+  @@map("category_relations")
+}
+
+model Subcategory {
+  id             String                  @id @db.Uuid
+  categoryId     String                  @map("category_id") @db.Uuid
+  slug           String
+  nameEn         String                  @map("name_en")
+  nameHi         String                  @map("name_hi")
+  normalizedName String                  @map("normalized_name")
+  serviceTypes   String[]                @default([]) @map("service_types")
+  imageAssetId   String?                 @map("image_asset_id") @db.Uuid
+  active         Boolean                 @default(true)
+  sortOrder      Int                     @default(0) @map("sort_order")
+  version        Int                     @default(1)
+  createdAt      DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime                @default(now()) @map("updated_at") @db.Timestamptz(6)
+  category       Category                @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategories_category_id_fkey")
+  approvedFrom   SubcategorySuggestion[] @relation("SuggestionApproved")
+  mergedFrom     SubcategorySuggestion[] @relation("SuggestionMerged")
+  keywordTargets KeywordMappingTarget[]
+
+  @@unique([categoryId, slug], map: "subcategories_category_slug_key")
+  @@unique([categoryId, normalizedName], map: "subcategories_category_normalized_name_key")
+  @@index([categoryId, active, sortOrder, id], map: "subcategories_category_active_sort_idx")
+  @@index([normalizedName(ops: raw("gin_trgm_ops"))], type: Gin, map: "subcategories_normalized_name_trgm_idx")
+  @@map("subcategories")
+}
+
+model CatalogHomeSection {
+  id                String                       @id @db.Uuid
+  kind              String
+  contentKind       String                       @map("content_kind")
+  categoryId        String?                      @map("category_id") @db.Uuid
+  headingEn         String?                      @map("heading_en")
+  headingHi         String?                      @map("heading_hi")
+  supportingTextEn  String?                      @map("supporting_text_en")
+  supportingTextHi  String?                      @map("supporting_text_hi")
+  initialCategoryId String?                      @map("initial_category_id") @db.Uuid
+  position          Int
+  active            Boolean                      @default(false)
+  removedAt         DateTime?                    @map("removed_at") @db.Timestamptz(6)
+  version           Int                          @default(1)
+  createdBy         String                       @map("created_by") @db.Uuid
+  updatedBy         String                       @map("updated_by") @db.Uuid
+  createdAt         DateTime                     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime                     @default(now()) @map("updated_at") @db.Timestamptz(6)
+  category          Category?                    @relation("CatalogHomeSectionCategory", fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "catalog_home_sections_category_id_fkey")
+  initialCategory   Category?                    @relation("CatalogHomeSectionInitial", fields: [initialCategoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "catalog_home_sections_initial_category_id_fkey")
+  creator           User                         @relation("CatalogHomeSectionCreator", fields: [createdBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "catalog_home_sections_created_by_fkey")
+  updater           User                         @relation("CatalogHomeSectionUpdater", fields: [updatedBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "catalog_home_sections_updated_by_fkey")
+  categories        CatalogHomeSectionCategory[]
+
+  @@unique([categoryId], where: raw("\"kind\" = 'single_category' AND \"removed_at\" IS NULL"), map: "catalog_home_sections_single_category_key")
+  @@index([position, id], where: raw("\"active\""), map: "catalog_home_sections_active_position_idx")
+  @@map("catalog_home_sections")
+}
+
+model CatalogHomeSectionCategory {
+  sectionId  String             @map("section_id") @db.Uuid
+  categoryId String             @map("category_id") @db.Uuid
+  position   Int
+  section    CatalogHomeSection @relation(fields: [sectionId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "catalog_home_section_categories_section_id_fkey")
+  category   Category           @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "catalog_home_section_categories_category_id_fkey")
+
+  @@id([sectionId, categoryId], map: "catalog_home_section_categories_pkey")
+  @@unique([sectionId, position], map: "catalog_home_section_categories_section_position_key")
+  @@index([sectionId, position, categoryId], map: "catalog_home_section_categories_pills_idx")
+  @@index([categoryId, sectionId], map: "catalog_home_section_categories_category_idx")
+  @@map("catalog_home_section_categories")
+}
+
+// `businessId` gains its businesses FK in the Businesses migration.
+model SubcategorySuggestion {
+  id                      String       @id @db.Uuid
+  businessId              String       @map("business_id") @db.Uuid
+  submitterUserId         String       @map("submitter_user_id") @db.Uuid
+  cityId                  String       @map("city_id") @db.Uuid
+  areaId                  String       @map("area_id") @db.Uuid
+  categoryId              String       @map("category_id") @db.Uuid
+  nameEn                  String       @map("name_en")
+  nameHi                  String?      @map("name_hi")
+  normalizedName          String       @map("normalized_name")
+  reason                  String?
+  status                  String       @default("pending")
+  reviewedBy              String?      @map("reviewed_by") @db.Uuid
+  reviewedAt              DateTime?    @map("reviewed_at") @db.Timestamptz(6)
+  rejectionReason         String?      @map("rejection_reason")
+  subcategoryId           String?      @map("subcategory_id") @db.Uuid
+  mergedIntoSubcategoryId String?      @map("merged_into_subcategory_id") @db.Uuid
+  version                 Int          @default(1)
+  createdAt               DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime     @default(now()) @map("updated_at") @db.Timestamptz(6)
+  submitter               User         @relation("SuggestionSubmitter", fields: [submitterUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_submitter_user_id_fkey")
+  reviewer                User?        @relation("SuggestionReviewer", fields: [reviewedBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_reviewed_by_fkey")
+  city                    City         @relation(fields: [cityId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_city_id_fkey")
+  area                    Area         @relation(fields: [areaId, cityId], references: [id, cityId], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_area_city_fkey")
+  category                Category     @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_category_id_fkey")
+  subcategory             Subcategory? @relation("SuggestionApproved", fields: [subcategoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_subcategory_id_fkey")
+  mergedInto              Subcategory? @relation("SuggestionMerged", fields: [mergedIntoSubcategoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_merged_into_fkey")
+
+  @@unique([categoryId, normalizedName], where: raw("\"status\" = 'pending'"), map: "subcategory_suggestions_pending_name_key")
+  @@index([status, cityId, areaId, createdAt, id], map: "subcategory_suggestions_queue_idx")
+  @@index([businessId, createdAt(sort: Desc), id(sort: Desc)], map: "subcategory_suggestions_business_idx")
+  @@index([normalizedName(ops: raw("gin_trgm_ops"))], type: Gin, map: "subcategory_suggestions_normalized_name_trgm_idx")
+  @@index([areaId, cityId], map: "subcategory_suggestions_area_city_idx")
+  @@map("subcategory_suggestions")
+}
+
+model KeywordMapping {
+  id        String                 @id @db.Uuid
+  enabled   Boolean                @default(true)
+  version   Int                    @default(1)
+  createdAt DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime               @default(now()) @map("updated_at") @db.Timestamptz(6)
+  terms     KeywordMappingTerm[]
+  targets   KeywordMappingTarget[]
+
+  @@index([enabled, id], map: "keyword_mappings_enabled_id_idx")
+  @@map("keyword_mappings")
+}
+
+model KeywordMappingTerm {
+  id             String         @id @db.Uuid
+  mappingId      String         @map("mapping_id") @db.Uuid
+  term           String
+  normalizedTerm String         @unique(map: "keyword_mapping_terms_normalized_term_key") @map("normalized_term")
+  kind           String
+  createdAt      DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  mapping        KeywordMapping @relation(fields: [mappingId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "keyword_mapping_terms_mapping_id_fkey")
+
+  @@unique([mappingId], where: raw("\"kind\" = 'primary'"), map: "keyword_mapping_terms_primary_key")
+  @@index([normalizedTerm(ops: raw("gin_trgm_ops"))], type: Gin, map: "keyword_mapping_terms_normalized_term_trgm_idx")
+  @@index([mappingId, kind, id], map: "keyword_mapping_terms_mapping_kind_idx")
+  @@map("keyword_mapping_terms")
+}
+
+model KeywordMappingTarget {
+  id            String         @id @db.Uuid
+  mappingId     String         @map("mapping_id") @db.Uuid
+  targetKind    String         @map("target_kind")
+  categoryId    String?        @map("category_id") @db.Uuid
+  subcategoryId String?        @map("subcategory_id") @db.Uuid
+  productTag    String?        @map("product_tag")
+  mapping       KeywordMapping @relation(fields: [mappingId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "keyword_mapping_targets_mapping_id_fkey")
+  category      Category?      @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "keyword_mapping_targets_category_id_fkey")
+  subcategory   Subcategory?   @relation(fields: [subcategoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "keyword_mapping_targets_subcategory_id_fkey")
+
+  @@unique([mappingId, categoryId], where: raw("\"category_id\" IS NOT NULL"), map: "keyword_mapping_targets_category_key")
+  @@unique([mappingId, subcategoryId], where: raw("\"subcategory_id\" IS NOT NULL"), map: "keyword_mapping_targets_subcategory_key")
+  @@unique([mappingId, productTag], where: raw("\"product_tag\" IS NOT NULL"), map: "keyword_mapping_targets_product_tag_key")
+  @@index([categoryId], where: raw("\"category_id\" IS NOT NULL"), map: "keyword_mapping_targets_category_idx")
+  @@index([subcategoryId], where: raw("\"subcategory_id\" IS NOT NULL"), map: "keyword_mapping_targets_subcategory_idx")
+  @@index([productTag], where: raw("\"product_tag\" IS NOT NULL"), map: "keyword_mapping_targets_product_tag_idx")
+  @@map("keyword_mapping_targets")
 }

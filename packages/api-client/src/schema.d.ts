@@ -160,6 +160,366 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/catalog/admin/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read the full category tree
+         * @description Active and inactive categories with their subcategories, versions and audit timestamps, ordered by kind, sortOrder and name; the taxonomy is platform-wide shared data. Requires an active admin with catalog:view and an active assigned city/area scope; super_admin is platform-wide. private, no-store.
+         */
+        get: operations["adminCatalogCategories"];
+        put?: never;
+        /**
+         * Create a category
+         * @description Allow-listed {kind,slug,nameEn,nameHi,icon?,imageAssetId?,sortOrder?}. The slug is immutable after creation. Emits catalog.taxonomy.changed. Names are trimmed plain text; duplicate checks use the shared normalization (NFKC, lowercase, whitespace collapse, unaccent) on both EN and HI names. imageAssetId must be an approved, attached-ready catalog_taxonomy Media asset; until the Media module binds its adapter every imageAssetId is rejected with CATALOG_IMAGE_INVALID (explicit null removes an image). super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.
+         */
+        post: operations["superAdminCatalogCategoryCreate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog/admin/categories/{categoryId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update a category
+         * @description Allow-listed {nameEn?,nameHi?,icon?,imageAssetId?,active?,sortOrder?,expectedVersion}; kind and slug are immutable. Deactivation hides the category from public reads and Home without deleting listings. Emits catalog.taxonomy.changed. imageAssetId must be an approved, attached-ready catalog_taxonomy Media asset; until the Media module binds its adapter every imageAssetId is rejected with CATALOG_IMAGE_INVALID (explicit null removes an image). super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.
+         */
+        patch: operations["superAdminCatalogCategoryUpdate"];
+        trace?: never;
+    };
+    "/catalog/admin/categories/{categoryId}/subcategories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create a subcategory directly
+         * @description {nameEn,nameHi,serviceTypes?,imageAssetId?,expectedVersion?}; the slug is derived from nameEn and immutable; expectedVersion optionally pins the parent category version. Emits catalog.taxonomy.changed. Names are trimmed plain text; duplicate checks use the shared normalization (NFKC, lowercase, whitespace collapse, unaccent) on both EN and HI names. imageAssetId must be an approved, attached-ready catalog_taxonomy Media asset; until the Media module binds its adapter every imageAssetId is rejected with CATALOG_IMAGE_INVALID (explicit null removes an image). super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.
+         */
+        post: operations["superAdminCatalogSubcategoryCreate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog/admin/home-sections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Home sections
+         * @description Live (not removed) sections, active and inactive, ordered by position then id, with localized content, pills and versions. Kinds: dedicated_subcategories (one category's active subcategories as tiles, unique per live category) and curated_pills (ordered active categories of one kind with an initial category). Headings/supporting text are localized EN/HI; displayed text is never hardcoded. No scheduling windows. Platform-wide. private, no-store.
+         */
+        get: operations["superAdminCatalogHomeSections"];
+        put?: never;
+        /**
+         * Create a Home section (inactive draft)
+         * @description Kinds: dedicated_subcategories (one category's active subcategories as tiles, unique per live category) and curated_pills (ordered active categories of one kind with an initial category). Headings/supporting text are localized EN/HI; displayed text is never hardcoded. No scheduling windows. Created inactive; activation is a separate status command. Emits catalog.home_sections.changed. super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.
+         */
+        post: operations["superAdminCatalogHomeSectionCreate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog/admin/home-sections/{sectionId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Remove a Home section
+         * @description Soft removal guarded by expectedVersion: the section leaves Home and the admin list while its row and audit history are preserved. Emits catalog.home_sections.changed. super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.
+         */
+        delete: operations["superAdminCatalogHomeSectionRemove"];
+        options?: never;
+        head?: never;
+        /**
+         * Update Home section content
+         * @description Versioned localized content, category, position and pill ordering update; kind and active state are not editable here (use the status command). An active section must remain publishable. Emits catalog.home_sections.changed. super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.
+         */
+        patch: operations["superAdminCatalogHomeSectionUpdate"];
+        trace?: never;
+    };
+    "/catalog/admin/home-sections/{sectionId}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Activate or deactivate a Home section
+         * @description {event:'activate'|'deactivate',expectedVersion}. Activation rechecks EN/HI content and that the category/subcategory set is active and non-empty. Emits catalog.home_sections.changed. super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.
+         */
+        post: operations["superAdminCatalogHomeSectionStatus"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog/admin/keyword-mappings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List search keyword mappings
+         * @description Mappings with their primary term, EN/HI/Hinglish/typo synonyms and typed category/subcategory/product-tag targets, ordered by id with a caller-bound cursor. Mappings are platform-wide; writes are super_admin only until Q-39 is resolved. Requires an active admin with catalog:view and an active assigned city/area scope; super_admin is platform-wide. private, no-store.
+         */
+        get: operations["adminCatalogKeywordMappings"];
+        put?: never;
+        /**
+         * Create a search keyword mapping
+         * @description {canonicalTerm,synonyms,targets}: one primary term plus EN/HI/Hinglish/typo variants, each stored with its normalized form (NFKC, lowercase, whitespace collapse, unaccent); normalized terms must be unique within and across mappings. Targets are typed active category/subcategory ids or normalized product tags. Admin catalog:edit write access is pending Q-39. Emits catalog.keyword_mapping.changed. super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.
+         */
+        post: operations["superAdminCatalogKeywordMappingCreate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog/admin/keyword-mappings/{mappingId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete a search keyword mapping
+         * @description {expectedVersion}. Deletes the mapping with its terms and targets; the audit entry keeps the before snapshot. Emits catalog.keyword_mapping.changed. super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.
+         */
+        delete: operations["superAdminCatalogKeywordMappingDelete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a search keyword mapping
+         * @description Allow-listed {canonicalTerm?,synonyms?,targets?,expectedVersion}; supplied lists replace the stored ones. Same normalization and target rules as create. Emits catalog.keyword_mapping.changed. super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.
+         */
+        patch: operations["superAdminCatalogKeywordMappingUpdate"];
+        trace?: never;
+    };
+    "/catalog/admin/subcategories/{subcategoryId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update a subcategory
+         * @description Allow-listed {nameEn?,nameHi?,serviceTypes?,imageAssetId?,active?,sortOrder?,expectedVersion}; slug and parent are immutable. Deactivation hides it from public reads, Home and new selections. Emits catalog.taxonomy.changed. Names are trimmed plain text; duplicate checks use the shared normalization (NFKC, lowercase, whitespace collapse, unaccent) on both EN and HI names. imageAssetId must be an approved, attached-ready catalog_taxonomy Media asset; until the Media module binds its adapter every imageAssetId is rejected with CATALOG_IMAGE_INVALID (explicit null removes an image). super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.
+         */
+        patch: operations["superAdminCatalogSubcategoryUpdate"];
+        trace?: never;
+    };
+    "/catalog/admin/subcategory-suggestions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Scoped subcategory suggestion queue
+         * @description Suggestions whose stored business area is inside the caller's assigned city/area scope (super_admin: all), filtered by the allow-listed status (default pending), oldest first with a caller-bound keyset cursor. Each item carries ranked existing-subcategory duplicate candidates from the same category. No owner contact or documents. Requires an active admin with catalog:view and an active assigned city/area scope; super_admin is platform-wide. private, no-store.
+         */
+        get: operations["adminCatalogSuggestions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog/admin/subcategory-suggestions/{id}/decision": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Approve, reject or merge a pending suggestion
+         * @description Requires an active admin with catalog:edit whose assigned scope contains the suggestion area (rechecked in the transaction); super_admin is platform-wide. approve creates the subcategory under the suggested category (approvalNameHi supplies a missing Hindi name); reject requires a reason; merge links to an active subcategory of the same category. Only pending suggestions transition, guarded by expectedVersion. The decision, any created subcategory, one audit entry and the outbox events (catalog.suggestion.*, catalog.taxonomy.changed) commit atomically. private, no-store.
+         */
+        post: operations["adminCatalogSuggestionDecision"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List active categories
+         * @description Active categories ordered by sortOrder then English name, optionally filtered by the allow-listed kind (products|services). Localized EN/HI names, icon fallback and public Media image descriptors only (no admin/audit fields). Publicly cacheable; taxonomy changes invalidate via catalog.taxonomy.changed.
+         */
+        get: operations["catalogCategories"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog/categories/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read an active category with its active subcategories
+         * @description Immutable slug lookup. Inactive or unknown categories are indistinguishable (CATEGORY_NOT_FOUND). Search owns paged listing results. Publicly cacheable.
+         */
+        get: operations["catalogCategory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog/categories/{slug}/subcategories/{subcategorySlug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read an active subcategory under its exact active parent
+         * @description Both rows must be active and the subcategory must belong to the named category. Returns the localized parent/child DTOs, image descriptors and canonical path; Search owns paged results. Publicly cacheable.
+         */
+        get: operations["catalogSubcategory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog/me/subcategory-suggestions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List the owner business's suggestions
+         * @description Newest first with a caller-bound keyset cursor; includes status, rejection reason and the approved/merged subcategory id. Authenticated owner whose business holds the business.taxonomy-suggest capability and a resolved area; business, submitter, city and area are derived server-side, never from the body. Until the Businesses module binds its adapter no owner can be resolved and every call is denied with COMMON_FORBIDDEN. private, no-store.
+         */
+        get: operations["catalogMySuggestions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog/subcategory-suggestions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Suggest a new subcategory
+         * @description {categoryId,nameEn,nameHi?,reason?,allowSimilar?} creates a pending suggestion. An exact normalized match with an existing subcategory or pending suggestion is refused; fuzzy candidates are refused with SUGGESTION_SIMILARITY_WARNING unless allowSimilar is true. The suggestion, one audit entry and catalog.suggestion.submitted commit atomically. Limited to 10 per hour per user. Authenticated owner whose business holds the business.taxonomy-suggest capability and a resolved area; business, submitter, city and area are derived server-side, never from the body. Until the Businesses module binds its adapter no owner can be resolved and every call is denied with COMMON_FORBIDDEN. private, no-store.
+         */
+        post: operations["catalogSuggestionCreate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog/subcategory-suggestions/duplicate-check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Check a proposed subcategory for duplicates
+         * @description {categoryId,nameEn,nameHi?} against the active category: returns an exact normalized-name match flag (with the existing subcategory) and up to 5 ranked fuzzy candidates. Read-only; nothing is stored. Authenticated owner whose business holds the business.taxonomy-suggest capability and a resolved area; business, submitter, city and area are derived server-side, never from the body. Until the Businesses module binds its adapter no owner can be resolved and every call is denied with COMMON_FORBIDDEN. private, no-store.
+         */
+        post: operations["catalogSuggestionDuplicateCheck"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/consents": {
         parameters: {
             query?: never;
@@ -1146,6 +1506,94 @@ export interface components {
                 name: string;
             }[];
         };
+        AdminCategoryDto: {
+            active: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            icon?: string;
+            /** Format: uuid */
+            id: string;
+            image?: {
+                /** Format: uuid */
+                assetId: string;
+                height: number;
+                mimeType: string;
+                /** Format: uri */
+                publicUrl: string;
+                width: number;
+            };
+            /** Format: uuid */
+            imageAssetId: string | null;
+            /** @enum {string} */
+            kind: "product" | "service";
+            nameEn: string;
+            nameHi: string;
+            relatedCategoryIds: string[];
+            slug: string;
+            sortOrder: number;
+            /** Format: date-time */
+            updatedAt: string;
+            version: number;
+        };
+        AdminCategoryTreeDto: {
+            items: {
+                active: boolean;
+                /** Format: date-time */
+                createdAt: string;
+                icon?: string;
+                /** Format: uuid */
+                id: string;
+                image?: {
+                    /** Format: uuid */
+                    assetId: string;
+                    height: number;
+                    mimeType: string;
+                    /** Format: uri */
+                    publicUrl: string;
+                    width: number;
+                };
+                /** Format: uuid */
+                imageAssetId: string | null;
+                /** @enum {string} */
+                kind: "product" | "service";
+                nameEn: string;
+                nameHi: string;
+                relatedCategoryIds: string[];
+                slug: string;
+                sortOrder: number;
+                subcategories: {
+                    active: boolean;
+                    /** Format: uuid */
+                    categoryId: string;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: uuid */
+                    id: string;
+                    image?: {
+                        /** Format: uuid */
+                        assetId: string;
+                        height: number;
+                        mimeType: string;
+                        /** Format: uri */
+                        publicUrl: string;
+                        width: number;
+                    };
+                    /** Format: uuid */
+                    imageAssetId: string | null;
+                    nameEn: string;
+                    nameHi: string;
+                    serviceTypes: string[];
+                    slug: string;
+                    sortOrder: number;
+                    /** Format: date-time */
+                    updatedAt: string;
+                    version: number;
+                }[];
+                /** Format: date-time */
+                updatedAt: string;
+                version: number;
+            }[];
+        };
         AdminCityDetailDto: {
             areas: {
                 /** Format: uuid */
@@ -1250,6 +1698,64 @@ export interface components {
             }[];
             nextCursor: string | null;
         };
+        AdminHomeSectionDto: {
+            active: boolean;
+            categories: {
+                /** Format: uuid */
+                categoryId: string;
+                position: number;
+            }[];
+            /** Format: uuid */
+            categoryId: string | null;
+            /** @enum {string} */
+            contentKind: "product" | "service";
+            /** Format: date-time */
+            createdAt: string;
+            headingEn: string | null;
+            headingHi: string | null;
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            initialCategoryId: string | null;
+            /** @enum {string} */
+            kind: "single_category" | "curated_categories";
+            position: number;
+            supportingTextEn: string | null;
+            supportingTextHi: string | null;
+            /** Format: date-time */
+            updatedAt: string;
+            version: number;
+        };
+        AdminHomeSectionListDto: {
+            items: {
+                active: boolean;
+                categories: {
+                    /** Format: uuid */
+                    categoryId: string;
+                    position: number;
+                }[];
+                /** Format: uuid */
+                categoryId: string | null;
+                /** @enum {string} */
+                contentKind: "product" | "service";
+                /** Format: date-time */
+                createdAt: string;
+                headingEn: string | null;
+                headingHi: string | null;
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                initialCategoryId: string | null;
+                /** @enum {string} */
+                kind: "single_category" | "curated_categories";
+                position: number;
+                supportingTextEn: string | null;
+                supportingTextHi: string | null;
+                /** Format: date-time */
+                updatedAt: string;
+                version: number;
+            }[];
+        };
         AdminImpactDto: {
             /** Format: uuid */
             adminId: string;
@@ -1350,6 +1856,74 @@ export interface components {
             nextCursor: string | null;
             total: number;
         };
+        AdminSubcategoryDto: {
+            active: boolean;
+            /** Format: uuid */
+            categoryId: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: uuid */
+            id: string;
+            image?: {
+                /** Format: uuid */
+                assetId: string;
+                height: number;
+                mimeType: string;
+                /** Format: uri */
+                publicUrl: string;
+                width: number;
+            };
+            /** Format: uuid */
+            imageAssetId: string | null;
+            nameEn: string;
+            nameHi: string;
+            serviceTypes: string[];
+            slug: string;
+            sortOrder: number;
+            /** Format: date-time */
+            updatedAt: string;
+            version: number;
+        };
+        AdminSuggestionPageDto: {
+            items: {
+                /** Format: uuid */
+                areaId: string;
+                /** Format: uuid */
+                businessId: string;
+                candidates: {
+                    nameEn: string;
+                    nameHi: string;
+                    similarity: number;
+                    slug: string;
+                    /** Format: uuid */
+                    subcategoryId: string;
+                }[];
+                /** Format: uuid */
+                categoryId: string;
+                /** Format: uuid */
+                cityId: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                mergedIntoSubcategoryId: string | null;
+                nameEn: string;
+                nameHi: string | null;
+                reason: string | null;
+                rejectionReason: string | null;
+                /** Format: date-time */
+                reviewedAt: string | null;
+                /** @enum {string} */
+                status: "pending" | "approved" | "rejected" | "merged";
+                /** Format: uuid */
+                subcategoryId: string | null;
+                /** Format: date-time */
+                updatedAt: string;
+                version: number;
+            }[];
+            nextCursor: string | null;
+        };
         AuditEntryDetailDto: {
             action: string;
             actorLabel: string;
@@ -1409,6 +1983,73 @@ export interface components {
             };
             message_key: string;
             status: number;
+        };
+        CategoryDetailDto: {
+            category: {
+                active: boolean;
+                icon?: string;
+                /** Format: uuid */
+                id: string;
+                image?: {
+                    /** Format: uuid */
+                    assetId: string;
+                    height: number;
+                    mimeType: string;
+                    /** Format: uri */
+                    publicUrl: string;
+                    width: number;
+                };
+                /** @enum {string} */
+                kind: "product" | "service";
+                nameEn: string;
+                nameHi: string;
+                slug: string;
+                sortOrder: number;
+            };
+            subcategories: {
+                active: boolean;
+                /** Format: uuid */
+                categoryId: string;
+                /** Format: uuid */
+                id: string;
+                image?: {
+                    /** Format: uuid */
+                    assetId: string;
+                    height: number;
+                    mimeType: string;
+                    /** Format: uri */
+                    publicUrl: string;
+                    width: number;
+                };
+                nameEn: string;
+                nameHi: string;
+                serviceTypes: string[];
+                slug: string;
+                sortOrder: number;
+            }[];
+        };
+        CategoryListDto: {
+            items: {
+                active: boolean;
+                icon?: string;
+                /** Format: uuid */
+                id: string;
+                image?: {
+                    /** Format: uuid */
+                    assetId: string;
+                    height: number;
+                    mimeType: string;
+                    /** Format: uri */
+                    publicUrl: string;
+                    width: number;
+                };
+                /** @enum {string} */
+                kind: "product" | "service";
+                nameEn: string;
+                nameHi: string;
+                slug: string;
+                sortOrder: number;
+            }[];
         };
         ChallengeDto: {
             /** Format: uuid */
@@ -1477,6 +2118,17 @@ export interface components {
             /** Format: uuid */
             roleId: string;
         };
+        CreateCategoryDto: {
+            icon?: string;
+            /** Format: uuid */
+            imageAssetId?: string | null;
+            /** @enum {string} */
+            kind: "product" | "service";
+            nameEn: string;
+            nameHi: string;
+            slug: string;
+            sortOrder?: number;
+        };
         CreateCityDto: {
             nameEn: string;
             nameHi: string;
@@ -1490,6 +2142,53 @@ export interface components {
             confirmed?: true;
             /** @enum {string} */
             type: "export" | "delete";
+        };
+        CreateHomeSectionDto: {
+            /** Format: uuid */
+            categoryId: string;
+            /** @enum {string} */
+            contentKind: "product" | "service";
+            /** @enum {string} */
+            kind: "single_category";
+            position: number;
+            supportingTextEn?: string;
+            supportingTextHi?: string;
+        } | {
+            categories: {
+                /** Format: uuid */
+                categoryId: string;
+                position: number;
+            }[];
+            /** @enum {string} */
+            contentKind: "product" | "service";
+            headingEn: string;
+            headingHi: string;
+            /** Format: uuid */
+            initialCategoryId: string;
+            /** @enum {string} */
+            kind: "curated_categories";
+            position: number;
+            supportingTextEn?: string;
+            supportingTextHi?: string;
+        };
+        CreateKeywordMappingDto: {
+            canonicalTerm: string;
+            synonyms: string[];
+            targets: ({
+                /** Format: uuid */
+                categoryId: string;
+                /** @enum {string} */
+                kind: "category";
+            } | {
+                /** @enum {string} */
+                kind: "subcategory";
+                /** Format: uuid */
+                subcategoryId: string;
+            } | {
+                /** @enum {string} */
+                kind: "product_tag";
+                productTag: string;
+            })[];
         };
         CreateRoleDto: {
             /** @default null */
@@ -1505,6 +2204,14 @@ export interface components {
                 reviews?: ("view" | "create" | "edit" | "delete" | "export")[];
                 users?: ("view" | "create" | "edit" | "delete" | "export")[];
             };
+        };
+        CreateSubcategoryDto: {
+            expectedVersion?: number;
+            /** Format: uuid */
+            imageAssetId?: string | null;
+            nameEn: string;
+            nameHi: string;
+            serviceTypes?: string[];
         };
         CreateSupportMessageDto: {
             message: string;
@@ -1661,6 +2368,23 @@ export interface components {
             /** @enum {string} */
             type: "export" | "delete";
         };
+        DecideSuggestionDto: {
+            /** @enum {string} */
+            action: "approve";
+            approvalNameHi?: string;
+            expectedVersion: number;
+        } | {
+            /** @enum {string} */
+            action: "reject";
+            expectedVersion: number;
+            reason: string;
+        } | {
+            /** @enum {string} */
+            action: "merge";
+            expectedVersion: number;
+            /** Format: uuid */
+            targetSubcategoryId: string;
+        };
         DeleteAddressDto: {
             expectedVersion: number;
         };
@@ -1678,6 +2402,9 @@ export interface components {
             };
             message_key: string;
             status: number;
+        };
+        ExpectedVersionBodyDto: {
+            expectedVersion: number;
         };
         FeatureFlagDto: {
             enablable: boolean;
@@ -1716,6 +2443,81 @@ export interface components {
         HealthDto: {
             /** @enum {string} */
             status: "ok";
+        };
+        HomeSectionRemovedDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {boolean} */
+            removed: true;
+            version: number;
+        };
+        HomeSectionStatusDto: {
+            /** @enum {string} */
+            event: "activate" | "deactivate";
+            expectedVersion: number;
+        };
+        KeywordMappingDeletedDto: {
+            /** @enum {boolean} */
+            deleted: true;
+            /** Format: uuid */
+            id: string;
+        };
+        KeywordMappingDto: {
+            canonicalTerm: string;
+            /** Format: date-time */
+            createdAt: string;
+            enabled: boolean;
+            /** Format: uuid */
+            id: string;
+            synonyms: string[];
+            targets: ({
+                /** Format: uuid */
+                categoryId: string;
+                /** @enum {string} */
+                kind: "category";
+            } | {
+                /** @enum {string} */
+                kind: "subcategory";
+                /** Format: uuid */
+                subcategoryId: string;
+            } | {
+                /** @enum {string} */
+                kind: "product_tag";
+                productTag: string;
+            })[];
+            /** Format: date-time */
+            updatedAt: string;
+            version: number;
+        };
+        KeywordMappingPageDto: {
+            items: {
+                canonicalTerm: string;
+                /** Format: date-time */
+                createdAt: string;
+                enabled: boolean;
+                /** Format: uuid */
+                id: string;
+                synonyms: string[];
+                targets: ({
+                    /** Format: uuid */
+                    categoryId: string;
+                    /** @enum {string} */
+                    kind: "category";
+                } | {
+                    /** @enum {string} */
+                    kind: "subcategory";
+                    /** Format: uuid */
+                    subcategoryId: string;
+                } | {
+                    /** @enum {string} */
+                    kind: "product_tag";
+                    productTag: string;
+                })[];
+                /** Format: date-time */
+                updatedAt: string;
+                version: number;
+            }[];
+            nextCursor: string | null;
         };
         LegalPageAdminDto: {
             bodyEn: string;
@@ -2820,6 +3622,145 @@ export interface components {
             action: "enable" | "disable";
             expectedVersion: number;
         };
+        SubcategoryDetailDto: {
+            canonicalPath: string;
+            category: {
+                active: boolean;
+                icon?: string;
+                /** Format: uuid */
+                id: string;
+                image?: {
+                    /** Format: uuid */
+                    assetId: string;
+                    height: number;
+                    mimeType: string;
+                    /** Format: uri */
+                    publicUrl: string;
+                    width: number;
+                };
+                /** @enum {string} */
+                kind: "product" | "service";
+                nameEn: string;
+                nameHi: string;
+                slug: string;
+                sortOrder: number;
+            };
+            subcategory: {
+                active: boolean;
+                /** Format: uuid */
+                categoryId: string;
+                /** Format: uuid */
+                id: string;
+                image?: {
+                    /** Format: uuid */
+                    assetId: string;
+                    height: number;
+                    mimeType: string;
+                    /** Format: uri */
+                    publicUrl: string;
+                    width: number;
+                };
+                nameEn: string;
+                nameHi: string;
+                serviceTypes: string[];
+                slug: string;
+                sortOrder: number;
+            };
+        };
+        SuggestionDto: {
+            /** Format: uuid */
+            areaId: string;
+            /** Format: uuid */
+            businessId: string;
+            /** Format: uuid */
+            categoryId: string;
+            /** Format: uuid */
+            cityId: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            mergedIntoSubcategoryId: string | null;
+            nameEn: string;
+            nameHi: string | null;
+            reason: string | null;
+            rejectionReason: string | null;
+            /** Format: date-time */
+            reviewedAt: string | null;
+            /** @enum {string} */
+            status: "pending" | "approved" | "rejected" | "merged";
+            /** Format: uuid */
+            subcategoryId: string | null;
+            /** Format: date-time */
+            updatedAt: string;
+            version: number;
+        };
+        SuggestionDuplicateCheckDto: {
+            /** Format: uuid */
+            categoryId: string;
+            nameEn: string;
+            nameHi?: string;
+        };
+        SuggestionDuplicateResultDto: {
+            candidates: {
+                nameEn: string;
+                nameHi: string;
+                similarity: number;
+                slug: string;
+                /** Format: uuid */
+                subcategoryId: string;
+            }[];
+            exact: boolean;
+            exactSubcategory: {
+                nameEn: string;
+                nameHi: string;
+                similarity: number;
+                slug: string;
+                /** Format: uuid */
+                subcategoryId: string;
+            } | null;
+        };
+        SuggestionPageDto: {
+            items: {
+                /** Format: uuid */
+                areaId: string;
+                /** Format: uuid */
+                businessId: string;
+                /** Format: uuid */
+                categoryId: string;
+                /** Format: uuid */
+                cityId: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                mergedIntoSubcategoryId: string | null;
+                nameEn: string;
+                nameHi: string | null;
+                reason: string | null;
+                rejectionReason: string | null;
+                /** Format: date-time */
+                reviewedAt: string | null;
+                /** @enum {string} */
+                status: "pending" | "approved" | "rejected" | "merged";
+                /** Format: uuid */
+                subcategoryId: string | null;
+                /** Format: date-time */
+                updatedAt: string;
+                version: number;
+            }[];
+            nextCursor: string | null;
+        };
+        SuggestSubcategoryDto: {
+            allowSimilar?: boolean;
+            /** Format: uuid */
+            categoryId: string;
+            nameEn: string;
+            nameHi?: string;
+            reason?: string;
+        };
         SuperAdminSettingsDto: {
             flags: {
                 enablable: boolean;
@@ -3297,6 +4238,16 @@ export interface components {
             lng?: number | null;
             pinCode?: string;
         };
+        UpdateCategoryDto: {
+            active?: boolean;
+            expectedVersion: number;
+            icon?: string | null;
+            /** Format: uuid */
+            imageAssetId?: string | null;
+            nameEn?: string;
+            nameHi?: string;
+            sortOrder?: number;
+        };
         UpdateCityStateCodeDto: {
             expectedVersion: number;
             /** @enum {string} */
@@ -3311,6 +4262,43 @@ export interface components {
         UpdateFeatureFlagDto: {
             enabled: boolean;
             expectedVersion: number;
+        };
+        UpdateHomeSectionDto: {
+            categories?: {
+                /** Format: uuid */
+                categoryId: string;
+                position: number;
+            }[];
+            /** Format: uuid */
+            categoryId?: string;
+            expectedVersion: number;
+            headingEn?: string;
+            headingHi?: string;
+            /** Format: uuid */
+            initialCategoryId?: string;
+            position?: number;
+            supportingTextEn?: string | null;
+            supportingTextHi?: string | null;
+        };
+        UpdateKeywordMappingDto: {
+            canonicalTerm?: string;
+            expectedVersion: number;
+            synonyms?: string[];
+            targets?: ({
+                /** Format: uuid */
+                categoryId: string;
+                /** @enum {string} */
+                kind: "category";
+            } | {
+                /** @enum {string} */
+                kind: "subcategory";
+                /** Format: uuid */
+                subcategoryId: string;
+            } | {
+                /** @enum {string} */
+                kind: "product_tag";
+                productTag: string;
+            })[];
         };
         UpdateLegalPageDto: {
             bodyEn: string;
@@ -3888,6 +4876,16 @@ export interface components {
                     };
                 };
             }[];
+        };
+        UpdateSubcategoryDto: {
+            active?: boolean;
+            expectedVersion: number;
+            /** Format: uuid */
+            imageAssetId?: string | null;
+            nameEn?: string;
+            nameHi?: string;
+            serviceTypes?: string[];
+            sortOrder?: number;
         };
         UpdateZoneDto: {
             expectedVersion: number;
@@ -5295,6 +6293,3363 @@ export interface operations {
                 };
             };
             /** @description Flat error envelope; no submitted values or credentials. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    adminCatalogCategories: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCategoryTreeDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_FORBIDDEN without catalog:view or without an active assigned scope; ADMIN_INACTIVE for a deactivated admin. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on (admins are not admitted); COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    superAdminCatalogCategoryCreate: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive command key. Retry the identical command within 24 hours; replay rechecks current super_admin access and returns the current state. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCategoryDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCategoryDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for invalid fields or unexpected keys. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATEGORY_CONFLICT when the slug already exists; idempotency conflicts. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATALOG_IMAGE_INVALID. */
+            422: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) with Retry-After for an authenticated non-super session while maintenance is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    superAdminCatalogCategoryUpdate: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive command key. Retry the identical command within 24 hours; replay rechecks current super_admin access and returns the current state. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                categoryId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCategoryDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminCategoryDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for no changes, invalid fields or unexpected keys. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATEGORY_NOT_FOUND. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATALOG_VERSION_CONFLICT for a stale expectedVersion; idempotency conflicts. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATALOG_IMAGE_INVALID. */
+            422: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) with Retry-After for an authenticated non-super session while maintenance is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    superAdminCatalogSubcategoryCreate: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive command key. Retry the identical command within 24 hours; replay rechecks current super_admin access and returns the current state. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                categoryId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateSubcategoryDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSubcategoryDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for invalid names/serviceTypes, a name that yields an empty slug or unexpected keys. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATEGORY_NOT_FOUND. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description SUBCATEGORY_DUPLICATE for a normalized EN/HI name or slug clash in the category; CATALOG_VERSION_CONFLICT for a stale parent version; idempotency conflicts. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATALOG_IMAGE_INVALID. */
+            422: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) with Retry-After for an authenticated non-super session while maintenance is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    superAdminCatalogHomeSections: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminHomeSectionListDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) with Retry-After for an authenticated non-super session while maintenance is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    superAdminCatalogHomeSectionCreate: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive command key. Retry the identical command within 24 hours; replay rechecks current super_admin access and returns the current state. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateHomeSectionDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminHomeSectionDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for an unknown kind, invalid fields or unexpected keys. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATALOG_HOME_SECTION_CONFLICT when a live dedicated section already exists for the category; idempotency conflicts. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATALOG_HOME_SECTION_INVALID for a missing/other-kind category, an initial category outside the pills, duplicate pills or the section limit. */
+            422: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) with Retry-After for an authenticated non-super session while maintenance is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    superAdminCatalogHomeSectionRemove: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive command key. Retry the identical command within 24 hours; replay rechecks current super_admin access and returns the current state. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                sectionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExpectedVersionBodyDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HomeSectionRemovedDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for a missing expectedVersion or unexpected keys. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATALOG_HOME_SECTION_NOT_FOUND. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATALOG_VERSION_CONFLICT for a stale expectedVersion; idempotency conflicts. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) with Retry-After for an authenticated non-super session while maintenance is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    superAdminCatalogHomeSectionUpdate: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive command key. Retry the identical command within 24 hours; replay rechecks current super_admin access and returns the current state. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                sectionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateHomeSectionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminHomeSectionDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for no changes, invalid fields or unexpected keys. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATALOG_HOME_SECTION_NOT_FOUND (also for a removed section). */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATALOG_VERSION_CONFLICT for a stale expectedVersion; CATALOG_HOME_SECTION_CONFLICT for a duplicate dedicated category; idempotency conflicts. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATALOG_HOME_SECTION_INVALID. */
+            422: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) with Retry-After for an authenticated non-super session while maintenance is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    superAdminCatalogHomeSectionStatus: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive command key. Retry the identical command within 24 hours; replay rechecks current super_admin access and returns the current state. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                sectionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HomeSectionStatusDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminHomeSectionDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for an unknown event or unexpected keys. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATALOG_HOME_SECTION_NOT_FOUND. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATALOG_HOME_SECTION_STATE_INVALID when already in the target state or not publishable; CATALOG_VERSION_CONFLICT for a stale expectedVersion; idempotency conflicts. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATALOG_HOME_SECTION_INVALID when stored content no longer validates. */
+            422: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) with Retry-After for an authenticated non-super session while maintenance is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    adminCatalogKeywordMappings: {
+        parameters: {
+            query?: {
+                cursor?: string;
+                limit?: number;
+            };
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KeywordMappingPageDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for an invalid limit or cursor. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_FORBIDDEN without catalog:view or without an active assigned scope; ADMIN_INACTIVE for a deactivated admin. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on (admins are not admitted); COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    superAdminCatalogKeywordMappingCreate: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive command key. Retry the identical command within 24 hours; replay rechecks current super_admin access and returns the current state. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateKeywordMappingDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KeywordMappingDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for empty/duplicate normalized terms or targets, oversized lists or unexpected keys. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description KEYWORD_MAPPING_CONFLICT when a normalized term already belongs to another mapping; idempotency conflicts. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description KEYWORD_TARGET_INVALID for a missing or inactive category/subcategory target. */
+            422: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) with Retry-After for an authenticated non-super session while maintenance is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    superAdminCatalogKeywordMappingDelete: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive command key. Retry the identical command within 24 hours; replay rechecks current super_admin access and returns the current state. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                mappingId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExpectedVersionBodyDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KeywordMappingDeletedDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for a missing expectedVersion or unexpected keys. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description KEYWORD_MAPPING_NOT_FOUND. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATALOG_VERSION_CONFLICT for a stale expectedVersion; idempotency conflicts. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) with Retry-After for an authenticated non-super session while maintenance is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    superAdminCatalogKeywordMappingUpdate: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive command key. Retry the identical command within 24 hours; replay rechecks current super_admin access and returns the current state. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                mappingId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateKeywordMappingDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KeywordMappingDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for no changes, empty/duplicate normalized terms or targets, or unexpected keys. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description KEYWORD_MAPPING_NOT_FOUND. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description KEYWORD_MAPPING_CONFLICT; CATALOG_VERSION_CONFLICT for a stale expectedVersion; idempotency conflicts. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description KEYWORD_TARGET_INVALID. */
+            422: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) with Retry-After for an authenticated non-super session while maintenance is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    superAdminCatalogSubcategoryUpdate: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive command key. Retry the identical command within 24 hours; replay rechecks current super_admin access and returns the current state. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                subcategoryId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateSubcategoryDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSubcategoryDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for no changes, invalid fields or unexpected keys. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description SUBCATEGORY_NOT_FOUND. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description SUBCATEGORY_DUPLICATE for a renamed clash; CATALOG_VERSION_CONFLICT for a stale expectedVersion; idempotency conflicts. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATALOG_IMAGE_INVALID. */
+            422: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) with Retry-After for an authenticated non-super session while maintenance is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    adminCatalogSuggestions: {
+        parameters: {
+            query?: {
+                cursor?: string;
+                limit?: number;
+                status?: string;
+            };
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSuggestionPageDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for an unknown status, invalid limit or a cursor bound to another caller/filter. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_FORBIDDEN without catalog:view or without an active assigned scope; ADMIN_INACTIVE for a deactivated admin. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on (admins are not admitted); COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    adminCatalogSuggestionDecision: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive command key. Retry the identical decision within 24 hours to replay the stored result; replay rechecks current admin access. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DecideSuggestionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuggestionDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for an unknown action, a missing reason/target or unexpected fields; COMMON_VALIDATION_FAILED for a missing/invalid Idempotency-Key. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_FORBIDDEN without catalog:edit; ADMIN_SCOPE_FORBIDDEN (route guard) or SUGGESTION_SCOPE_DENIED (transaction recheck) when the suggestion area is outside the assigned scope; ADMIN_INACTIVE for a deactivated admin. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description SUGGESTION_NOT_FOUND. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description SUGGESTION_STATE_INVALID when no longer pending; SUGGESTION_DUPLICATE when approval would duplicate an existing subcategory; CATALOG_VERSION_CONFLICT for a stale expectedVersion; idempotency conflicts. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description SUGGESTION_MERGE_TARGET_INVALID for a missing, inactive or other-category merge target. */
+            422: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on (admins are not admitted); COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    catalogCategories: {
+        parameters: {
+            query?: {
+                kind?: string;
+            };
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryListDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Untrusted Origin */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED: read limit exceeded */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Unexpected failure */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    catalogCategory: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryDetailDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Untrusted Origin */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description CATEGORY_NOT_FOUND */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED: read limit exceeded */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Unexpected failure */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    catalogSubcategory: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path: {
+                slug: string;
+                subcategorySlug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SubcategoryDetailDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Untrusted Origin */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description SUBCATEGORY_NOT_FOUND */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED: read limit exceeded */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Unexpected failure */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    catalogMySuggestions: {
+        parameters: {
+            query?: {
+                cursor?: string;
+                limit?: number;
+            };
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuggestionPageDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for an invalid limit or cursor. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_FORBIDDEN when no owned, capable, active business with a resolved area exists (always, until the Businesses module is available). */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    catalogSuggestionCreate: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive key; retry the identical suggestion within 24 hours to replay the stored result (replay rechecks the owner capability). */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SuggestSubcategoryDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuggestionDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for invalid names/reason or unexpected keys; COMMON_VALIDATION_FAILED for a missing/invalid Idempotency-Key. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_FORBIDDEN when no owned, capable, active business with a resolved area exists (always, until the Businesses module is available). */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATEGORY_NOT_FOUND for a missing or inactive category. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description SUGGESTION_DUPLICATE for an exact existing subcategory or pending suggestion; SUGGESTION_SIMILARITY_WARNING for fuzzy candidates without allowSimilar; idempotency conflicts. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED with Retry-After. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    catalogSuggestionDuplicateCheck: {
+        parameters: {
+            query?: never;
+            header: {
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SuggestionDuplicateCheckDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuggestionDuplicateResultDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for invalid names or unexpected keys. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_FORBIDDEN when no owned, capable, active business with a resolved area exists (always, until the Businesses module is available). */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CATEGORY_NOT_FOUND for a missing or inactive category. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED with Retry-After. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable. */
             503: {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */

@@ -45,6 +45,14 @@ import {
 import { PublicSettingsService } from '../../modules/settings/application/public-settings.service';
 import { SettingsService } from '../../modules/settings/application/settings.service';
 import { SupportService } from '../../modules/settings/application/support.service';
+import { CatalogHomeSectionsService } from '../../modules/catalog/application/catalog-home-sections.service';
+import { CatalogKeywordsService } from '../../modules/catalog/application/catalog-keywords.service';
+import { CatalogSuggestionsService } from '../../modules/catalog/application/catalog-suggestions.service';
+import { CatalogTaxonomyService } from '../../modules/catalog/application/catalog-taxonomy.service';
+import { AdminCatalogController } from '../../modules/catalog/presentation/admin-catalog.controller';
+import { OwnerCatalogSuggestionsController } from '../../modules/catalog/presentation/owner-catalog-suggestions.controller';
+import { PublicCatalogController } from '../../modules/catalog/presentation/public-catalog.controller';
+import { SuperAdminCatalogController } from '../../modules/catalog/presentation/super-admin-catalog.controller';
 
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
@@ -69,6 +77,10 @@ import { SupportService } from '../../modules/settings/application/support.servi
     SuperAdminSettingsController,
     SupportMessagesController,
     AdminSupportMessagesController,
+    PublicCatalogController,
+    AdminCatalogController,
+    SuperAdminCatalogController,
+    OwnerCatalogSuggestionsController,
   ],
   providers: [
     ReadinessService,
@@ -88,6 +100,10 @@ import { SupportService } from '../../modules/settings/application/support.servi
     PublicSettingsService,
     SettingsService,
     SupportService,
+    CatalogTaxonomyService,
+    CatalogHomeSectionsService,
+    CatalogSuggestionsService,
+    CatalogKeywordsService,
   ].map((provide) => ({ provide, useValue: Object.freeze({}) })),
 })
 class OpenApiModule {}

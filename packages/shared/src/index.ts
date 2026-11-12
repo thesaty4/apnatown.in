@@ -4,6 +4,11 @@ export { Money } from './money.js';
 export { canonicalJson } from './json.js';
 export type { JsonValue } from './json.js';
 export {
+  CATALOG_EVENT_TYPES,
+  CatalogHomeSectionsChangedPayloadSchema,
+  CatalogKeywordMappingChangedPayloadSchema,
+  CatalogSuggestionEventPayloadSchema,
+  CatalogTaxonomyChangedPayloadSchema,
   CONSENT_EVENT_TYPES,
   ConsentEventPayloadSchema,
   ConsentEventTypeSchema,
@@ -18,6 +23,10 @@ export {
   UserAccountEventPayloadSchema,
 } from './events.js';
 export type {
+  CatalogHomeSectionsChangedPayload,
+  CatalogKeywordMappingChangedPayload,
+  CatalogSuggestionEventPayload,
+  CatalogTaxonomyChangedPayload,
   ConsentEventPayload,
   ConsentEventType,
   DataRequestEventPayload,

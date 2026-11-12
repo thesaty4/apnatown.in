@@ -85,6 +85,34 @@ const catalogue = {
   SETTINGS_GROUP_REQUIRED: [422, 'errors.settings.groupRequired'],
   FEATURE_NOT_AVAILABLE: [409, 'errors.settings.featureNotAvailable'],
   SUPPORT_MESSAGE_NOT_FOUND: [404, 'errors.support.messageNotFound'],
+  CATEGORY_NOT_FOUND: [404, 'errors.catalog.categoryNotFound'],
+  CATEGORY_CONFLICT: [409, 'errors.catalog.categoryConflict'],
+  SUBCATEGORY_NOT_FOUND: [404, 'errors.catalog.subcategoryNotFound'],
+  SUBCATEGORY_DUPLICATE: [409, 'errors.catalog.subcategoryDuplicate'],
+  SUGGESTION_DUPLICATE: [409, 'errors.catalog.suggestion.duplicate'],
+  SUGGESTION_SIMILARITY_WARNING: [
+    409,
+    'errors.catalog.suggestion.similarityWarning',
+  ],
+  SUGGESTION_NOT_FOUND: [404, 'errors.catalog.suggestion.notFound'],
+  SUGGESTION_STATE_INVALID: [409, 'errors.catalog.suggestion.stateInvalid'],
+  SUGGESTION_SCOPE_DENIED: [403, 'errors.catalog.suggestion.scopeDenied'],
+  SUGGESTION_MERGE_TARGET_INVALID: [
+    422,
+    'errors.catalog.suggestion.mergeTargetInvalid',
+  ],
+  KEYWORD_MAPPING_NOT_FOUND: [404, 'errors.catalog.keyword.notFound'],
+  KEYWORD_MAPPING_CONFLICT: [409, 'errors.catalog.keyword.conflict'],
+  KEYWORD_TARGET_INVALID: [422, 'errors.catalog.keyword.targetInvalid'],
+  CATALOG_HOME_SECTION_NOT_FOUND: [404, 'errors.catalog.homeSection.notFound'],
+  CATALOG_HOME_SECTION_INVALID: [422, 'errors.catalog.homeSection.invalid'],
+  CATALOG_HOME_SECTION_CONFLICT: [409, 'errors.catalog.homeSection.conflict'],
+  CATALOG_HOME_SECTION_STATE_INVALID: [
+    409,
+    'errors.catalog.homeSection.stateInvalid',
+  ],
+  CATALOG_IMAGE_INVALID: [422, 'errors.catalog.imageInvalid'],
+  CATALOG_VERSION_CONFLICT: [409, 'errors.catalog.versionConflict'],
 } as const;
 
 export type ErrorCode = keyof typeof catalogue;
