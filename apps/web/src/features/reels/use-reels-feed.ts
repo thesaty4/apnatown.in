@@ -71,6 +71,7 @@ export function useReelsFeed(initialVideoId: string | undefined) {
     browseLocation.revision,
   );
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = feed.query;
+  const isFetchNextPageError = feed.query.isFetchNextPageError;
   const items = useMemo(
     () => data?.pages.flatMap((page) => page.items) ?? [],
     [data],
@@ -126,7 +127,6 @@ export function useReelsFeed(initialVideoId: string | undefined) {
     // Drop every cached page of the expired snapshot for this viewer.
     queryClient.removeQueries({ queryKey: feed.key.slice(0, 4) });
     startSession({
-      ...session,
       pill,
       category,
       snapshotId: undefined,
@@ -144,33 +144,34 @@ export function useReelsFeed(initialVideoId: string | undefined) {
 
   // Mirror the server's snapshot and effective filter (out-of-filter deep
   // links fall back to For You) without changing the query key.
+  const urlVideoId = activeId ?? session.anchorId;
   useEffect(() => {
-    if (firstPage) writeUrl(activeId, feedSearch(pill, category, snapshotId));
-  }, [activeId, category, firstPage, pill, snapshotId, writeUrl]);
+    if (firstPage) writeUrl(urlVideoId, feedSearch(pill, category, snapshotId));
+  }, [category, firstPage, pill, snapshotId, urlVideoId, writeUrl]);
 
   useEffect(() => {
     const anchorId = session.anchorId;
     if (!anchorId || anchorMissing || anchoredFor.current === session) return;
-    if (!items.length) return;
+    if (!items.length || isFetchingNextPage || isFetchNextPageError) return;
     const target = document.getElementById(`reel-${anchorId}`);
     if (target) {
       target.scrollIntoView({ block: 'start' });
       anchoredFor.current = session;
     } else if (hasNextPage) {
-      if (!isFetchingNextPage) void fetchNextPage();
-    } else if (!isFetchingNextPage) {
+      void fetchNextPage();
+    } else {
       setAnchorMissing(true);
     }
   }, [
     anchorMissing,
     fetchNextPage,
     hasNextPage,
+    isFetchNextPageError,
     isFetchingNextPage,
     items,
     session,
   ]);
 
-  const isFetchNextPageError = feed.query.isFetchNextPageError;
   useEffect(() => {
     if (activeIndex < 0 || activeIndex < items.length - 3) return;
     if (hasNextPage && !isFetchingNextPage && !isFetchNextPageError)

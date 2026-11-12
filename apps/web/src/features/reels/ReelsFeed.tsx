@@ -194,9 +194,9 @@ export function ReelsFeed({
         <div
           ref={scrollRoot}
           id={feedId}
+          role="tabpanel"
           tabIndex={0}
           aria-label={t('feedLabel')}
-          aria-busy={feed.isFetching || undefined}
           className={`h-full w-full max-w-reel-feed snap-y snap-mandatory overflow-y-auto overscroll-contain bg-reel-surface [scrollbar-width:none] desktop:my-3 desktop:h-[calc(100%-24px)] desktop:rounded-reel-frame [&::-webkit-scrollbar]:hidden ${reelFocusInset}`}
         >
           {firstPageProblem ? (
@@ -249,9 +249,9 @@ export function ReelsFeed({
               type="button"
               aria-label={t('previous')}
               aria-controls={feedId}
-              disabled={activeIndex <= 0}
+              aria-disabled={activeIndex <= 0 || undefined}
               className={reelTopIconClassName}
-              onClick={() => step(-1)}
+              onClick={() => activeIndex > 0 && step(-1)}
             >
               <NavIcon name="cu" className="size-5.5" />
             </button>
@@ -259,9 +259,9 @@ export function ReelsFeed({
               type="button"
               aria-label={t('next')}
               aria-controls={feedId}
-              disabled={atEnd}
+              aria-disabled={atEnd || undefined}
               className={reelTopIconClassName}
-              onClick={() => step(1)}
+              onClick={() => !atEnd && step(1)}
             >
               <NavIcon name="cd" className="size-5.5" />
             </button>
@@ -307,6 +307,7 @@ export function ReelsFeed({
       />
       {moreItem && (
         <VideoReportSheet
+          key={moreItem.id}
           videoId={moreItem.id}
           open={reportOpen}
           onOpenChange={setReportOpen}

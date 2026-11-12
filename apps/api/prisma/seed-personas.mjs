@@ -39,7 +39,8 @@ export function buildPersonaFixtures(sample, helpers, fixtures) {
   const phone = (key) => helpers.normalizePhone(personas[key].phone);
   const byPhone = (list, key) =>
     (list ?? []).find(
-      (entry) => entry.phone && helpers.normalizePhone(entry.phone) === phone(key),
+      (entry) =>
+        entry.phone && helpers.normalizePhone(entry.phone) === phone(key),
     );
   const customer = byPhone(sample.users, 'customer');
   const admin = byPhone(sample.admins, 'admin');
@@ -53,20 +54,37 @@ export function buildPersonaFixtures(sample, helpers, fixtures) {
     !admin.areas?.length ||
     admin.areas.some((key) => !areaKeys.has(key)) ||
     known.has(phone('super_admin')) ||
-    new Set(Object.keys(personas).map(phone)).size !== Object.keys(personas).length ||
+    new Set(Object.keys(personas).map(phone)).size !==
+      Object.keys(personas).length ||
     ['vendor', 'provider'].some(
       (key) =>
         !fixtures.owners.some(
-          (owner) => owner.phone === phone(key) && owner.role === personas[key].role,
+          (owner) =>
+            owner.phone === phone(key) && owner.role === personas[key].role,
         ),
     )
   )
     invalid();
   return {
     users: [
-      { id: fixtureId('user', customer.id), phone: phone('customer'), name: customer.name, roles: ['customer'] },
-      { id: fixtureId('user', admin.id), phone: phone('admin'), name: admin.name, roles: ['customer', 'admin'] },
-      { id: fixtureId('user', 'super-admin'), phone: phone('super_admin'), name: SUPER_ADMIN_NAME, roles: ['customer', 'super_admin'] },
+      {
+        id: fixtureId('user', customer.id),
+        phone: phone('customer'),
+        name: customer.name,
+        roles: ['customer'],
+      },
+      {
+        id: fixtureId('user', admin.id),
+        phone: phone('admin'),
+        name: admin.name,
+        roles: ['customer', 'admin'],
+      },
+      {
+        id: fixtureId('user', 'super-admin'),
+        phone: phone('super_admin'),
+        name: SUPER_ADMIN_NAME,
+        roles: ['customer', 'super_admin'],
+      },
     ],
     role: {
       id: fixtureId('admin-role', role.id),
@@ -118,7 +136,13 @@ async function seedUser(client, crypto, user, counts) {
       `INSERT INTO users (id, phone_ciphertext, phone_lookup_hash, display_name,
          created_at, updated_at)
        VALUES ($1::uuid, $2, $3, $4, $5, $5)`,
-      [user.id, crypto.encrypt(user.phone, `user:${user.id}:phone`), hash, user.name, FIXTURE_CLOCK],
+      [
+        user.id,
+        crypto.encrypt(user.phone, `user:${user.id}:phone`),
+        hash,
+        user.name,
+        FIXTURE_CLOCK,
+      ],
     );
     id = user.id;
     counts.personas += 1;
@@ -143,8 +167,16 @@ async function seedRole(client, role) {
   );
   // An existing same-named role keeps its operator-edited permissions.
   if (rowCount === 1)
-    await insertGrants(client, 'role_permissions', 'role_id', role.id, role.permissions);
-  const { rows } = await client.query('SELECT id FROM roles WHERE name = $1', [role.name]);
+    await insertGrants(
+      client,
+      'role_permissions',
+      'role_id',
+      role.id,
+      role.permissions,
+    );
+  const { rows } = await client.query('SELECT id FROM roles WHERE name = $1', [
+    role.name,
+  ]);
   if (!rows.length) invalid();
   return rows[0].id;
 }
@@ -169,19 +201,33 @@ async function seedAdmin(client, helpers, admin, ids) {
     [
       ids.userId,
       admin.name,
-      helpers.crypto.encrypt(admin.email, helpers.adminEmailContext(ids.userId)),
+      helpers.crypto.encrypt(
+        admin.email,
+        helpers.adminEmailContext(ids.userId),
+      ),
       ids.roleId,
       admin.communicationScopes,
       FIXTURE_CLOCK,
     ],
   );
   if (rowCount !== 1) return 0;
-  await insertGrants(client, 'admin_permissions', 'user_id', ids.userId, admin.permissions);
+  await insertGrants(
+    client,
+    'admin_permissions',
+    'user_id',
+    ids.userId,
+    admin.permissions,
+  );
   for (const key of admin.areas)
     await client.query(
       `INSERT INTO admin_scopes (id, user_id, authority, area_id, city_id)
        VALUES ($1::uuid, $2::uuid, 'area', $3::uuid, $4::uuid) ON CONFLICT DO NOTHING`,
-      [fixtureId('admin-scope', `${admin.key}:${key}`), ids.userId, ids.areaIds.get(key), ids.cityId],
+      [
+        fixtureId('admin-scope', `${admin.key}:${key}`),
+        ids.userId,
+        ids.areaIds.get(key),
+        ids.cityId,
+      ],
     );
   return 1;
 }
@@ -190,7 +236,11 @@ async function seedAdmin(client, helpers, admin, ids) {
 export async function seedPersonas(client, helpers, personas, scope, counts) {
   const [customer, admin, superAdmin] = personas.users;
   if (personas.admin.areas.some((key) => !scope.areaIds.has(key))) invalid();
-  await grantRoles(client, await seedUser(client, helpers.crypto, customer, counts), customer.roles);
+  await grantRoles(
+    client,
+    await seedUser(client, helpers.crypto, customer, counts),
+    customer.roles,
+  );
   const adminId = await seedUser(client, helpers.crypto, admin, counts);
   if (await exclusive(client, adminId, 'admin')) {
     const roleId = await seedRole(client, personas.role);

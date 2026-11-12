@@ -5,6 +5,20 @@ Format: see `.github/skills/lessons-learned/SKILL.md`. Newest at the
 top; developer bug-fix work and any agent that catches a reusable mistake add an
 entry here.
 
+## Don't navigate or refetch inside a frozen feed session
+
+What: scrolling the Reels feed called `router.replace('/videos/{id}')`,
+which changes the dynamic `[id]` param and remounts the page. That reloaded
+every embed and re-requested the feed. Separately, the global
+`refetchOnWindowFocus`/30 s `staleTime` re-ran page 1 without the snapshot,
+so the ranking changed under the viewer.
+Rule: mirror in-session URL state through `history.replaceState` when it
+would change a dynamic segment. Snapshot-ranked infinite queries opt out of
+stale/focus/reconnect refetch, and only an explicit restart creates a new
+snapshot.
+Enforced in: [frontend-shared API contract](../../specs/_foundation/frontend-shared.md#api-integration-with-react-query)
+(Freshness and pagination) and `useVideoFeed`.
+
 ## Preserve category-scoped subcategory identity
 
 What: grouped service filters used bare subcategory slugs, conflating the

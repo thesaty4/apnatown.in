@@ -38,11 +38,7 @@ export class DemoLoginService {
         : null;
       if (!principal?.roles.includes(identity.role))
         throw new DomainError('DEMO_PERSONA_UNAVAILABLE');
-      const issued = await this.sessions.replace(
-        tx,
-        binding,
-        principal.userId,
-      );
+      const issued = await this.sessions.replace(tx, binding, principal.userId);
       return { issued, principal };
     });
   }

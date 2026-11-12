@@ -70,11 +70,23 @@ filter, the API explicitly switches to a fresh For You snapshot. The URL keeps
 the snapshot ID so reloads and Back navigation stay on that frozen ranking;
 expired snapshots require an explicit fresh-feed action.
 
+S-CUST-21 renders as the prototype's full-screen dark shell (`reel-*`
+tokens): top pills, snap-scrolled slides, right rail (like/comment/share/
+more), creator info, desktop side panel and up/down arrows, ↑/↓/j/k and Esc
+keys, comments/report/more/guest-login sheets, and in-feed loading, empty,
+offline, expired and next-page-error slides. The active video and filter
+are mirrored with `history.replaceState` (as prototype `rtab`), so scrolling
+or switching pills never remounts the feed or adds history entries; Back
+leaves the feed. The feed query never refetches on focus/staleness, keeping
+the frozen order. Save sits in the More sheet; Copy link lives in Share.
+
 This is not completion of S-VEND-11/S-PROV-12 or the full S-CUST-21 feed.
 Thumbnail upload, linked-item editing, video edit/delete, ordering, analytics,
-gallery management, desktop side panel and Offers/Products/Services feed
-filters remain unimplemented. Pending, removed, hidden or non-consented items
-remain unavailable publicly under BR-10.
+gallery management, view recording (`POST /videos/{id}/views`), Shop this
+video, provider-API mute/progress/Space-to-pause, live comment/share counts
+and Offers/Products/Services feed filters (shown as unavailable pills) remain
+unimplemented. Pending, removed, hidden or non-consented items remain
+unavailable publicly under BR-10.
 
 ### S-ADMN-11 Videos and moderation | `/admin/videos` | `d-admin-avideos.jpg`, `m-admin-avideos.jpg`
 - Layout: Pending / Approved / Rejected / Removed / Reported / Engagement; player preview/business/links/reasons, scoped tab counts, Approve/Reject/Remove. Only **reviews:edit** enables decisions; catalog permissions are irrelevant (`js27`).

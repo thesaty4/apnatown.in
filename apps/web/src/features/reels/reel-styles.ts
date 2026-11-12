@@ -13,6 +13,7 @@ export const reelIconButtonClassName =
   'inline-grid shrink-0 place-items-center rounded-pill ' +
   'bg-reel-text/14 text-reel-text transition-colors duration-2 ease-standard ' +
   'hover:bg-reel-text/25 disabled:cursor-not-allowed disabled:opacity-50 ' +
+  'aria-disabled:cursor-not-allowed aria-disabled:opacity-50 ' +
   `motion-reduce:transition-none ${reelFocus}`;
 
 /** Prototype `.rtop .iconbtn`: 44px. */
