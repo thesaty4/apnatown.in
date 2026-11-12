@@ -24,6 +24,16 @@
         "default": "./dist/cjs/admin.js"
       }
     },
+    "./businesses": {
+      "import": {
+        "types": "./dist/esm/businesses.d.ts",
+        "default": "./dist/esm/businesses.js"
+      },
+      "require": {
+        "types": "./dist/cjs/businesses.d.ts",
+        "default": "./dist/cjs/businesses.js"
+      }
+    },
     "./catalog": {
       "import": {
         "types": "./dist/esm/catalog.d.ts",

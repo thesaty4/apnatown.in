@@ -4,6 +4,9 @@ export { Money } from './money.js';
 export { canonicalJson } from './json.js';
 export type { JsonValue } from './json.js';
 export {
+  BUSINESS_EVENT_TYPES,
+  BusinessEventPayloadSchema,
+  BusinessProfileChangedPayloadSchema,
   CATALOG_EVENT_TYPES,
   CatalogHomeSectionsChangedPayloadSchema,
   CatalogKeywordMappingChangedPayloadSchema,
@@ -23,6 +26,8 @@ export {
   UserAccountEventPayloadSchema,
 } from './events.js';
 export type {
+  BusinessEventPayload,
+  BusinessProfileChangedPayload,
   CatalogHomeSectionsChangedPayload,
   CatalogKeywordMappingChangedPayload,
   CatalogSuggestionEventPayload,

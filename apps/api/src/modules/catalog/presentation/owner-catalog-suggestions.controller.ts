@@ -26,6 +26,11 @@ import {
   type SuggestionDuplicateCheck,
 } from '@apnatown/shared/catalog';
 import {
+  BUSINESS_KIND_HEADER,
+  BusinessKindSchema,
+  type BusinessKind,
+} from '@apnatown/shared/businesses';
+import {
   EmptyRequestSchema,
   PageQuerySchema,
   type PageQuery,
@@ -61,23 +66,43 @@ const READ_LIMIT = {
   subject: 'principal',
 } as const;
 const OWNER =
-  'Authenticated owner whose business holds the business.taxonomy-suggest capability and a resolved area; business, submitter, city and area are derived server-side, never from the body. Until the Businesses module binds its adapter no owner can be resolved and every call is denied with COMMON_FORBIDDEN. private, no-store.';
+  'Authenticated owner whose business holds the business.taxonomy-suggest capability (owned, not deleted/suspended/inactive, area resolved; an approved business also needs its live vendor/provider role); business, submitter, city and area are derived server-side, never from the body. X-Business-Kind selects which owned business is meant when the user owns both a shop and a provider profile. private, no-store.';
 const FORBIDDEN =
-  'COMMON_FORBIDDEN when no owned, capable, active business with a resolved area exists (always, until the Businesses module is available).';
+  'COMMON_FORBIDDEN when no owned, capable business with a resolved area exists for the caller (or for the named X-Business-Kind).';
+const CONTEXT_REQUIRED =
+  'BUSINESS_CONTEXT_REQUIRED when the caller owns both kinds and X-Business-Kind is omitted.';
 const NOT_ADMITTED =
   'MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable.';
+
+/** Optional `X-Business-Kind` owner context; selects, never grants. */
+function businessKind(request: AuthRequest): { businessKind?: BusinessKind } {
+  const header = request.headers[BUSINESS_KIND_HEADER];
+  if (header === undefined) return {};
+  const parsed = BusinessKindSchema.safeParse(header);
+  if (!parsed.success)
+    throw new DomainError('VALIDATION_ERROR', { field: 'X-Business-Kind' });
+  return { businessKind: parsed.data };
+}
 
 function owner(request: AuthRequest): OwnerRequest {
   if (!request.principal) throw new DomainError('SESSION_EXPIRED');
   return {
     session: sessionBinding(request),
     actorId: request.principal.userId,
+    ...businessKind(request),
   };
 }
 
 @ApiTags('catalog')
 @PrivateApi()
 @OwnAccount()
+@ApiHeader({
+  name: 'X-Business-Kind',
+  required: false,
+  description:
+    'Owner route context (shop|provider) selecting which of the caller\'s own businesses is meant; required only when the caller owns both. Grants nothing.',
+  schema: { type: 'string', enum: ['shop', 'provider'] },
+})
 @Controller('catalog')
 export class OwnerCatalogSuggestionsController {
   constructor(private readonly suggestions: CatalogSuggestionsService) {}
@@ -96,6 +121,7 @@ export class OwnerCatalogSuggestionsController {
     400: 'VALIDATION_ERROR for invalid names or unexpected keys.',
     403: FORBIDDEN,
     404: 'CATEGORY_NOT_FOUND for a missing or inactive category.',
+    422: CONTEXT_REQUIRED,
     429: 'COMMON_RATE_LIMITED with Retry-After.',
     503: NOT_ADMITTED,
   })
@@ -137,6 +163,7 @@ export class OwnerCatalogSuggestionsController {
     403: FORBIDDEN,
     404: 'CATEGORY_NOT_FOUND for a missing or inactive category.',
     409: 'SUGGESTION_DUPLICATE for an exact existing subcategory or pending suggestion; SUGGESTION_SIMILARITY_WARNING for fuzzy candidates without allowSimilar; idempotency conflicts.',
+    422: CONTEXT_REQUIRED,
     429: 'COMMON_RATE_LIMITED with Retry-After.',
     503: NOT_ADMITTED,
   })
@@ -147,7 +174,10 @@ export class OwnerCatalogSuggestionsController {
     @Body(new InputPipe(SuggestSubcategorySchema)) input: SuggestSubcategory,
   ) {
     return SuggestionSchema.parse(
-      await this.suggestions.submit(adminCommand(request), input),
+      await this.suggestions.submit(
+        { ...adminCommand(request), ...businessKind(request) },
+        input,
+      ),
     );
   }
 
@@ -162,6 +192,7 @@ export class OwnerCatalogSuggestionsController {
   @AdminErrors({
     400: 'VALIDATION_ERROR for an invalid limit or cursor.',
     403: FORBIDDEN,
+    422: CONTEXT_REQUIRED,
     503: NOT_ADMITTED,
   })
   @RateLimit(READ_LIMIT)

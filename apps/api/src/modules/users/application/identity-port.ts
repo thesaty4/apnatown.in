@@ -8,6 +8,12 @@ export interface UserIdentityPort {
     normalizedPhone: string,
   ): Promise<Principal | null>;
   readPrincipal(tx: TxContext, userId: string): Promise<Principal | null>;
+  /**
+   * Verified login phone (E.164) of a live, active user, for owning modules
+   * that must snapshot it server-side (Businesses application contact).
+   * Locks the user row through commit; null for missing/inactive users.
+   */
+  verifiedPhone(tx: TxContext, userId: string): Promise<string | null>;
   /** Exact live-user lookup by verified phone; never creates a user. */
   findByPhone(tx: TxContext, phone: string): Promise<string | null>;
   /** Minimal display data for privileged labels; no contact fields. */

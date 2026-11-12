@@ -14,6 +14,7 @@ import {
 } from './users.js';
 import { CityStatusSchema, ZoneStatusSchema } from './geo.js';
 import { SuggestionStatusSchema } from './catalog.js';
+import { BusinessStatusSchema } from './businesses.js';
 
 export const EventEnvelopeSchema = z.strictObject({
   id: IdSchema,
@@ -170,4 +171,31 @@ export const CatalogHomeSectionsChangedPayloadSchema = z.strictObject({
 });
 export type CatalogHomeSectionsChangedPayload = z.infer<
   typeof CatalogHomeSectionsChangedPayloadSchema
+>;
+
+/** Businesses application/profile events (no separate status_changed event). */
+export const BUSINESS_EVENT_TYPES = Object.freeze({
+  applicationSubmitted: 'business.application.submitted',
+  decisionChanged: 'business.application.decision_changed',
+  profileChanged: 'business.profile.changed',
+} as const);
+export const BusinessEventPayloadSchema = z.strictObject({
+  businessId: IdSchema,
+  ownerUserId: IdSchema,
+  cityId: IdSchema.nullable(),
+  areaId: IdSchema.nullable(),
+  status: BusinessStatusSchema,
+  previousStatus: BusinessStatusSchema.optional(),
+  version: VersionSchema,
+});
+export type BusinessEventPayload = z.infer<typeof BusinessEventPayloadSchema>;
+/** Profile changes carry before/after category IDs for cache invalidation. */
+export const BusinessProfileChangedPayloadSchema =
+  BusinessEventPayloadSchema.extend({
+    categoryIdsBefore: z.array(IdSchema),
+    categoryIdsAfter: z.array(IdSchema),
+    deleted: z.boolean(),
+  });
+export type BusinessProfileChangedPayload = z.infer<
+  typeof BusinessProfileChangedPayloadSchema
 >;

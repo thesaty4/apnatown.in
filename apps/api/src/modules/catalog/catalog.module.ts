@@ -3,11 +3,9 @@ import { CatalogEvents } from './application/catalog-events';
 import { CatalogHomeSectionsService } from './application/catalog-home-sections.service';
 import { CatalogKeywordsService } from './application/catalog-keywords.service';
 import {
-  CATALOG_BUSINESS_CONTEXT,
   CATALOG_HOME_READ,
   CATALOG_MEDIA_ASSETS,
   CATALOG_READ,
-  UnavailableBusinessContext,
   UnavailableMediaAssets,
 } from './application/catalog-ports';
 import { CatalogReadService } from './application/catalog-read.service';
@@ -41,10 +39,12 @@ export class CatalogModule {
     users: DynamicModule,
     audit: DynamicModule,
     admin: DynamicModule,
+    businessContext: DynamicModule,
   ): DynamicModule {
     return {
       module: CatalogModule,
-      imports: [runtime, users, audit, admin],
+      // businessContext exports the Businesses-owned CATALOG_BUSINESS_CONTEXT.
+      imports: [runtime, users, audit, admin, businessContext],
       controllers: [
         PublicCatalogController,
         AdminCatalogController,
@@ -65,12 +65,8 @@ export class CatalogModule {
           provide: KEYWORD_MAPPING_REPOSITORY,
           useClass: PrismaKeywordMappingRepository,
         },
-        // Binding points: Businesses and Media replace these unavailable
-        // adapters with their real implementations when those modules land.
-        {
-          provide: CATALOG_BUSINESS_CONTEXT,
-          useClass: UnavailableBusinessContext,
-        },
+        // Binding point: Media replaces this unavailable adapter when it lands.
+        // CATALOG_BUSINESS_CONTEXT is provided by BusinessContextModule.
         { provide: CATALOG_MEDIA_ASSETS, useClass: UnavailableMediaAssets },
         CatalogEvents,
         TaxonomyWriter,

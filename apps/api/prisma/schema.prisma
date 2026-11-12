@@ -69,34 +69,38 @@ model RateLimitBucket {
 }
 
 model User {
-  id                   String                  @id @db.Uuid
-  phoneCiphertext      String?                 @map("phone_ciphertext")
-  phoneLookupHash      Bytes?                  @unique(map: "users_phone_lookup_hash_key") @map("phone_lookup_hash")
-  emailCiphertext      String?                 @map("email_ciphertext")
-  displayName          String?                 @map("display_name")
-  preferredLocale      String                  @default("en") @map("preferred_locale")
-  themePreference      String                  @default("light") @map("theme_preference")
-  accountStatus        String                  @default("active") @map("account_status")
-  version              Int                     @default(1)
-  deletedAt            DateTime?               @map("deleted_at") @db.Timestamptz(6)
-  createdAt            DateTime                @map("created_at") @db.Timestamptz(6)
-  updatedAt            DateTime                @map("updated_at") @db.Timestamptz(6)
+  id                   String                   @id @db.Uuid
+  phoneCiphertext      String?                  @map("phone_ciphertext")
+  phoneLookupHash      Bytes?                   @unique(map: "users_phone_lookup_hash_key") @map("phone_lookup_hash")
+  emailCiphertext      String?                  @map("email_ciphertext")
+  displayName          String?                  @map("display_name")
+  preferredLocale      String                   @default("en") @map("preferred_locale")
+  themePreference      String                   @default("light") @map("theme_preference")
+  accountStatus        String                   @default("active") @map("account_status")
+  version              Int                      @default(1)
+  deletedAt            DateTime?                @map("deleted_at") @db.Timestamptz(6)
+  createdAt            DateTime                 @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime                 @map("updated_at") @db.Timestamptz(6)
   roles                UserRole[]
   sessions             Session[]
   addresses            Address[]
   consents             Consent[]
   dataRequests         DataRequest[]
   auditLogs            AuditLog[]
-  adminAccount         AdminAccount?           @relation("AdminAccountUser")
-  adminsCreated        AdminAccount[]          @relation("AdminAccountCreator")
+  adminAccount         AdminAccount?            @relation("AdminAccountUser")
+  adminsCreated        AdminAccount[]           @relation("AdminAccountCreator")
   settingsUpdated      Setting[]
   flagsUpdated         FeatureFlag[]
   legalUpdated         LegalPage[]
   supportMessages      SupportMessage[]
-  homeSectionsCreated  CatalogHomeSection[]    @relation("CatalogHomeSectionCreator")
-  homeSectionsUpdated  CatalogHomeSection[]    @relation("CatalogHomeSectionUpdater")
-  suggestionsSubmitted SubcategorySuggestion[] @relation("SuggestionSubmitter")
-  suggestionsReviewed  SubcategorySuggestion[] @relation("SuggestionReviewer")
+  homeSectionsCreated  CatalogHomeSection[]     @relation("CatalogHomeSectionCreator")
+  homeSectionsUpdated  CatalogHomeSection[]     @relation("CatalogHomeSectionUpdater")
+  suggestionsSubmitted SubcategorySuggestion[]  @relation("SuggestionSubmitter")
+  suggestionsReviewed  SubcategorySuggestion[]  @relation("SuggestionReviewer")
+  businessesOwned      Business[]               @relation("BusinessOwner")
+  businessesReviewed   Business[]               @relation("BusinessReviewer")
+  businessDocuments    BusinessDocument[]
+  billingReviewed      BusinessBillingProfile[]
 
   @@index([deletedAt], where: raw("\"deleted_at\" IS NULL"), map: "users_active_deleted_at_idx")
   @@map("users")
@@ -251,6 +255,7 @@ model Area {
   adminScopes AdminScope[]
   support     SupportMessage[]
   suggestions SubcategorySuggestion[]
+  businesses  Business[]
 
   @@unique([id, cityId], map: "areas_id_city_id_key")
   @@unique([cityId, slug], map: "areas_city_slug_key")
@@ -490,6 +495,7 @@ model Category {
   sectionPills       CatalogHomeSectionCategory[]
   suggestions        SubcategorySuggestion[]
   keywordTargets     KeywordMappingTarget[]
+  businesses         BusinessCategory[]
 
   @@index([kind, active, sortOrder, id], map: "categories_kind_active_sort_idx")
   @@map("categories")
@@ -577,7 +583,6 @@ model CatalogHomeSectionCategory {
   @@map("catalog_home_section_categories")
 }
 
-// `businessId` gains its businesses FK in the Businesses migration.
 model SubcategorySuggestion {
   id                      String       @id @db.Uuid
   businessId              String       @map("business_id") @db.Uuid
@@ -605,6 +610,7 @@ model SubcategorySuggestion {
   category                Category     @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_category_id_fkey")
   subcategory             Subcategory? @relation("SuggestionApproved", fields: [subcategoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_subcategory_id_fkey")
   mergedInto              Subcategory? @relation("SuggestionMerged", fields: [mergedIntoSubcategoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_merged_into_fkey")
+  business                Business     @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_business_id_fkey")
 
   @@unique([categoryId, normalizedName], where: raw("\"status\" = 'pending'"), map: "subcategory_suggestions_pending_name_key")
   @@index([status, cityId, areaId, createdAt, id], map: "subcategory_suggestions_queue_idx")
@@ -660,4 +666,168 @@ model KeywordMappingTarget {
   @@index([subcategoryId], where: raw("\"subcategory_id\" IS NOT NULL"), map: "keyword_mapping_targets_subcategory_idx")
   @@index([productTag], where: raw("\"product_tag\" IS NOT NULL"), map: "keyword_mapping_targets_product_tag_idx")
   @@map("keyword_mapping_targets")
+}
+
+// Businesses (F-PF/F-VD/F-PV). `logo_asset_id`, `cover_asset_id` and
+// `business_documents.asset_id` gain their media_assets FKs in the Media
+// migration; there is no Prisma relation until then.
+model Business {
+  id             String                                @id @db.Uuid
+  ownerUserId    String                                @map("owner_user_id") @db.Uuid
+  kind           String
+  status         String                                @default("draft")
+  nameEn         String?                               @map("name_en")
+  nameHi         String?                               @map("name_hi")
+  slug           String?                               @unique(map: "businesses_slug_key")
+  description    String?
+  cityId         String?                               @map("city_id") @db.Uuid
+  areaId         String?                               @map("area_id") @db.Uuid
+  addressText    String?                               @map("address_text")
+  location       Unsupported("geography(Point,4326)")?
+  phoneE164      String                                @map("phone_e164")
+  whatsappE164   String?                               @map("whatsapp_e164")
+  email          String?
+  instagramUrl   String?                               @map("instagram_url")
+  youtubeUrl     String?                               @map("youtube_url")
+  facebookUrl    String?                               @map("facebook_url")
+  logoAssetId    String?                               @map("logo_asset_id") @db.Uuid
+  coverAssetId   String?                               @map("cover_asset_id") @db.Uuid
+  verifiedAt     DateTime?                             @map("verified_at") @db.Timestamptz(6)
+  submittedAt    DateTime?                             @map("submitted_at") @db.Timestamptz(6)
+  reviewReason   String?                               @map("review_reason")
+  reviewedBy     String?                               @map("reviewed_by") @db.Uuid
+  reviewedAt     DateTime?                             @map("reviewed_at") @db.Timestamptz(6)
+  version        Int                                   @default(1)
+  deletedAt      DateTime?                             @map("deleted_at") @db.Timestamptz(6)
+  createdAt      DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime                              @default(now()) @map("updated_at") @db.Timestamptz(6)
+  owner          User                                  @relation("BusinessOwner", fields: [ownerUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "businesses_owner_user_id_fkey")
+  reviewer       User?                                 @relation("BusinessReviewer", fields: [reviewedBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "businesses_reviewed_by_fkey")
+  area           Area?                                 @relation(fields: [areaId, cityId], references: [id, cityId], onDelete: Restrict, onUpdate: Restrict, map: "businesses_area_city_fkey")
+  categories     BusinessCategory[]
+  hours          BusinessHours[]
+  settings       BusinessSettings?
+  documents      BusinessDocument[]
+  billingProfile BusinessBillingProfile?
+  viewDedup      BusinessViewDedup[]
+  dailyViews     BusinessDailyViews[]
+  suggestions    SubcategorySuggestion[]
+
+  @@unique([ownerUserId, kind], map: "businesses_owner_kind_key")
+  @@index([ownerUserId, status], map: "businesses_owner_status_idx")
+  @@index([status, areaId, createdAt, id], map: "businesses_queue_idx")
+  @@index([areaId, cityId], map: "businesses_area_city_idx")
+  @@index([location], type: Gist, map: "businesses_location_gist_idx")
+  @@map("businesses")
+}
+
+model BusinessCategory {
+  businessId String   @map("business_id") @db.Uuid
+  categoryId String   @map("category_id") @db.Uuid
+  isPrimary  Boolean  @default(false) @map("is_primary")
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "business_categories_business_id_fkey")
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "business_categories_category_id_fkey")
+
+  @@id([businessId, categoryId], map: "business_categories_pkey")
+  @@unique([businessId], where: raw("\"is_primary\""), map: "business_categories_primary_key")
+  @@index([categoryId, businessId], map: "business_categories_category_idx")
+  @@map("business_categories")
+}
+
+model BusinessHours {
+  businessId String    @map("business_id") @db.Uuid
+  dayOfWeek  Int       @map("day_of_week") @db.SmallInt
+  opensAt    DateTime? @map("opens_at") @db.Time(0)
+  closesAt   DateTime? @map("closes_at") @db.Time(0)
+  isClosed   Boolean   @default(false) @map("is_closed")
+  business   Business  @relation(fields: [businessId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "business_hours_business_id_fkey")
+
+  @@id([businessId, dayOfWeek], map: "business_hours_pkey")
+  @@map("business_hours")
+}
+
+model BusinessSettings {
+  businessId          String   @id(map: "business_settings_pkey") @map("business_id") @db.Uuid
+  temporarilyClosed   Boolean  @default(false) @map("temporarily_closed")
+  deliveryMethod      String?  @map("delivery_method")
+  deliveryRadiusKm    Decimal? @map("delivery_radius_km") @db.Decimal(5, 2)
+  deliveryFeePaise    BigInt?  @map("delivery_fee_paise")
+  minimumOrderPaise   BigInt?  @map("minimum_order_paise")
+  pickupEnabled       Boolean  @default(false) @map("pickup_enabled")
+  pickupInstructions  String?  @map("pickup_instructions")
+  serviceRadiusKm     Decimal? @map("service_radius_km") @db.Decimal(5, 2)
+  serviceArea         String?  @map("service_area")
+  galleryMediaDefault Boolean  @default(true) @map("gallery_media_default")
+  createdAt           DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  business            Business @relation(fields: [businessId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "business_settings_business_id_fkey")
+
+  @@map("business_settings")
+}
+
+model BusinessDocument {
+  id           String   @id @db.Uuid
+  businessId   String   @map("business_id") @db.Uuid
+  documentKind String   @map("document_kind")
+  assetId      String   @unique(map: "business_documents_asset_id_key") @map("asset_id") @db.Uuid
+  uploadedBy   String   @map("uploaded_by") @db.Uuid
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  business     Business @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "business_documents_business_id_fkey")
+  uploader     User     @relation(fields: [uploadedBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "business_documents_uploaded_by_fkey")
+
+  @@index([businessId, createdAt(sort: Desc), id(sort: Desc)], map: "business_documents_business_idx")
+  @@map("business_documents")
+}
+
+model BusinessBillingProfile {
+  businessId              String    @id(map: "business_billing_profiles_pkey") @map("business_id") @db.Uuid
+  draft                   Json
+  approvedSnapshot        Json?     @map("approved_snapshot")
+  reviewStatus            String    @default("pending") @map("review_status")
+  version                 Int       @default(1)
+  approvedVersion         Int?      @map("approved_version")
+  reviewReason            String?   @map("review_reason")
+  verificationEvidenceRef String?   @map("verification_evidence_ref")
+  reviewedBy              String?   @map("reviewed_by") @db.Uuid
+  reviewedAt              DateTime? @map("reviewed_at") @db.Timestamptz(6)
+  createdAt               DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  business                Business  @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "business_billing_profiles_business_id_fkey")
+  reviewer                User?     @relation(fields: [reviewedBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "business_billing_profiles_reviewed_by_fkey")
+
+  @@map("business_billing_profiles")
+}
+
+// reporting-v1 visible-detail measurement: transient dedup claims (removed
+// after 48 hours) and IST daily aggregates without visitor identity.
+model BusinessViewDedup {
+  sessionSubjectHash Bytes    @map("session_subject_hash")
+  windowStart        DateTime @map("window_start") @db.Timestamptz(6)
+  businessId         String   @map("business_id") @db.Uuid
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  business           Business @relation(fields: [businessId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "business_view_dedup_business_id_fkey")
+
+  @@id([sessionSubjectHash, windowStart, businessId], map: "business_view_dedup_pkey")
+  @@index([createdAt], map: "business_view_dedup_created_at_idx")
+  @@map("business_view_dedup")
+}
+
+model BusinessDailyViews {
+  businessId String   @map("business_id") @db.Uuid
+  istDate    DateTime @map("ist_date") @db.Date
+  views      BigInt   @default(0)
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "business_daily_views_business_id_fkey")
+
+  @@id([businessId, istDate], map: "business_daily_views_pkey")
+  @@map("business_daily_views")
+}
+
+// Known reporting-v1 counter start (Admin "Reporting definitions"); earlier
+// days are unavailable, never zero.
+model BusinessReportingCoverage {
+  metric    String   @id(map: "business_reporting_coverage_pkey")
+  startedAt DateTime @map("started_at") @db.Timestamptz(6)
+
+  @@map("business_reporting_coverage")
 }

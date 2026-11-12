@@ -113,6 +113,17 @@ const catalogue = {
   ],
   CATALOG_IMAGE_INVALID: [422, 'errors.catalog.imageInvalid'],
   CATALOG_VERSION_CONFLICT: [409, 'errors.catalog.versionConflict'],
+  BUSINESS_NOT_FOUND: [404, 'errors.business.notFound'],
+  BUSINESS_NOT_PUBLIC: [404, 'errors.business.notPublic'],
+  BUSINESS_NOT_OWNED: [403, 'errors.business.notOwned'],
+  BUSINESS_SCOPE_DENIED: [403, 'errors.business.scopeDenied'],
+  BUSINESS_STATE_CONFLICT: [409, 'errors.business.stateConflict'],
+  BUSINESS_VERSION_CONFLICT: [409, 'errors.business.versionConflict'],
+  BUSINESS_DOCUMENT_INVALID: [422, 'errors.business.documentInvalid'],
+  BUSINESS_MEDIA_INVALID: [422, 'errors.business.mediaInvalid'],
+  BUSINESS_ALREADY_EXISTS: [409, 'errors.business.alreadyExists'],
+  BUSINESS_CONTEXT_REQUIRED: [422, 'errors.business.contextRequired'],
+  BUSINESS_BILLING_INVALID: [422, 'errors.business.billingInvalid'],
 } as const;
 
 export type ErrorCode = keyof typeof catalogue;

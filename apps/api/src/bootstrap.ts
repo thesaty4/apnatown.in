@@ -6,6 +6,7 @@ import { AppModule } from './app.module';
 import type { RuntimeConfig } from './shared/config/config';
 import { configureHttp } from './shared/http/security';
 import { createLogger, NestLogger } from './shared/logger/logger';
+import { mountLocalApiDocs } from './shared/openapi/docs-ui';
 import { shutdownHandler } from './shared/lifecycle';
 
 export async function createApplication(config: RuntimeConfig) {
@@ -20,6 +21,7 @@ export async function createApplication(config: RuntimeConfig) {
     },
   );
   configureHttp(app, config, logger);
+  mountLocalApiDocs(app, config);
   await app.init();
   const server = app.getHttpServer() as Server;
   server.requestTimeout = 15000;

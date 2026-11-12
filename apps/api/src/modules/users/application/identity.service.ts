@@ -67,6 +67,11 @@ export class IdentityService implements UserIdentityPort {
   ): Promise<Principal | null> {
     return this.principal(await this.users.lock(tx, userId));
   }
+  async verifiedPhone(tx: TxContext, userId: string): Promise<string | null> {
+    const user = await this.users.lock(tx, userId);
+    if (!user || user.deletedAt || user.accountStatus !== 'active') return null;
+    return this.crypto.decrypt(user.phoneCiphertext, `user:${user.id}:phone`);
+  }
   findByPhone(tx: TxContext, phone: string): Promise<string | null> {
     return this.roles.findIdByPhoneHash(
       tx,

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import type { ScopeRef } from '@apnatown/shared/admin';
+import type { BusinessKind } from '@apnatown/shared/businesses';
 import type {
   CatalogHomeSection,
   CategoryKind,
@@ -63,8 +64,9 @@ export interface CatalogHomeReadPort {
 }
 
 // ---------------------------------------------------------------------------
-// Ports Catalog consumes. Owned here (consumer-defined) and bound to explicit
-// "unavailable" adapters until the owning modules exist.
+// Ports Catalog consumes. Owned here (consumer-defined); the owning module
+// binds the implementation (Businesses) or an explicit "unavailable" adapter
+// until it exists (Media).
 // ---------------------------------------------------------------------------
 
 export const CATALOG_BUSINESS_CONTEXT = Symbol('CATALOG_BUSINESS_CONTEXT');
@@ -77,11 +79,13 @@ export interface CatalogBusinessContextPort {
   /**
    * Trusted owned business with the `business.taxonomy-suggest` capability
    * and a resolved area. Throws COMMON_FORBIDDEN for a non-owner, suspended,
-   * inactive, deleted or area-unresolved business.
+   * inactive, deleted or area-unresolved business, and
+   * BUSINESS_CONTEXT_REQUIRED when the user owns both kinds and `businessKind`
+   * (the `X-Business-Kind` route context) is omitted.
    */
   resolveSuggester(
     tx: TxContext,
-    input: { userId: string },
+    input: { userId: string; businessKind?: BusinessKind },
   ): Promise<SuggesterContext>;
   /** Owner manager audience for a business (Notifications return path). */
   audienceRole(
@@ -90,21 +94,6 @@ export interface CatalogBusinessContextPort {
   ): Promise<'vendor' | 'provider'>;
 }
 
-/**
- * Binding point: the Businesses module rebinds CATALOG_BUSINESS_CONTEXT
- * (CatalogModule provider) to its real adapter. Until then no owner can be
- * resolved, so suggestions are denied rather than accepted on guessed scope.
- */
-@Injectable()
-export class UnavailableBusinessContext implements CatalogBusinessContextPort {
-  resolveSuggester(): Promise<SuggesterContext> {
-    return Promise.reject(new DomainError('COMMON_FORBIDDEN'));
-  }
-
-  audienceRole(): Promise<'vendor' | 'provider'> {
-    return Promise.reject(new DomainError('COMMON_UNAVAILABLE'));
-  }
-}
 
 export const CATALOG_MEDIA_ASSETS = Symbol('CATALOG_MEDIA_ASSETS');
 export interface CatalogMediaAssetPort {

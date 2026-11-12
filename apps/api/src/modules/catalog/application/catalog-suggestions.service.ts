@@ -1,6 +1,7 @@
 import { Inject, Injectable, type OnModuleInit } from '@nestjs/common';
 import type { JsonValue } from '@apnatown/shared';
 import type { ScopeRef } from '@apnatown/shared/admin';
+import type { BusinessKind } from '@apnatown/shared/businesses';
 import {
   AdminSuggestionPageSchema,
   SUGGESTION_CANDIDATE_LIMIT,
@@ -109,10 +110,13 @@ export interface CatalogCommand {
   actorId: string;
   correlationId: string;
   key: unknown;
+  /** Owner routes: `X-Business-Kind` context (selects, never grants). */
+  businessKind?: BusinessKind;
 }
 export interface OwnerRequest {
   session: SessionBinding;
   actorId: string;
+  businessKind?: BusinessKind;
 }
 
 function suggestionDto(row: StoredSuggestion): Suggestion {
@@ -218,7 +222,8 @@ export class CatalogSuggestionsService implements OnModuleInit {
         method: 'POST',
         resource: '/catalog/subcategory-suggestions',
         successStatus: 201,
-        payload: input,
+        // Owner context is part of the fingerprint: same key, other kind = 409.
+        payload: { ...input, businessKind: request.businessKind ?? null },
       }),
       async (tx) => {
         const owner = await this.suggester(tx, request);
@@ -491,7 +496,10 @@ export class CatalogSuggestionsService implements OnModuleInit {
     const principal = await this.sessions.requirePrincipal(tx, request.session);
     if (principal.userId !== request.actorId)
       throw new DomainError('SESSION_EXPIRED');
-    return this.business.resolveSuggester(tx, { userId: principal.userId });
+    return this.business.resolveSuggester(tx, {
+      userId: principal.userId,
+      ...(request.businessKind ? { businessKind: request.businessKind } : {}),
+    });
   }
 
   /**

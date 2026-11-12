@@ -32,6 +32,13 @@ configuration. Web runs on `localhost:3000`, API on `localhost:3001`, and intern
 worker probes on `localhost:3002`. `db:down` stops the local database **without
 deleting its volume**. No Redis or real external providers are started.
 
+With `APP_ENV=local`, the API also serves Swagger UI at
+`http://localhost:3001/api/docs` (raw spec: `/api/docs/openapi.json` and
+`/api/docs/openapi.yaml`). It is never mounted outside local. Browser
+"Try it out" writes are rejected by the API's Origin/CSRF check; use the web
+app or `curl` for those. `pnpm api:openapi` regenerates the committed
+`packages/api-client/openapi.json`.
+
 New local configuration generates `IDEMPOTENCY_HASH_KEY` once. Existing
 configuration is preserved: provision this required API/worker-only value
 with 32 cryptographically random bytes encoded as 64 lowercase hex characters
