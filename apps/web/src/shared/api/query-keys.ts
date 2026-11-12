@@ -56,6 +56,10 @@ export const queryKeys = {
     ['public', 'media', 'video-comments', id] as const,
   videoCommentsPrivate: (scope: AccountScope, id: string) =>
     ['private', scope, 'media', 'video-comments', id] as const,
+  engagementStateRoot: (scope: AccountScope | null, epoch: number) =>
+    ['private', scope ?? { epoch }, 'engagement', 'state'] as const,
+  engagementState: (scope: AccountScope | null, epoch: number, videoIds: readonly string[]) =>
+    [...queryKeys.engagementStateRoot(scope, epoch), videoIds] as const,
   // Admin taxonomy reads. Suggestion pages are keyed by the URL status tab.
   adminCatalog: (scope: AccountScope) =>
     ['private', scope, 'admin', 'catalog'] as const,

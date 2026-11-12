@@ -8,6 +8,29 @@ import {
   VersionSchema,
 } from './wire.js';
 
+export const VideoLikeResultSchema = z.strictObject({
+  liked: z.boolean(),
+  likeCount: CountSchema,
+});
+export type VideoLikeResult = z.infer<typeof VideoLikeResultSchema>;
+
+export const EngagementStateQuerySchema = z.strictObject({
+  videoIds: z.string().max(1849).refine(
+    (value) => z.array(IdSchema).min(1).max(50).safeParse(value.split(',')).success,
+    'Expected at most 50 comma-separated video IDs',
+  ).optional(),
+});
+export type EngagementStateQuery = z.infer<typeof EngagementStateQuerySchema>;
+
+export const EngagementStateSchema = z.strictObject({
+  likedVideoIds: z.array(IdSchema).max(50),
+  videoCounts: z.array(z.strictObject({
+    videoId: IdSchema,
+    likeCount: CountSchema,
+  })).max(50),
+});
+export type EngagementState = z.infer<typeof EngagementStateSchema>;
+
 export const VideoCommentStatusSchema = z.enum(['pending', 'published', 'removed']);
 export type VideoCommentStatus = z.infer<typeof VideoCommentStatusSchema>;
 export const VideoCommentTextSchema = z.string().trim().min(1).max(500);

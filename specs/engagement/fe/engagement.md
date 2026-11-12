@@ -47,6 +47,18 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) for standard states,
 
 All buttons use foundation touch-target tokens, `aria-pressed` where appropriate, EN/HI labels and icon+text status. Follow does not grant marketing consent.
 
+### EG4 implementation slice
+
+The reusable LikeButton is integrated on `/videos/:id`. Its React Query hook
+reads the likes-only batch state (`likedVideoIds`, public `videoCounts`), uses
+session/epoch-scoped private cache keys even for guests, optimistically toggles
+with rollback, and reconciles the authoritative mutation result. Writes are
+serialized per mounted control and are not automatically retried. Guest clicks
+show the existing login gate preserving the same video URL. Zero is a valid count;
+unavailable, loading, read/retry, write-error and non-customer states are explicit.
+The eventual Reels feed reuses the control/batch pattern; this slice does not
+implement or claim the feed itself.
+
 ### Comments moderation integration — existing S-ADMN-11
 - Media FE owns `/admin/videos`; its Pending/Removed content selector includes Comments per G-09, using `GET /admin/comments` and `POST /admin/comments/{id}/decision`.
 - Require **reviews:view/edit**, not catalog; render comment/video/owner/status/reason/version with Publish/Remove controls and scoped counters. Removal requires reason; stale version refreshes the item without repeating the decision.

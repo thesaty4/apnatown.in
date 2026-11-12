@@ -238,7 +238,7 @@ Roles: customer. Backend module(s): `engagement`. Frontend route/screen: `/saved
 | EG1 | Saved: tabs Shops \| Services \| Photos & Videos (filters Photos/Videos/Reels, remove) | `specs/engagement/be/eg1-saved-tabs-shops-services-photos-vid.md` | `specs/engagement/fe/eg1-saved-tabs-shops-services-photos-vid.md` | not started |
 | EG2 | heart on any photo/video/reel | `specs/engagement/be/eg2-heart-on-any-photo-video-reel.md` | `specs/engagement/fe/eg2-heart-on-any-photo-video-reel.md` | not started |
 | EG3 | follow/unfollow with confirmation and bell | `specs/engagement/be/eg3-follow-unfollow-with-confirmation-an.md` | `specs/engagement/fe/eg3-follow-unfollow-with-confirmation-an.md` | not started |
-| EG4 | like on videos | `specs/engagement/be/eg4-like-on-videos.md` | `specs/engagement/fe/eg4-like-on-videos.md` | not started |
+| EG4 | like on videos | `specs/engagement/be/engagement.md` | `specs/engagement/fe/engagement.md` | implemented on video detail: DB/API/React Query LikeButton; Reels feed remains separate |
 | EG5 | comments (moderated, "awaiting moderation") | `specs/engagement/be/eg5-comments.md` | `specs/engagement/fe/eg5-comments.md` | not started |
 | EG6 | share sheet (WhatsApp, copy link, native share) | `specs/engagement/be/eg6-share-sheet.md` | `specs/engagement/fe/eg6-share-sheet.md` | not started |
 | EG7 | bookmarks of businesses/providers/services | `specs/engagement/be/eg7-bookmarks-of-businesses-providers-se.md` | `specs/engagement/fe/eg7-bookmarks-of-businesses-providers-se.md` | not started |

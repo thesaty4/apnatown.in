@@ -5342,6 +5342,50 @@
     "en": "Sending…",
     "hi": "भेज रहे हैं…"
   },
+  "engagement.likes.like": {
+    "en": "Like",
+    "hi": "पसंद करें"
+  },
+  "engagement.likes.liked": {
+    "en": "Liked",
+    "hi": "पसंद किया"
+  },
+  "engagement.likes.count": {
+    "en": "{count, plural, one {# like} other {# likes}}",
+    "hi": "{count, number} पसंद"
+  },
+  "engagement.likes.loading": {
+    "en": "Loading likes",
+    "hi": "पसंद लोड हो रही हैं"
+  },
+  "engagement.likes.loginPrompt": {
+    "en": "Log in to like this video. You will return to this video after login.",
+    "hi": "इस वीडियो को पसंद करने के लिए लॉग इन करें। लॉग इन के बाद आप इसी वीडियो पर लौटेंगे।"
+  },
+  "engagement.likes.restrictedTitle": {
+    "en": "Customer access required",
+    "hi": "ग्राहक की अनुमति ज़रूरी है"
+  },
+  "engagement.likes.restrictedMessage": {
+    "en": "Only customer accounts can like videos.",
+    "hi": "केवल ग्राहक खाते वीडियो पसंद कर सकते हैं।"
+  },
+  "engagement.likes.unavailableTitle": {
+    "en": "Video unavailable",
+    "hi": "वीडियो उपलब्ध नहीं है"
+  },
+  "engagement.likes.unavailableMessage": {
+    "en": "This video is no longer available for likes.",
+    "hi": "यह वीडियो अब पसंद करने के लिए उपलब्ध नहीं है।"
+  },
+  "engagement.likes.rateLimited": {
+    "en": "Too many changes. Wait a moment, then try again.",
+    "hi": "बहुत अधिक बदलाव किए गए हैं। थोड़ी देर रुककर फिर कोशिश करें।"
+  },
+  "engagement.likes.failed": {
+    "en": "Could not update your like. Please try again.",
+    "hi": "आपकी पसंद अपडेट नहीं हो सकी। कृपया फिर कोशिश करें।"
+  },
   "engagement.comments.title": {
     "en": "Comments",
     "hi": "टिप्पणियाँ"

@@ -50,6 +50,9 @@ export type {
   VideoModerationDecision,
 } from './media.js';
 export {
+  VideoLikeResultSchema,
+  EngagementStateQuerySchema,
+  EngagementStateSchema,
   VideoCommentStatusSchema,
   VideoCommentTextSchema,
   VideoCommentCreateSchema,
@@ -65,6 +68,9 @@ export {
   VideoCommentEventPayloadSchema,
 } from './engagement.js';
 export type {
+  VideoLikeResult,
+  EngagementStateQuery,
+  EngagementState,
   VideoCommentStatus,
   VideoCommentCreate,
   VideoCommentAdminQuery,

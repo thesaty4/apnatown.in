@@ -105,6 +105,7 @@ model User {
   mediaUploads         MediaUploadOperation[]
   reportedMedia        MediaReport[]              @relation("MediaReportReporter")
   videoComments        VideoComment[]
+  likes                Like[]
 
   @@index([deletedAt], where: raw("\"deleted_at\" IS NULL"), map: "users_active_deleted_at_idx")
   @@map("users")
@@ -799,12 +800,36 @@ model Video {
   business           Business  @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "videos_business_id_fkey")
   reports            MediaReport[]
   comments           VideoComment[]
+  likes              Like[]
+  engagementCounts   VideoEngagementCounts?
 
   @@index([status, showInReels, id], map: "videos_public_candidates_idx")
   @@index([status, createdAt(sort: Desc), id(sort: Desc)], map: "videos_moderation_page_idx")
   @@index([businessId, createdAt(sort: Desc), id(sort: Desc)], map: "videos_business_page_idx")
   @@index([businessId, sortOrder, id], map: "videos_business_order_idx")
   @@map("videos")
+}
+
+model Like {
+  userId    String   @map("user_id") @db.Uuid
+  videoId   String   @map("video_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "likes_user_id_fkey")
+  video     Video    @relation(fields: [videoId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "likes_video_id_fkey")
+
+  @@id([userId, videoId], map: "likes_pkey")
+  @@index([videoId], map: "likes_video_id_idx")
+  @@map("likes")
+}
+
+model VideoEngagementCounts {
+  videoId   String   @id @map("video_id") @db.Uuid
+  likeCount BigInt   @default(0) @map("like_count")
+  version   BigInt   @default(1)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  video     Video    @relation(fields: [videoId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "video_engagement_counts_video_id_fkey")
+
+  @@map("video_engagement_counts")
 }
 
 model VideoComment {

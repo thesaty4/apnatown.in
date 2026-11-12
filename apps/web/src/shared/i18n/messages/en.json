@@ -1811,6 +1811,19 @@
       },
       "title": "Comments",
       "validation": "Enter a comment of 1 to 500 characters."
+    },
+    "likes": {
+      "count": "{count, plural, one {# like} other {# likes}}",
+      "failed": "Could not update your like. Please try again.",
+      "like": "Like",
+      "liked": "Liked",
+      "loading": "Loading likes",
+      "loginPrompt": "Log in to like this video. You will return to this video after login.",
+      "rateLimited": "Too many changes. Wait a moment, then try again.",
+      "restrictedMessage": "Only customer accounts can like videos.",
+      "restrictedTitle": "Customer access required",
+      "unavailableMessage": "This video is no longer available for likes.",
+      "unavailableTitle": "Video unavailable"
     }
   },
   "errors": {

@@ -46,6 +46,27 @@ All customer writes require login; guest calls return `AUTH_REQUIRED` so the FE 
 
 ## Rules and use-cases
 
+### EG4 implementation slice
+
+- `likes` and the `like_count`, `version`, `updated_at` portion of
+  `video_engagement_counts` are implemented. Comment/share projection columns
+  remain with their respective counter work; existing comment behavior is unchanged.
+- PUT/DELETE have no request body. PK changes, the serialized per-video count
+  update and `engagement.liked`/`engagement.unliked` outbox event commit together.
+  No-op retries do not change the count/version or emit another event.
+- The current `/engagement/me/state?videoIds=` contract accepts up to 50
+  comma-separated UUIDs and returns `{likedVideoIds,videoCounts:[{videoId,likeCount}]}`.
+  Guest relationship flags are empty. Counts include only currently public videos;
+  private relationship flags are caller-owned. Other relationship filters are
+  introduced with their features, not silently accepted.
+- The existing video-detail LikeButton reads authoritative counts from this
+  batch, not Media's not-yet-wired feed projection. Feed projection/analytics and
+  Users-orchestrated export/erasure remain their separate integration slices.
+- Migration is additive and is not applied during implementation. Forward
+  repair can rebuild counts from `likes`; dropping tables loses relationship data.
+
+### Shared rules
+
 1. All toggles are idempotent upserts/deletes keyed by PK; counts never go negative.
 2. New follow has an **unset/off bell** (`js24.js:4–6`); following alone does not enable follower notifications and is not marketing consent. Unfollow records the transition and clears bell; refollow does not silently re-enable it. Daily count rows update once in the same transaction, not from replayable analytics.
 3. Comments: URL/blocked word → pending (author-only); clean → published. Explicit edges: pending→published/removed, published→removed (admin or author deletion), removed terminal. Rate limit 5/min/user. Admin moderation uses reviews, not catalog (`js27.js:23–27`; G-09).

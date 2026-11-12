@@ -74,10 +74,14 @@ import {
   VideoModerationController,
 } from '../../modules/media-videos/presentation/video-moderation.controller';
 
+import { VideoLikesController } from '../../modules/engagement/presentation/video-likes.controller';
+import { VideoLikesService } from '../../modules/engagement/application/video-likes.service';
+
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
 @Module({
   controllers: [
+    VideoLikesController,
     ImageController,
     OwnerVideoController,
     PublicVideoController,
@@ -111,6 +115,7 @@ import {
     AdminVideoCommentsController,
   ],
   providers: [
+    VideoLikesService,
     ImageService,
     ImageDeliveryService,
     VideoService,
