@@ -1,5 +1,11 @@
 import { Controller, Get, Param, Query, UseInterceptors } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { IdSchema } from '@apnatown/shared/wire';
 import type { AreaListQuery } from '@apnatown/shared/geo';
 import {
@@ -65,6 +71,7 @@ export class GeoController {
     operationId: 'geoCityAreas',
     summary: 'Find areas within a city',
   })
+  @ApiParam({ name: 'cityId', format: 'uuid' })
   @ApiQuery({ type: GeoAreaQueryDto })
   @ApiResponse({ status: 200, type: GeoAreaPageDto })
   @ApiResponse({ status: 404, type: ErrorDto, description: 'City not found' })
