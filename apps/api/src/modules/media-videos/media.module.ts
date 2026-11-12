@@ -1,0 +1,36 @@
+import { Module, type DynamicModule } from '@nestjs/common';
+import { CloudinaryImageStorage } from '../../integrations/cloudinary/image-storage';
+import { SharpImageProcessor } from '../../integrations/images/image-processor';
+import { RUNTIME_CONFIG, type RuntimeConfig } from '../../shared/config/config';
+import { IMAGE_PROCESSOR, IMAGE_STORAGE, MEDIA_IMAGES } from './domain/images';
+import { PrismaImageRepository } from './infrastructure/image.repository';
+import { ImageService } from './application/image.service';
+import { ImageDeliveryService } from './application/image-delivery.service';
+import { ImageCleanup } from './application/image-cleanup';
+import { ImageController } from './presentation/image.controller';
+
+@Module({})
+export class MediaStorageModule {
+  static forRoot(runtime: DynamicModule, cleanup = false): DynamicModule {
+    return {
+      module: MediaStorageModule, imports: [runtime],
+      providers: [
+        { provide: MEDIA_IMAGES, useClass: PrismaImageRepository },
+        { provide: IMAGE_PROCESSOR, useClass: SharpImageProcessor },
+        { provide: IMAGE_STORAGE, inject: [RUNTIME_CONFIG],
+          useFactory: (config: RuntimeConfig) => new CloudinaryImageStorage(config) },
+        ...(cleanup ? [ImageCleanup] : []),
+      ],
+      exports: [MEDIA_IMAGES, IMAGE_PROCESSOR, IMAGE_STORAGE],
+    };
+  }
+}
+@Module({})
+export class MediaModule {
+  static forRoot(imports: DynamicModule[]): DynamicModule {
+    return {
+      module: MediaModule, imports, controllers: [ImageController],
+      providers: [ImageService, ImageDeliveryService],
+    };
+  }
+}

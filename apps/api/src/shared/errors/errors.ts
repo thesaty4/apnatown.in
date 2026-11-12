@@ -1,6 +1,13 @@
 import type { ErrorDetails, ErrorResponse } from '@apnatown/shared/wire';
 
 const catalogue = {
+  MEDIA_UPLOAD_POLICY_REQUIRED: [503, 'errors.media.uploadPolicyRequired'],
+  MEDIA_STORAGE_UNAVAILABLE: [503, 'errors.media.storageUnavailable'],
+  MEDIA_TYPE_NOT_ALLOWED: [422, 'errors.media.typeNotAllowed'],
+  MEDIA_TOO_LARGE: [413, 'errors.media.tooLarge'],
+  MEDIA_IMAGE_PROCESSING_FAILED: [422, 'errors.media.imageProcessingFailed'],
+  MEDIA_NOT_FOUND: [404, 'errors.media.notFound'],
+  MEDIA_RANGE_INVALID: [416, 'errors.media.rangeInvalid'],
   OTP_INVALID: [401, 'errors.auth.otp.invalid'],
   OTP_NOT_FOUND: [404, 'errors.auth.otp.notFound'],
   OTP_EXPIRED: [410, 'errors.auth.otp.expired'],

@@ -8,7 +8,7 @@ export function contentSecurityPolicy(
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${development ? " 'unsafe-eval'" : ''}`,
     `style-src 'self' 'nonce-${nonce}'`,
-    "img-src 'self' data:",
+    "img-src 'self' data: blob:",
     "font-src 'self'",
     `connect-src 'self'${development ? ' ws://localhost:* ws://127.0.0.1:*' : ''}`,
     "object-src 'none'",

@@ -20,6 +20,7 @@ import { OutboxRelay } from './shared/jobs/outbox-relay';
 import { OutboxConsumer } from './shared/jobs/outbox-consumer';
 import { DataRequestProcessor } from './modules/users/application/data-request-processor';
 import { UsersDataWorkerModule } from './modules/users/users-data-worker.module';
+import { MediaStorageModule } from './modules/media-videos/media.module';
 
 @Module({})
 export class WorkerModule {
@@ -27,7 +28,7 @@ export class WorkerModule {
     const runtime = RuntimeModule.forRoot(config);
     return {
       module: WorkerModule,
-      imports: [runtime, UsersDataWorkerModule.forRoot(runtime, config)],
+      imports: [runtime, UsersDataWorkerModule.forRoot(runtime, config), MediaStorageModule.forRoot(runtime, true)],
       providers: [
         {
           provide: PG_BOSS_FACTORY,

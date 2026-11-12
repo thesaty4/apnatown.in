@@ -52,11 +52,15 @@ import { AdminCatalogController } from '../../modules/catalog/presentation/admin
 import { OwnerCatalogSuggestionsController } from '../../modules/catalog/presentation/owner-catalog-suggestions.controller';
 import { PublicCatalogController } from '../../modules/catalog/presentation/public-catalog.controller';
 import { SuperAdminCatalogController } from '../../modules/catalog/presentation/super-admin-catalog.controller';
+import { ImageController } from '../../modules/media-videos/presentation/image.controller';
+import { ImageService } from '../../modules/media-videos/application/image.service';
+import { ImageDeliveryService } from '../../modules/media-videos/application/image-delivery.service';
 
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
 @Module({
   controllers: [
+    ImageController,
     HealthController,
     AuthController,
     UsersController,
@@ -82,6 +86,8 @@ import { SuperAdminCatalogController } from '../../modules/catalog/presentation/
     OwnerCatalogSuggestionsController,
   ],
   providers: [
+    ImageService,
+    ImageDeliveryService,
     ReadinessService,
     SessionService,
     OtpService,

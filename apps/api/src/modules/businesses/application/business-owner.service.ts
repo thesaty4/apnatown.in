@@ -7,6 +7,7 @@ import {
   BusinessMediaUploadResultSchema,
   BusinessOverviewSchema,
   BusinessOwnerSchema,
+  BusinessSettingsSchema,
   type BusinessAnalytics,
   type BusinessDocumentUpload,
   type BusinessDocumentUploadResult,
@@ -563,7 +564,7 @@ export class BusinessOwnerService {
       });
     const kindChangedToShop = kind === 'shop' && input.kind === 'shop';
     if (!patch && !kindChangedToShop) return null;
-    const merged: BusinessSettings = { ...current, ...patch };
+    const merged = BusinessSettingsSchema.parse({ ...current, ...patch });
     if (kind === 'shop') {
       merged.serviceRadiusKm = null;
       merged.serviceArea = null;

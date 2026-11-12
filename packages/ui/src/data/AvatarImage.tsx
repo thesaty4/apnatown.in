@@ -6,7 +6,10 @@ import { Skeleton } from '../feedback/Skeleton.js';
 /** Internal image island: keep caller-supplied art visible after load failure.
  * The parent owns the single accessible image label; loading is decorative.
  */
-export function AvatarImage({ src }: { src: string }) {
+export function AvatarImage({ src, srcSet, sizes, width, height }: {
+  src: string; srcSet?: string | undefined; sizes?: string | undefined;
+  width?: number | undefined; height?: number | undefined;
+}) {
   const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
   const imageRef = useCallback((image: HTMLImageElement | null) => {
     if (image?.complete) setState(image.naturalWidth ? 'ready' : 'error');
@@ -17,6 +20,10 @@ export function AvatarImage({ src }: { src: string }) {
       <img
         ref={imageRef}
         src={src}
+        srcSet={srcSet}
+        sizes={srcSet ? sizes : undefined}
+        width={width}
+        height={height}
         alt=""
         aria-hidden="true"
         loading="lazy"

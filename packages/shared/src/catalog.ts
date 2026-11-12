@@ -6,7 +6,7 @@ import {
   TimestampSchema,
   VersionSchema,
 } from './wire.js';
-import { MediaGatewayPathSchema } from './media.js';
+import { MediaGatewayPathSchema, PublicImageVariantSchema } from './media.js';
 
 /**
  * Catalog wire contracts (F-HM-003/004, F-SV-008, F-VD-006, F-AD-005/006/015,
@@ -122,6 +122,7 @@ export const TaxonomyImageSchema = z.strictObject({
   mimeType: z.string().min(1).max(100),
   width: z.number().int().positive(),
   height: z.number().int().positive(),
+  variants: z.array(PublicImageVariantSchema).min(1).max(3),
 });
 export type TaxonomyImage = z.infer<typeof TaxonomyImageSchema>;
 

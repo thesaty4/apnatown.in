@@ -198,7 +198,7 @@ export class CatalogTaxonomyService {
       },
       input,
       async (tx, actor) => {
-        await this.writer.assertImage(tx, input.imageAssetId);
+        await this.writer.assertImage(tx, input.imageAssetId, actor.userId);
         const id = this.ids.uuidv7();
         if (
           !(await this.taxonomy.insertCategory(tx, {
@@ -254,7 +254,7 @@ export class CatalogTaxonomyService {
         if (!before) throw new DomainError('CATEGORY_NOT_FOUND');
         if (before.version !== input.expectedVersion)
           throw new DomainError('CATALOG_VERSION_CONFLICT');
-        await this.writer.assertImage(tx, input.imageAssetId);
+        await this.writer.assertImage(tx, input.imageAssetId, actor.userId);
         const { expectedVersion, ...change } = input;
         if (
           !(await this.taxonomy.updateCategory(tx, {
@@ -357,7 +357,7 @@ export class CatalogTaxonomyService {
         if (before.version !== input.expectedVersion)
           throw new DomainError('CATALOG_VERSION_CONFLICT');
         this.writer.assertServiceTypes(category, input.serviceTypes);
-        await this.writer.assertImage(tx, input.imageAssetId);
+        await this.writer.assertImage(tx, input.imageAssetId, actor.userId);
         const nameEn = input.nameEn ?? before.nameEn;
         const nameHi = input.nameHi ?? before.nameHi;
         let normalizedName: string | undefined;

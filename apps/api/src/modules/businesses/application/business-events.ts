@@ -3,7 +3,8 @@ import {
   BUSINESS_EVENT_TYPES,
   BusinessEventPayloadSchema,
   BusinessProfileChangedPayloadSchema,
-  type JsonValue,
+  type BusinessEventPayload,
+  type BusinessProfileChangedPayload,
 } from '@apnatown/shared';
 import type { BusinessStatus } from '@apnatown/shared/businesses';
 import {
@@ -95,15 +96,16 @@ export class BusinessEvents {
     tx: TxContext,
     type: string,
     business: StoredBusiness,
-    payload: JsonValue,
+    payload: BusinessEventPayload | BusinessProfileChangedPayload,
     correlationId: string,
   ): Promise<void> {
+    const { previousStatus, ...required } = payload;
     return this.outbox.append(
       tx,
       this.events.create(
         type,
         { type: 'business', id: business.id, version: business.version },
-        payload,
+        { ...required, ...(previousStatus !== undefined ? { previousStatus } : {}) },
         correlationId,
       ),
     );

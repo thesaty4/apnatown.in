@@ -1,7 +1,16 @@
 export { ErrorResponseSchema, HealthResponseSchema } from './wire.js';
 export type { ErrorResponse, HealthResponse } from './wire.js';
 export { Money } from './money.js';
-export { MediaGatewayPathSchema } from './media.js';
+export {
+  MediaGatewayPathSchema,
+  TaxonomyUploadBodySchema,
+  PublicImageVariantSchema,
+  MediaUploadResultSchema,
+  MediaPolicyResultSchema,
+  MediaAssetParamsSchema,
+  MediaPublicQuerySchema,
+} from './media.js';
+export type { MediaUploadResult, MediaPublicQuery } from './media.js';
 export { canonicalJson } from './json.js';
 export type { JsonValue } from './json.js';
 export {

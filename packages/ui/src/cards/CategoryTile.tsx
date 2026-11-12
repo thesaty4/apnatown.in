@@ -9,6 +9,9 @@ export type CategoryTileProps = {
   icon?: string | undefined;
   /** Only Media-authorized public URLs. Missing/failed images fall back to the icon. */
   imageSrc?: string | undefined;
+  imageSrcSet?: string | undefined;
+  imageWidth?: number | undefined;
+  imageHeight?: number | undefined;
   /** Router link component (e.g. next/link); defaults to a plain anchor. */
   linkAs?: ElementType;
   className?: string;
@@ -21,6 +24,9 @@ export function CategoryTile({
   label,
   icon,
   imageSrc,
+  imageSrcSet,
+  imageWidth,
+  imageHeight,
   linkAs: Link = 'a',
   className = '',
 }: CategoryTileProps) {
@@ -33,6 +39,9 @@ export function CategoryTile({
         label=""
         emoji={icon || '🏷️'}
         {...(imageSrc ? { src: imageSrc } : {})}
+        srcSet={imageSrcSet}
+        imageWidth={imageWidth}
+        imageHeight={imageHeight}
       />
       <span className="min-w-0 max-w-full [overflow-wrap:anywhere]">
         {label}

@@ -376,7 +376,7 @@ Roles: super_admin. Backend module(s): `admin, geo, settings, audit, catalog`. F
 | SA5 | global settings (branding, delivery slabs, rider earning rule, commission and plans, promotions fees, payments, refund/cancellation window, review rules, WhatsApp/SMS/email integration, SEO defaults, feature flags, legal pages) | `specs/admin/be/sa5-global-settings.md` | `specs/admin/fe/sa5-global-settings.md` | not started |
 | SA6 | platform analytics | `specs/admin/be/sa6-platform-analytics.md` | `specs/admin/fe/sa6-platform-analytics.md` | not started |
 | SA7 | activity monitor (audit with before/after and export) | `specs/admin/be/sa7-activity-monitor.md` | `specs/admin/fe/sa7-activity-monitor.md` | not started |
-| SA8 | main-category management (only super admin) and category tree with keyword/synonym mapping | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
+| SA8 | main-category management (only super admin) and category tree with keyword/synonym mapping | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | in progress — taxonomy image upload transport pending generated Media operation |
 
 ---
 

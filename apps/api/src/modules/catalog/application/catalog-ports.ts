@@ -11,6 +11,7 @@ import type {
 } from '@apnatown/shared/catalog';
 import { DomainError } from '../../../shared/errors/errors';
 import type { TxContext } from '../../../shared/persistence/ports';
+import type { ImagePlacement } from '../../media-videos/domain/images';
 
 // ---------------------------------------------------------------------------
 // Ports Catalog exposes to other modules (Search, Products, Services,
@@ -101,11 +102,11 @@ export interface CatalogMediaAssetPort {
    * An attached-ready, approved `catalog_taxonomy` asset; throws
    * CATALOG_IMAGE_INVALID otherwise.
    */
-  requireTaxonomyImage(tx: TxContext, assetId: string): Promise<void>;
+  requireTaxonomyImage(tx: TxContext, assetId: string, userId: string): Promise<void>;
   /** Currently public descriptors; missing ids fall back to the icon. */
   describe(
     tx: TxContext,
-    assetIds: readonly string[],
+    placements: readonly ImagePlacement[],
   ): Promise<Map<string, TaxonomyImage>>;
 }
 

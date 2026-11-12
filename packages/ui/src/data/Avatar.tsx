@@ -9,6 +9,9 @@ export type AvatarProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
   emoji: string;
   /** Only currently authorized/resolved media URLs, never raw user-submitted links. */
   src?: string;
+  srcSet?: string | undefined;
+  imageWidth?: number | undefined;
+  imageHeight?: number | undefined;
   hue?: number;
   size?: 'mini' | 'full' | '4:3';
   loading?: boolean;
@@ -27,6 +30,9 @@ export function Avatar({
   label,
   emoji,
   src,
+  srcSet,
+  imageWidth,
+  imageHeight,
   hue,
   size = 'mini',
   loading = false,
@@ -59,7 +65,8 @@ export function Avatar({
           className="absolute inset-0"
         />
       ) : src ? (
-        <AvatarImage key={src} src={src} />
+        <AvatarImage key={src} src={src} srcSet={srcSet}
+          sizes={size === 'mini' ? '56px' : '100vw'} width={imageWidth} height={imageHeight} />
       ) : null}
     </div>
   );

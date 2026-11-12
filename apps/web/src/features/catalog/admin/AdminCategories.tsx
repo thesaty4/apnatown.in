@@ -16,6 +16,7 @@ import { Card } from '@apnatown/ui/cards/Card';
 import { failureCode } from '../../../shared/api/result';
 import { AdminFailure, Notice, isDenied, useAdmin } from '../../admin';
 import { adminTreeOptions } from '../queries';
+import { taxonomySrcSet } from '../parts';
 import { CategorySheet, SubcategorySheet } from './CategorySheets';
 import { ActiveBadge, ReadOnlyNotice, useReadState } from './common';
 import { HomeSectionEditor } from './HomeSectionEditor';
@@ -28,8 +29,7 @@ type Editing =
 /**
  * S-ADMN-05 Categories: taxonomy tree for `catalog:view`. Main categories are
  * fixed; only a super admin sees add/edit/activate controls and the Home
- * section editor (Q-39). Filter preview (Search) and image upload (Media) are
- * not available yet and are intentionally absent.
+ * section editor (Q-39). Media's configured policy gates image uploads.
  */
 export function AdminCategories() {
   const context = useAdmin();
@@ -195,6 +195,9 @@ function CategoryCard({
           label=""
           emoji={node.icon || '🏷️'}
           {...(node.image ? { src: node.image.path } : {})}
+          srcSet={taxonomySrcSet(node.image)}
+          imageWidth={node.image?.width}
+          imageHeight={node.image?.height}
         />
         <div className="grid min-w-0 flex-1 gap-1">
           <h2 className="text-h3 [overflow-wrap:anywhere]" lang="en">

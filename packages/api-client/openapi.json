@@ -1,6 +1,1137 @@
 {
   "openapi": "3.0.0",
   "paths": {
+    "/media/policies/catalog_taxonomy": {
+      "get": {
+        "operationId": "mediaTaxonomyImagePolicy",
+        "parameters": [
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaPolicyDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "400": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "401": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "403": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "404": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "409": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "410": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "429": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds until this rate-limit window resets"
+              }
+            }
+          },
+          "500": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "503": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds before retrying; sent with MAINTENANCE"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Read configured taxonomy image upload limits",
+        "tags": [
+          "media"
+        ]
+      }
+    },
+    "/media/uploads": {
+      "post": {
+        "operationId": "mediaUpload",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Case-sensitive command key. Retry the identical command within 24 hours; replay rechecks current super_admin access and returns the current state.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{256}$"
+            }
+          },
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "purpose",
+                  "file"
+                ],
+                "properties": {
+                  "purpose": {
+                    "type": "string",
+                    "enum": [
+                      "catalog_taxonomy"
+                    ]
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaUploadDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "400": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "401": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "403": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "404": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "409": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "410": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "413": {
+            "description": "MEDIA_TOO_LARGE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "422": {
+            "description": "MEDIA_TYPE_NOT_ALLOWED or MEDIA_IMAGE_PROCESSING_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "429": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds until this rate-limit window resets"
+              }
+            }
+          },
+          "500": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "503": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds before retrying; sent with MAINTENANCE"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Upload a sanitized taxonomy image",
+        "tags": [
+          "media"
+        ]
+      }
+    },
+    "/media/previews/{assetId}": {
+      "get": {
+        "operationId": "mediaImagePreview",
+        "parameters": [
+          {
+            "name": "assetId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "401": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "403": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "404": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "409": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "410": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "429": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds until this rate-limit window resets"
+              }
+            }
+          },
+          "500": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "503": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds before retrying; sent with MAINTENANCE"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Read an owned image preview",
+        "tags": [
+          "media"
+        ]
+      }
+    },
+    "/media/public/{assetId}": {
+      "get": {
+        "operationId": "mediaPublicImage",
+        "parameters": [
+          {
+            "required": true,
+            "name": "placementType",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "required": true,
+            "name": "placementId",
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "required": true,
+            "name": "surface",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "required": true,
+            "name": "variantWidth",
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 640,
+              "type": "integer"
+            }
+          },
+          {
+            "required": true,
+            "name": "assetVersion",
+            "in": "query",
+            "schema": {
+              "maximum": 9007199254740991,
+              "exclusiveMinimum": true,
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "assetId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "503": {
+            "description": "MAINTENANCE (errors.system.maintenance) while maintenance mode is on and this route is not admitted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds before retrying; sent with MAINTENANCE"
+              }
+            }
+          }
+        },
+        "summary": "Read a currently published image placement",
+        "tags": [
+          "media"
+        ]
+      },
+      "head": {
+        "operationId": "ImageController_head",
+        "parameters": [
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "503": {
+            "description": "MAINTENANCE (errors.system.maintenance) while maintenance mode is on and this route is not admitted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds before retrying; sent with MAINTENANCE"
+              }
+            }
+          }
+        },
+        "tags": [
+          "media"
+        ]
+      }
+    },
     "/health/live": {
       "get": {
         "operationId": "healthLive",
@@ -19836,7 +20967,7 @@
         ]
       },
       "post": {
-        "description": "Allow-listed {kind,slug,nameEn,nameHi,icon?,imageAssetId?,sortOrder?}. The slug is immutable after creation. Emits catalog.taxonomy.changed. Names are trimmed plain text; duplicate checks use the shared normalization (NFKC, lowercase, whitespace collapse, unaccent) on both EN and HI names. imageAssetId must be an approved, attached-ready catalog_taxonomy Media asset; until the Media module binds its adapter every imageAssetId is rejected with CATALOG_IMAGE_INVALID (explicit null removes an image). super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.",
+        "description": "Allow-listed {kind,slug,nameEn,nameHi,icon?,imageAssetId?,sortOrder?}. The slug is immutable after creation. Emits catalog.taxonomy.changed. Names are trimmed plain text; duplicate checks use the shared normalization (NFKC, lowercase, whitespace collapse, unaccent) on both EN and HI names. imageAssetId must be an owned, ready catalog_taxonomy Media asset; invalid, removed or foreign assets are rejected with CATALOG_IMAGE_INVALID (explicit null removes an image). super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.",
         "operationId": "superAdminCatalogCategoryCreate",
         "parameters": [
           {
@@ -21503,7 +22634,7 @@
     },
     "/catalog/admin/categories/{categoryId}": {
       "patch": {
-        "description": "Allow-listed {nameEn?,nameHi?,icon?,imageAssetId?,active?,sortOrder?,expectedVersion}; kind and slug are immutable. Deactivation hides the category from public reads and Home without deleting listings. Emits catalog.taxonomy.changed. imageAssetId must be an approved, attached-ready catalog_taxonomy Media asset; until the Media module binds its adapter every imageAssetId is rejected with CATALOG_IMAGE_INVALID (explicit null removes an image). super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.",
+        "description": "Allow-listed {nameEn?,nameHi?,icon?,imageAssetId?,active?,sortOrder?,expectedVersion}; kind and slug are immutable. Deactivation hides the category from public reads and Home without deleting listings. Emits catalog.taxonomy.changed. imageAssetId must be an owned, ready catalog_taxonomy Media asset; invalid, removed or foreign assets are rejected with CATALOG_IMAGE_INVALID (explicit null removes an image). super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.",
         "operationId": "superAdminCatalogCategoryUpdate",
         "parameters": [
           {
@@ -21859,7 +22990,7 @@
     },
     "/catalog/admin/categories/{categoryId}/subcategories": {
       "post": {
-        "description": "{nameEn,nameHi,serviceTypes?,imageAssetId?,expectedVersion?}; the slug is derived from nameEn and immutable; expectedVersion optionally pins the parent category version. Emits catalog.taxonomy.changed. Names are trimmed plain text; duplicate checks use the shared normalization (NFKC, lowercase, whitespace collapse, unaccent) on both EN and HI names. imageAssetId must be an approved, attached-ready catalog_taxonomy Media asset; until the Media module binds its adapter every imageAssetId is rejected with CATALOG_IMAGE_INVALID (explicit null removes an image). super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.",
+        "description": "{nameEn,nameHi,serviceTypes?,imageAssetId?,expectedVersion?}; the slug is derived from nameEn and immutable; expectedVersion optionally pins the parent category version. Emits catalog.taxonomy.changed. Names are trimmed plain text; duplicate checks use the shared normalization (NFKC, lowercase, whitespace collapse, unaccent) on both EN and HI names. imageAssetId must be an owned, ready catalog_taxonomy Media asset; invalid, removed or foreign assets are rejected with CATALOG_IMAGE_INVALID (explicit null removes an image). super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.",
         "operationId": "superAdminCatalogSubcategoryCreate",
         "parameters": [
           {
@@ -22215,7 +23346,7 @@
     },
     "/catalog/admin/subcategories/{subcategoryId}": {
       "patch": {
-        "description": "Allow-listed {nameEn?,nameHi?,serviceTypes?,imageAssetId?,active?,sortOrder?,expectedVersion}; slug and parent are immutable. Deactivation hides it from public reads, Home and new selections. Emits catalog.taxonomy.changed. Names are trimmed plain text; duplicate checks use the shared normalization (NFKC, lowercase, whitespace collapse, unaccent) on both EN and HI names. imageAssetId must be an approved, attached-ready catalog_taxonomy Media asset; until the Media module binds its adapter every imageAssetId is rejected with CATALOG_IMAGE_INVALID (explicit null removes an image). super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.",
+        "description": "Allow-listed {nameEn?,nameHi?,serviceTypes?,imageAssetId?,active?,sortOrder?,expectedVersion}; slug and parent are immutable. Deactivation hides it from public reads, Home and new selections. Emits catalog.taxonomy.changed. Names are trimmed plain text; duplicate checks use the shared normalization (NFKC, lowercase, whitespace collapse, unaccent) on both EN and HI names. imageAssetId must be an owned, ready catalog_taxonomy Media asset; invalid, removed or foreign assets are rejected with CATALOG_IMAGE_INVALID (explicit null removes an image). super_admin only (regular admins are denied, even with catalog:edit); admitted during maintenance for recovery. Rechecks super_admin in the transaction and commits the change, one audit entry (before/after) and its outbox event atomically; a rejected write changes nothing. Same Idempotency-Key and payload replays the stored result.",
         "operationId": "superAdminCatalogSubcategoryUpdate",
         "parameters": [
           {
@@ -24927,9 +26058,22 @@
     },
     "/catalog/subcategory-suggestions/duplicate-check": {
       "post": {
-        "description": "{categoryId,nameEn,nameHi?} against the active category: returns an exact normalized-name match flag (with the existing subcategory) and up to 5 ranked fuzzy candidates. Read-only; nothing is stored. Authenticated owner whose business holds the business.taxonomy-suggest capability and a resolved area; business, submitter, city and area are derived server-side, never from the body. Until the Businesses module binds its adapter no owner can be resolved and every call is denied with COMMON_FORBIDDEN. private, no-store.",
+        "description": "{categoryId,nameEn,nameHi?} against the active category: returns an exact normalized-name match flag (with the existing subcategory) and up to 5 ranked fuzzy candidates. Read-only; nothing is stored. Authenticated owner whose business holds the business.taxonomy-suggest capability (owned, not deleted/suspended/inactive, area resolved; an approved business also needs its live vendor/provider role); business, submitter, city and area are derived server-side, never from the body. X-Business-Kind selects which owned business is meant when the user owns both a shop and a provider profile. private, no-store.",
         "operationId": "catalogSuggestionDuplicateCheck",
         "parameters": [
+          {
+            "name": "X-Business-Kind",
+            "in": "header",
+            "description": "Owner route context (shop|provider) selecting which of the caller's own businesses is meant; required only when the caller owns both. Grants nothing.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "shop",
+                "provider"
+              ]
+            }
+          },
           {
             "name": "Origin",
             "in": "header",
@@ -25043,7 +26187,7 @@
             }
           },
           "403": {
-            "description": "COMMON_FORBIDDEN when no owned, capable, active business with a resolved area exists (always, until the Businesses module is available).",
+            "description": "COMMON_FORBIDDEN when no owned, capable business with a resolved area exists for the caller (or for the named X-Business-Kind).",
             "content": {
               "application/json": {
                 "schema": {
@@ -25116,6 +26260,30 @@
           },
           "410": {
             "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "422": {
+            "description": "BUSINESS_CONTEXT_REQUIRED when the caller owns both kinds and X-Business-Kind is omitted.",
             "content": {
               "application/json": {
                 "schema": {
@@ -25238,9 +26406,22 @@
     },
     "/catalog/subcategory-suggestions": {
       "post": {
-        "description": "{categoryId,nameEn,nameHi?,reason?,allowSimilar?} creates a pending suggestion. An exact normalized match with an existing subcategory or pending suggestion is refused; fuzzy candidates are refused with SUGGESTION_SIMILARITY_WARNING unless allowSimilar is true. The suggestion, one audit entry and catalog.suggestion.submitted commit atomically. Limited to 10 per hour per user. Authenticated owner whose business holds the business.taxonomy-suggest capability and a resolved area; business, submitter, city and area are derived server-side, never from the body. Until the Businesses module binds its adapter no owner can be resolved and every call is denied with COMMON_FORBIDDEN. private, no-store.",
+        "description": "{categoryId,nameEn,nameHi?,reason?,allowSimilar?} creates a pending suggestion. An exact normalized match with an existing subcategory or pending suggestion is refused; fuzzy candidates are refused with SUGGESTION_SIMILARITY_WARNING unless allowSimilar is true. The suggestion, one audit entry and catalog.suggestion.submitted commit atomically. Limited to 10 per hour per user. Authenticated owner whose business holds the business.taxonomy-suggest capability (owned, not deleted/suspended/inactive, area resolved; an approved business also needs its live vendor/provider role); business, submitter, city and area are derived server-side, never from the body. X-Business-Kind selects which owned business is meant when the user owns both a shop and a provider profile. private, no-store.",
         "operationId": "catalogSuggestionCreate",
         "parameters": [
+          {
+            "name": "X-Business-Kind",
+            "in": "header",
+            "description": "Owner route context (shop|provider) selecting which of the caller's own businesses is meant; required only when the caller owns both. Grants nothing.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "shop",
+                "provider"
+              ]
+            }
+          },
           {
             "name": "Idempotency-Key",
             "in": "header",
@@ -25366,7 +26547,7 @@
             }
           },
           "403": {
-            "description": "COMMON_FORBIDDEN when no owned, capable, active business with a resolved area exists (always, until the Businesses module is available).",
+            "description": "COMMON_FORBIDDEN when no owned, capable business with a resolved area exists for the caller (or for the named X-Business-Kind).",
             "content": {
               "application/json": {
                 "schema": {
@@ -25439,6 +26620,30 @@
           },
           "410": {
             "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "422": {
+            "description": "BUSINESS_CONTEXT_REQUIRED when the caller owns both kinds and X-Business-Kind is omitted.",
             "content": {
               "application/json": {
                 "schema": {
@@ -25561,9 +26766,22 @@
     },
     "/catalog/me/subcategory-suggestions": {
       "get": {
-        "description": "Newest first with a caller-bound keyset cursor; includes status, rejection reason and the approved/merged subcategory id. Authenticated owner whose business holds the business.taxonomy-suggest capability and a resolved area; business, submitter, city and area are derived server-side, never from the body. Until the Businesses module binds its adapter no owner can be resolved and every call is denied with COMMON_FORBIDDEN. private, no-store.",
+        "description": "Newest first with a caller-bound keyset cursor; includes status, rejection reason and the approved/merged subcategory id. Authenticated owner whose business holds the business.taxonomy-suggest capability (owned, not deleted/suspended/inactive, area resolved; an approved business also needs its live vendor/provider role); business, submitter, city and area are derived server-side, never from the body. X-Business-Kind selects which owned business is meant when the user owns both a shop and a provider profile. private, no-store.",
         "operationId": "catalogMySuggestions",
         "parameters": [
+          {
+            "name": "X-Business-Kind",
+            "in": "header",
+            "description": "Owner route context (shop|provider) selecting which of the caller's own businesses is meant; required only when the caller owns both. Grants nothing.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "shop",
+                "provider"
+              ]
+            }
+          },
           {
             "required": false,
             "name": "cursor",
@@ -25671,7 +26889,7 @@
             }
           },
           "403": {
-            "description": "COMMON_FORBIDDEN when no owned, capable, active business with a resolved area exists (always, until the Businesses module is available).",
+            "description": "COMMON_FORBIDDEN when no owned, capable business with a resolved area exists for the caller (or for the named X-Business-Kind).",
             "content": {
               "application/json": {
                 "schema": {
@@ -25744,6 +26962,30 @@
           },
           "410": {
             "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "422": {
+            "description": "BUSINESS_CONTEXT_REQUIRED when the caller owns both kinds and X-Business-Kind is omitted.",
             "content": {
               "application/json": {
                 "schema": {
@@ -25887,6 +27129,253 @@
       }
     },
     "schemas": {
+      "MediaPolicyDto": {
+        "type": "object",
+        "properties": {
+          "purpose": {
+            "type": "string",
+            "enum": [
+              "catalog_taxonomy"
+            ]
+          },
+          "policy": {
+            "type": "object",
+            "properties": {
+              "version": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "allowedMimeTypes": {
+                "minItems": 1,
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "image/jpeg",
+                    "image/png",
+                    "image/webp"
+                  ]
+                }
+              },
+              "maxBytes": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5242880
+              },
+              "minWidth": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 6000
+              },
+              "minHeight": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 6000
+              },
+              "maxWidth": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 6000
+              },
+              "maxHeight": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 6000
+              },
+              "maxPixels": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 24000000
+              },
+              "variants": {
+                "minItems": 1,
+                "maxItems": 8,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "width": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 6000
+                    },
+                    "maxBytes": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 5242880
+                    }
+                  },
+                  "required": [
+                    "width",
+                    "maxBytes"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "quality": {
+                "type": "number",
+                "enum": [
+                  80
+                ]
+              },
+              "minQuality": {
+                "type": "number",
+                "enum": [
+                  60
+                ]
+              }
+            },
+            "required": [
+              "version",
+              "enabled",
+              "allowedMimeTypes",
+              "maxBytes",
+              "minWidth",
+              "minHeight",
+              "maxWidth",
+              "maxHeight",
+              "maxPixels",
+              "variants",
+              "quality",
+              "minQuality"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "purpose",
+          "policy"
+        ],
+        "additionalProperties": false
+      },
+      "AuthErrorDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]+$"
+          },
+          "message_key": {
+            "type": "string",
+            "pattern": "^errors\\.[A-Za-z0-9.]+$"
+          },
+          "status": {
+            "type": "integer",
+            "minimum": 400,
+            "maximum": 599
+          },
+          "details": {
+            "type": "object",
+            "properties": {
+              "field": {
+                "type": "string",
+                "maxLength": 100,
+                "pattern": "^[A-Za-z][A-Za-z0-9_.]*$"
+              },
+              "fields": {
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "maxLength": 100,
+                  "pattern": "^[A-Za-z][A-Za-z0-9_.]*$"
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          "correlationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          }
+        },
+        "required": [
+          "code",
+          "message_key",
+          "status",
+          "details",
+          "correlationId"
+        ],
+        "additionalProperties": false
+      },
+      "MediaUploadDto": {
+        "type": "object",
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ready"
+            ]
+          },
+          "purpose": {
+            "type": "string",
+            "enum": [
+              "catalog_taxonomy"
+            ]
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "public"
+            ]
+          },
+          "mimeType": {
+            "type": "string",
+            "enum": [
+              "image/webp"
+            ]
+          },
+          "bytes": {
+            "type": "integer",
+            "exclusiveMinimum": true,
+            "maximum": 9007199254740991,
+            "minimum": 0
+          },
+          "width": {
+            "type": "integer",
+            "exclusiveMinimum": true,
+            "maximum": 9007199254740991,
+            "minimum": 0
+          },
+          "height": {
+            "type": "integer",
+            "exclusiveMinimum": true,
+            "maximum": 9007199254740991,
+            "minimum": 0
+          },
+          "previewPath": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2048,
+            "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+            "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+          }
+        },
+        "required": [
+          "assetId",
+          "status",
+          "purpose",
+          "visibility",
+          "mimeType",
+          "bytes",
+          "width",
+          "height",
+          "previewPath"
+        ],
+        "additionalProperties": false
+      },
       "ErrorDto": {
         "type": "object",
         "properties": {
@@ -25951,58 +27440,6 @@
         },
         "required": [
           "status"
-        ],
-        "additionalProperties": false
-      },
-      "AuthErrorDto": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string",
-            "pattern": "^[A-Z][A-Z0-9_]+$"
-          },
-          "message_key": {
-            "type": "string",
-            "pattern": "^errors\\.[A-Za-z0-9.]+$"
-          },
-          "status": {
-            "type": "integer",
-            "minimum": 400,
-            "maximum": 599
-          },
-          "details": {
-            "type": "object",
-            "properties": {
-              "field": {
-                "type": "string",
-                "maxLength": 100,
-                "pattern": "^[A-Za-z][A-Za-z0-9_.]*$"
-              },
-              "fields": {
-                "maxItems": 50,
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "maxLength": 100,
-                  "pattern": "^[A-Za-z][A-Za-z0-9_.]*$"
-                }
-              }
-            },
-            "additionalProperties": false
-          },
-          "correlationId": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 64,
-            "pattern": "^[A-Za-z0-9_-]+$"
-          }
-        },
-        "required": [
-          "code",
-          "message_key",
-          "status",
-          "details",
-          "correlationId"
         ],
         "additionalProperties": false
       },
@@ -41711,6 +43148,13 @@
                       "format": "uuid",
                       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                     },
+                    "path": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 2048,
+                      "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                      "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                    },
                     "mimeType": {
                       "type": "string",
                       "minLength": 1,
@@ -41728,12 +43172,54 @@
                       "maximum": 9007199254740991,
                       "minimum": 0
                     },
-                    "path": {
-                      "type": "string",
-                      "minLength": 2,
-                      "maxLength": 2048,
-                      "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+$",
-                      "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                    "variants": {
+                      "minItems": 1,
+                      "maxItems": 3,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "width": {
+                            "type": "integer",
+                            "exclusiveMinimum": true,
+                            "maximum": 9007199254740991,
+                            "minimum": 0
+                          },
+                          "height": {
+                            "type": "integer",
+                            "exclusiveMinimum": true,
+                            "maximum": 9007199254740991,
+                            "minimum": 0
+                          },
+                          "mimeType": {
+                            "type": "string",
+                            "enum": [
+                              "image/webp"
+                            ]
+                          },
+                          "bytes": {
+                            "type": "integer",
+                            "exclusiveMinimum": true,
+                            "maximum": 122880,
+                            "minimum": 0
+                          },
+                          "path": {
+                            "type": "string",
+                            "minLength": 2,
+                            "maxLength": 2048,
+                            "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                            "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                          }
+                        },
+                        "required": [
+                          "width",
+                          "height",
+                          "mimeType",
+                          "bytes",
+                          "path"
+                        ],
+                        "additionalProperties": false
+                      }
                     }
                   },
                   "required": [
@@ -41741,7 +43227,8 @@
                     "path",
                     "mimeType",
                     "width",
-                    "height"
+                    "height",
+                    "variants"
                   ],
                   "additionalProperties": false
                 },
@@ -41816,6 +43303,13 @@
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                   },
+                  "path": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 2048,
+                    "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                    "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                  },
                   "mimeType": {
                     "type": "string",
                     "minLength": 1,
@@ -41833,12 +43327,54 @@
                     "maximum": 9007199254740991,
                     "minimum": 0
                   },
-                  "path": {
-                    "type": "string",
-                    "minLength": 2,
-                    "maxLength": 2048,
-                    "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+$",
-                    "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                  "variants": {
+                    "minItems": 1,
+                    "maxItems": 3,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "width": {
+                          "type": "integer",
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991,
+                          "minimum": 0
+                        },
+                        "height": {
+                          "type": "integer",
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991,
+                          "minimum": 0
+                        },
+                        "mimeType": {
+                          "type": "string",
+                          "enum": [
+                            "image/webp"
+                          ]
+                        },
+                        "bytes": {
+                          "type": "integer",
+                          "exclusiveMinimum": true,
+                          "maximum": 122880,
+                          "minimum": 0
+                        },
+                        "path": {
+                          "type": "string",
+                          "minLength": 2,
+                          "maxLength": 2048,
+                          "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                          "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                        }
+                      },
+                      "required": [
+                        "width",
+                        "height",
+                        "mimeType",
+                        "bytes",
+                        "path"
+                      ],
+                      "additionalProperties": false
+                    }
                   }
                 },
                 "required": [
@@ -41846,7 +43382,8 @@
                   "path",
                   "mimeType",
                   "width",
-                  "height"
+                  "height",
+                  "variants"
                 ],
                 "additionalProperties": false
               },
@@ -41913,6 +43450,13 @@
                       "format": "uuid",
                       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                     },
+                    "path": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 2048,
+                      "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                      "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                    },
                     "mimeType": {
                       "type": "string",
                       "minLength": 1,
@@ -41930,12 +43474,54 @@
                       "maximum": 9007199254740991,
                       "minimum": 0
                     },
-                    "path": {
-                      "type": "string",
-                      "minLength": 2,
-                      "maxLength": 2048,
-                      "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+$",
-                      "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                    "variants": {
+                      "minItems": 1,
+                      "maxItems": 3,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "width": {
+                            "type": "integer",
+                            "exclusiveMinimum": true,
+                            "maximum": 9007199254740991,
+                            "minimum": 0
+                          },
+                          "height": {
+                            "type": "integer",
+                            "exclusiveMinimum": true,
+                            "maximum": 9007199254740991,
+                            "minimum": 0
+                          },
+                          "mimeType": {
+                            "type": "string",
+                            "enum": [
+                              "image/webp"
+                            ]
+                          },
+                          "bytes": {
+                            "type": "integer",
+                            "exclusiveMinimum": true,
+                            "maximum": 122880,
+                            "minimum": 0
+                          },
+                          "path": {
+                            "type": "string",
+                            "minLength": 2,
+                            "maxLength": 2048,
+                            "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                            "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                          }
+                        },
+                        "required": [
+                          "width",
+                          "height",
+                          "mimeType",
+                          "bytes",
+                          "path"
+                        ],
+                        "additionalProperties": false
+                      }
                     }
                   },
                   "required": [
@@ -41943,7 +43529,8 @@
                     "path",
                     "mimeType",
                     "width",
-                    "height"
+                    "height",
+                    "variants"
                   ],
                   "additionalProperties": false
                 },
@@ -42020,6 +43607,13 @@
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                   },
+                  "path": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 2048,
+                    "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                    "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                  },
                   "mimeType": {
                     "type": "string",
                     "minLength": 1,
@@ -42037,12 +43631,54 @@
                     "maximum": 9007199254740991,
                     "minimum": 0
                   },
-                  "path": {
-                    "type": "string",
-                    "minLength": 2,
-                    "maxLength": 2048,
-                    "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+$",
-                    "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                  "variants": {
+                    "minItems": 1,
+                    "maxItems": 3,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "width": {
+                          "type": "integer",
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991,
+                          "minimum": 0
+                        },
+                        "height": {
+                          "type": "integer",
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991,
+                          "minimum": 0
+                        },
+                        "mimeType": {
+                          "type": "string",
+                          "enum": [
+                            "image/webp"
+                          ]
+                        },
+                        "bytes": {
+                          "type": "integer",
+                          "exclusiveMinimum": true,
+                          "maximum": 122880,
+                          "minimum": 0
+                        },
+                        "path": {
+                          "type": "string",
+                          "minLength": 2,
+                          "maxLength": 2048,
+                          "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                          "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                        }
+                      },
+                      "required": [
+                        "width",
+                        "height",
+                        "mimeType",
+                        "bytes",
+                        "path"
+                      ],
+                      "additionalProperties": false
+                    }
                   }
                 },
                 "required": [
@@ -42050,7 +43686,8 @@
                   "path",
                   "mimeType",
                   "width",
-                  "height"
+                  "height",
+                  "variants"
                 ],
                 "additionalProperties": false
               },
@@ -42115,6 +43752,13 @@
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                   },
+                  "path": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 2048,
+                    "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                    "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                  },
                   "mimeType": {
                     "type": "string",
                     "minLength": 1,
@@ -42132,12 +43776,54 @@
                     "maximum": 9007199254740991,
                     "minimum": 0
                   },
-                  "path": {
-                    "type": "string",
-                    "minLength": 2,
-                    "maxLength": 2048,
-                    "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+$",
-                    "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                  "variants": {
+                    "minItems": 1,
+                    "maxItems": 3,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "width": {
+                          "type": "integer",
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991,
+                          "minimum": 0
+                        },
+                        "height": {
+                          "type": "integer",
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991,
+                          "minimum": 0
+                        },
+                        "mimeType": {
+                          "type": "string",
+                          "enum": [
+                            "image/webp"
+                          ]
+                        },
+                        "bytes": {
+                          "type": "integer",
+                          "exclusiveMinimum": true,
+                          "maximum": 122880,
+                          "minimum": 0
+                        },
+                        "path": {
+                          "type": "string",
+                          "minLength": 2,
+                          "maxLength": 2048,
+                          "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                          "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                        }
+                      },
+                      "required": [
+                        "width",
+                        "height",
+                        "mimeType",
+                        "bytes",
+                        "path"
+                      ],
+                      "additionalProperties": false
+                    }
                   }
                 },
                 "required": [
@@ -42145,7 +43831,8 @@
                   "path",
                   "mimeType",
                   "width",
-                  "height"
+                  "height",
+                  "variants"
                 ],
                 "additionalProperties": false
               },
@@ -42228,6 +43915,13 @@
                       "format": "uuid",
                       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                     },
+                    "path": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 2048,
+                      "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                      "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                    },
                     "mimeType": {
                       "type": "string",
                       "minLength": 1,
@@ -42245,12 +43939,54 @@
                       "maximum": 9007199254740991,
                       "minimum": 0
                     },
-                    "path": {
-                      "type": "string",
-                      "minLength": 2,
-                      "maxLength": 2048,
-                      "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+$",
-                      "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                    "variants": {
+                      "minItems": 1,
+                      "maxItems": 3,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "width": {
+                            "type": "integer",
+                            "exclusiveMinimum": true,
+                            "maximum": 9007199254740991,
+                            "minimum": 0
+                          },
+                          "height": {
+                            "type": "integer",
+                            "exclusiveMinimum": true,
+                            "maximum": 9007199254740991,
+                            "minimum": 0
+                          },
+                          "mimeType": {
+                            "type": "string",
+                            "enum": [
+                              "image/webp"
+                            ]
+                          },
+                          "bytes": {
+                            "type": "integer",
+                            "exclusiveMinimum": true,
+                            "maximum": 122880,
+                            "minimum": 0
+                          },
+                          "path": {
+                            "type": "string",
+                            "minLength": 2,
+                            "maxLength": 2048,
+                            "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                            "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                          }
+                        },
+                        "required": [
+                          "width",
+                          "height",
+                          "mimeType",
+                          "bytes",
+                          "path"
+                        ],
+                        "additionalProperties": false
+                      }
                     }
                   },
                   "required": [
@@ -42258,7 +43994,8 @@
                     "path",
                     "mimeType",
                     "width",
-                    "height"
+                    "height",
+                    "variants"
                   ],
                   "additionalProperties": false
                 },
@@ -42342,6 +44079,13 @@
                             "format": "uuid",
                             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                           },
+                          "path": {
+                            "type": "string",
+                            "minLength": 2,
+                            "maxLength": 2048,
+                            "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                            "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                          },
                           "mimeType": {
                             "type": "string",
                             "minLength": 1,
@@ -42359,12 +44103,54 @@
                             "maximum": 9007199254740991,
                             "minimum": 0
                           },
-                          "path": {
-                            "type": "string",
-                            "minLength": 2,
-                            "maxLength": 2048,
-                            "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+$",
-                            "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                          "variants": {
+                            "minItems": 1,
+                            "maxItems": 3,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "width": {
+                                  "type": "integer",
+                                  "exclusiveMinimum": true,
+                                  "maximum": 9007199254740991,
+                                  "minimum": 0
+                                },
+                                "height": {
+                                  "type": "integer",
+                                  "exclusiveMinimum": true,
+                                  "maximum": 9007199254740991,
+                                  "minimum": 0
+                                },
+                                "mimeType": {
+                                  "type": "string",
+                                  "enum": [
+                                    "image/webp"
+                                  ]
+                                },
+                                "bytes": {
+                                  "type": "integer",
+                                  "exclusiveMinimum": true,
+                                  "maximum": 122880,
+                                  "minimum": 0
+                                },
+                                "path": {
+                                  "type": "string",
+                                  "minLength": 2,
+                                  "maxLength": 2048,
+                                  "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                                  "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                                }
+                              },
+                              "required": [
+                                "width",
+                                "height",
+                                "mimeType",
+                                "bytes",
+                                "path"
+                              ],
+                              "additionalProperties": false
+                            }
                           }
                         },
                         "required": [
@@ -42372,7 +44158,8 @@
                           "path",
                           "mimeType",
                           "width",
-                          "height"
+                          "height",
+                          "variants"
                         ],
                         "additionalProperties": false
                       },
@@ -43031,6 +44818,13 @@
                 "format": "uuid",
                 "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
               },
+              "path": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 2048,
+                "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+              },
               "mimeType": {
                 "type": "string",
                 "minLength": 1,
@@ -43048,12 +44842,54 @@
                 "maximum": 9007199254740991,
                 "minimum": 0
               },
-              "path": {
-                "type": "string",
-                "minLength": 2,
-                "maxLength": 2048,
-                "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+$",
-                "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+              "variants": {
+                "minItems": 1,
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "width": {
+                      "type": "integer",
+                      "exclusiveMinimum": true,
+                      "maximum": 9007199254740991,
+                      "minimum": 0
+                    },
+                    "height": {
+                      "type": "integer",
+                      "exclusiveMinimum": true,
+                      "maximum": 9007199254740991,
+                      "minimum": 0
+                    },
+                    "mimeType": {
+                      "type": "string",
+                      "enum": [
+                        "image/webp"
+                      ]
+                    },
+                    "bytes": {
+                      "type": "integer",
+                      "exclusiveMinimum": true,
+                      "maximum": 122880,
+                      "minimum": 0
+                    },
+                    "path": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 2048,
+                      "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                      "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                    }
+                  },
+                  "required": [
+                    "width",
+                    "height",
+                    "mimeType",
+                    "bytes",
+                    "path"
+                  ],
+                  "additionalProperties": false
+                }
               }
             },
             "required": [
@@ -43061,7 +44897,8 @@
               "path",
               "mimeType",
               "width",
-              "height"
+              "height",
+              "variants"
             ],
             "additionalProperties": false
           },
@@ -43243,6 +45080,13 @@
                 "format": "uuid",
                 "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
               },
+              "path": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 2048,
+                "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+              },
               "mimeType": {
                 "type": "string",
                 "minLength": 1,
@@ -43260,12 +45104,54 @@
                 "maximum": 9007199254740991,
                 "minimum": 0
               },
-              "path": {
-                "type": "string",
-                "minLength": 2,
-                "maxLength": 2048,
-                "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+$",
-                "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+              "variants": {
+                "minItems": 1,
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "width": {
+                      "type": "integer",
+                      "exclusiveMinimum": true,
+                      "maximum": 9007199254740991,
+                      "minimum": 0
+                    },
+                    "height": {
+                      "type": "integer",
+                      "exclusiveMinimum": true,
+                      "maximum": 9007199254740991,
+                      "minimum": 0
+                    },
+                    "mimeType": {
+                      "type": "string",
+                      "enum": [
+                        "image/webp"
+                      ]
+                    },
+                    "bytes": {
+                      "type": "integer",
+                      "exclusiveMinimum": true,
+                      "maximum": 122880,
+                      "minimum": 0
+                    },
+                    "path": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 2048,
+                      "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                      "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                    }
+                  },
+                  "required": [
+                    "width",
+                    "height",
+                    "mimeType",
+                    "bytes",
+                    "path"
+                  ],
+                  "additionalProperties": false
+                }
               }
             },
             "required": [
@@ -43273,7 +45159,8 @@
               "path",
               "mimeType",
               "width",
-              "height"
+              "height",
+              "variants"
             ],
             "additionalProperties": false
           },

@@ -25,14 +25,12 @@ export type ImageMap = ReadonlyMap<string, TaxonomyImage>;
 export function imagesFor(
   media: CatalogMediaAssetPort,
   tx: TxContext,
-  rows: readonly { imageAssetId: string | null }[],
+  rows: readonly { id: string; imageAssetId: string | null; categoryId?: string }[],
 ): Promise<Map<string, TaxonomyImage>> {
-  const ids = [
-    ...new Set(
-      rows.flatMap((row) => (row.imageAssetId ? [row.imageAssetId] : [])),
-    ),
-  ];
-  return ids.length ? media.describe(tx, ids) : Promise.resolve(new Map());
+  return media.describe(tx, rows.flatMap((row) => row.imageAssetId ? [{
+    assetId: row.imageAssetId, placementId: row.id,
+    placementType: row.categoryId ? 'catalog_subcategory' as const : 'catalog_category' as const,
+  }] : []));
 }
 
 const image = (images: ImageMap, assetId: string | null) => {
@@ -48,7 +46,7 @@ export function categoryDto(row: StoredCategory, images: ImageMap): Category {
     nameEn: row.nameEn,
     nameHi: row.nameHi,
     ...(row.icon ? { icon: row.icon } : {}),
-    ...image(images, row.imageAssetId),
+    ...image(images, row.id),
     active: row.active,
     sortOrder: row.sortOrder,
   });
@@ -65,7 +63,7 @@ export function subcategoryDto(
     nameEn: row.nameEn,
     nameHi: row.nameHi,
     serviceTypes: row.serviceTypes,
-    ...image(images, row.imageAssetId),
+    ...image(images, row.id),
     active: row.active,
     sortOrder: row.sortOrder,
   });

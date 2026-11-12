@@ -101,6 +101,8 @@ model User {
   businessesReviewed   Business[]               @relation("BusinessReviewer")
   businessDocuments    BusinessDocument[]
   billingReviewed      BusinessBillingProfile[]
+  mediaAssets          MediaAsset[]
+  mediaUploads         MediaUploadOperation[]
 
   @@index([deletedAt], where: raw("\"deleted_at\" IS NULL"), map: "users_active_deleted_at_idx")
   @@map("users")
@@ -472,8 +474,7 @@ model SupportMessage {
   @@map("support_messages")
 }
 
-// Catalog taxonomy (F-SA-008). `imageAssetId` gains its media_assets FK in
-// the Media migration; there is no Prisma relation until then.
+// Catalog taxonomy (F-SA-008).
 model Category {
   id                 String                       @id @db.Uuid
   kind               String
@@ -482,6 +483,7 @@ model Category {
   nameHi             String                       @map("name_hi")
   icon               String?
   imageAssetId       String?                      @map("image_asset_id") @db.Uuid
+  imageAsset         MediaAsset?                  @relation(fields: [imageAssetId], references: [id], onDelete: Restrict, onUpdate: Restrict)
   active             Boolean                      @default(true)
   sortOrder          Int                          @default(0) @map("sort_order")
   version            Int                          @default(1)
@@ -498,6 +500,7 @@ model Category {
   businesses         BusinessCategory[]
 
   @@index([kind, active, sortOrder, id], map: "categories_kind_active_sort_idx")
+  @@index([imageAssetId])
   @@map("categories")
 }
 
@@ -523,6 +526,7 @@ model Subcategory {
   normalizedName String                  @map("normalized_name")
   serviceTypes   String[]                @default([]) @map("service_types")
   imageAssetId   String?                 @map("image_asset_id") @db.Uuid
+  imageAsset     MediaAsset?             @relation(fields: [imageAssetId], references: [id], onDelete: Restrict, onUpdate: Restrict)
   active         Boolean                 @default(true)
   sortOrder      Int                     @default(0) @map("sort_order")
   version        Int                     @default(1)
@@ -536,8 +540,51 @@ model Subcategory {
   @@unique([categoryId, slug], map: "subcategories_category_slug_key")
   @@unique([categoryId, normalizedName], map: "subcategories_category_normalized_name_key")
   @@index([categoryId, active, sortOrder, id], map: "subcategories_category_active_sort_idx")
+  @@index([imageAssetId])
   @@index([normalizedName(ops: raw("gin_trgm_ops"))], type: Gin, map: "subcategories_normalized_name_trgm_idx")
   @@map("subcategories")
+}
+
+model MediaAsset {
+  id              String    @id @db.Uuid
+  ownerUserId     String    @map("owner_user_id") @db.Uuid
+  purpose         String
+  visibility      String    @default("public")
+  moderationState String    @default("allowed") @map("moderation_state")
+  storageProvider String    @default("cloudinary") @map("storage_provider")
+  storageKey      String    @unique @map("storage_key")
+  mimeType        String    @map("mime_type")
+  bytes           BigInt
+  width           Int
+  height          Int
+  variants        Json      @db.JsonB
+  version         Int       @default(1)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  deletedAt       DateTime? @map("deleted_at") @db.Timestamptz(6)
+  owner           User      @relation(fields: [ownerUserId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  categories      Category[]
+  subcategories   Subcategory[]
+
+  @@index([ownerUserId, createdAt, id])
+  @@map("media_assets")
+}
+
+model MediaUploadOperation {
+  id          String    @id @db.Uuid
+  ownerUserId String    @map("owner_user_id") @db.Uuid
+  keyHash     String    @map("key_hash")
+  requestHash String    @map("request_hash")
+  policy      Json      @db.JsonB
+  state       String    @default("pending")
+  leaseId     String?   @map("lease_id") @db.Uuid
+  leaseUntil  DateTime? @map("lease_until") @db.Timestamptz(6)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  expiresAt   DateTime  @map("expires_at") @db.Timestamptz(6)
+  owner       User      @relation(fields: [ownerUserId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@unique([ownerUserId, keyHash])
+  @@index([state, expiresAt, id])
+  @@map("media_upload_operations")
 }
 
 model CatalogHomeSection {

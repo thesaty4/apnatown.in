@@ -56,8 +56,12 @@ export class TaxonomyWriter {
   async assertImage(
     tx: TxContext,
     assetId: string | null | undefined,
+    userId: string | null,
   ): Promise<void> {
-    if (assetId) await this.media.requireTaxonomyImage(tx, assetId);
+    if (assetId) {
+      if (!userId) throw new DomainError('CATALOG_IMAGE_INVALID');
+      await this.media.requireTaxonomyImage(tx, assetId, userId);
+    }
   }
 
   assertServiceTypes(
@@ -88,7 +92,7 @@ export class TaxonomyWriter {
     const slug = catalogSlug(input.nameEn);
     if (!slug) throw new DomainError('VALIDATION_ERROR', { field: 'nameEn' });
     this.assertServiceTypes(input.category, input.serviceTypes);
-    await this.assertImage(tx, input.imageAssetId);
+    await this.assertImage(tx, input.imageAssetId, input.actor.userId);
     const [normalizedName, normalizedHi] = await this.normalize(tx, [
       input.nameEn,
       input.nameHi,

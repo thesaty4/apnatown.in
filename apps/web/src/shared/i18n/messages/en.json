@@ -396,8 +396,11 @@
         "addSubNamed": "Add subcategory to {name}",
         "addSubTitle": "Add subcategory",
         "adminIntro": "Main categories are managed by Super Admin only. You can review subcategory suggestions and suggest new ones.",
+        "chooseImage": "Choose image",
         "close": "Close",
+        "configuredImageHelp": "{types}. Minimum {width} × {height} pixels; maximum {megabytes} MB.",
         "createTitle": "Add main category",
+        "discardImageSelection": "Discard selected file",
         "duplicateHelp": "This subcategory already exists",
         "edit": "Edit",
         "editNamed": "Edit {name}",
@@ -411,17 +414,27 @@
         "icon": "Icon (emoji)",
         "iconHint": "Optional. One emoji shown when there is no image.",
         "iconInvalid": "Use a short emoji.",
+        "imageHelp": "JPEG, PNG or WebP. Minimum 256 × 256 pixels; maximum file size 5 MB.",
+        "imagePreview": "Preview for {name}",
+        "imageProcessingFailed": "The image could not be processed within the configured dimensions and size limits. Choose a smaller, non-animated image.",
+        "imageSizeInvalid": "The image exceeds the configured file-size limit.",
+        "imageTitle": "Category or subcategory image",
+        "imageTypeInvalid": "Choose a JPEG, PNG or WebP image.",
         "inCategory": "In {category}",
         "kindLabel": "Category type",
         "kindProduct": "Product category",
         "kindService": "Service category",
+        "loadingImagePolicy": "Loading upload limits…",
         "nameEn": "Name (English)",
         "nameHi": "Name (Hindi)",
         "nameInvalid": "Enter a name of 2–60 characters.",
         "noSubcategories": "No subcategories yet.",
         "productTab": "Product categories",
+        "removeImage": "Remove current image",
+        "retryUpload": "Retry",
         "save": "Save",
         "saved": "Category saved: {name}",
+        "selectedImageNotUploaded": "{name} is shown as a local preview only; it has not been uploaded or attached.",
         "serviceTab": "Service categories",
         "slug": "Web address (slug)",
         "slugFixed": "Web address: /{slug} (can’t be changed)",
@@ -433,7 +446,11 @@
         "subcategoryCount": "{count, plural, one {# subcategory} other {# subcategories}}",
         "subSaved": "Subcategory saved: {name}",
         "superIntro": "Main categories are a fixed, standard list. Only you (Super Admin) can add, rename, reorder or deactivate them. Vendors and providers can only suggest subcategories.",
-        "title": "Categories"
+        "title": "Categories",
+        "uploadFailed": "Upload failed. Your previous image is unchanged. Retry this file or choose another.",
+        "uploadImage": "Upload image",
+        "uploadReady": "Image uploaded. Save the form to attach it.",
+        "uploadUnavailable": "Image uploads are unavailable. Check your permissions and the server's Cloudinary/upload configuration, then retry."
       },
       "common": {
         "active": "Active",
@@ -1689,6 +1706,17 @@
       "saved": "Choice saved",
       "saving": "Saving your choice…",
       "title": "Notification & consent"
+    }
+  },
+  "errors": {
+    "media": {
+      "imageProcessingFailed": "The image could not be safely processed. Choose another image.",
+      "notFound": "This image is not available.",
+      "rangeInvalid": "The requested image range is invalid.",
+      "storageUnavailable": "Image storage is temporarily unavailable. Please retry.",
+      "tooLarge": "The image exceeds the configured size limit.",
+      "typeNotAllowed": "This image type is not allowed.",
+      "uploadPolicyRequired": "Image uploads are not configured or are disabled."
     }
   },
   "geo": {

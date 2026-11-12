@@ -10,6 +10,8 @@ import { AdminModule } from './modules/admin/admin.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
+import { BusinessContextModule } from './modules/businesses/business-context.module';
+import { MediaModule, MediaStorageModule } from './modules/media-videos/media.module';
 import { GeoAdminModule } from './modules/geo/geo-admin.module';
 import { GeoModule } from './modules/geo/geo.module';
 import { MaintenanceGuard } from './modules/settings/application/maintenance.guard';
@@ -28,6 +30,9 @@ export class AppModule {
     const admin = AdminModule.forRoot(runtime, geo, users, audit);
     const settings = SettingsModule.forRoot(runtime, users, audit, admin);
     const geoAdmin = GeoAdminModule.forRoot(runtime, audit, admin, settings);
+    const mediaStorage = MediaStorageModule.forRoot(runtime);
+    const businessContext = BusinessContextModule.forRoot(runtime, users);
+    const catalog = CatalogModule.forRoot(runtime, users, audit, admin, businessContext, mediaStorage);
     return {
       module: AppModule,
       imports: [
@@ -38,7 +43,8 @@ export class AppModule {
         admin,
         settings,
         geoAdmin,
-        CatalogModule.forRoot(runtime, users, audit, admin),
+        catalog,
+        MediaModule.forRoot([runtime, users, audit, settings, mediaStorage, catalog]),
       ],
       controllers: [HealthController],
       providers: [

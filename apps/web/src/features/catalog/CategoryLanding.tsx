@@ -15,6 +15,7 @@ import {
   categoryPath,
   categoryTiles,
   exploreHref,
+  taxonomySrcSet,
 } from './parts';
 
 const chipClassName =
@@ -144,6 +145,9 @@ export async function CategoryLanding({
           label=""
           emoji={category.icon || '🏷️'}
           {...(image ? { src: image.path } : {})}
+          srcSet={taxonomySrcSet(image)}
+          imageWidth={image?.width}
+          imageHeight={image?.height}
         />
         <div className="grid min-w-0 flex-1 gap-1">
           <h1 className="text-h1 [overflow-wrap:anywhere]">

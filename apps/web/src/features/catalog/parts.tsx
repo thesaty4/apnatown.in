@@ -4,6 +4,7 @@ import type {
   Category,
   CategoryKind,
   Subcategory,
+  TaxonomyImage,
 } from '@apnatown/shared/catalog';
 import { CategoryTile } from '@apnatown/ui/cards/CategoryTile';
 import { publicHref, type Locale } from '../../shared/i18n/preferences';
@@ -12,6 +13,9 @@ type Named = Pick<Category, 'nameEn' | 'nameHi'>;
 /** Taxonomy names come from the API in both languages; never translated here. */
 export const catalogName = (item: Named, locale: string) =>
   locale === 'hi' ? item.nameHi : item.nameEn;
+
+export const taxonomySrcSet = (image: TaxonomyImage | undefined) =>
+  image?.variants.map((variant) => `${variant.path} ${variant.width}w`).join(', ');
 
 /** Explore owns the result lists; Catalog only links with URL filters. */
 export function exploreHref(
@@ -49,6 +53,9 @@ export function TileGrid({
     label: string;
     icon?: string | undefined;
     imageSrc?: string | undefined;
+    imageSrcSet?: string | undefined;
+    imageWidth?: number | undefined;
+    imageHeight?: number | undefined;
   }[];
 }) {
   return (
@@ -60,6 +67,9 @@ export function TileGrid({
             label={tile.label}
             icon={tile.icon}
             imageSrc={tile.imageSrc}
+            imageSrcSet={tile.imageSrcSet}
+            imageWidth={tile.imageWidth}
+            imageHeight={tile.imageHeight}
             linkAs={Link}
           />
         </li>
@@ -80,6 +90,9 @@ export function categoryTiles(
     label: catalogName(category, locale),
     icon: category.icon,
     imageSrc: category.image?.path,
+    imageSrcSet: taxonomySrcSet(category.image),
+    imageWidth: category.image?.width,
+    imageHeight: category.image?.height,
   }));
 }
 
@@ -96,6 +109,9 @@ export function subcategoryTiles(
     // Subcategories have no icon field; the parent icon is the fallback art.
     icon: category.icon,
     imageSrc: subcategory.image?.path,
+    imageSrcSet: taxonomySrcSet(subcategory.image),
+    imageWidth: subcategory.image?.width,
+    imageHeight: subcategory.image?.height,
   }));
 }
 

@@ -6,9 +6,10 @@ import {
   CATALOG_HOME_READ,
   CATALOG_MEDIA_ASSETS,
   CATALOG_READ,
-  UnavailableMediaAssets,
 } from './application/catalog-ports';
 import { CatalogReadService } from './application/catalog-read.service';
+import { CatalogImages } from './application/catalog-images';
+import { IMAGE_PUBLICATION } from '../media-videos/domain/images';
 import { CatalogSuggestionsService } from './application/catalog-suggestions.service';
 import { CatalogTaxonomyService } from './application/catalog-taxonomy.service';
 import { TaxonomyWriter } from './application/taxonomy-writer';
@@ -40,11 +41,12 @@ export class CatalogModule {
     audit: DynamicModule,
     admin: DynamicModule,
     businessContext: DynamicModule,
+    mediaStorage: DynamicModule,
   ): DynamicModule {
     return {
       module: CatalogModule,
       // businessContext exports the Businesses-owned CATALOG_BUSINESS_CONTEXT.
-      imports: [runtime, users, audit, admin, businessContext],
+      imports: [runtime, users, audit, admin, businessContext, mediaStorage],
       controllers: [
         PublicCatalogController,
         AdminCatalogController,
@@ -65,9 +67,9 @@ export class CatalogModule {
           provide: KEYWORD_MAPPING_REPOSITORY,
           useClass: PrismaKeywordMappingRepository,
         },
-        // Binding point: Media replaces this unavailable adapter when it lands.
-        // CATALOG_BUSINESS_CONTEXT is provided by BusinessContextModule.
-        { provide: CATALOG_MEDIA_ASSETS, useClass: UnavailableMediaAssets },
+        CatalogImages,
+        { provide: CATALOG_MEDIA_ASSETS, useExisting: CatalogImages },
+        { provide: IMAGE_PUBLICATION, useExisting: CatalogImages },
         CatalogEvents,
         TaxonomyWriter,
         CatalogTaxonomyService,
@@ -78,7 +80,7 @@ export class CatalogModule {
         { provide: CATALOG_READ, useExisting: CatalogReadService },
         { provide: CATALOG_HOME_READ, useExisting: CatalogHomeSectionsService },
       ],
-      exports: [CATALOG_READ, CATALOG_HOME_READ],
+      exports: [CATALOG_READ, CATALOG_HOME_READ, IMAGE_PUBLICATION],
     };
   }
 }

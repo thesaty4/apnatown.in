@@ -106,7 +106,7 @@ const AUDITED =
 const MAINTENANCE_NOTE =
   'MAINTENANCE (errors.system.maintenance) with Retry-After for an authenticated non-super session while maintenance is on; COMMON_UNAVAILABLE when the store is unavailable.';
 const IMAGE =
-  'imageAssetId must be an approved, attached-ready catalog_taxonomy Media asset; until the Media module binds its adapter every imageAssetId is rejected with CATALOG_IMAGE_INVALID (explicit null removes an image).';
+  'imageAssetId must be an owned, ready catalog_taxonomy Media asset; invalid, removed or foreign assets are rejected with CATALOG_IMAGE_INVALID (explicit null removes an image).';
 const NAMES =
   'Names are trimmed plain text; duplicate checks use the shared normalization (NFKC, lowercase, whitespace collapse, unaccent) on both EN and HI names.';
 const SECTION =

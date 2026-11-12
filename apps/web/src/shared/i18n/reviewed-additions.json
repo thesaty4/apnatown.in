@@ -5014,6 +5014,102 @@
     "hi": "यह उप-श्रेणी पहले से है",
     "source": "docs/design-context prototype js27 (EN; HI reviewed translation)"
   },
+  "catalog.admin.categories.imageTitle": {
+    "en": "Category or subcategory image",
+    "hi": "श्रेणी या उप-श्रेणी की तस्वीर"
+  },
+  "catalog.admin.categories.imageHelp": {
+    "en": "JPEG, PNG or WebP. Minimum 256 × 256 pixels; maximum file size 5 MB.",
+    "hi": "JPEG, PNG या WebP। कम-से-कम 256 × 256 पिक्सेल; फ़ाइल अधिकतम 5 MB की हो।"
+  },
+  "catalog.admin.categories.chooseImage": {
+    "en": "Choose image",
+    "hi": "तस्वीर चुनें"
+  },
+  "catalog.admin.categories.imagePreview": {
+    "en": "Preview for {name}",
+    "hi": "{name} की तस्वीर का पूर्वावलोकन"
+  },
+  "catalog.admin.categories.removeImage": {
+    "en": "Remove current image",
+    "hi": "मौजूदा तस्वीर हटाएँ"
+  },
+  "catalog.admin.categories.discardImageSelection": {
+    "en": "Discard selected file",
+    "hi": "चुनी हुई फ़ाइल हटाएँ"
+  },
+  "catalog.admin.categories.uploadImage": {
+    "en": "Upload image",
+    "hi": "तस्वीर अपलोड करें"
+  },
+  "catalog.admin.categories.selectedImageNotUploaded": {
+    "en": "{name} is shown as a local preview only; it has not been uploaded or attached.",
+    "hi": "{name} सिर्फ़ आपके डिवाइस पर पूर्वावलोकन के रूप में दिख रही है; इसे अपलोड या जोड़ा नहीं गया है।"
+  },
+  "catalog.admin.categories.uploadUnavailable": {
+    "en": "Image uploads are unavailable. Check your permissions and the server's Cloudinary/upload configuration, then retry.",
+    "hi": "तस्वीर अपलोड उपलब्ध नहीं है। अपनी अनुमति और सर्वर की Cloudinary/अपलोड सेटिंग जाँचें, फिर कोशिश करें।"
+  },
+  "catalog.admin.categories.configuredImageHelp": {
+    "en": "{types}. Minimum {width} × {height} pixels; maximum {megabytes} MB.",
+    "hi": "{types}। कम-से-कम {width} × {height} पिक्सेल; अधिकतम {megabytes} MB।"
+  },
+  "catalog.admin.categories.loadingImagePolicy": {
+    "en": "Loading upload limits…",
+    "hi": "अपलोड की सीमाएँ लोड हो रही हैं…"
+  },
+  "catalog.admin.categories.retryUpload": {
+    "en": "Retry",
+    "hi": "फिर कोशिश करें"
+  },
+  "catalog.admin.categories.uploadFailed": {
+    "en": "Upload failed. Your previous image is unchanged. Retry this file or choose another.",
+    "hi": "अपलोड नहीं हुआ। आपकी पिछली तस्वीर नहीं बदली है। इसी फ़ाइल के साथ फिर कोशिश करें या दूसरी चुनें।"
+  },
+  "catalog.admin.categories.imageProcessingFailed": {
+    "en": "The image could not be processed within the configured dimensions and size limits. Choose a smaller, non-animated image.",
+    "hi": "तस्वीर तय आयाम और आकार की सीमाओं में तैयार नहीं हो सकी। छोटी, बिना एनीमेशन वाली तस्वीर चुनें।"
+  },
+  "catalog.admin.categories.uploadReady": {
+    "en": "Image uploaded. Save the form to attach it.",
+    "hi": "तस्वीर अपलोड हो गई। इसे जोड़ने के लिए फ़ॉर्म सहेजें।"
+  },
+  "catalog.admin.categories.imageTypeInvalid": {
+    "en": "Choose a JPEG, PNG or WebP image.",
+    "hi": "JPEG, PNG या WebP तस्वीर चुनें।"
+  },
+  "catalog.admin.categories.imageSizeInvalid": {
+    "en": "The image exceeds the configured file-size limit.",
+    "hi": "तस्वीर तय फ़ाइल-आकार की सीमा से बड़ी है।"
+  },
+  "errors.media.uploadPolicyRequired": {
+    "en": "Image uploads are not configured or are disabled.",
+    "hi": "तस्वीर अपलोड की सेटिंग नहीं हुई है या सुविधा बंद है।"
+  },
+  "errors.media.storageUnavailable": {
+    "en": "Image storage is temporarily unavailable. Please retry.",
+    "hi": "तस्वीर स्टोरेज अभी उपलब्ध नहीं है। कृपया फिर कोशिश करें।"
+  },
+  "errors.media.typeNotAllowed": {
+    "en": "This image type is not allowed.",
+    "hi": "इस प्रकार की तस्वीर की अनुमति नहीं है।"
+  },
+  "errors.media.tooLarge": {
+    "en": "The image exceeds the configured size limit.",
+    "hi": "तस्वीर तय आकार की सीमा से बड़ी है।"
+  },
+  "errors.media.imageProcessingFailed": {
+    "en": "The image could not be safely processed. Choose another image.",
+    "hi": "तस्वीर सुरक्षित रूप से तैयार नहीं हो सकी। दूसरी तस्वीर चुनें।"
+  },
+  "errors.media.notFound": {
+    "en": "This image is not available.",
+    "hi": "यह तस्वीर उपलब्ध नहीं है।"
+  },
+  "errors.media.rangeInvalid": {
+    "en": "The requested image range is invalid.",
+    "hi": "तस्वीर का माँगा गया हिस्सा मान्य नहीं है।"
+  },
   "catalog.admin.sections.title": { "en": "Home sections", "hi": "होम सेक्शन" },
   "catalog.admin.sections.intro": {
     "en": "Choose which category rows customers see on Home. New sections start inactive; activate when ready. Products and services are never mixed in one section.",

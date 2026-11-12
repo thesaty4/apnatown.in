@@ -15,6 +15,7 @@ import {
 import { Input } from '@apnatown/ui/primitives/Input';
 import { Switch } from '@apnatown/ui/primitives/Selection';
 import { Sheet } from '@apnatown/ui/overlay/Sheet';
+import { TaxonomyImageField } from './TaxonomyImageField';
 import {
   createCategory,
   createSubcategory,
@@ -79,6 +80,7 @@ type CategoryDraft = Names & {
   icon: string;
   sortOrder: string;
   active: boolean;
+  imageAssetId?: string | null | undefined;
 };
 
 /** Super-admin create (no `category`) or edit of a fixed main category.
@@ -105,6 +107,7 @@ export function CategorySheet({
     active: category?.active ?? true,
   });
   const [checked, setChecked] = useState(false);
+  const [pendingImage, setPendingImage] = useState(false);
   const create = useCatalogCommand(createCategory);
   const update = useCatalogCommand(updateCategory);
   const command = category ? update : create;
@@ -120,6 +123,9 @@ export function CategorySheet({
     nameEn: draft.nameEn.trim(),
     nameHi: draft.nameHi.trim(),
     ...(draft.icon.trim() && { icon: draft.icon.trim() }),
+    ...(draft.imageAssetId !== undefined && {
+      imageAssetId: draft.imageAssetId,
+    }),
     ...(sortOrder !== undefined && { sortOrder }),
   };
   const updateBody = category && {
@@ -128,6 +134,9 @@ export function CategorySheet({
     icon: draft.icon.trim() || null,
     active: draft.active,
     ...(sortOrder !== undefined && { sortOrder }),
+    ...(draft.imageAssetId !== undefined && {
+      imageAssetId: draft.imageAssetId,
+    }),
     expectedVersion: category.version,
   };
   const parsed = category
@@ -138,7 +147,7 @@ export function CategorySheet({
   function submit(event: FormEvent) {
     event.preventDefault();
     setChecked(true);
-    if (!parsed.success) return;
+    if (pendingImage || !parsed.success) return;
     if (category && updateBody)
       update.submit({ categoryId: category.id, patch: updateBody }, onSaved);
     else create.submit(createBody, onSaved);
@@ -157,6 +166,7 @@ export function CategorySheet({
           busy={command.busy}
           onCancel={onClose}
           submitLabel={t('save')}
+          disabled={pendingImage}
         />
       }
     >
@@ -200,6 +210,23 @@ export function CategorySheet({
           error={nameError(invalid, 'icon', t('iconInvalid'))}
           onChange={(event) => set({ icon: event.target.value })}
         />
+        <TaxonomyImageField
+          assetId={
+            draft.imageAssetId === undefined
+              ? (category?.imageAssetId ?? null)
+              : draft.imageAssetId
+          }
+          image={
+            draft.imageAssetId === undefined ||
+            draft.imageAssetId === category?.imageAssetId
+              ? category?.image
+              : undefined
+          }
+          previewLabel={draft.nameEn || category?.nameEn || t('imageTitle')}
+          onAssetIdChange={(imageAssetId) => set({ imageAssetId })}
+          onPendingChange={setPendingImage}
+          onScopeReset={() => set({ imageAssetId: undefined })}
+        />
         <Input
           label={t('sortOrder')}
           type="number"
@@ -242,8 +269,10 @@ export function SubcategorySheet({
     nameHi: subcategory?.nameHi ?? '',
     sortOrder: subcategory ? String(subcategory.sortOrder) : '',
     active: subcategory?.active ?? true,
+    imageAssetId: undefined as string | null | undefined,
   });
   const [checked, setChecked] = useState(false);
+  const [pendingImage, setPendingImage] = useState(false);
   const create = useCatalogCommand(createSubcategory);
   const update = useCatalogCommand(updateSubcategory);
   const command = subcategory ? update : create;
@@ -255,6 +284,9 @@ export function SubcategorySheet({
   const createBody = {
     nameEn: draft.nameEn.trim(),
     nameHi: draft.nameHi.trim(),
+    ...(draft.imageAssetId !== undefined && {
+      imageAssetId: draft.imageAssetId,
+    }),
     expectedVersion: category.version,
   };
   const updateBody = subcategory && {
@@ -262,6 +294,9 @@ export function SubcategorySheet({
     nameHi: draft.nameHi.trim(),
     active: draft.active,
     ...(sortOrder !== undefined && { sortOrder }),
+    ...(draft.imageAssetId !== undefined && {
+      imageAssetId: draft.imageAssetId,
+    }),
     expectedVersion: subcategory.version,
   };
   const parsed = subcategory
@@ -272,7 +307,7 @@ export function SubcategorySheet({
   function submit(event: FormEvent) {
     event.preventDefault();
     setChecked(true);
-    if (!parsed.success) return;
+    if (pendingImage || !parsed.success) return;
     if (subcategory && updateBody)
       update.submit(
         { subcategoryId: subcategory.id, patch: updateBody },
@@ -297,6 +332,7 @@ export function SubcategorySheet({
           busy={command.busy}
           onCancel={onClose}
           submitLabel={t('save')}
+          disabled={pendingImage}
         />
       }
     >
@@ -307,6 +343,23 @@ export function SubcategorySheet({
         onSubmit={submit}
       >
         <NameFields draft={draft} set={set} invalid={invalid} />
+        <TaxonomyImageField
+          assetId={
+            draft.imageAssetId === undefined
+              ? (subcategory?.imageAssetId ?? null)
+              : draft.imageAssetId
+          }
+          image={
+            draft.imageAssetId === undefined ||
+            draft.imageAssetId === subcategory?.imageAssetId
+              ? subcategory?.image
+              : undefined
+          }
+          previewLabel={draft.nameEn || subcategory?.nameEn || t('imageTitle')}
+          onAssetIdChange={(imageAssetId) => set({ imageAssetId })}
+          onPendingChange={setPendingImage}
+          onScopeReset={() => set({ imageAssetId: undefined })}
+        />
         {command.code === 'SUBCATEGORY_DUPLICATE' && (
           <p className="text-small text-text-2">{t('duplicateHelp')}</p>
         )}

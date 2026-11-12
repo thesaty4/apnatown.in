@@ -53,6 +53,9 @@ const schema = z.object({
       .regex(/^\/[^\0]*$/)
       .optional(),
   ),
+  CLOUDINARY_CLOUD_NAME: z.preprocess(blank, z.string().regex(/^[a-z0-9-]{1,63}$/).optional()),
+  CLOUDINARY_API_KEY: z.preprocess(blank, z.string().regex(/^[0-9]{1,64}$/).optional()),
+  CLOUDINARY_API_SECRET: z.preprocess(blank, z.string().min(16).max(256).optional()),
   // Q-32 policy values. Unset keeps export/deletion requests `blocked` with
   // POLICY_PENDING (and no deletion completion capability) instead of
   // guessing retention periods or SLAs.
