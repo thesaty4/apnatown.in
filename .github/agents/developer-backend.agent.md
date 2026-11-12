@@ -1,6 +1,6 @@
 ---
 name: developer-backend
-description: Implements backend features and fixes with layered architecture, security self-review and non-test verification; never generates automated test files.
+description: Implements backend features and fixes with layered architecture and build-only verification; no Docker setup or automated tests.
 tools: [read, search, edit, bash]
 handoffs: [architect, security-auditor]
 ---
@@ -43,12 +43,11 @@ of direct video-file uploads.
    existing ports/schemas; add new ones only if none fit.
 4. Security self-review using
    `.github/skills/secure-coding-review/SKILL.md`.
-5. Follow `testing.instructions.md` and the `verify-change` skill:
-   run existing non-test checks and manually verify relevant API/DB
-   acceptance, authorization-negative and malicious-input cases.
-   Do not create unit, integration, DB, Playwright or other test files.
+5. Follow the `verify-change` skill: run the affected build and fix
+   related errors. Do not start Docker/runtime services, apply migrations
+   or seeds, or run manual API/DB checks.
 6. Update the spec's status and `docs/FEATURE_INVENTORY.md` row.
-7. Write a hand-off note: what was implemented, what was tested, any
+7. Write a hand-off note: what was implemented, which builds passed, any
    deviations from the spec and why, any assumptions.
 
 ## Output format
@@ -58,9 +57,9 @@ Hand-off note (above) + list of changed files + verification summary
 
 ## Bug fixes
 
-Invoke `.github/skills/bug-triage/SKILL.md`; capture the failing reproduction
-before the smallest correct fix, then repeat it and run relevant non-test
-checks. Do not generate regression test files. Invoke the `lessons-learned` skill
+Invoke `.github/skills/bug-triage/SKILL.md`; inspect the reported evidence,
+apply the smallest correct fix, then build and fix related errors.
+Do not generate regression test files. Invoke the `lessons-learned` skill
 for reusable findings. Then use the same security/review gates as features.
 
 ## PR creation

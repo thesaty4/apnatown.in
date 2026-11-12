@@ -1,6 +1,6 @@
 ---
 name: db-migration
-description: "Recipe for forward-only PostgreSQL/Prisma migrations, extension setup, safe recovery and manual isolated seed verification."
+description: "Recipe for forward-only PostgreSQL/Prisma migration authoring and generated-client builds without running Docker, migrations or seeds."
 ---
 
 # DB migration
@@ -27,11 +27,10 @@ and the owning module's BE spec. Path rules:
    string values from the owning BE spec/shared schema.
 6. Soft-delete user-facing deletable records; reserve hard delete for
    explicit DPDP erasure requests, scoped narrowly.
-7. Manually apply to an empty isolated disposable database, verify extensions/FKs and
-   representative queries, then run the synthetic seed twice. Reject
-   production/unmarked targets before any reset; use the foundation's
-   `pnpm db:migrate` and `pnpm db:seed` contracts. Follow `verify-change`;
-   do not generate database tests, fixtures or suite provisioners.
+7. Generate the Prisma client if needed, then run the affected build and
+   fix related errors. Do not start Docker, provision databases, apply
+   migrations or run seeds during implementation. Report execution as
+   deferred; a separate explicit request is required to run it.
 
 ## Skeleton
 
@@ -50,4 +49,4 @@ CREATE INDEX idx_products_owner_page
 - [ ] Indexes added alongside new filterable/sortable fields.
 - [ ] Forward repair/restore documented; data-loss risk flagged for sign-off.
 - [ ] Naming matches convention and shared status enum values.
-- [ ] Empty-DB migration and repeated synthetic seed verified in isolation.
+- [ ] Generated client and affected build pass; migration/seed execution deferred.

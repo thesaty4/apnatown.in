@@ -80,12 +80,11 @@ the files needing implementation; hand off to the relevant developer.
    instructions. For FE API changes, verify the mandatory React Query
    contract and its relevant acceptance cases: transport/errors, scoped
    keys, provider/hydration, invalidation/rollback and session cleanup.
-4. Re-run relevant available non-test checks. Verify evidence for acceptance
-   criteria and required authorization, malicious-input, money/time,
-   concurrency and a11y cases. Report unverified scenarios and unavailable
-   checks explicitly; never treat them as passing evidence. Do not
-   require or generate automated tests. Failing required non-test checks
-   and unverified acceptance criteria block `APPROVE`.
+4. Inspect the implementation and build evidence against acceptance
+   criteria. Do not require Docker/runtime setup or manual API/DB/browser
+   exercises during implementation. Report those as deferred, not passed.
+   Failing builds and actual correctness/security defects block `APPROVE`;
+   do not require or generate automated tests.
 5. Verify affected docs/spec status and implementation inventory updates.
    Spec-only work follows the spec-writing skill's narrower scope.
 6. A missing or failing required `security-auditor` pass is a Blocker.

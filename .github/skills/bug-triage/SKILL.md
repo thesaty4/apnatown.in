@@ -1,6 +1,6 @@
 ---
 name: bug-triage
-description: Recipe for triaging a reported bug before fixing it — reproduce, classify severity/area, and find the right spec/instruction context.
+description: Recipe for inspecting a reported bug before fixing it — classify severity/area and find the right spec/instruction context without service setup.
 ---
 
 # Bug triage
@@ -10,9 +10,9 @@ Used by `.github/agents/developer-backend.agent.md` or
 
 ## Steps
 
-1. Reproduce the bug from the report; if it can't be reproduced, ask
-   for more detail (exact steps, role, device, EN/HI) rather than
-   guessing a fix.
+1. Inspect the reported evidence and affected source; if details are
+   missing, ask for exact steps, role, device and EN/HI context rather
+   than starting Docker/services to reproduce it.
 2. Classify severity: **Blocker** (data loss, security, money
    incorrect, invariant violated), **Major** (feature broken for a
    role/journey), **Minor** (cosmetic/edge case), and area (which of
@@ -31,7 +31,7 @@ Used by `.github/agents/developer-backend.agent.md` or
 
 ## Checklist
 
-- [ ] Reproduced (or clarifying question asked instead of guessing).
+- [ ] Reported failure evidence inspected (or clarifying question asked).
 - [ ] Severity and module classified.
 - [ ] Confirmed against the spec that this is a bug, not a spec gap.
 - [ ] Checked `docs/ai/LESSONS_LEARNED.md` for a prior similar issue.

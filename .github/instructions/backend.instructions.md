@@ -7,8 +7,9 @@ applyTo: 'apps/api/**,packages/shared/**'
 Builds on `.github/copilot-instructions.md` and
 `solid-dry-design.instructions.md`. Implementation contracts:
 `specs/_foundation/backend-shared.md` and `specs/_foundation/architecture.md`.
-Verification follows `testing.instructions.md`: existing non-test checks
-and manual API/DB evidence; do not generate automated test files.
+Implementation verification: run the affected build and fix related
+build errors. Do not start Docker/runtime services, apply migrations or
+seeds, or run manual API/DB checks.
 
 ## Layers
 

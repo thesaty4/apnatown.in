@@ -1,6 +1,6 @@
 ---
 name: developer-frontend
-description: Implements frontend features and fixes with React Query, design tokens, i18n/a11y and non-test verification; never generates automated test files.
+description: Implements frontend features and fixes with React Query, design tokens, i18n/a11y and build-only verification; no Docker setup or automated tests.
 tools: [read, search, edit, bash]
 handoffs: [architect, security-auditor]
 ---
@@ -46,26 +46,25 @@ cache ownership and Server Component boundaries.
    follow the URL/state
    rules (`frontend.instructions.md`) — e.g. Explore/Search independent
    filter state, Back/scroll restoration.
-4. Add EN+HI translation keys; verify long-Hindi-text wrapping;
-   keyboard and a11y pass (`i18n-a11y.instructions.md`).
-5. Follow `testing.instructions.md` and the `verify-change` skill:
-   run existing non-test checks and manually exercise affected journeys
-   and React Query acceptance cases. Do not create unit, component,
-   Playwright or other automated test files.
-6. Capture screenshots: 360px and desktop, light and dark, EN and HI
-   (`.github/pull_request_template.md` requires these).
+4. Add EN+HI translation keys; implement long-Hindi wrapping, keyboard
+   and accessibility behavior (`i18n-a11y.instructions.md`).
+5. Follow the `verify-change` skill: run the affected build and fix
+   related errors only. Do not start Docker/runtime services, launch
+   browsers or run manual UI checks during implementation.
+6. Report UI journeys and screenshots as deferred; capture them only on
+   a separate explicit request.
 7. Update the spec's status and `docs/FEATURE_INVENTORY.md` row; write
    a hand-off note.
 
 ## Output format
 
-Hand-off note + changed files + verification summary + screenshot list.
+Hand-off note + changed files + build results + deferred runtime checks.
 
 ## Bug fixes
 
-Invoke `.github/skills/bug-triage/SKILL.md`; capture the failing reproduction
-before the smallest correct fix, then repeat it and run relevant non-test
-checks. Do not generate regression test files. Invoke the `lessons-learned` skill
+Invoke `.github/skills/bug-triage/SKILL.md`; inspect the reported evidence,
+apply the smallest correct fix, then build and fix related errors.
+Do not generate regression test files. Invoke the `lessons-learned` skill
 for reusable findings. Then use the same security/review gates as features.
 
 ## PR creation

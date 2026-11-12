@@ -21,8 +21,8 @@ before implementing any feature.
    repositories/services in `docs/architecture.md` before adding new
    ones.
 3. **Small PRs.** One feature/task/bug per PR, linked to its spec.
-4. **Report honestly.** State what you verified (manual checks, commands
-   executed) vs. what you assumed.
+4. **Report honestly.** State which affected builds passed and which
+   runtime checks were not performed.
 
 ## SOLID / DRY / KISS
 
@@ -63,10 +63,12 @@ before implementing any feature.
 
 ## Verification and Definition of Done
 
-- Follow `testing.instructions.md`: no automated test-file generation
-  for FE, BE or DB; use existing non-test checks and manual evidence.
-- A change is done only when: spec acceptance criteria pass, product
-  invariants hold, verification evidence is recorded, docs/specs are updated, and
+- Implement, run the affected build, and fix related build errors only.
+  Do not set up Docker/runtime services, apply or seed databases, or
+  generate automated tests as part of implementation.
+- A change is done when source matches its spec and product invariants,
+  affected builds pass, deferred runtime checks are reported honestly,
+  docs/specs are updated, and
   `node scripts/validate-ai-setup.mjs` passes if `.github/`/`docs/`
   changed.
 

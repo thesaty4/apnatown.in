@@ -31,14 +31,13 @@ Use when implementing a FE spec (`frontend.instructions.md`,
    - Keep form/UI state local. Explore/Search filters stay in their own
      URLs and query namespaces (`frontend.instructions.md`).
 5. Add EN+HI translation keys (`<feature>.<screen>.<element>` naming);
-   verify wrapping with the longer Hindi strings.
+   implement wrapping for longer Hindi strings.
 6. Keyboard and ARIA pass: tab order, focus ring, roles/labels,
    `prefers-reduced-motion` (`i18n-a11y.instructions.md`).
-7. Verify in light and dark themes.
-8. Invoke `verify-change` for manual shared API acceptance checks;
-   do not generate component, Playwright or other automated test files;
-   take screenshots (360px + desktop, light +
-   dark, EN + HI) for the PR.
+7. Implement light/dark theme behavior and responsive states.
+8. Invoke `verify-change` to build and fix related errors only. Do not
+   launch browsers or capture screenshots during implementation; report
+   runtime/UI checks as deferred.
 
 ## Skeleton
 
@@ -66,5 +65,5 @@ export function ShopCard({ shopId }: { shopId: string }) {
   [integration acceptance cases](../../../specs/_foundation/frontend-shared.md#api-integration-acceptance-and-verification).
 - [ ] EN+HI keys added, Hindi wrapping checked.
 - [ ] Keyboard-operable, visible focus, reduced-motion respected.
-- [ ] Verified in light and dark.
+- [ ] Light and dark behavior implemented.
 - [ ] Status shown with icon + text.

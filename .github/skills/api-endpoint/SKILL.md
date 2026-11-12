@@ -23,9 +23,9 @@ Use when implementing a BE spec's endpoint(s)
 5. Authorize: role + ownership + scope check before the service call
    (`secure-coding-review` skill).
 6. Register the route and update the OpenAPI contract.
-7. Invoke `verify-change`: manually exercise the local API, including
-   authorization negatives and malicious input, and run relevant existing
-   non-test checks. Do not generate automated test files.
+7. Invoke `verify-change`: run the affected build and fix related errors.
+   Do not start Docker/runtime services, apply databases, or run API
+   smoke checks during implementation.
 8. Link the implementation back to its BE spec; update
    `docs/FEATURE_INVENTORY.md` status.
 

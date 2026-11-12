@@ -83,8 +83,10 @@ defines its domain columns/constraints; don't duplicate that schema here.
 
 ## Seed and verification isolation
 
-Follow `specs/_foundation/data-model.md` for extension checks, pg-boss
-schema setup, idempotent synthetic seeds and isolated disposable databases.
-No seed/reset on API startup; destructive commands must verify an
-explicit local/test target. Never seed real PII or an authentication bypass.
-Follow `testing.instructions.md`; do not generate database tests or harnesses.
+Keep extension checks, pg-boss schema setup, idempotent synthetic seeds
+and target safety in the database tooling. No seed/reset on API startup;
+destructive commands must verify an explicit local/test target. Never
+seed real PII or an authentication bypass. During implementation, author
+migrations and build generated clients only; do not start Docker, provision
+a database, or execute migrations/seeds. Runtime execution requires a
+separate explicit request.

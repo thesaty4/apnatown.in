@@ -33,9 +33,9 @@ Wire documented configuration through schema, launcher allow-lists and env
 template together; report unconfigured/unavailable states without fallback
 to another provider.
 
-## Local verification adapters
+## Local adapters
 
-- Preserve existing approved local adapters for safe manual verification
+- Preserve approved local adapters for explicitly requested local runtime work
   without real network sends. Where required by the spec, support explicit
   failure modes (timeout, rejection, invalid webhook signature).
 - Never generate test-only mocks, fixtures or suites; follow

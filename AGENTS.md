@@ -49,8 +49,8 @@ docs/FEATURE_INVENTORY.md (not started)
   architect (optional release notes/checklist) -> human executes release
 ```
 
-Existing regressions enter at the relevant developer agent: reproduce ->
-recorded failure -> minimal fix -> repeat verification -> reusable lesson, then the same
+Existing regressions enter at the relevant developer agent: inspect the
+reported failure -> minimal fix -> build and fix errors -> reusable lesson, then the same
 security/review/PR gates. For combined BE/FE work, choose one developer as
 PR owner. Spec writing and read-only code review are separate architect
 modes; release preparation is only performed when requested after merge.
@@ -77,10 +77,10 @@ The four agents in `.github/agents/` are:
 - **No secrets, tokens, or real PII** in code, commits, logs, or test
   fixtures. Use `.env.example` and fakes (`integrations.instructions.md`).
 - **Small PRs.** One feature/task/bug per PR; link its spec.
-- **No automated test files** for frontend, backend or database work.
-  Follow the [verification policy](.github/instructions/testing.instructions.md):
-  existing non-test checks and manual acceptance evidence, not unit,
-  integration, component, DB or Playwright test generation.
+- **Implementation scope:** implement, run the affected build, and fix
+  related build errors only. Do not start Docker/runtime services, apply
+  migrations/seeds, run manual API/DB/browser checks, or generate
+  automated test files. Report deferred runtime checks honestly.
 - **Media/map choices are fixed:** use the
   [integration contract](specs/_foundation/media-and-maps.md), not a new
   provider proposal. Public Cloudinary images, private documents, link-only
