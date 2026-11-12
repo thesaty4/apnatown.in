@@ -10,6 +10,7 @@ import {
 import { DomainError } from '../../../shared/errors/errors';
 import {
   UNIT_OF_WORK,
+  type TxContext,
   type UnitOfWork,
 } from '../../../shared/persistence/ports';
 import {
@@ -104,9 +105,9 @@ export class CatalogReadService implements CatalogReadPort {
 
   resolveKeywords(input: {
     normalizedQuery: string;
-  }): Promise<KeywordResolution> {
+  }, transaction?: TxContext): Promise<KeywordResolution> {
     const query = normalizeCatalogText(input.normalizedQuery).slice(0, 120);
-    return this.uow.run(async (tx) => {
+    const work = async (tx: TxContext) => {
       const revision = await this.mappings.revision(tx);
       if (!query)
         return KeywordResolutionSchema.parse({ matches: [], revision });
@@ -135,7 +136,8 @@ export class CatalogReadService implements CatalogReadPort {
         }),
         revision,
       });
-    });
+    };
+    return transaction ? work(transaction) : this.uow.run(work);
   }
 
   relatedCategories(input: {

@@ -45,7 +45,11 @@ const ownerKeys = {
     'CLOUDINARY_API_KEY',
     'CLOUDINARY_API_SECRET',
   ],
-  web: ['APP_ENV', 'NODE_ENV', 'APP_BASE_URL', 'API_INTERNAL_ORIGIN'],
+  web: [
+    'APP_ENV', 'NODE_ENV', 'APP_BASE_URL', 'API_INTERNAL_ORIGIN',
+    'MAP_TILE_URL_TEMPLATE', 'MAP_TILE_ATTRIBUTION_TEXT',
+    'MAP_TILE_ATTRIBUTION_URL', 'MAP_TILE_MAX_ZOOM',
+  ],
   database: [
     'APP_ENV',
     'NODE_ENV',
@@ -63,6 +67,8 @@ const ownerKeys = {
     'PII_ENCRYPTION_KEY',
     'PHONE_LOOKUP_HASH_KEY',
   ],
+  // Prisma Studio browses as the owner; prisma/studio.mjs forces read-only.
+  studio: ['APP_ENV', 'NODE_ENV', 'MIGRATION_DATABASE_URL'],
   compose: ['POSTGRES_PASSWORD'],
   build: [],
 };

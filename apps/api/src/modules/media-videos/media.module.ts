@@ -2,7 +2,8 @@ import { Module, type DynamicModule } from '@nestjs/common';
 import { CloudinaryImageStorage } from '../../integrations/cloudinary/image-storage';
 import { SharpImageProcessor } from '../../integrations/images/image-processor';
 import { RUNTIME_CONFIG, type RuntimeConfig } from '../../shared/config/config';
-import { IMAGE_PROCESSOR, IMAGE_STORAGE, MEDIA_IMAGES } from './domain/images';
+import { IMAGE_PROCESSOR, IMAGE_STORAGE, MEDIA_IMAGES, LISTING_IMAGE_PUBLICATION } from './domain/images';
+import { PrismaListingImagePublication } from './infrastructure/listing-image-publication';
 import { PrismaImageRepository } from './infrastructure/image.repository';
 import { ImageService } from './application/image.service';
 import { ImageDeliveryService } from './application/image-delivery.service';
@@ -64,6 +65,7 @@ export class MediaModule {
       providers: [
         ImageService,
         ImageDeliveryService,
+        { provide: LISTING_IMAGE_PUBLICATION, useClass: PrismaListingImagePublication },
         VideoService,
         VideoModerationService,
         VideoCommentTargetService,

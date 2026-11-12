@@ -5,6 +5,18 @@ Format: see `.github/skills/lessons-learned/SKILL.md`. Newest at the
 top; developer bug-fix work and any agent that catches a reusable mistake add an
 entry here.
 
+## Keep public pages in `app/[locale]`
+
+What: the Videos tab showed "Page not found". The Reels pages live in
+`app/videos`, so next-intl rewrote `/videos` to `/en/videos` and hit the
+`[locale]` catch-all 404. The provider dashboard has a different boundary:
+`/provider/media` is private and stays outside `[locale]`.
+Rule: place public routes under `app/[locale]` and build links with
+`publicHref`. Register only private routes outside that tree in
+`isUnprefixedPath`, shared by the proxy and language switch.
+Enforced in: [frontend-shared public URL and locale policy](../../specs/_foundation/frontend-shared.md#public-url-and-locale-policy)
+and `apps/web/src/shared/i18n/preferences.ts`.
+
 ## Empty local feeds usually mean unseeded data
 
 What: Reels showed no videos on a fresh local database. Migrations seed only

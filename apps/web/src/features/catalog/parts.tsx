@@ -27,6 +27,7 @@ export function exploreHref(
   const query = new URLSearchParams({
     tab: kind === 'service' ? 'services' : 'products',
   });
+  if (category) query.set('contextCategory', category);
   if (category) query.set('category', category);
   if (subcategory) query.set('subcategory', subcategory);
   return `${publicHref('/explore', locale)}?${query}`;

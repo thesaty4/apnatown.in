@@ -22,7 +22,7 @@ export class CatalogImages implements CatalogMediaAssetPort, ImagePublication {
     if (placement.placementType === 'catalog_category') {
       const category = await this.taxonomy.findCategory(tx, placement.placementId);
       if (category?.active && category.imageAssetId === placement.assetId) return;
-    } else {
+    } else if (placement.placementType === 'catalog_subcategory') {
       const sub = await this.taxonomy.findSubcategory(tx, placement.placementId);
       const category = sub && await this.taxonomy.findCategory(tx, sub.categoryId);
       if (sub?.active && category?.active && sub.imageAssetId === placement.assetId) return;

@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import type { VideoFeedItem } from '@apnatown/shared';
 import { formatDistanceKm } from '@apnatown/shared';
 import { buttonClassName } from '@apnatown/ui/primitives/Button';
+import { publicHref } from '../../shared/i18n/preferences';
 import { EmbedCard } from './EmbedCard';
 import { FollowButton } from '../engagement/FollowButton';
 import { HeartButton } from '../engagement/HeartButton';
@@ -44,8 +45,8 @@ export function ReelFeedCard({
 
   const name =
     locale === 'hi'
-      ? item.businessNameHi ?? item.businessNameEn
-      : item.businessNameEn ?? item.businessNameHi;
+      ? (item.businessNameHi ?? item.businessNameEn)
+      : (item.businessNameEn ?? item.businessNameHi);
 
   return (
     <article
@@ -108,7 +109,7 @@ export function ReelFeedCard({
             <ShareSheet videoId={item.id} />
             <Link
               className={buttonClassName}
-              href={`/videos/${item.id}`}
+              href={publicHref(`/videos/${item.id}`, locale)}
               aria-label={t('comments')}
             >
               {t('comments')}

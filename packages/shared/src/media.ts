@@ -31,7 +31,7 @@ export const PublicImageVariantSchema = z.strictObject({
   width: z.number().int().positive(),
   height: z.number().int().positive(),
   mimeType: z.literal('image/webp'),
-  bytes: z.number().int().positive().max(122880),
+  bytes: z.number().int().positive().max(358400),
   path: MediaGatewayPathSchema,
 });
 export const MediaUploadResultSchema = z.strictObject({
@@ -52,10 +52,10 @@ export const MediaPolicyResultSchema = z.strictObject({
 });
 export const MediaAssetParamsSchema = z.strictObject({ assetId: IdSchema });
 export const MediaPublicQuerySchema = z.strictObject({
-  placementType: z.enum(['catalog_category', 'catalog_subcategory']),
+  placementType: z.enum(['catalog_category', 'catalog_subcategory', 'product', 'service', 'business']),
   placementId: IdSchema,
   surface: z.enum(['card', 'detail', 'home']),
-  variantWidth: z.coerce.number().int().min(1).max(640),
+  variantWidth: z.coerce.number().int().min(1).max(1920),
   assetVersion: z.coerce.number().int().positive(),
 });
 export type MediaPublicQuery = z.infer<typeof MediaPublicQuerySchema>;

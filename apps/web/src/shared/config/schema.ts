@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { mapEnvironmentSchema } from './maps';
 
 const origin = z
   .string()
@@ -20,6 +21,7 @@ export const webEnvironmentSchema = z
     APP_ENV: z.enum(['local', 'test', 'production']),
     APP_BASE_URL: origin,
     API_INTERNAL_ORIGIN: origin,
+    ...mapEnvironmentSchema.shape,
   })
   .superRefine((value, context) => {
     if (

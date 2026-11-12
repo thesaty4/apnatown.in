@@ -14,8 +14,10 @@ import {
 } from '../../../../../../features/catalog/server';
 import { CategoryLanding } from '../../../../../../features/catalog/CategoryLanding';
 import { catalogName } from '../../../../../../features/catalog/parts';
+import { Suspense } from 'react';
+import { ExploreResults, type ExploreSearchParams } from '../../../../../../features/explore/ExploreResults';
 
-type Props = { params: Promise<{ slug: string; subcategorySlug: string }> };
+type Props = { params: Promise<{ slug: string; subcategorySlug: string }>; searchParams: Promise<ExploreSearchParams> };
 
 async function load(slug: string, subcategorySlug: string) {
   if (
@@ -48,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /** S-CUST-05 reused for a subcategory; mismatched/inactive pairs → 404. */
-export default async function SubcategoryPage({ params }: Props) {
+export default async function SubcategoryPage({ params, searchParams }: Props) {
   const { slug, subcategorySlug } = await params;
   const detail = await load(slug, subcategorySlug);
   if (!detail) notFound();
@@ -68,6 +70,8 @@ export default async function SubcategoryPage({ params }: Props) {
       subcategories={parent.subcategories}
       current={detail.subcategory}
       others={others.filter((item) => item.id !== detail.category.id)}
+      results={<Suspense><ExploreResults screen="category" path={detail.canonicalPath} searchParams={searchParams}
+        defaults={{ tab: detail.category.kind === 'service' ? 'services' : 'products', category: slug, subcategory: subcategorySlug }} /></Suspense>}
     />
   );
 }

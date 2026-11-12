@@ -15,7 +15,8 @@
     "db:generate": "prisma generate --config prisma.config.ts",
     "db:provision": "node prisma/cli.mjs provision",
     "db:migrate": "node prisma/cli.mjs migrate",
-    "db:seed": "node prisma/cli.mjs seed"
+    "db:seed": "node prisma/cli.mjs seed",
+    "db:studio": "node prisma/cli.mjs studio"
   },
   "dependencies": {
     "@apnatown/shared": "workspace:*",

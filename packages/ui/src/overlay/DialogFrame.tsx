@@ -17,6 +17,7 @@ export interface DialogFrameProps {
   closeLabel?: string;
   children?: ReactNode;
   footer?: ReactNode;
+  stickyFooter?: boolean;
   wide?: boolean;
   busy?: boolean;
   role?: 'dialog' | 'alertdialog';
@@ -41,6 +42,7 @@ export function DialogFrame({
   closeLabel,
   children,
   footer,
+  stickyFooter = false,
   wide = false,
   busy = false,
   role = 'dialog',
@@ -128,7 +130,7 @@ export function DialogFrame({
           </p>
         )}
         {children}
-        {footer && <footer>{footer}</footer>}
+        {footer && <footer className={stickyFooter ? 'sticky bottom-0 z-10 bg-surface' : undefined}>{footer}</footer>}
       </div>
     </dialog>
   );

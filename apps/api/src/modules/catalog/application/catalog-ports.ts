@@ -30,7 +30,7 @@ export interface CatalogReadPort {
   /** Enabled mappings only; the query is normalized again server-side. */
   resolveKeywords(input: {
     normalizedQuery: string;
-  }): Promise<KeywordResolution>;
+  }, tx?: TxContext): Promise<KeywordResolution>;
   /** Ordered active directed related categories (seeded RELP/RELS). */
   relatedCategories(input: {
     categoryId: string;

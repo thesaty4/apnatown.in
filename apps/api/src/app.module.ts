@@ -22,6 +22,9 @@ import { SettingsModule } from './modules/settings/settings.module';
 import { UsersModule } from './modules/users/users.module';
 import { EngagementModule } from './modules/engagement/engagement.module';
 import { SearchModule } from './modules/search/search.module';
+import { ProductsModule } from './modules/products/products.module';
+import { ServicesModule } from './modules/services/services.module';
+import { BusinessPublicModule } from './modules/businesses/business-public.module';
 import { RuntimeModule } from './shared/health/runtime.module';
 import { RateLimitGuard } from './shared/rate-limit/rate-limit';
 
@@ -77,6 +80,9 @@ export class AppModule {
         media,
         engagement,
         SearchModule.forRoot(runtime, catalog, businessContext),
+        ProductsModule.forRoot(runtime),
+        ServicesModule.forRoot(runtime),
+        BusinessPublicModule.forRoot(runtime),
       ],
       controllers: [HealthController],
       providers: [

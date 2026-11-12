@@ -67,6 +67,16 @@ steps; only then use Prisma `migrate resolve --rolled-back` for that exact
 failed attempt and rerun `pnpm db:migrate`. Never mark the failed SQL applied
 or reset the database to bypass it.
 
+`pnpm db:studio` starts [Prisma Studio](https://www.prisma.io/studio) for the
+local database and prints its URL (default `http://localhost:51212`, bound to
+`127.0.0.1`). It is local/test-only and connects as the migration owner so every
+table is visible, but each session starts with
+`default_transaction_read_only=on`. That prevents accidental edits, not a
+deliberate `SET` from Studio's SQL console. Studio has no login: run it only
+while needed and stop it with Ctrl+C. Change data through the app or
+`db:seed`, because direct edits bypass state machines, encryption and audit
+logging. Phone/email columns show stored ciphertext and lookup hashes.
+
 Feature translations belong in
 [`reviewed-additions.json`](apps/web/src/shared/i18n/reviewed-additions.json);
 run `pnpm i18n:generate` to emit both EN/HI catalogs. `pnpm dev` regenerates

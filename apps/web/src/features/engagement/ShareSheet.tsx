@@ -1,34 +1,43 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Button, buttonClassName } from '@apnatown/ui/primitives/Button';
 import { Sheet } from '@apnatown/ui/overlay/Sheet';
 import { failureCode } from '../../shared/api/result';
+import { publicHref } from '../../shared/i18n/preferences';
 import { useVideoShare } from './shares-queries';
 
 export function ShareSheet({ videoId }: { videoId: string }) {
   const t = useTranslations('engagement.share');
+  const locale = useLocale() === 'hi' ? 'hi' : 'en';
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [copyFailed, setCopyFailed] = useState(false);
   const [nativeFailed, setNativeFailed] = useState(false);
   const [nativeAvailable, setNativeAvailable] = useState(false);
   const share = useVideoShare();
-  const error = share.mutation.isError ? failureCode(share.mutation.error) : undefined;
+  const error = share.mutation.isError
+    ? failureCode(share.mutation.error)
+    : undefined;
 
   useEffect(() => {
     setNativeAvailable(typeof navigator.share === 'function');
   }, []);
 
   function canonicalUrl() {
-    return new URL(`/videos/${videoId}`, window.location.origin).toString();
+    return new URL(
+      publicHref(`/videos/${videoId}`, locale),
+      window.location.origin,
+    ).toString();
   }
 
-  function record(channel: 'whatsapp' | 'copy' | 'native', success?: () => void) {
-    share.record(
-      { targetType: 'video', targetId: videoId, channel },
-      () => success?.(),
+  function record(
+    channel: 'whatsapp' | 'copy' | 'native',
+    success?: () => void,
+  ) {
+    share.record({ targetType: 'video', targetId: videoId, channel }, () =>
+      success?.(),
     );
   }
 
@@ -101,9 +110,21 @@ export function ShareSheet({ videoId }: { videoId: string }) {
           >
             {t('native')}
           </Button>
-          {copied && <p role="status" className="m-0 text-text-2">{t('copied')}</p>}
-          {copyFailed && <p role="alert" className="m-0 text-error">{t('copyFailed')}</p>}
-          {nativeFailed && <p role="alert" className="m-0 text-error">{t('failed')}</p>}
+          {copied && (
+            <p role="status" className="m-0 text-text-2">
+              {t('copied')}
+            </p>
+          )}
+          {copyFailed && (
+            <p role="alert" className="m-0 text-error">
+              {t('copyFailed')}
+            </p>
+          )}
+          {nativeFailed && (
+            <p role="alert" className="m-0 text-error">
+              {t('failed')}
+            </p>
+          )}
           {error && (
             <p role="alert" className="m-0 text-error [overflow-wrap:anywhere]">
               {t(error === 'COMMON_RATE_LIMITED' ? 'rateLimited' : 'failed')}

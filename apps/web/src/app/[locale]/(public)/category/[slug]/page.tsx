@@ -13,8 +13,10 @@ import {
 import { CategoryLanding } from '../../../../../features/catalog/CategoryLanding';
 import { catalogName } from '../../../../../features/catalog/parts';
 import { getTranslations } from 'next-intl/server';
+import { Suspense } from 'react';
+import { ExploreResults, type ExploreSearchParams } from '../../../../../features/explore/ExploreResults';
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = { params: Promise<{ slug: string }>; searchParams: Promise<ExploreSearchParams> };
 
 async function load(slug: string) {
   if (!CatalogSlugSchema.safeParse(slug).success) return null;
@@ -35,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /** S-CUST-05 category landing: ISR taxonomy; inactive/unknown → noindex 404. */
-export default async function CategoryPage({ params }: Props) {
+export default async function CategoryPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const detail = await load(slug);
   if (!detail) notFound();
@@ -49,6 +51,8 @@ export default async function CategoryPage({ params }: Props) {
       category={detail.category}
       subcategories={detail.subcategories}
       others={others.filter((item) => item.id !== detail.category.id)}
+      results={<Suspense><ExploreResults screen="category" path={`/category/${slug}`} searchParams={searchParams}
+        defaults={{ tab: detail.category.kind === 'service' ? 'services' : 'products', category: slug }} /></Suspense>}
     />
   );
 }

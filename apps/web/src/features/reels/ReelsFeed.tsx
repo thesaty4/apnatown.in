@@ -1,21 +1,12 @@
 'use client';
 
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  type ReactNode,
-} from 'react';
+import { useCallback, useEffect, useMemo, useRef, type ReactNode } from 'react';
 import Link from 'next/link';
-import {
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { VideoFeedPillSchema } from '@apnatown/shared';
 import { useQuery } from '@tanstack/react-query';
+import { publicHref } from '../../shared/i18n/preferences';
 import { Button, buttonClassName } from '@apnatown/ui/primitives/Button';
 import {
   EmptyState,
@@ -89,9 +80,12 @@ export function ReelsFeed({
       const currentSnapshotId =
         firstPage?.snapshotId ?? searchParams.get('snapshotId');
       if (currentSnapshotId) params.set('snapshotId', currentSnapshotId);
-      router.replace(`/videos/${id}?${params.toString()}`, { scroll: false });
+      router.replace(
+        `${publicHref(`/videos/${id}`, locale)}?${params.toString()}`,
+        { scroll: false },
+      );
     },
-    [category, firstPage?.snapshotId, pill, router, searchParams],
+    [category, firstPage?.snapshotId, locale, pill, router, searchParams],
   );
 
   const selectFilter = (nextPill: string, nextCategory?: string) => {
@@ -101,7 +95,9 @@ export function ReelsFeed({
     const currentSnapshotId =
       firstPage?.snapshotId ?? searchParams.get('snapshotId');
     if (currentSnapshotId) params.set('snapshotId', currentSnapshotId);
-    router.push(`/videos?${params.toString()}`, { scroll: false });
+    router.push(`${publicHref('/videos', locale)}?${params.toString()}`, {
+      scroll: false,
+    });
   };
 
   useEffect(() => {
@@ -121,17 +117,23 @@ export function ReelsFeed({
       changed = true;
     }
     if (changed) {
-      const path = initialVideoId ? `/videos/${initialVideoId}` : pathname;
-      router.replace(`${path}?${params.toString()}`, { scroll: false });
+      const path = initialVideoId
+        ? `/videos/${initialVideoId}`
+        : pathname.replace(/^\/(?:hi|en)(?=\/|$)/, '') || '/videos';
+      router.replace(`${publicHref(path, locale)}?${params.toString()}`, {
+        scroll: false,
+      });
     }
-  }, [firstPage, initialVideoId, pathname, router, searchParams]);
+  }, [firstPage, initialVideoId, locale, pathname, router, searchParams]);
 
   const restartFeed = () => {
     const params = new URLSearchParams({ pill });
     if (pill === 'category' && category) params.set('category', category);
     const anchorId = activeId ?? requestedAnchorId;
     const path = anchorId ? `/videos/${anchorId}` : '/videos';
-    router.replace(`${path}?${params.toString()}`, { scroll: false });
+    router.replace(`${publicHref(path, locale)}?${params.toString()}`, {
+      scroll: false,
+    });
   };
 
   const fetchNextPage = feed.query.fetchNextPage;
@@ -168,7 +170,7 @@ export function ReelsFeed({
     searchParams,
   ]);
 
-  const closeHref = '/';
+  const closeHref = publicHref('/', locale);
   const feedExpired = errorCode === 'MEDIA_FEED_EXPIRED';
 
   return (
@@ -206,13 +208,28 @@ export function ReelsFeed({
           >
             {t('nearby')}
           </FilterButton>
-          <Button type="button" variant="outline" disabled title={t('offersUnavailable')}>
+          <Button
+            type="button"
+            variant="outline"
+            disabled
+            title={t('offersUnavailable')}
+          >
             {t('offers')}
           </Button>
-          <Button type="button" variant="outline" disabled title={t('productsUnavailable')}>
+          <Button
+            type="button"
+            variant="outline"
+            disabled
+            title={t('productsUnavailable')}
+          >
             {t('products')}
           </Button>
-          <Button type="button" variant="outline" disabled title={t('servicesUnavailable')}>
+          <Button
+            type="button"
+            variant="outline"
+            disabled
+            title={t('servicesUnavailable')}
+          >
             {t('services')}
           </Button>
         </nav>
@@ -276,7 +293,10 @@ export function ReelsFeed({
               title={t('videoUnavailableTitle')}
               message={t('videoUnavailableMessage')}
               action={
-                <Link className={buttonClassName} href="/videos">
+                <Link
+                  className={buttonClassName}
+                  href={publicHref('/videos', locale)}
+                >
                   {t('browseVideos')}
                 </Link>
               }
@@ -286,7 +306,11 @@ export function ReelsFeed({
               className="mx-auto min-h-dvh max-w-prose content-center pt-32"
               title={t('title')}
               message={t('emptyMessage')}
-              action={<Button onClick={() => void feed.query.refetch()}>{t('retry')}</Button>}
+              action={
+                <Button onClick={() => void feed.query.refetch()}>
+                  {t('retry')}
+                </Button>
+              }
             />
           ) : (
             <div className="mx-auto grid min-h-dvh max-w-prose content-center pt-32">
@@ -318,7 +342,10 @@ export function ReelsFeed({
               pill === 'following' && state.kind !== 'ready' ? (
                 <Link
                   className={buttonClassName}
-                  href={loginHref(locale, '/videos?pill=following')}
+                  href={loginHref(
+                    locale,
+                    `${publicHref('/videos', locale)}?pill=following`,
+                  )}
                 >
                   {t('signIn')}
                 </Link>
@@ -326,7 +353,8 @@ export function ReelsFeed({
                 <Button onClick={() => selectFilter('for_you')}>
                   {t('tryForYou')}
                 </Button>
-              ) : null}
+              ) : null
+            }
           />
         ) : (
           <>

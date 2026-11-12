@@ -88,6 +88,7 @@ const catalogue = {
   ADMIN_METRIC_POLICY_REQUIRED: [409, 'errors.admin.metricPolicyRequired'],
   USERS_DATA_REQUEST_REQUIRED: [409, 'errors.users.dataRequestRequired'],
   SEARCH_FILTER_INVALID: [400, 'errors.search.filterInvalid'],
+  SEARCH_LOCATION_REQUIRED: [422, 'errors.search.locationRequired'],
   MEDIA_SURFACE_CONSENT_REQUIRED: [422, 'errors.media.surfaceConsentRequired'],
   OFFERS_NOT_ACTIVE: [409, 'errors.offers.notActive'],
   CHECKOUT_COUPON_INVALID: [422, 'errors.checkout.couponInvalid'],

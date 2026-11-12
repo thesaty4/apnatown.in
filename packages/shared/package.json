@@ -4,6 +4,26 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./formatters": {
+      "import": {
+        "types": "./dist/esm/formatters.d.ts",
+        "default": "./dist/esm/formatters.js"
+      },
+      "require": {
+        "types": "./dist/cjs/formatters.d.ts",
+        "default": "./dist/cjs/formatters.js"
+      }
+    },
+    "./public-listings": {
+      "import": {
+        "types": "./dist/esm/public-listings.d.ts",
+        "default": "./dist/esm/public-listings.js"
+      },
+      "require": {
+        "types": "./dist/cjs/public-listings.d.ts",
+        "default": "./dist/cjs/public-listings.js"
+      }
+    },
     ".": {
       "import": {
         "types": "./dist/esm/index.d.ts",

@@ -1,327 +1,212 @@
 'use client';
 
-import {
-  HydrationBoundary,
-  useInfiniteQuery,
-  useQuery,
-  useQueryClient,
-  type DehydratedState,
-} from '@tanstack/react-query';
+import { HydrationBoundary, useInfiniteQuery, useQuery, useQueryClient, type DehydratedState } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
+import type { MapConfiguration } from '@apnatown/ui/geo/MapView';
 import { Skeleton } from '@apnatown/ui/feedback/Skeleton';
-import {
-  EmptyState,
-  ErrorState,
-  NoPermissionState,
-} from '@apnatown/ui/feedback/StateViews';
+import { EmptyState, ErrorState, NoPermissionState } from '@apnatown/ui/feedback/StateViews';
 import { Button } from '@apnatown/ui/primitives/Button';
 import { Chip } from '@apnatown/ui/primitives/Chip';
+import { Sheet } from '@apnatown/ui/overlay/Sheet';
+import { Input } from '@apnatown/ui/primitives/Input';
 import { failureCode } from '../../shared/api/result';
 import { useSession } from '../../shared/auth/SessionProvider';
-import { catalogName, categoriesOptions } from '../catalog';
+import { LocationBar, preciseBrowseLocation, useBrowseLocation } from '../geo';
+import { categoriesOptions, catalogName } from '../catalog';
 import { exploreOptions } from './api';
 import { ExploreCards } from './ExploreCards';
 import { ExploreFilterPanel } from './ExploreFilterPanel';
+import { ExploreFilterChips, activeFilterCount } from './ExploreFilterChips';
+import { ExploreMap } from './ExploreMap';
 import { ExploreTabs } from './ExploreTabs';
-import {
-  readFilters,
-  withFilters,
-  withTab,
-  type ExploreFilters,
-} from './url-state';
+import { readFilters, filterParams, withFilters, resetFilters, withContext, withTab, type ExploreFilters, type FilterPatch } from './url-state';
 import { useExploreScroll } from './use-explore-scroll';
 
-/** S-CUST-02 Explore: URL-owned tab/filters, React Query results. */
-export function ExploreScreen({
-  initial,
-}: {
-  initial: DehydratedState | undefined;
-}) {
+type Props = {
+  initial?: DehydratedState | undefined;
+  mapConfig: MapConfiguration;
+  defaults?: Partial<ExploreFilters>;
+  screen?: 'explore' | 'search' | 'category';
+};
+
+export function ExploreScreen({ initial, mapConfig, defaults, screen = 'explore' }: Props) {
   const cache = useQueryClient();
   const params = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations('explore.screen');
-  const filters = readFilters(new URLSearchParams(params));
-  if (!filters)
-    return (
-      <ErrorState
-        title={t('invalidFilters')}
-        message={t('invalidFiltersMessage')}
-        action={
-          <Button onClick={() => router.push(pathname, { scroll: false })}>
-            {t('resetFilters')}
-          </Button>
-        }
-      />
-    );
-  // Returning from another route must not replace cached Load-more pages
-  // with the server's first page before restoring the saved scroll position.
-  const hydration = initial && {
-    ...initial,
-    queries: initial.queries.filter(
-      (query) => !cache.getQueryData(query.queryKey),
-    ),
-  };
-  return (
-    <HydrationBoundary state={hydration}>
-      <ExploreContent filters={filters} />
-    </HydrationBoundary>
-  );
+  const merged = new URLSearchParams(params);
+  for (const [key, value] of Object.entries(defaults ?? {}))
+    if (!merged.has(key) && value !== undefined) merged.set(key, String(value));
+  const filters = readFilters(merged);
+  if (!filters) return <ErrorState title={t('invalidFilters')} message={t('invalidFiltersMessage')}
+    action={<Button onClick={() => router.push(pathname, { scroll: false })}>{t('resetFilters')}</Button>} />;
+  const hydration = initial && { ...initial, queries: initial.queries.filter((query) => !cache.getQueryData(query.queryKey)) };
+  return <HydrationBoundary state={hydration}><ExploreContent filters={filters} mapConfig={mapConfig} screen={screen} /></HydrationBoundary>;
 }
 
-function ExploreContent({ filters }: { filters: ExploreFilters }) {
+function ExploreContent({ filters, mapConfig, screen }: {
+  filters: ExploreFilters; mapConfig: MapConfiguration; screen: 'explore' | 'search' | 'category';
+}) {
   const t = useTranslations('explore.screen');
   const permission = useTranslations('common.noPermission');
   const share = useTranslations('engagement.share');
+  const geo = useTranslations('geo.explore');
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
   const pathname = usePathname();
   const params = useSearchParams();
   const { api } = useSession();
-  const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'failed'>(
-    'idle',
-  );
-  const { tab } = filters;
-
-  const categories = useQuery(categoriesOptions(api, 'product'));
-  const results = useInfiniteQuery(exploreOptions(api, filters));
-  useExploreScroll(!results.isPending && !categories.isPending);
+  const location = useBrowseLocation();
+  const position = preciseBrowseLocation();
+  const effective = {
+    ...filters,
+    ...(location.selection && !filters.cityId && { cityId: location.selection.city.id }),
+    ...(location.selection?.area && !filters.areaId && (!filters.cityId || filters.cityId === location.selection.city.id) && { areaId: location.selection.area.id }),
+  };
+  const results = useInfiniteQuery(exploreOptions(api, effective, location.revision, screen, position));
+  const categories = useQuery(categoriesOptions(api));
+  const first = results.data?.pages[0];
+  const current = first?.normalizedFilters ?? effective;
+  const items = results.data?.pages.flatMap((page) => page.page.items) ?? [];
+  const pins = [...new Map((results.data?.pages.flatMap((page) => page.mapPins) ?? []).map((pin) => [pin.businessId, pin])).values()];
+  const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'failed'>('idle');
+  const [draft, setDraft] = useState<URLSearchParams | null>(null);
+  const draftFilters = draft ? readFilters(draft) : null;
+  const preview = useInfiniteQuery({
+    ...exploreOptions(api, draftFilters ?? effective, location.revision, screen, position),
+    enabled: draftFilters !== null,
+    placeholderData: (previous) => previous,
+  });
+  const draftPage = preview.data?.pages[0];
+  const [changingCategory, setChangingCategory] = useState(false);
+  const activeCount = activeFilterCount(current);
+  const code = results.isError ? failureCode(results.error) : '';
+  const denied = ['COMMON_FORBIDDEN', 'ACCOUNT_UNAVAILABLE'].includes(code);
+  useExploreScroll(!results.isPending);
 
   const go = (next: URLSearchParams) => {
-    const href = `${pathname}?${next}`;
     if (next.toString() === params.toString()) return;
     setCopyStatus('idle');
-    // Next's native-history integration updates URL hooks without rerunning
-    // the initial SSR read; React Query owns subsequent filter requests.
-    window.history.pushState(null, '', href);
+    window.history.pushState(null, '', `${pathname}?${next}`);
   };
-  const current = () => new URLSearchParams(params);
-  const setFilter = (patch: Parameters<typeof withFilters>[1]) =>
-    go(withFilters(current(), patch));
-  const clearAll = () =>
-    setFilter({ category: null, verified: null, sort: null });
+  const setFilter = (patch: FilterPatch) => go(withFilters(filterParams(current), patch));
+  const reset = () => go(resetFilters(filterParams(current)));
+  const clearContext = () => go(withContext(filterParams(current), null));
   const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setCopyStatus('copied');
-    } catch {
-      setCopyStatus('failed');
-    }
+    try { await navigator.clipboard.writeText(window.location.href); setCopyStatus('copied'); }
+    catch { setCopyStatus('failed'); }
   };
-
-  const category = categories.data?.items.find(
-    (item) => item.slug === filters.category,
-  );
-  const categoryLabel = category
-    ? catalogName(category, locale)
-    : filters.category;
-  const chips: { key: string; label: string; remove: () => void }[] = [];
-  if (filters.category && categoryLabel)
-    chips.push({
-      key: 'category',
-      label: categoryLabel,
-      remove: () => setFilter({ category: null }),
-    });
-  if (filters.verified)
-    chips.push({
-      key: 'verified',
-      label: t('verified'),
-      remove: () => setFilter({ verified: null }),
-    });
-  if (filters.sort !== 'relevance')
-    chips.push({
-      key: 'sort',
-      label: t('sortChip', { label: t(`sort.${filters.sort}`) }),
-      remove: () => setFilter({ sort: null }),
-    });
-
-  const firstPage = results.data?.pages[0];
-  const items = results.data?.pages.flatMap((page) => page.items) ?? [];
-  const counts = firstPage?.counts;
-  const denied =
-    results.isError &&
-    ['COMMON_FORBIDDEN', 'ACCOUNT_UNAVAILABLE'].includes(
-      failureCode(results.error),
-    );
-
+  const context = categories.data?.items.find((category) => category.slug === current.contextCategory);
+  const contextLabel = context ? catalogName(context, locale) : current.contextCategory;
   return (
     <div className="grid min-w-0 gap-stack-gap">
-      <ExploreTabs
-        tab={tab}
-        counts={counts}
-        onChange={(next) => go(withTab(current(), next))}
-      />
-
-      <div
-        id="explore-panel"
-        role="tabpanel"
-        tabIndex={0}
-        aria-labelledby={`explore-tab-${tab}`}
-        className="grid gap-stack-gap desktop:grid-cols-[minmax(0,16rem)_minmax(0,1fr)] desktop:items-start"
-      >
-        {categories.isPending ? (
-          <Skeleton label={t('loading')} />
-        ) : categories.isError ? (
-          <ErrorState
-            title={t('errorTitle')}
-            message={t('categoryError')}
-            action={
-              <Button
-                disabled={categories.isFetching}
-                onClick={() => void categories.refetch()}
-              >
-                {t('retry')}
-              </Button>
-            }
-          />
-        ) : (
-          <ExploreFilterPanel
-            filters={filters}
-            categories={categories.data.items}
-            locale={locale}
-            onChange={setFilter}
-            onReset={clearAll}
-          />
-        )}
-
-        <section className="grid min-w-0 gap-3">
+      {screen === 'search' && <SearchInput query={filters.q ?? ''} onChange={(q) => setFilter({ q: q || null })} />}
+      <LocationBar />
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap gap-2">
+          {contextLabel && <Chip label={contextLabel} removable removeLabel={t('clearCategory')} onRemove={clearContext} />}
+          <Button variant="text" onClick={() => setChangingCategory(true)}>{t('changeCategory')}</Button>
+        </div>
+        {current.tab !== 'products' && <div role="group" aria-label={geo('viewLabel')} className="flex gap-2">
+          {(['list', 'map'] as const).map((view) => <Button key={view} variant={current.view === view ? 'primary' : 'outline'}
+            aria-pressed={current.view === view} onClick={() => setFilter({ view, ...(view === 'list' && { radiusKm: null }) })}>{geo(view)}</Button>)}
+        </div>}
+      </div>
+      {screen !== 'category' && <ExploreTabs tab={current.tab} counts={first?.counts} onChange={(tab) => go(withTab(filterParams(current), tab))} />}
+      <p className="rounded-md border border-info bg-surface p-3 text-small text-text-2">{t('nearbyExplanation')}</p>
+      <div id="explore-panel" role={screen === 'category' ? undefined : 'tabpanel'} tabIndex={0}
+        aria-labelledby={screen === 'category' ? undefined : `explore-tab-${current.tab}`}
+        className="grid gap-stack-gap desktop:grid-cols-[minmax(0,16rem)_minmax(0,1fr)] desktop:items-start">
+        <aside aria-label={t('filters')} className="hidden rounded-md border border-border bg-surface p-4 desktop:block">
+          {first ? <ExploreFilterPanel filters={current} facets={first.facets} onChange={setFilter} onReset={reset} />
+            : results.isPending ? <Skeleton label={t('loading')} /> : <Button onClick={reset}>{t('resetFilters')}</Button>}
+        </aside>
+        <section className="grid min-w-0 gap-3" aria-busy={results.isFetching}>
+          <Button variant="outline" className="justify-self-start desktop:hidden"
+            onClick={() => setDraft(filterParams(current))}>{t('filtersWithCount', { count: activeCount })}</Button>
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <b aria-live="polite">
-              {counts ? t(`count.${tab}`, { count: counts[tab] }) : null}
-            </b>
+            <b aria-live="polite">{first ? t(`count.${current.tab}`, { count: first.counts[current.tab] }) : null}</b>
             <div className="flex flex-wrap gap-2">
-              {chips.length > 0 && (
-                <Button variant="text" onClick={clearAll}>
-                  {t('clearAll')}
-                </Button>
-              )}
-              <Button variant="text" onClick={copyLink}>
-                <span aria-hidden="true">🔗</span> {t('copyLink')}
-              </Button>
+              {activeCount > 0 && <Button variant="text" onClick={reset}>{t('clearAll')}</Button>}
+              <Button variant="text" onClick={copyLink}>{t('copyLink')}</Button>
             </div>
           </div>
-          <p role="status" className="sr-only">
-            {copyStatus === 'copied' ? t('linkCopied') : ''}
-          </p>
-          {copyStatus === 'copied' && (
-            <p aria-hidden="true" className="text-small text-text-2">
-              {t('linkCopied')}
-            </p>
-          )}
-          {copyStatus === 'failed' && (
-            <p role="alert" className="text-small text-error">
-              {share('copyFailed')}
-            </p>
-          )}
-          {chips.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {chips.map((chip) => (
-                <Chip
-                  key={chip.key}
-                  label={chip.label}
-                  removable
-                  removeLabel={t('removeFilter', { label: chip.label })}
-                  onRemove={chip.remove}
-                />
-              ))}
-            </div>
-          )}
-
-          {results.isPending ? (
-            <Skeleton label={t('loading')} />
-          ) : denied ? (
-            <NoPermissionState
-              title={permission('title')}
-              message={permission('message')}
-              action={null}
-            />
-          ) : results.isError && !items.length ? (
-            failureCode(results.error) === 'SEARCH_FILTER_INVALID' ? (
-              <EmptyState
-                title={t('invalidCategory')}
-                message={t('emptyFilteredMessage')}
-                action={
-                  <Button onClick={() => setFilter({ category: null })}>
-                    {t('clearCategory')}
-                  </Button>
-                }
-              />
-            ) : (
-              <ErrorState
-                title={t('errorTitle')}
-                message={t('errorMessage')}
-                action={
-                  <Button onClick={() => void results.refetch()}>
-                    {t('retry')}
-                  </Button>
-                }
-              />
-            )
-          ) : items.length ? (
-            <>
-              <ExploreCards tab={tab} items={items} locale={locale} />
-              {results.hasNextPage && (
-                <Button
-                  variant="outline"
-                  className="justify-self-center"
-                  loading={results.isFetchingNextPage}
-                  disabled={results.isFetching}
-                  onClick={() => void results.fetchNextPage()}
-                >
-                  {t('loadMore')}
-                </Button>
+          <p role="status" className="text-small text-text-2">{copyStatus === 'copied' ? t('linkCopied') : ''}</p>
+          {copyStatus === 'failed' && <p role="alert" className="text-small text-error">{share('copyFailed')}</p>}
+          <ExploreFilterChips filters={current} facets={first?.facets} onChange={setFilter} />
+          {results.isPending ? <Skeleton label={t('loading')} />
+            : denied ? <NoPermissionState title={permission('title')} message={permission('message')} action={null} />
+            : results.isError && !items.length ? (
+              <ErrorState title={code === 'SEARCH_LOCATION_REQUIRED' ? t('locationRequired') : t('errorTitle')}
+                message={code === 'SEARCH_LOCATION_REQUIRED' ? t('locationRequiredMessage') : t('errorMessage')}
+                action={<div className="flex flex-wrap gap-2">
+                  <Button onClick={() => void results.refetch()}>{t('retry')}</Button>
+                  <Button variant="outline" onClick={reset}>{t('resetFilters')}</Button>
+                </div>} />
+            ) : <>
+              {current.view === 'map' && <ExploreMap key={`${current.tab}.${current.radiusKm ?? ''}`} config={mapConfig}
+                pins={pins} radius={current.radiusKm} position={position} onChange={setFilter} />}
+              {items.length ? <ExploreCards tab={current.tab} items={items} locale={locale} />
+                : <EmptyState title={t(activeCount ? 'emptyFiltered' : `emptyNone.${current.tab}`)}
+                    message={t(activeCount ? 'emptyFilteredMessage' : 'emptyNoneMessage')}
+                    action={<div className="flex flex-wrap justify-center gap-2">
+                      {(current.category || current.contextCategory) && <Button onClick={clearContext}>{t('clearCategory')}</Button>}
+                      <Button variant="outline" onClick={reset}>{t('resetFilters')}</Button>
+                    </div>} />}
+              {!items.length && first?.facets.categories.some((category) => category.count > 0) && (
+                <section className="grid gap-2"><h3>{t('suggestedCategories')}</h3><div className="flex flex-wrap gap-2">
+                  {first.facets.categories.filter((category) => category.count > 0).map((category) => <Button key={category.id}
+                    variant="outline" onClick={() => setFilter({ category: category.value, ...(current.tab !== 'shops' && { subcategory: '' }) })}>
+                    {t('categoryCount', { name: locale === 'hi' && category.labelHi ? category.labelHi : category.labelEn, count: category.count })}
+                  </Button>)}
+                </div></section>
               )}
-            </>
-          ) : (
-            <EmptyState
-              title={
-                filters.category && categoryLabel
-                  ? t(`emptyCategory.${tab}`, { category: categoryLabel })
-                  : chips.length
-                    ? t('emptyFiltered')
-                    : t(`emptyNone.${tab}`)
-              }
-              message={
-                chips.length ? t('emptyFilteredMessage') : t('emptyNoneMessage')
-              }
-              action={
-                chips.length ? (
-                  <div className="flex flex-wrap justify-center gap-2">
-                    {filters.category && (
-                      <Button onClick={() => setFilter({ category: null })}>
-                        {t('clearCategory')}
-                      </Button>
-                    )}
-                    <Button variant="outline" onClick={clearAll}>
-                      {t('resetFilters')}
-                    </Button>
-                  </div>
-                ) : null
-              }
-            />
-          )}
-          {results.isError && items.length > 0 && !denied && (
-            <ErrorState
-              title={t('errorTitle')}
-              message={t('errorMessage')}
-              action={
-                <Button
-                  disabled={results.isFetching}
-                  onClick={() =>
-                    void (results.isFetchNextPageError
-                      ? results.fetchNextPage()
-                      : results.refetch())
-                  }
-                >
-                  {t('retry')}
-                </Button>
-              }
-            />
-          )}
+              {results.hasNextPage && <Button variant="outline" className="justify-self-center"
+                loading={results.isFetchingNextPage} disabled={results.isFetching}
+                onClick={() => void results.fetchNextPage()}>{t('loadMore')}</Button>}
+            </>}
+          {results.isError && items.length > 0 && !denied && <ErrorState title={t('errorTitle')} message={t('errorMessage')}
+            action={<Button disabled={results.isFetching} onClick={() => void (results.isFetchNextPageError ? results.fetchNextPage() : results.refetch())}>{t('retry')}</Button>} />}
         </section>
       </div>
+      <Sheet open={draft !== null} onOpenChange={(open) => { if (!open) setDraft(null); }} title={t('filters')} closeLabel={t('cancel')} stickyFooter
+        footer={<div className="sticky bottom-0 flex flex-wrap gap-2 bg-surface py-3">
+          <Button variant="outline" onClick={() => { if (draft) setDraft(resetFilters(draft)); }}>{t('reset')}</Button>
+          <Button loading={preview.isFetching} disabled={!draftFilters || !draftPage || preview.isError || preview.isFetching}
+            onClick={() => { if (draftPage) go(filterParams(draftPage.normalizedFilters)); setDraft(null); }}>
+            {preview.isFetching ? t('loading') : t('showResults', { count: draftPage?.counts[current.tab] ?? 0 })}
+          </Button>
+        </div>}>
+        {draftFilters && draftPage && <ExploreFilterPanel filters={draftFilters} facets={draftPage.facets}
+          onChange={(patch) => setDraft(withFilters(draft!, patch))} onReset={() => setDraft(resetFilters(draft!))} />}
+        {preview.isPending && <Skeleton label={t('loading')} />}
+        {!draftFilters && draft && <p role="alert">{t('invalidFiltersMessage')}</p>}
+        {preview.isError && <ErrorState title={t('errorTitle')}
+          message={failureCode(preview.error) === 'SEARCH_LOCATION_REQUIRED' ? t('locationRequiredMessage') : t('errorMessage')}
+          action={<Button onClick={() => void preview.refetch()}>{t('retry')}</Button>} />}
+      </Sheet>
+      <Sheet open={changingCategory} onOpenChange={setChangingCategory} title={t('changeCategory')} closeLabel={t('cancel')}>
+        {categories.isPending ? <Skeleton label={t('loading')} /> : categories.data ? <div className="grid gap-2">
+          {categories.data.items.map((category) => <Button key={category.id} variant="outline" onClick={() => {
+              go(withContext(filterParams(current), category.slug)); setChangingCategory(false);
+            }}>{catalogName(category, locale)}</Button>)}
+          <Button variant="text" onClick={() => { clearContext(); setChangingCategory(false); }}>{t('clearCategory')}</Button>
+        </div> : <ErrorState title={t('errorTitle')} message={t('categoryError')} action={<Button onClick={() => void categories.refetch()}>{t('retry')}</Button>} />}
+      </Sheet>
     </div>
   );
+}
+
+function SearchInput({ query, onChange }: { query: string; onChange: (query: string) => void }) {
+  const t = useTranslations('explore.screen');
+  return <form onSubmit={(event) => {
+    event.preventDefault();
+    const value = new FormData(event.currentTarget).get('q');
+    if (typeof value === 'string') onChange(value.trim());
+  }} className="flex flex-wrap items-end gap-2">
+    <Input key={query} type="search" name="q" defaultValue={query} maxLength={200} label={t('search')} wrapperClassName="min-w-0 flex-1" />
+    <Button type="submit">{t('search')}</Button>
+  </form>;
 }

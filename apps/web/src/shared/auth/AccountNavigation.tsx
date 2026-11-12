@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import { NavIcon } from '../ui/NavIcon';
+import { publicHref } from '../i18n/preferences';
 import { useSession } from './SessionProvider';
 import { loginHref } from './return-to';
 
@@ -22,7 +23,7 @@ export function AccountNavigation() {
     <nav aria-label={t('account')} className="flex items-center gap-1">
       <Link
         className={iconButton}
-        href="/videos"
+        href={publicHref('/videos', locale)}
         aria-label={reels('title')}
         title={reels('title')}
       >

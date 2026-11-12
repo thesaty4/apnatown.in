@@ -220,6 +220,13 @@ async function main() {
         await readLocalEnvironment(root),
       ),
     );
+  } else if (command === 'db:studio') {
+    packageRun(
+      'api',
+      'db:studio',
+      [],
+      environmentFor('studio', await readLocalEnvironment(root)),
+    );
   } else if (command === 'db:generate' || command === 'api:openapi') {
     packageRun('api', command, args);
   } else if (command === 'tokens:generate') {

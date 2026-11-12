@@ -58,15 +58,15 @@ export class PrismaImageRepository implements ImageRepository {
     });
   }
 
-  async find(tx: TxContext, id: string): Promise<StoredImage | null> {
+  async find(tx: TxContext, id: string, purpose: 'catalog_taxonomy' | 'product' | 'service' | 'business_profile' = 'catalog_taxonomy'): Promise<StoredImage | null> {
     const row = await this.db.client(tx).mediaAsset.findFirst({
-      where: { id, purpose: 'catalog_taxonomy', moderationState: 'allowed', deletedAt: null },
+      where: { id, purpose, visibility: 'public', moderationState: 'allowed', deletedAt: null },
     });
     if (!row) return null;
     return {
       id: row.id, ownerUserId: row.ownerUserId, width: row.width, height: row.height,
       bytes: Number(row.bytes), version: row.version,
-      variants: StoredVariantSchema.array().min(1).max(3).parse(row.variants),
+      variants: StoredVariantSchema.array().min(1).max(purpose === 'catalog_taxonomy' ? 3 : 4).parse(row.variants),
     };
   }
 

@@ -1,122 +1,91 @@
 import {
-  EXPLORE_TABS,
-  ExploreQuerySchema,
-  type ExploreSort,
-  type ExploreTab,
+  EXPLORE_TABS, EXPLORE_FILTER_KEYS, EXPLORE_SORTS_BY_TAB,
+  ExploreQuerySchema, type ExploreTab,
 } from '@apnatown/shared/search';
+export type { ExploreFilters } from '@apnatown/shared/search';
+import type { ExploreFilters } from '@apnatown/shared/search';
 
-export type ExploreFilters = {
-  tab: ExploreTab;
-  category?: string;
-  verified: boolean;
-  sort: ExploreSort;
-};
-type FilterKey = 'category' | 'verified' | 'sort';
-const FILTER_KEYS: readonly FilterKey[] = ['category', 'verified', 'sort'];
-const filterSchema = ExploreQuerySchema.omit({ cursor: true, limit: true });
-
-/** Services has no newest sort and Products no verified filter (spec per-tab lists). */
-export const sortsFor = (tab: ExploreTab): ExploreSort[] =>
-  tab === 'services' ? ['relevance'] : ['relevance', 'newest'];
+export type FilterPatch = Record<string, string | number | null | undefined>;
+export const sortsFor = (tab: ExploreTab) => EXPLORE_SORTS_BY_TAB[tab];
 export const hasVerified = (tab: ExploreTab) => tab !== 'products';
+export const selectedValues = (value: string | undefined) => value ? value.split(',') : [];
 
-/** Reject unsupported or ambiguous links rather than silently broadening results. */
 export function readFilters(params: URLSearchParams): ExploreFilters | null {
-  const allowed = new Set<string>([
-    'tab',
-    ...FILTER_KEYS,
-    ...EXPLORE_TABS.flatMap((tab) => FILTER_KEYS.map((key) => `${tab}.${key}`)),
-  ]);
   for (const key of params.keys())
-    if (!allowed.has(key) || params.getAll(key).length !== 1) return null;
-
-  const active = parseFilters(
-    Object.fromEntries([...params].filter(([key]) => !key.includes('.'))),
-  );
-  if (!active) return null;
-  for (const tab of EXPLORE_TABS) {
-    const saved = FILTER_KEYS.flatMap((key) =>
-      params.has(`${tab}.${key}`) ? [[key, params.get(`${tab}.${key}`)]] : [],
-    );
-    if (saved.length) {
-      if (
-        tab === active.tab ||
-        !parseFilters({ ...Object.fromEntries(saved), tab })
-      )
-        return null;
-    }
-  }
-  return active;
-}
-
-function parseFilters(input: unknown): ExploreFilters | null {
-  const parsed = filterSchema.safeParse(input);
+    if (params.getAll(key).length !== 1 || key === 'cursor' || key === 'limit') return null;
+  const parsed = ExploreQuerySchema.safeParse(Object.fromEntries(params));
   if (!parsed.success) return null;
-  const { tab, category, sort, verified } = parsed.data;
-  if (
-    !sortsFor(tab).includes(sort) ||
-    (!hasVerified(tab) && verified === 'true')
-  )
-    return null;
-  return {
-    tab,
-    ...(category ? { category } : {}),
-    sort,
-    verified: verified === 'true',
-  };
+  const { cursor: _cursor, limit: _limit, ...filters } = parsed.data;
+  return filters;
 }
 
-function stashes(params: URLSearchParams, skip: readonly ExploreTab[]) {
-  const out: [string, string][] = [];
-  for (const tab of EXPLORE_TABS)
-    for (const key of FILTER_KEYS) {
-      const value = params.get(`${tab}.${key}`);
-      if (!skip.includes(tab) && value) out.push([`${tab}.${key}`, value]);
-    }
-  return out;
+export function filterParams(filters: ExploreFilters) {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(filters))
+    if (value !== undefined) params.set(key, String(value));
+  return params;
 }
 
-/** Active-tab filter change; empty/default values are removed from the URL. */
-export function withFilters(
-  params: URLSearchParams,
-  patch: Partial<Record<FilterKey, string | null>>,
-) {
+export function withFilters(params: URLSearchParams, patch: FilterPatch) {
+  const next = new URLSearchParams(params);
+  for (const [key, value] of Object.entries(patch)) {
+    if (value != null) next.set(key, String(value));
+    else if (key === 'category' || key === 'subcategory') next.set(key, '');
+    else if (key === 'sort') next.set(key, 'relevance');
+    else next.delete(key);
+  }
+  next.delete('cursor');
+  return next;
+}
+
+export function resetFilters(params: URLSearchParams) {
   const filters = readFilters(params);
   if (!filters) throw new Error('INVALID_EXPLORE_URL');
-  const next = { ...filters, ...patch };
-  const out = new URLSearchParams({ tab: filters.tab });
-  if (next.category) out.set('category', String(next.category));
-  if (String(next.verified) === 'true') out.set('verified', 'true');
-  if (next.sort && next.sort !== 'relevance')
-    out.set('sort', String(next.sort));
-  for (const [key, value] of stashes(params, [filters.tab]))
-    out.set(key, value);
-  return out;
+  const next = new URLSearchParams(params);
+  for (const key of EXPLORE_FILTER_KEYS[filters.tab]) next.delete(key);
+  next.set('sort', 'relevance');
+  next.set('category', '');
+  if (filters.tab !== 'shops') next.set('subcategory', '');
+  return next;
 }
 
-/**
- * Tab switch keeps each tab's filters independent: the current tab's filters
- * are stashed under `<tab>.` and the target tab's stash is restored.
- * Products and Shops share product categories, so a category carries over.
- */
 export function withTab(params: URLSearchParams, tab: ExploreTab) {
   const current = readFilters(params);
   if (!current) throw new Error('INVALID_EXPLORE_URL');
   if (current.tab === tab) return new URLSearchParams(params);
-  const out = new URLSearchParams({ tab });
-  for (const key of FILTER_KEYS) {
-    const value = params.get(`${tab}.${key}`);
-    if (value) out.set(key, value);
+  const next = new URLSearchParams(params);
+  for (const key of EXPLORE_FILTER_KEYS[current.tab]) {
+    const value = params.get(key);
+    if (value !== null) next.set(`${current.tab}.${key}`, value);
+    next.delete(key);
   }
-  const shared = current.tab !== 'services' && tab !== 'services';
-  const visited = FILTER_KEYS.some((key) => params.has(`${tab}.${key}`));
-  if (!visited && shared && current.category)
-    out.set('category', current.category);
-  for (const [key, value] of stashes(params, [tab, current.tab]))
-    out.set(key, value);
-  if (current.category) out.set(`${current.tab}.category`, current.category);
-  if (current.verified) out.set(`${current.tab}.verified`, 'true');
-  // Keep the default as a visited marker so a cleared category stays cleared.
-  out.set(`${current.tab}.sort`, current.sort);
-  return out;
+  next.set(`${current.tab}.sort`, current.sort);
+  for (const key of EXPLORE_FILTER_KEYS[tab]) {
+    const value = params.get(`${tab}.${key}`);
+    if (value !== null) next.set(key, value);
+    next.delete(`${tab}.${key}`);
+  }
+  if (!current.contextCategory && current.tab !== 'services' && tab !== 'services' &&
+      !params.has(`${tab}.sort`) && current.category)
+    next.set('category', current.category);
+  next.set('tab', tab);
+  if (tab === 'products') { next.set('view', 'list'); next.delete('radiusKm'); }
+  return next;
+}
+
+export function withContext(params: URLSearchParams, category: string | null) {
+  const next = new URLSearchParams(params);
+  if (category) next.set('contextCategory', category);
+  else next.delete('contextCategory');
+  for (const prefix of ['', ...EXPLORE_TABS.map((tab) => `${tab}.`)])
+    for (const key of ['category', 'subcategory']) next.delete(`${prefix}${key}`);
+  if (!category) {
+    const active = params.get('tab') ?? 'products';
+    for (const tab of EXPLORE_TABS) {
+      const prefix = tab === active ? '' : `${tab}.`;
+      next.set(`${prefix}category`, '');
+      if (tab !== 'shops') next.set(`${prefix}subcategory`, '');
+    }
+  }
+  return next;
 }

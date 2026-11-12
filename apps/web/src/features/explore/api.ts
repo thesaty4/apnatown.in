@@ -10,18 +10,20 @@ export async function getExplore(
   filters: ExploreFilters,
   cursor?: string,
   signal?: AbortSignal,
+  position?: { lat: number; lng: number } | null,
 ) {
   const query = {
-    tab: filters.tab,
-    sort: filters.sort,
+    ...filters,
     limit: 20,
-    ...(filters.category ? { category: filters.category } : {}),
-    ...(filters.verified ? { verified: 'true' } : {}),
     ...(cursor ? { cursor } : {}),
   };
   return unwrap(
     await api.GET('/explore', {
       params: { query },
+      ...(position && { headers: {
+        'X-Discovery-Latitude': String(position.lat),
+        'X-Discovery-Longitude': String(position.lng),
+      } }),
       ...(signal && { signal }),
     }),
     ExploreResponseSchema,
@@ -31,19 +33,22 @@ export async function getExplore(
 export function exploreOptions(
   api: Pick<BrowserApi, 'GET'>,
   filters: ExploreFilters,
+  locationRevision = 0,
+  screen = 'explore',
+  position?: { lat: number; lng: number } | null,
 ) {
   return infiniteQueryOptions({
-    queryKey: queryKeys.explore(filters),
+    queryKey: queryKeys.explore(filters, locationRevision, screen),
     initialPageParam: null as string | null,
     queryFn: async ({ pageParam, signal }) => {
       try {
-        return await getExplore(api, filters, pageParam ?? undefined, signal);
+        return await getExplore(api, filters, pageParam ?? undefined, signal, position);
       } catch (error) {
         signal.throwIfAborted();
         throw normalizeFailure(error);
       }
     },
-    getNextPageParam: (page) => page.nextCursor ?? undefined,
+    getNextPageParam: (page) => page.page.nextCursor ?? undefined,
     staleTime: 30_000,
     retry: false,
   });

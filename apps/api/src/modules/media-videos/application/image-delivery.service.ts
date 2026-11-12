@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { MediaPublicQuery } from '@apnatown/shared';
 import { DomainError } from '../../../shared/errors/errors';
 import { UNIT_OF_WORK, type UnitOfWork } from '../../../shared/persistence/ports';
-import { IMAGE_PUBLICATION, IMAGE_STORAGE, MEDIA_IMAGES, type ImagePublication,
+import { IMAGE_PUBLICATION, LISTING_IMAGE_PUBLICATION, IMAGE_STORAGE, MEDIA_IMAGES, type ImagePublication,
   type ImageRepository, type ImageStorage } from '../domain/images';
 
 @Injectable()
@@ -12,11 +12,15 @@ export class ImageDeliveryService {
     @Inject(MEDIA_IMAGES) private readonly images: ImageRepository,
     @Inject(IMAGE_STORAGE) private readonly storage: ImageStorage,
     @Inject(IMAGE_PUBLICATION) private readonly publication: ImagePublication,
+    @Inject(LISTING_IMAGE_PUBLICATION) private readonly listings: ImagePublication,
   ) {}
   async read(assetId: string, query: MediaPublicQuery) {
     const authorize = () => this.uow.run(async (tx) => {
-      await this.publication.requirePublic(tx, { assetId, ...query });
-      const asset = await this.images.find(tx, assetId);
+      const taxonomy = query.placementType === 'catalog_category' || query.placementType === 'catalog_subcategory';
+      await (taxonomy ? this.publication : this.listings).requirePublic(tx, { assetId, ...query });
+      const purpose = taxonomy ? 'catalog_taxonomy' : query.placementType === 'business'
+        ? 'business_profile' : query.placementType as 'product' | 'service';
+      const asset = await this.images.find(tx, assetId, purpose);
       const variant = asset?.variants.find((item) => item.width === query.variantWidth);
       if (!asset || asset.version !== query.assetVersion || !variant)
         throw new DomainError('MEDIA_NOT_FOUND');

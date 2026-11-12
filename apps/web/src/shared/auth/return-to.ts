@@ -9,12 +9,13 @@ const implemented = new Set([
   '/account/preferences',
   '/account/addresses',
   '/videos',
+  '/hi/videos',
   '/admin/profile',
   '/super-admin/admins',
   '/super-admin/roles',
 ]);
 const implementedVideoPath =
-  /^\/videos\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
+  /^\/(?:hi\/)?videos\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
 
 /** Only implemented, non-operational destinations; auth loops and encoded paths fail closed. */
 export function safeReturnTo(input: unknown): string | undefined {

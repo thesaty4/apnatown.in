@@ -7,10 +7,11 @@ export const MEDIA_IMAGES = Symbol('MEDIA_IMAGES');
 export const IMAGE_STORAGE = Symbol('IMAGE_STORAGE');
 export const IMAGE_PROCESSOR = Symbol('IMAGE_PROCESSOR');
 export const IMAGE_PUBLICATION = Symbol('IMAGE_PUBLICATION');
+export const LISTING_IMAGE_PUBLICATION = Symbol('LISTING_IMAGE_PUBLICATION');
 export interface ImagePlacement {
   assetId: string;
   placementId: string;
-  placementType: 'catalog_category' | 'catalog_subcategory';
+  placementType: MediaPublicQuery['placementType'];
 }
 export interface ImagePublication {
   requirePublic(tx: TxContext, placement: ImagePlacement): Promise<void>;
@@ -26,7 +27,7 @@ export function publicImagePath(assetId: string, query: MediaPublicQuery): strin
 export const StoredVariantSchema = z.strictObject({
   width: z.number().int().positive(),
   height: z.number().int().positive(),
-  bytes: z.number().int().positive().max(122880),
+  bytes: z.number().int().positive().max(358400),
   publicId: z.string().regex(/^apnatown\/[a-f0-9-]{36}\/[0-9]+$/),
   providerAssetId: z.string().min(1).max(128),
   providerVersion: z.number().int().positive(),
@@ -63,7 +64,7 @@ export interface ImageOperation {
 export interface ImageRepository {
   reserve(tx: TxContext, command: CommandContext, policy: ImagePolicy, id: string, leaseId: string): Promise<ImageOperation>;
   commit(tx: TxContext, id: string, leaseId: string, image: StoredImage): Promise<void>;
-  find(tx: TxContext, id: string): Promise<StoredImage | null>;
+  find(tx: TxContext, id: string, purpose?: 'catalog_taxonomy' | 'product' | 'service' | 'business_profile'): Promise<StoredImage | null>;
   release(tx: TxContext, id: string, leaseId: string): Promise<void>;
   claimCleanup(tx: TxContext): Promise<ImageOperation[]>;
   finishCleanup(tx: TxContext, id: string): Promise<void>;

@@ -31,6 +31,10 @@ export function createLogger(
         'cookie',
         'authorization',
         '*.authorization',
+        'latitude', 'longitude', '*.latitude', '*.longitude',
+        '["x-discovery-latitude"]', '["x-discovery-longitude"]',
+        'headers["x-discovery-latitude"]', 'headers["x-discovery-longitude"]',
+        'headers["X-Discovery-Latitude"]', 'headers["X-Discovery-Longitude"]',
         // Data-request deletion completion capability (never logged).
         'completionToken',
         '*.completionToken',

@@ -86,6 +86,12 @@ import { SearchHomeController } from '../../modules/search/presentation/search-h
 import { SearchHomeService } from '../../modules/search/application/search-home.service';
 import { ExploreController } from '../../modules/search/presentation/explore.controller';
 import { ExploreService } from '../../modules/search/application/explore.service';
+import { ProductPublicController } from '../../modules/products/presentation/product-public.controller';
+import { ProductReadService } from '../../modules/products/application/product-read.service';
+import { ServicePublicController } from '../../modules/services/presentation/service-public.controller';
+import { ServiceReadService } from '../../modules/services/application/service-read.service';
+import { BusinessDiscoveryDetailController } from '../../modules/businesses/presentation/business-discovery-detail.controller';
+import { BusinessDiscoveryDetailService } from '../../modules/businesses/application/business-discovery-detail.service';
 
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
@@ -128,6 +134,9 @@ import { ExploreService } from '../../modules/search/application/explore.service
     AdminVideoCommentsController,
     SearchHomeController,
     ExploreController,
+    ProductPublicController,
+    ServicePublicController,
+    BusinessDiscoveryDetailController,
   ],
   providers: [
     SavedService,
@@ -164,6 +173,9 @@ import { ExploreService } from '../../modules/search/application/explore.service
     VideoCommentEvents,
     SearchHomeService,
     ExploreService,
+    ProductReadService,
+    ServiceReadService,
+    BusinessDiscoveryDetailService,
   ].map((provide) => ({ provide, useValue: Object.freeze({}) })),
 })
 class OpenApiModule {}

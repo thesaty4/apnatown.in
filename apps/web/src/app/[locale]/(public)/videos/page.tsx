@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { getTranslations } from 'next-intl/server';
-import { ReelsFeed } from '../../features/reels/ReelsFeed';
+import { ReelsFeed } from '../../../../features/reels/ReelsFeed';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('reels.feed');

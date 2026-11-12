@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import '@apnatown/ui/tokens.css';
 @import '@apnatown/ui/tailwind';
+@import 'leaflet/dist/leaflet.css';
 
 @source "../../../../packages/ui/src";
 

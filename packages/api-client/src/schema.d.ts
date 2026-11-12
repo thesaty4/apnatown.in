@@ -284,6 +284,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/businesses/public/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Public detail for /shop/[slug] or /provider/[slug] */
+        get: operations["getPublicBusiness"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/catalog/admin/categories": {
         parameters: {
             query?: never;
@@ -803,8 +820,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Browse public shops and service providers
-         * @description S-CUST-02 businesses-only subset. Shops/Services list approved, non-deleted businesses with an active, non-deleted owner in an enabled city. Category filters use existing product-kind business memberships; service-listing taxonomy is not available yet. Relevance orders by creation time then ID; newest reverses that order (Shops only). Pagination uses a signed keyset cursor. Products is empty until its module exists.
+         * Browse public products, shops and individual services
+         * @description EX1–EX12: SQL filters/facets/counts and keyset pages in one repeatable-read snapshot. Service listing taxonomy is SERVICE kind; business memberships are PRODUCT kind. Optional location headers enable server distances/delivery. Radius, distance and delivery filters require usable location. Search q resolves Catalog mappings; this is not Search autocomplete.
          */
         get: operations["explore"];
         put?: never;
@@ -1143,6 +1160,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/products/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Public product detail for /product/[slug]; checkout is unavailable */
+        get: operations["getPublicProduct"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/search/home": {
         parameters: {
             query?: never;
@@ -1155,6 +1189,23 @@ export interface paths {
          * @description S-CUST-01 location-free composition. Returns the Catalog-owned active Home category sections (dedicated and curated) localized for the requested locale, in position order; ineligible sections are omitted. Sections owned by modules that do not exist yet are not returned. Publicly cacheable.
          */
         get: operations["searchHome"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/services/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Public service detail for /service/[slug] */
+        get: operations["getPublicService"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2467,6 +2518,83 @@ export interface components {
             message_key: string;
             status: number;
         };
+        BusinessDiscoveryDetailDto: {
+            description: string | null;
+            hours: {
+                closesAt: string | null;
+                dayOfWeek: number;
+                isClosed: boolean;
+                opensAt: string | null;
+            }[];
+            images: {
+                bytes: number;
+                height: number;
+                /** @enum {string} */
+                mimeType: "image/webp";
+                /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                path: string;
+                width: number;
+            }[];
+            item: {
+                area: {
+                    nameEn: string;
+                    nameHi: string | null;
+                } | null;
+                business: {
+                    /** Format: uuid */
+                    id: string;
+                    /** @enum {string} */
+                    kind: "shop" | "provider";
+                    nameEn: string;
+                    nameHi: string | null;
+                    slug: string;
+                };
+                category: {
+                    nameEn: string;
+                    nameHi: string | null;
+                    slug: string;
+                } | null;
+                delivers: boolean | null;
+                distanceKm: number | null;
+                featured: boolean;
+                /** Format: uuid */
+                id: string;
+                image: {
+                    bytes: number;
+                    height: number;
+                    /** @enum {string} */
+                    mimeType: "image/webp";
+                    /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                    path: string;
+                    width: number;
+                } | null;
+                inStock: boolean | null;
+                /** @enum {string} */
+                kind: "shop";
+                mrpPaise: number | null;
+                nameEn: string;
+                nameHi: string | null;
+                offers: boolean;
+                openNow: boolean | null;
+                path: string;
+                phone: string | null;
+                pickup: boolean;
+                priceMaxPaise: number | null;
+                pricePaise: number | null;
+                /** @enum {string|null} */
+                priceType: "from" | "fixed" | "range" | "enquiry" | null;
+                rating: number | null;
+                reviewCount: number;
+                slug: string;
+                subcategory: {
+                    nameEn: string;
+                    nameHi: string | null;
+                    slug: string;
+                } | null;
+                unit: string | null;
+                verified: boolean;
+            };
+        };
         CategoryDetailDto: {
             category: {
                 active: boolean;
@@ -2964,26 +3092,236 @@ export interface components {
                 services: number;
                 shops: number;
             };
-            items: {
-                area: {
-                    nameEn: string;
-                    nameHi: string | null;
+            facets: {
+                brands: {
+                    /** Format: uuid */
+                    categoryId?: string;
+                    count: number;
+                    disabled: boolean;
+                    id: string;
+                    labelEn: string;
+                    labelHi: string | null;
+                    selected: boolean;
+                    value: string;
+                }[];
+                categories: {
+                    /** Format: uuid */
+                    categoryId?: string;
+                    count: number;
+                    disabled: boolean;
+                    id: string;
+                    labelEn: string;
+                    labelHi: string | null;
+                    selected: boolean;
+                    value: string;
+                }[];
+                priceRange: {
+                    maxPaise: number;
+                    minPaise: number;
                 } | null;
-                category: {
-                    nameEn: string;
-                    nameHi: string | null;
-                    slug: string;
-                } | null;
+                subcategories: {
+                    /** Format: uuid */
+                    categoryId?: string;
+                    count: number;
+                    disabled: boolean;
+                    id: string;
+                    labelEn: string;
+                    labelHi: string | null;
+                    selected: boolean;
+                    value: string;
+                }[];
+            };
+            mapPins: {
+                /** Format: uuid */
+                businessId: string;
+                delivers: boolean | null;
+                distanceKm: number | null;
                 /** Format: uuid */
                 id: string;
-                /** @enum {string} */
-                kind: "shop" | "provider";
+                lat: number;
+                lng: number;
                 nameEn: string;
                 nameHi: string | null;
-                slug: string;
-                verified: boolean;
+                path: string;
             }[];
-            nextCursor: string | null;
+            normalizedFilters: {
+                /** Format: uuid */
+                areaId?: string;
+                /** @enum {string} */
+                availableToday?: "true" | "false";
+                brand?: string;
+                category?: string;
+                /** Format: uuid */
+                cityId?: string;
+                contextCategory?: string;
+                /** @enum {string} */
+                deliversToMe?: "true" | "false";
+                distanceKm?: number;
+                /** @enum {string} */
+                featured?: "true" | "false";
+                /** @enum {string} */
+                inStock?: "true" | "false";
+                /** Format: uuid */
+                offerId?: string;
+                /** @enum {string} */
+                offers?: "true" | "false";
+                /** @enum {string} */
+                openNow?: "true" | "false";
+                /** @enum {string} */
+                pickup?: "true" | "false";
+                priceMaxPaise?: number;
+                priceMinPaise?: number;
+                /** @enum {string} */
+                priceOnEnquiry?: "true" | "false";
+                "products.brand"?: string;
+                "products.category"?: string;
+                /** @enum {string} */
+                "products.deliversToMe"?: "true" | "false";
+                "products.distanceKm"?: number;
+                /** @enum {string} */
+                "products.featured"?: "true" | "false";
+                /** @enum {string} */
+                "products.inStock"?: "true" | "false";
+                /** Format: uuid */
+                "products.offerId"?: string;
+                /** @enum {string} */
+                "products.offers"?: "true" | "false";
+                /** @enum {string} */
+                "products.pickup"?: "true" | "false";
+                "products.priceMaxPaise"?: number;
+                "products.priceMinPaise"?: number;
+                "products.rating"?: 0 | 3 | 4 | 4.5;
+                /** @enum {string} */
+                "products.sort"?: "relevance" | "distance" | "price_asc" | "price_desc" | "rating" | "newest";
+                "products.subcategory"?: string;
+                q?: string;
+                radiusKm?: number;
+                rating?: 0 | 3 | 4 | 4.5;
+                /** @enum {string} */
+                "services.availableToday"?: "true" | "false";
+                "services.category"?: string;
+                "services.distanceKm"?: number;
+                /** @enum {string} */
+                "services.offers"?: "true" | "false";
+                "services.priceMaxPaise"?: number;
+                "services.priceMinPaise"?: number;
+                /** @enum {string} */
+                "services.priceOnEnquiry"?: "true" | "false";
+                "services.radiusKm"?: number;
+                "services.rating"?: 0 | 3 | 4 | 4.5;
+                /** @enum {string} */
+                "services.sort"?: "relevance" | "distance" | "price_asc" | "price_desc" | "rating" | "newest";
+                "services.subcategory"?: string;
+                /** @enum {string} */
+                "services.verified"?: "true" | "false";
+                "shops.category"?: string;
+                /** @enum {string} */
+                "shops.deliversToMe"?: "true" | "false";
+                "shops.distanceKm"?: number;
+                /** @enum {string} */
+                "shops.featured"?: "true" | "false";
+                /** @enum {string} */
+                "shops.offers"?: "true" | "false";
+                /** @enum {string} */
+                "shops.openNow"?: "true" | "false";
+                "shops.radiusKm"?: number;
+                "shops.rating"?: 0 | 3 | 4 | 4.5;
+                /** @enum {string} */
+                "shops.sort"?: "relevance" | "distance" | "price_asc" | "price_desc" | "rating" | "newest";
+                /** @enum {string} */
+                "shops.verified"?: "true" | "false";
+                /**
+                 * @default relevance
+                 * @enum {string}
+                 */
+                sort: "relevance" | "distance" | "price_asc" | "price_desc" | "rating" | "newest";
+                subcategory?: string;
+                /**
+                 * @default products
+                 * @enum {string}
+                 */
+                tab: "products" | "shops" | "services";
+                /** @enum {string} */
+                verified?: "true" | "false";
+                /**
+                 * @default list
+                 * @enum {string}
+                 */
+                view: "list" | "map";
+            };
+            page: {
+                items: {
+                    area: {
+                        nameEn: string;
+                        nameHi: string | null;
+                    } | null;
+                    business: {
+                        /** Format: uuid */
+                        id: string;
+                        /** @enum {string} */
+                        kind: "shop" | "provider";
+                        nameEn: string;
+                        nameHi: string | null;
+                        slug: string;
+                    };
+                    category: {
+                        nameEn: string;
+                        nameHi: string | null;
+                        slug: string;
+                    } | null;
+                    delivers: boolean | null;
+                    distanceKm: number | null;
+                    featured: boolean;
+                    /** Format: uuid */
+                    id: string;
+                    image: {
+                        bytes: number;
+                        height: number;
+                        /** @enum {string} */
+                        mimeType: "image/webp";
+                        /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                        path: string;
+                        width: number;
+                    } | null;
+                    inStock: boolean | null;
+                    /** @enum {string} */
+                    kind: "product" | "shop" | "service";
+                    mrpPaise: number | null;
+                    nameEn: string;
+                    nameHi: string | null;
+                    offers: boolean;
+                    openNow: boolean | null;
+                    path: string;
+                    phone: string | null;
+                    pickup: boolean;
+                    priceMaxPaise: number | null;
+                    pricePaise: number | null;
+                    /** @enum {string|null} */
+                    priceType: "from" | "fixed" | "range" | "enquiry" | null;
+                    rating: number | null;
+                    reviewCount: number;
+                    slug: string;
+                    subcategory: {
+                        nameEn: string;
+                        nameHi: string | null;
+                        slug: string;
+                    } | null;
+                    unit: string | null;
+                    verified: boolean;
+                }[];
+                nextCursor: string | null;
+            };
+            relatedCategories: {
+                /** Format: uuid */
+                categoryId?: string;
+                count: number;
+                disabled: boolean;
+                id: string;
+                labelEn: string;
+                labelHi: string | null;
+                selected: boolean;
+                value: string;
+            }[];
             /** @enum {string} */
             tab: "products" | "shops" | "services";
         };
@@ -3244,6 +3582,83 @@ export interface components {
             locale: "en" | "hi";
             /** @enum {string} */
             theme: "light" | "dark" | "auto";
+        };
+        ProductPublicDto: {
+            description: string | null;
+            images: {
+                bytes: number;
+                height: number;
+                /** @enum {string} */
+                mimeType: "image/webp";
+                /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                path: string;
+                width: number;
+            }[];
+            item: {
+                area: {
+                    nameEn: string;
+                    nameHi: string | null;
+                } | null;
+                business: {
+                    /** Format: uuid */
+                    id: string;
+                    /** @enum {string} */
+                    kind: "shop" | "provider";
+                    nameEn: string;
+                    nameHi: string | null;
+                    slug: string;
+                };
+                category: {
+                    nameEn: string;
+                    nameHi: string | null;
+                    slug: string;
+                } | null;
+                delivers: boolean | null;
+                distanceKm: number | null;
+                featured: boolean;
+                /** Format: uuid */
+                id: string;
+                image: {
+                    bytes: number;
+                    height: number;
+                    /** @enum {string} */
+                    mimeType: "image/webp";
+                    /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                    path: string;
+                    width: number;
+                } | null;
+                inStock: boolean | null;
+                /** @enum {string} */
+                kind: "product";
+                mrpPaise: number | null;
+                nameEn: string;
+                nameHi: string | null;
+                offers: boolean;
+                openNow: boolean | null;
+                path: string;
+                phone: string | null;
+                pickup: boolean;
+                priceMaxPaise: number | null;
+                pricePaise: number | null;
+                /** @enum {string|null} */
+                priceType: "from" | "fixed" | "range" | "enquiry" | null;
+                rating: number | null;
+                reviewCount: number;
+                slug: string;
+                subcategory: {
+                    nameEn: string;
+                    nameHi: string | null;
+                    slug: string;
+                } | null;
+                unit: string | null;
+                verified: boolean;
+            };
+            orderability: {
+                /** @enum {boolean} */
+                orderable: false;
+                /** @enum {string} */
+                reasonCode: "CHECKOUT_UNAVAILABLE";
+            };
         };
         ProfileDto: {
             displayName: string | null;
@@ -4404,6 +4819,81 @@ export interface components {
                 position: number;
                 supportingText: string | null;
             })[];
+        };
+        ServicePublicDto: {
+            description: string | null;
+            excluded: string[];
+            experienceYears: number | null;
+            images: {
+                bytes: number;
+                height: number;
+                /** @enum {string} */
+                mimeType: "image/webp";
+                /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                path: string;
+                width: number;
+            }[];
+            included: string[];
+            item: {
+                area: {
+                    nameEn: string;
+                    nameHi: string | null;
+                } | null;
+                business: {
+                    /** Format: uuid */
+                    id: string;
+                    /** @enum {string} */
+                    kind: "shop" | "provider";
+                    nameEn: string;
+                    nameHi: string | null;
+                    slug: string;
+                };
+                category: {
+                    nameEn: string;
+                    nameHi: string | null;
+                    slug: string;
+                } | null;
+                delivers: boolean | null;
+                distanceKm: number | null;
+                featured: boolean;
+                /** Format: uuid */
+                id: string;
+                image: {
+                    bytes: number;
+                    height: number;
+                    /** @enum {string} */
+                    mimeType: "image/webp";
+                    /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                    path: string;
+                    width: number;
+                } | null;
+                inStock: boolean | null;
+                /** @enum {string} */
+                kind: "service";
+                mrpPaise: number | null;
+                nameEn: string;
+                nameHi: string | null;
+                offers: boolean;
+                openNow: boolean | null;
+                path: string;
+                phone: string | null;
+                pickup: boolean;
+                priceMaxPaise: number | null;
+                pricePaise: number | null;
+                /** @enum {string|null} */
+                priceType: "from" | "fixed" | "range" | "enquiry" | null;
+                rating: number | null;
+                reviewCount: number;
+                slug: string;
+                subcategory: {
+                    nameEn: string;
+                    nameHi: string | null;
+                    slug: string;
+                } | null;
+                unit: string | null;
+                verified: boolean;
+            };
+            serviceArea: string | null;
         };
         SessionDto: {
             /** @enum {string} */
@@ -8699,6 +9189,70 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    getPublicBusiness: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BusinessDiscoveryDetailDto"];
+                };
+            };
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) while maintenance mode is on and this route is not admitted */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
                 };
             };
         };
@@ -13652,15 +14206,78 @@ export interface operations {
     explore: {
         parameters: {
             query?: {
+                areaId?: string;
+                availableToday?: string;
+                brand?: string;
                 category?: string;
+                cityId?: string;
+                contextCategory?: string;
                 cursor?: string;
+                deliversToMe?: string;
+                distanceKm?: number;
+                featured?: string;
+                inStock?: string;
                 limit?: number;
+                offerId?: string;
+                offers?: string;
+                openNow?: string;
+                pickup?: string;
+                priceMaxPaise?: number;
+                priceMinPaise?: number;
+                priceOnEnquiry?: string;
+                "products.brand"?: string;
+                "products.category"?: string;
+                "products.deliversToMe"?: string;
+                "products.distanceKm"?: number;
+                "products.featured"?: string;
+                "products.inStock"?: string;
+                "products.offerId"?: string;
+                "products.offers"?: string;
+                "products.pickup"?: string;
+                "products.priceMaxPaise"?: number;
+                "products.priceMinPaise"?: number;
+                "products.rating"?: 0 | 3 | 4 | 4.5;
+                "products.sort"?: string;
+                "products.subcategory"?: string;
+                q?: string;
+                radiusKm?: number;
+                rating?: 0 | 3 | 4 | 4.5;
+                "services.availableToday"?: string;
+                "services.category"?: string;
+                "services.distanceKm"?: number;
+                "services.offers"?: string;
+                "services.priceMaxPaise"?: number;
+                "services.priceMinPaise"?: number;
+                "services.priceOnEnquiry"?: string;
+                "services.radiusKm"?: number;
+                "services.rating"?: 0 | 3 | 4 | 4.5;
+                "services.sort"?: string;
+                "services.subcategory"?: string;
+                "services.verified"?: string;
+                "shops.category"?: string;
+                "shops.deliversToMe"?: string;
+                "shops.distanceKm"?: number;
+                "shops.featured"?: string;
+                "shops.offers"?: string;
+                "shops.openNow"?: string;
+                "shops.radiusKm"?: number;
+                "shops.rating"?: 0 | 3 | 4 | 4.5;
+                "shops.sort"?: string;
+                "shops.verified"?: string;
                 sort?: string;
+                subcategory?: string;
                 tab?: string;
                 verified?: string;
+                view?: string;
             };
-            header?: {
+            header: {
                 "X-Correlation-ID"?: string;
+                "x-discovery-latitude": string;
+                /** @description Optional ephemeral latitude; send together with longitude. */
+                "X-Discovery-Latitude"?: string;
+                "x-discovery-longitude": string;
+                /** @description Optional ephemeral longitude; never put precise location in URLs. */
+                "X-Discovery-Longitude"?: string;
             };
             path?: never;
             cookie?: never;
@@ -13694,6 +14311,19 @@ export interface operations {
             };
             /** @description Untrusted Origin */
             403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description SEARCH_LOCATION_REQUIRED */
+            422: {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
@@ -16414,6 +17044,70 @@ export interface operations {
             };
         };
     };
+    getPublicProduct: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductPublicDto"];
+                };
+            };
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) while maintenance mode is on and this route is not admitted */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
     searchHome: {
         parameters: {
             query?: {
@@ -16494,6 +17188,70 @@ export interface operations {
                 };
             };
             /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    getPublicService: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ServicePublicDto"];
+                };
+            };
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) while maintenance mode is on and this route is not admitted */
             503: {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */

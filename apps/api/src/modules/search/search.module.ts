@@ -3,6 +3,8 @@ import { ExploreService } from './application/explore.service';
 import { SearchHomeService } from './application/search-home.service';
 import { ExploreController } from './presentation/explore.controller';
 import { SearchHomeController } from './presentation/search-home.controller';
+import { EXPLORE_REPOSITORY } from './application/explore.repository';
+import { PrismaExploreRepository } from './infrastructure/explore.repository';
 
 /** Public discovery composition. Reads owner modules only through their ports. */
 @Module({})
@@ -16,7 +18,7 @@ export class SearchModule {
       module: SearchModule,
       imports: [runtime, catalog, businesses],
       controllers: [SearchHomeController, ExploreController],
-      providers: [SearchHomeService, ExploreService],
+      providers: [SearchHomeService, ExploreService, { provide: EXPLORE_REPOSITORY, useClass: PrismaExploreRepository }],
     };
   }
 }

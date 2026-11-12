@@ -1,8 +1,9 @@
-import { Controller, Get, Header, Query } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Header, Headers, Query } from '@nestjs/common';
+import { ApiHeader, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   ExploreQuerySchema,
   ExploreResponseSchema,
+  DiscoveryLocationSchema,
   type ExploreQuery,
 } from '@apnatown/shared/search';
 import { PublicRoute } from '../../../shared/auth';
@@ -11,6 +12,7 @@ import { ErrorDto } from '../../../shared/health/health.controller';
 import { RateLimit } from '../../../shared/rate-limit/rate-limit';
 import { ExploreService } from '../application/explore.service';
 import { ExploreQueryDto, ExploreResponseDto } from './search.dto';
+import { DomainError } from '../../../shared/errors/errors';
 
 const readLimit = {
   key: 'search.explore-read',
@@ -18,9 +20,6 @@ const readLimit = {
   maximumHits: 120,
   windowSeconds: 60,
 } as const;
-// Location-free public listings only. TODO(verify): approved Explore TTL.
-const PUBLIC_CACHE = 'public, max-age=30, stale-while-revalidate=120';
-
 @ApiTags('search')
 @PublicRoute()
 @ApiResponse({
@@ -43,21 +42,36 @@ const PUBLIC_CACHE = 'public, max-age=30, stale-while-revalidate=120';
     'MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable',
 })
 @Controller('explore')
+@ApiHeader({ name: 'X-Discovery-Latitude', required: false, description: 'Optional ephemeral latitude; send together with longitude.' })
+@ApiHeader({ name: 'X-Discovery-Longitude', required: false, description: 'Optional ephemeral longitude; never put precise location in URLs.' })
 export class ExploreController {
   constructor(private readonly explore: ExploreService) {}
 
   @Get()
   @RateLimit(readLimit)
-  @Header('Cache-Control', PUBLIC_CACHE)
+  // Eligibility, prices and hours are live. No cache may preserve expired
+  // Premium/promotions, or share a caller's precise location.
+  @Header('Cache-Control', 'private, no-store')
   @ApiOperation({
     operationId: 'explore',
-    summary: 'Browse public shops and service providers',
+    summary: 'Browse public products, shops and individual services',
     description:
-      'S-CUST-02 businesses-only subset. Shops/Services list approved, non-deleted businesses with an active, non-deleted owner in an enabled city. Category filters use existing product-kind business memberships; service-listing taxonomy is not available yet. Relevance orders by creation time then ID; newest reverses that order (Shops only). Pagination uses a signed keyset cursor. Products is empty until its module exists.',
+      'EX1–EX12: SQL filters/facets/counts and keyset pages in one repeatable-read snapshot. Service listing taxonomy is SERVICE kind; business memberships are PRODUCT kind. Optional location headers enable server distances/delivery. Radius, distance and delivery filters require usable location. Search q resolves Catalog mappings; this is not Search autocomplete.',
   })
   @ApiQuery({ type: ExploreQueryDto })
   @ApiResponse({ status: 200, type: ExploreResponseDto })
-  async read(@Query(new InputPipe(ExploreQuerySchema)) query: ExploreQuery) {
-    return ExploreResponseSchema.parse(await this.explore.explore(query));
+  @ApiResponse({ status: 422, type: ErrorDto, description: 'SEARCH_LOCATION_REQUIRED' })
+  async read(
+    @Query(new InputPipe(ExploreQuerySchema)) query: ExploreQuery,
+    @Headers('x-discovery-latitude') latitude?: string,
+    @Headers('x-discovery-longitude') longitude?: string,
+  ) {
+    let location = null;
+    if (latitude !== undefined || longitude !== undefined) {
+      const parsed = DiscoveryLocationSchema.safeParse({ latitude, longitude });
+      if (!parsed.success) throw new DomainError('COMMON_VALIDATION_FAILED');
+      location = parsed.data;
+    }
+    return ExploreResponseSchema.parse(await this.explore.explore(query, location));
   }
 }

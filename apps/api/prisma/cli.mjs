@@ -1,8 +1,9 @@
 import { provision } from './provision.mjs';
 import { migrate } from './migrate.mjs';
 import { seed } from './seed.mjs';
+import { studio } from './studio.mjs';
 
-const commands = new Set(['provision', 'migrate', 'seed']);
+const commands = new Set(['provision', 'migrate', 'seed', 'studio']);
 const safeErrors = new Set([
   'INVALID_DATABASE_TARGET',
   'UNSAFE_DATABASE_TARGET',
@@ -15,6 +16,7 @@ const safeErrors = new Set([
   'SEED_DATA_INVALID',
   'MIGRATION_DEPLOY_FAILED',
   'QUEUE_SCHEMA_SETUP_FAILED',
+  'STUDIO_FAILED',
   'INVALID_COMMAND',
 ]);
 
@@ -26,6 +28,7 @@ async function main() {
   if (command === 'provision') await provision(process.env);
   if (command === 'migrate') await migrate(process.env);
   if (command === 'seed') await seed(process.env);
+  if (command === 'studio') await studio(process.env);
   process.stdout.write('Database command completed\n');
 }
 

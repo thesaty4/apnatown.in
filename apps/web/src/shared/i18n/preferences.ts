@@ -5,9 +5,14 @@ export const themeCookie = 'apnatown-theme';
 export const localeCookie = 'apnatown-locale';
 
 export function isPrivatePath(path: string) {
-  return /^\/(?:account|orders|saved|my-reviews|checkout|bill|vendor|rider|admin|super-admin)(?:\/|$)/.test(
+  return /^\/(?:account|orders|saved|my-reviews|checkout|bill|vendor|provider\/media|rider|admin|super-admin)(?:\/|$)/.test(
     path,
   );
+}
+
+/** Private routes outside `app/[locale]` use the saved locale cookie. */
+export function isUnprefixedPath(path: string) {
+  return isPrivatePath(path);
 }
 
 export function isLocale(value: unknown): value is Locale {

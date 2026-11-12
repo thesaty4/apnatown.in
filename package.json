@@ -15,6 +15,7 @@
     "db:generate": "node scripts/workspace.mjs db:generate",
     "db:migrate": "node scripts/workspace.mjs db:migrate",
     "db:seed": "node scripts/workspace.mjs db:seed",
+    "db:studio": "node scripts/workspace.mjs db:studio",
     "tokens:generate": "node scripts/workspace.mjs tokens:generate",
     "i18n:generate": "node scripts/workspace.mjs i18n:generate",
     "api:openapi": "node scripts/workspace.mjs api:openapi",

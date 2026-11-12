@@ -82,7 +82,8 @@ export function AccessState({
         }}
       />
     );
-  const returnTo = safeReturnTo(videoFeedReturnTo(path, searchParams)) ?? '/account';
+  const returnTo =
+    safeReturnTo(videoFeedReturnTo(path, searchParams, locale)) ?? '/account';
   const href = guest
     ? loginHref(locale, returnTo)
     : `${publicHref('/session-expired', locale)}?${new URLSearchParams({ returnTo })}`;
@@ -103,11 +104,13 @@ export function AccessState({
 function videoFeedReturnTo(
   path: string,
   searchParams: URLSearchParams,
+  locale: 'en' | 'hi',
 ): string {
+  const route = path.replace(/^\/(?:hi|en)(?=\/|$)/, '') || '/';
   if (
-    path !== '/videos' &&
+    route !== '/videos' &&
     !/^\/videos\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu.test(
-      path,
+      route,
     )
   )
     return path;
@@ -135,5 +138,6 @@ function videoFeedReturnTo(
   )
     safe.set('snapshotId', snapshotId);
   const query = safe.toString();
-  return query ? `${path}?${query}` : path;
+  const localizedPath = publicHref(route, locale);
+  return query ? `${localizedPath}?${query}` : localizedPath;
 }

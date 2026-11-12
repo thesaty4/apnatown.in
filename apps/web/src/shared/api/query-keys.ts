@@ -1,4 +1,5 @@
 import type { components } from '@apnatown/api-client';
+import type { ExploreFilters } from '@apnatown/shared/search';
 
 export type Session = components['schemas']['SessionDto'];
 export function accountScope(session: Session, epoch: number) {
@@ -42,20 +43,8 @@ export const queryKeys = {
   catalogCategories: (kind?: 'product' | 'service') =>
     ['catalog', 'categories', kind ?? 'all'] as const,
   catalogCategory: (slug: string) => ['catalog', 'category', slug] as const,
-  explore: (filters: {
-    tab: string;
-    category?: string;
-    verified: boolean;
-    sort: string;
-  }) =>
-    [
-      'public',
-      'explore',
-      filters.tab,
-      filters.category ?? '',
-      filters.verified,
-      filters.sort,
-    ] as const,
+  explore: (filters: ExploreFilters, locationRevision = 0, screen = 'explore') =>
+    ['public', screen, filters, locationRevision] as const,
   catalogDuplicateCheck: (
     scope: AccountScope,
     check: Readonly<Record<string, string | undefined>>,

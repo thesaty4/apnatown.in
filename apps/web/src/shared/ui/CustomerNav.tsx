@@ -24,7 +24,7 @@ export function CustomerMenu() {
   const items = [
     ['home', publicHref('/', locale), path === '/'],
     ['explore', publicHref('/explore', locale), path.startsWith('/explore')],
-    ['videos', '/videos', path.startsWith('/videos')],
+    ['videos', publicHref('/videos', locale), path.startsWith('/videos')],
     ['services', publicHref('/services', locale), path.startsWith('/services')],
   ] as const;
   return (
@@ -59,7 +59,12 @@ export function CustomerTabBar() {
       publicHref('/explore', locale),
       path.startsWith('/explore'),
     ],
-    ['play', t('videos'), '/videos', path.startsWith('/videos')],
+    [
+      'play',
+      t('videos'),
+      publicHref('/videos', locale),
+      path.startsWith('/videos'),
+    ],
     [
       'user',
       t('account'),

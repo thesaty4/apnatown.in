@@ -3,9 +3,9 @@ import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
 import { getTranslations } from 'next-intl/server';
 import { IdSchema } from '@apnatown/shared/wire';
-import { ReelsFeed } from '../../../features/reels/ReelsFeed';
+import { ReelsFeed } from '../../../../../features/reels/ReelsFeed';
 
-type Props = { params: Promise<{ id: string }> };
+type Props = { params: Promise<{ locale: string; id: string }> };
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('reels.feed');

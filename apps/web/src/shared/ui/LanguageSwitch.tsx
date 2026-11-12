@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
-import { publicHref, isPrivatePath } from '../i18n/preferences';
+import { publicHref, isUnprefixedPath } from '../i18n/preferences';
 import { applyLocale } from '../i18n/browser-preferences';
 import { useSession } from '../auth/SessionProvider';
 import { useSavePreferences } from '../i18n/preferences-query';
@@ -17,12 +17,12 @@ export function LanguageSwitch({ short = false }: { short?: boolean }) {
   const path = usePathname().replace(/^\/(?:hi|en)(?=\/|$)/, '') || '/';
   const t = useTranslations('common');
   const target = locale === 'en' ? 'hi' : 'en';
-  const privatePath = isPrivatePath(path);
+  const unprefixed = isUnprefixedPath(path);
   const name = t(target === 'hi' ? 'language.hindi' : 'language.english');
   return (
     <>
       <a
-        href={privatePath ? path : publicHref(path, target)}
+        href={unprefixed ? path : publicHref(path, target)}
         hrefLang={target}
         lang={target}
         aria-label={t('language.switch', { language: name })}
@@ -34,7 +34,7 @@ export function LanguageSwitch({ short = false }: { short?: boolean }) {
           const apply = (confirmed: 'en' | 'hi') => {
             mutation.reset();
             applyLocale(confirmed);
-            if (privatePath) window.location.reload();
+            if (unprefixed) window.location.reload();
             else
               window.location.assign(
                 publicHref(path, confirmed) + location.search + location.hash,
