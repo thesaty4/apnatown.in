@@ -51,8 +51,11 @@ export type {
 } from './media.js';
 export {
   VideoLikeResultSchema,
+  EngagementTargetSchema,
   EngagementStateQuerySchema,
   EngagementStateSchema,
+  VideoHeartTargetTypeSchema,
+  VideoHeartResultSchema,
   VideoShareChannelSchema,
   VideoShareCreateSchema,
   VideoCommentStatusSchema,
@@ -71,8 +74,10 @@ export {
 } from './engagement.js';
 export type {
   VideoLikeResult,
+  EngagementTarget,
   EngagementStateQuery,
   EngagementState,
+  VideoHeartResult,
   VideoShareChannel,
   VideoShareCreate,
   VideoCommentStatus,

@@ -3,6 +3,8 @@ import { ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestj
 import {
   EngagementStateQuerySchema,
   EngagementStateSchema,
+  VideoHeartResultSchema,
+  VideoHeartTargetTypeSchema,
   VideoLikeResultSchema,
   type EngagementStateQuery,
 } from '@apnatown/shared';
@@ -17,6 +19,7 @@ import { VideoLikesService } from '../application/video-likes.service';
 import type { VideoLikeRequest } from '../domain/likes';
 
 class VideoLikeResultDto extends createZodDto(VideoLikeResultSchema) {}
+class VideoHeartResultDto extends createZodDto(VideoHeartResultSchema) {}
 class EngagementStateQueryDto extends createZodDto(EngagementStateQuerySchema) {}
 class EngagementStateDto extends createZodDto(EngagementStateSchema) {}
 
@@ -37,8 +40,8 @@ export class VideoLikesController {
   @ApiQuery({ type: EngagementStateQueryDto })
   @ApiOperation({
     operationId: 'engagementState',
-    summary: 'Read own liked-video IDs and public counts in one bounded batch',
-    description: 'Guests receive empty likedVideoIds. Counts omit unavailable videos.',
+    summary: 'Read own video likes, hearts and public counts in one bounded batch',
+    description: 'Guests receive empty relationship flags. Counts omit unavailable videos.',
   })
   @ApiOkResponse({ type: EngagementStateDto })
   async state(
@@ -87,5 +90,51 @@ export class VideoLikesController {
     @Body(new InputPipe(EmptyRequestSchema.default({}))) _body: Record<string, never>,
   ) {
     return VideoLikeResultSchema.parse(await this.likes.set(likeRequest(request), videoId, false));
+  }
+
+  @Put('hearts/:targetType/:targetId')
+  @Roles('customer')
+  @BrowserMutation()
+  @RateLimit({ key: 'engagement.hearts.write', maximumHits: 60, windowSeconds: 60, subject: 'principal' })
+  @ApiParam({ name: 'targetType', enum: ['video'] })
+  @ApiParam({ name: 'targetId', schema: { type: 'string', format: 'uuid' } })
+  @ApiOperation({
+    operationId: 'engagementVideoHeart',
+    summary: 'Heart a public video; repeated requests do not create duplicates',
+  })
+  @ApiOkResponse({ type: VideoHeartResultDto })
+  async heart(
+    @Req() request: AuthRequest,
+    @Param('targetType', new InputPipe(VideoHeartTargetTypeSchema)) _targetType: 'video',
+    @Param('targetId', new InputPipe(IdSchema)) targetId: string,
+    @Query(new InputPipe(EmptyRequestSchema)) _query: Record<string, never>,
+    @Body(new InputPipe(EmptyRequestSchema.default({}))) _body: Record<string, never>,
+  ) {
+    return VideoHeartResultSchema.parse(
+      await this.likes.setHeart(likeRequest(request), targetId, true),
+    );
+  }
+
+  @Delete('hearts/:targetType/:targetId')
+  @Roles('customer')
+  @BrowserMutation()
+  @RateLimit({ key: 'engagement.hearts.write', maximumHits: 60, windowSeconds: 60, subject: 'principal' })
+  @ApiParam({ name: 'targetType', enum: ['video'] })
+  @ApiParam({ name: 'targetId', schema: { type: 'string', format: 'uuid' } })
+  @ApiOperation({
+    operationId: 'engagementVideoUnheart',
+    summary: 'Remove own video heart even when the video is no longer public',
+  })
+  @ApiOkResponse({ type: VideoHeartResultDto })
+  async unheart(
+    @Req() request: AuthRequest,
+    @Param('targetType', new InputPipe(VideoHeartTargetTypeSchema)) _targetType: 'video',
+    @Param('targetId', new InputPipe(IdSchema)) targetId: string,
+    @Query(new InputPipe(EmptyRequestSchema)) _query: Record<string, never>,
+    @Body(new InputPipe(EmptyRequestSchema.default({}))) _body: Record<string, never>,
+  ) {
+    return VideoHeartResultSchema.parse(
+      await this.likes.setHeart(likeRequest(request), targetId, false),
+    );
   }
 }

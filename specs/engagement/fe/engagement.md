@@ -39,7 +39,7 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) for standard states,
 | Component | Behaviour | Used in |
 |---|---|---|
 | `FollowButton` (shared) | Follow / Following + separate bell; following alone sends no follower notifications; new/refollow bell **off/unset**, explicit PUT `{bellOn}` toggles it; unfollow confirmation clears bell; login gate | profiles, cards, Reels overlay, Videos tab |
-| `HeartButton` | Heart with scale animation; reduced-motion → instant fill + text change (EG2) | gallery lightbox, Reels, media tiles |
+| `HeartButton` | Save/Saved with touch-scale feedback; reduced motion removes transition (EG2) | video detail; gallery and media tiles when available |
 | `LikeButton` | Toggle with count (EG4) | Reels overlay |
 | `BookmarkButton` | Save/Saved for services only (EG7); shop/provider cards use the canonical FollowButton relationship | cards, service details |
 | `ShareSheet` | WhatsApp (`wa.me` with encoded canonical URL), Copy link (status), native `navigator.share` when available (EG6); posts `/engagement/shares` | Video detail; other target screens when available |
@@ -58,6 +58,14 @@ show the existing login gate preserving the same video URL. Zero is a valid coun
 unavailable, loading, read/retry, write-error and non-customer states are explicit.
 The eventual Reels feed reuses the control/batch pattern; this slice does not
 implement or claim the feed itself.
+
+### EG2 implementation slice
+
+The video detail page uses `HeartButton` with the batched React Query engagement
+state and session-scoped cache. It updates the returned heart flag after the
+authoritative write, gates guests to login with a return to the same video, and
+shows loading, unavailable, retry, write-error and non-customer states. Photo
+hearts and the Saved tab remain separate features.
 
 ### EG6 implementation slice
 

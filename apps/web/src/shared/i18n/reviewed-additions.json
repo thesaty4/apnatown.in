@@ -5386,6 +5386,46 @@
     "en": "Could not update your like. Please try again.",
     "hi": "आपकी पसंद अपडेट नहीं हो सकी। कृपया फिर कोशिश करें।"
   },
+  "engagement.heart.save": {
+    "en": "Save",
+    "hi": "सहेजें"
+  },
+  "engagement.heart.saved": {
+    "en": "Saved",
+    "hi": "सहेजा गया"
+  },
+  "engagement.heart.loading": {
+    "en": "Loading saved status",
+    "hi": "सहेजी गई स्थिति लोड हो रही है"
+  },
+  "engagement.heart.loginPrompt": {
+    "en": "Log in to save this video. You will return to this video after login.",
+    "hi": "इस वीडियो को सहेजने के लिए लॉग इन करें। लॉग इन के बाद आप इसी वीडियो पर लौटेंगे।"
+  },
+  "engagement.heart.restrictedTitle": {
+    "en": "Customer access required",
+    "hi": "ग्राहक की अनुमति ज़रूरी है"
+  },
+  "engagement.heart.restrictedMessage": {
+    "en": "Only customer accounts can save videos.",
+    "hi": "केवल ग्राहक खाते वीडियो सहेज सकते हैं।"
+  },
+  "engagement.heart.unavailableTitle": {
+    "en": "Video unavailable",
+    "hi": "वीडियो उपलब्ध नहीं है"
+  },
+  "engagement.heart.unavailableMessage": {
+    "en": "This video is no longer available to save.",
+    "hi": "यह वीडियो अब सहेजने के लिए उपलब्ध नहीं है।"
+  },
+  "engagement.heart.rateLimited": {
+    "en": "Too many changes. Wait a moment, then try again.",
+    "hi": "बहुत अधिक बदलाव किए गए हैं। थोड़ी देर रुककर फिर कोशिश करें।"
+  },
+  "engagement.heart.failed": {
+    "en": "Could not update your saved status. Please try again.",
+    "hi": "सहेजी गई स्थिति अपडेट नहीं हो सकी। कृपया फिर कोशिश करें।"
+  },
   "engagement.share.open": {
     "en": "Share",
     "hi": "साझा करें"

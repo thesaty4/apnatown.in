@@ -31,7 +31,7 @@ All customer writes require login; guest calls return `AUTH_REQUIRED` so the FE 
 |---|---|---|---|---|---|---|
 | PUT / DELETE | `/engagement/follows/{businessId}` | Customer; own relationship | PUT `{bellOn?}` → `{following,bellOn,followerCount}`; new/refollow defaults bell false; DELETE never needs target public | `ENGAGEMENT_TARGET_NOT_FOUND` on create | Yes | F-EG-003, F-PF-008 |
 | PUT / DELETE | `/engagement/likes/{videoId}` | Customer; PUT requires approved/public video; DELETE own relationship only | → `{liked,likeCount}` | `MEDIA_VIDEO_NOT_PUBLISHED` on create | Yes | F-EG-004 |
-| PUT / DELETE | `/engagement/hearts/{targetType}/{targetId}` | Customer; PUT public photo/video, DELETE own relationship even if target unavailable | → `{hearted}` | `ENGAGEMENT_TARGET_NOT_FOUND` on create | Yes | F-EG-002 |
+| PUT / DELETE | `/engagement/hearts/{targetType}/{targetId}` | Current slice: customer; video only, PUT requires public video, DELETE own relationship even if unavailable | → `{hearted}` | `MEDIA_VIDEO_NOT_PUBLISHED` on create | Yes | F-EG-002 |
 | PUT / DELETE | `/engagement/bookmarks/{targetType}/{targetId}` | Customer; `targetType=service` only; PUT requires public target, DELETE own existing relationship | → `{bookmarked}` | `ENGAGEMENT_TARGET_NOT_FOUND` on create | Yes | F-EG-007 |
 | GET | `/engagement/me/saved?tab=shops\|services\|media&mediaFilter=photos\|videos\|reels&cursor=` | Customer; own | `shops` is the Following list from active follows, including bell state; Services remains service bookmarks; media remains hearts. Unavailable targets remain removable. | `VALIDATION_ERROR` | Yes | F-EG-001, S-CUST-19 |
 | GET | `/engagement/me/state?videoIds=&businessIds=&targets=` | Customer (guest → empty) | batch → liked/hearted/service-bookmarked flags and business `{following,bellOn}` (max 50 IDs); no separately stored shop/provider bookmark state | — | Yes | overlays, cards |
@@ -64,6 +64,18 @@ All customer writes require login; guest calls return `AUTH_REQUIRED` so the FE 
   Users-orchestrated export/erasure remain their separate integration slices.
 - Migration is additive and is not applied during implementation. Forward
   repair can rebuild counts from `likes`; dropping tables loses relationship data.
+
+### EG2 implementation slice
+
+- The additive `hearts` relation table supports the spec's `photo|video`
+  target enum, composite owner/type/target uniqueness, and Saved-media index.
+- Current API writes and batched state expose video hearts only. PUT verifies the
+  approved/public video through Media; DELETE removes only the caller's row and
+  does not require the video to remain public. Both operations are naturally
+  idempotent and require a customer session plus CSRF.
+- Gallery/photo target validation and Saved-page listing/removal remain
+  unimplemented until the Media gallery and EG1 surfaces exist. Migration remains
+  unapplied.
 
 ### EG6 implementation slice
 

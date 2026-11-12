@@ -2,6 +2,8 @@ import { Module, type DynamicModule } from '@nestjs/common';
 import { VideoLikesService } from './application/video-likes.service';
 import { VIDEO_LIKE_REPOSITORY } from './domain/likes';
 import { PrismaVideoLikeRepository } from './infrastructure/prisma-video-like.repository';
+import { VIDEO_HEART_REPOSITORY } from './domain/hearts';
+import { PrismaVideoHeartRepository } from './infrastructure/prisma-video-heart.repository';
 import { VideoLikesController } from './presentation/video-likes.controller';
 import { VideoSharesService } from './application/video-shares.service';
 import { VIDEO_SHARE_REPOSITORY } from './domain/shares';
@@ -39,6 +41,7 @@ export class EngagementModule {
       ],
       providers: [
         { provide: VIDEO_LIKE_REPOSITORY, useClass: PrismaVideoLikeRepository },
+        { provide: VIDEO_HEART_REPOSITORY, useClass: PrismaVideoHeartRepository },
         VideoLikesService,
         { provide: VIDEO_SHARE_REPOSITORY, useClass: PrismaVideoShareRepository },
         VideoSharesService,

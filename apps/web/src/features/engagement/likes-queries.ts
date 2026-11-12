@@ -1,13 +1,17 @@
 'use client';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import type { EngagementState, VideoLikeResult } from '@apnatown/shared';
+import type {
+  EngagementState,
+  VideoHeartResult,
+  VideoLikeResult,
+} from '@apnatown/shared';
 import { accountScope, queryKeys } from '../../shared/api/query-keys';
 import { privateQueryOptions } from '../../shared/api/private-query';
 import { ApiFailure } from '../../shared/api/result';
 import { usePrivateMutation } from '../../shared/api/use-private-mutation';
 import { useSession } from '../../shared/auth/SessionProvider';
-import { getEngagementState, setVideoLike } from './likes-api';
+import { getEngagementState, setVideoHeart, setVideoLike } from './likes-api';
 
 function withLike(
   state: EngagementState,
@@ -21,6 +25,7 @@ function withLike(
     videoCounts: state.videoCounts.map((count) =>
       count.videoId === videoId ? { ...count, likeCount: result.likeCount } : count,
     ),
+    heartedTargets: state.heartedTargets,
   };
 }
 
@@ -74,4 +79,52 @@ export function useVideoLikes(videoIds: readonly string[]) {
     },
   );
   return { query, mutation };
+}
+
+export function useVideoHeartActions(videoId: string) {
+  const { api, lifecycle, state, epoch } = useSession();
+  const client = useQueryClient();
+  const scope = state.kind === 'ready' ? accountScope(state.data, epoch) : null;
+  const queryKey = queryKeys.engagementState(scope, epoch, [videoId]);
+  const mutation = usePrivateMutation(
+    lifecycle,
+    async (input: { hearted: boolean }, assertCurrent) => {
+      const result = await setVideoHeart(api, videoId, input.hearted, assertCurrent);
+      assertCurrent();
+      await client.cancelQueries({ queryKey, exact: true });
+      assertCurrent();
+      client.setQueryData<EngagementState>(queryKey, (current) =>
+        current
+          ? {
+              ...current,
+              heartedTargets: withHeart(current, videoId, result).heartedTargets,
+            }
+          : current,
+      );
+      await client.invalidateQueries({
+        queryKey,
+        exact: true,
+        refetchType: 'none',
+      });
+      return result;
+    },
+  );
+  return {
+    mutation,
+    toggle(hearted: boolean) {
+      void mutation.run({ hearted });
+    },
+  };
+}
+
+function withHeart(
+  state: EngagementState,
+  videoId: string,
+  result: VideoHeartResult,
+): EngagementState {
+  const heartedTargets = state.heartedTargets.filter(
+    (target) => target.targetType !== 'video' || target.targetId !== videoId,
+  );
+  if (result.hearted) heartedTargets.push({ targetType: 'video', targetId: videoId });
+  return { ...state, heartedTargets };
 }

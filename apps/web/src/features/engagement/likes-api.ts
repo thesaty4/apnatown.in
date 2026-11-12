@@ -1,4 +1,8 @@
-import { EngagementStateSchema, VideoLikeResultSchema } from '@apnatown/shared';
+import {
+  EngagementStateSchema,
+  VideoHeartResultSchema,
+  VideoLikeResultSchema,
+} from '@apnatown/shared';
 import type { BrowserApi } from '../../shared/api/browser';
 import { unwrap } from '../../shared/api/result';
 
@@ -9,11 +13,36 @@ export async function getEngagementState(
 ) {
   return unwrap(
     await api.GET('/engagement/me/state', {
-      params: { query: { videoIds: videoIds.join(',') } },
+      params: {
+        query: {
+          videoIds: videoIds.join(','),
+          targets: videoIds.map((id) => `video:${id}`).join(','),
+        },
+      },
       signal,
     }),
     EngagementStateSchema,
   );
+}
+
+export async function setVideoHeart(
+  api: BrowserApi,
+  videoId: string,
+  hearted: boolean,
+  assertCurrent: () => void,
+) {
+  const headers = await api.mutationHeaders();
+  assertCurrent();
+  const options = {
+    params: {
+      path: { targetType: 'video' as const, targetId: videoId },
+      header: headers,
+    },
+  };
+  const result = hearted
+    ? await api.PUT('/engagement/hearts/{targetType}/{targetId}', options)
+    : await api.DELETE('/engagement/hearts/{targetType}/{targetId}', options);
+  return unwrap(result, VideoHeartResultSchema);
 }
 
 export async function setVideoLike(

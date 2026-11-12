@@ -14,11 +14,38 @@ export const VideoLikeResultSchema = z.strictObject({
 });
 export type VideoLikeResult = z.infer<typeof VideoLikeResultSchema>;
 
+export const EngagementTargetSchema = z.strictObject({
+  targetType: z.enum(['photo', 'video']),
+  targetId: IdSchema,
+});
+export type EngagementTarget = z.infer<typeof EngagementTargetSchema>;
+
+const EngagementTargetQuerySchema = z.string().min(1).max(2149).refine(
+  (value) => value.split(',').length <= 50 && value.split(',').every((target) => {
+    const [targetType, targetId, ...extra] = target.split(':');
+    return (
+      extra.length === 0 &&
+      (targetType === 'photo' || targetType === 'video') &&
+      IdSchema.safeParse(targetId).success
+    );
+  }),
+  'Expected at most 50 comma-separated typed target IDs',
+);
+
 export const EngagementStateQuerySchema = z.strictObject({
   videoIds: z.string().max(1849).refine(
     (value) => z.array(IdSchema).min(1).max(50).safeParse(value.split(',')).success,
     'Expected at most 50 comma-separated video IDs',
   ).optional(),
+  targets: EngagementTargetQuerySchema.optional(),
+}).superRefine((query, context) => {
+  const videoIds = query.videoIds?.toLowerCase().split(',') ?? [];
+  const targets = query.targets?.toLowerCase().split(',').map((target) => {
+    const [targetType, targetId] = target.split(':');
+    return `${targetType}:${targetId}`;
+  }) ?? [];
+  if (new Set([...videoIds.map((id) => `video:${id}`), ...targets]).size > 50)
+    context.addIssue({ code: 'custom', path: ['targets'], message: 'At most 50 engagement targets are allowed' });
 });
 export type EngagementStateQuery = z.infer<typeof EngagementStateQuerySchema>;
 
@@ -28,8 +55,13 @@ export const EngagementStateSchema = z.strictObject({
     videoId: IdSchema,
     likeCount: CountSchema,
   })).max(50),
+  heartedTargets: z.array(EngagementTargetSchema).max(50).default([]),
 });
 export type EngagementState = z.infer<typeof EngagementStateSchema>;
+
+export const VideoHeartTargetTypeSchema = z.literal('video');
+export const VideoHeartResultSchema = z.strictObject({ hearted: z.boolean() });
+export type VideoHeartResult = z.infer<typeof VideoHeartResultSchema>;
 
 export const VideoShareChannelSchema = z.enum(['whatsapp', 'copy', 'native']);
 export type VideoShareChannel = z.infer<typeof VideoShareChannelSchema>;

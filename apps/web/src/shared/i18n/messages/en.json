@@ -1812,6 +1812,18 @@
       "title": "Comments",
       "validation": "Enter a comment of 1 to 500 characters."
     },
+    "heart": {
+      "failed": "Could not update your saved status. Please try again.",
+      "loading": "Loading saved status",
+      "loginPrompt": "Log in to save this video. You will return to this video after login.",
+      "rateLimited": "Too many changes. Wait a moment, then try again.",
+      "restrictedMessage": "Only customer accounts can save videos.",
+      "restrictedTitle": "Customer access required",
+      "save": "Save",
+      "saved": "Saved",
+      "unavailableMessage": "This video is no longer available to save.",
+      "unavailableTitle": "Video unavailable"
+    },
     "likes": {
       "count": "{count, plural, one {# like} other {# likes}}",
       "failed": "Could not update your like. Please try again.",

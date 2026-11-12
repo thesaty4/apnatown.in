@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import type { EngagementStateQuery, VideoLikeResult } from '@apnatown/shared';
+import type { EngagementStateQuery, VideoHeartResult, VideoLikeResult } from '@apnatown/shared';
 import { SESSION_ACCESS, type SessionAccess, type SessionBinding } from '../../../shared/auth/ports';
 import { DomainError } from '../../../shared/errors/errors';
 import { EVENT_FACTORY, type EventFactory } from '../../../shared/events/event-factory';
@@ -10,6 +10,10 @@ import {
   MEDIA_COMMENT_TARGET,
   type MediaCommentTargetPort,
 } from '../../media-videos/application/video-comment-target.port';
+import {
+  VIDEO_HEART_REPOSITORY,
+  type VideoHeartRepository,
+} from '../domain/hearts';
 import {
   VIDEO_LIKE_REPOSITORY,
   type VideoLikeRepository,
@@ -22,6 +26,7 @@ export class VideoLikesService {
     @Inject(UNIT_OF_WORK) private readonly uow: UnitOfWork,
     @Inject(SESSION_ACCESS) private readonly sessions: SessionAccess,
     @Inject(VIDEO_LIKE_REPOSITORY) private readonly likes: VideoLikeRepository,
+    @Inject(VIDEO_HEART_REPOSITORY) private readonly hearts: VideoHeartRepository,
     @Inject(MEDIA_COMMENT_TARGET) private readonly media: MediaCommentTargetPort,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(EVENT_FACTORY) private readonly events: EventFactory,
@@ -38,7 +43,24 @@ export class VideoLikesService {
         const target = await this.media.find(tx, id);
         if (target?.public) publicVideoIds.push(id);
       }
-      return this.likes.state(tx, userId, videoIds, publicVideoIds);
+      const state = await this.likes.state(tx, userId, videoIds, publicVideoIds);
+      const heartVideoIds = (query.targets?.toLowerCase().split(',') ?? [])
+        .flatMap((target) => {
+          const [targetType, targetId] = target.split(':');
+          return targetType === 'video' && targetId ? [targetId] : [];
+        });
+      const heartedVideoIds = await this.hearts.findOwned(
+        tx,
+        userId,
+        [...new Set(heartVideoIds)],
+      );
+      return {
+        ...state,
+        heartedTargets: heartedVideoIds.map((targetId) => ({
+          targetType: 'video' as const,
+          targetId,
+        })),
+      };
     });
   }
 
@@ -71,6 +93,28 @@ export class VideoLikesService {
         ));
       }
       return { liked: result.liked, likeCount: result.likeCount };
+    });
+  }
+
+  setHeart(
+    request: VideoLikeRequest,
+    videoId: string,
+    hearted: boolean,
+  ): Promise<VideoHeartResult> {
+    return this.uow.run(async (tx) => {
+      const principal = await this.sessions.requirePrincipal(tx, request.session);
+      if (!principal.roles.includes('customer')) throw new DomainError('COMMON_FORBIDDEN');
+      if (hearted) {
+        const target = await this.media.find(tx, videoId);
+        if (!target?.public) throw new DomainError('MEDIA_VIDEO_NOT_PUBLISHED');
+      }
+      await this.hearts.set(tx, {
+        userId: principal.userId,
+        videoId,
+        hearted,
+        at: this.clock.now(),
+      });
+      return { hearted };
     });
   }
 }
