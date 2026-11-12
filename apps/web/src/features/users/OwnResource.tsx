@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { Fragment, type ReactNode } from 'react';
 import {
   HydrationBoundary,
   useQuery,
@@ -18,6 +18,12 @@ import type { BrowserApi } from '../../shared/api/browser';
 import { accountScope, type AccountScope } from '../../shared/api/query-keys';
 import type { PrivateLifecycle } from '../../shared/api/private-lifecycle';
 
+export type OwnContext = {
+  api: BrowserApi;
+  scope: AccountScope;
+  lifecycle: PrivateLifecycle;
+};
+
 type Props<T> = {
   initial: DehydratedState;
   owner?: string | undefined;
@@ -31,25 +37,51 @@ type Props<T> = {
 
 /** Session revision remounts drafts. A late RSC payload from the old authority
  * cannot hydrate a cache after logout, account change, or revocation. */
+export function OwnBoundary({
+  initial,
+  owner,
+  guestMessage,
+  children,
+}: {
+  initial: DehydratedState;
+  owner?: string | undefined;
+  /** When set, a signed-out visitor is offered login back to this screen. */
+  guestMessage?: string | undefined;
+  children: (context: OwnContext) => ReactNode;
+}) {
+  const { state, epoch, api, lifecycle } = useSession();
+  if (state.kind !== 'ready')
+    return (
+      <AccessState
+        guest={guestMessage !== undefined}
+        guestMessage={guestMessage}
+      />
+    );
+  return (
+    <HydrationBoundary
+      state={state.data.userId === owner && epoch === 0 ? initial : undefined}
+    >
+      <Fragment key={`${state.data.userId}:${epoch}`}>
+        {children({ api, scope: accountScope(state.data, epoch), lifecycle })}
+      </Fragment>
+    </HydrationBoundary>
+  );
+}
+
 export function OwnResource<T>({
   initial,
   owner,
   options,
   children,
 }: Props<T>) {
-  const { state, epoch, api, lifecycle } = useSession();
-  if (state.kind !== 'ready') return <AccessState />;
   return (
-    <HydrationBoundary
-      state={state.data.userId === owner && epoch === 0 ? initial : undefined}
-    >
-      <ResourceBody
-        key={`${state.data.userId}:${epoch}`}
-        options={options(api, accountScope(state.data, epoch), lifecycle)}
-      >
-        {children}
-      </ResourceBody>
-    </HydrationBoundary>
+    <OwnBoundary initial={initial} owner={owner}>
+      {({ api, scope, lifecycle }) => (
+        <ResourceBody options={options(api, scope, lifecycle)}>
+          {children}
+        </ResourceBody>
+      )}
+    </OwnBoundary>
   );
 }
 

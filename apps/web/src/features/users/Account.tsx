@@ -64,6 +64,12 @@ export function Account({
                 {t('profile')}
               </Link>
               <Link
+                href="/account/addresses"
+                className="inline-flex min-h-touch items-center underline"
+              >
+                {t('addresses')}
+              </Link>
+              <Link
                 href="/account/preferences"
                 className="inline-flex min-h-touch items-center underline"
               >

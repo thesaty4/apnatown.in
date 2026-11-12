@@ -67,6 +67,10 @@
       "types": "./dist/navigation/SkipLink.d.ts",
       "import": "./dist/navigation/SkipLink.js"
     },
+    "./geo/Address": {
+      "types": "./dist/geo/Address.d.ts",
+      "import": "./dist/geo/Address.js"
+    },
     "./tokens.css": "./dist/tokens.css",
     "./tailwind": "./dist/tailwind.css"
   },

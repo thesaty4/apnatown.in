@@ -204,8 +204,8 @@
     "hi": "कारोबार के डैशबोर्ड और मंज़ूरी की जाँच यहाँ उपलब्ध नहीं हैं। आपकी भूमिका से इस स्क्रीन पर कारोबार संबंधी पहुँच नहीं मिलती है।"
   },
   "account.menu.unavailable": {
-    "en": "Addresses, payment methods, notifications and privacy requests are not available yet.",
-    "hi": "पते, भुगतान के तरीके, सूचनाएँ और गोपनीयता संबंधी अनुरोध अभी उपलब्ध नहीं हैं।"
+    "en": "Payment methods, notifications and privacy requests are not available yet.",
+    "hi": "भुगतान के तरीके, सूचनाएँ और गोपनीयता संबंधी अनुरोध अभी उपलब्ध नहीं हैं।"
   },
   "account.profile.title": { "en": "Profile", "hi": "प्रोफ़ाइल" },
   "account.profile.completeTitle": { "en": "Almost done", "hi": "बस हो गया" },
@@ -249,6 +249,289 @@
   "account.preferences.consentUnavailable": {
     "en": "Notification channels, WhatsApp and cookie consent are not available here. Saving language or theme does not grant consent.",
     "hi": "सूचना चैनल, WhatsApp और कुकी सहमति यहाँ उपलब्ध नहीं हैं। भाषा या थीम सहेजने से सहमति नहीं दी जाती है।"
+  },
+  "account.menu.addresses": { "en": "Saved addresses", "hi": "सहेजे पते" },
+  "account.addresses.title": { "en": "Saved addresses", "hi": "सहेजे पते" },
+  "account.addresses.guestMessage": {
+    "en": "Log in to see and manage your saved addresses.",
+    "hi": "अपने सहेजे पते देखने और बदलने के लिए लॉग इन करें।"
+  },
+  "account.addresses.loading": {
+    "en": "Loading your addresses…",
+    "hi": "आपके पते लोड हो रहे हैं…"
+  },
+  "account.addresses.back": {
+    "en": "Back to account",
+    "hi": "खाते पर वापस जाएँ"
+  },
+  "account.addresses.emptyTitle": {
+    "en": "No saved addresses",
+    "hi": "कोई सहेजा पता नहीं"
+  },
+  "account.addresses.emptyMessage": {
+    "en": "Add one to get home delivery.",
+    "hi": "होम डिलीवरी के लिए एक पता जोड़ें।"
+  },
+  "account.addresses.add": { "en": "Add address", "hi": "पता जोड़ें" },
+  "account.addresses.addNew": { "en": "Add new address", "hi": "नया पता जोड़ें" },
+  "account.addresses.editTitle": { "en": "Edit address", "hi": "पता बदलें" },
+  "account.addresses.edit": { "en": "Edit", "hi": "बदलें" },
+  "account.addresses.editNamed": { "en": "Edit {label}", "hi": "{label} बदलें" },
+  "account.addresses.setDefault": {
+    "en": "Set as default",
+    "hi": "डिफ़ॉल्ट बनाएँ"
+  },
+  "account.addresses.setDefaultNamed": {
+    "en": "Set {label} as default",
+    "hi": "{label} को डिफ़ॉल्ट बनाएँ"
+  },
+  "account.addresses.delete": { "en": "Delete", "hi": "हटाएँ" },
+  "account.addresses.deleteNamed": {
+    "en": "Delete {label}",
+    "hi": "{label} हटाएँ"
+  },
+  "account.addresses.default": { "en": "Default", "hi": "डिफ़ॉल्ट" },
+  "account.addresses.landmark": {
+    "en": "Landmark: {landmark}",
+    "hi": "लैंडमार्क: {landmark}"
+  },
+  "account.addresses.pin": {
+    "en": "PIN code: {pinCode}",
+    "hi": "पिन कोड: {pinCode}"
+  },
+  "account.addresses.pinSaved": {
+    "en": "Location pin saved",
+    "hi": "लोकेशन पिन सहेजा गया है"
+  },
+  "account.addresses.loadMore": {
+    "en": "Show more addresses",
+    "hi": "और पते दिखाएँ"
+  },
+  "account.addresses.loadMoreFailed": {
+    "en": "We could not load more addresses.",
+    "hi": "और पते लोड नहीं हो सके।"
+  },
+  "account.addresses.refreshFailed": {
+    "en": "We could not refresh your addresses. The list shown may be out of date.",
+    "hi": "आपके पते रीफ़्रेश नहीं हो सके। दिखाई गई सूची पुरानी हो सकती है।"
+  },
+  "account.addresses.retry": { "en": "Try again", "hi": "फिर कोशिश करें" },
+  "account.addresses.refresh": {
+    "en": "Refresh addresses",
+    "hi": "पते रीफ़्रेश करें"
+  },
+  "account.addresses.close": { "en": "Close", "hi": "बंद करें" },
+  "account.addresses.cancel": { "en": "Cancel", "hi": "रद्द करें" },
+  "account.addresses.saved": { "en": "Address saved", "hi": "पता सहेजा गया" },
+  "account.addresses.updated": {
+    "en": "Address updated",
+    "hi": "पता अपडेट किया गया"
+  },
+  "account.addresses.deleted": {
+    "en": "Address deleted",
+    "hi": "पता हटाया गया"
+  },
+  "account.addresses.defaultSaved": {
+    "en": "Default address updated",
+    "hi": "डिफ़ॉल्ट पता अपडेट किया गया"
+  },
+  "account.addresses.deleteTitle": {
+    "en": "Delete this address?",
+    "hi": "यह पता हटाएँ?"
+  },
+  "account.addresses.deleteImpact": {
+    "en": "“{label}” will be removed from your saved addresses. This cannot be undone.",
+    "hi": "“{label}” आपके सहेजे पतों से हटा दिया जाएगा। इसे वापस नहीं लाया जा सकता।"
+  },
+  "account.addresses.deleteDefaultImpact": {
+    "en": "“{label}” is your default address. After it is deleted, no address will be the default until you choose one. This cannot be undone.",
+    "hi": "“{label}” आपका डिफ़ॉल्ट पता है। इसे हटाने के बाद, जब तक आप कोई दूसरा पता न चुनें, कोई भी पता डिफ़ॉल्ट नहीं रहेगा। इसे वापस नहीं लाया जा सकता।"
+  },
+  "account.addresses.form.label": { "en": "Label", "hi": "पते का नाम" },
+  "account.addresses.form.labelHint": {
+    "en": "For example Home or Work",
+    "hi": "जैसे होम या काम"
+  },
+  "account.addresses.form.addressText": { "en": "Address", "hi": "पता" },
+  "account.addresses.form.addressHint": {
+    "en": "House or flat number, street and locality",
+    "hi": "मकान या फ़्लैट नंबर, गली और मोहल्ला"
+  },
+  "account.addresses.form.landmark": {
+    "en": "Landmark (optional)",
+    "hi": "लैंडमार्क (वैकल्पिक)"
+  },
+  "account.addresses.form.pinCode": { "en": "PIN code", "hi": "पिन कोड" },
+  "account.addresses.form.city": { "en": "City", "hi": "शहर" },
+  "account.addresses.form.cityPlaceholder": {
+    "en": "Choose a city",
+    "hi": "शहर चुनें"
+  },
+  "account.addresses.form.cityLoading": {
+    "en": "Loading cities…",
+    "hi": "शहर लोड हो रहे हैं…"
+  },
+  "account.addresses.form.cityCurrent": {
+    "en": "Saved city",
+    "hi": "सहेजा गया शहर"
+  },
+  "account.addresses.form.moreCities": {
+    "en": "Show more cities",
+    "hi": "और शहर दिखाएँ"
+  },
+  "account.addresses.form.area": {
+    "en": "Area (optional)",
+    "hi": "इलाका (वैकल्पिक)"
+  },
+  "account.addresses.form.areaNone": {
+    "en": "No area selected",
+    "hi": "कोई इलाका नहीं चुना गया"
+  },
+  "account.addresses.form.areaCurrent": {
+    "en": "Saved area",
+    "hi": "सहेजा गया इलाका"
+  },
+  "account.addresses.form.areaNeedsCity": {
+    "en": "Choose a city first to see its areas.",
+    "hi": "इलाके देखने के लिए पहले शहर चुनें।"
+  },
+  "account.addresses.form.areaLoading": {
+    "en": "Loading areas…",
+    "hi": "इलाके लोड हो रहे हैं…"
+  },
+  "account.addresses.form.moreAreas": {
+    "en": "Show more areas",
+    "hi": "और इलाके दिखाएँ"
+  },
+  "account.addresses.form.geoFailed": {
+    "en": "We could not load this list. Check your connection and try again.",
+    "hi": "यह सूची लोड नहीं हो सकी। अपना कनेक्शन जाँचें और फिर कोशिश करें।"
+  },
+  "account.addresses.form.location": {
+    "en": "Location pin (optional)",
+    "hi": "लोकेशन पिन (वैकल्पिक)"
+  },
+  "account.addresses.form.locationHint": {
+    "en": "A pin helps with delivery. Choosing a pin on a map is not available yet, so you can use the current location of this device or save without a pin.",
+    "hi": "पिन से डिलीवरी में मदद मिलती है। मैप पर पिन चुनना अभी उपलब्ध नहीं है, इसलिए आप इस डिवाइस की मौजूदा लोकेशन इस्तेमाल कर सकते हैं या बिना पिन के सहेज सकते हैं।"
+  },
+  "account.addresses.form.useLocation": {
+    "en": "Use my current location",
+    "hi": "मेरी मौजूदा लोकेशन इस्तेमाल करें"
+  },
+  "account.addresses.form.updateLocation": {
+    "en": "Update to my current location",
+    "hi": "मेरी मौजूदा लोकेशन से अपडेट करें"
+  },
+  "account.addresses.form.locating": {
+    "en": "Finding your location…",
+    "hi": "आपकी लोकेशन ढूँढी जा रही है…"
+  },
+  "account.addresses.form.pinSet": {
+    "en": "Location pin set",
+    "hi": "लोकेशन पिन सेट है"
+  },
+  "account.addresses.form.pinNotSet": {
+    "en": "No location pin set",
+    "hi": "कोई लोकेशन पिन सेट नहीं है"
+  },
+  "account.addresses.form.clearPin": { "en": "Remove pin", "hi": "पिन हटाएँ" },
+  "account.addresses.form.locationDenied": {
+    "en": "Location permission was denied. You can allow it in your browser settings or save without a pin.",
+    "hi": "लोकेशन की अनुमति नहीं दी गई। आप ब्राउज़र सेटिंग में इसे चालू कर सकते हैं या बिना पिन के सहेज सकते हैं।"
+  },
+  "account.addresses.form.locationUnavailable": {
+    "en": "We could not get your location. Try again or save without a pin.",
+    "hi": "आपकी लोकेशन नहीं मिल सकी। फिर कोशिश करें या बिना पिन के सहेजें।"
+  },
+  "account.addresses.form.locationUnsupported": {
+    "en": "This browser cannot share your location. You can save without a pin.",
+    "hi": "यह ब्राउज़र आपकी लोकेशन साझा नहीं कर सकता। आप बिना पिन के सहेज सकते हैं।"
+  },
+  "account.addresses.form.default": {
+    "en": "Make this my default address",
+    "hi": "इसे मेरा डिफ़ॉल्ट पता बनाएँ"
+  },
+  "account.addresses.form.defaultHint": {
+    "en": "Only one address can be the default.",
+    "hi": "सिर्फ़ एक पता डिफ़ॉल्ट हो सकता है।"
+  },
+  "account.addresses.form.save": { "en": "Save address", "hi": "पता सहेजें" },
+  "account.addresses.form.invalidLabel": {
+    "en": "Enter a label of up to 60 characters without angle brackets.",
+    "hi": "60 अक्षरों तक का नाम डालें। कोणीय कोष्ठक इस्तेमाल न करें।"
+  },
+  "account.addresses.form.invalidAddress": {
+    "en": "Enter the address in up to 1000 characters without angle brackets.",
+    "hi": "1000 अक्षरों तक में पता डालें। कोणीय कोष्ठक इस्तेमाल न करें।"
+  },
+  "account.addresses.form.invalidLandmark": {
+    "en": "Keep the landmark within 200 characters without angle brackets, or leave it empty.",
+    "hi": "लैंडमार्क 200 अक्षरों तक रखें और कोणीय कोष्ठक इस्तेमाल न करें, या इसे खाली छोड़ें।"
+  },
+  "account.addresses.form.invalidPin": {
+    "en": "Enter a 6-digit PIN code.",
+    "hi": "6 अंकों का पिन कोड डालें।"
+  },
+  "account.addresses.form.invalidCity": {
+    "en": "Choose your city.",
+    "hi": "अपना शहर चुनें।"
+  },
+  "account.addresses.form.invalidArea": {
+    "en": "Choose an area from the list or leave it empty.",
+    "hi": "सूची से इलाका चुनें या इसे खाली छोड़ें।"
+  },
+  "account.addresses.form.invalidLocation": {
+    "en": "The location pin is not valid. Remove it and try again.",
+    "hi": "लोकेशन पिन मान्य नहीं है। इसे हटाकर फिर कोशिश करें।"
+  },
+  "account.addresses.errors.conflict": {
+    "en": "This address was changed on another device or tab. Nothing was changed here. Refresh to see the latest version, then try again.",
+    "hi": "यह पता किसी दूसरे डिवाइस या टैब पर बदला गया है। यहाँ कुछ नहीं बदला गया। नया संस्करण देखने के लिए रीफ़्रेश करें, फिर कोशिश करें।"
+  },
+  "account.addresses.errors.draftConflict": {
+    "en": "This address was changed on another device or tab, so it was not saved. Your edits are kept. Load the latest version to review it before saving again.",
+    "hi": "यह पता किसी दूसरे डिवाइस या टैब पर बदला गया है, इसलिए इसे सहेजा नहीं गया। आपके बदलाव सुरक्षित हैं। दोबारा सहेजने से पहले नया संस्करण लोड करके देखें।"
+  },
+  "account.addresses.errors.loadLatest": {
+    "en": "Load latest version",
+    "hi": "नया संस्करण लोड करें"
+  },
+  "account.addresses.errors.latestTitle": {
+    "en": "Latest saved version",
+    "hi": "सबसे नया सहेजा गया संस्करण"
+  },
+  "account.addresses.errors.reviewing": {
+    "en": "This is the latest saved version. Your edits are still in the form: save again to replace it, or cancel to keep it.",
+    "hi": "यह सबसे नया सहेजा गया संस्करण है। आपके बदलाव फ़ॉर्म में बने हुए हैं: इसे बदलने के लिए फिर सहेजें, या इसे रखने के लिए रद्द करें।"
+  },
+  "account.addresses.errors.notFound": {
+    "en": "This address no longer exists. It may have been deleted on another device.",
+    "hi": "यह पता अब मौजूद नहीं है। हो सकता है इसे किसी दूसरे डिवाइस पर हटाया गया हो।"
+  },
+  "account.addresses.errors.gone": {
+    "en": "This address is no longer in your list. It may have been deleted. Cancel to return to your addresses.",
+    "hi": "यह पता अब आपकी सूची में नहीं है। हो सकता है इसे हटा दिया गया हो। अपने पतों पर लौटने के लिए रद्द करें।"
+  },
+  "account.addresses.errors.outOfScope": {
+    "en": "The selected city or area cannot be used for this address. Choose another and try again.",
+    "hi": "चुने गए शहर या इलाके का इस्तेमाल इस पते के लिए नहीं हो सकता। दूसरा चुनकर फिर कोशिश करें।"
+  },
+  "account.addresses.errors.inProgress": {
+    "en": "This request is still being processed. Wait a moment, then try again.",
+    "hi": "यह अनुरोध अभी प्रोसेस हो रहा है। थोड़ा रुककर फिर कोशिश करें।"
+  },
+  "account.addresses.errors.validation": {
+    "en": "Check the highlighted fields and try again.",
+    "hi": "चिह्नित जानकारी जाँचें और फिर कोशिश करें।"
+  },
+  "account.addresses.errors.forbiddenTitle": {
+    "en": "Addresses are not available",
+    "hi": "पते उपलब्ध नहीं हैं"
+  },
+  "account.addresses.errors.forbidden": {
+    "en": "This account cannot manage saved addresses here.",
+    "hi": "यह खाता यहाँ सहेजे पते नहीं बदल सकता।"
   },
   "common.navigation.skipToContent": {
     "en": "Skip to content",

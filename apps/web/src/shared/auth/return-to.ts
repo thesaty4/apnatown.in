@@ -7,6 +7,7 @@ const implemented = new Set([
   '/account',
   '/account/profile',
   '/account/preferences',
+  '/account/addresses',
 ]);
 
 /** Only implemented, non-operational destinations; auth loops and encoded paths fail closed. */

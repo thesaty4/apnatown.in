@@ -29,6 +29,11 @@ const errors: Record<string, string> = {
   USER_NOT_FOUND: 'missingProfile',
 };
 
+/** `auth.feedback` message for a normalized failure code; never server text. */
+export function failureMessageKey(code: string) {
+  return errors[code] ?? 'requestFailed';
+}
+
 export function Failure({
   code,
   retry,
@@ -43,7 +48,7 @@ export function Failure({
   return (
     <State
       title={t('title')}
-      message={t(errors[code] ?? 'requestFailed')}
+      message={t(failureMessageKey(code))}
       action={
         <Button disabled={retryDisabled} onClick={retry}>
           {t('retry')}
@@ -53,7 +58,14 @@ export function Failure({
   );
 }
 
-export function AccessState({ guest = false }: { guest?: boolean }) {
+export function AccessState({
+  guest = false,
+  guestMessage,
+}: {
+  guest?: boolean;
+  /** Localized screen-specific reason to log in; defaults to the account copy. */
+  guestMessage?: string | undefined;
+}) {
   const { state, refresh } = useSession();
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
   const path = usePathname();
@@ -77,7 +89,7 @@ export function AccessState({ guest = false }: { guest?: boolean }) {
   return (
     <State
       title={t(guest ? 'guestTitle' : 'expiredTitle')}
-      message={t(guest ? 'guestMessage' : 'expired')}
+      message={guest ? (guestMessage ?? t('guestMessage')) : t('expired')}
       action={
         <Link className={buttonClassName} href={href}>
           {t('login')}

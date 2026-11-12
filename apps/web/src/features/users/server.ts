@@ -3,6 +3,7 @@ import { createPrivateServerApi } from '../../shared/api/server';
 import { readSession } from '../../shared/auth/server';
 import { resource, type Resource } from '../../shared/api/result';
 import { getProfile, getPreferences } from './api';
+import { listAddresses } from './address-api';
 import { hydrateResource } from '../../shared/api/hydration';
 import { accountScope, queryKeys } from '../../shared/api/query-keys';
 
@@ -16,9 +17,15 @@ async function readOwn<T>(
 }
 export const readProfile = () => readOwn(getProfile);
 export const readPreferences = () => readOwn(getPreferences);
+/** First page in the client's infinite-query shape; later pages load on demand. */
+export const readAddresses = () =>
+  readOwn(async (api) => ({
+    pages: [await listAddresses(api)],
+    pageParams: [null],
+  }));
 
 export async function hydrateOwn<T>(
-  kind: 'profile' | 'preferences',
+  kind: 'profile' | 'preferences' | 'addresses',
   result: Resource<T>,
 ) {
   const session = await readSession();
