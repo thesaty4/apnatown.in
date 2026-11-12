@@ -103,6 +103,7 @@ model User {
   billingReviewed      BusinessBillingProfile[]
   mediaAssets          MediaAsset[]
   mediaUploads         MediaUploadOperation[]
+  reportedMedia        MediaReport[]              @relation("MediaReportReporter")
 
   @@index([deletedAt], where: raw("\"deleted_at\" IS NULL"), map: "users_active_deleted_at_idx")
   @@map("users")
@@ -564,6 +565,7 @@ model MediaAsset {
   owner           User      @relation(fields: [ownerUserId], references: [id], onDelete: Restrict, onUpdate: Restrict)
   categories      Category[]
   subcategories   Subcategory[]
+  reports         MediaReport[]
 
   @@index([ownerUserId, createdAt, id])
   @@map("media_assets")
@@ -759,6 +761,8 @@ model Business {
   viewDedup      BusinessViewDedup[]
   dailyViews     BusinessDailyViews[]
   suggestions    SubcategorySuggestion[]
+  videos         Video[]
+  mediaReports   MediaReport[]
 
   @@unique([ownerUserId, kind], map: "businesses_owner_kind_key")
   @@index([ownerUserId, status], map: "businesses_owner_status_idx")
@@ -766,6 +770,67 @@ model Business {
   @@index([areaId, cityId], map: "businesses_area_city_idx")
   @@index([location], type: Gist, map: "businesses_location_gist_idx")
   @@map("businesses")
+}
+
+model Video {
+  id                 String    @id @db.Uuid
+  businessId         String    @map("business_id") @db.Uuid
+  source             String
+  providerKind       String    @map("provider_kind")
+  providerVideoId    String    @map("provider_video_id")
+  caption            String    @default("")
+  hashtags           String[]  @default([])
+  showInGallery      Boolean   @default(false) @map("show_in_gallery")
+  showInReels         Boolean   @default(false) @map("show_in_reels")
+  status             String    @default("pending")
+  decisionReason     String?   @map("decision_reason")
+  approvedAt         DateTime? @map("approved_at") @db.Timestamptz(6)
+  ownerDeletedAt     DateTime? @map("owner_deleted_at") @db.Timestamptz(6)
+  sortOrder          Int       @default(0) @map("sort_order")
+  viewCount          BigInt    @default(0) @map("view_count")
+  likeCount          BigInt    @default(0) @map("like_count")
+  commentCount       BigInt    @default(0) @map("comment_count")
+  shareCount         BigInt    @default(0) @map("share_count")
+  engagementVersion  BigInt    @default(0) @map("engagement_version")
+  version            Int       @default(1)
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  business           Business  @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "videos_business_id_fkey")
+  reports            MediaReport[]
+
+  @@index([status, showInReels, id], map: "videos_public_candidates_idx")
+  @@index([status, createdAt(sort: Desc), id(sort: Desc)], map: "videos_moderation_page_idx")
+  @@index([businessId, createdAt(sort: Desc), id(sort: Desc)], map: "videos_business_page_idx")
+  @@index([businessId, sortOrder, id], map: "videos_business_order_idx")
+  @@map("videos")
+}
+
+model MediaReport {
+  id                 String      @id @db.Uuid
+  targetKind         String      @map("target_kind")
+  assetId            String?     @map("asset_id") @db.Uuid
+  videoId            String?     @map("video_id") @db.Uuid
+  businessId         String      @map("business_id") @db.Uuid
+  placementType      String?     @map("placement_type")
+  placementId        String?     @map("placement_id") @db.Uuid
+  reporterUserId     String?     @map("reporter_user_id") @db.Uuid
+  reporterSubjectHash Bytes      @map("reporter_subject_hash")
+  reason             String
+  details            String?
+  status             String      @default("open")
+  resolution         String?
+  resolvedAt         DateTime?   @map("resolved_at") @db.Timestamptz(6)
+  version            Int         @default(1)
+  createdAt          DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  asset              MediaAsset? @relation(fields: [assetId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "media_reports_asset_id_fkey")
+  video              Video?      @relation(fields: [videoId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "media_reports_video_id_fkey")
+  business           Business    @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "media_reports_business_id_fkey")
+  reporter           User?       @relation("MediaReportReporter", fields: [reporterUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "media_reports_reporter_user_id_fkey")
+
+  @@index([businessId, status, createdAt, id], map: "media_reports_business_status_page_idx")
+  @@index([assetId, status], map: "media_reports_asset_status_idx")
+  @@index([videoId, status], map: "media_reports_video_status_idx")
+  @@map("media_reports")
 }
 
 model BusinessCategory {

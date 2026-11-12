@@ -21,11 +21,13 @@ export function parseVideoSource(input: string): VideoSource {
   }
   if (url.protocol !== 'https:' || url.username || url.password || url.port)
     throw new DomainError('MEDIA_VIDEO_SOURCE_INVALID', { field: 'url' });
+  if (url.searchParams.has('list'))
+    throw new DomainError('MEDIA_VIDEO_SOURCE_INVALID', { field: 'url' });
 
   const host = url.hostname.toLowerCase();
   let source: VideoSource | undefined;
   if (['youtube.com', 'www.youtube.com', 'm.youtube.com'].includes(host)) {
-    if (url.pathname === '/watch' && !url.searchParams.has('list')) {
+    if (url.pathname === '/watch') {
       const ids = url.searchParams.getAll('v');
       if (ids.length === 1 && youtubeId.test(ids[0]!))
         source = { provider: 'youtube', kind: 'watch', providerId: ids[0]! };

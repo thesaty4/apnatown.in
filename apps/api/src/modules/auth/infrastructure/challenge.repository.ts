@@ -9,7 +9,7 @@ export class PrismaChallengeRepository implements ChallengeRepository {
   async lockPhone(tx: TxContext, hash: Uint8Array): Promise<void> {
     const key = `auth:phone:${Buffer.from(hash).toString('hex')}`;
     await this.database.client(tx)
-      .$queryRaw`SELECT pg_advisory_xact_lock(hashtextextended(${key}, 0))`;
+      .$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${key}, 0))`;
   }
   latest(tx: TxContext, hash: Uint8Array): Promise<OtpChallenge | null> {
     return this.database.client(tx).otpChallenge.findFirst({

@@ -195,6 +195,7 @@ function Shell({ me, children }: { me: AdminMe; children: ReactNode }) {
   // Only implemented screens appear; entries never grant access.
   const canAudit = me.isSuper || me.permissions.reports.includes('view');
   const canCatalog = me.isSuper || me.permissions.catalog.includes('view');
+  const canModerateVideos = me.isSuper || me.permissions.reviews.includes('view');
   const groups = [
     ...(me.isSuper
       ? [
@@ -212,6 +213,14 @@ function Shell({ me, children }: { me: AdminMe; children: ReactNode }) {
               item('/super-admin/roles', t('roles'), '🔑'),
               item('/super-admin/settings', t('settings'), '🎚️'),
             ],
+          },
+        ]
+      : []),
+    ...(canModerateVideos
+      ? [
+          {
+            label: t('moderation'),
+            items: [item('/admin/videos', t('videosModeration'), '🎬')],
           },
         ]
       : []),

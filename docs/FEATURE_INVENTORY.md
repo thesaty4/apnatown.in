@@ -249,16 +249,16 @@ Roles: customer, vendor, provider. Backend module(s): `media-videos, engagement`
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| RL1 | play icon in top bar, desktop nav and bottom navigation opens full-screen feed | `specs/media-videos/be/rl1-play-icon-in-top-bar.md` | `specs/media-videos/fe/rl1-play-icon-in-top-bar.md` | not started |
-| RL2 | pills: For You \| Following \| Nearby \| Offers \| Products \| Services + category pills | `specs/media-videos/be/rl2-pills-for-you-following-nearby-offer.md` | `specs/media-videos/fe/rl2-pills-for-you-following-nearby-offer.md` | not started |
-| RL3 | vertical snap feed, autoplay on view, tap pause/play, mute, progress bar, captions, data-saver "Tap to play", lazy loading | `specs/media-videos/be/rl3-vertical-snap-feed.md` | `specs/media-videos/fe/rl3-vertical-snap-feed.md` | not started |
-| RL4 | desktop: centred player + side panel (comments, linked products) + up/down arrow keys | `specs/media-videos/be/rl4-desktop-centred-player-side-panel.md` | `specs/media-videos/fe/rl4-desktop-centred-player-side-panel.md` | not started |
-| RL5 | overlay: owner avatar/name/verified + Follow/Following/bell, like with count, comments, share, caption, hashtags, distance, open/closed, overflow menu with Report | `specs/media-videos/be/rl5-overlay-owner-avatar-name-verified-f.md` | `specs/media-videos/fe/rl5-overlay-owner-avatar-name-verified-f.md` | not started |
-| RL6 | linked products/services strip with Add to cart / Enquire / View and "Shop this video" sheet | `specs/media-videos/be/rl6-linked-products-services-strip-with-.md` | `specs/media-videos/fe/rl6-linked-products-services-strip-with-.md` | not started |
-| RL7 | guest like/follow/comment -> login prompt -> back to the same video | `specs/media-videos/be/rl7-guest-like-follow-comment-login-prom.md` | `specs/media-videos/fe/rl7-guest-like-follow-comment-login-prom.md` | not started |
-| RL8 | states: empty Following, no videos nearby, skeleton, failed to load with retry, offline, removed/unavailable | `specs/media-videos/be/rl8-states-empty-following.md` | `specs/media-videos/fe/rl8-states-empty-following.md` | not started |
-| RL9 | deep link `/videos/:id` starts at that video; ranking frozen per session | `specs/media-videos/be/rl9-deep-link-videos-id-starts-at-that-v.md` | `specs/media-videos/fe/rl9-deep-link-videos-id-starts-at-that-v.md` | not started |
-| RL10 | YouTube/Instagram links only; typed safe playback and Open fallback; direct video uploads disabled | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | in progress — server source parser and typed provider renderer |
+| RL1 | play icon in top bar, desktop nav and bottom navigation opens full-screen feed | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
+| RL2 | pills: For You \| Following \| Nearby \| Offers \| Products \| Services + category pills | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
+| RL3 | vertical snap feed, autoplay on view, tap pause/play, mute, progress bar, captions, data-saver "Tap to play", lazy loading | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
+| RL4 | desktop: centred player + side panel (comments, linked products) + up/down arrow keys | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
+| RL5 | overlay: owner avatar/name/verified + Follow/Following/bell, like with count, comments, share, caption, hashtags, distance, open/closed, overflow menu with Report | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
+| RL6 | linked products/services strip with Add to cart / Enquire / View and "Shop this video" sheet | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
+| RL7 | guest like/follow/comment -> login prompt -> back to the same video | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
+| RL8 | states: empty Following, no videos nearby, skeleton, failed to load with retry, offline, removed/unavailable | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
+| RL9 | deep link `/videos/:id` starts at that video; ranking frozen per session | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
+| RL10 | YouTube/Instagram links only; typed safe playback and Open fallback; direct video uploads disabled | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | complete — safe owner link submission/list and approved detail playback; Reels feed remains separate; AD10 moderation is in progress |
 
 ## NT. Notifications
 
@@ -355,7 +355,7 @@ Roles: admin. Backend module(s): `admin, users, catalog, orders, delivery, revie
 | AD7 | orders and disputes (case workflow open -> in review -> resolved, notes, refund approval/completion, rider assign/reassign) | `specs/orders/be/orders.md` | `specs/orders/fe/orders.md` | spec written |
 | AD8 | live deliveries map with city filter (All cities cluster pins/one city), side list (order id, rider, status, ETA), empty state | `specs/admin/be/ad8-live-deliveries-map-with-city-filter.md` | `specs/admin/fe/ad8-live-deliveries-map-with-city-filter.md` | not started |
 | AD9 | review moderation (reported/pending/removed; approve/hide/delete) | `specs/admin/be/ad9-review-moderation.md` | `specs/admin/fe/ad9-review-moderation.md` | not started |
-| AD10 | video moderation queue (pending/approved/rejected/removed/reported, reasons, engagement report) | `specs/admin/be/ad10-video-moderation-queue.md` | `specs/admin/fe/ad10-video-moderation-queue.md` | not started |
+| AD10 | video moderation queue (pending/approved/rejected/removed/reported, reasons, engagement report) | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | in progress — scoped status and video-report queues with audited decisions; photo reports, comments, Engagement analytics and owner notifications remain |
 | AD11 | promotions (homepage banners, featured businesses, offer approval) | `specs/offers/be/offers.md` | `specs/offers/fe/offers.md` | spec written |
 | AD12 | communications (searchable audience combobox; scope Overall/City-wise/Zone-wise; template picker; channels WhatsApp/in-app/email; consent-aware recipient counts; preview; schedule; review-before-send summary; delivery report with opt-outs; permission-aware scopes) | `specs/admin/be/ad12-communications.md` | `specs/admin/fe/ad12-communications.md` | not started |
 | AD13 | reports (orders, revenue, vendor, rider, enquiries; CSV export) | `specs/admin/be/ad13-reports.md` | `specs/admin/fe/ad13-reports.md` | not started |

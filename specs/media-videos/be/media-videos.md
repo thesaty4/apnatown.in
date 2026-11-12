@@ -197,6 +197,51 @@ Public resolved-image DTOs expose intrinsic `{width,height}` and the canonical `
 
 `MEDIA_VIDEO_NOT_PUBLISHED` is already in the shared catalogue.
 
+## Implemented slices
+
+- The Prisma `Video` model and forward migration persist validated provider,
+  kind and provider ID, status, owner, consent flags, captions, hashtags and
+  versions. The migration is authored but has not been applied.
+- `GET/POST /businesses/me/videos` lists an approved owner’s videos and
+  creates a pending video. Create accepts the source kind/URL, caption,
+  hashtags and Gallery/Reels consent; it requires an idempotency key and
+  stores no submitted URL.
+- `GET /videos/{id}` returns only an approved video for an approved business
+  with Reels consent. Playback descriptors and provider URLs are rebuilt from
+  stored IDs.
+- The new controller is registered in the metadata-only OpenAPI exporter.
+
+This RL10 slice implements source safety, basic owner submit/list and approved
+detail playback. Thumbnail uploads, product/service links, editing, ordering,
+analytics and public feeds remain unimplemented.
+
+The AD10 status-moderation slice now implements:
+
+- `GET /admin/videos` for pending/approved/rejected/removed/reported tabs,
+  scoped keyset pages and scoped video/report counts.
+- `POST /admin/videos/{id}/decision` for approve/reject/remove, with a
+  transaction-time `reviews:edit` and stored-business-scope recheck,
+  optimistic version check, required rejection reason, idempotency receipt and
+  before/after audit entry.
+- `POST /videos/{id}/reports` for guest or signed-in reports of currently
+  public videos, with session/IP abuse limits, idempotency and open-report
+  deduplication; reporting does not change approval.
+- `POST /admin/media-reports/{id}/decision` for scoped, versioned dismissal or
+  video removal. Resolution and any target removal are transactional and
+  audited; dismissal never republishes a video.
+- Metadata-only OpenAPI registration and generated typed client operations.
+
+AD10 remains **in progress**. The Reported tab currently supports video
+reports only; photo report intake/resolution, comments moderation, Engagement
+analytics (including linked-item tap attribution), and owner notifications
+remain unimplemented because their owning runtime contracts are not present.
+New videos can be approved only through the status decision endpoint; report
+resolution is a separate workflow.
+
+The migration is authored but unapplied. Build verification is recorded by the
+implementation task; database/runtime checks and automated test files are
+intentionally not run.
+
 ## Acceptance criteria
 
 1. Given `https://evil.com/watch?v=x` or a YouTube URL with an invalid ID, when submitted, then 422 and nothing is stored.
@@ -220,7 +265,7 @@ Public resolved-image DTOs expose intrinsic `{width,height}` and the canonical `
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Rules: source URL parser/host suffix attacks and provider-specific IDs; action table, source-union DTO, exact score/2.5 km boundary, immutable cursor/session/TTL. Manual API/DB: configured MIME/size sniff + EXIF, applicant/private AssetPort consumers, PHOTO report → existing queue → remove, reorder conflicts, mutable counters between pages, live consent/publication rechecks, deep-link seeding and event replay. Negatives: foreign asset/purpose/application, catalog-only moderator, same-city foreign area, signed URL leakage/SSRF. Account export/erase validates references and repeat receipts; Q-11 metrics never use invented attribution.
 

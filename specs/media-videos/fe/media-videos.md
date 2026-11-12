@@ -36,10 +36,12 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 ### Gallery and Videos tabs (inside shop/provider profiles S-CUST-06, S-CUST-07)
 - Gallery (PF9): filter chips All / Photos / Videos / By product / By service; masonry grid; `FullScreenViewer` lightbox with swipe, caption, linked-item chip, heart (Engagement), Report media.
 - Report is bound for **photos as well as videos**: photo → `POST /media/photos/{assetId}/reports` with `{placementType,placementId,reason,details?}`; video → `/videos/{id}/reports`. Use canonical IDs supplied by Gallery, never title text or array index. Both allow the source's guest report flow with abuse-limit feedback.
+- The public `/videos/:id` detail also exposes Report video in a localized sheet with the report reason and optional details; submission uses the typed report mutation, and success leaves the approved video visible.
 - Success reports “Reported. Thank you.” without removing approved content locally. If moderation later removes it, show unavailable and refresh the projection; report status is not approval status.
 - Videos tab (PF10): grid with view counts and `FollowButton`; tile opens `/videos/:id`.
 - Data: `GET /businesses/{slug}/gallery?filter=`, `GET /businesses/{slug}/videos`. Empty: "No photos yet" / "No videos yet".
 - Acceptance: Given a Gallery PHOTO, when Report is submitted/retried, then one typed report reaches the existing admin Reported queue. Given a removed asset or current consent off, when Gallery refreshes, then the asset is not displayed; heart removal still works through Engagement.
+- Acceptance: Given a public video, when a guest or signed-in viewer submits a valid report from `/videos/:id`, then the typed report reaches the admin Reported queue and the video remains visible with localized success feedback.
 
 ### Videos & Reels section (product S-CUST-08, service S-CUST-09)
 - PD5/SV4: horizontal strip below details, hidden when empty; tile opens `/videos/:id?from=product:<id>` and the Reels linked strip returns to the product. Service page also shows previous-work gallery images. Data: `GET /videos?targetType=&targetId=`.
@@ -57,6 +59,20 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 
 `MediaConsentToggle` (VD13) is also used in product/service editors (products and services FE specs).
 
+### Current implementation boundary
+
+The RL10 slice currently provides the owner link form and paged video list on
+`/vendor/media` and `/provider/media`, plus approved-video detail playback on
+`/videos/:id`. Client API reads and creation use the typed API client through
+TanStack React Query; `EmbedCard` renders only the server-built playback DTO.
+The manager currently supports provider, URL, caption, hashtags and separate
+Gallery/Reels toggles.
+
+This is not completion of S-VEND-11/S-PROV-12 or the full S-CUST-21 feed.
+Thumbnail upload, linked-item editing, video edit/delete, ordering, analytics,
+gallery management, feed/ranking and engagement remain unimplemented. Pending
+items remain unavailable publicly under BR-10.
+
 ### S-ADMN-11 Videos and moderation | `/admin/videos` | `d-admin-avideos.jpg`, `m-admin-avideos.jpg`
 - Layout: Pending / Approved / Rejected / Removed / Reported / Engagement; player preview/business/links/reasons, scoped tab counts, Approve/Reject/Remove. Only **reviews:edit** enables decisions; catalog permissions are irrelevant (`js27`).
 - Reported is a typed **Photo / Video** report list with Open/Resolved badges. Dismiss/Remove calls `/admin/media-reports/{id}/decision` with report and target versions; photo preview/asset ID cannot be confused with a same-title video. Dismiss never approves a rejected/removed item. Photo Remove hides that asset, not the business/product.
@@ -65,6 +81,20 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 - Engagement table includes **Views, Likes, Shares, Taps on linked, Like rate** from final `js27.js:26`, plus supplied comments. Like rate uses server rounding; taps/gains use first-party dedup/first-follow definitions and coverage metadata.
 - Special states: no permission, empty tab.
 - Acceptance: Given a reason-required decision, when reason is empty, then submission is blocked. Given catalog-only permission, when opening moderation, then no access; reviews:view is read-only. Given a same-city unassigned area, when an ID is pasted, then data/action is denied. Given a published comment removal or photo report dismissal, when successful, then the correct queue/counters change without accidental video approval.
+
+### Implemented slice: AD10 status moderation
+
+`/admin/videos?tab=pending|approved|rejected|removed|reported` currently uses
+React Query over the typed API client. It shows scoped counts and keyset
+pages, keeps the selected tab in the URL, uses the shared safe `EmbedCard`
+only after an explicit preview action, and gates reads/decisions using
+`reviews:view`/`reviews:edit`. Reject and report-based removal require a
+reason; successful decisions invalidate all status lists and counts.
+
+The full S-ADMN-11 contract is still **in progress**: photo reports, comments
+moderation, Engagement metrics and owner notifications are not implemented.
+Their API/data ownership dependencies are recorded in the BE spec.
+Runtime/browser checks and automated test files are intentionally not run.
 
 ## Feature components
 
@@ -76,7 +106,7 @@ Prefixes `reels.*`, `gallery.*`, `vendor.media.*`, `admin.videos.*`. Events: `re
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 All public-image Uploaders follow [Media image policy](../be/media-videos.md#public-image-policy), display accepted format/size/dimensions, and retain the prior image on replacement failure. Consume variant dimensions/URLs for responsive images. Linked-tap POST occurs only on actual target activation. Follow includes `sourceVideoId` only with a recent same-session view; login-return following works without attribution. Prefetch/preload never creates a view.
 

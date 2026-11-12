@@ -233,6 +233,8 @@
       "keywordTargetInvalid": "One of the linked categories or subcategories isn’t available. Choose again.",
       "legalNotFound": "This page hasn’t been published yet.",
       "maintenance": "ApnaTown is under maintenance. Please try again in a few minutes.",
+      "mediaConflict": "This video changed elsewhere. Review the latest version before deciding again.",
+      "mediaNotFound": "This video is no longer available. The list has been refreshed.",
       "mergeTargetInvalid": "Choose an active subcategory from the same category.",
       "rateLimited": "Too many attempts. Wait a moment and try again.",
       "reportTooLarge": "Too many entries to export. Narrow the date range or filters and try again.",
@@ -250,6 +252,7 @@
       "systemLocked": "System roles can’t be changed or deleted.",
       "unavailable": "This isn’t available right now.",
       "validation": "Some details aren’t valid. Check the fields and try again.",
+      "videoTransition": "This video can’t be changed from its current status. The list has been refreshed.",
       "zoneInvalid": "The zone shape is not valid. Check the corners — edges must not cross.",
       "zoneNotFound": "This zone no longer exists. The list has been refreshed."
     },
@@ -303,6 +306,7 @@
       "cities": "Cities & zones",
       "control": "Control",
       "keywords": "Search keywords",
+      "moderation": "Moderation",
       "navLabel": "Admin sections",
       "platform": "Platform",
       "profile": "Profile",
@@ -310,7 +314,8 @@
       "settings": "Global settings",
       "subcategorySuggestions": "Subcategory suggestions",
       "superAdmin": "Super Admin",
-      "system": "System"
+      "system": "System",
+      "videosModeration": "Videos"
     },
     "state": {
       "account": "Go to my account",
@@ -323,6 +328,52 @@
       "loading": "Loading admin tools",
       "retry": "Try again",
       "superOnly": "Super Admin only"
+    },
+    "videos": {
+      "actions": {
+        "approve": "Approve",
+        "reject": "Reject",
+        "remove": "Remove"
+      },
+      "cancel": "Cancel",
+      "empty": {
+        "message": "Nothing in this list.",
+        "title": "Queue is clear"
+      },
+      "hidePreview": "Close preview",
+      "instagram": "Instagram",
+      "loadMore": "Load more",
+      "preview": "Preview",
+      "readOnly": "View-only: you can look but not change this section.",
+      "reasonLabel": "Reason",
+      "reasonRequired": "Please add a reason before rejecting.",
+      "rejectReason": "Reason (sent to the owner)",
+      "removeImpact": "It disappears from Reels, Gallery and search.",
+      "removeReason": "Removal reason",
+      "removeTitle": "Remove this video?",
+      "reportActions": {
+        "dismiss": "Dismiss report",
+        "remove": "Remove video"
+      },
+      "reportDetailsLabel": "Report details",
+      "reportReasonLabel": "Report reason",
+      "reportReasons": {
+        "copyright": "Copyright",
+        "inappropriate": "Inappropriate",
+        "misleading": "Misleading",
+        "other": "Other",
+        "spam": "Spam"
+      },
+      "tabs": {
+        "approved": "Approved",
+        "pending": "Pending",
+        "rejected": "Rejected",
+        "removed": "Removed",
+        "reported": "Reported"
+      },
+      "tabsLabel": "Video moderation status",
+      "title": "Videos & moderation",
+      "youtube": "YouTube"
     }
   },
   "auth": {
@@ -2077,6 +2128,72 @@
       "openProvider": "Open video on its original platform",
       "openUnavailable": "This embed is unavailable. Open it on the original platform.",
       "youtubeTitle": "YouTube video player"
+    },
+    "manager": {
+      "caption": "Caption (optional)",
+      "emptyMessage": "Add a supported YouTube or Instagram link to submit your first video.",
+      "emptyTitle": "No videos yet",
+      "errors": {
+        "approvalRequired": "Video management is available after your business is approved.",
+        "failed": "The request could not be completed. Try again.",
+        "rateLimited": "Too many submissions. Wait a while and try again.",
+        "sourceInvalid": "Enter a valid supported YouTube or Instagram link.",
+        "validation": "Check the link and try again."
+      },
+      "errorTitle": "Videos could not be loaded",
+      "forbiddenMessage": "Only the owner of an approved shop or service business can manage its videos.",
+      "forbiddenTitle": "Video manager unavailable",
+      "hashtags": "Hashtags (optional)",
+      "hashtagsHint": "Separate up to 10 hashtags with commas.",
+      "instagram": "Instagram",
+      "intro": "Add a YouTube watch or Shorts link, or a public Instagram Reel or post. New videos stay private until approved.",
+      "listTitle": "Your submitted videos",
+      "loading": "Loading your videos",
+      "loadMore": "Load more",
+      "openProvider": "Open original video",
+      "retry": "Try again",
+      "showInGallery": "Allow this video in my Gallery",
+      "showInReels": "Allow this video in Reels",
+      "sourceKind": "Video platform",
+      "sourceUrl": "Video link",
+      "status": {
+        "approved": "Approved",
+        "pending": "Pending review",
+        "rejected": "Rejected",
+        "removed": "Removed"
+      },
+      "submit": "Submit for review",
+      "submitted": "Video submitted. It will appear publicly only after approval.",
+      "submitting": "Submitting…",
+      "title": "Videos & Reels",
+      "youtube": "YouTube"
+    },
+    "viewer": {
+      "loading": "Loading video",
+      "report": {
+        "cancel": "Cancel",
+        "description": "Tell us why this video should be reviewed.",
+        "detailsLabel": "Details (optional)",
+        "failed": "We couldn't send your report. Please try again.",
+        "open": "Report video",
+        "rateLimited": "Please wait a little before sending another report.",
+        "reasonLabel": "Reason",
+        "reasons": {
+          "copyright": "Copyright",
+          "inappropriate": "Inappropriate",
+          "misleading": "Misleading",
+          "other": "Other",
+          "spam": "Spam"
+        },
+        "submit": "Send report",
+        "submitting": "Sending…",
+        "success": "Reported. Thank you.",
+        "title": "Report this video",
+        "validation": "Check the report details and try again."
+      },
+      "title": "Video",
+      "unavailableMessage": "This video is not approved or is no longer available.",
+      "unavailableTitle": "Video unavailable"
     }
   },
   "superAdmin": {

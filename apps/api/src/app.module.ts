@@ -44,7 +44,16 @@ export class AppModule {
         settings,
         geoAdmin,
         catalog,
-        MediaModule.forRoot([runtime, users, audit, settings, mediaStorage, catalog]),
+        MediaModule.forRoot([
+          runtime,
+          users,
+          audit,
+          admin,
+          settings,
+          mediaStorage,
+          catalog,
+          businessContext,
+        ]),
       ],
       controllers: [HealthController],
       providers: [

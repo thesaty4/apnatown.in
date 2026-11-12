@@ -49,6 +49,9 @@ export const queryKeys = {
   // Owner suggestion history (the business is resolved server-side).
   catalogSuggestions: (scope: AccountScope) =>
     ['private', scope, 'catalog', 'suggestions'] as const,
+  mediaVideos: (scope: AccountScope, kind: 'shop' | 'provider') =>
+    ['private', scope, 'media', 'videos', kind] as const,
+  mediaVideo: (id: string) => ['public', 'media', 'video', id] as const,
   // Admin taxonomy reads. Suggestion pages are keyed by the URL status tab.
   adminCatalog: (scope: AccountScope) =>
     ['private', scope, 'admin', 'catalog'] as const,
@@ -60,6 +63,18 @@ export const queryKeys = {
     ['private', scope, 'admin', 'catalog', 'suggestions', status] as const,
   adminCatalogKeywords: (scope: AccountScope) =>
     ['private', scope, 'admin', 'catalog', 'keywords'] as const,
+  adminVideoModerationRoot: (scope: AccountScope) =>
+    ['private', scope, 'admin', 'videos', 'moderation'] as const,
+  adminVideoModeration: (
+    scope: AccountScope,
+    scopeRevision: string,
+    tab: string,
+  ) =>
+    [
+      ...queryKeys.adminVideoModerationRoot(scope),
+      scopeRevision,
+      tab,
+    ] as const,
   // Admin reads are scoped by account/roles/epoch like every private key. The
   // free-text search never enters a key (it may hold a phone or email); the
   // caller keys it by an in-memory revision instead.

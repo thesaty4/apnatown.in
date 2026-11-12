@@ -1,0 +1,1 @@
+export { EmbedCard } from './EmbedCard';

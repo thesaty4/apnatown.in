@@ -5126,6 +5126,222 @@
     "en": "This embed is unavailable. Open it on the original platform.",
     "hi": "यह एम्बेड उपलब्ध नहीं है। इसे मूल प्लेटफ़ॉर्म पर खोलें।"
   },
+  "reels.manager.title": {
+    "en": "Videos & Reels",
+    "hi": "वीडियो और रील्स"
+  },
+  "reels.manager.intro": {
+    "en": "Add a YouTube watch or Shorts link, or a public Instagram Reel or post. New videos stay private until approved.",
+    "hi": "YouTube वॉच या शॉर्ट्स लिंक, या सार्वजनिक Instagram Reel या पोस्ट जोड़ें। नए वीडियो मंज़ूरी तक निजी रहेंगे।"
+  },
+  "reels.manager.sourceKind": {
+    "en": "Video platform",
+    "hi": "वीडियो प्लेटफ़ॉर्म"
+  },
+  "reels.manager.youtube": {
+    "en": "YouTube",
+    "hi": "YouTube"
+  },
+  "reels.manager.instagram": {
+    "en": "Instagram",
+    "hi": "Instagram"
+  },
+  "reels.manager.sourceUrl": {
+    "en": "Video link",
+    "hi": "वीडियो लिंक"
+  },
+  "reels.manager.caption": {
+    "en": "Caption (optional)",
+    "hi": "कैप्शन (ज़रूरी नहीं)"
+  },
+  "reels.manager.hashtags": {
+    "en": "Hashtags (optional)",
+    "hi": "हैशटैग (ज़रूरी नहीं)"
+  },
+  "reels.manager.hashtagsHint": {
+    "en": "Separate up to 10 hashtags with commas.",
+    "hi": "अधिकतम 10 हैशटैग को कॉमा से अलग करें।"
+  },
+  "reels.manager.showInGallery": {
+    "en": "Allow this video in my Gallery",
+    "hi": "इस वीडियो को मेरी गैलरी में दिखाने दें"
+  },
+  "reels.manager.showInReels": {
+    "en": "Allow this video in Reels",
+    "hi": "इस वीडियो को रील्स में दिखाने दें"
+  },
+  "reels.manager.submit": {
+    "en": "Submit for review",
+    "hi": "समीक्षा के लिए भेजें"
+  },
+  "reels.manager.submitting": {
+    "en": "Submitting…",
+    "hi": "भेजा जा रहा है…"
+  },
+  "reels.manager.submitted": {
+    "en": "Video submitted. It will appear publicly only after approval.",
+    "hi": "वीडियो भेज दिया गया है। मंज़ूरी के बाद ही यह सार्वजनिक होगा।"
+  },
+  "reels.manager.listTitle": {
+    "en": "Your submitted videos",
+    "hi": "आपके भेजे गए वीडियो"
+  },
+  "reels.manager.openProvider": {
+    "en": "Open original video",
+    "hi": "मूल वीडियो खोलें"
+  },
+  "reels.manager.loading": {
+    "en": "Loading your videos",
+    "hi": "आपके वीडियो लोड हो रहे हैं"
+  },
+  "reels.manager.emptyTitle": {
+    "en": "No videos yet",
+    "hi": "अभी कोई वीडियो नहीं"
+  },
+  "reels.manager.emptyMessage": {
+    "en": "Add a supported YouTube or Instagram link to submit your first video.",
+    "hi": "अपना पहला वीडियो भेजने के लिए समर्थित YouTube या Instagram लिंक जोड़ें।"
+  },
+  "reels.manager.forbiddenTitle": {
+    "en": "Video manager unavailable",
+    "hi": "वीडियो प्रबंधन उपलब्ध नहीं है"
+  },
+  "reels.manager.forbiddenMessage": {
+    "en": "Only the owner of an approved shop or service business can manage its videos.",
+    "hi": "केवल मंज़ूरशुदा दुकान या सेवा व्यवसाय का मालिक उसके वीडियो प्रबंधित कर सकता है।"
+  },
+  "reels.manager.errorTitle": {
+    "en": "Videos could not be loaded",
+    "hi": "वीडियो लोड नहीं हो सके"
+  },
+  "reels.manager.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें"
+  },
+  "reels.manager.loadMore": {
+    "en": "Load more",
+    "hi": "और लोड करें"
+  },
+  "reels.manager.errors.validation": {
+    "en": "Check the link and try again.",
+    "hi": "लिंक जाँचें और फिर कोशिश करें।"
+  },
+  "reels.manager.errors.sourceInvalid": {
+    "en": "Enter a valid supported YouTube or Instagram link.",
+    "hi": "मान्य समर्थित YouTube या Instagram लिंक डालें।"
+  },
+  "reels.manager.errors.approvalRequired": {
+    "en": "Video management is available after your business is approved.",
+    "hi": "आपके व्यवसाय की मंज़ूरी के बाद वीडियो प्रबंधन उपलब्ध होगा।"
+  },
+  "reels.manager.errors.rateLimited": {
+    "en": "Too many submissions. Wait a while and try again.",
+    "hi": "बहुत अधिक बार भेजा गया। थोड़ी देर बाद फिर कोशिश करें।"
+  },
+  "reels.manager.errors.failed": {
+    "en": "The request could not be completed. Try again.",
+    "hi": "अनुरोध पूरा नहीं हो सका। फिर कोशिश करें।"
+  },
+  "reels.manager.status.pending": {
+    "en": "Pending review",
+    "hi": "समीक्षा लंबित"
+  },
+  "reels.manager.status.approved": {
+    "en": "Approved",
+    "hi": "मंज़ूर"
+  },
+  "reels.manager.status.rejected": {
+    "en": "Rejected",
+    "hi": "अस्वीकृत"
+  },
+  "reels.manager.status.removed": {
+    "en": "Removed",
+    "hi": "हटाया गया"
+  },
+  "reels.viewer.title": {
+    "en": "Video",
+    "hi": "वीडियो"
+  },
+  "reels.viewer.loading": {
+    "en": "Loading video",
+    "hi": "वीडियो लोड हो रहा है"
+  },
+  "reels.viewer.unavailableTitle": {
+    "en": "Video unavailable",
+    "hi": "वीडियो उपलब्ध नहीं है"
+  },
+  "reels.viewer.unavailableMessage": {
+    "en": "This video is not approved or is no longer available.",
+    "hi": "यह वीडियो मंज़ूर नहीं है या अब उपलब्ध नहीं है।"
+  },
+  "reels.viewer.report.open": {
+    "en": "Report video",
+    "hi": "वीडियो की रिपोर्ट करें"
+  },
+  "reels.viewer.report.title": {
+    "en": "Report this video",
+    "hi": "इस वीडियो की रिपोर्ट करें"
+  },
+  "reels.viewer.report.description": {
+    "en": "Tell us why this video should be reviewed.",
+    "hi": "बताएँ कि इस वीडियो की समीक्षा क्यों होनी चाहिए।"
+  },
+  "reels.viewer.report.reasonLabel": {
+    "en": "Reason",
+    "hi": "कारण"
+  },
+  "reels.viewer.report.detailsLabel": {
+    "en": "Details (optional)",
+    "hi": "विवरण (वैकल्पिक)"
+  },
+  "reels.viewer.report.reasons.inappropriate": {
+    "en": "Inappropriate",
+    "hi": "अनुचित"
+  },
+  "reels.viewer.report.reasons.misleading": {
+    "en": "Misleading",
+    "hi": "भ्रामक"
+  },
+  "reels.viewer.report.reasons.spam": {
+    "en": "Spam",
+    "hi": "स्पैम"
+  },
+  "reels.viewer.report.reasons.copyright": {
+    "en": "Copyright",
+    "hi": "कॉपीराइट"
+  },
+  "reels.viewer.report.reasons.other": {
+    "en": "Other",
+    "hi": "अन्य"
+  },
+  "reels.viewer.report.validation": {
+    "en": "Check the report details and try again.",
+    "hi": "रिपोर्ट का विवरण जाँचें और फिर से कोशिश करें।"
+  },
+  "reels.viewer.report.failed": {
+    "en": "We couldn't send your report. Please try again.",
+    "hi": "आपकी रिपोर्ट नहीं भेजी जा सकी। कृपया फिर से कोशिश करें।"
+  },
+  "reels.viewer.report.rateLimited": {
+    "en": "Please wait a little before sending another report.",
+    "hi": "दूसरी रिपोर्ट भेजने से पहले कृपया थोड़ी देर प्रतीक्षा करें।"
+  },
+  "reels.viewer.report.success": {
+    "en": "Reported. Thank you.",
+    "hi": "रिपोर्ट की गई। धन्यवाद।"
+  },
+  "reels.viewer.report.cancel": {
+    "en": "Cancel",
+    "hi": "रद्द करें"
+  },
+  "reels.viewer.report.submit": {
+    "en": "Send report",
+    "hi": "रिपोर्ट भेजें"
+  },
+  "reels.viewer.report.submitting": {
+    "en": "Sending…",
+    "hi": "भेज रहे हैं…"
+  },
   "catalog.admin.sections.title": { "en": "Home sections", "hi": "होम सेक्शन" },
   "catalog.admin.sections.intro": {
     "en": "Choose which category rows customers see on Home. New sections start inactive; activate when ready. Products and services are never mixed in one section.",
@@ -5717,5 +5933,181 @@
   "admin.errors.imageInvalid": {
     "en": "This image can’t be used. Choose another.",
     "hi": "यह तस्वीर इस्तेमाल नहीं हो सकती। दूसरी चुनें।"
+  },
+  "admin.shell.moderation": {
+    "en": "Moderation",
+    "hi": "समीक्षा"
+  },
+  "admin.shell.videosModeration": {
+    "en": "Videos",
+    "hi": "वीडियो"
+  },
+  "admin.errors.mediaNotFound": {
+    "en": "This video is no longer available. The list has been refreshed.",
+    "hi": "यह वीडियो अब उपलब्ध नहीं है। सूची ताज़ा कर दी गई है।"
+  },
+  "admin.errors.mediaConflict": {
+    "en": "This video changed elsewhere. Review the latest version before deciding again.",
+    "hi": "यह वीडियो कहीं और बदला गया है। दोबारा फ़ैसला करने से पहले नया वर्ज़न देखें।"
+  },
+  "admin.errors.videoTransition": {
+    "en": "This video can’t be changed from its current status. The list has been refreshed.",
+    "hi": "वीडियो की मौजूदा स्थिति में यह बदलाव नहीं हो सकता। सूची ताज़ा कर दी गई है।"
+  },
+  "admin.videos.title": {
+    "en": "Videos & moderation",
+    "hi": "वीडियो और समीक्षा",
+    "source": "docs/design-context/reference/prototype-source/js27.js (EN; HI reviewed)"
+  },
+  "admin.videos.tabsLabel": {
+    "en": "Video moderation status",
+    "hi": "वीडियो मॉडरेशन की स्थिति"
+  },
+  "admin.videos.tabs.pending": {
+    "en": "Pending",
+    "hi": "लंबित",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.videos.tabs.approved": {
+    "en": "Approved",
+    "hi": "मंज़ूर",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.videos.tabs.rejected": {
+    "en": "Rejected",
+    "hi": "अस्वीकार",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.videos.tabs.removed": {
+    "en": "Removed",
+    "hi": "हटाया गया",
+    "source": "docs/design-context/reference/prototype-source/js27.js (EN; HI reviewed)"
+  },
+  "admin.videos.tabs.reported": {
+    "en": "Reported",
+    "hi": "रिपोर्ट की गई"
+  },
+  "admin.videos.empty.title": {
+    "en": "Queue is clear",
+    "hi": "सूची खाली है",
+    "source": "docs/design-context/reference/prototype-source/js27.js (EN; HI reviewed)"
+  },
+  "admin.videos.empty.message": {
+    "en": "Nothing in this list.",
+    "hi": "इस सूची में कुछ नहीं है।",
+    "source": "docs/design-context/reference/prototype-source/js27.js (EN; HI reviewed)"
+  },
+  "admin.videos.actions.approve": {
+    "en": "Approve",
+    "hi": "मंज़ूर करें",
+    "source": "docs/design-context/reference/prototype-source/js27.js (EN; HI reviewed)"
+  },
+  "admin.videos.actions.reject": {
+    "en": "Reject",
+    "hi": "अस्वीकार करें",
+    "source": "docs/design-context/reference/prototype-source/js27.js (EN; HI reviewed)"
+  },
+  "admin.videos.actions.remove": {
+    "en": "Remove",
+    "hi": "हटाएँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.videos.preview": {
+    "en": "Preview",
+    "hi": "पूर्वावलोकन",
+    "source": "docs/design-context/reference/prototype-source/hi.json"
+  },
+  "admin.videos.hidePreview": {
+    "en": "Close preview",
+    "hi": "पूर्वावलोकन बंद करें"
+  },
+  "admin.videos.youtube": {
+    "en": "YouTube",
+    "hi": "YouTube",
+    "source": "docs/design-context/reference/prototype-source/js27.js (provider)"
+  },
+  "admin.videos.instagram": {
+    "en": "Instagram",
+    "hi": "Instagram",
+    "source": "docs/design-context/reference/prototype-source/js27.js (provider)"
+  },
+  "admin.videos.reasonLabel": {
+    "en": "Reason",
+    "hi": "कारण",
+    "source": "docs/design-context/reference/prototype-source/js27.js (EN; HI reviewed)"
+  },
+  "admin.videos.rejectReason": {
+    "en": "Reason (sent to the owner)",
+    "hi": "कारण (मालिक को भेजा जाएगा)",
+    "source": "docs/design-context/reference/prototype-source/js27.js (EN; HI reviewed)"
+  },
+  "admin.videos.reasonRequired": {
+    "en": "Please add a reason before rejecting.",
+    "hi": "अस्वीकार करने से पहले कारण लिखें।"
+  },
+  "admin.videos.removeReason": {
+    "en": "Removal reason",
+    "hi": "हटाने का कारण"
+  },
+  "admin.videos.reportReasonLabel": {
+    "en": "Report reason",
+    "hi": "रिपोर्ट का कारण"
+  },
+  "admin.videos.reportDetailsLabel": {
+    "en": "Report details",
+    "hi": "रिपोर्ट का विवरण"
+  },
+  "admin.videos.reportReasons.inappropriate": {
+    "en": "Inappropriate",
+    "hi": "अनुचित"
+  },
+  "admin.videos.reportReasons.misleading": {
+    "en": "Misleading",
+    "hi": "भ्रामक"
+  },
+  "admin.videos.reportReasons.spam": {
+    "en": "Spam",
+    "hi": "स्पैम"
+  },
+  "admin.videos.reportReasons.copyright": {
+    "en": "Copyright",
+    "hi": "कॉपीराइट"
+  },
+  "admin.videos.reportReasons.other": {
+    "en": "Other",
+    "hi": "अन्य"
+  },
+  "admin.videos.reportActions.dismiss": {
+    "en": "Dismiss report",
+    "hi": "रिपोर्ट खारिज करें"
+  },
+  "admin.videos.reportActions.remove": {
+    "en": "Remove video",
+    "hi": "वीडियो हटाएँ"
+  },
+  "admin.videos.cancel": {
+    "en": "Cancel",
+    "hi": "रद्द करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.videos.readOnly": {
+    "en": "View-only: you can look but not change this section.",
+    "hi": "सिर्फ़ देखने की अनुमति है; इस सेक्शन में बदलाव नहीं कर सकते।",
+    "source": "docs/design-context/reference/prototype-source/js11.js (EN; HI reviewed)"
+  },
+  "admin.videos.removeTitle": {
+    "en": "Remove this video?",
+    "hi": "यह वीडियो हटाएँ?",
+    "source": "docs/design-context/reference/prototype-source/js27.js (EN; HI reviewed)"
+  },
+  "admin.videos.removeImpact": {
+    "en": "It disappears from Reels, Gallery and search.",
+    "hi": "यह रील्स, गैलरी और खोज से हट जाएगा।",
+    "source": "docs/design-context/reference/prototype-source/js27.js (EN; HI reviewed)"
+  },
+  "admin.videos.loadMore": {
+    "en": "Load more",
+    "hi": "और देखें",
+    "source": "specs/_foundation/frontend-shared.md"
   }
 }

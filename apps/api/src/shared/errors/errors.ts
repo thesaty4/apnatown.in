@@ -60,6 +60,8 @@ const catalogue = {
   SERVICES_SUBCATEGORY_REQUIRED: [422, 'errors.services.subcategoryRequired'],
   REVIEWS_NOT_ELIGIBLE: [403, 'errors.reviews.notEligible'],
   MEDIA_VIDEO_NOT_PUBLISHED: [409, 'errors.media.videoNotPublished'],
+  MEDIA_VERSION_CONFLICT: [409, 'errors.media.versionConflict'],
+  VIDEO_INVALID_TRANSITION: [409, 'errors.media.videoInvalidTransition'],
   COMMUNICATIONS_CONSENT_REQUIRED: [
     422,
     'errors.communications.consentRequired',

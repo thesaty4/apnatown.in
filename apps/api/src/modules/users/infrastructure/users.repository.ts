@@ -20,7 +20,7 @@ export class PrismaUsersRepository implements UsersRepository {
   async lockPhone(tx: TxContext, hash: Uint8Array): Promise<void> {
     const key = `users:phone:${Buffer.from(hash).toString('hex')}`;
     await this.database.client(tx)
-      .$queryRaw`SELECT pg_advisory_xact_lock(hashtextextended(${key}, 0))`;
+      .$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${key}, 0))`;
   }
   async findPhone(
     tx: TxContext,

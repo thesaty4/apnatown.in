@@ -59,6 +59,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/admin/media-reports/{id}/decision": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Dismiss a report or remove its video target
+         * @description Rechecks reviews:edit and the stored video business scope in the command transaction. Resolving a report never approves its target.
+         */
+        post: operations["mediaAdminReportDecision"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/admin/support/messages/{id}": {
         parameters: {
             query?: never;
@@ -73,6 +93,46 @@ export interface paths {
         get: operations["adminSupportMessage"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/videos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List videos within the authenticated admin’s review scope
+         * @description Video status queues, open video reports and counts are filtered by current assigned city/area scope.
+         */
+        get: operations["mediaAdminVideoList"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/videos/{id}/decision": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Approve, reject or remove a video
+         * @description Rechecks reviews:edit and the stored video business scope in the command transaction; writes a versioned decision and audit entry atomically.
+         */
+        post: operations["mediaAdminVideoDecision"];
         delete?: never;
         options?: never;
         head?: never;
@@ -154,6 +214,30 @@ export interface paths {
         get: operations["AuthController_session"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/businesses/me/videos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List the authenticated business owner’s video links
+         * @description Newest first; includes private moderation status and server-built playback descriptors. Response is private and no-store.
+         */
+        get: operations["mediaOwnerVideoList"];
+        put?: never;
+        /**
+         * Submit a YouTube or Instagram video link for moderation
+         * @description Accepts link-only sources. The API stores only the validated provider, kind and ID; each submission starts pending and public access requires moderation approval.
+         */
+        post: operations["mediaOwnerVideoCreate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1466,6 +1550,46 @@ export interface paths {
         patch: operations["UsersController_updatePreferences"];
         trace?: never;
     };
+    "/videos/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an approved video by ID
+         * @description Returns only currently approved videos with Reels consent and an approved business; playback URLs are rebuilt from validated provider IDs.
+         */
+        get: operations["mediaPublicVideoGet"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/videos/{id}/reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Report a currently public video
+         * @description Accepts a reason and optional details from a guest or signed-in session. A report queues review and does not change video approval.
+         */
+        post: operations["mediaVideoReport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2347,6 +2471,26 @@ export interface components {
         CreateSupportMessageDto: {
             message: string;
         };
+        CreateVideoDto: {
+            /** @default  */
+            caption: string;
+            /** @default [] */
+            hashtags: string[];
+            /** @default false */
+            showInGallery: boolean;
+            /** @default false */
+            showInReels: boolean;
+            source: {
+                /** @enum {string} */
+                kind: "youtube" | "instagram";
+                url: string;
+            };
+        };
+        CreateVideoReportDto: {
+            details?: string;
+            /** @enum {string} */
+            reason: "inappropriate" | "misleading" | "spam" | "copyright" | "other";
+        };
         CreateZoneDto: {
             feeSlabs: {
                 feePaise: number;
@@ -2736,6 +2880,25 @@ export interface components {
             };
             /** @enum {string} */
             purpose: "catalog_taxonomy";
+        };
+        MediaReportDecisionDto: {
+            /** @enum {string} */
+            action: "dismiss" | "remove";
+            expectedVersion: number;
+            reason?: string;
+            targetVersion: number;
+        };
+        MediaReportDecisionResultDto: {
+            /** Format: uuid */
+            reportId: string;
+            reportVersion: number;
+            /** @enum {string} */
+            resolution: "dismissed" | "removed";
+            /** @enum {string} */
+            status: "resolved";
+            /** @enum {string} */
+            targetStatus: "pending" | "approved" | "rejected" | "removed";
+            targetVersion: number;
         };
         MediaUploadDto: {
             /** Format: uuid */
@@ -5097,6 +5260,269 @@ export interface components {
         VerifyInputDto: {
             code: string;
         };
+        VideoDto: {
+            caption: string;
+            /** Format: date-time */
+            createdAt: string;
+            hashtags: string[];
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            kind: "watch" | "shorts" | "share" | "reel" | "p";
+            playback: {
+                embedUrl: string;
+                openUrl: string;
+                /** @enum {string} */
+                provider: "youtube";
+                /** @enum {string} */
+                render: "iframe";
+            } | {
+                openUrl: string;
+                permalink: string;
+                /** @enum {string} */
+                provider: "instagram";
+                /** @enum {string} */
+                render: "instagram";
+            } | {
+                /** Format: uri */
+                openUrl: string;
+                /** @enum {string} */
+                provider: "youtube" | "instagram";
+                /** @enum {string} */
+                reason: "disabled" | "unavailable";
+                /** @enum {string} */
+                render: "fallback";
+            };
+            /** @enum {string} */
+            provider: "youtube" | "instagram";
+            providerId: string;
+            showInGallery: boolean;
+            showInReels: boolean;
+            /** @enum {string} */
+            status: "pending" | "approved" | "rejected" | "removed";
+            version: number;
+        };
+        VideoModerationDecisionDto: {
+            /** @enum {string} */
+            action: "approve" | "reject" | "remove";
+            expectedVersion: number;
+            reason?: string;
+        };
+        VideoModerationItemDto: {
+            businessNameEn: string | null;
+            businessNameHi: string | null;
+            caption: string;
+            /** Format: date-time */
+            createdAt: string;
+            decisionReason: string | null;
+            hashtags: string[];
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            kind: "watch" | "shorts" | "share" | "reel" | "p";
+            playback: {
+                embedUrl: string;
+                openUrl: string;
+                /** @enum {string} */
+                provider: "youtube";
+                /** @enum {string} */
+                render: "iframe";
+            } | {
+                openUrl: string;
+                permalink: string;
+                /** @enum {string} */
+                provider: "instagram";
+                /** @enum {string} */
+                render: "instagram";
+            } | {
+                /** Format: uri */
+                openUrl: string;
+                /** @enum {string} */
+                provider: "youtube" | "instagram";
+                /** @enum {string} */
+                reason: "disabled" | "unavailable";
+                /** @enum {string} */
+                render: "fallback";
+            };
+            /** @enum {string} */
+            provider: "youtube" | "instagram";
+            providerId: string;
+            showInGallery: boolean;
+            showInReels: boolean;
+            /** @enum {string} */
+            status: "pending" | "approved" | "rejected" | "removed";
+            version: number;
+        };
+        VideoModerationPageDto: {
+            counts: {
+                approved: number;
+                pending: number;
+                rejected: number;
+                removed: number;
+                reported: number;
+            };
+            items: ({
+                businessNameEn: string | null;
+                businessNameHi: string | null;
+                caption: string;
+                /** Format: date-time */
+                createdAt: string;
+                decisionReason: string | null;
+                hashtags: string[];
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "watch" | "shorts" | "share" | "reel" | "p";
+                playback: {
+                    embedUrl: string;
+                    openUrl: string;
+                    /** @enum {string} */
+                    provider: "youtube";
+                    /** @enum {string} */
+                    render: "iframe";
+                } | {
+                    openUrl: string;
+                    permalink: string;
+                    /** @enum {string} */
+                    provider: "instagram";
+                    /** @enum {string} */
+                    render: "instagram";
+                } | {
+                    /** Format: uri */
+                    openUrl: string;
+                    /** @enum {string} */
+                    provider: "youtube" | "instagram";
+                    /** @enum {string} */
+                    reason: "disabled" | "unavailable";
+                    /** @enum {string} */
+                    render: "fallback";
+                };
+                /** @enum {string} */
+                provider: "youtube" | "instagram";
+                providerId: string;
+                /** @enum {string} */
+                queueItemType: "video";
+                showInGallery: boolean;
+                showInReels: boolean;
+                /** @enum {string} */
+                status: "pending" | "approved" | "rejected" | "removed";
+                version: number;
+            } | {
+                allowedActions: ("dismiss" | "remove")[];
+                /** Format: date-time */
+                createdAt: string;
+                details: string | null;
+                /** @enum {string} */
+                queueItemType: "report";
+                /** @enum {string} */
+                reason: "inappropriate" | "misleading" | "spam" | "copyright" | "other";
+                /** Format: uuid */
+                reportId: string;
+                reportVersion: number;
+                /** @enum {string} */
+                status: "open";
+                /** @enum {string} */
+                targetKind: "video";
+                targetVersion: number;
+                video: {
+                    businessNameEn: string | null;
+                    businessNameHi: string | null;
+                    caption: string;
+                    /** Format: date-time */
+                    createdAt: string;
+                    decisionReason: string | null;
+                    hashtags: string[];
+                    /** Format: uuid */
+                    id: string;
+                    /** @enum {string} */
+                    kind: "watch" | "shorts" | "share" | "reel" | "p";
+                    playback: {
+                        embedUrl: string;
+                        openUrl: string;
+                        /** @enum {string} */
+                        provider: "youtube";
+                        /** @enum {string} */
+                        render: "iframe";
+                    } | {
+                        openUrl: string;
+                        permalink: string;
+                        /** @enum {string} */
+                        provider: "instagram";
+                        /** @enum {string} */
+                        render: "instagram";
+                    } | {
+                        /** Format: uri */
+                        openUrl: string;
+                        /** @enum {string} */
+                        provider: "youtube" | "instagram";
+                        /** @enum {string} */
+                        reason: "disabled" | "unavailable";
+                        /** @enum {string} */
+                        render: "fallback";
+                    };
+                    /** @enum {string} */
+                    provider: "youtube" | "instagram";
+                    providerId: string;
+                    showInGallery: boolean;
+                    showInReels: boolean;
+                    /** @enum {string} */
+                    status: "pending" | "approved" | "rejected" | "removed";
+                    version: number;
+                };
+                /** Format: uuid */
+                videoId: string;
+            })[];
+            nextCursor: string | null;
+        };
+        VideoPageDto: {
+            items: {
+                caption: string;
+                /** Format: date-time */
+                createdAt: string;
+                hashtags: string[];
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "watch" | "shorts" | "share" | "reel" | "p";
+                playback: {
+                    embedUrl: string;
+                    openUrl: string;
+                    /** @enum {string} */
+                    provider: "youtube";
+                    /** @enum {string} */
+                    render: "iframe";
+                } | {
+                    openUrl: string;
+                    permalink: string;
+                    /** @enum {string} */
+                    provider: "instagram";
+                    /** @enum {string} */
+                    render: "instagram";
+                } | {
+                    /** Format: uri */
+                    openUrl: string;
+                    /** @enum {string} */
+                    provider: "youtube" | "instagram";
+                    /** @enum {string} */
+                    reason: "disabled" | "unavailable";
+                    /** @enum {string} */
+                    render: "fallback";
+                };
+                /** @enum {string} */
+                provider: "youtube" | "instagram";
+                providerId: string;
+                showInGallery: boolean;
+                showInReels: boolean;
+                /** @enum {string} */
+                status: "pending" | "approved" | "rejected" | "removed";
+                version: number;
+            }[];
+            nextCursor: string | null;
+        };
+        VideoReportAcceptedDto: {
+            /** Format: uuid */
+            reportId: string;
+        };
         WaitlistAcceptedDto: {
             /** Format: uuid */
             requestId: string;
@@ -5600,6 +6026,162 @@ export interface operations {
             };
         };
     };
+    mediaAdminReportDecision: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Retry the same report decision with the same key for 24 hours. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MediaReportDecisionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaReportDecisionResultDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for invalid fields or key. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description ADMIN_SCOPE_FORBIDDEN when the target business is outside assigned scope. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MEDIA_NOT_FOUND when the report or target does not exist. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MEDIA_VERSION_CONFLICT or VIDEO_INVALID_TRANSITION. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED with Retry-After. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
     adminSupportMessage: {
         parameters: {
             query?: never;
@@ -5732,6 +6314,312 @@ export interface operations {
                 };
             };
             /** @description MAINTENANCE while maintenance mode is on (admins are not admitted). */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    mediaAdminVideoList: {
+        parameters: {
+            query?: {
+                cursor?: string;
+                limit?: number;
+                tab?: ("pending" | "approved" | "rejected" | "removed") | "reported";
+            };
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VideoModerationPageDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description ADMIN_SCOPE_FORBIDDEN when the admin lacks reviews:view or assigned scope. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    mediaAdminVideoDecision: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Retry the same video decision with the same key for 24 hours. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VideoModerationDecisionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VideoModerationItemDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for invalid fields or key. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description ADMIN_SCOPE_FORBIDDEN when the target business is outside assigned scope. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MEDIA_NOT_FOUND when the video does not exist. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MEDIA_VERSION_CONFLICT or VIDEO_INVALID_TRANSITION. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED with Retry-After. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
             503: {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
@@ -6454,6 +7342,339 @@ export interface operations {
                 };
             };
             /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    mediaOwnerVideoList: {
+        parameters: {
+            query?: {
+                cursor?: string;
+                limit?: number;
+            };
+            header?: {
+                /** @description Selects which of the authenticated owner’s businesses is used; grants no access. */
+                "X-Business-Kind"?: "shop" | "provider";
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VideoPageDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description The caller does not own an approved vendor/provider business. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description BUSINESS_CONTEXT_REQUIRED when the owner has both business kinds but omitted X-Business-Kind. */
+            422: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    mediaOwnerVideoCreate: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Retry the identical submission with the same key for up to 24 hours. */
+                "Idempotency-Key": string;
+                Origin: string;
+                /** @description Selects which of the authenticated owner’s businesses is used; grants no access. */
+                "X-Business-Kind"?: "shop" | "provider";
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateVideoDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VideoDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for invalid fields or COMMON_VALIDATION_FAILED for an invalid Idempotency-Key. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description The caller does not own an approved vendor/provider business. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_CONFLICT when the idempotency key is reused with a different payload. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MEDIA_VIDEO_SOURCE_INVALID for a source outside the exact YouTube/Instagram allow-list. */
+            422: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED with Retry-After. */
             429: {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
@@ -18191,6 +19412,178 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    mediaPublicVideoGet: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VideoDto"];
+                };
+            };
+            /** @description COMMON_VALIDATION_FAILED for an invalid id. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MEDIA_VIDEO_NOT_PUBLISHED when the video is pending, removed, or not Reels-consented. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) while maintenance mode is on and this route is not admitted */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    mediaVideoReport: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Retry the same report with the same key for 24 hours. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateVideoReportDto"];
+            };
+        };
+        responses: {
+            202: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VideoReportAcceptedDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for invalid fields or idempotency key. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CSRF_INVALID for a missing or untrusted browser session. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_CONFLICT when the key is reused with a different payload; MEDIA_VIDEO_NOT_PUBLISHED when the video is no longer public. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED with Retry-After. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) while maintenance mode is on and this route is not admitted */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
                 };
             };
         };

@@ -15,7 +15,7 @@ export class BusinessContextModule {
         BusinessOwnerContext,
         { provide: CATALOG_BUSINESS_CONTEXT, useClass: CatalogBusinessContextAdapter },
       ],
-      exports: [CATALOG_BUSINESS_CONTEXT],
+      exports: [CATALOG_BUSINESS_CONTEXT, BusinessOwnerContext],
     };
   }
 }

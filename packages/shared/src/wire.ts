@@ -2,7 +2,9 @@ import { z } from 'zod';
 
 export const PaiseSchema = z.number().int().safe().nonnegative();
 export const SignedPaiseSchema = z.number().int().safe();
-export const IdSchema = z.uuid();
+// Any 8-4-4-4-12 hex id, matching PostgreSQL `uuid`. Not `z.uuid()`: its RFC
+// version/variant check rejects deterministic `md5(...)::uuid` seed ids.
+export const IdSchema = z.guid();
 export const VersionSchema = z.number().int().min(1).max(2147483647);
 export const TimestampSchema = z.iso.datetime({ offset: false });
 export const CountSchema = z.number().int().safe().nonnegative();

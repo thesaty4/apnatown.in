@@ -8,7 +8,7 @@ export function localUrl(value, username) {
   if (
     !['postgres:', 'postgresql:'].includes(url.protocol) ||
     url.hostname !== '127.0.0.1' ||
-    url.port !== '5432' ||
+    url.port !== '5434' ||
     url.username !== username ||
     !url.password ||
     !/^\/apnatown_[a-z0-9_-]+$/.test(url.pathname) ||

@@ -55,12 +55,26 @@ import { SuperAdminCatalogController } from '../../modules/catalog/presentation/
 import { ImageController } from '../../modules/media-videos/presentation/image.controller';
 import { ImageService } from '../../modules/media-videos/application/image.service';
 import { ImageDeliveryService } from '../../modules/media-videos/application/image-delivery.service';
+import {
+  OwnerVideoController,
+  PublicVideoController,
+} from '../../modules/media-videos/presentation/video.controller';
+import { VideoService } from '../../modules/media-videos/application/video.service';
+import { VideoModerationService } from '../../modules/media-videos/application/video-moderation.service';
+import {
+  AdminMediaReportController,
+  VideoModerationController,
+} from '../../modules/media-videos/presentation/video-moderation.controller';
 
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
 @Module({
   controllers: [
     ImageController,
+    OwnerVideoController,
+    PublicVideoController,
+    VideoModerationController,
+    AdminMediaReportController,
     HealthController,
     AuthController,
     UsersController,
@@ -88,6 +102,8 @@ import { ImageDeliveryService } from '../../modules/media-videos/application/ima
   providers: [
     ImageService,
     ImageDeliveryService,
+    VideoService,
+    VideoModerationService,
     ReadinessService,
     SessionService,
     OtpService,

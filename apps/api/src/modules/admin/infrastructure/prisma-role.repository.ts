@@ -23,7 +23,7 @@ export class PrismaRoleRepository implements RoleRepository {
 
   async lockNames(tx: TxContext): Promise<void> {
     await this.database.client(tx)
-      .$queryRaw`SELECT pg_advisory_xact_lock(hashtextextended('admin:roles:names', 0))`;
+      .$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended('admin:roles:names', 0))`;
   }
 
   async nameTaken(

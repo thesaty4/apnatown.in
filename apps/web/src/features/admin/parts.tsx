@@ -68,6 +68,9 @@ const errors: Record<string, string> = {
   CATALOG_HOME_SECTION_CONFLICT: 'homeSectionConflict',
   CATALOG_HOME_SECTION_STATE_INVALID: 'homeSectionState',
   CATALOG_IMAGE_INVALID: 'imageInvalid',
+  MEDIA_NOT_FOUND: 'mediaNotFound',
+  MEDIA_VERSION_CONFLICT: 'mediaConflict',
+  VIDEO_INVALID_TRANSITION: 'videoTransition',
   MAINTENANCE: 'maintenance',
 };
 /** `admin.errors` key for a normalized code; never server text. */
