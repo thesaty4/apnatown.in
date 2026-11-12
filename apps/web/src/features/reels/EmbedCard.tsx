@@ -4,6 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { SafeVideoPlaybackSchema, type VideoPlayback } from '@apnatown/shared';
 import { Button } from '@apnatown/ui/primitives/Button';
+import {
+  ReelEmbedFailure,
+  ReelOpenOnProvider,
+  ReelPoster,
+  ReelTapToPlay,
+} from './ReelEmbedStates';
 
 const INSTAGRAM_SCRIPT = 'https://www.instagram.com/embed.js';
 let instagramScript: Promise<void> | undefined;
@@ -17,6 +23,15 @@ function getRequestedPlaybackUrl(embedUrl: string) {
   const url = new URL(embedUrl);
   url.searchParams.set('autoplay', '1');
   url.searchParams.set('mute', '0');
+  url.searchParams.set('playsinline', '1');
+  return url.toString();
+}
+
+/** Muted, inline autoplay for the visible reel; browsers allow it without a tap. */
+function getMutedAutoplayUrl(embedUrl: string) {
+  const url = new URL(embedUrl);
+  url.searchParams.set('autoplay', '1');
+  url.searchParams.set('mute', '1');
   url.searchParams.set('playsinline', '1');
   return url.toString();
 }
@@ -52,16 +67,21 @@ export function EmbedCard({
   active,
   nonce,
   showTapToPlayWhenRestricted = false,
+  variant = 'card',
 }: {
   playback: VideoPlayback;
   active: boolean;
   nonce: string;
   showTapToPlayWhenRestricted?: boolean;
+  /** `reel` fills an immersive Reels slide and autoplays muted when allowed. */
+  variant?: 'card' | 'reel';
 }) {
   const t = useTranslations('reels.embed');
   const blockquote = useRef<HTMLQuoteElement | null>(null);
   const [unavailable, setUnavailable] = useState(false);
   const [playRequested, setPlayRequested] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const reel = variant === 'reel';
   const [preferences, setPreferences] = useState({
     ready: false,
     dataSaver: false,
@@ -139,7 +159,49 @@ export function EmbedCard({
       clearTimeout(timeout);
       observer?.disconnect();
     };
-  }, [active, nonce, permalink, playRequested, tapRequired]);
+  }, [active, attempt, nonce, permalink, playRequested, tapRequired]);
+
+  if (reel) {
+    if (unavailable)
+      return (
+        <ReelEmbedFailure
+          openUrl={parsed.openUrl}
+          onRetry={() => {
+            setUnavailable(false);
+            setAttempt((value) => value + 1);
+          }}
+        />
+      );
+    if (parsed.render === 'fallback')
+      return <ReelOpenOnProvider openUrl={parsed.openUrl} />;
+    // Poster until network/motion preferences are read, so no gate flashes.
+    if (!active || (showTapToPlayWhenRestricted && !preferences.ready))
+      return <ReelPoster />;
+    if (tapRequired && !playRequested)
+      return (
+        <ReelTapToPlay
+          dataSaver={preferences.dataSaver}
+          onPlay={() => setPlayRequested(true)}
+        />
+      );
+    if (parsed.render === 'iframe')
+      return (
+        <iframe
+          key={attempt}
+          title={t('youtubeTitle')}
+          src={
+            playRequested
+              ? getRequestedPlaybackUrl(parsed.embedUrl)
+              : getMutedAutoplayUrl(parsed.embedUrl)
+          }
+          referrerPolicy="strict-origin-when-cross-origin"
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowFullScreen
+          onError={() => setUnavailable(true)}
+          className="absolute inset-0 size-full border-0"
+        />
+      );
+  }
 
   if (parsed.render === 'fallback' || !active || unavailable)
     return (
@@ -182,8 +244,9 @@ export function EmbedCard({
       />
     );
 
-  return (
+  const quote = (
     <blockquote
+      key={attempt}
       ref={blockquote}
       className="instagram-media w-full"
       data-instgrm-permalink={parsed.permalink}
@@ -194,5 +257,12 @@ export function EmbedCard({
         {t('openProvider')}
       </a>
     </blockquote>
+  );
+  return reel ? (
+    <div className="absolute inset-0 grid place-items-center overflow-y-auto p-3 [&_a]:text-reel-text [&_a]:underline">
+      {quote}
+    </div>
+  ) : (
+    quote
   );
 }

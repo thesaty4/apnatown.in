@@ -60,6 +60,19 @@ appear.
 Enforced in: [README local development](../../README.md#local-development) and
 [data-model persistence rule 4](../../specs/_foundation/data-model.md#migrations-seeds-and-isolation).
 
+## Check public visibility predicates per business kind
+
+What: Explore Services stayed nearly empty because `businesses_public_context`
+required a PRODUCT-category membership for every business, while providers are
+categorised by SERVICE taxonomy, so every provider and its services vanished.
+Filters also disappeared because the panel rendered only after a successful
+first page.
+Rule: when a public projection filters on taxonomy, verify the predicate for
+each `businesses.kind` against the prototype before shipping; render filter
+controls independently of result loading/errors.
+Enforced in: `20261112191000_provider_public_context` and
+[Search BE notes](../../specs/search/be/search.md).
+
 ## Avoid collisions with generated constraint names
 
 What: the reports migration failed because PostgreSQL named an inline

@@ -1,30 +1,51 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, type ReactNode } from 'react';
-import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { VideoFeedPillSchema } from '@apnatown/shared';
-import { useQuery } from '@tanstack/react-query';
-import { publicHref } from '../../shared/i18n/preferences';
-import { Button, buttonClassName } from '@apnatown/ui/primitives/Button';
-import {
-  EmptyState,
-  NoPermissionState,
-} from '@apnatown/ui/feedback/StateViews';
-import { Skeleton } from '@apnatown/ui/feedback/Skeleton';
-import { categoriesOptions } from '../catalog';
+import type { VideoFeedItem, VideoFeedQuery } from '@apnatown/shared';
+import { Sheet } from '@apnatown/ui/overlay/Sheet';
 import { failureCode } from '../../shared/api/result';
-import { Failure } from '../../shared/auth/AccessState';
 import { useSession } from '../../shared/auth/SessionProvider';
-import { loginHref } from '../../shared/auth/return-to';
-import {
-  preciseBrowseLocation,
-  useBrowseLocation,
-} from '../geo/location-store';
-import { useVideoFeed } from './queries';
+import { useOnline } from '../../shared/hooks/use-online';
+import { publicHref } from '../../shared/i18n/preferences';
+import { NavIcon } from '../../shared/ui/NavIcon';
+import { CommentsPanel } from '../engagement';
 import { ReelFeedCard } from './ReelFeedCard';
+import {
+  ReelFeedStatus,
+  ReelLoadingSlide,
+  type ReelFeedProblem,
+} from './ReelFeedStates';
+import { ReelGateSheet, type ReelGate } from './ReelGateSheet';
+import { ReelMoreSheet } from './ReelMoreSheet';
+import { ReelPills, type ReelPill } from './ReelPills';
+import { ReelSidePanel } from './ReelSidePanel';
+import { VideoReportSheet } from './VideoReportSheet';
+import { reelFocusInset, reelTopIconClassName } from './reel-styles';
+import { useReelsFeed } from './use-reels-feed';
 
+function problemFor(
+  code: string,
+  online: boolean,
+  retrying: boolean,
+): ReelFeedProblem {
+  if (!online) return { kind: 'offline' };
+  if (code === 'MEDIA_FEED_EXPIRED') return { kind: 'expired' };
+  if (code === 'MEDIA_VIDEO_NOT_PUBLISHED') return { kind: 'unpublished' };
+  if (code === 'COMMON_FORBIDDEN') return { kind: 'forbidden' };
+  return { kind: 'failed', code, retrying };
+}
+
+function isTypingTarget(target: EventTarget | null) {
+  return (
+    target instanceof HTMLElement &&
+    (target.isContentEditable ||
+      target.closest('input, textarea, select, dialog') !== null)
+  );
+}
+
+/** S-CUST-21: prototype `.reels` immersive vertical feed (js25). */
 export function ReelsFeed({
   nonce,
   initialVideoId,
@@ -33,386 +54,266 @@ export function ReelsFeed({
   initialVideoId?: string;
 }) {
   const t = useTranslations('reels.feed');
+  const copy = useTranslations('common.copy');
+  const report = useTranslations('reels.viewer.report');
+  const comments = useTranslations('engagement.comments');
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
   const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const { api, state } = useSession();
-  const browseLocation = useBrowseLocation();
-  const point = preciseBrowseLocation();
+  const feedId = useId();
+  const online = useOnline();
+  const { state } = useSession();
+  const reels = useReelsFeed(initialVideoId);
+  const { feed, items, activeId, activeIndex, pill, category } = reels;
   const scrollRoot = useRef<HTMLDivElement>(null);
-  const activeRef = useRef<string | null>(null);
-  const rawPill = searchParams.get('pill');
-  const parsedPill = VideoFeedPillSchema.safeParse(rawPill);
-  const category = searchParams.get('category') ?? undefined;
-  const requestedAnchorId =
-    initialVideoId ?? searchParams.get('video') ?? undefined;
-  const snapshotId = searchParams.get('snapshotId') ?? undefined;
-  const pill =
-    parsedPill.success && (parsedPill.data !== 'category' || category)
-      ? parsedPill.data
-      : 'for_you';
-  const categories = useQuery(categoriesOptions(api));
-  const feed = useVideoFeed(
-    { pill, ...(pill === 'category' && category ? { category } : {}) },
-    requestedAnchorId,
-    snapshotId,
-    point,
-    browseLocation.revision,
-  );
-  const items = useMemo(
-    () => feed.query.data?.pages.flatMap((page) => page.items) ?? [],
-    [feed.query.data],
-  );
-  const activeId = initialVideoId ?? searchParams.get('video');
-  const firstPage = feed.query.data?.pages[0];
-  const errorCode = feed.query.isError
-    ? failureCode(feed.query.error)
-    : undefined;
-
-  const setVisible = useCallback(
-    (id: string) => {
-      if (activeRef.current === id) return;
-      activeRef.current = id;
-      const params = new URLSearchParams();
-      params.set('pill', pill);
-      if (pill === 'category' && category) params.set('category', category);
-      const currentSnapshotId =
-        firstPage?.snapshotId ?? searchParams.get('snapshotId');
-      if (currentSnapshotId) params.set('snapshotId', currentSnapshotId);
-      router.replace(
-        `${publicHref(`/videos/${id}`, locale)}?${params.toString()}`,
-        { scroll: false },
-      );
-    },
-    [category, firstPage?.snapshotId, locale, pill, router, searchParams],
-  );
-
-  const selectFilter = (nextPill: string, nextCategory?: string) => {
-    activeRef.current = null;
-    const params = new URLSearchParams({ pill: nextPill });
-    if (nextCategory) params.set('category', nextCategory);
-    const currentSnapshotId =
-      firstPage?.snapshotId ?? searchParams.get('snapshotId');
-    if (currentSnapshotId) params.set('snapshotId', currentSnapshotId);
-    router.push(`${publicHref('/videos', locale)}?${params.toString()}`, {
-      scroll: false,
-    });
-  };
+  const [gate, setGate] = useState<ReelGate | null>(null);
+  const [commentsItem, setCommentsItem] = useState<VideoFeedItem>();
+  const [commentsOpen, setCommentsOpen] = useState(false);
+  const [moreItem, setMoreItem] = useState<VideoFeedItem | null>(null);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reported, setReported] = useState(false);
 
   useEffect(() => {
-    if (!firstPage) return;
-    const params = new URLSearchParams(searchParams.toString());
-    let changed = false;
-    if (params.get('snapshotId') !== firstPage.snapshotId) {
-      params.set('snapshotId', firstPage.snapshotId);
-      changed = true;
-    }
-    if (params.get('pill') !== firstPage.effectiveFilter) {
-      params.set('pill', firstPage.effectiveFilter);
-      changed = true;
-    }
-    if (firstPage.effectiveFilter !== 'category' && params.has('category')) {
-      params.delete('category');
-      changed = true;
-    }
-    if (changed) {
-      const path = initialVideoId
-        ? `/videos/${initialVideoId}`
-        : pathname.replace(/^\/(?:hi|en)(?=\/|$)/, '') || '/videos';
-      router.replace(`${publicHref(path, locale)}?${params.toString()}`, {
-        scroll: false,
-      });
-    }
-  }, [firstPage, initialVideoId, locale, pathname, router, searchParams]);
+    if (!reported) return;
+    const timer = window.setTimeout(() => setReported(false), 4000);
+    return () => window.clearTimeout(timer);
+  }, [reported]);
 
-  const restartFeed = () => {
-    const params = new URLSearchParams({ pill });
-    if (pill === 'category' && category) params.set('category', category);
-    const anchorId = activeId ?? requestedAnchorId;
-    const path = anchorId ? `/videos/${anchorId}` : '/videos';
-    router.replace(`${publicHref(path, locale)}?${params.toString()}`, {
-      scroll: false,
+  const step = useCallback((direction: 1 | -1) => {
+    const root = scrollRoot.current;
+    if (!root) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    root.scrollBy({
+      top: direction * root.clientHeight,
+      behavior: reduce.matches ? 'auto' : 'smooth',
     });
-  };
+  }, []);
 
-  const fetchNextPage = feed.query.fetchNextPage;
-  const hasNextPage = feed.query.hasNextPage;
-  const isFetchingNextPage = feed.query.isFetchingNextPage;
-  const isFetchNextPageError = feed.query.isFetchNextPageError;
-  const nextPageError = feed.query.error;
+  // Prototype `rback`: leave the feed the way the user entered it.
+  const close = useCallback(() => {
+    if (window.history.length > 1) router.back();
+    else router.push(publicHref('/', locale));
+  }, [locale, router]);
 
   useEffect(() => {
-    if (!activeId) return;
-    const target = document.getElementById(`reel-${activeId}`);
-    if (target) {
-      target.scrollIntoView({ block: 'start' });
-      activeRef.current = activeId;
-      return;
-    }
-    if (hasNextPage && !isFetchingNextPage) {
-      void fetchNextPage();
-      return;
-    }
-    if (!hasNextPage && !isFetchingNextPage) {
-      const params = new URLSearchParams(searchParams.toString());
-      params.delete('video');
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-    }
-  }, [
-    activeId,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    items.length,
-    pathname,
-    router,
-    searchParams,
-  ]);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.altKey || event.ctrlKey) return;
+      if (event.metaKey || isTypingTarget(event.target)) return;
+      if (document.querySelector('dialog[open]')) return;
+      if (event.key === 'ArrowDown' || event.key === 'j') step(1);
+      else if (event.key === 'ArrowUp' || event.key === 'k') step(-1);
+      else if (event.key === 'Escape') close();
+      else return;
+      event.preventDefault();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [close, step]);
 
-  const closeHref = publicHref('/', locale);
-  const feedExpired = errorCode === 'MEDIA_FEED_EXPIRED';
+  const selectFilter = (next: VideoFeedQuery['pill'], slug?: string) => {
+    scrollRoot.current?.scrollTo({ top: 0 });
+    reels.selectFilter(next, slug);
+  };
+  const openComments = useCallback((item: VideoFeedItem) => {
+    setCommentsItem(item);
+    setCommentsOpen(true);
+  }, []);
+  const openMore = useCallback((item: VideoFeedItem) => {
+    setMoreItem(item);
+    setMoreOpen(true);
+  }, []);
+
+  const pills: ReelPill[] = [
+    ...(['for_you', 'following', 'nearby'] as const).map((key) => ({
+      key,
+      label: t(key === 'for_you' ? 'forYou' : key),
+      selected: pill === key,
+      onSelect: () => selectFilter(key),
+    })),
+    ...(['offers', 'products', 'services'] as const).map((key) => ({
+      key,
+      label: t(key),
+      selected: false,
+      unavailable: t(`${key}Unavailable`),
+      onSelect: () => undefined,
+    })),
+    ...(reels.categories.data?.items ?? []).map((item) => ({
+      key: `category:${item.slug}`,
+      label: locale === 'hi' ? item.nameHi : item.nameEn,
+      selected: pill === 'category' && category === item.slug,
+      onSelect: () => selectFilter('category', item.slug),
+    })),
+  ];
+
+  const statusActions = {
+    onRestart: reels.restartFeed,
+    onBrowse: reels.browseAll,
+    onForYou: () => selectFilter('for_you'),
+  };
+  const firstPageProblem: ReelFeedProblem | undefined =
+    pill === 'nearby' && !reels.point
+      ? { kind: 'nearbyNeedsLocation' }
+      : feed.isPending
+        ? undefined
+        : feed.isError && items.length === 0
+          ? problemFor(failureCode(feed.error), online, feed.isFetching)
+          : items.length === 0
+            ? { kind: 'empty', pill, signedIn: state.kind === 'ready' }
+            : undefined;
+  const trailing =
+    items.length > 0 &&
+    (feed.hasNextPage || feed.isFetchingNextPage || feed.isFetchNextPageError);
+  const atEnd = activeIndex >= items.length - 1 && !feed.hasNextPage;
 
   return (
     <section
       aria-label={t('title')}
-      className="fixed inset-0 z-30 grid bg-bg text-text"
+      className="fixed inset-0 z-120 flex flex-col bg-reel-canvas pt-sat pb-sab text-reel-text"
     >
-      <header className="absolute inset-x-0 top-0 z-10 grid gap-2 bg-bg/95 px-page-gutter py-2 shadow-sh-1">
-        <div className="flex items-center justify-between gap-3">
-          <h1 className="m-0 text-h3">{t('title')}</h1>
-          <Link className={buttonClassName} href={closeHref}>
-            {t('close')}
-          </Link>
-        </div>
-        <nav
-          aria-label={t('category')}
-          role="group"
-          className="flex gap-2 overflow-x-auto py-1"
+      <h1 className="sr-only">{t('title')}</h1>
+      <div className="z-3 flex items-start gap-1.5 bg-linear-to-b from-reel-canvas/70 to-transparent px-2.5 py-2">
+        <button
+          type="button"
+          aria-label={copy('back')}
+          className={reelTopIconClassName}
+          onClick={close}
         >
-          <FilterButton
-            selected={pill === 'for_you'}
-            onClick={() => selectFilter('for_you')}
-          >
-            {t('forYou')}
-          </FilterButton>
-          <FilterButton
-            selected={pill === 'following'}
-            onClick={() => selectFilter('following')}
-          >
-            {t('following')}
-          </FilterButton>
-          <FilterButton
-            selected={pill === 'nearby'}
-            onClick={() => selectFilter('nearby')}
-          >
-            {t('nearby')}
-          </FilterButton>
-          <Button
-            type="button"
-            variant="outline"
-            disabled
-            title={t('offersUnavailable')}
-          >
-            {t('offers')}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            disabled
-            title={t('productsUnavailable')}
-          >
-            {t('products')}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            disabled
-            title={t('servicesUnavailable')}
-          >
-            {t('services')}
-          </Button>
-        </nav>
-        {categories.isError && (
-          <p role="alert" className="m-0 text-small text-error">
-            {t('categoriesUnavailable')}
-          </p>
-        )}
-        {categories.data?.items.length ? (
-          <nav
-            aria-label={t('category')}
-            role="group"
-            className="flex gap-2 overflow-x-auto pb-1"
-          >
-            {categories.data.items.map((item) => (
-              <FilterButton
-                key={item.id}
-                selected={pill === 'category' && category === item.slug}
-                onClick={() => selectFilter('category', item.slug)}
-              >
-                {locale === 'hi' ? item.nameHi : item.nameEn}
-              </FilterButton>
-            ))}
-          </nav>
-        ) : null}
-        <p id="reel-filter-availability" className="sr-only">
-          {t('dependentFiltersUnavailable')}
-        </p>
-      </header>
-
-      <div
-        ref={scrollRoot}
-        className="h-dvh snap-y snap-mandatory overflow-y-auto overscroll-contain"
-      >
-        {pill === 'nearby' && !point ? (
-          <EmptyState
-            className="mx-auto min-h-dvh max-w-prose content-center pt-32"
-            title={t('emptyNearbyTitle')}
-            message={t('nearbyRequiresLocation')}
-            action={
-              <Button onClick={() => selectFilter('for_you')}>
-                {t('tryForYou')}
-              </Button>
-            }
-          />
-        ) : feed.query.isPending ? (
-          <div className="grid min-h-dvh place-items-center pt-24">
-            <Skeleton label={t('loading')} />
-          </div>
-        ) : feed.query.isError ? (
-          feedExpired ? (
-            <EmptyState
-              className="mx-auto min-h-dvh max-w-prose content-center pt-32"
-              title={t('feedExpired')}
-              message={t('feedExpired')}
-              action={<Button onClick={restartFeed}>{t('startFresh')}</Button>}
-            />
-          ) : errorCode === 'MEDIA_VIDEO_NOT_PUBLISHED' ? (
-            <EmptyState
-              className="mx-auto min-h-dvh max-w-prose content-center pt-32"
-              title={t('videoUnavailableTitle')}
-              message={t('videoUnavailableMessage')}
-              action={
-                <Link
-                  className={buttonClassName}
-                  href={publicHref('/videos', locale)}
-                >
-                  {t('browseVideos')}
-                </Link>
-              }
-            />
-          ) : errorCode === 'COMMON_FORBIDDEN' ? (
-            <NoPermissionState
-              className="mx-auto min-h-dvh max-w-prose content-center pt-32"
-              title={t('title')}
-              message={t('emptyMessage')}
-              action={
-                <Button onClick={() => void feed.query.refetch()}>
-                  {t('retry')}
-                </Button>
-              }
-            />
-          ) : (
-            <div className="mx-auto grid min-h-dvh max-w-prose content-center pt-32">
-              <Failure
-                code={errorCode ?? 'COMMON_INTERNAL_ERROR'}
-                retry={() => void feed.query.refetch()}
-                retryDisabled={feed.query.isFetching}
-              />
-            </div>
-          )
-        ) : items.length === 0 ? (
-          <EmptyState
-            className="mx-auto min-h-dvh max-w-prose content-center pt-32"
-            title={
-              pill === 'following'
-                ? t('emptyFollowingTitle')
-                : pill === 'nearby'
-                  ? t('emptyNearbyTitle')
-                  : t('emptyTitle')
-            }
-            message={
-              pill === 'following'
-                ? t('emptyFollowingMessage')
-                : pill === 'nearby'
-                  ? t('emptyNearbyMessage')
-                  : t('emptyMessage')
-            }
-            action={
-              pill === 'following' && state.kind !== 'ready' ? (
-                <Link
-                  className={buttonClassName}
-                  href={loginHref(
-                    locale,
-                    `${publicHref('/videos', locale)}?pill=following`,
-                  )}
-                >
-                  {t('signIn')}
-                </Link>
-              ) : pill === 'following' || pill === 'nearby' ? (
-                <Button onClick={() => selectFilter('for_you')}>
-                  {t('tryForYou')}
-                </Button>
-              ) : null
-            }
-          />
-        ) : (
-          <>
-            {items.map((item, index) => (
-              <ReelFeedCard
-                key={item.id}
-                item={item}
-                active={activeId === item.id || (!activeId && index === 0)}
-                nonce={nonce}
-                scrollRoot={scrollRoot}
-                onVisible={setVisible}
-              />
-            ))}
-            <div className="grid min-h-24 place-items-center p-4">
-              {feed.query.hasNextPage ? (
-                <Button
-                  loading={feed.query.isFetchingNextPage}
-                  disabled={feed.query.isFetchingNextPage}
-                  onClick={() => void feed.query.fetchNextPage()}
-                >
-                  {t('loadMore')}
-                </Button>
-              ) : null}
-              {isFetchNextPageError && (
-                <Failure
-                  code={failureCode(nextPageError)}
-                  retry={() => void fetchNextPage()}
-                  retryDisabled={isFetchingNextPage}
-                />
-              )}
-            </div>
-          </>
-        )}
+          <NavIcon name="cl" className="size-5.5" />
+        </button>
+        <div className="grid min-w-0 flex-1 gap-1 self-center">
+          <ReelPills pills={pills} controls={feedId} />
+          {reels.categories.isError && (
+            <p role="alert" className="m-0 text-small text-reel-text-2">
+              {t('categoriesUnavailable')}
+            </p>
+          )}
+        </div>
       </div>
-      <p className="pointer-events-none absolute bottom-0 z-10 m-0 bg-bg/95 px-page-gutter py-2 text-small text-text-2">
-        {t('dependentFiltersUnavailable')}
-      </p>
-    </section>
-  );
-}
 
-function FilterButton({
-  selected,
-  onClick,
-  children,
-}: {
-  selected: boolean;
-  onClick: () => void;
-  children: ReactNode;
-}) {
-  return (
-    <Button
-      type="button"
-      variant={selected ? 'primary' : 'outline'}
-      aria-pressed={selected}
-      onClick={onClick}
-    >
-      {children}
-    </Button>
+      <div className="flex min-h-0 flex-1 justify-center gap-4">
+        <div
+          ref={scrollRoot}
+          id={feedId}
+          tabIndex={0}
+          aria-label={t('feedLabel')}
+          aria-busy={feed.isFetching || undefined}
+          className={`h-full w-full max-w-reel-feed snap-y snap-mandatory overflow-y-auto overscroll-contain bg-reel-surface [scrollbar-width:none] desktop:my-3 desktop:h-[calc(100%-24px)] desktop:rounded-reel-frame [&::-webkit-scrollbar]:hidden ${reelFocusInset}`}
+        >
+          {firstPageProblem ? (
+            <ReelFeedStatus
+              problem={firstPageProblem}
+              onRetry={() => void feed.refetch()}
+              {...statusActions}
+            />
+          ) : feed.isPending ? (
+            <ReelLoadingSlide />
+          ) : (
+            <>
+              {items.map((item) => (
+                <ReelFeedCard
+                  key={item.id}
+                  item={item}
+                  active={item.id === activeId}
+                  nonce={nonce}
+                  scrollRoot={scrollRoot}
+                  onVisible={reels.setVisible}
+                  onGate={setGate}
+                  onComments={openComments}
+                  onMore={openMore}
+                />
+              ))}
+              {trailing && (
+                <div className="h-full snap-start snap-always">
+                  {feed.isFetchNextPageError ? (
+                    <ReelFeedStatus
+                      problem={problemFor(
+                        failureCode(feed.error),
+                        online,
+                        feed.isFetchingNextPage,
+                      )}
+                      onRetry={() => void feed.fetchNextPage()}
+                      {...statusActions}
+                    />
+                  ) : (
+                    <ReelLoadingSlide />
+                  )}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
+        {items.length > 1 && (
+          <div className="hidden flex-col justify-center gap-3 desktop:flex">
+            <button
+              type="button"
+              aria-label={t('previous')}
+              aria-controls={feedId}
+              disabled={activeIndex <= 0}
+              className={reelTopIconClassName}
+              onClick={() => step(-1)}
+            >
+              <NavIcon name="cu" className="size-5.5" />
+            </button>
+            <button
+              type="button"
+              aria-label={t('next')}
+              aria-controls={feedId}
+              disabled={atEnd}
+              className={reelTopIconClassName}
+              onClick={() => step(1)}
+            >
+              <NavIcon name="cd" className="size-5.5" />
+            </button>
+          </div>
+        )}
+
+        <ReelSidePanel
+          item={items.find((item) => item.id === activeId)}
+          onComments={openComments}
+        />
+      </div>
+
+      <p
+        role="status"
+        className={
+          reported
+            ? 'pointer-events-none absolute inset-x-3.5 bottom-[calc(var(--at-tab-h)+var(--at-sab)+16px)] z-4 mx-auto w-fit max-w-reel-feed rounded-md bg-text px-4 py-3 text-product-title text-bg shadow-3 desktop:bottom-6'
+            : 'sr-only'
+        }
+      >
+        {reported ? report('success') : ''}
+      </p>
+
+      {commentsItem && (
+        <Sheet
+          open={commentsOpen}
+          onOpenChange={setCommentsOpen}
+          title={comments('title')}
+          closeLabel={copy('close')}
+        >
+          <CommentsPanel videoId={commentsItem.id} showHeading={false} />
+        </Sheet>
+      )}
+      <ReelMoreSheet
+        item={moreItem}
+        open={moreOpen}
+        onOpenChange={setMoreOpen}
+        onGate={setGate}
+        onReport={() => {
+          setMoreOpen(false);
+          setReportOpen(true);
+        }}
+      />
+      {moreItem && (
+        <VideoReportSheet
+          videoId={moreItem.id}
+          open={reportOpen}
+          onOpenChange={setReportOpen}
+          onReported={() => setReported(true)}
+        />
+      )}
+      <ReelGateSheet gate={gate} onClose={() => setGate(null)} />
+    </section>
   );
 }

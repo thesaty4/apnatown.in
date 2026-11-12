@@ -65,15 +65,17 @@ only with a new product. Status/approval, edits, soft deletions and business
 settings are never reset. Gallery defaults use the current setting. Original
 stock/availability and exact integer paise are preserved. `free` maps to fixed
 zero, supported display units map to existing enum values (`/ chair` -> `unit`),
-and the three unsupported monthly fees become enquiry/null amounts/unit with
-their original quote retained in description. There is no new price/unit enum.
+and the three monthly fees use the new `month` unit with their real amounts
+(`20261112191100_service_month_unit`).
 
-Scope limitation from source inspection: `businesses_public_context` still
-requires PRODUCT-category business memberships. The reference providers only
-have SERVICE memberships, so their 31 service rows remain outside that public
-projection; no false memberships are seeded to bypass it. Unchanged eligible
-shops supply 53 products and 7 shop services before filters. Full reference
-provider visibility is not claimed by this seed-only fix. Reference emoji
+Provider visibility (2026-11-12): `businesses_public_context` required a
+PRODUCT-category membership for every business, but providers are categorised
+by SERVICE taxonomy (prototype `js9.js` provider wizard uses service
+categories), so all 31 provider services were excluded. Forward migration
+`20261112191000_provider_public_context` keeps the PRODUCT-membership rule for
+shops only; approval, owner, city and listing-taxonomy checks are unchanged and
+no false memberships are seeded. Unchanged eligible
+businesses supply 53 products and 38 services before filters. Reference emoji
 images are omitted; no asset/media delivery changes, invented ratings,
 verified experience, offers, Premium purchases/subscriptions or delivery
 configuration are added. Owner read projections remain authoritative.

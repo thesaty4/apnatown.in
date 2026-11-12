@@ -4,6 +4,7 @@ import { withDatabase } from './database.mjs';
 import { buildFixtures, FIXTURE_CLOCK } from './seed-fixtures.mjs';
 import { buildListingFixtures } from './seed-listing-fixtures.mjs';
 import { seedBusinessListings, seedListingTaxonomy } from './seed-listings.mjs';
+import { buildPersonaFixtures, seedPersonas } from './seed-personas.mjs';
 import { localTargets } from './targets.mjs';
 
 const require = createRequire(import.meta.url);
@@ -26,6 +27,9 @@ function loadHelpers(env) {
     modules = {
       crypto: require('../dist/shared/auth/crypto.js'),
       videos: require('../dist/modules/media-videos/domain/video-source.js'),
+      personas: require('../dist/modules/auth/domain/demo-personas.js'),
+      adminProjection: require('../dist/modules/admin/application/admin-projection.js'),
+      admin: require('@apnatown/shared/admin'),
       catalog: require('@apnatown/shared/catalog'),
       users: require('@apnatown/shared/users'),
       wire: require('@apnatown/shared/wire'),
@@ -48,6 +52,10 @@ function loadHelpers(env) {
     servicePriceTypeSchema: modules.search.ExploreCardSchema.shape.priceType,
     normalizePhone: modules.users.normalizePhone,
     parseVideoSource: modules.videos.parseVideoSource,
+    demoPersonas: modules.personas.DEMO_PERSONAS,
+    adminEmailContext: modules.adminProjection.adminEmailContext,
+    permissionInputSchema: modules.admin.PermissionInputSchema,
+    communicationScopeSchema: modules.admin.CommunicationScopeSchema,
   };
 }
 
@@ -223,7 +231,8 @@ async function seedBusiness(client, business, ownerId, cityId, areaId) {
   return videos;
 }
 
-async function apply(client, fixtures, listings, crypto) {
+async function apply(client, fixtures, listings, personas, helpers) {
+  const { crypto } = helpers;
   const counts = {
     businesses: 0,
     videos: 0,
@@ -234,6 +243,9 @@ async function apply(client, fixtures, listings, crypto) {
     inventory: 0,
     services: 0,
     listingsSkipped: 0,
+    personas: 0,
+    adminAccounts: 0,
+    personaConflicts: 0,
   };
   const taxonomyIds = await seedListingTaxonomy(
     client,
@@ -274,6 +286,7 @@ async function apply(client, fixtures, listings, crypto) {
       counts,
     );
   }
+  await seedPersonas(client, helpers, personas, { cityId, areaIds }, counts);
   return counts;
 }
 
@@ -306,9 +319,10 @@ export async function seed(env) {
   const sample = JSON.parse(await readFile(SAMPLE_DATA, 'utf8'));
   const fixtures = buildFixtures(sample, helpers);
   const listings = buildListingFixtures(sample, helpers);
+  const personas = buildPersonaFixtures(sample, helpers, fixtures);
   const counts = await withDatabase(targets.migration, (client) =>
     inTransaction(client, (tx) =>
-      apply(tx, fixtures, listings, helpers.crypto),
+      apply(tx, fixtures, listings, personas, helpers),
     ),
   );
   process.stdout.write(
@@ -316,6 +330,8 @@ export async function seed(env) {
       `${counts.existing} businesses already present; ${counts.conflicts} business conflicts; ` +
       `${counts.productSubcategories} product subcategories, ${counts.products} products, ` +
       `${counts.inventory} inventory rows and ${counts.services} services added; ` +
-      `${counts.listingsSkipped} listings skipped (existing, conflicting or missing settings)\n`,
+      `${counts.listingsSkipped} listings skipped (existing, conflicting or missing settings); ` +
+      `${counts.personas} demo persona users and ${counts.adminAccounts} admin accounts added; ` +
+      `${counts.personaConflicts} persona role conflicts\n`,
   );
 }

@@ -19,6 +19,10 @@ const schema = z.object({
   OTP_MAX_ATTEMPTS: z.coerce.number().int().min(1).max(10),
   OTP_PHONE_REQUESTS_PER_HOUR: z.coerce.number().int().min(1).max(100),
   OTP_DELIVERY_ADAPTER: z.enum(['private-local', 'unavailable']),
+  // Local/test-only one-click demo persona sessions (ADR 0002); refused in production.
+  DEMO_LOGIN_ENABLED: z
+    .preprocess(blank, z.enum(['true', 'false']).default('false'))
+    .transform((value) => value === 'true'),
   PORT: integer(1, 65535, 3001),
   WORKER_PROBE_PORT: integer(1, 65535, 3002),
   LOG_LEVEL: z
@@ -96,6 +100,7 @@ export function parseConfig(env: NodeJS.ProcessEnv): RuntimeConfig {
     new Set(keys).size !== keys.length ||
     keys.some((key) => /^(.)\1+$/.test(key)) ||
     (!local && config.OTP_DELIVERY_ADAPTER === 'private-local') ||
+    (!local && config.DEMO_LOGIN_ENABLED) ||
     (!local && config.PRIVATE_STORAGE_ADAPTER === 'private-local') ||
     (config.PRIVATE_STORAGE_ADAPTER === 'private-local' &&
       !config.PRIVATE_STORAGE_LOCAL_DIR) ||

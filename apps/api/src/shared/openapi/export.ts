@@ -7,6 +7,8 @@ import { buildOpenApiDocument } from './document';
 import { HealthController } from '../health/health.controller';
 import { ReadinessService } from '../health/readiness';
 import { AuthController } from '../../modules/auth/presentation/auth.controller';
+import { DemoLoginController } from '../../modules/auth/presentation/demo-login.controller';
+import { DemoLoginService } from '../../modules/auth/application/demo-login.service';
 import { UsersController } from '../../modules/users/presentation/users.controller';
 import { SessionService } from '../../modules/auth/application/session.service';
 import { OtpService } from '../../modules/auth/application/otp.service';
@@ -111,6 +113,8 @@ import { BusinessDiscoveryDetailService } from '../../modules/businesses/applica
     AdminMediaReportController,
     HealthController,
     AuthController,
+    // Local/test-only route; documented so the typed client can call it (ADR 0002).
+    DemoLoginController,
     UsersController,
     GeoController,
     SuperAdminGeoController,
@@ -154,6 +158,7 @@ import { BusinessDiscoveryDetailService } from '../../modules/businesses/applica
     ReadinessService,
     SessionService,
     OtpService,
+    DemoLoginService,
     ProfileService,
     SessionCookie,
     GeoReadService,

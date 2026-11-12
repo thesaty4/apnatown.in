@@ -84,19 +84,16 @@ Only missing product subcategories are added; their EN-only reference labels
 are also used in the required Hindi column, without invented translations.
 Product/service prices convert exactly to integer paise. Free services use
 `fixed` zero; `/ sq ft`, `/ plate`, `/ unit` and `/ chair` map to existing
-`sq_ft`, `plate` and `unit` values. The three `/ month` quotes use `enquiry`
-with null amounts/unit because the schema has no monthly unit; original
-service quote text is retained in the description. Service Gallery preference
+`sq_ft`, `plate` and `unit` values, and `/ month` maps to `month` (added by
+`20261112191100_service_month_unit`). Service Gallery preference
 comes from the existing business setting; missing settings skip that service.
 
 Discovery still applies current owner/business/city/taxonomy visibility.
-In particular, the current `businesses_public_context` projection requires a
-PRODUCT-category membership, while reference providers have SERVICE
-memberships. Their 31 service rows are provisioned but remain excluded by that
-projection unless legitimate qualifying memberships already exist. This seed
-does not add false memberships or relax visibility. With unchanged reference
-shops, 53 products and the 7 shop services have the required source visibility;
-active filters can still reduce those results.
+Shops need a PRODUCT-category membership; provider businesses are categorised
+by SERVICE taxonomy (`20261112191000_provider_public_context`), so all
+38 reference services are publicly eligible once migrations are applied. This
+seed does not add false memberships or relax any other visibility rule.
+Active filters can still reduce those results.
 
 No images are generated/uploaded: reference emoji media is not a storage
 asset. Ratings/reviews, offers, subscriptions/payments, verified experience,

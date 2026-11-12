@@ -34,6 +34,19 @@ export const SessionSchema = PrincipalSchema.extend({
   expiresAt: TimestampSchema,
 });
 export const LogoutSchema = z.strictObject({ loggedOut: z.literal(true) });
+/** Local/test-only demo personas (ADR 0002). Rider has no owner module yet. */
+export const DemoPersonaSchema = z.enum([
+  'customer',
+  'vendor',
+  'provider',
+  'admin',
+  'super_admin',
+]);
+export const DemoSessionInputSchema = z.strictObject({
+  persona: DemoPersonaSchema,
+});
+export type DemoPersona = z.infer<typeof DemoPersonaSchema>;
+export type DemoSessionInput = z.infer<typeof DemoSessionInputSchema>;
 export type Principal = z.infer<typeof PrincipalSchema>;
 export type SessionResponse = z.infer<typeof SessionSchema>;
 export type ChallengeInput = z.infer<typeof ChallengeInputSchema>;

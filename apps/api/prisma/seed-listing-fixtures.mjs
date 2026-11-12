@@ -1,14 +1,13 @@
 import { fixtureId } from './seed-fixtures.mjs';
 
-// Only existing Services units; the reference's monthly fees cannot be
-// represented as fixed per-month prices by the current source schema.
+// Reference units mapped to the Services unit allow-list.
 const SERVICE_UNITS = new Map([
   ['', null],
   ['/ sq ft', 'sq_ft'],
   ['/ plate', 'plate'],
   ['/ unit', 'unit'],
   ['/ chair', 'unit'],
-  ['/ month', null],
+  ['/ month', 'month'],
 ]);
 
 function invalid() {
@@ -126,12 +125,9 @@ function productFor(entry, sample, helpers) {
 
 function servicePrice(entry, helpers) {
   if (!SERVICE_UNITS.has(entry.unit)) invalid();
-  const sourceType = entry.ptype === 'free' ? 'fixed' : entry.ptype;
-  checked(helpers.servicePriceTypeSchema, sourceType);
-  if (!sourceType || (entry.ptype === 'free' && entry.from !== 0)) invalid();
-  // Do not turn ₹700/month into an apparently one-time ₹700 fee.
-  // Keep the original quote in description and use enquiry for monthly fees.
-  const priceType = entry.unit === '/ month' ? 'enquiry' : sourceType;
+  const priceType = entry.ptype === 'free' ? 'fixed' : entry.ptype;
+  checked(helpers.servicePriceTypeSchema, priceType);
+  if (!priceType || (entry.ptype === 'free' && entry.from !== 0)) invalid();
   const priceFromPaise =
     priceType === 'enquiry' ? null : paise(entry.from, helpers);
   const priceToPaise = priceType === 'range' ? paise(entry.to, helpers) : null;
@@ -150,7 +146,7 @@ function serviceFor(entry, business, sample, helpers) {
     businessKey: business.id,
     taxonomy: taxonomyFor(sample, 'service', entry.cat, entry.sub, helpers),
     // Services have only English titles in this reference.
-    description: `${text(entry.desc)}\nReference price: ${text(entry.p)}`,
+    description: text(entry.desc),
     ...servicePrice(entry, helpers),
     included: strings(entry.incl),
     excluded: strings(entry.excl),

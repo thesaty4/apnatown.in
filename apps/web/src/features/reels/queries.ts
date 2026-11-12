@@ -136,7 +136,10 @@ export function useVideoFeed(
         : undefined,
     enabled: input.pill !== 'nearby' || location !== null,
     retry: false,
-    staleTime: 30_000,
+    // A snapshot is frozen; a background refetch would re-rank page one.
+    staleTime: Number.POSITIVE_INFINITY,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
   return { query, key };
 }

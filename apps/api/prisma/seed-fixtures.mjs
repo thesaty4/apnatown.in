@@ -178,7 +178,8 @@ function assertUnique(values) {
 /**
  * Map the design-context sample data to seed rows. Only the shapes needed for
  * public listings and the Reels/Gallery feed are produced; social handles,
- * customers, orders and engagement are intentionally not seeded.
+ * other customers, orders and engagement are intentionally not seeded (demo
+ * personas live in seed-personas.mjs).
  */
 export function buildFixtures(sample, helpers) {
   const city = sample.cities?.find((item) => item.id === PADRAUNA.key);

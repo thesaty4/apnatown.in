@@ -3,18 +3,27 @@ export const reelFocus =
   'focus-visible:outline-(length:--at-focus-ring) focus-visible:outline-solid ' +
   'focus-visible:outline-offset-2 focus-visible:outline-reel-text';
 
-/** Prototype `.rtop .iconbtn`: 44px translucent circle. */
-export const reelTopIconClassName =
-  'inline-grid size-icon-min shrink-0 place-items-center rounded-pill ' +
+/** Inset variant for edge-to-edge regions such as the scrollable feed. */
+export const reelFocusInset =
+  'focus-visible:outline-(length:--at-focus-ring) focus-visible:outline-solid ' +
+  'focus-visible:-outline-offset-3 focus-visible:outline-reel-text';
+
+/** Prototype translucent `.iconbtn` circle on the dark surface; add a size. */
+export const reelIconButtonClassName =
+  'inline-grid shrink-0 place-items-center rounded-pill ' +
   'bg-reel-text/14 text-reel-text transition-colors duration-2 ease-standard ' +
   'hover:bg-reel-text/25 disabled:cursor-not-allowed disabled:opacity-50 ' +
   `motion-reduce:transition-none ${reelFocus}`;
+
+/** Prototype `.rtop .iconbtn`: 44px. */
+export const reelTopIconClassName = `size-icon-min ${reelIconButtonClassName}`;
 
 /** Prototype `.rrail button`: 48px dark translucent circle. */
 export const reelRailButtonClassName =
   'relative grid size-touch place-items-center rounded-pill bg-reel-canvas/45 ' +
   'text-reel-text transition-transform duration-2 ease-standard ' +
-  'active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 ' +
+  'motion-safe:active:scale-95 aria-busy:cursor-progress aria-disabled:cursor-not-allowed ' +
+  'aria-disabled:opacity-50 ' +
   `aria-pressed:text-reel-liked motion-reduce:transition-none ${reelFocus}`;
 
 /** Prototype `.rrail .n`. */

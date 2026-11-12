@@ -19,6 +19,7 @@ const catalogue = {
   SESSION_EXPIRED: [401, 'errors.auth.session.expired'],
   CSRF_INVALID: [403, 'errors.auth.session.csrfInvalid'],
   ACCOUNT_UNAVAILABLE: [403, 'errors.auth.account.unavailable'],
+  DEMO_PERSONA_UNAVAILABLE: [404, 'errors.auth.demo.personaUnavailable'],
   USER_NOT_FOUND: [404, 'errors.users.notFound'],
   ADDRESS_NOT_FOUND: [404, 'errors.users.address.notFound'],
   ADDRESS_OUT_OF_SCOPE: [403, 'errors.users.address.outOfScope'],

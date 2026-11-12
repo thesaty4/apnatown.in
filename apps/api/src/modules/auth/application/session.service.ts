@@ -125,6 +125,16 @@ export class SessionService implements SessionAccess, AuthSessionPort {
     await this.sessions.revoke(tx, old.id, this.clock.now());
     return this.issue(tx, principal.userId);
   }
+  /** Demo persona switch (docs/adr/0002): replaces a live session of any kind. */
+  async replace(
+    tx: TxContext,
+    old: SessionBinding,
+    userId: string,
+  ): Promise<IssuedSession> {
+    await this.lockBinding(tx, old);
+    await this.sessions.revoke(tx, old.id, this.clock.now());
+    return this.issue(tx, userId);
+  }
   private async issue(
     tx: TxContext,
     userId: string | null,

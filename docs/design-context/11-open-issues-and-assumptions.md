@@ -45,6 +45,7 @@
 | G-20 | The product owner requested provider Premium plan management, but the prototype has no provider billing screen. | Add S-PROV-18 at `/provider/billing`, reuse the vendor subscription components, and preserve provider ownership, plan/invoice scope, and paid-expiry cancellation behavior. |
 | G-21 | Prototype `.btn.d` keeps white text on the dark error fill, measuring only 2.77:1 contrast. | The shared danger button uses the existing `on-primary` foreground token, preserving white in light mode and using the approved dark foreground in dark mode (6.47:1 / 6.24:1). This intentional accessibility correction needs design-owner acknowledgement; do not restore the failing literal white. |
 | G-22 | Simulated Reels controls imply identical playback/mute/progress APIs for every provider. | Use YouTube-supported controls and Instagram native interaction or safe Open fallback; never fabricate playback state. Preserve feed ranking/layout/consent under the [integration contract](../../specs/_foundation/media-and-maps.md) |
+| G-23 | Prototype provider onboarding picks a SERVICE category (`js9.js` `wizard('service')` uses `SCATS`), but the Businesses BE spec requires PRODUCT-category memberships for every business, which hid all approved providers and their services from Explore. | Public discovery requires PRODUCT memberships for shops only (`20261112191000_provider_public_context`); provider onboarding/profile category rules in the Businesses spec still need architect/product confirmation. |
 
 ## Confirmed integration decisions (2026-11-12)
 

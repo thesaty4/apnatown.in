@@ -22,6 +22,7 @@ const ownerKeys = {
     'OTP_MAX_ATTEMPTS',
     'OTP_PHONE_REQUESTS_PER_HOUR',
     'OTP_DELIVERY_ADAPTER',
+    'DEMO_LOGIN_ENABLED',
     'PORT',
     'WORKER_PROBE_PORT',
     'LOG_LEVEL',
@@ -48,7 +49,7 @@ const ownerKeys = {
   web: [
     'APP_ENV', 'NODE_ENV', 'APP_BASE_URL', 'API_INTERNAL_ORIGIN',
     'MAP_TILE_URL_TEMPLATE', 'MAP_TILE_ATTRIBUTION_TEXT',
-    'MAP_TILE_ATTRIBUTION_URL', 'MAP_TILE_MAX_ZOOM',
+    'MAP_TILE_ATTRIBUTION_URL', 'MAP_TILE_MAX_ZOOM', 'DEMO_LOGIN_ENABLED',
   ],
   database: [
     'APP_ENV',
@@ -163,6 +164,8 @@ export function validateLocalEnvironment(values) {
   }
   if (!['private-local', 'unavailable'].includes(values.OTP_DELIVERY_ADAPTER))
     throw new Error('OTP delivery adapter must be explicit.');
+  if (!['', 'true', 'false'].includes(values.DEMO_LOGIN_ENABLED ?? ''))
+    throw new Error('DEMO_LOGIN_ENABLED must be true or false.');
   for (const key of ['APP_BASE_URL', 'API_INTERNAL_ORIGIN', 'WEB_ORIGIN']) {
     let url;
     try {

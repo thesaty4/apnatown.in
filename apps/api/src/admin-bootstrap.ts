@@ -27,8 +27,9 @@ import { PrismaAdminRepository } from './modules/admin/infrastructure/prisma-adm
 const HELP = `Usage: pnpm --filter @apnatown/api admin:bootstrap -- --phone=<+91XXXXXXXXXX>
 
 Grants the super_admin role to an existing user identified by verified phone.
-Operator-only, local/test bootstrap of the FIRST super_admin; there is no
-seeded admin account. The command:
+Operator-only, local/test bootstrap of the FIRST super_admin; only the
+local/test \`db:seed\` demo personas (docs/adr/0002) seed admin accounts, and
+after that seed this command refuses because the demo Super Admin exists. The command:
   - refuses unless APP_ENV is local or test (never production);
   - refuses when an active super_admin already exists;
   - requires an existing, active user (sign in once with OTP first);

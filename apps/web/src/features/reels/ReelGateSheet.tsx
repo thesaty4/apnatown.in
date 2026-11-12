@@ -22,7 +22,7 @@ export function ReelGateSheet({
   gate: ReelGate | null;
   onClose: () => void;
 }) {
-  const t = useTranslations('reels.feed');
+  const t = useTranslations('common.copy');
   const auth = useTranslations('auth.feedback');
   const loginHref = useLoginHref();
   // Keep the last gate's copy while the sheet animates closed.
@@ -35,7 +35,7 @@ export function ReelGateSheet({
       onOpenChange={(open) => {
         if (!open) onClose();
       }}
-      title={shown?.kind === 'restricted' ? shown.title : t('loginTitle')}
+      title={shown?.kind === 'restricted' ? shown.title : t('pleaseLogInToContinue')}
       description={shown?.message ?? ''}
       closeLabel={t('notNow')}
     >

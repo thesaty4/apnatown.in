@@ -22,6 +22,8 @@ import { PrismaSessionRepository } from './infrastructure/session.repository';
 import { PrismaChallengeRepository } from './infrastructure/challenge.repository';
 import { PrismaAuthCleanup } from './infrastructure/cleanup.repository';
 import { AuthController } from './presentation/auth.controller';
+import { DemoLoginController } from './presentation/demo-login.controller';
+import { DemoLoginService } from './application/demo-login.service';
 
 @Global()
 @Module({})
@@ -35,11 +37,16 @@ export class AuthModule {
     // Never start production with a successful-looking local/no-op delivery adapter.
     if (config.APP_ENV === 'production')
       throw new Error('OTP_PROVIDER_NOT_CONFIGURED');
+    // Demo persona sign-in (docs/adr/0002) is mounted only on explicit local/test opt-in.
+    const demo = config.DEMO_LOGIN_ENABLED;
     return {
       module: AuthModule,
       imports: [runtime, users],
-      controllers: [AuthController],
+      controllers: demo
+        ? [AuthController, DemoLoginController]
+        : [AuthController],
       providers: [
+        ...(demo ? [DemoLoginService] : []),
         {
           provide: IDENTITY_CRYPTO,
           useFactory: () =>
