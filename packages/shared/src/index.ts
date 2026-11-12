@@ -7,10 +7,18 @@ export {
   CONSENT_EVENT_TYPES,
   ConsentEventPayloadSchema,
   ConsentEventTypeSchema,
+  DATA_REQUEST_EVENT_TYPES,
+  DataRequestEventPayloadSchema,
+  DataRequestFailedEventPayloadSchema,
   EventEnvelopeSchema,
+  USER_ACCOUNT_EVENT_TYPES,
+  UserAccountEventPayloadSchema,
 } from './events.js';
 export type {
   ConsentEventPayload,
   ConsentEventType,
+  DataRequestEventPayload,
+  DataRequestFailedEventPayload,
   EventEnvelope,
+  UserAccountEventPayload,
 } from './events.js';

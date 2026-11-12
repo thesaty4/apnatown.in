@@ -33,6 +33,17 @@ export interface AddressRepository {
   lock(tx: TxContext, id: string): Promise<StoredAddress | null>;
   defaultAddress(tx: TxContext, userId: string): Promise<StoredAddress | null>;
   insert(tx: TxContext, row: StoredAddress): Promise<void>;
+  /**
+   * Data-request erasure of every address (live or tombstoned) of one user:
+   * replaces text with the sealed marker, removes landmark/location and
+   * tombstones live rows. Returns the number of rows changed.
+   */
+  eraseForUser(
+    tx: TxContext,
+    userId: string,
+    now: string,
+    seal: (id: string) => string,
+  ): Promise<number>;
   /** CAS includes immutable owner, live state and version. */
   update(
     tx: TxContext,

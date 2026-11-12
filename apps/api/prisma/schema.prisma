@@ -69,22 +69,23 @@ model RateLimitBucket {
 }
 
 model User {
-  id              String     @id @db.Uuid
-  phoneCiphertext String?    @map("phone_ciphertext")
-  phoneLookupHash Bytes?     @unique(map: "users_phone_lookup_hash_key") @map("phone_lookup_hash")
-  emailCiphertext String?    @map("email_ciphertext")
-  displayName     String?    @map("display_name")
-  preferredLocale String     @default("en") @map("preferred_locale")
-  themePreference String     @default("light") @map("theme_preference")
-  accountStatus   String     @default("active") @map("account_status")
-  version         Int        @default(1)
-  deletedAt       DateTime?  @map("deleted_at") @db.Timestamptz(6)
-  createdAt       DateTime   @map("created_at") @db.Timestamptz(6)
-  updatedAt       DateTime   @map("updated_at") @db.Timestamptz(6)
+  id              String        @id @db.Uuid
+  phoneCiphertext String?       @map("phone_ciphertext")
+  phoneLookupHash Bytes?        @unique(map: "users_phone_lookup_hash_key") @map("phone_lookup_hash")
+  emailCiphertext String?       @map("email_ciphertext")
+  displayName     String?       @map("display_name")
+  preferredLocale String        @default("en") @map("preferred_locale")
+  themePreference String        @default("light") @map("theme_preference")
+  accountStatus   String        @default("active") @map("account_status")
+  version         Int           @default(1)
+  deletedAt       DateTime?     @map("deleted_at") @db.Timestamptz(6)
+  createdAt       DateTime      @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime      @map("updated_at") @db.Timestamptz(6)
   roles           UserRole[]
   sessions        Session[]
   addresses       Address[]
   consents        Consent[]
+  dataRequests    DataRequest[]
 
   @@index([deletedAt], where: raw("\"deleted_at\" IS NULL"), map: "users_active_deleted_at_idx")
   @@map("users")
@@ -142,6 +143,30 @@ model Consent {
   @@index([userId, purpose, channel, recordedAt(sort: Desc), id(sort: Desc)], map: "consents_user_choice_idx")
   @@index([anonymousSubjectHash, purpose, channel, recordedAt(sort: Desc), id(sort: Desc)], map: "consents_anonymous_choice_idx")
   @@map("consents")
+}
+
+model DataRequest {
+  id                       String    @id @db.Uuid
+  userId                   String    @map("user_id") @db.Uuid
+  requestType              String    @map("request_type")
+  status                   String    @default("queued")
+  idempotencyKey           String    @map("idempotency_key")
+  policyVersion            String?   @map("policy_version")
+  completedSteps           Json      @default("{}") @map("completed_steps") @db.JsonB
+  artifactStorageKey       String?   @map("artifact_storage_key")
+  artifactExpiresAt        DateTime? @map("artifact_expires_at") @db.Timestamptz(6)
+  completionTokenHash      Bytes?    @map("completion_token_hash")
+  completionTokenExpiresAt DateTime? @map("completion_token_expires_at") @db.Timestamptz(6)
+  failureCode              String?   @map("failure_code")
+  requestedAt              DateTime  @map("requested_at") @db.Timestamptz(6)
+  updatedAt                DateTime  @map("updated_at") @db.Timestamptz(6)
+  completedAt              DateTime? @map("completed_at") @db.Timestamptz(6)
+  user                     User      @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "data_requests_user_id_fkey")
+
+  @@unique([userId, idempotencyKey], map: "data_requests_user_id_idempotency_key_key")
+  @@index([userId, requestedAt(sort: Desc), id(sort: Desc)], map: "data_requests_user_requested_idx")
+  @@index([status, requestedAt, id], where: raw("\"status\" IN ('queued', 'processing')"), map: "data_requests_work_idx")
+  @@map("data_requests")
 }
 
 model OtpChallenge {

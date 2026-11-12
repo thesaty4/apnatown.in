@@ -30,6 +30,10 @@ export function createLogger(
         'token',
         'cookie',
         'authorization',
+        '*.authorization',
+        // Data-request deletion completion capability (never logged).
+        'completionToken',
+        '*.completionToken',
         'DATABASE_URL',
         'req',
         'res',

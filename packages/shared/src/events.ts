@@ -5,7 +5,13 @@ import {
   TimestampSchema,
   VersionSchema,
 } from './wire.js';
-import { ConsentChannelSchema, ConsentPurposeSchema } from './users.js';
+import {
+  AccountStatusSchema,
+  ConsentChannelSchema,
+  ConsentPurposeSchema,
+  DataRequestFailureCodeSchema,
+  DataRequestTypeSchema,
+} from './users.js';
 
 export const EventEnvelopeSchema = z.strictObject({
   id: IdSchema,
@@ -51,3 +57,37 @@ export const ConsentEventPayloadSchema = z
   );
 export type ConsentEventType = z.infer<typeof ConsentEventTypeSchema>;
 export type ConsentEventPayload = z.infer<typeof ConsentEventPayloadSchema>;
+
+// Users data requests (F-AU-008, F-AC-004). IDs only; never personal data.
+export const DATA_REQUEST_EVENT_TYPES = Object.freeze({
+  created: 'user.data_request.created',
+  completed: 'user.data_request.completed',
+  failed: 'user.data_request.failed',
+} as const);
+export const USER_ACCOUNT_EVENT_TYPES = Object.freeze({
+  deleted: 'user.account.deleted',
+} as const);
+export const DataRequestEventPayloadSchema = z.strictObject({
+  requestId: IdSchema,
+  userId: IdSchema,
+  type: DataRequestTypeSchema,
+});
+export const DataRequestFailedEventPayloadSchema =
+  DataRequestEventPayloadSchema.extend({
+    status: z.enum(['failed', 'blocked']),
+    failureCode: DataRequestFailureCodeSchema,
+  });
+export const UserAccountEventPayloadSchema = z.strictObject({
+  userId: IdSchema,
+  status: AccountStatusSchema,
+  version: VersionSchema,
+});
+export type DataRequestEventPayload = z.infer<
+  typeof DataRequestEventPayloadSchema
+>;
+export type DataRequestFailedEventPayload = z.infer<
+  typeof DataRequestFailedEventPayloadSchema
+>;
+export type UserAccountEventPayload = z.infer<
+  typeof UserAccountEventPayloadSchema
+>;

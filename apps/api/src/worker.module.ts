@@ -18,13 +18,16 @@ import {
 } from './shared/jobs/outbox-queue';
 import { OutboxRelay } from './shared/jobs/outbox-relay';
 import { OutboxConsumer } from './shared/jobs/outbox-consumer';
+import { DataRequestProcessor } from './modules/users/application/data-request-processor';
+import { UsersDataWorkerModule } from './modules/users/users-data-worker.module';
 
 @Module({})
 export class WorkerModule {
   static forRoot(config: RuntimeConfig): DynamicModule {
+    const runtime = RuntimeModule.forRoot(config);
     return {
       module: WorkerModule,
-      imports: [RuntimeModule.forRoot(config)],
+      imports: [runtime, UsersDataWorkerModule.forRoot(runtime, config)],
       providers: [
         {
           provide: PG_BOSS_FACTORY,
@@ -57,7 +60,9 @@ export class WorkerModule {
         { provide: EVENT_CONSUMER, useClass: TransactionalEventConsumer },
         {
           provide: OUTBOX_HANDLERS,
-          useValue: Object.freeze<OutboxHandler[]>([]),
+          useFactory: (dataRequests: DataRequestProcessor) =>
+            Object.freeze<OutboxHandler[]>([dataRequests]),
+          inject: [DataRequestProcessor],
         },
         OutboxDispatcher,
       ],

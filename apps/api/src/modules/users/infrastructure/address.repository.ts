@@ -64,6 +64,26 @@ export class PrismaAddressRepository implements AddressRepository {
         ${this.location(row)}, ${row.isDefault}, ${row.version}, ${row.deletedAt}::timestamptz,
         ${row.createdAt}::timestamptz, ${row.updatedAt}::timestamptz)`);
   }
+  async eraseForUser(
+    tx: TxContext,
+    userId: string,
+    now: string,
+    seal: (id: string) => string,
+  ): Promise<number> {
+    const db = this.database.client(tx);
+    const rows = await db.$queryRaw<{ id: string }[]>(Prisma.sql`
+      SELECT id FROM addresses WHERE user_id = ${userId}::uuid
+      ORDER BY id FOR UPDATE`);
+    for (const { id } of rows)
+      await db.$executeRaw(Prisma.sql`
+        UPDATE addresses SET label = 'Erased', address_text = ${seal(id)},
+          landmark = NULL, location = NULL, is_default = false,
+          version = version + 1,
+          deleted_at = COALESCE(deleted_at, ${now}::timestamptz),
+          updated_at = ${now}::timestamptz
+        WHERE id = ${id}::uuid AND user_id = ${userId}::uuid`);
+    return rows.length;
+  }
   async update(
     tx: TxContext,
     row: StoredAddress,

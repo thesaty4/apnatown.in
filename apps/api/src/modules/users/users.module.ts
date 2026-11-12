@@ -19,6 +19,15 @@ import { ConsentService } from './application/consent.service';
 import { PrismaConsentRepository } from './infrastructure/consent.repository';
 import { ConsentsController } from './presentation/consents.controller';
 import { AnonymousConsentsController } from './presentation/anonymous-consents.controller';
+import { privateStorageProvider } from '../../integrations/storage/provider';
+import { DATA_REQUEST_REPOSITORY } from './domain/data-request';
+import { DataRequestEvents } from './application/data-request-events';
+import { DataRequestService } from './application/data-request.service';
+import { PrismaDataRequestRepository } from './infrastructure/data-request.repository';
+import {
+  DataRequestCompletionController,
+  DataRequestsController,
+} from './presentation/data-requests.controller';
 
 @Module({})
 export class UsersModule {
@@ -31,6 +40,8 @@ export class UsersModule {
         AddressesController,
         ConsentsController,
         AnonymousConsentsController,
+        DataRequestsController,
+        DataRequestCompletionController,
       ],
       providers: [
         { provide: USERS_REPOSITORY, useClass: PrismaUsersRepository },
@@ -47,6 +58,13 @@ export class UsersModule {
         ConsentService,
         { provide: CONSENT_READ, useExisting: ConsentService },
         { provide: CONSENT_WRITE, useExisting: ConsentService },
+        {
+          provide: DATA_REQUEST_REPOSITORY,
+          useClass: PrismaDataRequestRepository,
+        },
+        privateStorageProvider,
+        DataRequestEvents,
+        DataRequestService,
       ],
       exports: [USER_IDENTITY, USERS_ADDRESS, CONSENT_READ, CONSENT_WRITE],
     };

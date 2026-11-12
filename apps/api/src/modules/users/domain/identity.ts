@@ -40,4 +40,10 @@ export interface UsersRepository {
     patch: Partial<Preferences>,
     now: Date,
   ): Promise<Preferences>;
+  /** Data-request deletion: blocks new sessions/writes before erasure. */
+  markDeleting(tx: TxContext, id: string, now: Date): Promise<UserIdentity>;
+  /** Removes optional profile data; phone retention is Q-32-gated. */
+  eraseProfile(tx: TxContext, id: string, now: Date): Promise<void>;
+  /** Final anonymized tombstone; the row stays for foreign keys. */
+  markDeleted(tx: TxContext, id: string, now: Date): Promise<UserIdentity>;
 }

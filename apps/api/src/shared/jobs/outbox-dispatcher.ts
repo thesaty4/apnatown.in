@@ -20,6 +20,12 @@ export interface OutboxHandler {
   readonly operation: ConsumerOperation;
   expiresAt(event: EventEnvelope): Date;
   handle(tx: TxContext, event: EventEnvelope): Promise<void>;
+  /**
+   * Optional non-transactional continuation run after the receipt commits,
+   * including on receipt replay, so job retries resume idempotent work
+   * (e.g. private storage or multi-step processing outside one transaction).
+   */
+  afterCommit?(event: EventEnvelope): Promise<void>;
 }
 
 const jobSchema = z.strictObject({ eventId: IdSchema });
@@ -41,7 +47,9 @@ export class OutboxDispatcher {
       if (
         !parsed.success ||
         typeof registration.expiresAt !== 'function' ||
-        typeof registration.handle !== 'function'
+        typeof registration.handle !== 'function' ||
+        (registration.afterCommit !== undefined &&
+          typeof registration.afterCommit !== 'function')
       )
         throw new Error('OUTBOX_HANDLER_INVALID');
       const operation = Object.freeze(parsed.data);
@@ -50,10 +58,12 @@ export class OutboxDispatcher {
       identities.add(identity);
       const key = this.eventKey(operation.eventType, operation.schemaVersion);
       const handlers = this.handlers.get(key) ?? [];
+      const afterCommit = registration.afterCommit?.bind(registration);
       handlers.push({
         operation,
         expiresAt: (event) => registration.expiresAt(event),
         handle: (tx, event) => registration.handle(tx, event),
+        ...(afterCommit ? { afterCommit } : {}),
       });
       this.handlers.set(key, handlers);
     }
@@ -67,7 +77,16 @@ export class OutboxDispatcher {
     const handlers = this.handlers.get(
       this.eventKey(event.type, event.schemaVersion),
     );
-    if (!handlers?.length) throw new Error('OUTBOX_EVENT_UNHANDLED');
+    // Every event shares one outbox queue; events with no registered consumer
+    // in this worker have nothing to do and are acknowledged.
+    if (!handlers?.length) {
+      this.logger.debug({
+        event: 'outbox.event_unhandled',
+        eventId: event.id,
+        code: 'OUTBOX_EVENT_UNHANDLED',
+      });
+      return;
+    }
     await withCorrelation(event.correlationId, async () => {
       let failed = false;
       for (const handler of handlers) {
@@ -78,6 +97,7 @@ export class OutboxDispatcher {
             handler.expiresAt(event),
             (tx, envelope) => handler.handle(tx, envelope),
           );
+          await handler.afterCommit?.(event);
         } catch {
           failed = true;
           this.logger.error({

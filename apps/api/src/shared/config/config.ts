@@ -1,6 +1,7 @@
 import { ConsentNoticeVersionSchema } from '@apnatown/shared/users';
 import { z } from 'zod';
 
+const blank = (value: unknown) => (value === '' ? undefined : value);
 const integer = (min: number, max: number, fallback: number) =>
   z.coerce.number().int().min(min).max(max).default(fallback);
 const schema = z.object({
@@ -34,8 +35,36 @@ const schema = z.object({
   OUTBOX_RELAY_LEASE_MS: integer(10000, 300000, 30000),
   // Approved consent notice copy version (Q-31). Unset keeps grants unavailable.
   CONSENT_NOTICE_VERSION: z.preprocess(
-    (value) => (value === '' ? undefined : value),
+    blank,
     ConsentNoticeVersionSchema.optional(),
+  ),
+  // Private generated-artifact storage. No provider is approved yet
+  // (TODO(verify)); `unavailable` keeps export artifacts from being stored.
+  PRIVATE_STORAGE_ADAPTER: z.preprocess(
+    blank,
+    z.enum(['private-local', 'unavailable']).default('unavailable'),
+  ),
+  PRIVATE_STORAGE_LOCAL_DIR: z.preprocess(
+    blank,
+    z
+      .string()
+      .regex(/^\/[^\0]*$/)
+      .optional(),
+  ),
+  // Q-32 policy values. Unset keeps export/deletion requests `blocked` with
+  // POLICY_PENDING (and no deletion completion capability) instead of
+  // guessing retention periods or SLAs.
+  DATA_EXPORT_TTL_SECONDS: z.preprocess(
+    blank,
+    z.coerce.number().int().min(60).max(2592000).optional(),
+  ),
+  DATA_DELETION_POLICY_VERSION: z.preprocess(
+    blank,
+    ConsentNoticeVersionSchema.optional(),
+  ),
+  DATA_DELETION_COMPLETION_TTL_SECONDS: z.preprocess(
+    blank,
+    z.coerce.number().int().min(60).max(2592000).optional(),
   ),
 });
 
@@ -62,6 +91,9 @@ export function parseConfig(env: NodeJS.ProcessEnv): RuntimeConfig {
     new Set(keys).size !== keys.length ||
     keys.some((key) => /^(.)\1+$/.test(key)) ||
     (!local && config.OTP_DELIVERY_ADAPTER === 'private-local') ||
+    (!local && config.PRIVATE_STORAGE_ADAPTER === 'private-local') ||
+    (config.PRIVATE_STORAGE_ADAPTER === 'private-local' &&
+      !config.PRIVATE_STORAGE_LOCAL_DIR) ||
     !['postgres:', 'postgresql:'].includes(db.protocol) ||
     !db.username ||
     !db.password ||

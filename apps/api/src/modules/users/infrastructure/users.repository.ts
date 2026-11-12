@@ -103,6 +103,45 @@ export class PrismaUsersRepository implements UsersRepository {
     });
     return fromRow(row).preferences;
   }
+  async markDeleting(
+    tx: TxContext,
+    id: string,
+    now: Date,
+  ): Promise<UserIdentity> {
+    const row = await this.database.client(tx).user.update({
+      where: { id },
+      data: {
+        accountStatus: 'deleting',
+        version: { increment: 1 },
+        updatedAt: now,
+      },
+      include: { roles: true },
+    });
+    return fromRow(row);
+  }
+  async eraseProfile(tx: TxContext, id: string, now: Date): Promise<void> {
+    await this.database.client(tx).user.update({
+      where: { id },
+      data: {
+        displayName: null,
+        emailCiphertext: null,
+        version: { increment: 1 },
+        updatedAt: now,
+      },
+    });
+  }
+  async markDeleted(
+    tx: TxContext,
+    id: string,
+    now: Date,
+  ): Promise<UserIdentity> {
+    const row = await this.database.client(tx).user.update({
+      where: { id },
+      data: { deletedAt: now, version: { increment: 1 }, updatedAt: now },
+      include: { roles: true },
+    });
+    return fromRow(row);
+  }
 }
 function fromRow(row: User & { roles: UserRole[] }): UserIdentity {
   return {

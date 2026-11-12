@@ -35,6 +35,22 @@ export class PrismaConsentRepository implements ConsentRepository {
       ORDER BY recorded_at DESC, id DESC LIMIT 1`);
     return rows[0] ?? null;
   }
+  history(
+    tx: TxContext,
+    userId: string,
+    limit: number,
+    after?: { recordedAt: string; id: string },
+  ): Promise<StoredConsent[]> {
+    if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100)
+      throw new Error('INVALID_CONSENT_PAGE_LIMIT');
+    const position = after
+      ? Prisma.sql`AND (recorded_at, id) < (${after.recordedAt}::timestamptz, ${after.id}::uuid)`
+      : Prisma.empty;
+    return this.database.client(tx).$queryRaw<StoredConsent[]>(Prisma.sql`
+      SELECT ${columns} FROM consents
+      WHERE user_id = ${userId}::uuid ${position}
+      ORDER BY recorded_at DESC, id DESC LIMIT ${limit + 1}`);
+  }
   async insert(tx: TxContext, row: StoredConsent): Promise<StoredConsent> {
     const rows = await this.database.client(tx).$queryRaw<
       StoredConsent[]

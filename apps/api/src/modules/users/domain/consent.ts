@@ -26,6 +26,13 @@ export interface ConsentRepository {
     purpose: ConsentPurpose,
     channel: ConsentChannel,
   ): Promise<StoredConsent | null>;
+  /** Full evidence history page for data export, newest first. */
+  history(
+    tx: TxContext,
+    userId: string,
+    limit: number,
+    after?: { recordedAt: string; id: string },
+  ): Promise<StoredConsent[]>;
   /** Append only; returns the row exactly as persisted. */
   insert(tx: TxContext, row: StoredConsent): Promise<StoredConsent>;
 }

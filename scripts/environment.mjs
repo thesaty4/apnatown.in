@@ -35,6 +35,11 @@ const ownerKeys = {
     'RUNTIME_CLEANUP_INTERVAL_MS',
     'RUNTIME_CLEANUP_BATCH_SIZE',
     'CONSENT_NOTICE_VERSION',
+    'DATA_EXPORT_TTL_SECONDS',
+    'DATA_DELETION_POLICY_VERSION',
+    'DATA_DELETION_COMPLETION_TTL_SECONDS',
+    'PRIVATE_STORAGE_ADAPTER',
+    'PRIVATE_STORAGE_LOCAL_DIR',
   ],
   web: ['APP_ENV', 'NODE_ENV', 'APP_BASE_URL', 'API_INTERNAL_ORIGIN'],
   database: [
@@ -199,6 +204,9 @@ export async function createLocalEnvironment(root, environment = process.env) {
     OTP_MAX_ATTEMPTS: '5',
     OTP_PHONE_REQUESTS_PER_HOUR: '10',
     OTP_DELIVERY_ADAPTER: 'private-local',
+    // Ignored private directory; the adapter enforces owner-only permissions.
+    PRIVATE_STORAGE_ADAPTER: 'private-local',
+    PRIVATE_STORAGE_LOCAL_DIR: resolve(root, '.local/storage'),
     SHUTDOWN_TIMEOUT_MS: '10000',
   });
   validateLocalEnvironment(values);

@@ -222,3 +222,100 @@ export type UpdateConsent = z.infer<typeof UpdateConsentSchema>;
 export type ConsentRecord = z.infer<typeof ConsentRecordSchema>;
 export type ConsentChoice = z.infer<typeof ConsentChoiceSchema>;
 export type ConsentList = z.infer<typeof ConsentListSchema>;
+
+// Data requests (F-AU-008, F-AC-004, BR-14). Processing follows
+// queued -> processing -> completed|failed|blocked; Q-32 gates policy.
+export const DataRequestTypeSchema = z.enum(['export', 'delete']);
+export const DataRequestStatusSchema = z.enum([
+  'queued',
+  'processing',
+  'blocked',
+  'completed',
+  'failed',
+]);
+// Stored/returned failure reasons only; never free text or personal data.
+export const DataRequestFailureCodeSchema = z.enum([
+  'POLICY_PENDING',
+  'ACCOUNT_UNAVAILABLE',
+  'OWNER_BLOCKED',
+  'STORAGE_UNAVAILABLE',
+  'PROCESSING_FAILED',
+]);
+export const CreateDataRequestSchema = z
+  .strictObject({
+    type: DataRequestTypeSchema,
+    confirmed: z.literal(true).optional(),
+  })
+  // Deletion requires the explicit confirmation from F-AU-008.
+  .refine((value) => value.type !== 'delete' || value.confirmed === true, {
+    path: ['confirmed'],
+  });
+export const DataRequestParamsSchema = z.strictObject({ requestId: IdSchema });
+// Opaque-token helper shape: 32 random bytes, base64url without padding.
+export const DataRequestCompletionTokenSchema = z
+  .string()
+  .regex(/^[A-Za-z0-9_-]{43}$/);
+export const DataRequestAcceptedSchema = z.strictObject({
+  requestId: IdSchema,
+  type: DataRequestTypeSchema,
+  status: DataRequestStatusSchema,
+  failureCode: DataRequestFailureCodeSchema.optional(),
+  requestedAt: TimestampSchema,
+  completionToken: DataRequestCompletionTokenSchema.optional(),
+  completionTokenExpiresAt: TimestampSchema.optional(),
+});
+export const DataRequestSchema = z.strictObject({
+  requestId: IdSchema,
+  type: DataRequestTypeSchema,
+  status: DataRequestStatusSchema,
+  failureCode: DataRequestFailureCodeSchema.optional(),
+  requestedAt: TimestampSchema,
+  completedAt: TimestampSchema.optional(),
+  downloadAvailable: z.boolean(),
+});
+export const DataRequestCompletionSchema = z.strictObject({
+  status: DataRequestStatusSchema,
+});
+// Owner sections of the export; owners not implemented yet are explicit.
+export const DATA_EXPORT_SECTIONS = Object.freeze([
+  'profile',
+  'addresses',
+  'consents',
+  'orders',
+  'bookmarks',
+  'reviews',
+] as const);
+export type DataExportSection = (typeof DATA_EXPORT_SECTIONS)[number];
+const UnavailableExportSectionSchema = z.strictObject({
+  status: z.literal('unavailable'),
+  reasonCode: z.literal('OWNER_NOT_IMPLEMENTED'),
+});
+const includedSection = <T extends z.ZodType>(item: T) =>
+  z.strictObject({ status: z.literal('included'), items: z.array(item) });
+export const DataExportProfileSchema = ProfileSchema.extend({
+  preferences: PreferencesSchema,
+  createdAt: TimestampSchema,
+});
+export const DataExportSchema = z.strictObject({
+  requestId: IdSchema,
+  generatedAt: TimestampSchema,
+  sections: z.strictObject({
+    profile: includedSection(DataExportProfileSchema),
+    addresses: includedSection(AddressSchema),
+    consents: includedSection(ConsentRecordSchema),
+    orders: UnavailableExportSectionSchema,
+    bookmarks: UnavailableExportSectionSchema,
+    reviews: UnavailableExportSectionSchema,
+  }),
+});
+export type DataRequestType = z.infer<typeof DataRequestTypeSchema>;
+export type DataRequestStatus = z.infer<typeof DataRequestStatusSchema>;
+export type DataRequestFailureCode = z.infer<
+  typeof DataRequestFailureCodeSchema
+>;
+export type CreateDataRequest = z.infer<typeof CreateDataRequestSchema>;
+export type DataRequestParams = z.infer<typeof DataRequestParamsSchema>;
+export type DataRequestAccepted = z.infer<typeof DataRequestAcceptedSchema>;
+export type DataRequest = z.infer<typeof DataRequestSchema>;
+export type DataRequestCompletion = z.infer<typeof DataRequestCompletionSchema>;
+export type DataExport = z.infer<typeof DataExportSchema>;
