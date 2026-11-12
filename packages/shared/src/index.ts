@@ -49,6 +49,33 @@ export type {
   MediaReportDecisionResult,
   VideoModerationDecision,
 } from './media.js';
+export {
+  VideoCommentStatusSchema,
+  VideoCommentTextSchema,
+  VideoCommentCreateSchema,
+  VideoCommentPublicQuerySchema,
+  VideoCommentAdminQuerySchema,
+  VideoCommentSchema,
+  VideoCommentPublicItemSchema,
+  VideoCommentPublicPageSchema,
+  VideoCommentAdminItemSchema,
+  VideoCommentAdminPageSchema,
+  VideoCommentDecisionSchema,
+  VideoCommentDecisionResultSchema,
+  VideoCommentEventPayloadSchema,
+} from './engagement.js';
+export type {
+  VideoCommentStatus,
+  VideoCommentCreate,
+  VideoCommentAdminQuery,
+  VideoComment,
+  VideoCommentPublicItem,
+  VideoCommentPublicPage,
+  VideoCommentAdminPage,
+  VideoCommentDecision,
+  VideoCommentDecisionResult,
+  VideoCommentEventPayload,
+} from './engagement.js';
 export { canonicalJson } from './json.js';
 export type { JsonValue } from './json.js';
 export {

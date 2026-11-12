@@ -52,6 +52,10 @@ export const queryKeys = {
   mediaVideos: (scope: AccountScope, kind: 'shop' | 'provider') =>
     ['private', scope, 'media', 'videos', kind] as const,
   mediaVideo: (id: string) => ['public', 'media', 'video', id] as const,
+  videoCommentsPublic: (id: string) =>
+    ['public', 'media', 'video-comments', id] as const,
+  videoCommentsPrivate: (scope: AccountScope, id: string) =>
+    ['private', scope, 'media', 'video-comments', id] as const,
   // Admin taxonomy reads. Suggestion pages are keyed by the URL status tab.
   adminCatalog: (scope: AccountScope) =>
     ['private', scope, 'admin', 'catalog'] as const,
@@ -65,6 +69,18 @@ export const queryKeys = {
     ['private', scope, 'admin', 'catalog', 'keywords'] as const,
   adminVideoModerationRoot: (scope: AccountScope) =>
     ['private', scope, 'admin', 'videos', 'moderation'] as const,
+  adminVideoCommentsRoot: (scope: AccountScope) =>
+    ['private', scope, 'admin', 'videos', 'comments'] as const,
+  adminVideoComments: (
+    scope: AccountScope,
+    scopeRevision: string,
+    status: string,
+  ) =>
+    [
+      ...queryKeys.adminVideoCommentsRoot(scope),
+      scopeRevision,
+      status,
+    ] as const,
   adminVideoModeration: (
     scope: AccountScope,
     scopeRevision: string,

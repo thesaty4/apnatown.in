@@ -10,6 +10,8 @@ import { ImageCleanup } from './application/image-cleanup';
 import { ImageController } from './presentation/image.controller';
 import { VideoService } from './application/video.service';
 import { VideoModerationService } from './application/video-moderation.service';
+import { VideoCommentTargetService } from './application/video-comment-target.service';
+import { MEDIA_COMMENT_TARGET } from './application/video-comment-target.port';
 import { VIDEO_REPOSITORY } from './domain/videos';
 import { PrismaVideoRepository } from './infrastructure/video.repository';
 import { OwnerVideoController, PublicVideoController } from './presentation/video.controller';
@@ -51,8 +53,11 @@ export class MediaModule {
         ImageDeliveryService,
         VideoService,
         VideoModerationService,
+        VideoCommentTargetService,
+        { provide: MEDIA_COMMENT_TARGET, useExisting: VideoCommentTargetService },
         { provide: VIDEO_REPOSITORY, useClass: PrismaVideoRepository },
       ],
+      exports: [MEDIA_COMMENT_TARGET],
     };
   }
 }

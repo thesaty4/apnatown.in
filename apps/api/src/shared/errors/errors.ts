@@ -60,6 +60,9 @@ const catalogue = {
   SERVICES_SUBCATEGORY_REQUIRED: [422, 'errors.services.subcategoryRequired'],
   REVIEWS_NOT_ELIGIBLE: [403, 'errors.reviews.notEligible'],
   MEDIA_VIDEO_NOT_PUBLISHED: [409, 'errors.media.videoNotPublished'],
+  ENGAGEMENT_TARGET_NOT_FOUND: [404, 'errors.engagement.targetNotFound'],
+  COMMENT_INVALID_TRANSITION: [409, 'errors.engagement.commentInvalidTransition'],
+  COMMENT_VERSION_CONFLICT: [409, 'errors.engagement.commentVersionConflict'],
   MEDIA_VERSION_CONFLICT: [409, 'errors.media.versionConflict'],
   VIDEO_INVALID_TRANSITION: [409, 'errors.media.videoInvalidTransition'],
   COMMUNICATIONS_CONSENT_REQUIRED: [

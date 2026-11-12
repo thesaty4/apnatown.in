@@ -17,6 +17,7 @@ import { GeoModule } from './modules/geo/geo.module';
 import { MaintenanceGuard } from './modules/settings/application/maintenance.guard';
 import { SettingsModule } from './modules/settings/settings.module';
 import { UsersModule } from './modules/users/users.module';
+import { EngagementModule } from './modules/engagement/engagement.module';
 import { RuntimeModule } from './shared/health/runtime.module';
 import { RateLimitGuard } from './shared/rate-limit/rate-limit';
 
@@ -33,6 +34,23 @@ export class AppModule {
     const mediaStorage = MediaStorageModule.forRoot(runtime);
     const businessContext = BusinessContextModule.forRoot(runtime, users);
     const catalog = CatalogModule.forRoot(runtime, users, audit, admin, businessContext, mediaStorage);
+    const media = MediaModule.forRoot([
+      runtime,
+      users,
+      audit,
+      admin,
+      settings,
+      mediaStorage,
+      catalog,
+      businessContext,
+    ]);
+    const engagement = EngagementModule.forRoot(
+      runtime,
+      admin,
+      audit,
+      settings,
+      media,
+    );
     return {
       module: AppModule,
       imports: [
@@ -44,16 +62,8 @@ export class AppModule {
         settings,
         geoAdmin,
         catalog,
-        MediaModule.forRoot([
-          runtime,
-          users,
-          audit,
-          admin,
-          settings,
-          mediaStorage,
-          catalog,
-          businessContext,
-        ]),
+        media,
+        engagement,
       ],
       controllers: [HealthController],
       providers: [

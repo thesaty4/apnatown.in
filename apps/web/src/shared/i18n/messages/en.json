@@ -214,6 +214,9 @@
       "cityNotFound": "This city no longer exists.",
       "citySlugConflict": "A city with this name already exists.",
       "cityTransition": "This city’s status already changed. The latest status is loaded — review and try again.",
+      "commentConflict": "This comment changed elsewhere. Review the latest version before deciding again.",
+      "commentNotFound": "This comment is no longer available. The list has been refreshed.",
+      "commentTransition": "This comment cannot be changed from its current status. The list has been refreshed.",
       "conflict": "Someone else changed this just now. The latest version is loaded and your edits are kept — review and save again.",
       "exists": "An admin with this phone or email already exists.",
       "expired": "Your session expired. Sign in again.",
@@ -336,6 +339,27 @@
         "remove": "Remove"
       },
       "cancel": "Cancel",
+      "comments": {
+        "author": "Comment by",
+        "businessId": "Business ID",
+        "publish": "Publish",
+        "reasonLabel": "Removal reason",
+        "reasonRequired": "Add a reason before removing this comment.",
+        "remove": "Remove comment",
+        "status": {
+          "pending": "Pending",
+          "published": "Published",
+          "removed": "Removed"
+        },
+        "statusLabel": "Comment moderation status",
+        "version": "Version {version}",
+        "videoId": "Video ID"
+      },
+      "content": {
+        "comments": "Comments",
+        "label": "Moderation content",
+        "videos": "Videos"
+      },
       "empty": {
         "message": "Nothing in this list.",
         "title": "Queue is clear"
@@ -1757,6 +1781,36 @@
       "saved": "Choice saved",
       "saving": "Saving your choice…",
       "title": "Notification & consent"
+    }
+  },
+  "engagement": {
+    "comments": {
+      "addLabel": "Add a comment",
+      "deleteFailed": "The comment could not be deleted. Please try again.",
+      "empty": "Be the first to comment.",
+      "emptyTitle": "No comments yet",
+      "errorTitle": "Comments unavailable",
+      "failed": "The comment could not be posted. Please try again.",
+      "loadFailed": "Comments could not be loaded. Please try again.",
+      "loading": "Loading comments",
+      "loginPrompt": "Log in to add a comment.",
+      "moderationHint": "Comments are checked by our team before everyone sees them.",
+      "more": "Load more comments",
+      "post": "Post",
+      "posting": "Posting…",
+      "rateLimited": "You have added comments too quickly. Try again in a minute.",
+      "remove": "Delete",
+      "restrictedMessage": "This account cannot post comments.",
+      "restrictedTitle": "Comments are for customer accounts",
+      "retry": "Try again",
+      "sent": "Comment posted.",
+      "status": {
+        "pending": "Awaiting moderation",
+        "published": "Published",
+        "removed": "Removed"
+      },
+      "title": "Comments",
+      "validation": "Enter a comment of 1 to 500 characters."
     }
   },
   "errors": {

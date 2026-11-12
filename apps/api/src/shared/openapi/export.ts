@@ -62,6 +62,14 @@ import {
 import { VideoService } from '../../modules/media-videos/application/video.service';
 import { VideoModerationService } from '../../modules/media-videos/application/video-moderation.service';
 import {
+  AdminVideoCommentsController,
+  PublicVideoCommentsController,
+  VideoCommentsController,
+} from '../../modules/engagement/presentation/video-comments.controller';
+import { VideoCommentsService } from '../../modules/engagement/application/video-comments.service';
+import { VideoCommentModerationService } from '../../modules/engagement/application/video-comment-moderation.service';
+import { VideoCommentEvents } from '../../modules/engagement/application/video-comment-events';
+import {
   AdminMediaReportController,
   VideoModerationController,
 } from '../../modules/media-videos/presentation/video-moderation.controller';
@@ -98,6 +106,9 @@ import {
     AdminCatalogController,
     SuperAdminCatalogController,
     OwnerCatalogSuggestionsController,
+    PublicVideoCommentsController,
+    VideoCommentsController,
+    AdminVideoCommentsController,
   ],
   providers: [
     ImageService,
@@ -125,6 +136,9 @@ import {
     CatalogHomeSectionsService,
     CatalogSuggestionsService,
     CatalogKeywordsService,
+    VideoCommentsService,
+    VideoCommentModerationService,
+    VideoCommentEvents,
   ].map((provide) => ({ provide, useValue: Object.freeze({}) })),
 })
 class OpenApiModule {}

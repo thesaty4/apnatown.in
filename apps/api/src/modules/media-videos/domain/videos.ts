@@ -76,6 +76,16 @@ export interface VideoRepository {
     },
   ): Promise<StoredVideo[]>;
   findPublic(tx: TxContext, id: string): Promise<StoredVideo | null>;
+  findForComments(
+    tx: TxContext,
+    id: string,
+  ): Promise<{
+    id: string;
+    businessId: string;
+    cityId: string | null;
+    areaId: string | null;
+    public: boolean;
+  } | null>;
   moderationPage(
     tx: TxContext,
     input: {

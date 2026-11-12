@@ -35,6 +35,7 @@ import {
   useVideoModerationDecision,
   videoModerationOptions,
 } from './queries';
+import { VideoCommentsQueue } from './VideoCommentsQueue';
 
 const statusPresentation: Record<
   Exclude<VideoModerationTab, 'reported'>,
@@ -64,6 +65,7 @@ export function VideoModerationScreen({ nonce }: { nonce: string }) {
   const client = useQueryClient();
   const pathname = usePathname();
   const params = useSearchParams();
+  const contentTab = params.get('content') === 'comments' ? 'comments' : 'videos';
   const parsedTab = VideoModerationTabSchema.safeParse(params.get('tab'));
   const tab = parsedTab.success ? parsedTab.data : 'pending';
   const [decisionTarget, setDecisionTarget] = useState<string>();
@@ -72,7 +74,7 @@ export function VideoModerationScreen({ nonce }: { nonce: string }) {
   const canEdit = me.isSuper || me.permissions.reviews.includes('edit');
   const list = useInfiniteQuery({
     ...videoModerationOptions(context, tab),
-    enabled: permitted,
+    enabled: permitted && contentTab === 'videos',
   });
   const decision = useVideoModerationDecision(context);
   const reportDecision = useMediaReportDecision(context);
@@ -117,9 +119,9 @@ export function VideoModerationScreen({ nonce }: { nonce: string }) {
     }
   }, [client, deniedDecision, recheck, scope]);
 
-  let content;
+  let videoContent;
   if (!permitted || denied || deniedDecision) {
-    content = (
+    videoContent = (
       <NoPermissionState
         title={ts('forbiddenTitle')}
         message={
@@ -135,9 +137,9 @@ export function VideoModerationScreen({ nonce }: { nonce: string }) {
       />
     );
   } else if (list.isPending) {
-    content = <Skeleton label={ts('loading')} />;
+    videoContent = <Skeleton label={ts('loading')} />;
   } else if (listCode && !list.data) {
-    content = (
+    videoContent = (
       <ErrorState
         title={ts('errorTitle')}
         message={te(adminErrorKey(listCode))}
@@ -152,7 +154,7 @@ export function VideoModerationScreen({ nonce }: { nonce: string }) {
       />
     );
   } else if (!items.length) {
-    content = (
+    videoContent = (
       <EmptyState
         title={t('empty.title')}
         message={t('empty.message')}
@@ -160,7 +162,7 @@ export function VideoModerationScreen({ nonce }: { nonce: string }) {
       />
     );
   } else {
-    content = (
+    videoContent = (
       <div
         className="grid gap-3"
         aria-busy={list.isFetching && !list.isFetchingNextPage}
@@ -259,33 +261,65 @@ export function VideoModerationScreen({ nonce }: { nonce: string }) {
       <header className="grid gap-2">
         <h1 className="m-0 font-display text-h2">{t('title')}</h1>
       </header>
-      {decisionCode && !items.length && (
-        <AdminFailure code={decisionCode} />
-      )}
-      {reportDecisionCode && !items.length && (
-        <AdminFailure code={reportDecisionCode} />
-      )}
-      <nav aria-label={t('tabsLabel')} className="flex flex-wrap gap-2">
-        {tabs.map((value) => (
-          <Link
-            key={value}
-            href={`${pathname}?tab=${value}`}
-            scroll={false}
-            aria-current={value === tab ? 'page' : undefined}
-            className={`inline-flex min-h-touch items-center gap-2 rounded-pill border-2 px-4 py-2 font-semibold whitespace-normal [overflow-wrap:anywhere] focus-visible:ring-focus ${
-              value === tab
-                ? 'border-primary bg-primary-soft text-primary'
-                : 'border-border bg-surface text-text-2'
-            }`}
-          >
-            <span>{t(`tabs.${value}`)}</span>
-            <span className="rounded-pill bg-surface-2 px-2 py-0.5 text-caption">
-              {counts?.[value] ?? '—'}
-            </span>
-          </Link>
-        ))}
+      <nav aria-label={t('content.label')} className="flex flex-wrap gap-2">
+        <Link
+          href={`${pathname}?tab=pending`}
+          scroll={false}
+          aria-current={contentTab === 'videos' ? 'page' : undefined}
+          className={`inline-flex min-h-touch items-center rounded-pill border-2 px-4 py-2 font-semibold whitespace-normal [overflow-wrap:anywhere] focus-visible:ring-focus ${
+            contentTab === 'videos'
+              ? 'border-primary bg-primary-soft text-primary'
+              : 'border-border bg-surface text-text-2'
+          }`}
+        >
+          {t('content.videos')}
+        </Link>
+        <Link
+          href={`${pathname}?content=comments&status=pending`}
+          scroll={false}
+          aria-current={contentTab === 'comments' ? 'page' : undefined}
+          className={`inline-flex min-h-touch items-center rounded-pill border-2 px-4 py-2 font-semibold whitespace-normal [overflow-wrap:anywhere] focus-visible:ring-focus ${
+            contentTab === 'comments'
+              ? 'border-primary bg-primary-soft text-primary'
+              : 'border-border bg-surface text-text-2'
+          }`}
+        >
+          {t('content.comments')}
+        </Link>
       </nav>
-      {content}
+      {contentTab === 'comments' ? (
+        <VideoCommentsQueue />
+      ) : (
+        <>
+          {decisionCode && !items.length && (
+            <AdminFailure code={decisionCode} />
+          )}
+          {reportDecisionCode && !items.length && (
+            <AdminFailure code={reportDecisionCode} />
+          )}
+          <nav aria-label={t('tabsLabel')} className="flex flex-wrap gap-2">
+            {tabs.map((value) => (
+              <Link
+                key={value}
+                href={`${pathname}?tab=${value}`}
+                scroll={false}
+                aria-current={value === tab ? 'page' : undefined}
+                className={`inline-flex min-h-touch items-center gap-2 rounded-pill border-2 px-4 py-2 font-semibold whitespace-normal [overflow-wrap:anywhere] focus-visible:ring-focus ${
+                  value === tab
+                    ? 'border-primary bg-primary-soft text-primary'
+                    : 'border-border bg-surface text-text-2'
+                }`}
+              >
+                <span>{t(`tabs.${value}`)}</span>
+                <span className="rounded-pill bg-surface-2 px-2 py-0.5 text-caption">
+                  {counts?.[value] ?? '—'}
+                </span>
+              </Link>
+            ))}
+          </nav>
+          {videoContent}
+        </>
+      )}
     </section>
   );
 }

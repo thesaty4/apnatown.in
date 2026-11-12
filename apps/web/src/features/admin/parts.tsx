@@ -71,6 +71,9 @@ const errors: Record<string, string> = {
   MEDIA_NOT_FOUND: 'mediaNotFound',
   MEDIA_VERSION_CONFLICT: 'mediaConflict',
   VIDEO_INVALID_TRANSITION: 'videoTransition',
+  ENGAGEMENT_TARGET_NOT_FOUND: 'commentNotFound',
+  COMMENT_VERSION_CONFLICT: 'commentConflict',
+  COMMENT_INVALID_TRANSITION: 'commentTransition',
   MAINTENANCE: 'maintenance',
 };
 /** `admin.errors` key for a normalized code; never server text. */

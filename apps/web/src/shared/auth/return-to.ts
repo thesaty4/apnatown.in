@@ -12,6 +12,8 @@ const implemented = new Set([
   '/super-admin/admins',
   '/super-admin/roles',
 ]);
+const implementedVideoPath =
+  /^\/videos\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
 
 /** Only implemented, non-operational destinations; auth loops and encoded paths fail closed. */
 export function safeReturnTo(input: unknown): string | undefined {
@@ -29,7 +31,8 @@ export function safeReturnTo(input: unknown): string | undefined {
   const url = new URL(input, 'https://return.invalid');
   if (
     url.origin !== 'https://return.invalid' ||
-    !implemented.has(url.pathname) ||
+    (!implemented.has(url.pathname) &&
+      !implementedVideoPath.test(url.pathname)) ||
     input.split(/[?#]/)[0] !== url.pathname
   )
     return;

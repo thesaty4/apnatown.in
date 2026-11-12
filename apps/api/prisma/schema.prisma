@@ -104,6 +104,7 @@ model User {
   mediaAssets          MediaAsset[]
   mediaUploads         MediaUploadOperation[]
   reportedMedia        MediaReport[]              @relation("MediaReportReporter")
+  videoComments        VideoComment[]
 
   @@index([deletedAt], where: raw("\"deleted_at\" IS NULL"), map: "users_active_deleted_at_idx")
   @@map("users")
@@ -797,12 +798,31 @@ model Video {
   updatedAt          DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
   business           Business  @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "videos_business_id_fkey")
   reports            MediaReport[]
+  comments           VideoComment[]
 
   @@index([status, showInReels, id], map: "videos_public_candidates_idx")
   @@index([status, createdAt(sort: Desc), id(sort: Desc)], map: "videos_moderation_page_idx")
   @@index([businessId, createdAt(sort: Desc), id(sort: Desc)], map: "videos_business_page_idx")
   @@index([businessId, sortOrder, id], map: "videos_business_order_idx")
   @@map("videos")
+}
+
+model VideoComment {
+  id            String   @id @db.Uuid
+  videoId       String   @map("video_id") @db.Uuid
+  authorUserId  String   @map("author_user_id") @db.Uuid
+  text          String
+  status        String   @default("pending")
+  removedReason String?  @map("removed_reason")
+  version       Int      @default(1)
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  video         Video    @relation(fields: [videoId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "video_comments_video_id_fkey")
+  author        User     @relation(fields: [authorUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "video_comments_author_user_id_fkey")
+
+  @@index([videoId, status, createdAt(sort: Desc), id(sort: Desc)], map: "video_comments_video_status_page_idx")
+  @@index([status, createdAt, id], map: "video_comments_status_page_idx")
+  @@map("video_comments")
 }
 
 model MediaReport {

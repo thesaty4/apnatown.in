@@ -5342,6 +5342,162 @@
     "en": "Sending…",
     "hi": "भेज रहे हैं…"
   },
+  "engagement.comments.title": {
+    "en": "Comments",
+    "hi": "टिप्पणियाँ"
+  },
+  "engagement.comments.addLabel": {
+    "en": "Add a comment",
+    "hi": "टिप्पणी जोड़ें"
+  },
+  "engagement.comments.moderationHint": {
+    "en": "Comments are checked by our team before everyone sees them.",
+    "hi": "सबको दिखने से पहले हमारी टीम टिप्पणियों की समीक्षा करती है।"
+  },
+  "engagement.comments.post": {
+    "en": "Post",
+    "hi": "पोस्ट करें"
+  },
+  "engagement.comments.posting": {
+    "en": "Posting…",
+    "hi": "पोस्ट हो रहा है…"
+  },
+  "engagement.comments.sent": {
+    "en": "Comment posted.",
+    "hi": "टिप्पणी पोस्ट हो गई।"
+  },
+  "engagement.comments.status.pending": {
+    "en": "Awaiting moderation",
+    "hi": "समीक्षा लंबित"
+  },
+  "engagement.comments.status.published": {
+    "en": "Published",
+    "hi": "प्रकाशित"
+  },
+  "engagement.comments.status.removed": {
+    "en": "Removed",
+    "hi": "हटाई गई"
+  },
+  "engagement.comments.emptyTitle": {
+    "en": "No comments yet",
+    "hi": "अभी कोई टिप्पणी नहीं"
+  },
+  "engagement.comments.empty": {
+    "en": "Be the first to comment.",
+    "hi": "पहली टिप्पणी आप करें।"
+  },
+  "engagement.comments.validation": {
+    "en": "Enter a comment of 1 to 500 characters.",
+    "hi": "1 से 500 अक्षरों की टिप्पणी लिखें।"
+  },
+  "engagement.comments.rateLimited": {
+    "en": "You have added comments too quickly. Try again in a minute.",
+    "hi": "आपने बहुत जल्दी टिप्पणियाँ जोड़ी हैं। एक मिनट बाद फिर कोशिश करें।"
+  },
+  "engagement.comments.failed": {
+    "en": "The comment could not be posted. Please try again.",
+    "hi": "टिप्पणी पोस्ट नहीं हो सकी। कृपया फिर से कोशिश करें।"
+  },
+  "engagement.comments.deleteFailed": {
+    "en": "The comment could not be deleted. Please try again.",
+    "hi": "टिप्पणी हटाई नहीं जा सकी। कृपया फिर से कोशिश करें।"
+  },
+  "engagement.comments.loginPrompt": {
+    "en": "Log in to add a comment.",
+    "hi": "टिप्पणी जोड़ने के लिए लॉग इन करें।"
+  },
+  "engagement.comments.restrictedTitle": {
+    "en": "Comments are for customer accounts",
+    "hi": "टिप्पणियाँ ग्राहक खाते से की जा सकती हैं"
+  },
+  "engagement.comments.restrictedMessage": {
+    "en": "This account cannot post comments.",
+    "hi": "इस खाते से टिप्पणी नहीं की जा सकती।"
+  },
+  "engagement.comments.errorTitle": {
+    "en": "Comments unavailable",
+    "hi": "टिप्पणियाँ उपलब्ध नहीं हैं"
+  },
+  "engagement.comments.loadFailed": {
+    "en": "Comments could not be loaded. Please try again.",
+    "hi": "टिप्पणियाँ लोड नहीं हो सकीं। कृपया फिर से कोशिश करें।"
+  },
+  "engagement.comments.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें"
+  },
+  "engagement.comments.loading": {
+    "en": "Loading comments",
+    "hi": "टिप्पणियाँ लोड हो रही हैं"
+  },
+  "engagement.comments.remove": {
+    "en": "Delete",
+    "hi": "हटाएँ"
+  },
+  "engagement.comments.more": {
+    "en": "Load more comments",
+    "hi": "और टिप्पणियाँ देखें"
+  },
+  "admin.videos.content.videos": {
+    "en": "Videos",
+    "hi": "वीडियो"
+  },
+  "admin.videos.content.comments": {
+    "en": "Comments",
+    "hi": "टिप्पणियाँ"
+  },
+  "admin.videos.content.label": {
+    "en": "Moderation content",
+    "hi": "मॉडरेशन सामग्री"
+  },
+  "admin.videos.comments.statusLabel": {
+    "en": "Comment moderation status",
+    "hi": "टिप्पणी मॉडरेशन स्थिति"
+  },
+  "admin.videos.comments.status.pending": {
+    "en": "Pending",
+    "hi": "लंबित"
+  },
+  "admin.videos.comments.author": {
+    "en": "Comment by",
+    "hi": "टिप्पणीकार"
+  },
+  "admin.videos.comments.videoId": {
+    "en": "Video ID",
+    "hi": "वीडियो आईडी"
+  },
+  "admin.videos.comments.businessId": {
+    "en": "Business ID",
+    "hi": "बिज़नेस आईडी"
+  },
+  "admin.videos.comments.version": {
+    "en": "Version {version}",
+    "hi": "वर्ज़न {version}"
+  },
+  "admin.videos.comments.publish": {
+    "en": "Publish",
+    "hi": "प्रकाशित करें"
+  },
+  "admin.videos.comments.remove": {
+    "en": "Remove comment",
+    "hi": "टिप्पणी हटाएँ"
+  },
+  "admin.videos.comments.status.published": {
+    "en": "Published",
+    "hi": "प्रकाशित"
+  },
+  "admin.videos.comments.status.removed": {
+    "en": "Removed",
+    "hi": "हटाई गई"
+  },
+  "admin.videos.comments.reasonLabel": {
+    "en": "Removal reason",
+    "hi": "हटाने का कारण"
+  },
+  "admin.videos.comments.reasonRequired": {
+    "en": "Add a reason before removing this comment.",
+    "hi": "यह टिप्पणी हटाने से पहले कारण लिखें।"
+  },
   "catalog.admin.sections.title": { "en": "Home sections", "hi": "होम सेक्शन" },
   "catalog.admin.sections.intro": {
     "en": "Choose which category rows customers see on Home. New sections start inactive; activate when ready. Products and services are never mixed in one section.",
@@ -5953,6 +6109,18 @@
   "admin.errors.videoTransition": {
     "en": "This video can’t be changed from its current status. The list has been refreshed.",
     "hi": "वीडियो की मौजूदा स्थिति में यह बदलाव नहीं हो सकता। सूची ताज़ा कर दी गई है।"
+  },
+  "admin.errors.commentNotFound": {
+    "en": "This comment is no longer available. The list has been refreshed.",
+    "hi": "यह टिप्पणी अब उपलब्ध नहीं है। सूची ताज़ा कर दी गई है।"
+  },
+  "admin.errors.commentConflict": {
+    "en": "This comment changed elsewhere. Review the latest version before deciding again.",
+    "hi": "यह टिप्पणी कहीं और बदली गई है। दोबारा फ़ैसला करने से पहले नया वर्ज़न देखें।"
+  },
+  "admin.errors.commentTransition": {
+    "en": "This comment cannot be changed from its current status. The list has been refreshed.",
+    "hi": "टिप्पणी की मौजूदा स्थिति में यह बदलाव नहीं हो सकता। सूची ताज़ा कर दी गई है।"
   },
   "admin.videos.title": {
     "en": "Videos & moderation",

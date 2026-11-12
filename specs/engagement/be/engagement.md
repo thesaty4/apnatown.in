@@ -35,7 +35,7 @@ All customer writes require login; guest calls return `AUTH_REQUIRED` so the FE 
 | PUT / DELETE | `/engagement/bookmarks/{targetType}/{targetId}` | Customer; `targetType=service` only; PUT requires public target, DELETE own existing relationship | → `{bookmarked}` | `ENGAGEMENT_TARGET_NOT_FOUND` on create | Yes | F-EG-007 |
 | GET | `/engagement/me/saved?tab=shops\|services\|media&mediaFilter=photos\|videos\|reels&cursor=` | Customer; own | `shops` is the Following list from active follows, including bell state; Services remains service bookmarks; media remains hearts. Unavailable targets remain removable. | `VALIDATION_ERROR` | Yes | F-EG-001, S-CUST-19 |
 | GET | `/engagement/me/state?videoIds=&businessIds=&targets=` | Customer (guest → empty) | batch → liked/hearted/service-bookmarked flags and business `{following,bellOn}` (max 50 IDs); no separately stored shop/provider bookmark state | — | Yes | overlays, cards |
-| GET | `/videos/{videoId}/comments?cursor=` | Public | → published comments + caller's own pending ones | — | Yes | F-EG-005 |
+| GET | `/videos/{videoId}/comments?cursor=` | Public | → published comments + caller's own pending ones; `canDelete` is server-derived per item and never exposes the author ID | — | Yes | F-EG-005 |
 | POST | `/videos/{videoId}/comments` | Customer | `{text}` → comment with status | `VALIDATION_ERROR`, `RATE_LIMITED` | Required key | F-EG-005 |
 | DELETE | `/videos/{videoId}/comments/{id}` | Author | → 204 | `ENGAGEMENT_TARGET_NOT_FOUND` | Yes | F-EG-005 |
 | POST | `/engagement/shares` | Public | `{targetType:'video'\|'shop'\|'provider'\|'product'\|'service',targetId,channel:'whatsapp'\|'copy'\|'native'}` → 204 | — | Yes | F-EG-006 |

@@ -147,6 +147,37 @@ export class PrismaVideoRepository implements VideoRepository {
     return rows[0] ?? null;
   }
 
+  async findForComments(
+    tx: TxContext,
+    id: string,
+  ): Promise<{
+    id: string;
+    businessId: string;
+    cityId: string | null;
+    areaId: string | null;
+    public: boolean;
+  } | null> {
+    const rows = await this.database.client(tx).$queryRaw<
+      Array<{
+        id: string;
+        businessId: string;
+        cityId: string | null;
+        areaId: string | null;
+        public: boolean;
+      }>
+    >(Prisma.sql`
+      SELECT v.id, v.business_id AS "businessId",
+             b.city_id AS "cityId", b.area_id AS "areaId",
+             (v.status = 'approved' AND v.show_in_reels = TRUE
+               AND v.owner_deleted_at IS NULL
+               AND b.status = 'approved' AND b.deleted_at IS NULL) AS public
+      FROM videos v
+      JOIN businesses b ON b.id = v.business_id
+      WHERE v.id = ${id}::uuid
+      FOR SHARE OF v, b`);
+    return rows[0] ?? null;
+  }
+
   moderationPage(
     tx: TxContext,
     input: {
