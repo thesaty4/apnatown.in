@@ -12,11 +12,16 @@ frontend.
 
 ## Video link validation and server-rebuilt embeds (RL10, BR-10)
 
-- Accepted video sources: YouTube/Instagram links or direct uploads.
+- Accepted video sources: YouTube watch/Shorts and Instagram Reels/public
+  posts only; direct video uploads are disabled at launch.
 - A client-supplied link is **never embedded as-is**: the server
-  validates it against an allow-list of hosts and rebuilds a safe embed
-  URL; invalid/unsupported links fall back to "Open in
-  YouTube/Instagram" instead of an iframe (`security.instructions.md`).
+  validates exact hosts/IDs and builds the typed provider renderer.
+  Invalid links are rejected; only valid provider links get an Open fallback.
+- Follow [media integration](../../specs/_foundation/media-and-maps.md):
+  Cloudinary images use Media's sanitized AssetPort and reauthorizing
+  same-origin gateway. KYC/evidence/exports stay private and separate.
+  Shared EmbedCard/ReelsPlayer respects provider controls; Instagram has
+  no promised custom autoplay/mute/progress API.
 
 ## Approval and moderation states (BR-10)
 

@@ -23,6 +23,10 @@ templates: `docs/prompts/LEAN-SPECS.md`.
   and an approved architecture decision.
 - Reference IDs (F-, S-, BR-, ST-, J-) instead of repeating the design
   pack; standard UX states live in `specs/_foundation/frontend-shared.md`.
+- Image/video/map work inherits the selected
+  [integration contract](../../../specs/_foundation/media-and-maps.md):
+  Cloudinary public images, separate private documents, link-only videos
+  and Leaflet/OSM. Do not reopen these as unspecified provider choices.
 
 ## Steps
 

@@ -31,7 +31,7 @@ Use only this slice; legacy `docs/specs/` outputs are not prerequisites.
 - Code in `apps/web`, `apps/api`, `packages/*` as defined by the specs, with manual verification evidence and Storybook stories
 
 ## REQUIRED CONTENTS
-Build RL and media features: link validation and server-rebuilt embeds, submit -> pending -> moderation -> publish, reels feed with all pills and states, desktop side panel, linked items, gallery rules and media-consent, reports.
+Build RL and media features: link-only submission and provider-specific rendering per the [YouTube/Instagram contract](../../specs/_foundation/media-and-maps.md#youtube-and-instagram-embeds), submit -> pending -> moderation -> publish, reels feed with all pills and states, desktop side panel, linked items, gallery rules and media-consent, reports. Gallery images follow the [Cloudinary public-image contract](../../specs/_foundation/media-and-maps.md#cloudinary-public-images), preserving existing Media ports, DTOs and the same-origin reauthorizing gateway. Instagram uses safe canonical provider metadata and trusted `embed.js`, not arbitrary iframe HTML or untrusted fallback URLs. Direct video-file uploads remain disabled at launch.
 
 ## IMPLEMENTATION RULES (in addition to the standing requirements)
 - Follow the current foundation/module specs above and the Design Context Pack. Keep changes slice-scoped; ask about a blocking ambiguity and fix its owning spec, not missing legacy documents or trackers.
@@ -58,7 +58,7 @@ Build RL and media features: link validation and server-rebuilt embeds, submit -
 If the output is too long for one response, continue in numbered parts (Part 1, Part 2, ...). Never summarise, never skip, never write "and so on". At the end of every part list: (a) what is covered so far (IDs), and (b) what remains. Continue until everything is covered, then end with "ALL PARTS COMPLETE" and the final coverage table.
 
 ## DONE WHEN (tick every box before you finish and paste the ticked list)
-- [ ] J4 and J6 manually verified; embed host allow-list checked
+- [ ] J4 and J6 manually verified; applicable [media acceptance criteria](../../specs/_foundation/media-and-maps.md#manual-acceptance) checked, including host validation, Instagram handling and direct video-file rejection; unavailable evidence reported explicitly
 - [ ] Every ID listed in the coverage table at the end exists in the output (no empty cells)
 - [ ] All standing requirements above were applied; assumptions are recorded as Open Issues
 - [ ] A coverage table (feature IDs / screen IDs covered by this document) is included

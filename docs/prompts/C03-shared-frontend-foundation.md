@@ -37,6 +37,13 @@ Implement [frontend-shared.md](../../specs/_foundation/frontend-shared.md): dete
 
 Build the catalogued components in small owner-linked batches, reusing Button/Input and URL/Back-scroll contracts. Apply the specified rendering, metadata, accessibility, low-bandwidth and PWA rules. Keep unapproved route/copy/button metrics explicit rather than inventing them. Verify real transport only after its API dependencies exist; otherwise report the check as pending, not passed with intercepted success responses.
 
+Build shared media/map components against the
+[canonical media/maps contract](../../specs/_foundation/media-and-maps.md):
+client-only Leaflet `MapView`, Geoman Free editing, gateway-backed images and
+provider-specific embeds. Do not assume `react-leaflet` is selected or add
+direct Cloudinary browser transport or direct video-file upload controls.
+Preserve the generated-client/React Query ownership above.
+
 ## IMPLEMENTATION RULES (in addition to the standing requirements)
 - Read the current foundation and owning FE/BE specs plus the Design Context Pack. Record a blocking ambiguity inline in its owning spec and ask; no legacy shared-UI document generation or progress trackers.
 - Work in small pull requests (about 400 changed lines or fewer), one concern each. Branch `feat/<scope>-<name>`; Conventional Commits. Never merge; humans review and merge.

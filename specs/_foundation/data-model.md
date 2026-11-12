@@ -215,7 +215,6 @@ erDiagram
     businesses |o--o{ reviews : receives
     businesses ||--o{ videos : publishes
     videos ||--o{ video_links : links
-    media_assets |o--o{ videos : file_asset
     media_assets |o--o{ videos : thumbnail_asset
     users ||--o{ follows : follows
     businesses ||--o{ follows : followed

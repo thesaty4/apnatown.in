@@ -94,6 +94,9 @@ PWA · [AD](./project/03-feature-catalog.md#ad-admin) Admin ·
   layer).
 - [docs/architecture.md](./architecture.md) — backend module map and
   layering.
+- [Media and maps contract](../specs/_foundation/media-and-maps.md) —
+  selected Cloudinary images, link-only YouTube/Instagram embeds,
+  Leaflet/OSM maps, configuration ownership and verification.
 - [docs/adr/](./adr/) — architecture decision records (tech stack,
   etc.).
 - [docs/security/security-guidelines.md](./security/security-guidelines.md)

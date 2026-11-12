@@ -68,7 +68,7 @@ involved, the success path, and the main failure path(s).
 ## J6 — Vendor video to public Gallery/Reels
 
 - **Actor:** R-02 vendor, R-05 admin.
-- **Steps:** vendor uploads a video, links products, chooses the
+- **Steps:** vendor submits a YouTube/Instagram video link, links products, chooses the
   Gallery option (VD12, VD13, BR-16, S-VD-6) -> admin approves
   (AD10, ST-video `pending -> approved`) -> appears in Reels (S-RL-1)
   and Gallery (PF9, S-PF-1).

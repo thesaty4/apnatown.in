@@ -81,6 +81,10 @@ The four agents in `.github/agents/` are:
   Follow the [verification policy](.github/instructions/testing.instructions.md):
   existing non-test checks and manual acceptance evidence, not unit,
   integration, component, DB or Playwright test generation.
+- **Media/map choices are fixed:** use the
+  [integration contract](specs/_foundation/media-and-maps.md), not a new
+  provider proposal. Public Cloudinary images, private documents, link-only
+  video and policy-compliant Leaflet/OSM maps have separate boundaries.
 - **Security-auditor is required**, not optional, before PR creation
   for sensitive changes defined in `security.instructions.md`.
 - **Don't invent product behaviour.** If section 2 of the original

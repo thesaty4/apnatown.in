@@ -12,6 +12,9 @@ Use when implementing a FE spec (`frontend.instructions.md`,
 
 1. Check `docs/design-system.md` for an existing `packages/ui`
    component that fits; extend it rather than forking.
+   For uploads, embeds or maps, use the shared components and selected
+   [media/map contract](../../../specs/_foundation/media-and-maps.md);
+   never add a direct Cloudinary browser upload or a second map library.
 2. Build the container (data/state) separate from the presentational
    component.
 3. Implement all five UX states: default, skeleton, empty, error+retry,

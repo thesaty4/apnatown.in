@@ -6,6 +6,10 @@ Backend contract: [BE media-videos](../be/media-videos.md)
 
 API integration: [shared React Query contract](../../_foundation/frontend-shared.md#api-integration-with-react-query), preserving the frozen feed snapshot.
 
+Integration implementation: [Cloudinary images and link-only provider renderers](../../_foundation/media-and-maps.md).
+This supersedes prototype direct-video-upload controls, not moderation,
+surface consent, feed ranking or guest return-to-video rules.
+
 Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Verification](#verification)
 
 ## Routes and rendering
@@ -24,8 +28,8 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 - Data: `GET /videos/feed` returns **snapshotId, expiresAt, effectiveFilter, nextCursor** over immutable ranked IDs/scores; `GET /videos/:id` validates the deep link. POST `/videos/{id}/views` for the active ≥60%-in-view video, replay-safe per session, not a new two-second analytics rule.
 - Retain opaque snapshot/cursor with Back position; never recompute sort from changing overlay counters. `MEDIA_FEED_EXPIRED` shows restart/reload, creates a new 30-minute snapshot explicitly and does not quietly splice new ranking into the old feed.
 - Special states: empty Following (For You CTA), no videos nearby (“Try another area or pick another tab” / For You), failed/retry, offline, unavailable, data-saver poster. Nearby follows source **2.5 km**; no invented radius-widening control.
-- Interactions: autoplay muted only when ≥ 60 % in view and not data-saver/Save-Data; tap toggles play/pause; mute toggle persists per session; progress bar; captions; ↑/↓ and j/k on desktop; Esc closes sheets; pill and video id in URL (`/videos/:id?pill=`), Back restores position. "Shop this video" opens `ShopThisVideoSheet`; items Add to cart / Enquire / View. Guest like/follow/comment opens login and returns to the same video (RL7, BR-21). Overflow → Report sheet.
-- Rules: BR-10 only approved; embeds rendered from server `embedUrl` in a sandboxed iframe (`allow` minimal) else `EmbedCard` "Open in YouTube/Instagram".
+- Interactions: supported YouTube playback autoplays muted only when ≥ 60 % in view, not data-saver/Save-Data, and permitted by browser/consent policy; tap play/pause, session mute and progress/captions use the real provider API. Instagram retains native interaction, not simulated custom controls. ↑/↓ and j/k navigate on desktop; Esc closes sheets; pill and video id in URL (`/videos/:id?pill=`), Back restores position. "Shop this video" opens `ShopThisVideoSheet`; items Add to cart / Enquire / View. Guest like/follow/comment opens login and returns to the same video (RL7, BR-21). Overflow → Report sheet.
+- Rules: BR-10 only approved; consume `VideoPlaybackDTO`: YouTube iframe, safe Instagram permalink markup with the trusted embed loader, or `EmbedCard` Open fallback. Never insert raw HTML or embed a form-held URL. Custom play/mute/progress controls appear only where the provider supports them; Instagram uses native interaction, not simulated autoplay/progress.
 - Deep link sends `startVideoId`; an out-of-filter eligible ID causes the returned `effectiveFilter=for_you` and new snapshot, as final js25 does. A removed/non-consented ID is unavailable, never force-played.
 - Acceptance: Given an eligible deep link, when opened, then playback anchors by ID, not array index. Given changed likes/views/new approvals, when loading the next page, then existing order stays fixed while hidden/withdrawn items disappear. Given an expired or foreign snapshot, when used, then restart/denial is explicit. Given data-saver, when entering a video, then no autoplay occurs. Given guest Like, when login completes, then the exact video/action returns once.
 
@@ -41,12 +45,12 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 - PD5/SV4: horizontal strip below details, hidden when empty; tile opens `/videos/:id?from=product:<id>` and the Reels linked strip returns to the product. Service page also shows previous-work gallery images. Data: `GET /videos?targetType=&targetId=`.
 
 ### S-VEND-11 / S-PROV-12 Gallery and videos manager | `/vendor/media`, `/provider/media` | `d-vendor-vmedia.jpg`, `m-vendor-vmedia.jpg`, `d-provider-smedia.jpg`, `m-provider-smedia.jpg`
-- Layout matches final js26: Videos & Reels / Gallery; link/upload editor, thumbnail, caption, hashtags, linked items and separate Gallery/Reels toggles. Each video has **Move up/Move down**, status/reason, Preview, linked-item editor and Remove confirmation; Gallery photos have arrow/drag ordering.
+- Layout matches final js26: Videos & Reels / Gallery; YouTube/Instagram link editor, image thumbnail, caption, hashtags, linked items and separate Gallery/Reels toggles. Direct video-file upload remains disabled with the launch-scope explanation. Each video has **Move up/Move down**, status/reason, Preview, linked-item editor and Remove confirmation; Gallery photos have arrow/drag ordering.
 - Display **Views, Likes, Shares, Followers gained, Taps on linked** (comments in the shared analytics table) using reporting-v1 and BE first-follow attribution. Coverage/definition metadata distinguishes missing historical evidence from zero; never estimate gains client-side.
 - Data: `/businesses/me/videos`, `/businesses/me/gallery`, `/businesses/me/videos/analytics`, `/media/uploads`, Businesses settings for the default.
 - Reorder GET/PUT `/businesses/me/videos/order` or `/gallery/order` uses canonical ordered IDs and `expectedOrderVersion`; keyboard arrows share the same atomic mutation as drag, rollback/reload on conflicts.
 - Edit GET `/businesses/me/videos/{id}` hydrates source union, thumbnail asset ID, text, links, consent and version. PATCH sends `VideoEdit`; **Edit & resubmit** on rejected content explicitly sends `resubmit:true`. Source replacement validates/re-enters pending; a consent-only change does not pretend to resubmit. Removed owner content remains read-only.
-- Upload uses purpose-specific AssetPort IDs (`video_file`, `video_thumbnail`, `gallery`). If hosting/caps are unconfigured, disable that upload with `MEDIA_UPLOAD_POLICY_REQUIRED` explanation; validated YouTube/Instagram links still work. No assumed provider/size promise.
+- Image upload uses purpose-specific AssetPort IDs (`video_thumbnail`, `gallery`) and the Cloudinary-backed multipart API through React Query. Never upload directly to Cloudinary or cache file bytes/provider URLs in Query state. Missing image readiness disables only that upload with `MEDIA_UPLOAD_POLICY_REQUIRED`; validated YouTube/Instagram links still work. No video-file purpose/control can be enabled by image readiness.
 - Special states: pending, rejected with reason, removed, order/version conflict, unavailable metrics and unconfigured upload.
 - Validation: link field validates host client-side for fast feedback; server is authoritative (RL10).
 - Acceptance: Given an unsupported URL or foreign/wrong-purpose asset, when submitted, then validation blocks it. Given a rejected video, when valid edit plus explicit resubmit succeeds, then the new status is Pending with the returned version. Given consent defaults off, when creating, then new controls start off without opting existing items in. Given a keyboard reorder, when reloaded, then persisted order matches and a stale version cannot overwrite it.
@@ -77,5 +81,9 @@ Follow the [verification policy](../../../.github/instructions/testing.instructi
 All public-image Uploaders follow [Media image policy](../be/media-videos.md#public-image-policy), display accepted format/size/dimensions, and retain the prior image on replacement failure. Consume variant dimensions/URLs for responsive images. Linked-tap POST occurs only on actual target activation. Follow includes `sourceVideoId` only with a recent same-session view; login-return following works without attribution. Prefetch/preload never creates a view.
 
 Responsive renderers import `PublicImageVariantDTO` and use `variant.path` with its width/height; never expect a `url` alias or construct storage paths. Manually verify upload-ready without public placement, authorized public variants, invalid width/version and revoked placement including conditional/range requests.
+
+Verify both provider renderers, private/deleted/embedding-disabled Instagram
+fallback, CSP/referrer behavior, unsupported autoplay controls and direct-file
+rejection using the [integration acceptance cases](../../_foundation/media-and-maps.md#manual-acceptance).
 
 Manual UI/accessibility: feed snap/keyboard and player lazy loading, data-saver, ID anchoring, explicit TTL restart, report/photo sheet, source edit/resubmit, reorder arrows/drag, comment queue, focus after action, Hindi/dark layouts. Manual journey J4/J6: immutable ranking despite counters/approvals, live consent removal, out-of-filter deep link, guest PHOTO report → scoped admin resolution, catalog-only denial, published-comment count decrement and private applicant upload-purpose checks. Account data export/deletion stays Users-owned; clear personal cached media/report state on invalidation.

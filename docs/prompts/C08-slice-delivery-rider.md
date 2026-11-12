@@ -33,6 +33,14 @@ Use only this slice; legacy `docs/specs/` outputs are not prerequisites.
 ## REQUIRED CONTENTS
 Build RD and delivery features: rider onboarding/approval, online toggle, requests with 60 s countdown, active delivery flow, OTP verification, earnings, fee slabs, live deliveries data, realtime channels.
 
+Keep rider KYC in separate private storage under the
+[media-purpose boundary](../../specs/_foundation/media-and-maps.md#cloudinary-public-images).
+Delivery maps reuse the
+[shared Leaflet MapView and OpenStreetMap policy](../../specs/_foundation/media-and-maps.md#leaflet-and-openstreetmap).
+Rider PWA/offline behavior must not add offline tile storage or prefetch;
+retain the prescribed HTTP caching, Referer, attribution and unavailable-map
+behavior.
+
 ## IMPLEMENTATION RULES (in addition to the standing requirements)
 - Follow the current foundation/module specs above and the Design Context Pack. Keep changes slice-scoped; ask about a blocking ambiguity and fix its owning spec, not missing legacy documents or trackers.
 - Work in small pull requests (about 400 changed lines or fewer), one concern each. Branch `feat/<scope>-<name>`; Conventional Commits. Never merge; humans review and merge.

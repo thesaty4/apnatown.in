@@ -44,6 +44,11 @@ Which filter combinations are indexable (propose clean landing pages for categor
 Sitemap index and splitting by type (shops, providers, products, services, categories, subcategories, videos, images), `lastmod` from `updated_at`, max 50k URLs per file, generation job, robots.txt rules, EN/HI alternates.
 ### Core Web Vitals and assets
 Budgets per page type, LCP element strategy, font loading for Devanagari, image sizes/formats/lazy rules, third-party script policy (analytics, embeds on interaction), caching headers, CDN.
+Use the [public-image gateway contract](../../specs/_foundation/media-and-maps.md#cloudinary-public-images)
+for images in pages, metadata, sitemaps and social previews. Do not expose
+Cloudinary URLs/signatures or introduce image-optimizer/CDN caching that
+bypasses current placement authorization.
+
 ### Social previews and testing
 Dynamic OG images (shop, product, service, video), WhatsApp link previews (critical for India), validation tools, CI checks (Lighthouse CI, structured-data validation, link checker), Search Console and monitoring plan.
 

@@ -245,14 +245,14 @@ Roles: R-01 customer, R-02 vendor, R-03 provider. Default rules: BR-10, BR-16, B
 |---|---|---|---|---|
 | RL1 | a play icon in the top app bar | a play icon in the top app bar (mobile, beside bell and cart), in the desktop main nav and in the bottom navigation opens the full-screen experience | BR-10, BR-16, BR-21 | S-RL-1 |
 | RL2 | top pills | top pills (horizontally scrollable): For You \| Following \| Nearby (my area) \| Offers \| Products \| Services, plus category pills (Electronics, Fashion, Food, Wedding, Mobile, Repair). Following shows only followed owners; Nearby uses businesses near the selected location | BR-10, BR-16, BR-21 | S-RL-1 |
-| RL3 | vertical full-screen snap feed | vertical full-screen snap feed: autoplay when in view, tap to pause/play, mute toggle, progress bar, captions, data-saver mode ("Tap to play" poster), lazy loading | BR-10, BR-16, BR-21 | S-RL-1 |
+| RL3 | vertical full-screen snap feed | vertical feed with provider-supported autoplay/play/pause/mute/progress/captions; Instagram native controls, data-saver "Tap to play" and lazy loading; no simulated playback state | BR-10, BR-16, BR-21 | S-RL-1 |
 | RL4 | desktop | desktop: centred vertical player with a side panel (comments, linked products) and up/down arrow navigation | BR-10, BR-16, BR-21 | S-RL-1 |
 | RL5 | per-video overlay | per-video overlay: owner avatar, name, verified badge, Follow/Following + bell; like with count; comment; share; caption; hashtags; distance and open/closed; overflow with "Report video" | BR-10, BR-16, BR-21 | S-RL-1 |
 | RL6 | linked products/services strip | linked products/services strip (image, name, price, Add to cart / Enquire / View) and a "Shop this video" bottom sheet listing all linked items | BR-10, BR-16, BR-21 | S-RL-1 |
 | RL7 | a guest who likes | a guest who likes, follows or comments sees the login prompt (mobile OTP) and returns to the same video | BR-05, BR-10, BR-16, BR-21 | S-RL-1 |
 | RL8 | states | states: empty Following ("Follow shops to see their videos here"), no videos nearby, skeleton, video failed to load with retry, offline, removed/unavailable | BR-10, BR-16, BR-21 | S-RL-1 |
 | RL9 | deep link `/videos/ | deep link `/videos/:id` starts at that video; ranking is frozen per session so ids resolve reliably | BR-10, BR-16, BR-21 | S-RL-1 |
-| RL10 | videos are YouTube/Instagram links or uploads | videos are YouTube/Instagram links or uploads; embed URLs are rebuilt server-side from allow-listed hosts; "Open in YouTube/Instagram" fallback always available | BR-10, BR-16, BR-21 | S-RL-1 |
+| RL10 | YouTube/Instagram video links | link-only launch; typed playback rebuilt server-side from allow-listed hosts/IDs; safe "Open in YouTube/Instagram" fallback; direct video upload disabled | BR-10, BR-16, BR-21 | S-RL-1 |
 
 ## NT. Notifications
 
@@ -296,7 +296,7 @@ Roles: R-02 vendor. Default rules: BR-06, BR-07, BR-16. Entities: Owner, Product
 | VD9 | inventory | inventory: stock levels, thresholds, quick toggles, restock, bulk update | BR-06, BR-07, BR-16 | S-VD-7 |
 | VD10 | reviews | reviews: list, filter, reply, report abusive | BR-06, BR-07, BR-16 | S-VD-7 |
 | VD11 | QR and links | QR and links: business QR with logo, poster/table-tent/sticker templates, profile/product links, share | BR-06, BR-07, BR-16 | S-VD-7 |
-| VD12 | gallery manager | gallery manager (gallery-only photos, ordering, default media-consent setting) and videos & reels manager: add YouTube/Instagram link or upload, thumbnail picker, caption, hashtags, link products/services, visibility toggles "Show in Gallery" and "Show in Reels feed", approval status (pending/approved/rejected with reason/removed), analytics (views, likes, shares, followers gained, taps on linked items) | BR-06, BR-07, BR-11, BR-16 | S-VD-6 |
+| VD12 | gallery manager | gallery manager (Cloudinary-backed photos through Media, ordering, default media-consent setting) and videos & reels manager: YouTube/Instagram link only, image thumbnail picker, caption, hashtags, link products/services, visibility toggles "Show in Gallery" and "Show in Reels feed", approval status (pending/approved/rejected with reason/removed), analytics (views, likes, shares, followers gained, taps on linked items) | BR-06, BR-07, BR-11, BR-16 | S-VD-6 |
 | VD13 | media-consent toggle on every product/service media upload | media-consent toggle on every product/service media upload: "Also show this in my business Gallery / Videos & Reels" with explanation and a default from settings | BR-06, BR-07, BR-11, BR-16 | S-VD-3 |
 | VD14 | services manager | services manager: title, category, one subcategory, description, price type (from/fixed/range/on enquiry) + amount + unit, inclusions/exclusions, service area, images, video link, active/pause toggle, shareable link | BR-06, BR-07, BR-08, BR-16 | S-VD-4 |
 | VD15 | followers | followers: count, growth chart, announce to followers | BR-06, BR-07, BR-16 | S-VD-7 |

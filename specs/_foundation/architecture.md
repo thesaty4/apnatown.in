@@ -26,6 +26,12 @@ The user's 2026-11-11 authorization resolves the following historical questions 
 | Q-23/Q-24 subcategory and EN/HI public routes | [Frontend shared](./frontend-shared.md#public-url-and-locale-policy) |
 | ADM-Q4/Q-11 existing operational financial, cohort and engagement reports | [Admin](../admin/be/admin.md#reporting-definitions) and its owner-port contracts |
 
+The user's 2026-11-12 provider decision additionally selects Cloudinary for
+public-purpose images, link-only YouTube/Instagram videos, and Leaflet/OSM.
+The [media and maps contract](./media-and-maps.md) supersedes older Q-02/Q-03/
+Q-19/Q-22 proposals only within that scope; private storage, residency,
+production capacity and other vendors are not approved by this decision.
+
 Runtime configuration (real prices, verified supplier tax identities/classifications and configured integration credentials) is required input, not a guessed default or an unresolved implementation algorithm. Only the affected feature is unavailable until its readiness check passes. Manual verification uses explicit synthetic fiscal data; no spec declares legal registration, actual performance or production readiness already verified.
 
 Modular monolith: NestJS modules own their domain tables and use-cases. Cross-module calls require the purpose-limited owner ports below and in the paired module contracts; state changes use those typed application interfaces or domain events, never another module's repositories. Controllers validate DTOs and call use-cases. Shared contracts live in `packages/shared`.
@@ -69,16 +75,21 @@ Cross-cutting Auth/live-principal, Admin authorization, Audit append and Setting
 | Cache | PostgreSQL remains authoritative; public read fragments use existing Next.js ISR/tag boundaries; no Redis use is selected for launch | Existing query-plan, indexing and public-cache contracts cover the specified workloads; no workload measurements justify another service | Consider Redis only after production-like measurements show a named hot-read workload misses existing p95 budgets after query/index/cache-boundary review, and a reviewed ADR defines owner, key/scope, TTL, invalidation, memory bounds, stampede protection, observability and outage behavior |
 | Search | PostgreSQL keyword mappings, `pg_trgm`, `unaccent`, full-text indexes | Matches SR2/SR3 and avoids an external search engine | Product requirements exceed PostgreSQL's measured capability |
 | Realtime | SSE for order tracking, rider requests and live map | One-way updates fit the required live views | A feature requires bidirectional realtime |
-| Object storage | `StoragePort`; recommend S3-compatible storage with private uploads and signed access; vendor open (Q-22) | Keeps credentials and provider-specific logic in an adapter | Provider selection or measured media needs require a different adapter |
+| Public image storage | Cloudinary behind `StoragePort`, authenticated sanitized variants and the existing same-origin publication gateway; [contract](./media-and-maps.md#cloudinary-public-images) | User-selected provider without bypassing Media ownership/revocation | Approved change for measured cost, residency or capability needs |
+| Private storage | Separate private-storage port/adapter for KYC, evidence and account exports; production vendor/region remain open | Public-image selection must not expose sensitive records | Separate security-reviewed private-storage decision |
+| Video embeds | YouTube watch/Shorts and Instagram Reels/public posts; direct video upload disabled | User-confirmed link-only launch, no hosting/transcoding pipeline | New approved scope, limits, processing and cost contract |
 | Payments | `PaymentProvider` port and fake; gateway and split-charge topology open (Q-01, Q-19, Q-21) | Gateway and webhooks remain replaceable | Human selects a compliant gateway and charge/capture model |
 | OTP/SMS | `OtpDeliveryPort` and fake; primary/failover open (Q-15, Q-19) | No provider is named in product decisions | Human selects delivery providers and verifies sender setup |
 | WhatsApp | `WhatsAppPort`; BSP/template approval open (Q-04, Q-19) | Consent and approved templates are provider-independent | Human confirms BSP, sender and template approval |
-| Maps | `MapsPort`; provider open (Q-02, Q-19) | Manual address fallback stays available | Human selects provider after Padrauna coverage review |
+| Maps | Leaflet shared React client island + Geoman Free; policy-compliant OSM tiles; [contract](./media-and-maps.md#leaflet-and-openstreetmap) | Free permissive map/editing libraries; Geo/PostGIS and manual address fallback remain authoritative | Approved tiles/self-hosting for capacity/SLA needs; MapLibre only for justified vector requirements |
 | Hosting region | Recommend India region; deployment vendor/region open (Q-13, Q-25) | Fits India launch while data residency and backup policy are unresolved | Human approves region and recovery policy |
 | Observability | Pino structured logs + OpenTelemetry traces/metrics; no vendor lock-in | Correlation IDs and request/job tracing cover the monolith | An operations platform requires a specific exporter |
 | CI | GitHub Actions | Existing stack ADR and repository workflow | Repository hosting or org policy changes |
 
-The decisions above are the scaffold target, not permission to select vendors or provision production infrastructure. See the alignment gates below.
+The decisions above are implementation targets, not permission to provision
+production infrastructure. Only explicitly named providers are selected;
+their credentials, plans and operational readiness still require verification.
+See the alignment gates below.
 
 Redis workload evaluation for this specification: taxonomy/home/profile reads use public ISR tags; relationship/rate-limit state remains in PostgreSQL; durable notification/media work uses the outbox and `pg-boss`; local search remains PostgreSQL-backed. None has a measured launch workload justifying Redis. Before reconsidering, measure p95/p99 read latency, PostgreSQL CPU/IO, query plans, request/cache hit rates and queue throughput under representative launch traffic; Redis is a proposal until an ADR approves a specific use and its operational contract.
 
@@ -196,7 +207,10 @@ Acceptance:
 ## Implementation alignment gates
 
 - **Current implementation baseline:** LEAN-SPECS fixes Nest/Next TS/Tailwind, PostgreSQL/Prisma, pg-boss/no Redis and flat `{code,message_key,status,details,correlationId}`. The [backend guidance](../../.github/instructions/backend.instructions.md), [database guidance](../../.github/instructions/database.instructions.md), [migration recipe](../../.github/skills/db-migration/SKILL.md) and C00-C03 prompts follow these foundations. Earlier P01 Redis/BullMQ and database-undecided proposals are historical, not alternatives to implement (Q-20/Q-26/Q-29; [ADR 0001](../../docs/adr/0001-tech-stack.md)).
-- Toolchain pins are a scaffold implementation/CI deliverable above. Hosting/region/backups (Q-25), external provider choices and payment charge topology (Q-21) remain human decisions. Local fake bootstrap is not approval for production integration.
+- Toolchain pins are a scaffold implementation/CI deliverable above. Hosting/
+  region/backups (Q-25), unselected external providers and payment topology
+  (Q-21) remain human decisions. Cloudinary/link embeds/Leaflet choices follow
+  [media and maps](./media-and-maps.md); local bootstrap does not provision them.
 - Auth owns synchronizer state in `sessions`, including anonymous rows that cannot authenticate; cross-process/restart, concurrent-tab and rotation verification is required without automated test-file generation. Catalog owns optional suggestion Hindi plus conditional approval translation described in [backend-shared](./backend-shared.md#catalog-reference-slice). These are implementation contracts, not unresolved ownership decisions.
 - Q-23/Q-24 canonical subcategory/locale URL choices, Q-27 compact/large-button metrics, reviewed Hindi/SEO copy and Catalog's matching/slug policy remain explicit implementation/content gates where affected. No locale URL, translation, similarity threshold or missing design metric is invented here.
 
@@ -219,7 +233,7 @@ Acceptance:
    3. At platform/self delivery or customer pickup, Delivery verifies the customer-held code, explicit current cash confirmation when due, Orders transition and code consumption in one UoW.
    - **Failure:** concurrent acceptance -> one winner; wrong attempts/lockouts commit as rejected non-2xx outcomes without fulfilment, even on idempotent retry. Customer-only authorized disclosure decrypts the live code generation; rider/vendor/admin DTOs, logs and idempotency records never contain it.
 4. **Video submit -> moderation -> publish (RL, VD12-13, AD10, BR-10, BR-16)**
-   1. Owner submits a permitted YouTube/Instagram link or upload; server validates host/content, rebuilds embed URL, stores per-item Gallery/Reels consent and sets moderation state.
+   1. Owner submits a permitted YouTube/Instagram link; server validates exact host/path/ID, builds typed playback, stores per-item Gallery/Reels consent and sets moderation state. Direct video upload is rejected; optional image thumbnails use the Cloudinary image contract.
    2. Area-scoped admin with `reviews:edit` approves/rejects/removes with reason; decision/audit commit together and author notification is queued.
    3. Only currently approved, surface-consented content appears publicly. A report creates a separate review-queue record, not an automatic pending/removal transition; explicit moderation determines visibility.
    - **Failure:** invalid host/media -> reject before fetch/render; missing consent -> do not surface on that surface; unauthorized moderation -> 403; rejected/removed media stays non-public.

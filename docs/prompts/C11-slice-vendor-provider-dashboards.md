@@ -33,6 +33,13 @@ Use only this slice; legacy `docs/specs/` outputs are not prerequisites.
 ## REQUIRED CONTENTS
 Build VD and PV features: onboarding wizard and approval states, profile editor, products (CSV import, media sorter), services manager (one subcategory), offers, orders, inventory, reviews, QR/print templates, media managers, followers, enquiries, earnings, account.
 
+Dashboard media managers follow the
+[canonical media/maps contract](../../specs/_foundation/media-and-maps.md):
+separate public-purpose image uploads, link-only video submission and
+private KYC/document handling. Reuse shared media components and preserve
+owner authorization, moderation and consent controls. Do not restore direct
+video-file upload controls from older prototype or inventory descriptions.
+
 ## IMPLEMENTATION RULES (in addition to the standing requirements)
 - Follow the current foundation/module specs above and the Design Context Pack. Keep changes slice-scoped; ask about a blocking ambiguity and fix its owning spec, not missing legacy documents or trackers.
 - Work in small pull requests (about 400 changed lines or fewer), one concern each. Branch `feat/<scope>-<name>`; Conventional Commits. Never merge; humans review and merge.

@@ -31,7 +31,7 @@ docs/design-context/reference/apnatown-prototype.html and reference/prototype-so
 2. Do not write application code except the three reference implementations required: (a) one shared component (P6), (b) one NestJS module skeleton (P4), (c) one vertical slice, Explore services with the subcategory multi-select filter (P8g).
 3. Everything must be traceable: features F-..., screens S-..., flows J..., rules BR-.., states ST-.. .
 4. Record every gap, conflict or assumption in `docs/design-context/11-open-issues-and-assumptions.md` (append; never delete).
-5. Tech stack is fixed: Next.js (App Router) + Tailwind, NestJS, PostgreSQL. Choose and justify everything else per feature.
+5. Follow standing requirement 3 below for the fixed stack and media/maps choices. Choose and justify only technologies not already settled by the current foundation contracts.
 6. UI and functionality must match the prototype exactly (see `reference/` and `screenshots/`).
 
 ## ORDER OF PROMPTS AND OUTPUTS

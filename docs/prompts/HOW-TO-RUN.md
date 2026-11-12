@@ -57,4 +57,4 @@ The foundation defines exact future setup/build/start/verification commands.
 Humans review and merge every PR.
 
 ## 4. Human decisions needed early
-Open the Open Issues file (`docs/design-context/11-open-issues-and-assumptions.md`) and decide: payment gateway, maps provider, OTP/SMS and WhatsApp providers, video hosting, delivery slabs per city, commission/plan values, Hindi translation review owner, SEO landing-page URLs, hosting region.
+Open the Open Issues file (`docs/design-context/11-open-issues-and-assumptions.md`) and decide remaining unresolved items: payment gateway, OTP/SMS and WhatsApp providers, delivery slabs per city, commission/plan values, Hindi translation review owner, SEO landing-page URLs, hosting region. Public-purpose image storage, video sources and map rendering/editing are settled by the [canonical media/maps contract](../../specs/_foundation/media-and-maps.md); follow its [configuration/readiness gates](../../specs/_foundation/media-and-maps.md#configuration-and-readiness) rather than reopening those selections.

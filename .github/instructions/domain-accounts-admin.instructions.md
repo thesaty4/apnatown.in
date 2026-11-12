@@ -1,5 +1,5 @@
 ---
-applyTo: "apps/api/src/modules/{auth,users,admin,geo,communications,settings,audit}/**,apps/web/src/features/admin/**"
+applyTo: "apps/api/src/modules/{auth,users,admin,geo,communications,settings,audit}/**,apps/web/src/features/{admin,super-admin,geo}/**"
 ---
 
 # Domain: Accounts and admin
@@ -33,6 +33,9 @@ Journeys J7, J9, J10. Covers `auth`, `users`, `admin`, `geo`,
 
 ## Cities, zones, fee slabs (SA4)
 
+- Use the shared [Leaflet/OSM map contract](../../specs/_foundation/media-and-maps.md#leaflet-and-openstreetmap)
+  and Geoman Free polygon editor. Retain list/coordinate alternatives,
+  attribution and tile limits; PostGIS validates polygons and serviceability.
 - A city has zones, each zone a polygon + a delivery-fee slab table;
   `delivery` (see `domain-delivery-riders.instructions.md`) reads fee
   slabs from here, never duplicates them.

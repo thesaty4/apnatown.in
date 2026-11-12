@@ -54,6 +54,22 @@ manual behavioral, accessibility or security verification. Readiness remains
 unavailable until the specified database/shared-runtime prerequisites exist;
 liveness alone is not proof of readiness.
 
+## Selected media and map integrations
+
+The [implementation contract](specs/_foundation/media-and-maps.md) selects:
+
+- **Images:** Cloudinary for public-purpose images through the backend's
+  validated upload and authorized delivery paths. Private KYC, evidence and
+  account exports stay separate.
+- **Video/Reels:** YouTube videos/Shorts and Instagram Reels/public-post
+  embeds; direct video-file upload is disabled.
+- **Maps:** Leaflet + OpenStreetMap with Geoman Free for zone editing.
+  Attribution and tile-use limits apply; free libraries do not guarantee
+  unlimited free hosting or an SLA.
+
+These are specified integrations, not installed/configured runtime features.
+See the contract for planned environment keys and manual acceptance checks.
+
 ## How the AI workflow works
 
 This repository is built with GitHub Copilot coding agents following a

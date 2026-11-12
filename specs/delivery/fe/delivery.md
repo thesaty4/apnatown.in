@@ -4,6 +4,11 @@ Features: F-RD-001, F-RD-002, F-RD-003, F-RD-004, F-RD-005, F-RD-006, F-RD-007, 
 
 Backend contract: [BE delivery](../be/delivery.md)
 
+Live-map UI uses the shared [Leaflet/OSM contract](../../_foundation/media-and-maps.md#leaflet-and-openstreetmap).
+Keep scoped SSE/list data separate from basemap tiles; Rider PWA does not
+download/cache tiles offline. KYC and case-evidence uploads stay on the
+private Media path, never Cloudinary's public-purpose image adapter.
+
 ## Routes and rendering
 
 | Route (production) | Screen ID | Rendering + reason | Auth / role | Index policy |

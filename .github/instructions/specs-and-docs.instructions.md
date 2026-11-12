@@ -26,6 +26,9 @@ Builds on `.github/copilot-instructions.md`. Templates:
 - Specs describe verification scenarios, not automated test files or
   runner setup. Follow [the verification policy](testing.instructions.md)
   for FE, BE and DB; preserve behavior/security criteria as manual checks.
+- Image, video and map specs inherit the selected
+  [media/map contract](../../specs/_foundation/media-and-maps.md);
+  historical provider-open or direct-video-upload proposals do not override it.
 
 ## Given/When/Then
 

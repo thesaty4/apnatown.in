@@ -1,5 +1,5 @@
 ---
-applyTo: "apps/api/src/integrations/**,apps/api/src/modules/{payments,notifications,communications}/**"
+applyTo: "apps/api/src/integrations/**,apps/api/src/modules/{payments,notifications,communications,media-videos,geo}/**"
 ---
 
 # Integrations
@@ -12,13 +12,26 @@ regardless of provider.
 ## Ports and adapters
 
 - One interface per capability: `PaymentProvider`, `SmsOtpProvider`,
-  `WhatsAppProvider`, `EmailProvider`, `StorageProvider`, `MapsProvider`,
+  `WhatsAppProvider`, `EmailProvider`, `StoragePort`, `MapsPort`,
   `MediaProcessor`. Modules (`payments`, `notifications`,
   `communications`) depend only on the interface
   (`solid-dry-design.instructions.md` dependency inversion).
 - Each real adapter lives under `apps/api/src/integrations/<provider>/`
   and implements exactly one port; no module imports a concrete
   provider SDK directly.
+
+## Selected media and map integrations
+
+Follow [the canonical contract](../../specs/_foundation/media-and-maps.md):
+Cloudinary stores sanitized public-purpose images through `StoragePort`;
+KYC/evidence/exports stay separate. Use authenticated image delivery behind
+Media's same-origin gateway, never browser upload signatures or public URLs.
+YouTube/Instagram links only; no direct video upload, scraping or raw embed
+HTML. Leaflet/Geoman Free render OSM tiles; they do not supply geocoding,
+routing or fee decisions. Honor tile attribution/limits; no offline downloads.
+Wire documented configuration through schema, launcher allow-lists and env
+template together; report unconfigured/unavailable states without fallback
+to another provider.
 
 ## Local verification adapters
 

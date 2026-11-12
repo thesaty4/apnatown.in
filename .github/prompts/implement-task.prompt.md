@@ -5,6 +5,13 @@ description: Implement one task (feature spec or bug) end to end following the A
 Implement the task described below, following `AGENTS.md`'s read order
 and lifecycle.
 
+For media/maps-related work, read and follow the
+[canonical media/maps contract](../../specs/_foundation/media-and-maps.md)
+and its [manual acceptance criteria](../../specs/_foundation/media-and-maps.md#manual-acceptance)
+alongside the owning module specs. Preserve this prompt's lifecycle mode,
+React Query requirements and verification policy; do not reopen settled
+provider choices or enable direct video-file uploads.
+
 1. If no spec exists yet for a non-trivial feature, invoke
    `architect` in specification mode (`.github/agents/architect.agent.md`,
    `.github/skills/spec-writing/SKILL.md`).

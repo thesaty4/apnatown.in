@@ -28,6 +28,11 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 - Commission & plans: default commission %, platform fee ₹, plan rows (localized name, tax-inclusive ₹/calendar month, commission %, enabled and Premium entitlement), promotion fee rows (tax-inclusive ₹/7 days). Use the server's fixed term rules; no auto-renew/proration controls or sample price fallback.
 - Payments: Online payments / Cash on delivery toggles; approved configured gateway choices; "Configured"/"Not configured" badge, no key input or silently selected provider. A separate versioned Tax configuration card edits verified platform supplier/classifications and displays missing readiness fields; it never infers a GST rate or claims regex validation proves registration.
 - Policies: approved refund window; review rule EN/HI textarea; blocked words chips. Rule copy cannot resolve Reviews' eligibility/re-review gates. A separate Upload policies card shows Media's approved limits/hard ceilings and saves `uploads` independently, without changing `policies_reviews` group semantics.
+- Upload policies also shows Cloudinary image readiness from the server,
+  without credential entry or provider URLs. Link-only video, separate private
+  documents and deployment-owned map/embedding configuration follow
+  [media and maps](../../_foundation/media-and-maps.md); image readiness
+  never enables a video-file upload control.
 - Notifications & WhatsApp: configured sender/status/enable toggle, SMS adapter and email sender; **public support Call and WhatsApp E.164 destinations**. No secrets or example phone number.
 - SEO: default title/description with search-result preview.
 - Feature flags: Customer reviews, Guest browsing, WhatsApp, Maintenance; future Booking/Donations visible **false, disabled, unavailable** until separately implemented.

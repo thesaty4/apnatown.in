@@ -12,6 +12,10 @@ Features: F-PD-001, F-PD-002, F-PD-003, F-PD-006, F-PD-008, F-PD-009, F-VD-004, 
 
 Backend counterpart: [BE products](../be/products.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
 
+Image Uploaders and linked-video panels follow the shared
+[Cloudinary/embed contract](../../_foundation/media-and-maps.md): API multipart
+uploads and canonical asset paths, not browser Cloudinary SDKs or video files.
+
 ## Routes and rendering
 
 | Route | Screen ID | Rendering + reason | Auth / role | Index policy |

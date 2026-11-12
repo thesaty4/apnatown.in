@@ -24,6 +24,17 @@ do not turn a spec-only task into implementation or a release.
 - A developer has completed implementation or a PR needs general review.
 - A human requests release notes/checklists for an already merged batch.
 
+## Media and maps
+
+For affected work in any mode, read and follow the
+[canonical media/maps contract](../../specs/_foundation/media-and-maps.md).
+In specification mode, align linked BE/FE specs and ADRs with its settled
+provider, licensing and purpose boundaries; reference rather than duplicate
+the contract. Preserve Media's `AssetPort`, `PublicImageVariantDTO` and
+strict same-origin reauthorizing image gateway ownership.
+In read-only review, inspect the applicable configuration/readiness and
+manual-acceptance evidence; do not implement fixes or reopen settled choices.
+
 ## Specification and design mode
 
 1. Follow `AGENTS.md`'s read order; read the feature/inventory row,

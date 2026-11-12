@@ -136,7 +136,7 @@ for those deferred runtime contracts.
 | Audit interceptor/context | Collect trusted actor/correlation/action metadata only. Application calls Audit-owned `record(tx, entry)` inside the state transaction; an after-response log is not the required audit. |
 | Rate-limit guard | Atomic PostgreSQL buckets defined in data-model; shared across API processes, no Redis; Auth attempt/cooldown policy remains authoritative. |
 | Outbox publisher + job runner | Application appends outbox in its transaction; a separate relay sends to pg-boss at least once. Consumers deduplicate/reconcile; repositories do not publish. |
-| Adapter interfaces + local implementations | Ports for payment, OTP/SMS, WhatsApp, email, storage and maps; manual verification uses approved local adapters without real external sends. |
+| Adapter interfaces + local implementations | Ports for payment, OTP/SMS, WhatsApp, email, storage and maps; [Cloudinary/embeds/OSM contract](./media-and-maps.md) fixes the selected capabilities and private-storage separation. Manual verification uses approved local adapters without real external sends. |
 | Settings/feature flags | Typed server-side reads; no client-supplied flag may authorize an action. |
 | OpenAPI | Generate from DTO/Zod schemas; version REST routes deliberately and publish stable error shapes. |
 | i18n message catalogue | `en` and `hi` message keys for user-visible API errors/templates; API returns key and safe parameters, clients render localized copy. |

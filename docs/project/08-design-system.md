@@ -114,12 +114,14 @@ Purpose, key props, states and do/don't live with the component in
   graph chart with an accessible table alternative — SA1; do not specify Candle/OHLC.
 - **Feedback:** skeleton, progress, spinner, empty/error/no-permission/
   success states, offline banner.
-- **Map components:** schematic map with pins, clusters, you-are-here,
-  radius, draggable pin, polygon editor with draggable corners.
+- **Map components:** shared client-only Leaflet/OSM MapView with pins,
+  clusters, you-are-here, radius, draggable pin and Geoman Free polygon
+  editing; retain attribution and keyboard/list/coordinate alternatives
+  per the [integration contract](../../specs/_foundation/media-and-maps.md).
 - **QR card** with logo.
 - **Media:** carousel with video thumbnails and play badge, gallery
   grid with lightbox, **full-screen viewer**, YouTube/Instagram embed
-  card with fallback, **reels player**, **follow button** states,
+  card with safe fallback and provider-supported controls, **reels player**, **follow button** states,
   **linked-product strip**, video grid, **media-consent toggle**,
   **heart button**.
 - **Filter panel:** sheet / sidebar / tablet bar, including the

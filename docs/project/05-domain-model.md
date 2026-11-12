@@ -35,7 +35,7 @@
 | Rider | profile, vehicle, documents, status (ST-approval), online |
 | Review | target (product/shop/service/rider), author, rating, text, tags, status (ST-review), reply |
 | Enquiry | service/owner, name, phone, message, preferred date, status (ST-enquiry) |
-| Video | owner, source (YouTube/Instagram/upload), id/url, title, caption, hashtags, linked items[], visibility toggles, status (ST-video), counters |
+| Video | owner, source (YouTube/Instagram only), validated provider kind/ID, title, caption, hashtags, linked items[], visibility toggles, status (ST-video), counters; no uploaded video file |
 | VideoComment | video, author, text, status (ST-comment) |
 | Follow / Like / Heart | User <-> Owner/Video/Photo |
 | Notification / NotificationPreference | user, channel, event, read state |

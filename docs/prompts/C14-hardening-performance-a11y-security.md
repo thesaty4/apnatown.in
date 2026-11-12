@@ -31,6 +31,12 @@ not prerequisites.
 - Code in `apps/web`, `apps/api`, `packages/*` as defined by the specs, with manual verification evidence and Storybook stories
 
 ## REQUIRED CONTENTS
+
+Include applicable [media/maps manual acceptance criteria](../../specs/_foundation/media-and-maps.md#manual-acceptance)
+and [configuration/readiness gates](../../specs/_foundation/media-and-maps.md#configuration-and-readiness)
+within this task's existing verification/traceability scope. Record missing
+evidence explicitly; contract links or selected providers alone are not
+runtime readiness evidence.
 Run and fix relevant existing non-test foundation/module checks. Manually measure performance budgets, inspect keyboard/screen-reader accessibility and Hindi/dark appearance, and obtain required security review for Explore, search, checkout and Reels. Do not create load, visual, component or journey test files or add test tooling. `node scripts/check-spec-coverage.mjs` verifies structural F-ID/S-ID coverage, **not** functioning features: manually exercise the affected acceptance/journey scenarios and record unverified gaps. Prepare release material only when explicitly requested; do not generate missing legacy audit scripts or trackers.
 
 ## IMPLEMENTATION RULES (in addition to the standing requirements)

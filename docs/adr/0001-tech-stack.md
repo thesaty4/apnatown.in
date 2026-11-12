@@ -6,8 +6,10 @@ Superseded for implementation by the user-directed
 [lean specs](../prompts/LEAN-SPECS.md) and
 [architecture foundation](../../specs/_foundation/architecture.md).
 Next.js/NestJS, PostgreSQL/Prisma and pg-boss without Redis are the
-current baseline. Provider, payment-topology and hosting decisions
-remain open; this alignment does not approve any of them.
+current baseline. The 2026-11-12 user decision selects the
+[media/map integrations](../../specs/_foundation/media-and-maps.md).
+Unrelated providers, private-storage vendor/residency, payment topology
+and production hosting decisions remain separate.
 
 ## Context
 
@@ -41,6 +43,13 @@ Use the foundation's pnpm workspace/package and version-pinning contracts:
 - Integrations as ports with approved local adapters: payments, SMS/OTP,
   WhatsApp Business, email, storage, maps, media processing
   (`integrations.instructions.md`).
+- Public-purpose images: Cloudinary behind Media/StoragePort and the
+  same-origin authorization gateway; private KYC/evidence/exports stay
+  separate. Video: YouTube/Instagram links only, no direct uploads.
+- Maps: shared client-only Leaflet (BSD-2-Clause), Geoman Free (MIT),
+  policy-compliant OpenStreetMap tiles. Alternatives and switch conditions,
+  configuration and capacity/licensing limits live in the
+  [canonical contract](../../specs/_foundation/media-and-maps.md).
 - CI: GitHub Actions.
 
 ## Consequences
@@ -53,9 +62,10 @@ Use the foundation's pnpm workspace/package and version-pinning contracts:
 - Negative: Next.js App Router and the chosen state/query libraries add
   learning overhead; a layered Node.js API is more boilerplate than a
   minimal framework.
-- Follow-up: confirm the external providers and production policies
-  listed in the module specs before enabling their real adapters.
-  Local/test ports stay fake; no new database-engine decision is needed.
+- Follow-up: configure and verify the selected media/map integrations;
+  confirm the remaining providers and production policies before enabling
+  their adapters. Local verification stays explicit and isolated; provider
+  selection does not promise unlimited free hosting.
 
 ## Alternatives considered
 

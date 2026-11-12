@@ -54,11 +54,13 @@ Required before touching `auth`, `payments`, `cart-checkout`, `orders`,
 ## SSRF, uploads, CSV, webhooks
 
 - **Embeds (video links):** never embed a client-supplied URL directly;
-  validate against an allow-list of hosts (YouTube, Instagram) and
-  rebuild the embed URL server-side; fall back to "Open in
-  YouTube/Instagram" otherwise.
+  validate exact YouTube/Instagram hosts/IDs and build typed playback
+  server-side. Reject invalid URLs; Open fallback is only for valid
+  provider links. Never render raw oEmbed HTML.
 - **Uploads:** validate file type by content and size; use the
-  `storage` integration port; strip EXIF/GPS from photos.
+  storage port; strip EXIF/GPS. Cloudinary public-purpose images stay
+  authenticated behind Media's gateway; private documents stay separate.
+  No direct video upload. Follow [media/map security](../../specs/_foundation/media-and-maps.md).
 - **CSV import/export:** treat cells as untrusted; neutralize
   formula-injection characters on export; cap/validate rows and types
   on import.

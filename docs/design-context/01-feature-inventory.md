@@ -246,14 +246,14 @@ Depends on: AD10 moderation, EG, VD12
 |---|---|---|---|---|
 | F-RL-001 | Entry points | Customer | Play icon in mobile top bar, desktop nav, bottom navigation. | P0 |
 | F-RL-002 | Feed pills | Customer | For You / Following / Nearby / Offers / Products / Services + category pills (Electronics, Fashion, Food, Wedding, Mobile, Repair). | P0 |
-| F-RL-003 | Vertical snap feed | Customer | Autoplay in view, tap pause/play, mute, progress, captions, data-saver 'Tap to play', lazy loading. | P0 |
+| F-RL-003 | Vertical snap feed | Customer | Provider-supported autoplay in view, pause/play, mute, progress and captions; Instagram native controls; data-saver 'Tap to play', lazy loading (G-22). | P0 |
 | F-RL-004 | Desktop layout | Customer | Centred player, side panel (comments, linked products), up/down arrow keys. | P0 |
 | F-RL-005 | Video overlay | Customer | Owner avatar/name/verified, Follow/Following + bell, like count, comments, share, caption, hashtags, distance, open/closed, overflow with Report. | P0 |
 | F-RL-006 | Linked products/services strip | Customer | Image, name, price, Add to cart / Enquire / View; 'Shop this video' sheet. | P0 |
 | F-RL-007 | Guest actions and return | Customer | Like/follow/comment prompts login and returns to same video. | P0 |
 | F-RL-008 | Reels states | Customer | Empty Following, no videos nearby, skeleton, failed with retry, offline, removed/unavailable. | P0 |
 | F-RL-009 | Deep link and stable ranking | Customer | /videos/:id starts at that video; ranking frozen per session. | P0 |
-| F-RL-010 | Video sources and safety | Customer, Vendor, Provider | YouTube/Instagram links or uploads; embed URLs rebuilt server-side from allow-listed hosts; Open-in fallback. | P0 |
+| F-RL-010 | Video sources and safety | Customer, Vendor, Provider | YouTube/Instagram links only; typed playback rebuilt server-side from allow-listed hosts/IDs; safe Open fallback. Direct video upload disabled. | P0 |
 
 ## NT - Notifications
 
@@ -295,7 +295,7 @@ Depends on: AD2 approval
 | F-VD-009 | Inventory | Vendor | Stock levels, thresholds, quick toggles, restock, bulk update. | P0 |
 | F-VD-010 | Vendor reviews | Vendor | List, filter, reply, report. | P0 |
 | F-VD-011 | QR and links | Vendor | Business QR with logo, poster/table-tent/sticker templates, links, share. | P0 |
-| F-VD-012 | Gallery manager and videos/reels manager | Vendor | Gallery-only photos, default consent setting, link/upload videos, thumbnail, caption, hashtags, link items, 'Show in Gallery'/'Show in Reels', approval status, analytics. | P0 |
+| F-VD-012 | Gallery manager and videos/reels manager | Vendor | Gallery-only photos, default consent setting, YouTube/Instagram video links (file upload disabled), thumbnail, caption, hashtags, link items, 'Show in Gallery'/'Show in Reels', approval status, analytics. | P0 |
 | F-VD-013 | Media-consent toggle | Vendor | On every product/service media upload: 'Also show this in my business Gallery / Videos & Reels' with explanation and default. | P0 |
 | F-VD-014 | Services manager | Vendor | Title, category, one subcategory, price type/amount/unit, inclusions, exclusions, area, images, video, active/pause, shareable link. | P0 |
 | F-VD-015 | Followers | Vendor | Count, growth chart, announce to followers. | P0 |

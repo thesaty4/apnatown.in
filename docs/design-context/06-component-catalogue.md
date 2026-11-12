@@ -68,7 +68,7 @@ Conventions: all components accept `className`, forward refs, are keyboard acces
 | CategoryMultiSelect | counts per category | - |
 | ActiveFilterChips + ClearAll | removable chips, count, Clear all | - |
 | CategoryPillRow / SubcategoryPillRow | sticky horizontally scrollable pills with counts, overflow, long text | selected |
-| MapView (schematic) | pins, clusters with counts, you-are-here, radius, draggable pin, polygon editor with draggable corners | empty city |
+| MapView | Shared client-only Leaflet/OSM map; pins, clusters, you-are-here, radius, draggable pin; Geoman Free polygon editing and visible attribution | empty city; tile failure with list/manual fallback |
 | PriceRangeSlider | min/max + inputs | - |
 | OfferBanner | badge, discounted price, validity, terms; expired and out-of-stock | states |
 | AddressForm / AddressCard | map pin, landmark, PIN, label | - |
@@ -81,7 +81,7 @@ Conventions: all components accept `className`, forward refs, are keyboard acces
 |---|---|---|
 | MediaCarousel | images + video thumbnails with play badge | loading, video error fallback |
 | FullScreenViewer | prev/next, swipe, arrows, counter, zoom (pinch/double-tap/wheel), heart, focus trap, ignores pointer capture on buttons | - |
-| EmbedCard | YouTube/Instagram embed with lazy poster and "Open in" fallback; host allow-list | blocked, offline |
+| EmbedCard | Typed YouTube iframe / Instagram permalink renderer with lazy poster and safe Open fallback; exact host/ID validation, no raw HTML | blocked, offline, provider unavailable |
 | GalleryGrid + Lightbox | filters All/Photos/Videos/By product/By service; swipe; caption; linked chip; report | empty |
 | **ReelsPlayer** | vertical snap feed, autoplay in view, tap pause, mute, progress, data-saver, keyboard (up/down), side panel on desktop | failed, offline, removed, empty Following, no nearby |
 | **FollowButton** | Follow / Following + bell, unfollow confirmation, login prompt | pending |

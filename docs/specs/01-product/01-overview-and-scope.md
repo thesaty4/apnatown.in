@@ -20,6 +20,13 @@ ApnaTown.in is a mobile-first hyperlocal marketplace and local business discover
 - **Canonical source:** [Design Context Pack](../../design-context/README.md); prototype HTML and stylesheet control visual/behaviour conflicts, which must be appended to [open issues](../../design-context/11-open-issues-and-assumptions.md).
 - **Coverage size:** 206 feature IDs/22 areas; 105 screens; 14 journeys; 16 state models; 22 BRs; 927 EN/HI string pairs.
 
+**Implementation precedence:** the user's 2026-11-12
+[media/map decision](../../../specs/_foundation/media-and-maps.md) selects
+Cloudinary public-purpose images, link-only YouTube/Instagram videos and
+Leaflet/OSM/Geoman Free. It overrides historical upload/provider proposals
+throughout P01; source-requirement quotations remain historical evidence,
+not permission to implement direct video uploads or choose other providers.
+
 ## Personas and roles
 
 | Role | Goals and capabilities | Boundaries |
@@ -44,7 +51,7 @@ ApnaTown.in is a mobile-first hyperlocal marketplace and local business discover
 9. **Refunds/cancellations:** Notify admin and vendor; admin resolves disputes.
 10. **Taxonomy:** Main categories Super Admin-managed; subcategories suggested and admin-approved with duplicate detection/merge.
 11. **Service taxonomy:** Exactly one subcategory per service; provider may be expert in several.
-12. **Videos:** YouTube/Instagram links or uploads; public only after admin approval.
+12. **Videos:** YouTube/Instagram links only; public only after admin approval; direct video upload disabled.
 13. **Media consent:** Product/service media enters business Gallery/Reels only if vendor allows per item.
 14. **Location/messaging:** Location optional; WhatsApp/marketing requires recorded opt-in consent.
 
@@ -55,11 +62,13 @@ ApnaTown.in is a mobile-first hyperlocal marketplace and local business discover
 | P0 launch | Discovery (Home, Explore, Search, profiles, product/service details), cart/checkout/orders/tracking, vendor/provider dashboards, rider app, admin/super-admin, notifications, reels/moderation, EN/HI and SEO foundation. |
 | P1 | Richer analytics, advanced promotions, vendor staff roles, saved payment methods. |
 | P2 | Service booking/quotation/payment, wallet, loyalty, more cities. |
-| Off by default / undecided | Donations OFF; service booking OFF; dedicated video hosting/transcoding undecided. No partial UI may imply enablement. |
+| Off by default / undecided | Donations OFF; service booking OFF; direct video hosting/transcoding disabled by the link-only launch decision. No partial UI may imply enablement. |
 
 ## Technology assumptions
 
-The fixed stack is binding. The remainder below are P01 proposals only, not approved vendor commitments; confirm in P02/P09 before production integration. Open provider questions remain authoritative.
+The fixed stack and explicit foundation/provider decisions are binding.
+Remaining P01 proposals do not authorize production integration; current
+owning specs and unresolved operational gates remain authoritative.
 
 | Concern | P01 proposal | Alternative and switch condition |
 |---|---|---|
@@ -67,13 +76,13 @@ The fixed stack is binding. The remainder below are P01 proposals only, not appr
 | Cache | No Redis at launch; PostgreSQL remains authoritative and public read fragments use the approved Next.js ISR/tag boundary. No current use is selected because no workload measurement justifies another service. | Reconsider Redis only when production-like metrics show a named hot-read workload misses existing p95 budgets after indexing/query/cache review; an ADR must specify ownership, key/scope, TTL, invalidation, memory bounds, stampede protection, observability and outage behavior. |
 | Queue | PostgreSQL `pg-boss` plus transactional outbox is the binding launch choice; do not adopt BullMQ/Redis for these jobs. | A separate broker requires measured throughput/isolation need and an approved architecture decision; Redis adoption alone does not select BullMQ. |
 | Search | PostgreSQL FTS + pg_trgm with explicit Hindi/Hinglish keyword map. | OpenSearch if measured quality/volume cannot meet p95. |
-| Storage | S3-compatible private object storage behind storage port; provider pending residency/retention. | Provider selection changes if residency/cost/lifecycle constraints require. |
+| Storage | Selected Cloudinary public-purpose images behind Media/StoragePort; private documents/exports remain separate. | Change only by approved decision for cost/residency/capability; private-storage vendor remains open. |
 | Realtime | SSE for server-to-client status; polling fallback on weak network. No high-frequency bidirectional location contract assumed. | WebSockets only if confirmed rider live-location needs demand bidirectional updates. |
 | Payments | Evaluate Razorpay first behind provider port; Cashfree alternative; no provider live before Q-01 decision. | Re-evaluate against settlement, method coverage, pricing, uptime and compliance. |
 | OTP/SMS | Provider-neutral port; MSG91 candidate only after DLT, delivery and failover review. | Provider/failover remains open Q-15. |
 | WhatsApp | Template-approved BSP adapter; consent/STOP handling mandatory; BSP/sender open Q-04. | Select after template approval, deliverability and cost comparison. |
-| Maps | Mappls candidate for India behind adapter; Q-02 approval required. | Google Maps or locality-only fallback if coverage/cost/licensing requires. |
-| Video | P0 rebuild allow-listed embed URLs server-side and provide Open-in fallback; dedicated hosting/transcoding not selected. | Choose storage/transcoding only after Q-03 confirms scope/retention/moderation/cost. |
+| Maps | Selected Leaflet/OSM with Geoman Free; no geocoding/routing provider selected. | Approved tile provider/self-hosting for capacity/SLA; MapLibre only for justified vector requirements. |
+| Video | Typed YouTube/Instagram link embeds and safe Open fallback; direct uploads disabled. | New explicit scope/processing/cost/retention approval required before hosted video. |
 | Hosting | Managed application/database hosting in India region is provisional; provider/topology/backups pending residency approval. | Provider-specific deployment after residency, restore and cost requirements. |
 
 ## Glossary

@@ -4,6 +4,11 @@ Features: F-PF-001, F-PF-002, F-PF-003, F-PF-004, F-PF-005, F-PF-006, F-PF-007, 
 
 Backend contract: [BE businesses](../be/businesses.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
 
+Logo/cover Uploaders, media panels and location pins follow the shared
+[media/map contract](../../_foundation/media-and-maps.md). Public-purpose
+images use Cloudinary through Media; onboarding documents stay private even
+when they are photos. Reuse Leaflet MapView and the typed link-only renderer.
+
 ## Routes and rendering
 
 | Route | Screen ID | Rendering + reason | Auth / role | Index policy |

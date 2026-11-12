@@ -18,6 +18,8 @@ Fill the existing folders `specs/<module>/be/` and `specs/<module>/fe/` (they ex
 - `docs/design-context/screenshots/` and `reference/` (runnable prototype + source = visual and behavioural truth; if the pack and the prototype disagree, the prototype wins and you log it in file 11)
 - `.github/copilot-instructions.md` and `docs/specs/_progress.md`
 
+- [Canonical media/maps contract](../../specs/_foundation/media-and-maps.md): settled provider/licensing choices, public/private-purpose separation, readiness and manual acceptance. It governs older media/maps alternatives or direct-video-upload suggestions in the pack/prototype.
+
 ## 3. KEEP IT LEAN (hard rules: no over-engineering)
 
 1. **Reference, never repeat.** Do not re-describe things the pack already defines. Cite IDs (F-, S-, BR-, ST-, J-) and screenshot file names. Standard UX states (default, skeleton, empty, error + retry, no-permission, offline) are defined once in the foundation file; screens list only their **special** states.
@@ -52,6 +54,9 @@ Fill the existing folders `specs/<module>/be/` and `specs/<module>/fe/` (they ex
 - Two reference components in real code: **Button** and **Input** (variants via tokens, a11y, loading state, manual verification).
 **`specs/_foundation/data-model.md`**
 - Conventions (snake_case, UUIDv7, `timestamptz` UTC, money `bigint` paise, soft delete, `version` for optimistic locking, i18n columns `name_en/name_hi`), one overall ERD (Mermaid) with table ownership per module, and the index strategy for the hot queries (Explore facets, nearby via PostGIS, feeds with keyset pagination, admin queues). Full column definitions live in each module's BE spec.
+
+**`specs/_foundation/media-and-maps.md`**
+- Keep the [canonical media/maps contract](../../specs/_foundation/media-and-maps.md) authoritative for public-purpose images, link-only videos, map rendering/editing, licensing/tile use, configuration/readiness and manual acceptance. Other foundations and module specs reference it without duplicating its contract or redefining Media's ports, DTOs or image gateway.
 
 ### 4.2 Module specs
 
@@ -197,7 +202,7 @@ Create `scripts/check-spec-coverage.mjs` (Node, no dependencies) that: reads F-I
 
 ## 7. DONE WHEN
 
-- [ ] `specs/_foundation/` has the four files; reference code for the module skeleton, Button and Input is included
+- [ ] `specs/_foundation/` contains the current foundations, including [media and maps](../../specs/_foundation/media-and-maps.md); reference code for the module skeleton, Button and Input is included
 - [ ] All 21 modules have a BE and an FE spec following the templates, within the size limits
 - [ ] `node scripts/check-spec-coverage.mjs` passes (all 206 features and 105 screens covered)
 - [ ] No forbidden over-engineering (section 3); open questions appended to file 11

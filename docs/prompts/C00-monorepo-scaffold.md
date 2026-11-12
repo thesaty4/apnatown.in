@@ -23,9 +23,12 @@ docs/design-context/10-sample-data.json       (Padrauna sample data)
 docs/design-context/11-open-issues-and-assumptions.md
 docs/design-context/screenshots/              (reference images: m-<role>-<view>.jpg = 390px, d-<role>-<view>.jpg = 1280px, plus dark and Hindi samples)
 docs/design-context/reference/apnatown-prototype.html and reference/prototype-source/ (the runnable prototype and its complete source and stylesheet; the visual and behavioural source of truth)
-Also read [LEAN-SPECS.md](./LEAN-SPECS.md) and the four current
-[foundation specs](../../specs/_foundation/). Legacy `docs/specs/`
-generation outputs are not scaffold prerequisites.
+Also read [LEAN-SPECS.md](./LEAN-SPECS.md) and the current
+[foundation specs](../../specs/_foundation/), including the
+[media/maps configuration and readiness contract](../../specs/_foundation/media-and-maps.md#configuration-and-readiness).
+Apply its owner-specific configuration boundaries without expanding this
+scaffold into provider-adapter or feature implementation. Legacy
+`docs/specs/` generation outputs are not scaffold prerequisites.
 
 ## OUTPUT FILES (exact paths)
 - Workspace/tooling files and the `apps/web`, `apps/api`, `packages/shared`,

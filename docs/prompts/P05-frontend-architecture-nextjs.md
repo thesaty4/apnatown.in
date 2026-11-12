@@ -48,6 +48,12 @@ App Router layout groups: `(public)`, `(account)`, `(vendor)`, `(provider)`, `(r
 Server Components first; TanStack React Query (`@tanstack/react-query`) is mandatory for every client API read/mutation over the generated OpenAPI client. Follow the [shared API integration contract](../../specs/_foundation/frontend-shared.md#api-integration-with-react-query) for query keys, provider/hydration, errors, retries, pagination, mutation invalidation/rollback and cleanup. Do not duplicate cart/session/API responses in Zustand, Context or `useEffect` request state; local UI/forms and URL filters remain separate. Optimistic updates must be permitted by the owning module spec.
 ### Auth, i18n, performance, PWA
 httpOnly cookie sessions, middleware guards and return-to-origin for guests (BR-21); i18n with locale strategy (justify path prefix vs cookie; hreflang), message catalogues seeded from `09a-i18n-en-hi.json`, formatters; budgets (LCP, INP, CLS, JS per route), `next/image`, `next/font` (Poppins, Noto Sans, Noto Sans Devanagari with subsetting and `display: swap`), code splitting (maps, charts, reels, editors), lite/data-saver mode; PWA for rider and installable customer app, offline shell, background-safe request countdown.
+Image optimization, map code splitting and PWA/offline behavior follow the
+[canonical media/maps contract](../../specs/_foundation/media-and-maps.md).
+Do not let image optimizers, service-worker caches or CDN delivery bypass
+the image gateway. Maps use the shared client-only MapView; preserve OSM
+HTTP caching and Referer requirements without offline tile storage or prefetch.
+
 ### URL state contract
 Exact schema for Explore (`tab`, `category`, `subcategory`, `q`, `sort`, price, rating, distance, flags), Search, Reels (`/videos/:id`); parsing/validation with zod; canonicalisation; Back-button and scroll restoration; per-screen filter state; copy-link behaviour.
 ### Forms, UX states, analytics

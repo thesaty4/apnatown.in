@@ -31,6 +31,12 @@ Also read everything under `docs/specs/`.
 - fixes applied to the affected spec files
 
 ## REQUIRED CONTENTS
+
+Include applicable [media/maps manual acceptance criteria](../../specs/_foundation/media-and-maps.md#manual-acceptance)
+and [configuration/readiness gates](../../specs/_foundation/media-and-maps.md#configuration-and-readiness)
+within this task's existing verification/traceability scope. Record missing
+evidence explicitly; contract links or selected providers alone are not
+runtime readiness evidence.
 1. Write `scripts/audit-specs.mjs` (Node, no dependencies) that parses `docs/design-context/01-feature-inventory.md` and `02-screen-inventory.md` for IDs and verifies that **every F-ID and S-ID appears** in `docs/specs/**` and in the traceability matrix; that every BR-xx and ST-* appears in specs; every token key from `04-design-tokens.json` appears in the Tailwind mapping; every component in `06-component-catalogue.md` appears in `06-shared-ui`; every route in `02` appears in `05-frontend/02-routes-and-rendering.md`; every screen has a section in `08-screens`; every endpoint referenced by a screen exists in the catalogue; every table referenced exists in the database spec. Exit non-zero on any gap. Add it to CI.
 2. Run it, paste the output, and list **every gap, conflict and assumption** in `11-coverage-audit.md` (ID, type, location, fix applied or open).
 3. **Fix the specs** for every gap (do not merely list them), re-run until clean, and record the final output.

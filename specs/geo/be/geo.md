@@ -8,6 +8,13 @@ Frontend counterpart: [FE geo](../fe/geo.md).
 
 Own cities, customer-facing areas, service zones, delivery-fee slabs and service-area waitlist requests. Resolve optional location input and provide authoritative city/zone serviceability. Business distance and delivery-radius rules remain with `businesses`/`search`; geo does not own shop or provider pins.
 
+Leaflet/OSM is the selected frontend map stack, not a backend geocoder or fee
+calculator. Follow the [map contract](../../_foundation/media-and-maps.md#leaflet-and-openstreetmap):
+city/area/PIN resolution and polygon/distance validation remain PostgreSQL/
+PostGIS-owned. Do not introduce public Nominatim autocomplete, a routing
+provider or an arbitrary tile proxy. GeoJSON stays `[longitude,latitude]`,
+SRID 4326; Leaflet conversions never replace server validation.
+
 ## Tables
 
 | Table | Columns, constraints and defaults | Indexes |

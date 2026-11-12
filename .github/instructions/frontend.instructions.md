@@ -78,5 +78,7 @@ components (`docs/design-system.md`) — don't build bespoke ones.
   cookies (`security.instructions.md`).
 - Render user-generated content as text; never `dangerouslySetInnerHTML`
   with unsanitized input.
-- Rebuild video embeds only from server-provided, already-allow-listed
-  embed URLs — never construct an iframe from a raw client-held link.
+- Follow the [media/map contract](../../specs/_foundation/media-and-maps.md):
+  shared API-backed image Uploader, typed YouTube/Instagram renderer and
+  client-only Leaflet MapView. No browser Cloudinary SDK/URLs, direct video
+  upload or raw iframe HTML; retain provider fallbacks and OSM attribution.

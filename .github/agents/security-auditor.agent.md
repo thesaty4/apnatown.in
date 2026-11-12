@@ -13,6 +13,17 @@ Deep, read-only security review — **required**, not optional, before
 PR creation for any change touching `auth`, `payments`, uploads/CSV,
 embeds, admin permissions, or `communications` (`AGENTS.md`).
 
+## Media and maps
+
+For affected work, read and follow the
+[canonical media/maps contract](../../specs/_foundation/media-and-maps.md).
+Remain read-only: inspect public/private-purpose separation, image-gateway
+reauthorization and absence of browser-visible Cloudinary URLs/signatures,
+provider-specific embed and direct-video-upload boundaries, map dependency/
+tile-use boundaries, and configuration/readiness evidence.
+Use the [manual acceptance criteria](../../specs/_foundation/media-and-maps.md#manual-acceptance)
+to assess available evidence and record gaps; never implement the fixes.
+
 ## Process
 
 Review against `security.instructions.md` and the full detail in
@@ -30,10 +41,15 @@ does not relax runtime controls or justify a security finding.
    idempotency, webhook signature verification, no client-trusted
    amounts, per-shop authorization on order access.
 3. **Uploads/CSV** (VD4 media, AD13 CSV export): content-based
-   validation, size limits, formula-injection neutralization on
-   export, storage via the `storage` port.
-4. **Embeds** (RL10): host allow-list, server-side rebuild, no raw
-   client iframe sources.
+   validation, size limits and formula-injection neutralization on
+   export. Verify Media `AssetPort` and purpose-separated storage against
+   the [public-image boundary](../../specs/_foundation/media-and-maps.md#cloudinary-public-images).
+4. **Embeds** (RL10): verify host/source validation and provider-specific
+   metadata/rendering against the
+   [YouTube/Instagram contract](../../specs/_foundation/media-and-maps.md#youtube-and-instagram-embeds),
+   including trusted Instagram `embed.js`, safe canonical fallback links
+   and direct video-file rejection; never raw client iframe sources or
+   arbitrary embed HTML.
 5. **Admin actions** (AD, SA): role + ownership + scope on every
    endpoint, system-role protection, audit logging with before/after.
 6. **Communications consent** (AD12): consent-aware recipient

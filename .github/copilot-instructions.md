@@ -11,3 +11,8 @@ ApnaTown.in is a hyperlocal marketplace (shops, products, services, riders, reel
 7. **Output:** Markdown with TOC, consistent IDs, tables, code blocks, Mermaid diagrams. Long output: continue in numbered parts, never summarise.
 8. **Never invent requirements;** record Open Issues with the assumption used.
 9. **Quality:** OWASP/DPDP aligned, WCAG 2.2 AA, English + Hindi strings, INR paise, UTC storage / IST display, paginated lists, server-side state machines, verification for every change, humans review and merge. **Do not write automated test files for FE, BE or DB**, including unit and Playwright tests; follow [the verification policy](instructions/testing.instructions.md).
+10. **Selected integrations:** Cloudinary for public-purpose images only;
+    YouTube/Instagram link embeds (no direct video uploads); shared Leaflet
+    with OpenStreetMap and Geoman Free. Private documents stay separate.
+    Follow [the media/map contract](../specs/_foundation/media-and-maps.md)
+    for configuration, delivery authorization, provider limits and fallbacks.

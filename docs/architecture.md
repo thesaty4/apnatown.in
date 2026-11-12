@@ -28,6 +28,13 @@ layer; server-only reads remain in Server Components. Follow the
 [API integration contract](../specs/_foundation/frontend-shared.md#api-integration-with-react-query);
 no feature imports another feature's internals (see `frontend.instructions.md`).
 
+Selected image, embed and map integrations follow the
+[media and maps contract](../specs/_foundation/media-and-maps.md):
+Cloudinary for public-purpose images behind Media's authorization gateway,
+YouTube/Instagram links only, and shared Leaflet/OSM maps with Geoman Free.
+Private documents/exports remain separate. Provider selection does not mean
+the integrations are implemented or production-ready.
+
 ## 2. Module map (21 modules)
 
 | Module | Responsibility | Primary FE areas |
@@ -45,7 +52,7 @@ no feature imports another feature's internals (see `frontend.instructions.md`).
 | `delivery` | Rider applications, assignments, job lifecycle, delivery/pickup codes and earnings | RD, OR3, AD8 |
 | `payments` | Charges, per-shop allocations, cash collection, refunds, compensation and billing | CK6-7, OR6 |
 | `reviews` | Review submission, eligibility, moderation, replies | RV, PD7, SV6 |
-| `media-videos` | Reels/gallery upload, embeds, moderation, consent | RL, PF9-10, VD12-13, AD10 |
+| `media-videos` | Gallery/image uploads, link-only Reels/embeds, moderation, consent | RL, PF9-10, VD12-13, AD10 |
 | `engagement` | Follow, like, heart, save/bookmark, comments | EG |
 | `notifications` | Notification centre, preferences, templates | NT, X12 |
 | `communications` | Admin bulk campaigns (WhatsApp/in-app/email), consent-aware audience | AD12 |

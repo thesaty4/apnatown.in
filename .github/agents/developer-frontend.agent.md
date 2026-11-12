@@ -14,6 +14,22 @@ or one bug) in `apps/web`/`packages/ui`.
 Own frontend bug fixes and PR creation for the assigned task; a missing
 non-trivial spec goes to `architect` before implementation.
 
+## Media and maps
+
+For affected work, read and follow the
+[canonical media/maps contract](../../specs/_foundation/media-and-maps.md).
+Own the shared client-only Leaflet `MapView`, Geoman Free editing integration
+and shared image/embed wrappers; follow the
+[licensing and tile-use contract](../../specs/_foundation/media-and-maps.md#leaflet-and-openstreetmap)
+rather than assuming `react-leaflet` is selected.
+Consume `PublicImageVariantDTO` through the strict same-origin reauthorizing
+gateway. Render server-validated video metadata using the
+[provider-specific embed contract](../../specs/_foundation/media-and-maps.md#youtube-and-instagram-embeds):
+Instagram uses safe canonical metadata and trusted `embed.js`, never arbitrary
+iframe HTML or untrusted fallback URLs. Do not add direct video-file uploads.
+Retain generated-client transport, the shared React Query provider, scoped
+cache ownership and Server Component boundaries.
+
 ## Process
 
 1. Load context in `AGENTS.md` order: `frontend.instructions.md`,

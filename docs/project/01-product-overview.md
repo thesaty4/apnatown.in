@@ -85,4 +85,4 @@ Coaching & Education, Electrician, Plumber, Other Services.
   enquiry-only for now; see D-05 in
   [12-decisions-assumptions-open-questions.md](./12-decisions-assumptions-open-questions.md)).
 - Donations (feature flag off).
-- Hosting of uploaded videos beyond link-based (decide later — Q-03).
+- Direct video-file upload/hosting (link-only launch confirmed; Q-03).

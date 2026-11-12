@@ -17,25 +17,27 @@ into the list below (one is now resolved).
 | D-01 | Main categories are fixed and managed only by Super Admin (BR-07). |
 | D-02 | Each service has exactly one subcategory; a provider sets which subcategories they are "expert in" separately (BR-08). |
 | D-03 | One checkout always splits into one order per shop (BR-03). |
-| D-04 | Videos are link-based (YouTube/Instagram) or uploads, public only after admin approval, first — no dedicated video-hosting build yet (BR-10). |
+| D-04 | Confirmed 2026-11-12: YouTube watch/Shorts and Instagram Reels/public-post links only; public only after admin approval (BR-10). Direct video uploads are disabled; no hosting/transcoding build. |
 | D-05 | Search uses a keyword-mapping table with Hindi/Hinglish and typo tolerance — not a full search engine — for this stage (SR2, SR3). |
 | D-06 | Services are enquiry-only for now; booking/quotation/online payment are feature-flagged off (SV5, PV7). |
 | D-07 | Explore and Search keep separate filter state (BR-15). |
 | D-08 | Explore filter state is a shareable URL (BR-15, EX8). |
+| D-09 | Confirmed 2026-11-12: Cloudinary for public-purpose images through Media's sanitized upload and authorized same-origin delivery; KYC/evidence/exports remain separate private storage. See [integration contract](../../specs/_foundation/media-and-maps.md). |
+| D-10 | Confirmed 2026-11-12: shared Leaflet maps with Geoman Free and policy-compliant OSM tiles; no new geocoding/routing provider. Attribution, tile limits and list/manual fallback are mandatory. |
 
 ## 2. Assumptions `[ASSUMPTION]`
 
 | ID | Assumption | Confirm via |
 |---|---|---|
-| A-01 | Tech stack: pnpm monorepo, Next.js + TypeScript + Tailwind frontend, Node/TypeScript layered API, REST + OpenAPI, OTP + httpOnly cookies. Database engine, and payment/SMS/WhatsApp/maps providers, are not yet chosen. | [`docs/adr/0001-tech-stack.md`](../adr/0001-tech-stack.md) (full detail lives there, not duplicated here) |
+| A-01 | The active foundation selects pnpm, Next.js/React Query, NestJS, PostgreSQL and cookie sessions. Media/map choices are D-04/D-09/D-10; payment/SMS/WhatsApp and production private-storage/hosting decisions remain separate. | [`docs/adr/0001-tech-stack.md`](../adr/0001-tech-stack.md) and [media/map contract](../../specs/_foundation/media-and-maps.md) |
 
 ## 3. Open questions `[OPEN]`
 
 | ID | Question | Status |
 |---|---|---|
 | Q-01 | Payment gateway choice (e.g. Razorpay, Cashfree) for UPI/cards. | Open |
-| Q-02 | Maps/geocoding provider. | Open |
-| Q-03 | Video upload hosting (beyond link-based YouTube/Instagram). | Open |
+| Q-02 | Maps/geocoding provider. | Map stack resolved by D-10: Leaflet/OSM/Geoman Free. Geo/PostGIS remains authoritative; no external geocoder selected. Production tile capacity/SLA review remains required. |
+| Q-03 | Video upload hosting (beyond link-based YouTube/Instagram). | Launch resolved by D-04: embeds only, direct uploads disabled. Reopening hosting requires explicit new approval. |
 | Q-04 | WhatsApp Business template approval process and sender numbers; which BSP. | Open |
 | Q-05 | KYC document retention period. | Open |
 | Q-06 | Commission model invoicing rules (the commission **percentages** themselves are decided — see [04-business-rules.md](./04-business-rules.md)). | Open |

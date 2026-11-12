@@ -24,10 +24,12 @@ task, and as the working checklist for `security-auditor`. Full rules:
    CSRF-protected.
 6. [ ] User-generated content rendered as text or through a strict
    sanitizer — never raw HTML.
-7. [ ] Video/media embed URLs are rebuilt server-side from an
-   allow-list of hosts; no raw client iframe source.
+7. [ ] Typed YouTube/Instagram playback and safe fallback links are rebuilt
+   server-side; invalid links/direct video files are rejected, no raw HTML.
 8. [ ] Uploads validated by content and size, routed through the
-   `storage` port; EXIF/GPS stripped from photos.
+   storage port; EXIF/GPS stripped before Cloudinary. Public-purpose
+   images use authenticated storage plus the reauthorizing gateway;
+   KYC/evidence/exports stay separate.
 9. [ ] CSV export neutralizes formula-injection characters; CSV import
    validates row count and column types.
 10. [ ] Webhook handlers verify signatures and are idempotent.
@@ -39,6 +41,10 @@ task, and as the working checklist for `security-auditor`. Full rules:
     before/after values.
 14. [ ] Marketing/WhatsApp sends check recorded consent and honour
     opt-outs.
+15. [ ] [Media/map contract](../../../specs/_foundation/media-and-maps.md)
+    enforced: credentials stay server-only, CSP is narrowly scoped,
+    map popups cannot inject HTML, location remains optional and tiles
+    follow attribution/caching/no-offline rules.
 
 ## Authorization reference
 

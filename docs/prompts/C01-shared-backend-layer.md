@@ -37,6 +37,12 @@ Implement `apps/api/src/shared` from [backend-shared.md](../../specs/_foundation
 
 Implement the Catalog suggestion reference with its documented collaborators, DI bindings, guarded controller, repository mappings and manual observations of real DB state. Its migrations and Auth/Users/Business ownership prerequisites must exist first; take them from their owner specs in dependency-sized changes. Manual HTTP verification uses real authentication and guards, not authorization mocks. Do not invent helpers or claim integration success from mocks.
 
+For media-related shared interfaces and configuration, follow the
+[media/maps configuration and readiness contract](../../specs/_foundation/media-and-maps.md#configuration-and-readiness).
+Reuse Media's `AssetPort` and purpose-separated storage adapters rather
+than introducing a second upload/storage contract. This does not expand
+the shared-layer task into Media feature implementation.
+
 ## IMPLEMENTATION RULES (in addition to the standing requirements)
 - Read the current foundation and owning module specs plus the Design Context Pack. Record a blocking ambiguity inline in the owning spec and ask; do not generate missing legacy documentation or trackers.
 - Work in small pull requests (about 400 changed lines or fewer), one concern each. Branch `feat/<scope>-<name>`; Conventional Commits. Never merge; humans review and merge.

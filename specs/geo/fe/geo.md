@@ -4,6 +4,14 @@ Features: F-LC-001, F-LC-002, F-LC-003, F-LC-004, F-LC-005, F-SA-004 | Screens: 
 
 API integration: [shared React Query contract](../../_foundation/frontend-shared.md#api-integration-with-react-query), including private location-context keys.
 
+Backend counterpart: [BE geo](../be/geo.md).
+Map implementation: [Leaflet/OSM contract](../../_foundation/media-and-maps.md#leaflet-and-openstreetmap).
+Use one lazy client-only shared `MapView`, direct Leaflet bindings and Geoman
+Free for polygon editing; API reads/writes remain React Query-owned.
+Keep attribution, HTTP tile caching and origin-only referrers; no offline/
+prefetched tiles or implicit geocoding service. A failed basemap retains the
+list/manual inputs and explicit retry, never a fabricated empty result.
+
 ## Routes and rendering
 
 | Route | Screen ID | Rendering + reason | Auth / role | Index policy |
@@ -77,6 +85,7 @@ API integration: [shared React Query contract](../../_foundation/frontend-shared
   - Given a super admin saves an invalid polygon or slab order, when the server rejects it, then the editor preserves entered values and shows field errors.
   - Given a zone changes, when save succeeds, then the map/list refresh from server values and the action is auditable.
   - Given a super admin deletes a zone, when they confirm the stated fallback, then the city default schedule is used for eligible addresses and the UI confirms deletion.
+  - Given keyboard-only use or failed tiles, when editing a zone, then the coordinate/list alternative retains undo/cancel/save; no paid plugin capability is required and server validation remains authoritative.
 
 ## Components and i18n
 

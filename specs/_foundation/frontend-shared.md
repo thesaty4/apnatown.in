@@ -186,7 +186,7 @@ Owner paths are under `packages/ui/src`; grouped names share the stated file unl
 | CategoryMultiSelect | counts per category; selected/empty | `discovery/CategoryMultiSelect.tsx` |
 | ActiveFilterChips / ClearAll | removable chips/count; clear all | `discovery/ActiveFilterChips.tsx` |
 | CategoryPillRow / SubcategoryPillRow | pills/counts; sticky horizontal overflow | `discovery/FilterPillRows.tsx` |
-| MapView | pins, clusters, radius, draggable pin, polygon editor; empty-city state | `geo/MapView.tsx` |
+| MapView | client-only Leaflet pins/clusters/radius; Geoman Free zone editor; attribution and list fallback per [map contract](./media-and-maps.md#leaflet-and-openstreetmap) | `geo/MapView.tsx` |
 | PriceRangeSlider | min/max and paired inputs | `commerce/PriceRangeSlider.tsx` |
 | OfferBanner | badge, discounted price, validity, terms; expired/out-of-stock | `commerce/OfferBanner.tsx` |
 | AddressForm / AddressCard | map pin, landmark, PIN, label | `geo/Address.tsx` |
@@ -196,9 +196,9 @@ Owner paths are under `packages/ui/src`; grouped names share the stated file unl
 | ReviewForm / RatingBreakdown | stars, text, photos, tags; not-eligible | `forms/ReviewForm.tsx`, `data/RatingBreakdown.tsx` |
 | MediaCarousel | images/video thumbnails; loading/error fallback | `media/MediaCarousel.tsx` |
 | FullScreenViewer | prev/next, swipe, zoom, counter, heart; focus trap | `media/FullScreenViewer.tsx` |
-| EmbedCard | validated YouTube/Instagram poster and open fallback | `media/EmbedCard.tsx` |
+| EmbedCard | typed YouTube iframe / Instagram permalink renderer, poster and validated Open fallback | `media/EmbedCard.tsx` |
 | GalleryGrid / Lightbox | filters, caption, linked chip, report; swipe/empty | `media/Gallery.tsx` |
-| ReelsPlayer | vertical feed, playback, mute, progress, data-saver, keyboard | `media/ReelsPlayer.tsx` |
+| ReelsPlayer | vertical feed, provider-supported playback controls, data-saver, keyboard; no simulated Instagram mute/progress | `media/ReelsPlayer.tsx` |
 | FollowButton | follow/following, bell, confirm, login prompt | `engagement/FollowButton.tsx` |
 | HeartButton / LikeButton | pressed state, reduced-motion animation | `engagement/ReactionButtons.tsx` |
 | LinkedItemsStrip | product/service cards; add/enquire/view | `media/LinkedItemsStrip.tsx` |
@@ -228,7 +228,7 @@ Owner paths are under `packages/ui/src`; grouped names share the stated file unl
 | `useBackScroll`, `useDebounce`, `useMediaQuery` | `apps/web/src/shared/hooks/`; restore per-screen scroll, debounce input, subscribe to media queries with cleanup. |
 | `useCart`, `useAuthGate`, `useFollow`, `useLike`, `useI18n` | `apps/web/src/shared/hooks/`; API-backed behavior follows the [React Query contract](#api-integration-with-react-query), without a second response store; login gate returns to a validated origin. |
 | `formatInr(paise)`, `formatDateIst`, `formatTimeIst`, `formatDistanceKm`, `formatPhone`, `slugify` | `packages/shared`; one implementation shared by web and API where applicable. |
-| `buildEmbedUrl` | `apps/api/src/modules/media-videos`; server-only allow-list and reconstruction—never build an embed from a client URL. |
+| `VideoPlaybackDTO` builder | `apps/api/src/modules/media-videos`; server-only provider/ID validation and typed renderer reconstruction per [embed contract](./media-and-maps.md#youtube-and-instagram-embeds), never client URL/HTML. |
 
 ## States, i18n and interaction contracts
 
@@ -242,10 +242,21 @@ Owner paths are under `packages/ui/src`; grouped names share the stated file unl
 
 - Budgets: retain the existing LCP <2.5 s on slow 4G, route JS approximately 170 KB gzip and CLS <0.1 targets; verify the full API/INP/TTFB budgets in [product NFR](../../docs/specs/01-product/06-non-functional-requirements.md). Do not add targets or claim measurements without production-like verification.
 - Use intrinsic dimensions/aspect ratio plus responsive `sizes`; prioritize only the actual LCP image and lazy-load below-fold/category/subcategory cards. Batch owner projections and cap every rendered section/page using its module's cursor limit. Preserve skeleton/poster geometry before media. Video never autoplays in data-saver/Save-Data mode; show tap-to-play poster and respect reduced motion.
-- Link embeds only from approved hosts; API rebuilds embed URLs. Uploads use the storage port, content/size validation and EXIF/GPS stripping; use short-lived authorized media access where required.
-- Revocable uploaded images use Media's revalidated public-content URLs. Do not let Next's image optimizer/CDN cache bypass their current publication check; use `unoptimized` with supplied dimensions/responsive layout until an equally authorized optimization path exists. Media's configured upload policy owns byte/dimension limits, EXIF removal and any approved compressed/responsive variants; no image format, quality or variant breakpoints are selected by this foundation. If no approved compressed variant exists, serve the validated source and measure it against the existing LCP budget; do not claim a compression gain. Static design assets may use ordinary image caching.
+- Follow [media and maps](./media-and-maps.md) for Cloudinary image uploads,
+  typed YouTube/Instagram rendering, provider-specific playback and client-only
+  Leaflet/Geoman Free. No direct video upload, raw embed HTML or browser
+  Cloudinary integration. Private documents stay on their separate capability.
+- Revocable uploaded images use Media's revalidated same-origin content paths.
+  Do not let Next's optimizer/CDN cache bypass current publication checks;
+  use `unoptimized` with supplied responsive variants until an equally
+  authorized optimization path exists. Media's [public image policy](../media-videos/be/media-videos.md#public-image-policy)
+  owns formats, quality and limits. Missing/failed variants are an explicit
+  error, never an original-file fallback. Static design assets retain ordinary caching.
 - Cache the static app shell for offline rendering; do not cache private API, KYC, session or payment data. Show offline state and retry. Rider actions remain server-authoritative; countdowns use server timestamps and cannot be accepted/delivered offline.
 - PWA supports install prompt and weak connections. Data-saver disables autoplay and requests smaller media variants; all controls remain operable without motion.
+- PWA/service workers must not prefetch/cache OSM tiles or third-party
+  embeds for offline playback. Normal tile HTTP caching, visible attribution,
+  origin-only referrers and the shared list/manual fallback remain required.
 
 ## Cross-cutting feature ownership
 

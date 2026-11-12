@@ -4,6 +4,11 @@ Features: F-HM-001, F-HM-002, F-HM-005, F-HM-006, F-HM-007, F-HM-008, F-HM-009, 
 
 Backend contract: [BE search](../be/search.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
 
+Explore maps and media cards reuse the
+[media/map contract](../../_foundation/media-and-maps.md); no second map
+library, geocoding service or direct image-storage URL. Tile failure retains
+the same Search-owned results/list rather than replacing them with empty data.
+
 ## Routes and rendering
 
 | Route (production) | Screen ID | Rendering + reason | Auth / role | Index policy |

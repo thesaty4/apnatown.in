@@ -258,7 +258,7 @@ Roles: customer, vendor, provider. Backend module(s): `media-videos, engagement`
 | RL7 | guest like/follow/comment -> login prompt -> back to the same video | `specs/media-videos/be/rl7-guest-like-follow-comment-login-prom.md` | `specs/media-videos/fe/rl7-guest-like-follow-comment-login-prom.md` | not started |
 | RL8 | states: empty Following, no videos nearby, skeleton, failed to load with retry, offline, removed/unavailable | `specs/media-videos/be/rl8-states-empty-following.md` | `specs/media-videos/fe/rl8-states-empty-following.md` | not started |
 | RL9 | deep link `/videos/:id` starts at that video; ranking frozen per session | `specs/media-videos/be/rl9-deep-link-videos-id-starts-at-that-v.md` | `specs/media-videos/fe/rl9-deep-link-videos-id-starts-at-that-v.md` | not started |
-| RL10 | videos are YouTube/Instagram links or uploads; embed URLs rebuilt server-side from allow-listed hosts with "Open in YouTube/Instagram" fallback | `specs/media-videos/be/rl10-videos-are-youtube-instagram-links-.md` | `specs/media-videos/fe/rl10-videos-are-youtube-instagram-links-.md` | not started |
+| RL10 | YouTube/Instagram links only; typed safe playback and Open fallback; direct video uploads disabled | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | spec written |
 
 ## NT. Notifications
 
@@ -302,7 +302,7 @@ Roles: vendor. Backend module(s): `businesses, products, services, offers, order
 | VD9 | inventory (stock, thresholds, quick toggles, restock) | `specs/products/be/products.md` | `specs/products/fe/products.md` | spec written |
 | VD10 | reviews (reply/report) | `specs/businesses/be/vd10-reviews.md` | `specs/businesses/fe/vd10-reviews.md` | not started |
 | VD11 | QR and links (poster/table-tent/sticker, share) | `specs/businesses/be/businesses.md` | `specs/businesses/fe/businesses.md` | spec written |
-| VD12 | gallery manager (gallery-only photos, default media-consent setting) and videos/reels manager (link/upload, thumbnail, caption, hashtags, link products/services, "Show in Gallery"/"Show in Reels", approval status, analytics: views, likes, shares, followers gained, taps on linked items) | `specs/businesses/be/vd12-gallery-manager.md` | `specs/businesses/fe/vd12-gallery-manager.md` | not started |
+| VD12 | gallery manager (photos, default consent) and link-only videos/reels manager (thumbnail, caption, hashtags, linked items, Gallery/Reels visibility, approval status and analytics) | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | spec written |
 | VD13 | media-consent toggle on every product/service upload | `specs/businesses/be/vd13-media-consent-toggle-on-every-produ.md` | `specs/businesses/fe/vd13-media-consent-toggle-on-every-produ.md` | not started |
 | VD14 | services manager (title, category, one subcategory, price type/unit/amount, inclusions/exclusions, area, images, videos, active/pause, shareable link) | `specs/services/be/services.md` | `specs/services/fe/services.md` | spec written |
 | VD15 | followers (count, growth chart, announce to followers) | `specs/businesses/be/vd15-followers.md` | `specs/businesses/fe/vd15-followers.md` | not started |

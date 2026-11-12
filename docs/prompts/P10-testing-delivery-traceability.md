@@ -35,6 +35,12 @@ Also read everything under `docs/specs/`.
 - `docs/specs/10-delivery/07-github-issues-backlog.csv`
 
 ## REQUIRED CONTENTS
+
+Include applicable [media/maps manual acceptance criteria](../../specs/_foundation/media-and-maps.md#manual-acceptance)
+and [configuration/readiness gates](../../specs/_foundation/media-and-maps.md#configuration-and-readiness)
+within this task's existing verification/traceability scope. Record missing
+evidence explicitly; contract links or selected providers alone are not
+runtime readiness evidence.
 Verification strategy: existing lint/type-check/build/generated-contract and documentation checks, plus manual UI/API/DB observations using synthetic data from `10-sample-data.json`. Cover authorisation negatives, state-machine invariants, money/time boundaries, concurrency, Hindi/long-text and dark-mode appearance, and critical journeys J1-J14. Do not generate unit, integration, component, database, E2E, Playwright, property, load or visual-regression test files, runners or harnesses. Record exact commands/results, manual steps/expected/observed outcomes, unavailable checks and residual regression risk; static checks alone do not prove behavior or security. Definition of Done: code, verification evidence, a11y, i18n EN+HI, screenshot parity, docs, required security review and measured performance. **Roadmap:** epics per feature area, stories with acceptance criteria references (F-IDs), BE/FE tasks, estimates (S/M/L or points), dependencies, MVP versus later phases. **Build order:** foundation -> reference slice -> vertical slices in dependency order -> hardening. Risk register: technical, product, compliance and vendor lock-in risks with mitigation. **Traceability matrix:** one row per F-ID: Feature -> Screens (S-IDs) -> Components -> API endpoints -> Tables -> Verification scenario/evidence IDs -> Epic/Story. Retain existing trace handles as scenario identifiers, not executable suite promises. CSV backlog columns: id, epic, title, type (BE/FE/Shared), feature_ids, depends_on, estimate, acceptance_criteria_ref.
 
 The historical output filename `01-test-strategy.md` is retained for link compatibility; its content must follow this verification-only policy.

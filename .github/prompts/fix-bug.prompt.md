@@ -7,6 +7,13 @@ Fix the bug with `.github/agents/developer-backend.agent.md` or
 area, and `.github/skills/bug-triage/SKILL.md`. For a spec gap, ask
 `architect` to clarify the intended behavior before implementing.
 
+For media/maps-related work, read and follow the
+[canonical media/maps contract](../../specs/_foundation/media-and-maps.md)
+and its [manual acceptance criteria](../../specs/_foundation/media-and-maps.md#manual-acceptance)
+alongside the owning module specs. Preserve this prompt's lifecycle mode,
+React Query requirements and verification policy; do not reopen settled
+provider choices or enable direct video-file uploads.
+
 1. Reproduce it; if you can't, ask for more detail instead of guessing.
 2. Classify severity/area and check `docs/ai/LESSONS_LEARNED.md` for a
    similar prior issue.

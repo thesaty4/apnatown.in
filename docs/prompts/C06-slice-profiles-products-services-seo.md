@@ -33,6 +33,14 @@ Use only this slice; legacy `docs/specs/` outputs are not prerequisites.
 ## REQUIRED CONTENTS
 Build PF, PD, SV, OF-display features: unified profile with Products & Services pills, gallery, videos tab, product page with offer banner and videos section, service details with enquiry, JSON-LD, metadata, sitemaps, OG images and hreflang per [frontend-shared.md](../../specs/_foundation/frontend-shared.md#rendering-and-seo). Do not invent unapproved locale/subcategory URLs or copy.
 
+Profile, listing and gallery images follow the
+[public-image contract](../../specs/_foundation/media-and-maps.md#cloudinary-public-images);
+video surfaces follow the
+[YouTube/Instagram embed contract](../../specs/_foundation/media-and-maps.md#youtube-and-instagram-embeds).
+Reuse the existing Media DTOs and shared renderers. Image optimization,
+metadata, JSON-LD and social previews must not expose Cloudinary
+URLs/signatures or bypass the strict same-origin reauthorizing gateway.
+
 ## IMPLEMENTATION RULES (in addition to the standing requirements)
 - Follow the current foundation/module specs above and the Design Context Pack. Keep changes slice-scoped; ask about a blocking ambiguity and fix its owning spec, not missing legacy documents or trackers.
 - Work in small pull requests (about 400 changed lines or fewer), one concern each. Branch `feat/<scope>-<name>`; Conventional Commits. Never merge; humans review and merge.

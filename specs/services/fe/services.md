@@ -12,6 +12,10 @@ Features: F-SV-001, F-SV-002, F-SV-003, F-SV-004, F-SV-005, F-SV-006, F-SV-007, 
 
 Backend contract: [BE services](../be/services.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
 
+Previous-work images, video panels and any location map reuse the
+[media/map contract](../../_foundation/media-and-maps.md): Cloudinary through
+Media, link-only provider rendering and one Leaflet MapView.
+
 ## Routes and rendering
 
 | Route | Screen ID | Rendering + reason | Auth / role | Index policy |

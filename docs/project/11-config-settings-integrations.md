@@ -31,8 +31,10 @@ section.
 
 ## 3. Integration ports and responsibilities
 
-Each is a port with an approved local verification adapter (`integrations.instructions.md`);
-provider choice is `[ASSUMPTION]`/`[OPEN]` — see
+Providers stay behind their ports and approved local verification adapters.
+Cloudinary public images, YouTube/Instagram link embeds and Leaflet/OSM maps
+are selected in the [media/map contract](../../specs/_foundation/media-and-maps.md).
+Other provider/operational decisions remain in
 [12-decisions-assumptions-open-questions.md](./12-decisions-assumptions-open-questions.md).
 
 | Port | Responsibility | Failure behaviour |
@@ -41,9 +43,10 @@ provider choice is `[ASSUMPTION]`/`[OPEN]` — see
 | SMS/OTP | Login OTP delivery | Failover provider, same OTP session |
 | WhatsApp Business API | Order updates, admin communications | Falls back to in-app/email notification |
 | Email | Transactional email | Best-effort; never the only channel for a critical event |
-| Object storage | Product/service/video media | Upload retry; never block checkout on media |
-| Maps/geocoding | Address pin, distance, directions | Manual address entry fallback |
-| Media processing | Thumbnails, embed URL rebuilding (BR-10) | Placeholder thumbnail; "Open in YouTube/Instagram" fallback |
+| Public image storage | Cloudinary behind Media/StoragePort; sanitized authenticated variants, same-origin authorized delivery | Explicit upload failure/retry; retain prior attachment |
+| Private storage | KYC, dispute evidence and account exports; separate from Cloudinary | Owning authorization/retention gates; never public fallback |
+| Map rendering / tiles | Leaflet + Geoman Free + policy-compliant OSM tiles; Geo/PostGIS owns resolution and fees | List/manual entry stays usable; tile error/retry; no implicit geocoder |
+| Video embeds / image processing | YouTube/Instagram typed renderer and Media image sanitization (BR-10); direct video uploads disabled | Canonical Open fallback for valid unavailable sources; invalid URLs rejected |
 
 ## 4. Admin-editable vs deploy-time configuration
 
@@ -53,6 +56,13 @@ provider choice is `[ASSUMPTION]`/`[OPEN]` — see
 | Feature flags | Database connection |
 | Refund/cancellation window, review rules | Hosting/CI configuration |
 | SEO defaults, legal page content | Logging/observability backend |
+
+Cloudinary credentials, provider enable switches and validated tile
+URL/attribution/zoom settings follow the
+[configuration ownership table](../../specs/_foundation/media-and-maps.md#configuration-and-readiness).
+Admin UI displays image readiness, never provider secrets or a video-upload
+enable switch. Free map libraries do not guarantee free unlimited tile or
+Cloudinary capacity; operator quotas, residency and availability are separate gates.
 
 ## 5. Sample seed data *(sample data only — never ship as real production data)*
 

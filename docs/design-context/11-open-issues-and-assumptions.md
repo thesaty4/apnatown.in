@@ -10,9 +10,9 @@
 |---|---|
 | A-01 | Delivery fee slabs, rider earning, commission, plans, promotion prices, coupons and refund window are **sample values** from the prototype settings; real values per city to be decided |
 | A-02 | Hindi translations are machine-assisted and unreviewed by a native speaker |
-| A-03 | Maps are schematic in the prototype; real maps/geocoding provider not chosen |
+| A-03 | Maps are schematic in the prototype; 2026-11-12 implementation selects Leaflet/OSM/Geoman Free. External geocoding is not selected; Geo/PostGIS and manual input remain authoritative |
 | A-04 | YouTube/Instagram embeds depend on the host allowing embedding; seed video ids are samples; the "Open in" fallback is always shown |
-| A-05 | Reels playback in the prototype is simulated (poster + progress bar); real playback uses embeds or hosted video |
+| A-05 | Reels playback in the prototype is simulated (poster + progress bar); launch uses YouTube/Instagram embeds with provider-supported controls, not hosted video |
 | A-06 | Payments, OTP, WhatsApp and file uploads are simulated; demo OTP 123456 exists only in the prototype and must never exist in production |
 | A-07 | Search relevance is a keyword mapping table + small typo tolerance, not a full search engine |
 | A-08 | Only Padrauna is live; Kasia is "coming soon"; Deoria and Gorakhpur planned |
@@ -30,7 +30,7 @@
 | G-05 | Prototype stores state in localStorage; production must not store tokens or PII in browser storage | Server sessions with httpOnly cookies; only UI preferences in localStorage |
 | G-06 | The hosted prototype may not keep a query string in the address bar | Production hosting keeps it; contract is in 07 and the Explore features |
 | G-07 | Tablet horizontal filter bar is specified but not built in the prototype | Build from spec EX7 using the shared FilterPanel |
-| G-08 | Video upload hosting vs link-only | Link-based first; hosting decision open |
+| G-08 | Video upload hosting vs link-only | User confirmed link-only on 2026-11-12; keep direct video-file upload disabled. Cloudinary is selected for public images, not video hosting |
 | G-09 | Comments are shown with moderation placeholder only | Implement moderation queue with comments in the admin video module |
 | G-10 | The desktop and mobile `dark-customer-explore.jpg` screenshots are byte-identical to their light variants | Use the runnable prototype's dark theme and token overrides as the visual source; regenerate or confirm the dark screenshots before pixel-level dark-mode review |
 | G-11 | `ST-city` names enabled/disabled/coming_soon; prototype stores active/soon/planned and labels them Enabled/Coming soon/Disabled. Its Disable action changes active to soon, while newly added cities can start in any of the three states. | Preserve the prototype's labels and action/copy; map active/soon/planned to enabled/coming_soon/disabled and use the explicit transition edges in the geo spec pending product confirmation (Q-17). |
@@ -44,8 +44,21 @@
 | G-19 | Services Explore currently shows checkbox controls, while the requested presentation is ecommerce-style selectable pills. | Intentionally change only the visible control styling to token-based pills; preserve native multi-select semantics, counts, disabled/selected states, URL/Back/scroll behavior, and the shared filter component across Search/Explore/category pages. |
 | G-20 | The product owner requested provider Premium plan management, but the prototype has no provider billing screen. | Add S-PROV-18 at `/provider/billing`, reuse the vendor subscription components, and preserve provider ownership, plan/invoice scope, and paid-expiry cancellation behavior. |
 | G-21 | Prototype `.btn.d` keeps white text on the dark error fill, measuring only 2.77:1 contrast. | The shared danger button uses the existing `on-primary` foreground token, preserving white in light mode and using the approved dark foreground in dark mode (6.47:1 / 6.24:1). This intentional accessibility correction needs design-owner acknowledgement; do not restore the failing literal white. |
+| G-22 | Simulated Reels controls imply identical playback/mute/progress APIs for every provider. | Use YouTube-supported controls and Instagram native interaction or safe Open fallback; never fabricate playback state. Preserve feed ranking/layout/consent under the [integration contract](../../specs/_foundation/media-and-maps.md) |
+
+## Confirmed integration decisions (2026-11-12)
+
+The user selected Cloudinary for public-purpose images only, YouTube/Instagram
+link-only videos, and Leaflet/OpenStreetMap. The
+[canonical implementation contract](../../specs/_foundation/media-and-maps.md)
+supersedes historical provider-open/upload wording for Q-02/Q-03/Q-19/Q-22
+within that scope. Private KYC/evidence/exports stay separate; residency,
+retention, hosting capacity and unrelated providers are not approved.
+The prototype remains visual reference, not permission to enable video uploads,
+simulate unsupported Instagram controls or bypass provider usage policies.
+
 ## Open questions
-Q-01 payment gateway; Q-02 maps/geocoding provider; Q-03 video upload hosting and transcoding; Q-04 WhatsApp Business sender and template approval process; Q-05 KYC retention period; Q-06 commission and invoicing rules, GST handling; Q-07 refund SLA and moderation SLAs; Q-08 owner of Hindi translation review; Q-09 exact delivery slabs per city; Q-10 vendor staff roles; Q-11 analytics and event-tracking plan; Q-12 legal copy (terms, privacy, refund); Q-13 data residency, backups and retention; Q-14 SEO: indexable facets policy owner; Q-15 OTP/SMS provider and DLT registration.
+Q-01 payment gateway; Q-02 external geocoding/production tile capacity (Leaflet/OSM rendering selected); Q-03 future video hosting only (link-only launch resolved); Q-04 WhatsApp Business sender and template approval process; Q-05 KYC retention period; Q-06 commission and invoicing rules, GST handling; Q-07 refund SLA and moderation SLAs; Q-08 owner of Hindi translation review; Q-09 exact delivery slabs per city; Q-10 vendor staff roles; Q-11 analytics and event-tracking plan; Q-12 legal copy (terms, privacy, refund); Q-13 data residency, backups and retention; Q-14 SEO: indexable facets policy owner; Q-15 OTP/SMS provider and DLT registration.
 
 ## P01 specification assumptions and open items
 
@@ -67,7 +80,7 @@ These additions are append-only and do not replace the assumptions or questions 
 | Q-16 | What TTFB target, launch/10-city workload, RPO and RTO should be approved? | Treat A-14 values as planning targets only; replace them after product forecast, SLO review and load testing. | Do not use the figures as a production capacity or recovery commitment before approval. |
 | Q-17 | For lifecycle transitions whose actor, guard or transition edge is not specified in the pack, what exact actors and guards apply? | Keep only source-defined edges and mark unspecified actors/guards for the owning BE spec. | Do not enable additional transitions until approved. |
 | Q-18 | Approve or replace the P01 candidate API error envelope and machine-readable codes in A-15. | Use the candidate shape only as a trace handle; final names and HTTP mappings remain unapproved. | Backend DTOs and clients must not treat the candidate contract as final. |
-| Q-19 | Approve or replace the P01 technology proposals in A-13; keep payment, OTP/SMS, WhatsApp, maps, storage and hosting provider decisions subject to their existing questions. | Treat all proposals as options behind ports, not selected dependencies. | No procurement, credentials or production integration decision follows from P01. |
+| Q-19 | Approve or replace the P01 technology proposals in A-13. | Active foundations govern; Cloudinary public images and Leaflet/OSM are now selected by the 2026-11-12 user decision. Payment, OTP/SMS, WhatsApp, private storage and hosting remain separate. | Provider selection is not permission to provision accounts or claim production readiness. |
 
 ## LEAN SPECS follow-up questions
 
@@ -77,7 +90,7 @@ These are additions for the backend/frontend foundation specs. Existing Q-01..Q-
 |---|---|---|---|
 | Q-20 | Does the LEAN SPECS prompt's fixed PostgreSQL/PostGIS target supersede the proposed tech-stack ADR and the earlier database-open decision? | Specs target PostgreSQL/PostGIS as explicitly requested; the ADR remains proposed until a human reconciles it. | Do not treat the documentation conflict as approval to procure or provision production infrastructure. |
 | Q-21 | For online checkout split across shops, is the gateway charge captured once per checkout or separately per shop? | Keep one idempotent checkout attempt and the BR-03 per-shop order/payment records; leave provider charge/capture topology to the payments decision. | Payments, reconciliation and refund specs must agree before gateway integration. |
-| Q-22 | Which storage provider and region serve product, service, gallery and uploaded video media? | Specify only a storage port, fake and S3-compatible recommendation; select neither vendor nor region. | Retention, signed access, upload limits and data residency must be confirmed before implementation. |
+| Q-22 | Which storage provider and region serve media? | Cloudinary is selected for public-purpose images behind Media's authorization gateway; private documents/exports remain separate and direct video upload is disabled. | Region/residency/retention and production private-storage vendor remain open; image limits and delivery follow the canonical Media/integration contracts. |
 | Q-23 | What production URL represents an indexable subcategory landing page? | Keep filter combinations `noindex`; do not invent a subcategory route beyond the current `/category/:slug` inventory. | SEO sitemap and canonical rules cannot include subcategory landing pages until the route is confirmed. |
 | Q-24 | How are English and Hindi locale variants represented in production URLs for `hreflang`? | Use next-intl locale routing, but do not assume a locale prefix or cookie-only URL strategy. | Canonicals and alternates need the approved locale routing contract. |
 | Q-25 | Which hosting region and backup/retention policy are approved for launch? | Recommend an India region; keep deployment provider, residency and recovery targets open under Q-13. | No production hosting or backup commitment follows from the recommendation. |

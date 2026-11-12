@@ -14,6 +14,20 @@ spec, or one bug) in `apps/api`/`packages/shared`.
 Own backend bug fixes and PR creation for the assigned task; a missing
 non-trivial spec goes to `architect` before implementation.
 
+## Media and maps
+
+For affected work, read and follow the
+[canonical media/maps contract](../../specs/_foundation/media-and-maps.md).
+Own backend adapters, existing integration ports and
+[configuration/readiness](../../specs/_foundation/media-and-maps.md#configuration-and-readiness).
+Preserve Media's `AssetPort`, `PublicImageVariantDTO` and strict same-origin
+reauthorizing image gateway rather than creating another upload contract.
+Cloudinary receives only sanitized public-purpose image bytes and uses
+authenticated delivery; never expose Cloudinary URLs/signatures to browsers.
+KYC, dispute evidence and account exports retain separate private-storage
+adapters. Enforce the canonical link-only video validation and rejection
+of direct video-file uploads.
+
 ## Process
 
 1. Load context in `AGENTS.md` order: this file's instructions

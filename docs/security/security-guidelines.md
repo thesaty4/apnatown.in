@@ -64,13 +64,24 @@ touching `auth`, `payments`, `cart-checkout`, `orders`, `delivery`,
 
 - **Media embeds (RL10):** video links accepted from the client are
   **never embedded directly**. The server validates the URL against an
-  allow-list of hosts (YouTube, Instagram) and rebuilds a safe embed URL
-  itself; unsupported/invalid links fall back to "Open in
-  YouTube/Instagram" instead of an iframe.
+  exact allow-list of provider hosts/paths/IDs and rebuilds the typed
+  YouTube/Instagram renderer. Invalid links are rejected; fallback links
+  are canonical URLs for valid sources only. No raw client/oEmbed HTML.
 - **Uploads:** validate file type by content (not just extension) and
   size; store via the `storage` integration port, not local disk;
   generate derivative/thumbnail sizes server-side; strip EXIF/GPS from
   user photos before public display.
+- **Selected providers:** follow [media/map security](../../specs/_foundation/media-and-maps.md).
+  Public-purpose images are sanitized before Cloudinary and stored with
+  authenticated delivery; same-origin image/preview gateways reauthorize
+  every request, including conditional/range reads. Never expose a permanent
+  or signed Cloudinary URL as a bypass. KYC/evidence/exports remain separate.
+  Direct video upload is disabled. Local-only approved storage adapters do
+  not authorize a production filesystem or a silent provider fallback.
+- **Maps:** trusted deployment tile URL only, safe popup/attribution text,
+  optional location and PostGIS-authoritative serviceability. Leaflet/OSM
+  requires visible attribution, origin referrers and policy-compliant HTTP
+  caching; no offline tile scraping or client-selected server fetch target.
 - **CSV import/export (VD4, AD13):** treat every cell as untrusted text;
   neutralize formula-injection characters (`=`, `+`, `-`, `@` at cell
   start) on export; validate and cap row counts and column types on
