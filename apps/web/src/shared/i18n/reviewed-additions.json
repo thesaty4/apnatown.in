@@ -4435,5 +4435,1175 @@
   "geo.zones.discard": {
     "en": "Discard",
     "hi": "छोड़ दें"
+  },
+  "catalog.categories.shopByCategory": {
+    "en": "Shop by category",
+    "hi": "श्रेणी के अनुसार खरीदें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.categories.localServices": {
+    "en": "Local services",
+    "hi": "स्थानीय सेवाएँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.categories.explore": {
+    "en": "Explore",
+    "hi": "खोजें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.categories.exploreServices": {
+    "en": "Explore Services",
+    "hi": "सेवाएँ खोजें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.categories.allServices": { "en": "All services", "hi": "सभी सेवाएँ" },
+  "catalog.categories.errorTitle": {
+    "en": "Categories couldn’t load",
+    "hi": "श्रेणियाँ लोड नहीं हो सकीं"
+  },
+  "catalog.categories.errorMessage": {
+    "en": "Check your connection and try again.",
+    "hi": "अपना कनेक्शन जाँचें और फिर कोशिश करें।"
+  },
+  "catalog.categories.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.categories.loading": {
+    "en": "Loading categories",
+    "hi": "श्रेणियाँ लोड हो रही हैं"
+  },
+  "catalog.categories.pillsLabel": {
+    "en": "{section} categories",
+    "hi": "{section} श्रेणियाँ"
+  },
+  "catalog.categories.showing": {
+    "en": "Showing {category}",
+    "hi": "{category} दिखाया जा रहा है"
+  },
+  "catalog.categories.noSubcategoriesTitle": {
+    "en": "No subcategories yet",
+    "hi": "अभी कोई उप-श्रेणी नहीं"
+  },
+  "catalog.categories.noSubcategoriesMessage": {
+    "en": "Pick another category to see more.",
+    "hi": "और देखने के लिए दूसरी श्रेणी चुनें।"
+  },
+  "catalog.categories.home": {
+    "en": "Home",
+    "hi": "होम",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.categories.breadcrumbs": { "en": "Breadcrumb", "hi": "आप कहाँ हैं" },
+  "catalog.categories.subcategories": {
+    "en": "Subcategories",
+    "hi": "उप-श्रेणियाँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.categories.allSubcategories": {
+    "en": "All subcategories",
+    "hi": "सभी उप-श्रेणियाँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.categories.emptyCategoryTitle": {
+    "en": "Nothing here yet",
+    "hi": "यहाँ अभी कुछ नहीं है"
+  },
+  "catalog.categories.tryAnother": {
+    "en": "Try another category.",
+    "hi": "दूसरी श्रेणी आज़माएँ।",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.categories.otherCategories": {
+    "en": "Other categories",
+    "hi": "दूसरी श्रेणियाँ"
+  },
+  "catalog.categories.servicesTitle": {
+    "en": "Local services near you | ApnaTown",
+    "hi": "आपके पास की स्थानीय सेवाएँ | अपना टाउन"
+  },
+  "catalog.categories.servicesDescription": {
+    "en": "Browse local service categories on ApnaTown — find trusted providers in your town.",
+    "hi": "अपना टाउन पर स्थानीय सेवा श्रेणियाँ देखें — अपने शहर में भरोसेमंद सेवा देने वाले खोजें।"
+  },
+  "catalog.categories.serviceCategories": {
+    "en": "Services",
+    "hi": "सेवाएँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.categories.emptyServicesTitle": {
+    "en": "No service categories yet",
+    "hi": "अभी कोई सेवा श्रेणी नहीं"
+  },
+  "catalog.categories.seoTitle": {
+    "en": "{name} in your town | ApnaTown",
+    "hi": "आपके शहर में {name} | अपना टाउन"
+  },
+  "catalog.categories.seoDescription": {
+    "en": "Find {name} shops, products and services near you on ApnaTown.",
+    "hi": "अपना टाउन पर अपने पास {name} की दुकानें, प्रोडक्ट और सेवाएँ खोजें।"
+  },
+  "catalog.categories.subcategorySeoTitle": {
+    "en": "{name} – {category} | ApnaTown",
+    "hi": "{name} – {category} | अपना टाउन"
+  },
+  "catalog.categories.subcategorySeoDescription": {
+    "en": "Find {name} in {category} near you on ApnaTown.",
+    "hi": "अपना टाउन पर अपने पास {category} में {name} खोजें।"
+  },
+  "catalog.subcategorySuggestion.title": {
+    "en": "Suggest a subcategory",
+    "hi": "उप-श्रेणी सुझाएँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.subcategorySuggestion.suggest": {
+    "en": "Suggest a subcategory",
+    "hi": "उप-श्रेणी सुझाएँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.subcategorySuggestion.intro": {
+    "en": "Main categories are fixed by ApnaTown. You can suggest subcategories for admin approval.",
+    "hi": "मुख्य श्रेणियाँ अपना टाउन तय करता है। आप उप-श्रेणी सुझा सकते हैं, एडमिन मंज़ूर करेगा।",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.subcategorySuggestion.close": { "en": "Close", "hi": "बंद करें" },
+  "catalog.subcategorySuggestion.cancel": {
+    "en": "Cancel",
+    "hi": "रद्द करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.subcategorySuggestion.send": {
+    "en": "Send suggestion",
+    "hi": "सुझाव भेजें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.subcategorySuggestion.suggestAnyway": {
+    "en": "Suggest anyway",
+    "hi": "फिर भी सुझाएँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.subcategorySuggestion.chooseCategory": {
+    "en": "Choose a category",
+    "hi": "श्रेणी चुनें"
+  },
+  "catalog.subcategorySuggestion.category": {
+    "en": "Category",
+    "hi": "श्रेणी",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.subcategorySuggestion.nameEn": {
+    "en": "Subcategory name (English)",
+    "hi": "उप-श्रेणी का नाम (अंग्रेज़ी)",
+    "source": "docs/design-context prototype js17 (EN; HI reviewed translation)"
+  },
+  "catalog.subcategorySuggestion.nameHi": {
+    "en": "Subcategory name (Hindi, optional)",
+    "hi": "उप-श्रेणी का नाम (हिंदी, वैकल्पिक)"
+  },
+  "catalog.subcategorySuggestion.reason": {
+    "en": "Why is it needed? (optional)",
+    "hi": "इसकी ज़रूरत क्यों है? (वैकल्पिक)"
+  },
+  "catalog.subcategorySuggestion.checking": {
+    "en": "Checking for similar subcategories…",
+    "hi": "मिलती-जुलती उप-श्रेणियाँ जाँची जा रही हैं…"
+  },
+  "catalog.subcategorySuggestion.noSimilar": {
+    "en": "No similar subcategory found.",
+    "hi": "कोई मिलती-जुलती उप-श्रेणी नहीं मिली।",
+    "source": "docs/design-context prototype js17 (EN; HI reviewed translation)"
+  },
+  "catalog.subcategorySuggestion.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.subcategorySuggestion.exactTitle": {
+    "en": "This subcategory already exists",
+    "hi": "यह उप-श्रेणी पहले से है",
+    "source": "docs/design-context prototype js27 (EN; HI reviewed translation)"
+  },
+  "catalog.subcategorySuggestion.pendingTitle": {
+    "en": "Someone already suggested this",
+    "hi": "किसी ने यह पहले ही सुझाया है"
+  },
+  "catalog.subcategorySuggestion.similarTitle": {
+    "en": "Similar subcategory already exists",
+    "hi": "मिलती-जुलती उप-श्रेणी पहले से है",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.subcategorySuggestion.exactHelp": {
+    "en": "Choose the existing subcategory instead.",
+    "hi": "इसकी जगह मौजूदा उप-श्रेणी चुनें।"
+  },
+  "catalog.subcategorySuggestion.similarHelp": {
+    "en": "Check these first. If yours is different, you can still suggest it.",
+    "hi": "पहले इन्हें देखें। अगर आपकी उप-श्रेणी अलग है, तो भी सुझा सकते हैं।"
+  },
+  "catalog.subcategorySuggestion.loading": {
+    "en": "Loading your suggestions",
+    "hi": "आपके सुझाव लोड हो रहे हैं"
+  },
+  "catalog.subcategorySuggestion.forbiddenTitle": {
+    "en": "Suggestions aren’t available",
+    "hi": "सुझाव उपलब्ध नहीं हैं"
+  },
+  "catalog.subcategorySuggestion.errorTitle": {
+    "en": "Suggestions couldn’t load",
+    "hi": "सुझाव लोड नहीं हो सके"
+  },
+  "catalog.subcategorySuggestion.emptyTitle": {
+    "en": "No suggestions yet.",
+    "hi": "अभी कोई सुझाव नहीं।",
+    "source": "docs/design-context prototype js17 (EN; HI reviewed translation)"
+  },
+  "catalog.subcategorySuggestion.inCategory": {
+    "en": "In {category}",
+    "hi": "{category} में"
+  },
+  "catalog.subcategorySuggestion.rejectionReason": {
+    "en": "Reason: {reason}",
+    "hi": "कारण: {reason}"
+  },
+  "catalog.subcategorySuggestion.loadMore": {
+    "en": "Load more",
+    "hi": "और देखें"
+  },
+  "catalog.subcategorySuggestion.mine": {
+    "en": "My suggestions",
+    "hi": "मेरे सुझाव",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.subcategorySuggestion.status.pending": {
+    "en": "Pending",
+    "hi": "लंबित",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.subcategorySuggestion.status.approved": {
+    "en": "Approved",
+    "hi": "मंज़ूर",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.subcategorySuggestion.status.rejected": {
+    "en": "Rejected",
+    "hi": "अस्वीकार",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.subcategorySuggestion.status.merged": {
+    "en": "Merged",
+    "hi": "मिला दिया गया",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.subcategorySuggestion.errors.duplicate": {
+    "en": "This subcategory already exists or was already suggested.",
+    "hi": "यह उप-श्रेणी पहले से है या पहले ही सुझाई जा चुकी है।"
+  },
+  "catalog.subcategorySuggestion.errors.similar": {
+    "en": "A similar subcategory exists. Review it, then choose Suggest anyway.",
+    "hi": "मिलती-जुलती उप-श्रेणी मौजूद है। उसे देखें, फिर ‘फिर भी सुझाएँ’ चुनें।"
+  },
+  "catalog.subcategorySuggestion.errors.categoryMissing": {
+    "en": "This category is no longer available. Choose another.",
+    "hi": "यह श्रेणी अब उपलब्ध नहीं है। दूसरी चुनें।"
+  },
+  "catalog.subcategorySuggestion.errors.forbidden": {
+    "en": "Only a verified vendor or provider can suggest subcategories.",
+    "hi": "सिर्फ़ सत्यापित वेंडर या सेवा प्रदाता ही उप-श्रेणी सुझा सकते हैं।"
+  },
+  "catalog.subcategorySuggestion.errors.rateLimited": {
+    "en": "Too many suggestions. Please wait a little and try again.",
+    "hi": "बहुत ज़्यादा सुझाव। थोड़ी देर रुककर फिर कोशिश करें।"
+  },
+  "catalog.subcategorySuggestion.errors.validation": {
+    "en": "Some details aren’t valid. Check the fields and try again.",
+    "hi": "कुछ जानकारी सही नहीं है। फ़ील्ड जाँचकर फिर कोशिश करें।"
+  },
+  "catalog.subcategorySuggestion.errors.expired": {
+    "en": "Your session ended. Sign in again to continue.",
+    "hi": "आपका सेशन खत्म हो गया। जारी रखने के लिए फिर से साइन इन करें।"
+  },
+  "catalog.subcategorySuggestion.errors.maintenance": {
+    "en": "ApnaTown is under maintenance. Please try again later.",
+    "hi": "अपना टाउन पर रखरखाव चल रहा है। कृपया बाद में कोशिश करें।"
+  },
+  "catalog.subcategorySuggestion.errors.failed": {
+    "en": "Something went wrong. Please try again.",
+    "hi": "कुछ गड़बड़ हो गई। कृपया फिर कोशिश करें।"
+  },
+  "catalog.subcategorySuggestion.errors.categoriesFailed": {
+    "en": "Categories couldn’t load.",
+    "hi": "श्रेणियाँ लोड नहीं हो सकीं।"
+  },
+  "catalog.subcategorySuggestion.errors.categoryRequired": {
+    "en": "Choose a category.",
+    "hi": "श्रेणी चुनें।"
+  },
+  "catalog.subcategorySuggestion.errors.name": {
+    "en": "Enter a name of 2–60 characters.",
+    "hi": "2–60 अक्षरों का नाम लिखें।"
+  },
+  "catalog.subcategorySuggestion.errors.reason": {
+    "en": "Keep the reason under 500 characters.",
+    "hi": "कारण 500 अक्षरों से कम रखें।"
+  },
+  "catalog.taxonomy.legend": {
+    "en": "Category & subcategory",
+    "hi": "श्रेणी व उप-श्रेणी",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.taxonomy.category": {
+    "en": "Category",
+    "hi": "श्रेणी",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.taxonomy.chooseCategory": {
+    "en": "Choose a category",
+    "hi": "श्रेणी चुनें"
+  },
+  "catalog.taxonomy.subcategory": { "en": "Subcategory", "hi": "उप-श्रेणी" },
+  "catalog.taxonomy.chooseSubcategory": {
+    "en": "Choose a subcategory",
+    "hi": "उप-श्रेणी चुनें"
+  },
+  "catalog.taxonomy.pickCategoryFirst": {
+    "en": "Pick a category above to see its subcategories.",
+    "hi": "उप-श्रेणियाँ देखने के लिए ऊपर श्रेणी चुनें।",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.taxonomy.noSubcategories": {
+    "en": "This category has no subcategories yet.",
+    "hi": "इस श्रेणी में अभी कोई उप-श्रेणी नहीं है।"
+  },
+  "catalog.taxonomy.loadFailed": {
+    "en": "Categories couldn’t load.",
+    "hi": "श्रेणियाँ लोड नहीं हो सकीं।"
+  },
+  "catalog.taxonomy.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.common.loading": { "en": "Loading", "hi": "लोड हो रहा है" },
+  "catalog.admin.common.forbiddenTitle": {
+    "en": "No access",
+    "hi": "पहुँच नहीं है"
+  },
+  "catalog.admin.common.forbidden": {
+    "en": "You don’t have permission to view this.",
+    "hi": "आपको इसे देखने की अनुमति नहीं है।"
+  },
+  "catalog.admin.common.checkAgain": { "en": "Check again", "hi": "फिर जाँचें" },
+  "catalog.admin.common.errorTitle": {
+    "en": "Couldn’t load",
+    "hi": "लोड नहीं हो सका"
+  },
+  "catalog.admin.common.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.common.active": {
+    "en": "Active",
+    "hi": "चालू",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.common.inactive": {
+    "en": "Inactive",
+    "hi": "निष्क्रिय",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.common.cancel": {
+    "en": "Cancel",
+    "hi": "रद्द करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.categories.title": {
+    "en": "Categories",
+    "hi": "श्रेणियाँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.categories.superIntro": {
+    "en": "Main categories are a fixed, standard list. Only you (Super Admin) can add, rename, reorder or deactivate them. Vendors and providers can only suggest subcategories.",
+    "hi": "मुख्य श्रेणियाँ तय और मानक सूची हैं। इन्हें सिर्फ़ आप (सुपर एडमिन) जोड़, बदल या बंद कर सकते हैं। वेंडर और प्रदाता सिर्फ़ उप-श्रेणी सुझा सकते हैं।",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.categories.adminIntro": {
+    "en": "Main categories are managed by Super Admin only. You can review subcategory suggestions and suggest new ones.",
+    "hi": "मुख्य श्रेणियाँ सिर्फ़ सुपर एडमिन संभालते हैं। आप उप-श्रेणी सुझाव देख सकते हैं और नए सुझा सकते हैं।",
+    "source": "docs/design-context prototype js18 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.categories.addCategory": {
+    "en": "Add main category",
+    "hi": "मुख्य श्रेणी जोड़ें",
+    "source": "docs/design-context prototype js18 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.categories.kindLabel": {
+    "en": "Category type",
+    "hi": "श्रेणी का प्रकार"
+  },
+  "catalog.admin.categories.productTab": {
+    "en": "Product categories",
+    "hi": "प्रोडक्ट श्रेणियाँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.categories.serviceTab": {
+    "en": "Service categories",
+    "hi": "सेवा श्रेणियाँ"
+  },
+  "catalog.admin.categories.emptyTitle": {
+    "en": "No categories yet",
+    "hi": "अभी कोई श्रेणी नहीं"
+  },
+  "catalog.admin.categories.emptyMessage": {
+    "en": "Main categories added by Super Admin appear here.",
+    "hi": "सुपर एडमिन की जोड़ी मुख्य श्रेणियाँ यहाँ दिखेंगी।"
+  },
+  "catalog.admin.categories.emptyKind": {
+    "en": "No categories of this type yet.",
+    "hi": "इस प्रकार की अभी कोई श्रेणी नहीं।"
+  },
+  "catalog.admin.categories.fixed": {
+    "en": "Fixed",
+    "hi": "तय",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.categories.subcategoryCount": {
+    "en": "{count, plural, one {# subcategory} other {# subcategories}}",
+    "hi": "{count, plural, one {# उप-श्रेणी} other {# उप-श्रेणियाँ}}"
+  },
+  "catalog.admin.categories.noSubcategories": {
+    "en": "No subcategories yet.",
+    "hi": "अभी कोई उप-श्रेणी नहीं।"
+  },
+  "catalog.admin.categories.edit": {
+    "en": "Edit",
+    "hi": "बदलें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.categories.editNamed": {
+    "en": "Edit {name}",
+    "hi": "{name} बदलें"
+  },
+  "catalog.admin.categories.editSubNamed": {
+    "en": "Edit subcategory {name}",
+    "hi": "उप-श्रेणी {name} बदलें"
+  },
+  "catalog.admin.categories.addSubcategory": {
+    "en": "Add subcategory",
+    "hi": "उप-श्रेणी जोड़ें",
+    "source": "docs/design-context prototype js27 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.categories.addSubNamed": {
+    "en": "Add subcategory to {name}",
+    "hi": "{name} में उप-श्रेणी जोड़ें"
+  },
+  "catalog.admin.categories.saved": {
+    "en": "Category saved: {name}",
+    "hi": "श्रेणी सहेजी गई: {name}",
+    "source": "docs/design-context prototype js11 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.categories.subSaved": {
+    "en": "Subcategory saved: {name}",
+    "hi": "उप-श्रेणी सहेजी गई: {name}"
+  },
+  "catalog.admin.categories.nameEn": {
+    "en": "Name (English)",
+    "hi": "नाम (अंग्रेज़ी)"
+  },
+  "catalog.admin.categories.nameHi": {
+    "en": "Name (Hindi)",
+    "hi": "नाम (हिंदी)"
+  },
+  "catalog.admin.categories.nameInvalid": {
+    "en": "Enter a name of 2–60 characters.",
+    "hi": "2–60 अक्षरों का नाम लिखें।"
+  },
+  "catalog.admin.categories.editTitle": {
+    "en": "Edit category",
+    "hi": "श्रेणी बदलें",
+    "source": "docs/design-context prototype js11 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.categories.createTitle": {
+    "en": "Add main category",
+    "hi": "मुख्य श्रेणी जोड़ें",
+    "source": "docs/design-context prototype js18 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.categories.close": { "en": "Close", "hi": "बंद करें" },
+  "catalog.admin.categories.save": {
+    "en": "Save",
+    "hi": "सहेजें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.categories.kindService": {
+    "en": "Service category",
+    "hi": "सेवा श्रेणी"
+  },
+  "catalog.admin.categories.kindProduct": {
+    "en": "Product category",
+    "hi": "प्रोडक्ट श्रेणी"
+  },
+  "catalog.admin.categories.slugFixed": {
+    "en": "Web address: /{slug} (can’t be changed)",
+    "hi": "वेब पता: /{slug} (बदला नहीं जा सकता)"
+  },
+  "catalog.admin.categories.slug": {
+    "en": "Web address (slug)",
+    "hi": "वेब पता (स्लग)"
+  },
+  "catalog.admin.categories.slugHint": {
+    "en": "Lowercase letters, numbers and hyphens. It can’t be changed later.",
+    "hi": "छोटे अंग्रेज़ी अक्षर, अंक और हाइफ़न। बाद में बदला नहीं जा सकता।"
+  },
+  "catalog.admin.categories.slugTaken": {
+    "en": "This web address is already used.",
+    "hi": "यह वेब पता पहले से इस्तेमाल में है।"
+  },
+  "catalog.admin.categories.slugInvalid": {
+    "en": "Use 2–60 lowercase letters, numbers and hyphens.",
+    "hi": "2–60 छोटे अंग्रेज़ी अक्षर, अंक और हाइफ़न इस्तेमाल करें।"
+  },
+  "catalog.admin.categories.icon": {
+    "en": "Icon (emoji)",
+    "hi": "आइकन (इमोजी)"
+  },
+  "catalog.admin.categories.iconHint": {
+    "en": "Optional. One emoji shown when there is no image.",
+    "hi": "वैकल्पिक। तस्वीर न होने पर दिखने वाला एक इमोजी।"
+  },
+  "catalog.admin.categories.iconInvalid": {
+    "en": "Use a short emoji.",
+    "hi": "छोटा इमोजी इस्तेमाल करें।"
+  },
+  "catalog.admin.categories.sortOrder": {
+    "en": "Display order",
+    "hi": "दिखाने का क्रम"
+  },
+  "catalog.admin.categories.sortOrderInvalid": {
+    "en": "Enter a whole number from 0 to 10000.",
+    "hi": "0 से 10000 तक की पूरी संख्या लिखें।"
+  },
+  "catalog.admin.categories.activeLabel": {
+    "en": "Active",
+    "hi": "चालू",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.categories.activeHelp": {
+    "en": "Inactive categories are hidden from customers and vendors.",
+    "hi": "निष्क्रिय श्रेणियाँ ग्राहकों और वेंडरों से छिपी रहती हैं।"
+  },
+  "catalog.admin.categories.activeSubHelp": {
+    "en": "Inactive subcategories are hidden from customers and vendors.",
+    "hi": "निष्क्रिय उप-श्रेणियाँ ग्राहकों और वेंडरों से छिपी रहती हैं।"
+  },
+  "catalog.admin.categories.editSubTitle": {
+    "en": "Edit subcategory",
+    "hi": "उप-श्रेणी बदलें"
+  },
+  "catalog.admin.categories.addSubTitle": {
+    "en": "Add subcategory",
+    "hi": "उप-श्रेणी जोड़ें",
+    "source": "docs/design-context prototype js27 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.categories.inCategory": {
+    "en": "In {category}",
+    "hi": "{category} में"
+  },
+  "catalog.admin.categories.duplicateHelp": {
+    "en": "This subcategory already exists",
+    "hi": "यह उप-श्रेणी पहले से है",
+    "source": "docs/design-context prototype js27 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.sections.title": { "en": "Home sections", "hi": "होम सेक्शन" },
+  "catalog.admin.sections.intro": {
+    "en": "Choose which category rows customers see on Home. New sections start inactive; activate when ready. Products and services are never mixed in one section.",
+    "hi": "चुनें कि ग्राहक होम पर कौन-सी श्रेणी पंक्तियाँ देखें। नए सेक्शन बंद रहते हैं; तैयार होने पर चालू करें। एक सेक्शन में प्रोडक्ट और सेवाएँ नहीं मिलाई जातीं।"
+  },
+  "catalog.admin.sections.add": {
+    "en": "Add Home section",
+    "hi": "होम सेक्शन जोड़ें"
+  },
+  "catalog.admin.sections.emptyTitle": {
+    "en": "No Home sections yet",
+    "hi": "अभी कोई होम सेक्शन नहीं"
+  },
+  "catalog.admin.sections.emptyMessage": {
+    "en": "Add a category row or a curated row of category pills.",
+    "hi": "एक श्रेणी पंक्ति या चुनी हुई श्रेणी पिल्स की पंक्ति जोड़ें।"
+  },
+  "catalog.admin.sections.kindSingle": {
+    "en": "Dedicated category",
+    "hi": "एक श्रेणी"
+  },
+  "catalog.admin.sections.kindCurated": {
+    "en": "Curated categories",
+    "hi": "चुनी हुई श्रेणियाँ"
+  },
+  "catalog.admin.sections.kindSingleHelp": {
+    "en": "Shows the subcategories of one category.",
+    "hi": "एक श्रेणी की उप-श्रेणियाँ दिखाता है।"
+  },
+  "catalog.admin.sections.kindCuratedHelp": {
+    "en": "Shows category pills; customers switch between them.",
+    "hi": "श्रेणी पिल्स दिखाता है; ग्राहक इनके बीच बदल सकते हैं।"
+  },
+  "catalog.admin.sections.kindLegend": {
+    "en": "Section type",
+    "hi": "सेक्शन का प्रकार"
+  },
+  "catalog.admin.sections.contentKind": { "en": "Content", "hi": "सामग्री" },
+  "catalog.admin.sections.contentProduct": { "en": "Products", "hi": "प्रोडक्ट" },
+  "catalog.admin.sections.contentService": {
+    "en": "Services",
+    "hi": "सेवाएँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.sections.initialPill": {
+    "en": "Selected first",
+    "hi": "पहले से चुनी"
+  },
+  "catalog.admin.sections.initialPillNamed": {
+    "en": "{name} (selected first)",
+    "hi": "{name} (पहले से चुनी)"
+  },
+  "catalog.admin.sections.moveUpNamed": {
+    "en": "Move {name} up",
+    "hi": "{name} को ऊपर करें"
+  },
+  "catalog.admin.sections.moveDownNamed": {
+    "en": "Move {name} down",
+    "hi": "{name} को नीचे करें"
+  },
+  "catalog.admin.sections.moved": {
+    "en": "Order updated",
+    "hi": "क्रम बदल गया"
+  },
+  "catalog.admin.sections.edit": {
+    "en": "Edit",
+    "hi": "बदलें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.sections.activate": {
+    "en": "Activate",
+    "hi": "चालू करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.sections.deactivate": {
+    "en": "Deactivate",
+    "hi": "बंद करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.sections.activated": {
+    "en": "Section activated",
+    "hi": "सेक्शन चालू हुआ"
+  },
+  "catalog.admin.sections.deactivated": {
+    "en": "Section deactivated",
+    "hi": "सेक्शन बंद हुआ"
+  },
+  "catalog.admin.sections.remove": {
+    "en": "Remove",
+    "hi": "हटाएँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.sections.removeTitle": {
+    "en": "Remove “{name}” from Home?",
+    "hi": "होम से “{name}” हटाएँ?"
+  },
+  "catalog.admin.sections.removeImpact": {
+    "en": "Customers will no longer see this section. Categories are not changed.",
+    "hi": "ग्राहकों को यह सेक्शन अब नहीं दिखेगा। श्रेणियाँ नहीं बदलेंगी।"
+  },
+  "catalog.admin.sections.removed": {
+    "en": "Section removed",
+    "hi": "सेक्शन हटाया गया"
+  },
+  "catalog.admin.sections.cancel": {
+    "en": "Cancel",
+    "hi": "रद्द करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.sections.saved": {
+    "en": "Section saved",
+    "hi": "सेक्शन सहेजा गया"
+  },
+  "catalog.admin.sections.created": {
+    "en": "Section created as inactive draft",
+    "hi": "सेक्शन बंद ड्राफ़्ट के रूप में बना"
+  },
+  "catalog.admin.sections.editTitle": {
+    "en": "Edit Home section",
+    "hi": "होम सेक्शन बदलें"
+  },
+  "catalog.admin.sections.createTitle": {
+    "en": "Add Home section",
+    "hi": "होम सेक्शन जोड़ें"
+  },
+  "catalog.admin.sections.draftHelp": {
+    "en": "The section is saved inactive. Activate it when it is ready.",
+    "hi": "सेक्शन बंद रूप में सहेजा जाता है। तैयार होने पर चालू करें।"
+  },
+  "catalog.admin.sections.close": { "en": "Close", "hi": "बंद करें" },
+  "catalog.admin.sections.save": {
+    "en": "Save",
+    "hi": "सहेजें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.sections.category": {
+    "en": "Category",
+    "hi": "श्रेणी",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.sections.choose": { "en": "Choose", "hi": "चुनें" },
+  "catalog.admin.sections.categoryInvalid": {
+    "en": "Choose a category.",
+    "hi": "श्रेणी चुनें।"
+  },
+  "catalog.admin.sections.headingEn": {
+    "en": "Heading (English)",
+    "hi": "शीर्षक (अंग्रेज़ी)"
+  },
+  "catalog.admin.sections.headingHi": {
+    "en": "Heading (Hindi)",
+    "hi": "शीर्षक (हिंदी)"
+  },
+  "catalog.admin.sections.headingInvalid": {
+    "en": "Enter a heading of up to 80 characters.",
+    "hi": "80 अक्षरों तक का शीर्षक लिखें।"
+  },
+  "catalog.admin.sections.pills": { "en": "Category pills", "hi": "श्रेणी पिल्स" },
+  "catalog.admin.sections.pillsHelp": {
+    "en": "Pills appear in the order you select them.",
+    "hi": "पिल्स उसी क्रम में दिखेंगी जिसमें आप उन्हें चुनते हैं।"
+  },
+  "catalog.admin.sections.pillsInvalid": {
+    "en": "Choose 1–20 categories.",
+    "hi": "1–20 श्रेणियाँ चुनें।"
+  },
+  "catalog.admin.sections.inactiveCategory": {
+    "en": "Inactive — hidden until activated",
+    "hi": "निष्क्रिय — चालू होने तक छिपी"
+  },
+  "catalog.admin.sections.initialInvalid": {
+    "en": "Choose one of the selected categories.",
+    "hi": "चुनी हुई श्रेणियों में से एक चुनें।"
+  },
+  "catalog.admin.sections.supportingEn": {
+    "en": "Supporting text (English, optional)",
+    "hi": "सहायक पाठ (अंग्रेज़ी, वैकल्पिक)"
+  },
+  "catalog.admin.sections.supportingHi": {
+    "en": "Supporting text (Hindi, optional)",
+    "hi": "सहायक पाठ (हिंदी, वैकल्पिक)"
+  },
+  "catalog.admin.sections.supportingHelp": {
+    "en": "Fill both English and Hindi, or leave both empty.",
+    "hi": "अंग्रेज़ी और हिंदी दोनों भरें, या दोनों खाली छोड़ें।"
+  },
+  "catalog.admin.sections.supportingInvalid": {
+    "en": "Enter both English and Hindi (up to 160 characters), or neither.",
+    "hi": "अंग्रेज़ी और हिंदी दोनों लिखें (160 अक्षरों तक), या कोई नहीं।"
+  },
+  "catalog.admin.sections.position": { "en": "Position", "hi": "स्थान" },
+  "catalog.admin.sections.positionInvalid": {
+    "en": "Enter a whole number from 0 to 10000.",
+    "hi": "0 से 10000 तक की पूरी संख्या लिखें।"
+  },
+  "catalog.admin.suggestions.title": {
+    "en": "Subcategory suggestions",
+    "hi": "उप-श्रेणी सुझाव",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.suggestions.intro": {
+    "en": "Review subcategories suggested by vendors and providers in your areas.",
+    "hi": "अपने इलाकों के वेंडर और सेवा प्रदाताओं की सुझाई उप-श्रेणियाँ देखें।"
+  },
+  "catalog.admin.suggestions.statusLabel": {
+    "en": "Filter by status",
+    "hi": "स्थिति से छाँटें"
+  },
+  "catalog.admin.suggestions.filter.pending": {
+    "en": "Pending",
+    "hi": "लंबित",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.suggestions.filter.approved": {
+    "en": "Approved",
+    "hi": "मंज़ूर",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.suggestions.filter.rejected": {
+    "en": "Rejected",
+    "hi": "अस्वीकार",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.suggestions.filter.merged": {
+    "en": "Merged",
+    "hi": "मिला दिया गया",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.suggestions.emptyTitle": {
+    "en": "No suggestions here",
+    "hi": "यहाँ कोई सुझाव नहीं"
+  },
+  "catalog.admin.suggestions.emptyMessage": {
+    "en": "Suggestions with this status will appear here.",
+    "hi": "इस स्थिति वाले सुझाव यहाँ दिखेंगे।"
+  },
+  "catalog.admin.suggestions.loadMore": { "en": "Load more", "hi": "और देखें" },
+  "catalog.admin.suggestions.noHindi": {
+    "en": "No Hindi name yet",
+    "hi": "अभी हिंदी नाम नहीं"
+  },
+  "catalog.admin.suggestions.category": { "en": "Category:", "hi": "श्रेणी:" },
+  "catalog.admin.suggestions.submitted": {
+    "en": "Suggested on:",
+    "hi": "सुझाव की तारीख:"
+  },
+  "catalog.admin.suggestions.reason": { "en": "Reason:", "hi": "कारण:" },
+  "catalog.admin.suggestions.rejectionReason": {
+    "en": "Rejection reason:",
+    "hi": "अस्वीकार का कारण:"
+  },
+  "catalog.admin.suggestions.mergedInto": {
+    "en": "Merged into:",
+    "hi": "इसमें मिलाया:",
+    "source": "docs/design-context prototype js17 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.suggestions.similarTitle": {
+    "en": "Similar subcategory already exists",
+    "hi": "मिलती-जुलती उप-श्रेणी पहले से है",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.suggestions.similarity": {
+    "en": "{percent}% match",
+    "hi": "{percent}% मेल"
+  },
+  "catalog.admin.suggestions.approve": {
+    "en": "Approve",
+    "hi": "मंज़ूर करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.suggestions.reject": {
+    "en": "Reject",
+    "hi": "अस्वीकार",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.suggestions.merge": {
+    "en": "Merge into existing",
+    "hi": "मौजूदा में मिलाएँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.suggestions.decision": { "en": "Decision", "hi": "फ़ैसला" },
+  "catalog.admin.suggestions.sheet.approve": {
+    "en": "Approve suggestion",
+    "hi": "सुझाव मंज़ूर करें"
+  },
+  "catalog.admin.suggestions.sheet.reject": {
+    "en": "Reject suggestion",
+    "hi": "सुझाव अस्वीकार करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.suggestions.sheet.merge": {
+    "en": "Merge into existing",
+    "hi": "मौजूदा में मिलाएँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.suggestions.sheetFor": {
+    "en": "Suggestion: {name}",
+    "hi": "सुझाव: {name}"
+  },
+  "catalog.admin.suggestions.done.approve": {
+    "en": "Approved. The suggester was notified.",
+    "hi": "मंज़ूर हुआ। सुझाने वाले को सूचना भेज दी गई।",
+    "source": "docs/design-context prototype js18 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.suggestions.done.reject": {
+    "en": "Rejected. The suggester was notified.",
+    "hi": "अस्वीकार हुआ। सुझाने वाले को सूचना भेज दी गई।",
+    "source": "docs/design-context prototype js18 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.suggestions.done.merge": {
+    "en": "Subcategory merged",
+    "hi": "उप-श्रेणी मिला दी गई",
+    "source": "docs/design-context prototype js18 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.suggestions.close": { "en": "Close", "hi": "बंद करें" },
+  "catalog.admin.suggestions.approvalNameHi": {
+    "en": "Hindi name",
+    "hi": "हिंदी नाम"
+  },
+  "catalog.admin.suggestions.approvalNameHiHint": {
+    "en": "Required — the suggestion has no Hindi name.",
+    "hi": "ज़रूरी — सुझाव में हिंदी नाम नहीं है।"
+  },
+  "catalog.admin.suggestions.nameInvalid": {
+    "en": "Enter a name of 2–60 characters.",
+    "hi": "2–60 अक्षरों का नाम लिखें।"
+  },
+  "catalog.admin.suggestions.approveHelp": {
+    "en": "“{name}” becomes an active subcategory.",
+    "hi": "“{name}” एक चालू उप-श्रेणी बन जाएगी।"
+  },
+  "catalog.admin.suggestions.rejectReason": {
+    "en": "Reason for rejection",
+    "hi": "अस्वीकार करने का कारण"
+  },
+  "catalog.admin.suggestions.rejectReasonHint": {
+    "en": "Shared with the vendor or provider.",
+    "hi": "वेंडर या सेवा प्रदाता को दिखाया जाएगा।"
+  },
+  "catalog.admin.suggestions.reasonInvalid": {
+    "en": "Enter a reason (up to 500 characters).",
+    "hi": "कारण लिखें (500 अक्षरों तक)।"
+  },
+  "catalog.admin.suggestions.mergeTarget": {
+    "en": "Existing subcategory",
+    "hi": "मौजूदा उप-श्रेणी"
+  },
+  "catalog.admin.suggestions.mergeHint": {
+    "en": "Only active subcategories in the same category.",
+    "hi": "सिर्फ़ उसी श्रेणी की चालू उप-श्रेणियाँ।"
+  },
+  "catalog.admin.suggestions.mergeInvalid": {
+    "en": "Choose a subcategory.",
+    "hi": "उप-श्रेणी चुनें।"
+  },
+  "catalog.admin.suggestions.noMergeTargets": {
+    "en": "No active subcategories in this category to merge into.",
+    "hi": "इस श्रेणी में मिलाने के लिए कोई चालू उप-श्रेणी नहीं है।"
+  },
+  "catalog.admin.suggestions.choose": { "en": "Choose", "hi": "चुनें" },
+  "catalog.admin.keywords.title": {
+    "en": "Search keywords",
+    "hi": "सर्च कीवर्ड",
+    "source": "docs/design-context prototype js27 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.keywords.intro": {
+    "en": "Link a search word to categories, subcategories and tags so search can show related products, shops, services and videos.",
+    "hi": "किसी सर्च शब्द को श्रेणियों, उप-श्रेणियों और टैग से जोड़ें, ताकि सर्च में जुड़े प्रोडक्ट, दुकानें, सेवाएँ और वीडियो दिखें।",
+    "source": "docs/design-context prototype js27 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.keywords.readOnly": {
+    "en": "Only Super Admin can add, edit or delete keywords.",
+    "hi": "कीवर्ड सिर्फ़ सुपर एडमिन जोड़, बदल या हटा सकते हैं।"
+  },
+  "catalog.admin.keywords.add": {
+    "en": "Add keyword",
+    "hi": "कीवर्ड जोड़ें",
+    "source": "docs/design-context prototype js27 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.keywords.edit": {
+    "en": "Edit",
+    "hi": "बदलें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.keywords.editNamed": {
+    "en": "Edit keyword {term}",
+    "hi": "कीवर्ड {term} बदलें"
+  },
+  "catalog.admin.keywords.delete": {
+    "en": "Delete",
+    "hi": "हटाएँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.keywords.deleteNamed": {
+    "en": "Delete keyword {term}",
+    "hi": "कीवर्ड {term} हटाएँ"
+  },
+  "catalog.admin.keywords.deleteTitle": {
+    "en": "Delete this keyword?",
+    "hi": "यह कीवर्ड हटाएँ?",
+    "source": "docs/design-context prototype js27 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.keywords.deleteImpact": {
+    "en": "Search will stop linking “{term}” and its synonyms to these targets.",
+    "hi": "सर्च “{term}” और इसके समानार्थी शब्दों को इन लक्ष्यों से जोड़ना बंद कर देगा।"
+  },
+  "catalog.admin.keywords.deleted": {
+    "en": "Keyword deleted",
+    "hi": "कीवर्ड हटाया गया"
+  },
+  "catalog.admin.keywords.saved": {
+    "en": "Keyword mapping saved",
+    "hi": "कीवर्ड मैपिंग सहेजी गई",
+    "source": "docs/design-context prototype js27 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.keywords.cancel": {
+    "en": "Cancel",
+    "hi": "रद्द करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.keywords.emptyTitle": {
+    "en": "No keywords yet",
+    "hi": "अभी कोई कीवर्ड नहीं"
+  },
+  "catalog.admin.keywords.emptyMessage": {
+    "en": "Keywords help customers find the right category even with Hindi or Hinglish words.",
+    "hi": "कीवर्ड से ग्राहक हिंदी या हिंग्लिश शब्दों से भी सही श्रेणी ढूँढ पाते हैं।"
+  },
+  "catalog.admin.keywords.loadMore": { "en": "Load more", "hi": "और देखें" },
+  "catalog.admin.keywords.synonyms": {
+    "en": "Synonyms",
+    "hi": "समानार्थी शब्द",
+    "source": "docs/design-context prototype js27 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.keywords.noSynonyms": {
+    "en": "No synonyms",
+    "hi": "कोई समानार्थी शब्द नहीं"
+  },
+  "catalog.admin.keywords.targets": { "en": "Linked to", "hi": "इनसे जुड़ा" },
+  "catalog.admin.keywords.target.category": {
+    "en": "Category: {name}",
+    "hi": "श्रेणी: {name}"
+  },
+  "catalog.admin.keywords.target.subcategory": {
+    "en": "Subcategory: {name}",
+    "hi": "उप-श्रेणी: {name}"
+  },
+  "catalog.admin.keywords.target.productTag": {
+    "en": "Tag: {name}",
+    "hi": "टैग: {name}"
+  },
+  "catalog.admin.keywords.editTitle": {
+    "en": "Edit keyword",
+    "hi": "कीवर्ड बदलें",
+    "source": "docs/design-context prototype js27 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.keywords.createTitle": {
+    "en": "Add keyword",
+    "hi": "कीवर्ड जोड़ें",
+    "source": "docs/design-context prototype js27 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.keywords.close": { "en": "Close", "hi": "बंद करें" },
+  "catalog.admin.keywords.save": {
+    "en": "Save",
+    "hi": "सहेजें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "catalog.admin.keywords.term": { "en": "Search word", "hi": "सर्च शब्द" },
+  "catalog.admin.keywords.termHint": {
+    "en": "The main word customers type, e.g. “plumber”.",
+    "hi": "ग्राहक जो मुख्य शब्द लिखते हैं, जैसे “plumber”।"
+  },
+  "catalog.admin.keywords.termInvalid": {
+    "en": "Enter a word of up to 60 characters.",
+    "hi": "60 अक्षरों तक का शब्द लिखें।"
+  },
+  "catalog.admin.keywords.synonymsHint": {
+    "en": "Separate with commas or new lines. Add Hindi, Hinglish and common misspellings, e.g. नल वाला, nalwala, plumbr. Up to {max}.",
+    "hi": "कॉमा या नई लाइन से अलग करें। हिंदी, हिंग्लिश और आम गलत वर्तनी जोड़ें, जैसे नल वाला, nalwala, plumbr। ज़्यादा से ज़्यादा {max}।"
+  },
+  "catalog.admin.keywords.synonymsInvalid": {
+    "en": "Use up to {max} synonyms of up to 60 characters each.",
+    "hi": "ज़्यादा से ज़्यादा {max} समानार्थी शब्द, हर एक 60 अक्षरों तक।"
+  },
+  "catalog.admin.keywords.targetsHint": {
+    "en": "Choose 1–{max} targets. Selected: {count}.",
+    "hi": "1–{max} लक्ष्य चुनें। चुने गए: {count}।"
+  },
+  "catalog.admin.keywords.targetsInvalid": {
+    "en": "Choose between 1 and {max} targets.",
+    "hi": "1 से {max} लक्ष्य चुनें।"
+  },
+  "catalog.admin.keywords.treeFailed": {
+    "en": "Categories couldn’t load. Close and try again.",
+    "hi": "श्रेणियाँ लोड नहीं हो सकीं। बंद करके फिर कोशिश करें।"
+  },
+  "catalog.admin.keywords.shopCategories": {
+    "en": "Shop categories",
+    "hi": "दुकान श्रेणियाँ",
+    "source": "docs/design-context prototype js27 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.keywords.serviceCategories": {
+    "en": "Service subcategories",
+    "hi": "सेवा उप-श्रेणियाँ",
+    "source": "docs/design-context prototype js27 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.keywords.tags": {
+    "en": "Tags",
+    "hi": "टैग",
+    "source": "docs/design-context prototype js27 (EN; HI reviewed translation)"
+  },
+  "catalog.admin.keywords.tagsHint": {
+    "en": "Optional product tags, separated by commas.",
+    "hi": "वैकल्पिक प्रोडक्ट टैग, कॉमा से अलग करें।"
+  },
+  "admin.shell.catalog": { "en": "Catalog", "hi": "कैटलॉग" },
+  "admin.shell.categories": {
+    "en": "Categories",
+    "hi": "श्रेणियाँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.shell.subcategorySuggestions": {
+    "en": "Subcategory suggestions",
+    "hi": "उप-श्रेणी सुझाव",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.shell.keywords": {
+    "en": "Search keywords",
+    "hi": "सर्च कीवर्ड",
+    "source": "docs/design-context prototype js27 (EN; HI reviewed translation)"
+  },
+  "admin.errors.categoryConflict": {
+    "en": "This web address or name is already used.",
+    "hi": "यह वेब पता या नाम पहले से इस्तेमाल में है।"
+  },
+  "admin.errors.categoryNotFound": {
+    "en": "This category no longer exists. The list has been refreshed.",
+    "hi": "यह श्रेणी अब मौजूद नहीं है। सूची ताज़ा कर दी गई है।"
+  },
+  "admin.errors.subcategoryNotFound": {
+    "en": "This subcategory no longer exists. The list has been refreshed.",
+    "hi": "यह उप-श्रेणी अब मौजूद नहीं है। सूची ताज़ा कर दी गई है।"
+  },
+  "admin.errors.subcategoryDuplicate": {
+    "en": "This subcategory already exists",
+    "hi": "यह उप-श्रेणी पहले से है",
+    "source": "docs/design-context prototype js27 (EN; HI reviewed translation)"
+  },
+  "admin.errors.suggestionNotFound": {
+    "en": "This suggestion isn’t available. The list has been refreshed.",
+    "hi": "यह सुझाव उपलब्ध नहीं है। सूची ताज़ा कर दी गई है।"
+  },
+  "admin.errors.suggestionState": {
+    "en": "This suggestion was already decided. The list has been refreshed.",
+    "hi": "इस सुझाव पर फ़ैसला हो चुका है। सूची ताज़ा कर दी गई है।"
+  },
+  "admin.errors.mergeTargetInvalid": {
+    "en": "Choose an active subcategory from the same category.",
+    "hi": "उसी श्रेणी की कोई चालू उप-श्रेणी चुनें।"
+  },
+  "admin.errors.keywordNotFound": {
+    "en": "This keyword no longer exists. The list has been refreshed.",
+    "hi": "यह कीवर्ड अब मौजूद नहीं है। सूची ताज़ा कर दी गई है।"
+  },
+  "admin.errors.keywordConflict": {
+    "en": "This word or synonym is already used by another keyword.",
+    "hi": "यह शब्द या समानार्थी शब्द किसी दूसरे कीवर्ड में पहले से है।"
+  },
+  "admin.errors.keywordTargetInvalid": {
+    "en": "One of the linked categories or subcategories isn’t available. Choose again.",
+    "hi": "जुड़ी श्रेणियों या उप-श्रेणियों में से एक उपलब्ध नहीं है। फिर से चुनें।"
+  },
+  "admin.errors.homeSectionNotFound": {
+    "en": "This Home section no longer exists. The list has been refreshed.",
+    "hi": "यह होम सेक्शन अब मौजूद नहीं है। सूची ताज़ा कर दी गई है।"
+  },
+  "admin.errors.homeSectionInvalid": {
+    "en": "Check the section: categories must match its type and the first-selected pill must be included.",
+    "hi": "सेक्शन जाँचें: श्रेणियाँ उसके प्रकार की हों और पहले से चुनी पिल शामिल हो।"
+  },
+  "admin.errors.homeSectionConflict": {
+    "en": "This category already has a Home section, or the limit is reached.",
+    "hi": "इस श्रेणी का होम सेक्शन पहले से है, या सीमा पूरी हो चुकी है।"
+  },
+  "admin.errors.homeSectionState": {
+    "en": "This section is already in that state. The list has been refreshed.",
+    "hi": "यह सेक्शन पहले से उसी स्थिति में है। सूची ताज़ा कर दी गई है।"
+  },
+  "admin.errors.imageInvalid": {
+    "en": "This image can’t be used. Choose another.",
+    "hi": "यह तस्वीर इस्तेमाल नहीं हो सकती। दूसरी चुनें।"
   }
 }

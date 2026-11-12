@@ -37,6 +37,29 @@ export const queryKeys = {
   // Public reference data: both EN and HI names are in every response.
   geoCities: ['geo', 'cities'] as const,
   geoAreas: (cityId: string) => ['geo', 'cities', cityId, 'areas'] as const,
+  // Public taxonomy: both EN and HI names are in every response.
+  catalog: ['catalog'] as const,
+  catalogCategories: (kind?: 'product' | 'service') =>
+    ['catalog', 'categories', kind ?? 'all'] as const,
+  catalogCategory: (slug: string) => ['catalog', 'category', slug] as const,
+  catalogDuplicateCheck: (
+    scope: AccountScope,
+    check: Readonly<Record<string, string | undefined>>,
+  ) => ['private', scope, 'catalog', 'duplicate-check', check] as const,
+  // Owner suggestion history (the business is resolved server-side).
+  catalogSuggestions: (scope: AccountScope) =>
+    ['private', scope, 'catalog', 'suggestions'] as const,
+  // Admin taxonomy reads. Suggestion pages are keyed by the URL status tab.
+  adminCatalog: (scope: AccountScope) =>
+    ['private', scope, 'admin', 'catalog'] as const,
+  adminCatalogTree: (scope: AccountScope) =>
+    ['private', scope, 'admin', 'catalog', 'tree'] as const,
+  adminCatalogHomeSections: (scope: AccountScope) =>
+    ['private', scope, 'admin', 'catalog', 'homeSections'] as const,
+  adminCatalogSuggestions: (scope: AccountScope, status: string) =>
+    ['private', scope, 'admin', 'catalog', 'suggestions', status] as const,
+  adminCatalogKeywords: (scope: AccountScope) =>
+    ['private', scope, 'admin', 'catalog', 'keywords'] as const,
   // Admin reads are scoped by account/roles/epoch like every private key. The
   // free-text search never enters a key (it may hold a phone or email); the
   // caller keys it by an in-memory revision instead.

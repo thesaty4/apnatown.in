@@ -43,6 +43,10 @@
       "types": "./dist/cards/Card.d.ts",
       "import": "./dist/cards/Card.js"
     },
+    "./cards/CategoryTile": {
+      "types": "./dist/cards/CategoryTile.d.ts",
+      "import": "./dist/cards/CategoryTile.js"
+    },
     "./data/Avatar": {
       "types": "./dist/data/Avatar.d.ts",
       "import": "./dist/data/Avatar.js"

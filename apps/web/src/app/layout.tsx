@@ -48,6 +48,7 @@ export default async function RootLayout({
     admin: catalogue.admin,
     superAdmin: catalogue.superAdmin,
     geo: catalogue.geo,
+    catalog: catalogue.catalog,
     help: catalogue.help,
     system: catalogue.system,
   };
