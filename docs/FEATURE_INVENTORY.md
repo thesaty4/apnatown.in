@@ -257,7 +257,7 @@ Roles: customer, vendor, provider. Backend module(s): `media-videos, engagement`
 | RL6 | linked products/services strip with Add to cart / Enquire / View and "Shop this video" sheet | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
 | RL7 | guest like/follow/comment -> login prompt -> back to the same video | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
 | RL8 | states: empty Following, no videos nearby, skeleton, failed to load with retry, offline, removed/unavailable | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
-| RL9 | deep link `/videos/:id` starts at that video; ranking frozen per session | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
+| RL9 | deep link `/videos/:id` starts at that video; ranking frozen per session | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | implemented for supported feed filters; shared/API/OpenAPI/web builds and generated checks pass; runtime/browser verification pending |
 | RL10 | YouTube/Instagram links only; typed safe playback and Open fallback; direct video uploads disabled | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | complete — safe owner link submission/list and approved detail playback; Reels feed remains separate; AD10 moderation is in progress |
 
 ## NT. Notifications

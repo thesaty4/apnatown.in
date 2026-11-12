@@ -12,6 +12,7 @@ import {
   VideoFeedItemSchema,
   VideoFeedPageSchema,
   VideoFeedQuerySchema,
+  type VideoFeedPill,
   type CreateVideo,
   type CreateVideoReport,
   type VideoFeedPage,
@@ -61,6 +62,12 @@ const positionSchema = z.tuple([TimestampSchema, IdSchema]);
 const feedPositionSchema = z.tuple([z.number().int().nonnegative(), IdSchema]);
 const RECEIPT_TTL_MS = 24 * 60 * 60 * 1000;
 const FEED_SNAPSHOT_TTL_MS = 30 * 60 * 1000;
+
+interface FeedStart {
+  snapshot: ReelRankSnapshot;
+  effectiveFilter: VideoFeedPill;
+  afterOrdinal: number;
+}
 
 @Injectable()
 export class VideoService {
@@ -184,7 +191,7 @@ export class VideoService {
       `session:${request.session.id}`,
     );
     return this.uow.run(async (tx) => {
-      const snapshot = query.snapshotId
+      let snapshot = query.snapshotId
         ? await this.videos.findRankSnapshot(tx, query.snapshotId)
         : await this.createFeedSnapshot(tx, subjectHash);
       if (!snapshot || !this.ownsSnapshot(snapshot, subjectHash))
@@ -192,14 +199,23 @@ export class VideoService {
       if (snapshot.expiresAt.getTime() <= this.clock.now().getTime())
         throw new DomainError('MEDIA_FEED_EXPIRED');
 
+      const start = await this.feedStart(
+        tx,
+        request,
+        query,
+        snapshot,
+        subjectHash,
+      );
+      snapshot = start.snapshot;
       const binding: CursorBinding = {
         operation: 'media.videos.feed',
         sort: 'frozen-ordinal-asc',
         filters: {
-          pill: query.pill,
-          category: query.category ?? null,
-          lat: query.lat ?? null,
-          lng: query.lng ?? null,
+          pill: start.effectiveFilter,
+          category:
+            start.effectiveFilter === 'category' ? query.category ?? null : null,
+          lat: start.effectiveFilter === 'nearby' ? query.lat ?? null : null,
+          lng: start.effectiveFilter === 'nearby' ? query.lng ?? null : null,
         },
         scope: {
           snapshotId: snapshot.id,
@@ -209,15 +225,12 @@ export class VideoService {
       };
       const afterOrdinal = query.cursor
         ? this.feedPosition(query.cursor, binding, snapshot.id)
-        : 0;
+        : start.afterOrdinal;
       const rows = await this.videos.feedPage(tx, {
         snapshotId: snapshot.id,
         afterOrdinal,
         limit: query.limit,
-        pill: query.pill,
-        ...(query.category ? { category: query.category } : {}),
-        ...(query.lat !== undefined ? { lat: query.lat } : {}),
-        ...(query.lng !== undefined ? { lng: query.lng } : {}),
+        ...this.feedFilter(query, start.effectiveFilter),
         userId: request.userId,
       });
       const visibleRows = rows.slice(0, query.limit);
@@ -225,7 +238,7 @@ export class VideoService {
       return VideoFeedPageSchema.parse({
         snapshotId: snapshot.id,
         expiresAt: snapshot.expiresAt.toISOString(),
-        effectiveFilter: query.pill,
+        effectiveFilter: start.effectiveFilter,
         items: visibleRows.map((row) => this.feedDto(row)),
         nextCursor:
           rows.length > query.limit && last
@@ -233,6 +246,92 @@ export class VideoService {
             : null,
       });
     });
+  }
+
+  private async feedStart(
+    tx: TxContext,
+    request: VideoFeedRequest,
+    query: VideoFeedQuery,
+    initialSnapshot: ReelRankSnapshot,
+    subjectHash: Uint8Array,
+  ): Promise<FeedStart> {
+    if (!query.startVideoId)
+      return {
+        snapshot: initialSnapshot,
+        effectiveFilter: query.pill,
+        afterOrdinal: 0,
+      };
+    if (!(await this.videos.findPublic(tx, query.startVideoId)))
+      throw new DomainError('MEDIA_VIDEO_NOT_PUBLISHED');
+
+    let snapshot = initialSnapshot;
+    let effectiveFilter = query.pill;
+    let anchor = snapshot.rankedItems.find(
+      (entry) => entry.videoId === query.startVideoId,
+    );
+    if (!anchor && query.snapshotId) {
+      snapshot = await this.createFeedSnapshot(tx, subjectHash);
+      anchor = snapshot.rankedItems.find(
+        (entry) => entry.videoId === query.startVideoId,
+      );
+      effectiveFilter = 'for_you';
+    }
+    if (!anchor) throw new DomainError('MEDIA_VIDEO_NOT_PUBLISHED');
+
+    if (
+      effectiveFilter !== 'for_you' &&
+      !(await this.anchorMatchesFilter(
+        tx,
+        request,
+        query,
+        snapshot.id,
+        anchor.ordinal,
+      ))
+    ) {
+      effectiveFilter = 'for_you';
+      if (query.snapshotId && snapshot.id === query.snapshotId) {
+        snapshot = await this.createFeedSnapshot(tx, subjectHash);
+        anchor = snapshot.rankedItems.find(
+          (entry) => entry.videoId === query.startVideoId,
+        );
+      }
+    }
+    if (!anchor) throw new DomainError('MEDIA_VIDEO_NOT_PUBLISHED');
+    return {
+      snapshot,
+      effectiveFilter,
+      afterOrdinal: anchor.ordinal - 1,
+    };
+  }
+
+  private anchorMatchesFilter(
+    tx: TxContext,
+    request: VideoFeedRequest,
+    query: VideoFeedQuery,
+    snapshotId: string,
+    anchorOrdinal: number,
+  ): Promise<boolean> {
+    return this.videos
+      .feedPage(tx, {
+        snapshotId,
+        afterOrdinal: anchorOrdinal - 1,
+        limit: 1,
+        ...this.feedFilter(query, query.pill),
+        userId: request.userId,
+      })
+      .then((rows) => rows[0]?.id === query.startVideoId);
+  }
+
+  private feedFilter(query: VideoFeedQuery, pill: VideoFeedPill) {
+    return {
+      pill,
+      ...(pill === 'category' && query.category
+        ? { category: query.category }
+        : {}),
+      ...(pill === 'nearby' && query.lat !== undefined && query.lng !== undefined
+        ? { lat: query.lat, lng: query.lng }
+        : {}),
+    };
   }
 
   report(

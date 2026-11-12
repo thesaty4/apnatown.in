@@ -6500,5 +6500,25 @@
     "en": "Load more",
     "hi": "और देखें",
     "source": "specs/_foundation/frontend-shared.md"
+  },
+  "reels.feed.startFresh": {
+    "en": "Start a fresh feed",
+    "hi": "नई फ़ीड शुरू करें",
+    "source": "specs/media-videos/fe/media-videos.md#S-CUST-21"
+  },
+  "reels.feed.videoUnavailableTitle": {
+    "en": "This video is unavailable",
+    "hi": "यह वीडियो उपलब्ध नहीं है",
+    "source": "specs/media-videos/fe/media-videos.md#S-CUST-21"
+  },
+  "reels.feed.videoUnavailableMessage": {
+    "en": "It may have been removed or is no longer public.",
+    "hi": "इसे हटाया गया हो सकता है या यह अब सार्वजनिक नहीं है।",
+    "source": "specs/media-videos/fe/media-videos.md#S-CUST-21"
+  },
+  "reels.feed.browseVideos": {
+    "en": "Browse videos",
+    "hi": "वीडियो देखें",
+    "source": "specs/media-videos/fe/media-videos.md#S-CUST-21"
   }
 }

@@ -187,6 +187,7 @@ export const VideoFeedQuerySchema = z
       .optional(),
     lat: z.coerce.number().finite().min(-90).max(90).optional(),
     lng: z.coerce.number().finite().min(-180).max(180).optional(),
+    startVideoId: IdSchema.optional(),
     snapshotId: IdSchema.optional(),
     cursor: CursorSchema.optional(),
     limit: z.coerce.number().int().min(1).max(10).default(10),
@@ -209,6 +210,12 @@ export const VideoFeedQuerySchema = z
         code: 'custom',
         path: ['lat'],
         message: 'Nearby requires both coordinates',
+      });
+    if (query.startVideoId && query.cursor)
+      context.addIssue({
+        code: 'custom',
+        path: ['startVideoId'],
+        message: 'A deep-link anchor is valid only on the first page',
       });
     if ((query.lat === undefined) !== (query.lng === undefined))
       context.addIssue({

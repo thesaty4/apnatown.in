@@ -54,6 +54,7 @@ export const queryKeys = {
     pill: string,
     category: string | undefined,
     locationRevision: number,
+    snapshotOrAnchor: string | undefined,
   ) =>
     [
       'private',
@@ -63,6 +64,7 @@ export const queryKeys = {
       pill,
       category ?? null,
       locationRevision,
+      snapshotOrAnchor ?? null,
     ] as const,
   mediaVideos: (scope: AccountScope, kind: 'shop' | 'provider') =>
     ['private', scope, 'media', 'videos', kind] as const,

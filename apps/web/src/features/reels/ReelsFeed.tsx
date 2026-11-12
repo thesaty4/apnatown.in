@@ -34,7 +34,13 @@ import {
 import { useVideoFeed } from './queries';
 import { ReelFeedCard } from './ReelFeedCard';
 
-export function ReelsFeed({ nonce }: { nonce: string }) {
+export function ReelsFeed({
+  nonce,
+  initialVideoId,
+}: {
+  nonce: string;
+  initialVideoId?: string;
+}) {
   const t = useTranslations('reels.feed');
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
   const router = useRouter();
@@ -48,6 +54,9 @@ export function ReelsFeed({ nonce }: { nonce: string }) {
   const rawPill = searchParams.get('pill');
   const parsedPill = VideoFeedPillSchema.safeParse(rawPill);
   const category = searchParams.get('category') ?? undefined;
+  const requestedAnchorId =
+    initialVideoId ?? searchParams.get('video') ?? undefined;
+  const snapshotId = searchParams.get('snapshotId') ?? undefined;
   const pill =
     parsedPill.success && (parsedPill.data !== 'category' || category)
       ? parsedPill.data
@@ -55,6 +64,8 @@ export function ReelsFeed({ nonce }: { nonce: string }) {
   const categories = useQuery(categoriesOptions(api));
   const feed = useVideoFeed(
     { pill, ...(pill === 'category' && category ? { category } : {}) },
+    requestedAnchorId,
+    snapshotId,
     point,
     browseLocation.revision,
   );
@@ -62,7 +73,8 @@ export function ReelsFeed({ nonce }: { nonce: string }) {
     () => feed.query.data?.pages.flatMap((page) => page.items) ?? [],
     [feed.query.data],
   );
-  const activeId = searchParams.get('video');
+  const activeId = initialVideoId ?? searchParams.get('video');
+  const firstPage = feed.query.data?.pages[0];
   const errorCode = feed.query.isError
     ? failureCode(feed.query.error)
     : undefined;
@@ -71,21 +83,55 @@ export function ReelsFeed({ nonce }: { nonce: string }) {
     (id: string) => {
       if (activeRef.current === id) return;
       activeRef.current = id;
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams();
       params.set('pill', pill);
       if (pill === 'category' && category) params.set('category', category);
-      else params.delete('category');
-      params.set('video', id);
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      const currentSnapshotId =
+        firstPage?.snapshotId ?? searchParams.get('snapshotId');
+      if (currentSnapshotId) params.set('snapshotId', currentSnapshotId);
+      router.replace(`/videos/${id}?${params.toString()}`, { scroll: false });
     },
-    [category, pathname, pill, router, searchParams],
+    [category, firstPage?.snapshotId, pill, router, searchParams],
   );
 
   const selectFilter = (nextPill: string, nextCategory?: string) => {
     activeRef.current = null;
     const params = new URLSearchParams({ pill: nextPill });
     if (nextCategory) params.set('category', nextCategory);
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    const currentSnapshotId =
+      firstPage?.snapshotId ?? searchParams.get('snapshotId');
+    if (currentSnapshotId) params.set('snapshotId', currentSnapshotId);
+    router.push(`/videos?${params.toString()}`, { scroll: false });
+  };
+
+  useEffect(() => {
+    if (!firstPage) return;
+    const params = new URLSearchParams(searchParams.toString());
+    let changed = false;
+    if (params.get('snapshotId') !== firstPage.snapshotId) {
+      params.set('snapshotId', firstPage.snapshotId);
+      changed = true;
+    }
+    if (params.get('pill') !== firstPage.effectiveFilter) {
+      params.set('pill', firstPage.effectiveFilter);
+      changed = true;
+    }
+    if (firstPage.effectiveFilter !== 'category' && params.has('category')) {
+      params.delete('category');
+      changed = true;
+    }
+    if (changed) {
+      const path = initialVideoId ? `/videos/${initialVideoId}` : pathname;
+      router.replace(`${path}?${params.toString()}`, { scroll: false });
+    }
+  }, [firstPage, initialVideoId, pathname, router, searchParams]);
+
+  const restartFeed = () => {
+    const params = new URLSearchParams({ pill });
+    if (pill === 'category' && category) params.set('category', category);
+    const anchorId = activeId ?? requestedAnchorId;
+    const path = anchorId ? `/videos/${anchorId}` : '/videos';
+    router.replace(`${path}?${params.toString()}`, { scroll: false });
   };
 
   const fetchNextPage = feed.query.fetchNextPage;
@@ -222,14 +268,17 @@ export function ReelsFeed({ nonce }: { nonce: string }) {
               className="mx-auto min-h-dvh max-w-prose content-center pt-32"
               title={t('feedExpired')}
               message={t('feedExpired')}
+              action={<Button onClick={restartFeed}>{t('startFresh')}</Button>}
+            />
+          ) : errorCode === 'MEDIA_VIDEO_NOT_PUBLISHED' ? (
+            <EmptyState
+              className="mx-auto min-h-dvh max-w-prose content-center pt-32"
+              title={t('videoUnavailableTitle')}
+              message={t('videoUnavailableMessage')}
               action={
-                <Button
-                  onClick={() => {
-                    void feed.query.refetch();
-                  }}
-                >
-                  {t('retry')}
-                </Button>
+                <Link className={buttonClassName} href="/videos">
+                  {t('browseVideos')}
+                </Link>
               }
             />
           ) : errorCode === 'COMMON_FORBIDDEN' ? (

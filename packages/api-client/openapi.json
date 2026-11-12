@@ -4673,7 +4673,7 @@
     },
     "/videos/feed": {
       "get": {
-        "description": "Ranks eligible videos once for 30 minutes. Supported filters are For You, Following, Nearby (2.5 km) and active business categories. Offer/product/service item filters await their owning read paths.",
+        "description": "Ranks eligible videos once for 30 minutes. startVideoId anchors a deep link within that frozen ranking; an eligible out-of-filter anchor starts a fresh For You snapshot. Supported filters are For You, Following, Nearby (2.5 km) and active business categories. Offer/product/service item filters await their owning read paths.",
         "operationId": "mediaVideoFeed",
         "parameters": [
           {
@@ -4714,6 +4714,16 @@
               "minimum": -180,
               "maximum": 180,
               "type": "number"
+            }
+          },
+          {
+            "required": false,
+            "name": "startVideoId",
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$",
+              "type": "string"
             }
           },
           {
@@ -4810,6 +4820,30 @@
           },
           "403": {
             "description": "CSRF_INVALID for an untrusted browser session.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "409": {
+            "description": "MEDIA_VIDEO_NOT_PUBLISHED when the deep-link target is not currently public.",
             "content": {
               "application/json": {
                 "schema": {

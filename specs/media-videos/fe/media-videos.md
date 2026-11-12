@@ -61,17 +61,20 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 
 ### Current implementation boundary
 
-The RL10 slice currently provides the owner link form and paged video list on
-`/vendor/media` and `/provider/media`, plus approved-video detail playback on
-`/videos/:id`. Client API reads and creation use the typed API client through
-TanStack React Query; `EmbedCard` renders only the server-built playback DTO.
-The manager currently supports provider, URL, caption, hashtags and separate
-Gallery/Reels toggles.
+The RL10 slice provides the owner link form and paged video list on
+`/vendor/media` and `/provider/media`, plus approved-video playback through
+`EmbedCard`. The customer feed now supports For You, Following, Nearby and
+category filters over a frozen session ranking. `/videos/:id` starts at the
+requested eligible video by ID; if it is outside the requested supported
+filter, the API explicitly switches to a fresh For You snapshot. The URL keeps
+the snapshot ID so reloads and Back navigation stay on that frozen ranking;
+expired snapshots require an explicit fresh-feed action.
 
 This is not completion of S-VEND-11/S-PROV-12 or the full S-CUST-21 feed.
 Thumbnail upload, linked-item editing, video edit/delete, ordering, analytics,
-gallery management, feed/ranking and engagement remain unimplemented. Pending
-items remain unavailable publicly under BR-10.
+gallery management, desktop side panel and Offers/Products/Services feed
+filters remain unimplemented. Pending, removed, hidden or non-consented items
+remain unavailable publicly under BR-10.
 
 ### S-ADMN-11 Videos and moderation | `/admin/videos` | `d-admin-avideos.jpg`, `m-admin-avideos.jpg`
 - Layout: Pending / Approved / Rejected / Removed / Reported / Engagement; player preview/business/links/reasons, scoped tab counts, Approve/Reject/Remove. Only **reviews:edit** enables decisions; catalog permissions are irrelevant (`js27`).

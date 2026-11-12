@@ -104,7 +104,13 @@ function videoFeedReturnTo(
   path: string,
   searchParams: URLSearchParams,
 ): string {
-  if (path !== '/videos') return path;
+  if (
+    path !== '/videos' &&
+    !/^\/videos\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu.test(
+      path,
+    )
+  )
+    return path;
   const safe = new URLSearchParams();
   const pill = searchParams.get('pill');
   if (pill && ['for_you', 'following', 'nearby', 'category'].includes(pill))
@@ -120,6 +126,14 @@ function videoFeedReturnTo(
     )
   )
     safe.set('video', video);
+  const snapshotId = searchParams.get('snapshotId');
+  if (
+    snapshotId &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu.test(
+      snapshotId,
+    )
+  )
+    safe.set('snapshotId', snapshotId);
   const query = safe.toString();
   return query ? `${path}?${query}` : path;
 }

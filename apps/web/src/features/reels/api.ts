@@ -92,6 +92,9 @@ export async function getVideoFeed(
           ...(query.limit !== undefined && { limit: query.limit }),
           ...(query.lng !== undefined && { lng: query.lng }),
           ...(query.pill !== undefined && { pill: query.pill }),
+          ...(query.startVideoId !== undefined && {
+            startVideoId: query.startVideoId,
+          }),
           ...(query.snapshotId !== undefined && {
             snapshotId: query.snapshotId,
           }),

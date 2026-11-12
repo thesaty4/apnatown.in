@@ -1794,7 +1794,7 @@ export interface paths {
         };
         /**
          * Read an immutable, session-bound Reels feed
-         * @description Ranks eligible videos once for 30 minutes. Supported filters are For You, Following, Nearby (2.5 km) and active business categories. Offer/product/service item filters await their owning read paths.
+         * @description Ranks eligible videos once for 30 minutes. startVideoId anchors a deep link within that frozen ranking; an eligible out-of-filter anchor starts a fresh For You snapshot. Supported filters are For You, Following, Nearby (2.5 km) and active business categories. Offer/product/service item filters await their owning read paths.
          */
         get: operations["mediaVideoFeed"];
         put?: never;
@@ -22180,6 +22180,7 @@ export interface operations {
                 lng?: number;
                 pill?: string;
                 snapshotId?: string;
+                startVideoId?: string;
             };
             header?: {
                 "X-Correlation-ID"?: string;
@@ -22216,6 +22217,19 @@ export interface operations {
             };
             /** @description CSRF_INVALID for an untrusted browser session. */
             403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MEDIA_VIDEO_NOT_PUBLISHED when the deep-link target is not currently public. */
+            409: {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;

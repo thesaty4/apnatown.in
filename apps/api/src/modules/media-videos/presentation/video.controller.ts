@@ -204,12 +204,13 @@ export class PublicVideoController {
     operationId: 'mediaVideoFeed',
     summary: 'Read an immutable, session-bound Reels feed',
     description:
-      'Ranks eligible videos once for 30 minutes. Supported filters are For You, Following, Nearby (2.5 km) and active business categories. Offer/product/service item filters await their owning read paths.',
+      'Ranks eligible videos once for 30 minutes. startVideoId anchors a deep link within that frozen ranking; an eligible out-of-filter anchor starts a fresh For You snapshot. Supported filters are For You, Following, Nearby (2.5 km) and active business categories. Offer/product/service item filters await their owning read paths.',
   })
   @ApiOkResponse({ type: VideoFeedPageDto })
   @AdminErrors({
     400: 'VALIDATION_ERROR for malformed filters or mismatched cursors.',
     403: 'CSRF_INVALID for an untrusted browser session.',
+    409: 'MEDIA_VIDEO_NOT_PUBLISHED when the deep-link target is not currently public.',
     410: 'MEDIA_FEED_EXPIRED when the snapshot has expired or belongs to another session.',
     429: 'COMMON_RATE_LIMITED with Retry-After.',
   })

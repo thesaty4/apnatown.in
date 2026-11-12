@@ -95,6 +95,8 @@ type FeedPageParam = { snapshotId?: string; cursor?: string };
 
 export function useVideoFeed(
   input: Pick<VideoFeedQuery, 'pill' | 'category'>,
+  startVideoId: string | undefined,
+  snapshotId: string | undefined,
   location: { lat: number; lng: number } | null,
   locationRevision: number,
 ) {
@@ -108,10 +110,12 @@ export function useVideoFeed(
     input.pill,
     input.category,
     locationRevision,
+    snapshotId ?? startVideoId,
   );
+  const initialPageParam: FeedPageParam = snapshotId ? { snapshotId } : {};
   const query = useInfiniteQuery({
     queryKey: key,
-    initialPageParam: {} as FeedPageParam,
+    initialPageParam,
     queryFn: ({ signal, pageParam }) =>
       getVideoFeed(
         api,
@@ -120,6 +124,7 @@ export function useVideoFeed(
           ...(input.pill === 'nearby' && location
             ? { lat: location.lat, lng: location.lng }
             : {}),
+          ...(!pageParam.cursor && startVideoId ? { startVideoId } : {}),
           ...pageParam,
           limit: 10,
         },
