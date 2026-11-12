@@ -64,6 +64,16 @@
         "default": "./dist/cjs/auth.js"
       }
     },
+    "./search": {
+      "import": {
+        "types": "./dist/esm/search.d.ts",
+        "default": "./dist/esm/search.js"
+      },
+      "require": {
+        "types": "./dist/cjs/search.d.ts",
+        "default": "./dist/cjs/search.js"
+      }
+    },
     "./settings": {
       "import": {
         "types": "./dist/esm/settings.d.ts",

@@ -1123,6 +1123,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/search/home": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Compose the public Home discovery sections
+         * @description S-CUST-01 location-free composition. Returns the Catalog-owned active Home category sections (dedicated and curated) localized for the requested locale, in position order; ineligible sections are omitted. Sections owned by modules that do not exist yet are not returned. Publicly cacheable.
+         */
+        get: operations["searchHome"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/settings/public": {
         parameters: {
             query?: never;
@@ -4186,6 +4206,154 @@ export interface components {
                     };
                 } | null;
                 version: number;
+            })[];
+        };
+        SearchHomeDto: {
+            categorySections: ({
+                category: {
+                    active: boolean;
+                    icon?: string;
+                    /** Format: uuid */
+                    id: string;
+                    image?: {
+                        /** Format: uuid */
+                        assetId: string;
+                        height: number;
+                        mimeType: string;
+                        /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                        path: string;
+                        variants: {
+                            bytes: number;
+                            height: number;
+                            /** @enum {string} */
+                            mimeType: "image/webp";
+                            /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                            path: string;
+                            width: number;
+                        }[];
+                        width: number;
+                    };
+                    /** @enum {string} */
+                    kind: "product" | "service";
+                    nameEn: string;
+                    nameHi: string;
+                    slug: string;
+                    sortOrder: number;
+                };
+                /** @enum {string} */
+                contentKind: "product" | "service";
+                heading: string;
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "single_category";
+                position: number;
+                subcategories: {
+                    active: boolean;
+                    /** Format: uuid */
+                    categoryId: string;
+                    /** Format: uuid */
+                    id: string;
+                    image?: {
+                        /** Format: uuid */
+                        assetId: string;
+                        height: number;
+                        mimeType: string;
+                        /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                        path: string;
+                        variants: {
+                            bytes: number;
+                            height: number;
+                            /** @enum {string} */
+                            mimeType: "image/webp";
+                            /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                            path: string;
+                            width: number;
+                        }[];
+                        width: number;
+                    };
+                    nameEn: string;
+                    nameHi: string;
+                    serviceTypes: string[];
+                    slug: string;
+                    sortOrder: number;
+                }[];
+                supportingText: string | null;
+            } | {
+                categories: {
+                    category: {
+                        active: boolean;
+                        icon?: string;
+                        /** Format: uuid */
+                        id: string;
+                        image?: {
+                            /** Format: uuid */
+                            assetId: string;
+                            height: number;
+                            mimeType: string;
+                            /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                            path: string;
+                            variants: {
+                                bytes: number;
+                                height: number;
+                                /** @enum {string} */
+                                mimeType: "image/webp";
+                                /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                                path: string;
+                                width: number;
+                            }[];
+                            width: number;
+                        };
+                        /** @enum {string} */
+                        kind: "product" | "service";
+                        nameEn: string;
+                        nameHi: string;
+                        slug: string;
+                        sortOrder: number;
+                    };
+                    position: number;
+                    subcategories: {
+                        active: boolean;
+                        /** Format: uuid */
+                        categoryId: string;
+                        /** Format: uuid */
+                        id: string;
+                        image?: {
+                            /** Format: uuid */
+                            assetId: string;
+                            height: number;
+                            mimeType: string;
+                            /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                            path: string;
+                            variants: {
+                                bytes: number;
+                                height: number;
+                                /** @enum {string} */
+                                mimeType: "image/webp";
+                                /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                                path: string;
+                                width: number;
+                            }[];
+                            width: number;
+                        };
+                        nameEn: string;
+                        nameHi: string;
+                        serviceTypes: string[];
+                        slug: string;
+                        sortOrder: number;
+                    }[];
+                }[];
+                /** @enum {string} */
+                contentKind: "product" | "service";
+                heading: string;
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                initialCategoryId: string;
+                /** @enum {string} */
+                kind: "curated_categories";
+                position: number;
+                supportingText: string | null;
             })[];
         };
         SessionDto: {
@@ -16092,6 +16260,102 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    searchHome: {
+        parameters: {
+            query?: {
+                locale?: string;
+            };
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchHomeDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Untrusted Origin */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED: read limit exceeded */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Unexpected failure */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
                 };
             };
         };

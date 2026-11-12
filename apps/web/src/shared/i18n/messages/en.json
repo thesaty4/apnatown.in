@@ -1707,7 +1707,9 @@
     },
     "language": {
       "english": "English",
+      "englishShort": "EN",
       "hindi": "हिन्दी",
+      "hindiShort": "हिं",
       "label": "Language",
       "switch": "Switch language to {language}"
     },
@@ -1719,7 +1721,13 @@
       "title": "We’ll be right back"
     },
     "navigation": {
-      "skipToContent": "Skip to content"
+      "account": "Account",
+      "home": "Home",
+      "logo": "ApnaTown.in home",
+      "main": "Main",
+      "services": "Services",
+      "skipToContent": "Skip to content",
+      "videos": "Videos"
     },
     "noPermission": {
       "message": "This section is not available for your role. Ask a Super Admin for access.",
@@ -1864,6 +1872,7 @@
       "filterLabel": "Saved media filters",
       "guestMessage": "Keep your followed businesses and saved videos in one place.",
       "guestTitle": "Log in to see saved items",
+      "homeTitle": "Your bookmarks",
       "invalidFilters": "These saved-item filters are invalid.",
       "loading": "Loading saved items…",
       "loadMore": "Load more",
@@ -1881,6 +1890,7 @@
       "resetFilters": "Reset filters",
       "restrictedMessage": "Saved items are available to customer accounts.",
       "restrictedTitle": "Customer account required",
+      "seeAll": "See all",
       "services": "Services",
       "shops": "Following",
       "title": "Saved",

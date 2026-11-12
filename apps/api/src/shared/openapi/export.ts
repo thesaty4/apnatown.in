@@ -82,6 +82,8 @@ import { VideoSharesController } from '../../modules/engagement/presentation/vid
 import { VideoSharesService } from '../../modules/engagement/application/video-shares.service';
 import { SavedController } from '../../modules/engagement/presentation/saved.controller';
 import { SavedService } from '../../modules/engagement/application/saved.service';
+import { SearchHomeController } from '../../modules/search/presentation/search-home.controller';
+import { SearchHomeService } from '../../modules/search/application/search-home.service';
 
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
@@ -122,6 +124,7 @@ import { SavedService } from '../../modules/engagement/application/saved.service
     PublicVideoCommentsController,
     VideoCommentsController,
     AdminVideoCommentsController,
+    SearchHomeController,
   ],
   providers: [
     SavedService,
@@ -156,6 +159,7 @@ import { SavedService } from '../../modules/engagement/application/saved.service
     VideoCommentsService,
     VideoCommentModerationService,
     VideoCommentEvents,
+    SearchHomeService,
   ].map((provide) => ({ provide, useValue: Object.freeze({}) })),
 })
 class OpenApiModule {}

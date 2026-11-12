@@ -25,6 +25,8 @@ Discovery endpoints are public reads; the separate admin preview requires permis
 | GET | `/explore` | Public; `ExploreQuery` below | `tab=products\|shops\|services`; → `DiscoveryResponse`, selected-tab facets and page-aligned shop/provider map pins | `SEARCH_FILTER_INVALID`, `SEARCH_LOCATION_REQUIRED`, `COMMON_VALIDATION_FAILED` | Yes | F-EX-001–012, S-CUST-02 |
 | POST | `/search/admin/preview` | Admin `catalog:view` + assigned city/area, or super_admin; CSRF; no-store | `{tab,query?,categoryIds?,subcategoryIds?,mapping?:{canonicalTerm,synonyms,targets},cityId?,areaIds?,cursor?,limit?}` → same public projections/counts restricted to trusted scope plus `{appliedMapping,effectiveScope}` | `COMMON_FORBIDDEN`, `SEARCH_FILTER_INVALID`, `KEYWORD_TARGET_INVALID` | Read-only | F-AD-005, F-AD-015 |
 
+Implementation status: the first `/search/home` slice accepts only `locale` and returns `{categorySections}` (Catalog dedicated and curated sections in one array ordered by `position`), cached publicly for 60 seconds. Other sections are added as their owner modules land; omitted sections render nothing on Home.
+
 `OffersDiscoveryPort.homePlacements({cityId?,areaId?,at})` supplies active, in-window hero/featured/local-promotion placements and typed target/asset/order data. Search only composes them; Q-60 no longer leaves banners ownerless. Products' explicit featured flag supplies eligible product cards; popularity/view rankings without an approved source remain `unavailable` under Q-57, never guessed analytics. Catalog owns cross-kind relations from `js23.js`; Geo, browser-local state and Engagement own location, recent views and saved counts.
 
 ### Complete query and result contract

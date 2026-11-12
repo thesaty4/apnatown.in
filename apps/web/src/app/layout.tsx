@@ -4,9 +4,18 @@ import { cookies } from 'next/headers';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { SkipLink } from '@apnatown/ui/navigation/SkipLink';
 import { fontVariables } from '../shared/i18n/fonts';
-import { isLocale, parseTheme, themeCookie } from '../shared/i18n/preferences';
+import {
+  isLocale,
+  parseTheme,
+  publicHref,
+  themeCookie,
+} from '../shared/i18n/preferences';
 import { getWebEnvironment } from '../shared/config/server';
+import Link from 'next/link';
 import { Preferences } from '../shared/ui/Preferences';
+import { LanguageSwitch } from '../shared/ui/LanguageSwitch';
+import { BrandLogo } from '../shared/ui/BrandLogo';
+import { CustomerMenu, CustomerTabBar } from '../shared/ui/CustomerNav';
 import { Providers } from './providers';
 import en from '../shared/i18n/messages/en.json';
 import hi from '../shared/i18n/messages/hi.json';
@@ -66,14 +75,23 @@ export default async function RootLayout({
           )}
         >
           <SkipLink label={t('navigation.skipToContent')} targetId="main" />
-          <div className="mx-auto max-w-page px-page-gutter">
-            <header className="flex min-h-nav-h flex-wrap items-center justify-between gap-4 border-b border-border py-2">
-              <span className="font-display font-bold text-primary">
-                {t('app.welcome')}
-              </span>
+          <header className="sticky top-sat z-60 border-b border-border bg-surface shadow-1">
+            <div className="mx-auto flex min-h-nav-h max-w-page flex-wrap items-center gap-x-2.5 gap-y-2 px-page-gutter py-1.5 desktop:flex-nowrap">
+              <Link
+                href={publicHref('/', locale)}
+                aria-label={t('navigation.logo')}
+                className="rounded-sm focus-visible:ring-focus"
+              >
+                <BrandLogo />
+              </Link>
+              <CustomerMenu />
+              <span className="min-w-0 flex-1" />
+              <LanguageSwitch short />
               <AccountNavigation />
               <Preferences initialTheme={theme} />
-            </header>
+            </div>
+          </header>
+          <div className="mx-auto max-w-page px-page-gutter">
             <main
               id="main"
               tabIndex={-1}
@@ -81,8 +99,9 @@ export default async function RootLayout({
             >
               {children}
             </main>
-            <SiteFooter />
           </div>
+          <SiteFooter />
+          <CustomerTabBar />
         </Providers>
       </body>
     </html>

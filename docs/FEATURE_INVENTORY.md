@@ -56,10 +56,10 @@ Roles: customer. Backend module(s): `search` (home composition), `catalog` (cate
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| HM1 | sticky location selector, search with voice icon, bell, cart, play (videos) icon | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| HM1 | sticky location selector, search with voice icon, bell, cart, play (videos) icon | `specs/search/be/search.md` | `specs/search/fe/search.md` | partial: sticky header with logo, desktop menu, language pill, Videos/Saved/Account icons and mobile bottom tabs, plus sticky Home location bar; search, bell and cart wait for their modules |
 | HM2 | hero banner carousel | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
-| HM3 | "Shop by category" tiles open Explore with category pre-applied | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
-| HM4 | "Local services" tiles open Explore Services with category pre-applied | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | spec written |
+| HM3 | "Shop by category" tiles open Explore with category pre-applied | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | implemented: Home tiles via ISR taxonomy; dedicated/curated Catalog sections composed by `GET /search/home` |
+| HM4 | "Local services" tiles open Explore Services with category pre-applied | `specs/catalog/be/catalog.md` | `specs/catalog/fe/catalog.md` | implemented: Home Local services tiles open `/services` |
 | HM5 | offers and deals (card opens product/service/filtered list) | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
 | HM6 | nearby shops with responsive shop card (image top, details bottom; 1/2/3-4 columns; "View all shops") | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
 | HM7 | featured businesses ("View all businesses" -> Explore Shops featured) | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
@@ -68,8 +68,8 @@ Roles: customer. Backend module(s): `search` (home composition), `catalog` (cate
 | HM10 | popular providers | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
 | HM11 | local promotions | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
 | HM12 | recently viewed | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
-| HM13 | bookmarks quick access | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
-| HM14 | desktop footer (About, Contact, Vendor/Rider/Provider signup, legal, language) | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| HM13 | bookmarks quick access | `specs/search/be/search.md` | `specs/search/fe/search.md` | implemented: signed-in customers see the first four followed shops with See all -> `/saved` |
+| HM14 | desktop footer (About, Contact, Vendor/Rider/Provider signup, legal, language) | `specs/search/be/search.md` | `specs/search/fe/search.md` | partial: brand + tagline, Company, Legal and language switch; vendor/rider/provider signup links wait for onboarding routes |
 
 ## LC. Location and discovery
 

@@ -44,7 +44,7 @@ export function LocationBar() {
   return (
     <section
       aria-label={t('barLabel')}
-      className="sticky top-0 z-10 mb-stack-gap grid gap-2 bg-bg py-2"
+      className="sticky top-[calc(var(--spacing-sat)+var(--spacing-nav-h))] z-10 mb-stack-gap grid gap-2 bg-bg py-2"
     >
       <button
         type="button"

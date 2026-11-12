@@ -21,6 +21,7 @@ import { MaintenanceGuard } from './modules/settings/application/maintenance.gua
 import { SettingsModule } from './modules/settings/settings.module';
 import { UsersModule } from './modules/users/users.module';
 import { EngagementModule } from './modules/engagement/engagement.module';
+import { SearchModule } from './modules/search/search.module';
 import { RuntimeModule } from './shared/health/runtime.module';
 import { RateLimitGuard } from './shared/rate-limit/rate-limit';
 
@@ -75,6 +76,7 @@ export class AppModule {
         catalog,
         media,
         engagement,
+        SearchModule.forRoot(runtime, catalog),
       ],
       controllers: [HealthController],
       providers: [

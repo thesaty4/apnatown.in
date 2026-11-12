@@ -6668,5 +6668,55 @@
     "en": "Browse videos",
     "hi": "वीडियो देखें",
     "source": "specs/media-videos/fe/media-videos.md#S-CUST-21"
+  },
+  "common.navigation.main": {
+    "en": "Main",
+    "hi": "मुख्य",
+    "source": "specs/search/fe/search.md#S-CUST-01"
+  },
+  "common.navigation.home": {
+    "en": "Home",
+    "hi": "होम",
+    "source": "specs/search/fe/search.md#S-CUST-01"
+  },
+  "common.navigation.videos": {
+    "en": "Videos",
+    "hi": "वीडियो",
+    "source": "specs/search/fe/search.md#S-CUST-01"
+  },
+  "common.navigation.services": {
+    "en": "Services",
+    "hi": "सेवाएँ",
+    "source": "specs/search/fe/search.md#S-CUST-01"
+  },
+  "common.navigation.account": {
+    "en": "Account",
+    "hi": "खाता",
+    "source": "specs/search/fe/search.md#S-CUST-01"
+  },
+  "common.navigation.logo": {
+    "en": "ApnaTown.in home",
+    "hi": "अपना टाउन.in होम",
+    "source": "specs/search/fe/search.md#S-CUST-01"
+  },
+  "common.language.hindiShort": {
+    "en": "हिं",
+    "hi": "हिं",
+    "source": "specs/search/fe/search.md#S-CUST-01"
+  },
+  "common.language.englishShort": {
+    "en": "EN",
+    "hi": "EN",
+    "source": "specs/search/fe/search.md#S-CUST-01"
+  },
+  "engagement.saved.homeTitle": {
+    "en": "Your bookmarks",
+    "hi": "आपके बुकमार्क",
+    "source": "specs/search/fe/search.md#S-CUST-01"
+  },
+  "engagement.saved.seeAll": {
+    "en": "See all",
+    "hi": "सब देखें",
+    "source": "specs/search/fe/search.md#S-CUST-01"
   }
 }

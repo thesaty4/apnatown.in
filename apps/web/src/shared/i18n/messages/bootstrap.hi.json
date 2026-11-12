@@ -20,7 +20,9 @@
     },
     "language": {
       "english": "English",
+      "englishShort": "EN",
       "hindi": "हिन्दी",
+      "hindiShort": "हिं",
       "label": "भाषा",
       "switch": "{language} भाषा चुनें"
     },
@@ -32,7 +34,13 @@
       "title": "हम जल्द लौटेंगे"
     },
     "navigation": {
-      "skipToContent": "मुख्य सामग्री पर जाएँ"
+      "account": "खाता",
+      "home": "होम",
+      "logo": "अपना टाउन.in होम",
+      "main": "मुख्य",
+      "services": "सेवाएँ",
+      "skipToContent": "मुख्य सामग्री पर जाएँ",
+      "videos": "वीडियो"
     },
     "noPermission": {
       "message": "यह सेक्शन आपकी भूमिका के लिए उपलब्ध नहीं है। सुपर एडमिन से अनुमति माँगें।",

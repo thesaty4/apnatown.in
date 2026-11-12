@@ -2,44 +2,49 @@
 
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
+import { NavIcon } from '../ui/NavIcon';
 import { useSession } from './SessionProvider';
 import { loginHref } from './return-to';
 
+const iconButton =
+  'relative grid size-11 place-items-center rounded-pill text-text hover:bg-surface-2 focus-visible:ring-focus';
+
+/** Header icon buttons (prototype `.iconbtn`); Account is in the bottom tabs
+ * on mobile, so its header button shows from 900px. */
 export function AccountNavigation() {
   const { state } = useSession();
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
   const t = useTranslations('auth.login');
   const reels = useTranslations('reels.feed');
   const saved = useTranslations('engagement.saved');
+  const label = t(state.kind === 'ready' ? 'account' : 'login');
   return (
-    <nav className="flex flex-wrap gap-2">
+    <nav aria-label={t('account')} className="flex items-center gap-1">
       <Link
-        className="inline-flex min-h-touch items-center gap-2 rounded-sm px-3 underline"
+        className={iconButton}
         href="/videos"
+        aria-label={reels('title')}
+        title={reels('title')}
       >
-        <svg
-          aria-hidden="true"
-          className="size-4 shrink-0"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <path d="M7 4l13 8-13 8z" />
-        </svg>
-        {reels('title')}
+        <NavIcon name="play" />
       </Link>
       <Link
-        className="inline-flex min-h-touch items-center rounded-sm px-3 underline"
+        className={iconButton}
         href="/saved"
+        aria-label={saved('title')}
+        title={saved('title')}
       >
-        {saved('title')}
+        <NavIcon name="bookmark" />
       </Link>
       <Link
-        className="inline-flex min-h-touch items-center rounded-sm px-3 underline"
+        className={`${iconButton} hidden desktop:grid`}
         href={
           state.kind === 'ready' ? '/account' : loginHref(locale, '/account')
         }
+        aria-label={label}
+        title={label}
       >
-        {t(state.kind === 'ready' ? 'account' : 'login')}
+        <NavIcon name="user" />
       </Link>
     </nav>
   );
