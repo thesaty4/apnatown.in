@@ -13,6 +13,12 @@ import { AddressCommands } from './application/address-command';
 import { AddressProjection } from './application/address-projection';
 import { PrismaAddressRepository } from './infrastructure/address.repository';
 import { AddressesController } from './presentation/addresses.controller';
+import { CONSENT_REPOSITORY } from './domain/consent';
+import { CONSENT_READ, CONSENT_WRITE } from './application/consent-port';
+import { ConsentService } from './application/consent.service';
+import { PrismaConsentRepository } from './infrastructure/consent.repository';
+import { ConsentsController } from './presentation/consents.controller';
+import { AnonymousConsentsController } from './presentation/anonymous-consents.controller';
 
 @Module({})
 export class UsersModule {
@@ -20,7 +26,12 @@ export class UsersModule {
     return {
       module: UsersModule,
       imports: [runtime, geo],
-      controllers: [UsersController, AddressesController],
+      controllers: [
+        UsersController,
+        AddressesController,
+        ConsentsController,
+        AnonymousConsentsController,
+      ],
       providers: [
         { provide: USERS_REPOSITORY, useClass: PrismaUsersRepository },
         IdentityService,
@@ -32,8 +43,12 @@ export class UsersModule {
         AddressProjection,
         AddressService,
         { provide: USERS_ADDRESS, useExisting: AddressService },
+        { provide: CONSENT_REPOSITORY, useClass: PrismaConsentRepository },
+        ConsentService,
+        { provide: CONSENT_READ, useExisting: ConsentService },
+        { provide: CONSENT_WRITE, useExisting: ConsentService },
       ],
-      exports: [USER_IDENTITY, USERS_ADDRESS],
+      exports: [USER_IDENTITY, USERS_ADDRESS, CONSENT_READ, CONSENT_WRITE],
     };
   }
 }

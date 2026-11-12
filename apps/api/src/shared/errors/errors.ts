@@ -14,6 +14,8 @@ const catalogue = {
   ADDRESS_NOT_FOUND: [404, 'errors.users.address.notFound'],
   ADDRESS_OUT_OF_SCOPE: [403, 'errors.users.address.outOfScope'],
   ADDRESS_VERSION_CONFLICT: [409, 'errors.users.address.versionConflict'],
+  CONSENT_PURPOSE_INVALID: [422, 'errors.users.consent.purposeInvalid'],
+  CONSENT_NOTICE_INVALID: [422, 'errors.users.consent.noticeInvalid'],
   CITY_NOT_FOUND: [404, 'errors.geo.city.notFound'],
   AREA_NOT_FOUND: [404, 'errors.geo.area.notFound'],
   PIN_CODE_INVALID: [422, 'errors.geo.pin.invalid'],

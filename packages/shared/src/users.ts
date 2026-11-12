@@ -138,3 +138,87 @@ export type UpdateAddress = z.infer<typeof UpdateAddressSchema>;
 export type DeleteAddress = z.infer<typeof DeleteAddressSchema>;
 export type AddressDeleted = z.infer<typeof AddressDeletedSchema>;
 export type AddressPage = z.infer<typeof AddressPageSchema>;
+
+// Authenticated consent registry (BR-11). Unknown pairs are rejected; absence
+// of a record means "not granted" and is never inferred from defaults.
+export const ConsentPurposeSchema = z.enum([
+  'marketing',
+  'order_updates',
+  'enquiry_updates',
+]);
+export const ConsentChannelSchema = z.enum(['in_app', 'email', 'whatsapp']);
+export type ConsentPurpose = z.infer<typeof ConsentPurposeSchema>;
+export type ConsentChannel = z.infer<typeof ConsentChannelSchema>;
+export interface ConsentPair {
+  readonly purpose: ConsentPurpose;
+  readonly channel: ConsentChannel;
+}
+export const CONSENT_REGISTRY: Readonly<
+  Record<ConsentPurpose, readonly ConsentChannel[]>
+> = Object.freeze({
+  marketing: Object.freeze(['in_app', 'email', 'whatsapp'] as const),
+  order_updates: Object.freeze(['whatsapp'] as const),
+  enquiry_updates: Object.freeze(['whatsapp'] as const),
+});
+export const CONSENT_PAIRS: readonly ConsentPair[] = Object.freeze(
+  ConsentPurposeSchema.options.flatMap((purpose) =>
+    CONSENT_REGISTRY[purpose].map((channel) =>
+      Object.freeze({ purpose, channel }),
+    ),
+  ),
+);
+/** Registered pair or null; a missing channel is never inferred. */
+export function registeredConsentPair(
+  purpose: unknown,
+  channel: unknown,
+): ConsentPair | null {
+  return (
+    CONSENT_PAIRS.find(
+      (pair) => pair.purpose === purpose && pair.channel === channel,
+    ) ?? null
+  );
+}
+// Which flow recorded the evidence; the owning module passes its own source.
+export const ConsentSourceSchema = z.enum([
+  'account',
+  'notification_preferences',
+  'marketing_unsubscribe',
+  'whatsapp_stop',
+]);
+export type ConsentSource = z.infer<typeof ConsentSourceSchema>;
+export const ConsentNoticeVersionSchema = z
+  .string()
+  .regex(/^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/);
+export const ConsentParamsSchema = z.strictObject({
+  purpose: ConsentPurposeSchema,
+});
+// Q-31: anonymous cookie categories are unapproved; shape-only purpose key.
+export const AnonymousConsentParamsSchema = z.strictObject({
+  purpose: z.string().regex(/^[a-z][a-z0-9_]{0,63}$/),
+});
+export const UpdateConsentSchema = z.strictObject({
+  channel: ConsentChannelSchema.optional(),
+  granted: z.boolean(),
+  noticeVersion: ConsentNoticeVersionSchema.optional(),
+});
+export const ConsentRecordSchema = z.strictObject({
+  consentId: IdSchema,
+  purpose: ConsentPurposeSchema,
+  channel: ConsentChannelSchema,
+  granted: z.boolean(),
+  noticeVersion: ConsentNoticeVersionSchema.nullable(),
+  recordedAt: TimestampSchema,
+});
+export const ConsentChoiceSchema = ConsentRecordSchema.extend({
+  consentId: IdSchema.nullable(),
+  recordedAt: TimestampSchema.nullable(),
+});
+export const ConsentListSchema = z.strictObject({
+  currentNoticeVersion: ConsentNoticeVersionSchema.nullable(),
+  items: z.array(ConsentChoiceSchema).max(20),
+});
+export type ConsentParams = z.infer<typeof ConsentParamsSchema>;
+export type UpdateConsent = z.infer<typeof UpdateConsentSchema>;
+export type ConsentRecord = z.infer<typeof ConsentRecordSchema>;
+export type ConsentChoice = z.infer<typeof ConsentChoiceSchema>;
+export type ConsentList = z.infer<typeof ConsentListSchema>;

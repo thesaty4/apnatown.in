@@ -17,6 +17,9 @@ import { GeoController } from '../../modules/geo/presentation/geo.controller';
 import { GeoReadService } from '../../modules/geo/application/geo-read.service';
 import { AddressesController } from '../../modules/users/presentation/addresses.controller';
 import { AddressService } from '../../modules/users/application/address.service';
+import { ConsentsController } from '../../modules/users/presentation/consents.controller';
+import { AnonymousConsentsController } from '../../modules/users/presentation/anonymous-consents.controller';
+import { ConsentService } from '../../modules/users/application/consent.service';
 
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
@@ -27,6 +30,8 @@ import { AddressService } from '../../modules/users/application/address.service'
     UsersController,
     GeoController,
     AddressesController,
+    ConsentsController,
+    AnonymousConsentsController,
   ],
   providers: [
     ReadinessService,
@@ -36,6 +41,7 @@ import { AddressService } from '../../modules/users/application/address.service'
     SessionCookie,
     GeoReadService,
     AddressService,
+    ConsentService,
   ].map((provide) => ({ provide, useValue: Object.freeze({}) })),
 })
 class OpenApiModule {}

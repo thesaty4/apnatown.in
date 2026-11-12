@@ -80,6 +80,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/consents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read anonymous consent choices (policy pending)
+         * @description Always fails with COMMON_UNAVAILABLE (errors.common.unavailable): anonymous consent identity and cookie categories are pending policy approval (Q-31). Nothing is read or recorded.
+         */
+        get: operations["AnonymousConsentsController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/consents/{purpose}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Record an anonymous consent choice (policy pending)
+         * @description Requires the anonymous browser session, Origin and CSRF token; signed-in users use PUT /users/me/consents/{purpose}. Valid input still fails with COMMON_UNAVAILABLE (errors.common.unavailable): anonymous consent identity and cookie categories are pending policy approval (Q-31). Nothing is read or recorded.
+         */
+        put: operations["AnonymousConsentsController_update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/geo/cities": {
         parameters: {
             query?: never;
@@ -198,6 +238,46 @@ export interface paths {
         patch: operations["AddressesController_update"];
         trace?: never;
     };
+    "/users/me/consents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List own consent choices
+         * @description Latest recorded choice for every registered purpose/channel pair with its evidence (consentId, recordedAt, noticeVersion). A pair without evidence is not granted. currentNoticeVersion is the notice a grant must acknowledge; null means grants are unavailable until an approved notice is configured.
+         */
+        get: operations["ConsentsController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/me/consents/{purpose}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Record an own consent choice
+         * @description Appends evidence for one registered pair: marketing with in_app|email|whatsapp; order_updates and enquiry_updates with whatsapp. channel is required. A grant must send the current noticeVersion; withdrawals are never blocked by notice copy. Repeating the current effective choice returns the latest record without new evidence or events.
+         */
+        put: operations["ConsentsController_update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/users/me/preferences": {
         parameters: {
             query?: never;
@@ -288,6 +368,33 @@ export interface components {
         };
         ChallengeInputDto: {
             phone: string;
+        };
+        ConsentListDto: {
+            currentNoticeVersion: string | null;
+            items: {
+                /** @enum {string} */
+                channel: "in_app" | "email" | "whatsapp";
+                /** Format: uuid */
+                consentId: string | null;
+                granted: boolean;
+                noticeVersion: string | null;
+                /** @enum {string} */
+                purpose: "marketing" | "order_updates" | "enquiry_updates";
+                /** Format: date-time */
+                recordedAt: string | null;
+            }[];
+        };
+        ConsentRecordDto: {
+            /** @enum {string} */
+            channel: "in_app" | "email" | "whatsapp";
+            /** Format: uuid */
+            consentId: string;
+            granted: boolean;
+            noticeVersion: string | null;
+            /** @enum {string} */
+            purpose: "marketing" | "order_updates" | "enquiry_updates";
+            /** Format: date-time */
+            recordedAt: string;
         };
         CreateAddressDto: {
             addressText: string;
@@ -402,6 +509,12 @@ export interface components {
             lat?: number | null;
             lng?: number | null;
             pinCode?: string;
+        };
+        UpdateConsentDto: {
+            /** @enum {string} */
+            channel?: "in_app" | "email" | "whatsapp";
+            granted: boolean;
+            noticeVersion?: string;
         };
         UpdatePreferencesDto: {
             /** @enum {string} */
@@ -1152,6 +1265,187 @@ export interface operations {
                 };
             };
             /** @description Flat error envelope; no submitted values or credentials. */
+            503: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    AnonymousConsentsController_list: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description VALIDATION_ERROR for unexpected query parameters. */
+            400: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Untrusted Origin. */
+            403: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Read limit exceeded. */
+            429: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Unexpected failure. */
+            500: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_UNAVAILABLE (errors.common.unavailable): anonymous consent identity and cookie categories are pending policy approval (Q-31). Nothing is read or recorded. */
+            503: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    AnonymousConsentsController_update: {
+        parameters: {
+            query?: never;
+            header: {
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                purpose: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateConsentDto"];
+            };
+        };
+        responses: {
+            /** @description VALIDATION_ERROR for an invalid body or query. */
+            400: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CSRF_INVALID for a missing anonymous session, Origin or CSRF token; COMMON_FORBIDDEN for signed-in sessions. */
+            403: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CONSENT_PURPOSE_INVALID for a malformed purpose or channel. */
+            422: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Write limit exceeded. */
+            429: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Unexpected failure. */
+            500: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_UNAVAILABLE (errors.common.unavailable): anonymous consent identity and cookie categories are pending policy approval (Q-31). Nothing is read or recorded. */
             503: {
                 headers: {
                     /** @description Auth and own-account responses are private, no-store. */
@@ -2404,6 +2698,315 @@ export interface operations {
             };
             /** @description Flat error envelope; no submitted values or credentials. */
             410: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            503: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    ConsentsController_list: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsentListDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            503: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    ConsentsController_update: {
+        parameters: {
+            query?: never;
+            header: {
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                purpose: "marketing" | "order_updates" | "enquiry_updates";
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateConsentDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsentRecordDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CONSENT_PURPOSE_INVALID for an unregistered purpose/channel pair; CONSENT_NOTICE_INVALID when a grant does not acknowledge the configured current notice. */
+            422: {
                 headers: {
                     /** @description Auth and own-account responses are private, no-store. */
                     "Cache-Control"?: string;

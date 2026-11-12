@@ -1,3 +1,4 @@
+import { ConsentNoticeVersionSchema } from '@apnatown/shared/users';
 import { z } from 'zod';
 
 const integer = (min: number, max: number, fallback: number) =>
@@ -31,6 +32,11 @@ const schema = z.object({
   OUTBOX_RELAY_POLL_INTERVAL_MS: integer(100, 60000, 1000),
   OUTBOX_RELAY_BATCH_SIZE: integer(1, 20, 10),
   OUTBOX_RELAY_LEASE_MS: integer(10000, 300000, 30000),
+  // Approved consent notice copy version (Q-31). Unset keeps grants unavailable.
+  CONSENT_NOTICE_VERSION: z.preprocess(
+    (value) => (value === '' ? undefined : value),
+    ConsentNoticeVersionSchema.optional(),
+  ),
 });
 
 export type RuntimeConfig = z.infer<typeof schema>;

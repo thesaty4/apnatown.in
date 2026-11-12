@@ -84,6 +84,7 @@ model User {
   roles           UserRole[]
   sessions        Session[]
   addresses       Address[]
+  consents        Consent[]
 
   @@index([deletedAt], where: raw("\"deleted_at\" IS NULL"), map: "users_active_deleted_at_idx")
   @@map("users")
@@ -124,6 +125,23 @@ model Address {
   @@index([cityId], map: "addresses_city_id_idx")
   @@index([areaId, cityId], map: "addresses_area_city_idx")
   @@map("addresses")
+}
+
+model Consent {
+  id                   String   @id @db.Uuid
+  userId               String?  @map("user_id") @db.Uuid
+  anonymousSubjectHash Bytes?   @map("anonymous_subject_hash")
+  purpose              String
+  channel              String?
+  granted              Boolean
+  noticeVersion        String?  @map("notice_version")
+  recordedAt           DateTime @map("recorded_at") @db.Timestamptz(6)
+  source               String
+  user                 User?    @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "consents_user_id_fkey")
+
+  @@index([userId, purpose, channel, recordedAt(sort: Desc), id(sort: Desc)], map: "consents_user_choice_idx")
+  @@index([anonymousSubjectHash, purpose, channel, recordedAt(sort: Desc), id(sort: Desc)], map: "consents_anonymous_choice_idx")
+  @@map("consents")
 }
 
 model OtpChallenge {
