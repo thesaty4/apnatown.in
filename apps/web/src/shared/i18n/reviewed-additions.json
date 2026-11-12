@@ -821,5 +821,1133 @@
   "privacy.goodbye.neutralMessage": {
     "en": "There is nothing to show on this page. You can continue browsing ApnaTown.",
     "hi": "इस पेज पर दिखाने के लिए कुछ नहीं है। आप अपना टाउन देखना जारी रख सकते हैं।"
+  },
+  "admin.state.loading": {
+    "en": "Loading admin tools",
+    "hi": "एडमिन टूल लोड हो रहे हैं"
+  },
+  "admin.state.forbiddenTitle": {
+    "en": "You don’t have permission",
+    "hi": "आपको अनुमति नहीं है",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.state.adminOnly": {
+    "en": "This section is not available for your role. Ask a Super Admin for access.",
+    "hi": "यह सेक्शन आपकी भूमिका के लिए उपलब्ध नहीं है। सुपर एडमिन से अनुमति माँगें।",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.state.superOnly": {
+    "en": "Super Admin only",
+    "hi": "सिर्फ़ सुपर एडमिन",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.state.account": {
+    "en": "Go to my account",
+    "hi": "मेरे खाते पर जाएँ"
+  },
+  "admin.state.inactiveTitle": {
+    "en": "Your admin access is paused",
+    "hi": "आपकी एडमिन पहुँच रोकी गई है"
+  },
+  "admin.state.inactiveMessage": {
+    "en": "Your admin account is inactive. Ask a Super Admin to activate it, then check again.",
+    "hi": "आपका एडमिन खाता निष्क्रिय है। सुपर एडमिन से इसे चालू करवाएँ, फिर दोबारा जाँचें।"
+  },
+  "admin.state.checkAgain": {
+    "en": "Check again",
+    "hi": "फिर जाँचें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.state.errorTitle": {
+    "en": "Something went wrong",
+    "hi": "कुछ गड़बड़ हो गई",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.state.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.errors.exists": {
+    "en": "An admin with this phone or email already exists.",
+    "hi": "इस फ़ोन या ईमेल से एडमिन पहले से मौजूद है।"
+  },
+  "admin.errors.conflict": {
+    "en": "Someone else changed this just now. The latest version is loaded and your edits are kept — review and save again.",
+    "hi": "किसी और ने अभी इसे बदला है। नया वर्ज़न लोड हो गया है और आपके बदलाव बने हुए हैं — देखकर फिर सहेजें।"
+  },
+  "admin.errors.inProgress": {
+    "en": "This change is still being processed. Try again in a moment.",
+    "hi": "यह बदलाव अभी प्रोसेस हो रहा है। थोड़ी देर में फिर कोशिश करें।"
+  },
+  "admin.errors.self": {
+    "en": "You can’t change your own status.",
+    "hi": "आप अपनी स्थिति ख़ुद नहीं बदल सकते।"
+  },
+  "admin.errors.inactive": {
+    "en": "Your admin account is inactive.",
+    "hi": "आपका एडमिन खाता निष्क्रिय है।"
+  },
+  "admin.errors.adminNotFound": {
+    "en": "This admin no longer exists. The list has been refreshed.",
+    "hi": "यह एडमिन अब मौजूद नहीं है। सूची ताज़ा कर दी गई है।"
+  },
+  "admin.errors.forbidden": {
+    "en": "You don’t have permission for this action.",
+    "hi": "आपको इस काम की अनुमति नहीं है।"
+  },
+  "admin.errors.roleNotFound": {
+    "en": "This role no longer exists. The list has been refreshed.",
+    "hi": "यह भूमिका अब मौजूद नहीं है। सूची ताज़ा कर दी गई है।"
+  },
+  "admin.errors.roleNameTaken": {
+    "en": "A role with this name already exists",
+    "hi": "इस नाम की भूमिका पहले से मौजूद है",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.errors.systemLocked": {
+    "en": "System roles can’t be changed or deleted.",
+    "hi": "सिस्टम भूमिकाएँ बदली या हटाई नहीं जा सकतीं।"
+  },
+  "admin.errors.roleInUse": {
+    "en": "Admins still use this role. Move them to another role first.",
+    "hi": "एडमिन अभी यह भूमिका इस्तेमाल कर रहे हैं। पहले उन्हें दूसरी भूमिका में भेजें।"
+  },
+  "admin.errors.areaNotFound": {
+    "en": "One of the selected areas is no longer available. Choose again.",
+    "hi": "चुने गए इलाकों में से एक अब उपलब्ध नहीं है। फिर से चुनें।"
+  },
+  "admin.errors.accountUnavailable": {
+    "en": "This account can’t be made an admin.",
+    "hi": "इस खाते को एडमिन नहीं बनाया जा सकता।"
+  },
+  "admin.errors.rateLimited": {
+    "en": "Too many attempts. Wait a moment and try again.",
+    "hi": "बहुत ज़्यादा कोशिशें हुईं। थोड़ा रुककर फिर कोशिश करें।"
+  },
+  "admin.errors.unavailable": {
+    "en": "This isn’t available right now.",
+    "hi": "यह अभी उपलब्ध नहीं है।"
+  },
+  "admin.errors.expired": {
+    "en": "Your session expired. Sign in again.",
+    "hi": "आपका सत्र समाप्त हो गया। फिर से साइन इन करें।"
+  },
+  "admin.errors.validation": {
+    "en": "Some details aren’t valid. Check the fields and try again.",
+    "hi": "कुछ जानकारी सही नहीं है। फ़ील्ड जाँचकर फिर कोशिश करें।"
+  },
+  "admin.errors.failed": {
+    "en": "Something went wrong",
+    "hi": "कुछ गड़बड़ हो गई",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.errors.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.shell.navLabel": {
+    "en": "Admin sections",
+    "hi": "एडमिन सेक्शन"
+  },
+  "admin.shell.control": {
+    "en": "Control",
+    "hi": "नियंत्रण",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.shell.system": {
+    "en": "System",
+    "hi": "सिस्टम",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.shell.profile": {
+    "en": "Profile",
+    "hi": "प्रोफ़ाइल",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.shell.admins": {
+    "en": "Admins & areas",
+    "hi": "एडमिन व क्षेत्र",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.shell.roles": {
+    "en": "Roles & permissions",
+    "hi": "भूमिकाएँ व अनुमतियाँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.shell.admin": {
+    "en": "Admin",
+    "hi": "एडमिन",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.shell.superAdmin": {
+    "en": "Super Admin",
+    "hi": "सुपर एडमिन",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.permissions.modules.approvals": {
+    "en": "Approvals",
+    "hi": "मंज़ूरियाँ",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.permissions.modules.orders": {
+    "en": "Orders & disputes",
+    "hi": "ऑर्डर व विवाद",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.permissions.modules.users": {
+    "en": "Users",
+    "hi": "यूज़र",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.permissions.modules.reviews": {
+    "en": "Review moderation",
+    "hi": "समीक्षा मॉडरेशन",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.permissions.modules.comms": {
+    "en": "Communications",
+    "hi": "संचार",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.permissions.modules.reports": {
+    "en": "Reports",
+    "hi": "रिपोर्ट",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.permissions.modules.catalog": {
+    "en": "Categories & listings",
+    "hi": "श्रेणियाँ व लिस्टिंग"
+  },
+  "admin.permissions.modules.promos": {
+    "en": "Promotions",
+    "hi": "प्रमोशन",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.permissions.actions.view": {
+    "en": "View",
+    "hi": "देखें",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.permissions.actions.create": {
+    "en": "Create",
+    "hi": "बनाएँ"
+  },
+  "admin.permissions.actions.edit": {
+    "en": "Edit",
+    "hi": "बदलें",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.permissions.actions.delete": {
+    "en": "Delete",
+    "hi": "हटाएँ",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.permissions.actions.export": {
+    "en": "Export",
+    "hi": "एक्सपोर्ट"
+  },
+  "admin.permissions.cell": {
+    "en": "{module}: {action}",
+    "hi": "{module}: {action}"
+  },
+  "admin.permissions.matrix": {
+    "en": "Permission matrix",
+    "hi": "अनुमति मैट्रिक्स",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.permissions.module": {
+    "en": "Module",
+    "hi": "मॉड्यूल",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.permissions.rule": {
+    "en": "Any action also grants View. Removing View clears that module.",
+    "hi": "कोई भी काम चुनने पर ‘देखें’ भी मिलता है। ‘देखें’ हटाने से उस मॉड्यूल की सभी अनुमतियाँ हट जाती हैं।"
+  },
+  "admin.profile.title": {
+    "en": "Admin profile",
+    "hi": "एडमिन प्रोफ़ाइल",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.profile.cityUnknown": {
+    "en": "Unknown city",
+    "hi": "अज्ञात शहर"
+  },
+  "admin.profile.roleSuper": {
+    "en": "Super Admin",
+    "hi": "सुपर एडमिन",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.profile.roleAdmin": {
+    "en": "Admin",
+    "hi": "एडमिन",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.profile.assignedAreas": {
+    "en": "Assigned areas",
+    "hi": "सौंपे गए इलाके",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.profile.superScope": {
+    "en": "Super Admins can manage every city and area.",
+    "hi": "सुपर एडमिन हर शहर और इलाके को संभाल सकते हैं।"
+  },
+  "admin.profile.noneYet": {
+    "en": "None yet",
+    "hi": "अभी कोई नहीं",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.profile.wholeCity": {
+    "en": "All of {city}",
+    "hi": "पूरा {city}"
+  },
+  "admin.profile.comms": {
+    "en": "Communications scope",
+    "hi": "संचार दायरा"
+  },
+  "admin.profile.commsScope.city": {
+    "en": "City-wide",
+    "hi": "पूरे शहर में"
+  },
+  "admin.profile.commsScope.zone": {
+    "en": "Zone-wide",
+    "hi": "पूरे ज़ोन में"
+  },
+  "admin.profile.commsNone": {
+    "en": "No communications scope",
+    "hi": "कोई संचार दायरा नहीं"
+  },
+  "admin.profile.myPermissions": {
+    "en": "My permissions",
+    "hi": "मेरी अनुमतियाँ",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.title": {
+    "en": "Admins & areas",
+    "hi": "एडमिन व क्षेत्र",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.admins.add": {
+    "en": "Add admin",
+    "hi": "एडमिन जोड़ें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.admins.searchLabel": {
+    "en": "Search admins",
+    "hi": "एडमिन खोजें"
+  },
+  "superAdmin.admins.search": {
+    "en": "Search name, phone or email",
+    "hi": "नाम, फ़ोन या ईमेल खोजें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.filters": {
+    "en": "Filters",
+    "hi": "फ़िल्टर",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.close": {
+    "en": "Close",
+    "hi": "बंद करें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.show": {
+    "en": "Show results",
+    "hi": "नतीजे दिखाएँ"
+  },
+  "superAdmin.admins.loading": {
+    "en": "Loading admins",
+    "hi": "एडमिन लोड हो रहे हैं"
+  },
+  "superAdmin.admins.zoneUnavailableTitle": {
+    "en": "Zone filter unavailable",
+    "hi": "ज़ोन फ़िल्टर उपलब्ध नहीं"
+  },
+  "superAdmin.admins.zoneUnavailableMessage": {
+    "en": "Zones aren’t set up yet, so admins can’t be filtered by zone.",
+    "hi": "ज़ोन अभी तैयार नहीं हैं, इसलिए ज़ोन से एडमिन नहीं छाँटे जा सकते।"
+  },
+  "superAdmin.admins.clearZone": {
+    "en": "Remove zone filter",
+    "hi": "ज़ोन फ़िल्टर हटाएँ"
+  },
+  "superAdmin.admins.forbiddenTitle": {
+    "en": "You don’t have permission",
+    "hi": "आपको अनुमति नहीं है",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.admins.checkAgain": {
+    "en": "Check again",
+    "hi": "फिर जाँचें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.admins.errorTitle": {
+    "en": "Couldn’t load admins",
+    "hi": "एडमिन लोड नहीं हो सके"
+  },
+  "superAdmin.admins.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.admins.emptyTitle": {
+    "en": "No admins match",
+    "hi": "कोई एडमिन नहीं मिला",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.admins.emptyMessage": {
+    "en": "Try a different name, or clear the filters.",
+    "hi": "दूसरा नाम आज़माएँ या फ़िल्टर हटाएँ।",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.clearAll": {
+    "en": "Clear all",
+    "hi": "सब हटाएँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.admins.count": {
+    "en": "{count, plural, one {# admin} other {# admins}}",
+    "hi": "{count, plural, one {# एडमिन} other {# एडमिन}}"
+  },
+  "superAdmin.admins.loadMore": {
+    "en": "Load more",
+    "hi": "और देखें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.created": {
+    "en": "Admin created",
+    "hi": "एडमिन बन गया",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.city": {
+    "en": "City",
+    "hi": "शहर",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.allCities": {
+    "en": "All cities",
+    "hi": "सभी शहर",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.areaZone": {
+    "en": "Area / zone",
+    "hi": "इलाका / ज़ोन",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.zonesUnavailableHint": {
+    "en": "Zones aren’t available yet.",
+    "hi": "ज़ोन अभी उपलब्ध नहीं हैं।"
+  },
+  "superAdmin.admins.areaNeedsCity": {
+    "en": "Choose a city first.",
+    "hi": "पहले शहर चुनें।"
+  },
+  "superAdmin.admins.allAreas": {
+    "en": "All areas & zones",
+    "hi": "सभी इलाके व ज़ोन",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.zoneSelected": {
+    "en": "Selected zone",
+    "hi": "चुना गया ज़ोन"
+  },
+  "superAdmin.admins.areaSelected": {
+    "en": "Selected area",
+    "hi": "चुना गया इलाका"
+  },
+  "superAdmin.admins.zonesUnavailable": {
+    "en": "Zones (not available)",
+    "hi": "ज़ोन (उपलब्ध नहीं)"
+  },
+  "superAdmin.admins.role": {
+    "en": "Role",
+    "hi": "भूमिका",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.admins.allRoles": {
+    "en": "All roles",
+    "hi": "सभी भूमिकाएँ",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.roleSelected": {
+    "en": "Selected role",
+    "hi": "चुनी गई भूमिका"
+  },
+  "superAdmin.admins.status": {
+    "en": "Status",
+    "hi": "स्थिति",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.anyStatus": {
+    "en": "Any status",
+    "hi": "कोई भी स्थिति",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.active": {
+    "en": "Active",
+    "hi": "चालू",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.inactive": {
+    "en": "Inactive",
+    "hi": "निष्क्रिय",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.removeFilter": {
+    "en": "Remove filter: {filter}",
+    "hi": "फ़िल्टर हटाएँ: {filter}",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.noneYet": {
+    "en": "None yet",
+    "hi": "अभी कोई नहीं",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.scopeSummary": {
+    "en": "{cities, plural, one {# city} other {# cities}} · {areas, plural, one {# area} other {# areas}}",
+    "hi": "{cities, plural, one {# शहर} other {# शहर}} · {areas, plural, one {# इलाका} other {# इलाके}}"
+  },
+  "superAdmin.admins.details": {
+    "en": "Details for {name}",
+    "hi": "{name} का विवरण"
+  },
+  "superAdmin.admins.you": {
+    "en": "You",
+    "hi": "आप"
+  },
+  "superAdmin.admins.phone": {
+    "en": "Phone",
+    "hi": "फ़ोन",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.admins.callName": {
+    "en": "Call {name}",
+    "hi": "{name} को कॉल करें"
+  },
+  "superAdmin.admins.call": {
+    "en": "Call",
+    "hi": "कॉल",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.noPhone": {
+    "en": "No phone",
+    "hi": "फ़ोन नहीं"
+  },
+  "superAdmin.admins.email": {
+    "en": "Email",
+    "hi": "ईमेल",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.admins.lastActive": {
+    "en": "Last active",
+    "hi": "आख़िरी बार सक्रिय",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.never": {
+    "en": "Never",
+    "hi": "कभी नहीं"
+  },
+  "superAdmin.admins.commsScope": {
+    "en": "Communications scope",
+    "hi": "संचार दायरा"
+  },
+  "superAdmin.admins.comms.city": {
+    "en": "City-wide",
+    "hi": "पूरे शहर में"
+  },
+  "superAdmin.admins.comms.zone": {
+    "en": "Zone-wide",
+    "hi": "पूरे ज़ोन में"
+  },
+  "superAdmin.admins.none": {
+    "en": "None",
+    "hi": "कोई नहीं"
+  },
+  "superAdmin.admins.citiesZones": {
+    "en": "Assigned cities & zones",
+    "hi": "सौंपे गए शहर व ज़ोन",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.wholeCity": {
+    "en": "All of {city}",
+    "hi": "पूरा {city}"
+  },
+  "superAdmin.admins.zonesUnavailableNote": {
+    "en": "Zones aren’t available yet.",
+    "hi": "ज़ोन अभी उपलब्ध नहीं हैं।"
+  },
+  "superAdmin.admins.noZones": {
+    "en": "No zones",
+    "hi": "कोई ज़ोन नहीं"
+  },
+  "superAdmin.admins.areas": {
+    "en": "Assigned areas",
+    "hi": "सौंपे गए इलाके",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.permissionsSummary": {
+    "en": "Permissions summary",
+    "hi": "अनुमतियों का सार",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.admins.noPermissions": {
+    "en": "No permissions",
+    "hi": "कोई अनुमति नहीं",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.auditLog": {
+    "en": "Audit log",
+    "hi": "ऑडिट लॉग",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.auditUnavailable": {
+    "en": "The audit log isn’t available here yet.",
+    "hi": "ऑडिट लॉग अभी यहाँ उपलब्ध नहीं है।"
+  },
+  "superAdmin.admins.editAreas": {
+    "en": "Edit areas",
+    "hi": "इलाके बदलें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.permissions": {
+    "en": "Permissions",
+    "hi": "अनुमतियाँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.admins.changeRole": {
+    "en": "Change role",
+    "hi": "भूमिका बदलें"
+  },
+  "superAdmin.admins.deactivate": {
+    "en": "Deactivate",
+    "hi": "बंद करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.admins.activate": {
+    "en": "Activate",
+    "hi": "चालू करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.admins.selfNote": {
+    "en": "You can’t deactivate yourself.",
+    "hi": "आप ख़ुद को बंद नहीं कर सकते।"
+  },
+  "superAdmin.admins.commsKept": {
+    "en": "Communications scope stays: {scopes}",
+    "hi": "संचार दायरा वही रहेगा: {scopes}"
+  },
+  "superAdmin.admins.areasFor": {
+    "en": "Areas for {name}",
+    "hi": "{name} के इलाके",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.permissionsFor": {
+    "en": "Permissions for {name}",
+    "hi": "{name} की अनुमतियाँ"
+  },
+  "superAdmin.admins.roleFor": {
+    "en": "Role for {name}",
+    "hi": "{name} की भूमिका"
+  },
+  "superAdmin.admins.save": {
+    "en": "Save",
+    "hi": "सहेजें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.admins.areasSaved": {
+    "en": "Areas updated for {name}",
+    "hi": "{name} के इलाके बदल गए"
+  },
+  "superAdmin.admins.permissionsSaved": {
+    "en": "Permissions updated for {name}",
+    "hi": "{name} की अनुमतियाँ बदल गईं"
+  },
+  "superAdmin.admins.roleSaved": {
+    "en": "Role updated for {name}",
+    "hi": "{name} की भूमिका बदल गई"
+  },
+  "superAdmin.admins.reseed": {
+    "en": "Replace permissions with the new role’s defaults",
+    "hi": "अनुमतियों को नई भूमिका की डिफ़ॉल्ट अनुमतियों से बदलें"
+  },
+  "superAdmin.admins.reseedHint": {
+    "en": "Leave this unticked to keep the admin’s current permissions.",
+    "hi": "एडमिन की मौजूदा अनुमतियाँ रखने के लिए इसे न चुनें।"
+  },
+  "superAdmin.sheet.cancel": {
+    "en": "Cancel",
+    "hi": "रद्द करें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.create.title": {
+    "en": "Add admin",
+    "hi": "एडमिन जोड़ें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.create.close": {
+    "en": "Close",
+    "hi": "बंद करें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.create.submit": {
+    "en": "Create admin",
+    "hi": "एडमिन बनाएँ"
+  },
+  "superAdmin.create.displayName": {
+    "en": "Name",
+    "hi": "नाम",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.create.phone": {
+    "en": "Mobile number",
+    "hi": "मोबाइल नंबर"
+  },
+  "superAdmin.create.phoneHint": {
+    "en": "10-digit Indian mobile number",
+    "hi": "10 अंकों का भारतीय मोबाइल नंबर"
+  },
+  "superAdmin.create.email": {
+    "en": "Email",
+    "hi": "ईमेल",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.create.role": {
+    "en": "Role",
+    "hi": "भूमिका",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.create.rolePlaceholder": {
+    "en": "Choose a role",
+    "hi": "भूमिका चुनें"
+  },
+  "superAdmin.create.phoneInvalid": {
+    "en": "Enter a valid 10-digit mobile number",
+    "hi": "सही 10 अंकों का मोबाइल नंबर डालें"
+  },
+  "superAdmin.create.emailInvalid": {
+    "en": "Enter a valid email",
+    "hi": "सही ईमेल डालें"
+  },
+  "superAdmin.create.nameInvalid": {
+    "en": "Enter a name of 2–60 characters",
+    "hi": "2–60 अक्षरों का नाम डालें"
+  },
+  "superAdmin.create.roleRequired": {
+    "en": "Choose a role",
+    "hi": "भूमिका चुनें"
+  },
+  "superAdmin.create.areasInvalid": {
+    "en": "Choose valid areas",
+    "hi": "सही इलाके चुनें"
+  },
+  "superAdmin.areas.legend": {
+    "en": "Assigned areas",
+    "hi": "सौंपे गए इलाके",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.areas.noneSelected": {
+    "en": "No areas selected",
+    "hi": "कोई इलाका नहीं चुना"
+  },
+  "superAdmin.areas.selected": {
+    "en": "Selected areas",
+    "hi": "चुने गए इलाके"
+  },
+  "superAdmin.areas.remove": {
+    "en": "Remove {area}",
+    "hi": "{area} हटाएँ"
+  },
+  "superAdmin.areas.city": {
+    "en": "City",
+    "hi": "शहर",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.areas.cityHint": {
+    "en": "Pick a city to see its areas. Choosing a city doesn’t assign the whole city.",
+    "hi": "इलाके देखने के लिए शहर चुनें। शहर चुनने से पूरा शहर नहीं सौंपा जाता।"
+  },
+  "superAdmin.areas.cityPlaceholder": {
+    "en": "Choose a city",
+    "hi": "शहर चुनें"
+  },
+  "superAdmin.areas.moreCities": {
+    "en": "More cities",
+    "hi": "और शहर"
+  },
+  "superAdmin.areas.failed": {
+    "en": "Couldn’t load this list.",
+    "hi": "यह सूची लोड नहीं हो सकी।"
+  },
+  "superAdmin.areas.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.areas.loading": {
+    "en": "Loading areas",
+    "hi": "इलाके लोड हो रहे हैं"
+  },
+  "superAdmin.areas.noAreas": {
+    "en": "No areas in this city yet.",
+    "hi": "इस शहर में अभी कोई इलाका नहीं।"
+  },
+  "superAdmin.areas.moreAreas": {
+    "en": "More areas",
+    "hi": "और इलाके"
+  },
+  "superAdmin.status.deactivateTitle": {
+    "en": "Deactivate {name}?",
+    "hi": "{name} को बंद करें?"
+  },
+  "superAdmin.status.activateTitle": {
+    "en": "Activate {name}?",
+    "hi": "{name} को चालू करें?"
+  },
+  "superAdmin.status.deactivateImpact": {
+    "en": "{name} will lose access immediately. Signed-in sessions end now.",
+    "hi": "{name} की पहुँच तुरंत बंद हो जाएगी। साइन-इन सत्र अभी खत्म होंगे।",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.status.activateImpact": {
+    "en": "{name} will be able to sign in again and manage their assigned areas.",
+    "hi": "{name} फिर साइन इन कर सकेंगे और सौंपे गए इलाके संभाल सकेंगे।",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.status.cancel": {
+    "en": "Cancel",
+    "hi": "रद्द करें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.status.confirmDeactivate": {
+    "en": "Confirm deactivate",
+    "hi": "बंद करना पक्का करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.status.confirmActivate": {
+    "en": "Confirm activate",
+    "hi": "चालू करना पक्का करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.status.deactivated": {
+    "en": "{name} was deactivated",
+    "hi": "{name} को बंद किया गया",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.status.activated": {
+    "en": "{name} was activated",
+    "hi": "{name} को चालू किया गया",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.status.impactLoading": {
+    "en": "Checking impact",
+    "hi": "असर जाँचा जा रहा है"
+  },
+  "superAdmin.status.uncovered": {
+    "en": "Areas left without an active admin",
+    "hi": "बिना चालू एडमिन वाले इलाके"
+  },
+  "superAdmin.status.noneUncovered": {
+    "en": "None",
+    "hi": "कोई नहीं"
+  },
+  "superAdmin.status.openCases": {
+    "en": "Open cases in scope",
+    "hi": "दायरे में खुले मामले"
+  },
+  "superAdmin.status.unavailable": {
+    "en": "Not available",
+    "hi": "उपलब्ध नहीं",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.roles.title": {
+    "en": "Roles & permissions",
+    "hi": "भूमिकाएँ व अनुमतियाँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.roles.newRole": {
+    "en": "New role",
+    "hi": "नई भूमिका",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.roles.loading": {
+    "en": "Loading roles",
+    "hi": "भूमिकाएँ लोड हो रही हैं"
+  },
+  "superAdmin.roles.forbiddenTitle": {
+    "en": "You don’t have permission",
+    "hi": "आपको अनुमति नहीं है",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.roles.checkAgain": {
+    "en": "Check again",
+    "hi": "फिर जाँचें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.roles.errorTitle": {
+    "en": "Couldn’t load roles",
+    "hi": "भूमिकाएँ लोड नहीं हो सकीं"
+  },
+  "superAdmin.roles.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.roles.notFoundTitle": {
+    "en": "Role not found",
+    "hi": "भूमिका नहीं मिली"
+  },
+  "superAdmin.roles.notFoundMessage": {
+    "en": "This role may have been deleted.",
+    "hi": "यह भूमिका शायद हटा दी गई है।"
+  },
+  "superAdmin.roles.allRoles": {
+    "en": "All roles",
+    "hi": "सभी भूमिकाएँ",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.created": {
+    "en": "Role created",
+    "hi": "भूमिका बन गई",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.duplicated": {
+    "en": "Role duplicated",
+    "hi": "भूमिका की नक़ल बन गई",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.discardTitle": {
+    "en": "Discard changes?",
+    "hi": "बदलाव छोड़ें?",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.discardMessage": {
+    "en": "Your edits to this role will be lost.",
+    "hi": "इस भूमिका में किए आपके बदलाव मिट जाएँगे।",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.keepEditing": {
+    "en": "Keep editing",
+    "hi": "बदलाव जारी रखें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.discard": {
+    "en": "Discard",
+    "hi": "छोड़ें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.noPermissions": {
+    "en": "No permissions",
+    "hi": "कोई अनुमति नहीं",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.emptyTitle": {
+    "en": "No roles yet",
+    "hi": "अभी कोई भूमिका नहीं"
+  },
+  "superAdmin.roles.emptyMessage": {
+    "en": "Create a role to group permissions for admins.",
+    "hi": "एडमिन की अनुमतियाँ एक साथ रखने के लिए भूमिका बनाएँ।"
+  },
+  "superAdmin.roles.systemRole": {
+    "en": "System role",
+    "hi": "सिस्टम भूमिका",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.roles.adminCount": {
+    "en": "{count, plural, one {# admin} other {# admins}}",
+    "hi": "{count, plural, one {# एडमिन} other {# एडमिन}}"
+  },
+  "superAdmin.roles.viewName": {
+    "en": "View {name}",
+    "hi": "{name} देखें"
+  },
+  "superAdmin.roles.editName": {
+    "en": "Edit {name}",
+    "hi": "{name} बदलें"
+  },
+  "superAdmin.roles.view": {
+    "en": "View",
+    "hi": "देखें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.edit": {
+    "en": "Edit",
+    "hi": "बदलें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.duplicateName": {
+    "en": "Duplicate {name}",
+    "hi": "{name} की नक़ल बनाएँ"
+  },
+  "superAdmin.roles.duplicate": {
+    "en": "Duplicate",
+    "hi": "नक़ल बनाएँ",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.deleteName": {
+    "en": "Delete {name}",
+    "hi": "{name} हटाएँ"
+  },
+  "superAdmin.roles.delete": {
+    "en": "Delete role",
+    "hi": "भूमिका हटाएँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.roles.systemNoDelete": {
+    "en": "System roles cannot be deleted",
+    "hi": "सिस्टम भूमिकाएँ हटाई नहीं जा सकतीं",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.roles.name": {
+    "en": "Role name",
+    "hi": "भूमिका का नाम",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.description": {
+    "en": "Description",
+    "hi": "विवरण",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.noChanges": {
+    "en": "No changes",
+    "hi": "कोई बदलाव नहीं",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.field": {
+    "en": "Field",
+    "hi": "फ़ील्ड"
+  },
+  "superAdmin.roles.before": {
+    "en": "Before",
+    "hi": "पहले",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.after": {
+    "en": "After",
+    "hi": "बाद में",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.viewRole": {
+    "en": "View role",
+    "hi": "भूमिका देखें"
+  },
+  "superAdmin.roles.editRole": {
+    "en": "Edit role",
+    "hi": "भूमिका बदलें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.roles.unsaved": {
+    "en": "Unsaved changes",
+    "hi": "बिना सहेजे बदलाव",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.roles.systemLocked": {
+    "en": "System roles are locked. Duplicate this role to make a copy you can edit.",
+    "hi": "सिस्टम भूमिकाएँ लॉक हैं। बदलने लायक कॉपी के लिए इसकी नक़ल बनाएँ।"
+  },
+  "superAdmin.roles.saved": {
+    "en": "Role saved",
+    "hi": "भूमिका सहेजी गई",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.savedSummary": {
+    "en": "What changed",
+    "hi": "क्या बदला"
+  },
+  "superAdmin.roles.nameInvalid": {
+    "en": "Enter a role name of 2–40 characters",
+    "hi": "2–40 अक्षरों का भूमिका नाम डालें"
+  },
+  "superAdmin.roles.nameTaken": {
+    "en": "A role with this name already exists",
+    "hi": "इस नाम की भूमिका पहले से मौजूद है",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.descriptionInvalid": {
+    "en": "Use up to 200 characters, without < or >",
+    "hi": "200 अक्षरों तक लिखें, < या > के बिना"
+  },
+  "superAdmin.roles.review": {
+    "en": "Review & save",
+    "hi": "देखें व सहेजें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.reviewTitle": {
+    "en": "Review changes",
+    "hi": "बदलाव देखें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.close": {
+    "en": "Close",
+    "hi": "बंद करें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.confirmSave": {
+    "en": "Confirm & save",
+    "hi": "पक्का करें व सहेजें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.createTitle": {
+    "en": "New role",
+    "hi": "नई भूमिका",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.roles.cancel": {
+    "en": "Cancel",
+    "hi": "रद्द करें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.create": {
+    "en": "Create role",
+    "hi": "भूमिका बनाएँ"
+  },
+  "superAdmin.roles.createHint": {
+    "en": "New roles start with no permissions. Set them after creating the role.",
+    "hi": "नई भूमिका बिना अनुमतियों के शुरू होती है। भूमिका बनाने के बाद अनुमतियाँ चुनें।"
+  },
+  "superAdmin.roles.deleteTitle": {
+    "en": "Delete “{name}”?",
+    "hi": "“{name}” हटाएँ?"
+  },
+  "superAdmin.roles.deleteImpact": {
+    "en": "No admins use this role. This cannot be undone.",
+    "hi": "कोई एडमिन यह भूमिका इस्तेमाल नहीं करता। इसे वापस नहीं लाया जा सकता।",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.deleted": {
+    "en": "Role deleted",
+    "hi": "भूमिका हटा दी गई",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.reassignTitle": {
+    "en": "{count, plural, one {Reassign # admin first} other {Reassign # admins first}}",
+    "hi": "{count, plural, one {पहले # एडमिन को दोबारा सौंपें} other {पहले # एडमिन को दोबारा सौंपें}}",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.reassignDelete": {
+    "en": "Reassign & delete role",
+    "hi": "दोबारा सौंपें व भूमिका हटाएँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.roles.reassigned": {
+    "en": "Admins reassigned. Role deleted.",
+    "hi": "एडमिन दोबारा सौंपे गए। भूमिका हटा दी गई।",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.inUse": {
+    "en": "Can’t delete “{name}”. {count, plural, one {# admin still uses} other {# admins still use}} this role.",
+    "hi": "“{name}” हटाई नहीं जा सकती। {count, plural, one {# एडमिन अभी यह भूमिका इस्तेमाल करता है} other {# एडमिन अभी यह भूमिका इस्तेमाल करते हैं}}।",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.moveTo": {
+    "en": "Move these admins to",
+    "hi": "इन एडमिन को यहाँ भेजें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.roles.chooseRole": {
+    "en": "Choose a role",
+    "hi": "भूमिका चुनें"
   }
 }

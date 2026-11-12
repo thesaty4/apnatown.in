@@ -3,15 +3,12 @@
 import Link from 'next/link';
 import { useCallback, useState } from 'react';
 import type { DehydratedState } from '@tanstack/react-query';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { Card } from '@apnatown/ui/cards/Card';
 import { Avatar } from '@apnatown/ui/data/Avatar';
-import { Button } from '@apnatown/ui/primitives/Button';
-import { ConfirmDialog } from '@apnatown/ui/overlay/ConfirmDialog';
-import { useSession, useLogout } from '../../shared/auth/SessionProvider';
-import { AccessState, Failure } from '../../shared/auth/AccessState';
-import { failureCode } from '../../shared/api/result';
-import { publicHref } from '../../shared/i18n/preferences';
+import { useSession } from '../../shared/auth/SessionProvider';
+import { AccessState } from '../../shared/auth/AccessState';
+import { Logout } from '../../shared/auth/Logout';
 import { accountScope } from '../../shared/api/query-keys';
 import { profileOptions } from './api';
 import { OwnResource } from './OwnResource';
@@ -116,58 +113,5 @@ export function Account({
       )}
       <p className="text-small text-muted">{t('unavailable')}</p>
     </div>
-  );
-}
-
-function Logout() {
-  const { lifecycle, broadcast } = useSession();
-  const mutation = useLogout();
-  const t = useTranslations('account.menu');
-  const locale = useLocale() === 'hi' ? 'hi' : 'en';
-  const [confirm, setConfirm] = useState(false);
-  const busy = mutation.isPending;
-  const error = mutation.isError ? failureCode(mutation.error) : undefined;
-  async function submit() {
-    await mutation.run(undefined, () => {
-      mutation.reset();
-      lifecycle.expire('SESSION_EXPIRED');
-      broadcast();
-      window.location.replace(publicHref('/', locale));
-    });
-  }
-  return (
-    <Card padded className="grid gap-4">
-      <Button
-        onClick={() => {
-          mutation.reset();
-          setConfirm(true);
-        }}
-      >
-        {t('logout')}
-      </Button>
-      <ConfirmDialog
-        open={confirm}
-        onOpenChange={(open) => setConfirm(open)}
-        title={t('logoutTitle')}
-        impact={t('logoutMessage')}
-        cancelLabel={t('cancel')}
-        confirmLabel={t('logout')}
-        onConfirm={() => {
-          void submit();
-        }}
-        busy={busy}
-        tone="danger"
-      >
-        {error && (
-          <Failure
-            code={error}
-            retryDisabled={busy}
-            retry={() => {
-              void submit();
-            }}
-          />
-        )}
-      </ConfirmDialog>
-    </Card>
   );
 }

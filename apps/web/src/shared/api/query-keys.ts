@@ -34,4 +34,28 @@ export const queryKeys = {
   // Public reference data: both EN and HI names are in every response.
   geoCities: ['geo', 'cities'] as const,
   geoAreas: (cityId: string) => ['geo', 'cities', cityId, 'areas'] as const,
+  // Admin reads are scoped by account/roles/epoch like every private key. The
+  // free-text search never enters a key (it may hold a phone or email); the
+  // caller keys it by an in-memory revision instead.
+  admin: (scope: AccountScope) => ['private', scope, 'admin'] as const,
+  adminMe: (scope: AccountScope) => ['private', scope, 'admin', 'me'] as const,
+  adminList: (scope: AccountScope) =>
+    ['private', scope, 'admin', 'admins'] as const,
+  admins: (
+    scope: AccountScope,
+    filters: Readonly<Record<string, string | undefined>>,
+    searchRevision: number,
+  ) =>
+    [
+      'private',
+      scope,
+      'admin',
+      'admins',
+      'list',
+      filters,
+      searchRevision,
+    ] as const,
+  adminImpact: (scope: AccountScope, adminId: string) =>
+    ['private', scope, 'admin', 'admins', adminId, 'impact'] as const,
+  roles: (scope: AccountScope) => ['private', scope, 'admin', 'roles'] as const,
 };

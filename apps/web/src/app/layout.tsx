@@ -44,6 +44,8 @@ export default async function RootLayout({
     account: catalogue.account,
     consent: catalogue.consent,
     privacy: catalogue.privacy,
+    admin: catalogue.admin,
+    superAdmin: catalogue.superAdmin,
   };
   return (
     <html lang={locale} data-theme={theme} className={fontVariables}>

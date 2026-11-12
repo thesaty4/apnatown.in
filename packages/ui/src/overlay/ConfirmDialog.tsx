@@ -12,6 +12,8 @@ export type ConfirmDialogProps = Omit<
   confirmLabel: string;
   onConfirm: () => void;
   tone?: 'primary' | 'danger';
+  /** Blocks confirming until required impact/choices are available. */
+  confirmDisabled?: boolean;
 };
 
 export function ConfirmDialog({
@@ -21,6 +23,7 @@ export function ConfirmDialog({
   onConfirm,
   tone = 'primary',
   busy = false,
+  confirmDisabled = false,
   onOpenChange,
   ...props
 }: ConfirmDialogProps) {
@@ -46,6 +49,7 @@ export function ConfirmDialog({
             variant={tone}
             className="min-w-0 flex-1"
             loading={busy}
+            disabled={confirmDisabled}
             onClick={() => onConfirm()}
           >
             {confirmLabel}

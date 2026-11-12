@@ -8,6 +8,9 @@ const implemented = new Set([
   '/account/profile',
   '/account/preferences',
   '/account/addresses',
+  '/admin/profile',
+  '/super-admin/admins',
+  '/super-admin/roles',
 ]);
 
 /** Only implemented, non-operational destinations; auth loops and encoded paths fail closed. */
