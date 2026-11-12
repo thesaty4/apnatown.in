@@ -401,6 +401,25 @@
     }
   },
   "auth": {
+    "demo": {
+      "cardAction": "Open demo controls",
+      "cardBody": "This demo lets you open any dashboard.",
+      "cardTitle": "Switch role",
+      "close": "Close",
+      "comingSoon": "Coming soon",
+      "description": "Local demo only. Choosing a role signs you in as its sample account and opens its dashboard.",
+      "open": "Switch demo role",
+      "role": {
+        "admin": "Admin",
+        "customer": "Customer",
+        "provider": "Service provider",
+        "rider": "Rider",
+        "superAdmin": "Super Admin",
+        "vendor": "Vendor"
+      },
+      "title": "Demo controls",
+      "viewAs": "View as"
+    },
     "entry": {
       "discoveryUnavailable": "Shopping and local discovery are not available here yet. You can manage your profile and preferences.",
       "guest": "Continue as guest",
@@ -411,6 +430,7 @@
     "feedback": {
       "csrf": "Your security context changed. Try again to refresh it. Nothing was confirmed.",
       "deliveryFailed": "The SMS could not be sent. Please try again later.",
+      "demoUnavailable": "Demo account not found. Run the demo seed and try again.",
       "expired": "Log in with your mobile number to continue. Your last action has not been repeated.",
       "expiredCode": "This code has expired. Request another code.",
       "expiredTitle": "Session expired",

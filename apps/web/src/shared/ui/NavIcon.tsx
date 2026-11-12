@@ -5,6 +5,8 @@ const paths = {
   play: 'M7 4l13 8-13 8z',
   bookmark: 'M6 3h12v18l-6-4-6 4z',
   user: 'M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9zM4 21a8 8 0 0 1 16 0',
+  users:
+    'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21a7 7 0 0 1 14 0M16 3.5a4 4 0 0 1 0 7M18 21a7 7 0 0 0-3-5.7',
   list: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01',
   filter: 'M4 6h16M7 12h10M10 18h4',
   copy: 'M9 9h11v11H9zM5 15H4V4h11v1',

@@ -2,10 +2,7 @@
 
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
-import {
-  Button,
-  buttonVariantClassName,
-} from '@apnatown/ui/primitives/Button';
+import { Button, buttonVariantClassName } from '@apnatown/ui/primitives/Button';
 import {
   EmptyState,
   NoPermissionState,

@@ -7,7 +7,8 @@ import { publicHref } from '../i18n/preferences';
 import { useSession } from './SessionProvider';
 import { loginHref } from './return-to';
 
-const iconButton =
+/** Prototype `.iconbtn` shared by header actions. */
+export const iconButton =
   'relative grid size-11 place-items-center rounded-pill text-text hover:bg-surface-2 focus-visible:ring-focus';
 
 /** Header icon buttons (prototype `.iconbtn`); Account is in the bottom tabs

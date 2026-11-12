@@ -6,10 +6,7 @@ import { formatCompactCount, type VideoFeedItem } from '@apnatown/shared';
 import { NavIcon, type NavIconName } from '../../shared/ui/NavIcon';
 import { ShareSheet, useVideoLikeAction } from '../engagement';
 import type { ReelGate } from './ReelGateSheet';
-import {
-  reelCountClassName,
-  reelRailButtonClassName,
-} from './reel-styles';
+import { reelCountClassName, reelRailButtonClassName } from './reel-styles';
 
 function RailAction({
   icon,
@@ -46,11 +43,7 @@ function RailAction({
           if (!disabled && !busy) onClick();
         }}
       >
-        <NavIcon
-          name={icon}
-          filled={pressed === true}
-          className="size-6.5"
-        />
+        <NavIcon name={icon} filled={pressed === true} className="size-6.5" />
       </button>
       {count !== undefined && (
         <p id={countId} className={reelCountClassName}>
@@ -114,7 +107,9 @@ export function ReelRail({
             like.busy
           }
           disabled={
-            like.access === 'customer' && like.query.isSuccess && !like.available
+            like.access === 'customer' &&
+            like.query.isSuccess &&
+            !like.available
           }
           count={compact(likeCount)}
           countLabel={likes('count', { count: likeCount })}

@@ -1,10 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import {
-  Button,
-  buttonVariantClassName,
-} from '@apnatown/ui/primitives/Button';
+import { Button, buttonVariantClassName } from '@apnatown/ui/primitives/Button';
 import { NavIcon } from '../../shared/ui/NavIcon';
 
 const providerLink = {
@@ -16,7 +13,10 @@ const providerLink = {
 /** Prototype `.rpp`: idle play glyph while a reel is off-screen. */
 export function ReelPoster() {
   return (
-    <div className="absolute inset-0 grid place-items-center" aria-hidden="true">
+    <div
+      className="absolute inset-0 grid place-items-center"
+      aria-hidden="true"
+    >
       <span className="grid size-18 place-items-center rounded-pill bg-reel-canvas/55 text-reel-text">
         <NavIcon name="play" filled className="size-7.5" />
       </span>

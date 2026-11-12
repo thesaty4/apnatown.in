@@ -7537,5 +7537,30 @@
     "en": "Service",
     "hi": "सेवा",
     "source": "specs/engagement/fe/engagement.md"
+  },
+  "auth.demo.open": { "en": "Switch demo role", "hi": "डेमो भूमिका बदलें" },
+  "auth.demo.title": { "en": "Demo controls", "hi": "डेमो कंट्रोल" },
+  "auth.demo.description": {
+    "en": "Local demo only. Choosing a role signs you in as its sample account and opens its dashboard.",
+    "hi": "केवल लोकल डेमो। भूमिका चुनने पर आप उसके सैंपल खाते से लॉग इन होंगे और उसका डैशबोर्ड खुलेगा।"
+  },
+  "auth.demo.viewAs": { "en": "View as", "hi": "इस रूप में देखें" },
+  "auth.demo.close": { "en": "Close", "hi": "बंद करें" },
+  "auth.demo.comingSoon": { "en": "Coming soon", "hi": "जल्द आ रहा" },
+  "auth.demo.role.customer": { "en": "Customer", "hi": "ग्राहक" },
+  "auth.demo.role.vendor": { "en": "Vendor", "hi": "वेंडर" },
+  "auth.demo.role.provider": { "en": "Service provider", "hi": "सेवा प्रदाता" },
+  "auth.demo.role.rider": { "en": "Rider", "hi": "राइडर" },
+  "auth.demo.role.admin": { "en": "Admin", "hi": "एडमिन" },
+  "auth.demo.role.superAdmin": { "en": "Super Admin", "hi": "सुपर एडमिन" },
+  "auth.demo.cardTitle": { "en": "Switch role", "hi": "भूमिका बदलें" },
+  "auth.demo.cardBody": {
+    "en": "This demo lets you open any dashboard.",
+    "hi": "यह डेमो आपको कोई भी डैशबोर्ड खोलने देता है।"
+  },
+  "auth.demo.cardAction": { "en": "Open demo controls", "hi": "डेमो कंट्रोल खोलें" },
+  "auth.feedback.demoUnavailable": {
+    "en": "Demo account not found. Run the demo seed and try again.",
+    "hi": "डेमो खाता नहीं मिला। डेमो सीड चलाकर फिर कोशिश करें।"
   }
 }

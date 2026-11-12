@@ -107,7 +107,10 @@ export function useReelsFeed(initialVideoId: string | undefined) {
     setVisibleId(undefined);
     setAnchorMissing(false);
     setSession(next);
-    writeUrl(next.anchorId, feedSearch(next.pill, next.category, next.snapshotId));
+    writeUrl(
+      next.anchorId,
+      feedSearch(next.pill, next.category, next.snapshotId),
+    );
   };
 
   const selectFilter = (nextPill: Pill, nextCategory?: string) =>

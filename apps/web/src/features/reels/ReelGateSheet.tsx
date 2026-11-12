@@ -3,10 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import {
-  Button,
-  buttonVariantClassName,
-} from '@apnatown/ui/primitives/Button';
+import { Button, buttonVariantClassName } from '@apnatown/ui/primitives/Button';
 import { Sheet } from '@apnatown/ui/overlay/Sheet';
 import { useLoginHref } from '../../shared/auth/AccessState';
 
@@ -35,13 +32,18 @@ export function ReelGateSheet({
       onOpenChange={(open) => {
         if (!open) onClose();
       }}
-      title={shown?.kind === 'restricted' ? shown.title : t('pleaseLogInToContinue')}
+      title={
+        shown?.kind === 'restricted' ? shown.title : t('pleaseLogInToContinue')
+      }
       description={shown?.message ?? ''}
       closeLabel={t('notNow')}
     >
       <div className="grid gap-2">
         {shown?.kind === 'login' && (
-          <Link className={`${buttonVariantClassName()} w-full`} href={loginHref}>
+          <Link
+            className={`${buttonVariantClassName()} w-full`}
+            href={loginHref}
+          >
             {auth('login')}
           </Link>
         )}

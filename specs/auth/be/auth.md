@@ -72,6 +72,7 @@ cryptography, CSRF and cookies pass; database integration coverage remains unrun
 | POST | `/auth/otp/challenges/{challengeId}/verify` | Guest; challenge-bound; CSRF + Origin check | `{code}` → principal; sets rotated httpOnly session cookie | `OTP_INVALID`, `OTP_EXPIRED`, `OTP_LOCKED`, `OTP_NOT_FOUND`, `ACCOUNT_UNAVAILABLE`, `CSRF_INVALID` | No | F-AU-004 |
 | GET | `/auth/session` | Session cookie; no-store | → `{userId,roles,approvalStates,accountStatus,expiresAt}` from current owner-module state | `SESSION_EXPIRED`, `ACCOUNT_UNAVAILABLE` | Yes | F-AU-004, F-AU-007 |
 | POST | `/auth/logout` | Authenticated session + CSRF | → `{loggedOut:true}`; revokes server session and clears cookie | `SESSION_EXPIRED`, `CSRF_INVALID` | Yes | F-AU-007 |
+| POST | `/auth/demo/sessions` | Local/test only, registered when `DEMO_LOGIN_ENABLED` ([ADR 0002](../../../docs/adr/0002-local-demo-persona-sign-in.md)); guest or session + CSRF + Origin; 30/min per IP | `{persona}` (allow-listed enum) → principal; revokes the current session and sets a rotated httpOnly session cookie | `DEMO_PERSONA_UNAVAILABLE`, `VALIDATION_ERROR`, `CSRF_INVALID`, `COMMON_RATE_LIMITED`; 404 when disabled | No | Prototype Demo controls |
 
 Use the shared error envelope and OpenAPI DTOs from [backend-shared.md](../../_foundation/backend-shared.md). OTP maximum attempts/expiry are configuration values; the resend cooldown is 30 seconds. Optional email/Google methods are not specified beyond their presence in the design; see Q-30.
 
@@ -85,7 +86,7 @@ Use the shared error envelope and OpenAPI DTOs from [backend-shared.md](../../_f
 6. Preserve an origin only as a validated same-origin route in the frontend flow; do not use an arbitrary redirect supplied to these endpoints.
 7. Use the foundation's same-origin `/api` transport and `csrf-sync` synchronizer middleware, including anonymous login requests. Auth owns its PostgreSQL-backed state in `sessions`; no second store, Redis or process-local fallback. `/auth/csrf` creates a short-lived anonymous session when needed or returns the current session's token. It persists state before sending the cookie/token and never refreshes expired authenticated access implicitly. `ANONYMOUS_SESSION_TTL_SECONDS` is positive validated server config; local/test uses an explicit short fixture value, production requires an approved value.
 8. Hydrate request-local CSRF state from the validated session before the library runs. Its `getTokenFromState`/`storeTokenInState` callbacks operate synchronously on that state; repository persistence is awaited outside those callbacks. Reuse an existing token on bootstrap, so another tab does not invalidate it. Login atomically revokes the anonymous/old session and issues a new authenticated session plus new CSRF state; logout revokes state and clears the cookie, then the client bootstraps a fresh anonymous context. Check `X-CSRF-Token` and Origin before every browser mutation; no handwritten token-generation/comparison protocol.
-9. Auth/session responses are private/no-store and no service worker caches them. OTP fakes are test/local delivery adapters, never a production fixed-code bypass. Rate-limit anonymous session creation and clean up expired/revoked records in bounded batches.
+9. Auth/session responses are private/no-store and no service worker caches them. OTP fakes are test/local delivery adapters, never a production fixed-code bypass. Rate-limit anonymous session creation and clean up expired/revoked records in bounded batches. The only login-as path is the ADR 0002 demo persona route: production config refuses the flag, the persona maps server-side to a fixed seeded phone, and the live principal must be active and already hold that role; it never creates users or grants roles.
 10. Use the foundation's [rejected-verification transaction contract](../../_foundation/data-model.md#shared-runtime-persistence): wrong-code attempts/locks and valid-challenge consumption for `ACCOUNT_UNAVAILABLE` commit before the HTTP error is raised. No session is created on rejection. Unexpected failures roll back; a broad catch must not turn them into a committed authentication outcome.
 
 Open question: profile phone editing in `js7.js` has no verified-number-change flow (Q-43). Login identity cannot be changed through generic profile PATCH; keep that field read-only until re-verification and account-linking behavior are approved. Email/Google controls remain explicitly unavailable under Q-30, not success-shaped demo logins.
@@ -107,6 +108,7 @@ No domain event/job is required by the source pack. OTP delivery uses the `OtpDe
 | `SESSION_EXPIRED` | 401 | `auth.session.expired` |
 | `CSRF_INVALID` | 403 | `auth.session.csrfInvalid` |
 | `ACCOUNT_UNAVAILABLE` | 403 | `auth.account.unavailable` |
+| `DEMO_PERSONA_UNAVAILABLE` | 404 | `auth.demo.personaUnavailable` |
 
 ## Acceptance criteria
 
@@ -123,6 +125,7 @@ No domain event/job is required by the source pack. OTP delivery uses the `OtpDe
 11. Given a cross-site login/logout request or missing CSRF token, when the API receives it, then it is denied; same-origin anonymous CSRF bootstrap permits the legitimate login flow.
 12. Given an anonymous CSRF session, when it calls `/auth/session` or a protected endpoint, then it receives 401; its cookie does not grant a customer or applicant role.
 13. Given two API processes and concurrent tabs, when they bootstrap/use the same session token or an API restarts, then CSRF remains valid through PostgreSQL state; login/logout invalidates the old binding everywhere.
+14. Given `DEMO_LOGIN_ENABLED` is off or the environment is production, when `/auth/demo/sessions` is called, then it is not registered (404), and production startup refuses the flag; given it is on locally, when a missing/inactive persona or one without its role is requested, then `DEMO_PERSONA_UNAVAILABLE` is returned and no session changes.
 
 ## Verification
 

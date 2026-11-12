@@ -9,6 +9,7 @@ import { Avatar } from '@apnatown/ui/data/Avatar';
 import { useSession } from '../../shared/auth/SessionProvider';
 import { AccessState } from '../../shared/auth/AccessState';
 import { Logout } from '../../shared/auth/Logout';
+import { DemoRoleCard } from '../auth/demo/DemoControls';
 import { accountScope } from '../../shared/api/query-keys';
 import { profileOptions } from './api';
 import { OwnResource } from './OwnResource';
@@ -17,9 +18,12 @@ import { DeletionProgress, PrivacyActions, type Deletion } from './Privacy';
 export function Account({
   initial,
   owner,
+  demo = false,
 }: {
   initial: DehydratedState;
   owner?: string | undefined;
+  /** Local/test demo controls (docs/adr/0002); read server-side. */
+  demo?: boolean;
 }) {
   const { state, epoch } = useSession();
   const t = useTranslations('account.menu');
@@ -108,6 +112,7 @@ export function Account({
               {t('operationsUnavailable')}
             </p>
           )}
+          {demo && <DemoRoleCard />}
           <Logout />
         </>
       )}

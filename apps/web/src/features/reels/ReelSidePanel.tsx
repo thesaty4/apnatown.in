@@ -19,7 +19,10 @@ function SideComments({
   const comments = query.data?.pages.flatMap((page) => page.items) ?? [];
 
   return (
-    <section aria-labelledby={`reel-side-comments-${item.id}`} className="grid gap-2">
+    <section
+      aria-labelledby={`reel-side-comments-${item.id}`}
+      className="grid gap-2"
+    >
       <h3 id={`reel-side-comments-${item.id}`} className="m-0 text-h4">
         {t('title')}
       </h3>
@@ -32,7 +35,11 @@ function SideComments({
           <p role="alert" className="m-0 text-small text-reel-text-2">
             {t('loadFailed')}
           </p>
-          <Button size="small" variant="ghost" onClick={() => void query.refetch()}>
+          <Button
+            size="small"
+            variant="ghost"
+            onClick={() => void query.refetch()}
+          >
             {t('retry')}
           </Button>
         </div>
@@ -41,7 +48,10 @@ function SideComments({
       ) : (
         <ul className="m-0 grid list-none gap-2 p-0">
           {comments.map((comment) => (
-            <li key={comment.id} className="text-small [overflow-wrap:anywhere]">
+            <li
+              key={comment.id}
+              className="text-small [overflow-wrap:anywhere]"
+            >
               <b>{comment.authorLabel}</b>{' '}
               <span className="whitespace-pre-wrap text-reel-text-2">
                 {comment.text}

@@ -24,6 +24,7 @@ import { AccountNavigation } from '../shared/auth/AccountNavigation';
 import { hydrateResource } from '../shared/api/hydration';
 import { queryKeys } from '../shared/api/query-keys';
 import { SiteFooter } from '../features/support/SiteFooter';
+import { DemoSwitcher } from '../features/auth/demo/DemoControls';
 import './globals.css';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -88,6 +89,7 @@ export default async function RootLayout({
               <CustomerMenu />
               <span className="min-w-0 flex-1" />
               <LanguageSwitch short />
+              {getWebEnvironment().DEMO_LOGIN_ENABLED && <DemoSwitcher />}
               <AccountNavigation />
               <Preferences initialTheme={theme} />
             </div>

@@ -87,7 +87,9 @@ defines its domain columns/constraints; don't duplicate that schema here.
 Keep extension checks, pg-boss schema setup, idempotent synthetic seeds
 and target safety in the database tooling. No seed/reset on API startup;
 destructive commands must verify an explicit local/test target. Never
-seed real PII or an authentication bypass. During implementation, author
+seed real PII or an authentication bypass; the only exception is the
+synthetic local/test demo personas of `docs/adr/0002-local-demo-persona-sign-in.md`
+(role holders only, no OTP/password/session seed). During implementation, author
 migrations and build generated clients only; do not start Docker, provision
 a database, or execute migrations/seeds. Runtime execution requires a
 separate explicit request.

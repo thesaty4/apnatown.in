@@ -10,11 +10,7 @@ import {
 
 /** How the current session may use customer-only engagement actions. */
 export type CustomerAccess =
-  | 'pending'
-  | 'customer'
-  | 'guest'
-  | 'forbidden'
-  | 'unavailable';
+  'pending' | 'customer' | 'guest' | 'forbidden' | 'unavailable';
 
 export type EngagementErrorKey = 'rateLimited' | 'failed';
 
@@ -69,8 +65,7 @@ export function useVideoSaveAction(videoId: string, businessId: string) {
     access,
     query,
     available:
-      query.data?.videoCounts.some((item) => item.videoId === videoId) ??
-      false,
+      query.data?.videoCounts.some((item) => item.videoId === videoId) ?? false,
     saved,
     busy: heart.mutation.isPending,
     errorKey: errorKey(heart.mutation),

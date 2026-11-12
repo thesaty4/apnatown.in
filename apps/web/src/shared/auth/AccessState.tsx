@@ -28,6 +28,7 @@ const errors: Record<string, string> = {
   SESSION_EXPIRED: 'expired',
   VALIDATION_ERROR: 'validation',
   USER_NOT_FOUND: 'missingProfile',
+  DEMO_PERSONA_UNAVAILABLE: 'demoUnavailable',
 };
 
 /** `auth.feedback` message for a normalized failure code; never server text. */
