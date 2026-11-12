@@ -39,7 +39,10 @@ export function readFilters(params: URLSearchParams): ExploreFilters | null {
       params.has(`${tab}.${key}`) ? [[key, params.get(`${tab}.${key}`)]] : [],
     );
     if (saved.length) {
-      if (tab === active.tab || !parseFilters({ ...Object.fromEntries(saved), tab }))
+      if (
+        tab === active.tab ||
+        !parseFilters({ ...Object.fromEntries(saved), tab })
+      )
         return null;
     }
   }

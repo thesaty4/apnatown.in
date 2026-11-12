@@ -40,10 +40,13 @@ export default async function ExplorePage({
       }))
     : undefined;
   if (result?.kind === 'error' && result.code === 'MAINTENANCE')
-    redirect(maintenanceHref(`/explore?${params}`, (await currentLocale()) === 'hi'));
-  const initial = filters && result
-    ? await hydrateResource(queryKeys.explore(filters), result)
-    : undefined;
+    redirect(
+      maintenanceHref(`/explore?${params}`, (await currentLocale()) === 'hi'),
+    );
+  const initial =
+    filters && result
+      ? await hydrateResource(queryKeys.explore(filters), result)
+      : undefined;
   return (
     <div className="grid min-w-0 gap-stack-gap">
       <h1 className="text-h1">{t('title')}</h1>

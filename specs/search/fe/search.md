@@ -64,8 +64,27 @@ tab keys include arrows, Home and End. Mobile uses the current stacked filter
 panel; service multi-select, full facets, map, advanced filters, profile links
 and the prototype filter sheet remain deferred.
 
-Build-time verification covers the shared schemas, generated API client and
-both builds. Deferred runtime acceptance:
+Verification (2026-11-12): `pnpm --dir apps/api db:generate`,
+`pnpm --dir packages/shared build`, `pnpm api:openapi`,
+`pnpm client:generate`, and
+`APP_ENV=local APP_BASE_URL=http://localhost:3000 API_INTERNAL_ORIGIN=http://localhost:3001 pnpm --dir apps/web build`
+passed. Targeted ESLint/Prettier and `check:generated` in web, API and API client
+passed. `node scripts/validate-ai-setup.mjs` still fails with the identical
+93-error baseline (missing links and an instruction size-budget violation).
+No migrations/seeds, runtime services, browser checks or automated test files
+were executed/created.
+
+Static secure-coding self-review (not a security-auditor sign-off):
+- [x] Checklist 1/3: bound SQL values, allow-listed sorts, strict DTOs and limits.
+- [x] Checklist 2: public read; approved business, live owner and enabled-city
+  eligibility apply to both cards and counts.
+- [x] Checklist 6: business/category/area names are React text, not HTML.
+- [x] Checklist 11/12: no credentials, private contacts, documents or owner
+  identifiers added to responses, logging or source.
+- [x] Checklist 4/5/7/8/9/10/13/14/15: no changed OTP/session/mutation,
+  embed/upload/CSV/webhook, admin audit, consent or map flows in this slice.
+
+Deferred runtime acceptance:
 - With approved/draft/suspended/deleted businesses and active/blocked/deleted
   owners, only approved businesses of active owners in enabled cities appear
   in cards and counts; a secondary category membership does not duplicate rows.
