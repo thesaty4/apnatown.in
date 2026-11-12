@@ -6,6 +6,7 @@ import { ErrorFilter } from './shared/errors/exception-filter';
 import { HealthController } from './shared/health/health.controller';
 import { AuthGuard } from './shared/auth/auth.guard';
 import { AuthModule } from './modules/auth/auth.module';
+import { GeoModule } from './modules/geo/geo.module';
 import { RuntimeModule } from './shared/health/runtime.module';
 import { RateLimitGuard } from './shared/rate-limit/rate-limit';
 
@@ -15,7 +16,11 @@ export class AppModule {
     const runtime = RuntimeModule.forRoot(config);
     return {
       module: AppModule,
-      imports: [runtime, AuthModule.forRoot(runtime, config)],
+      imports: [
+        runtime,
+        AuthModule.forRoot(runtime, config),
+        GeoModule.forRoot(runtime),
+      ],
       controllers: [HealthController],
       providers: [
         { provide: APP_PIPE, useClass: ZodValidationPipe },

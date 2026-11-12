@@ -13,17 +13,25 @@ import { SessionService } from '../../modules/auth/application/session.service';
 import { OtpService } from '../../modules/auth/application/otp.service';
 import { ProfileService } from '../../modules/users/application/profile.service';
 import { SessionCookie } from '../auth/cookie';
+import { GeoController } from '../../modules/geo/presentation/geo.controller';
+import { GeoReadService } from '../../modules/geo/application/geo-read.service';
 
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
 @Module({
-  controllers: [HealthController, AuthController, UsersController],
+  controllers: [
+    HealthController,
+    AuthController,
+    UsersController,
+    GeoController,
+  ],
   providers: [
     ReadinessService,
     SessionService,
     OtpService,
     ProfileService,
     SessionCookie,
+    GeoReadService,
   ].map((provide) => ({ provide, useValue: Object.freeze({}) })),
 })
 class OpenApiModule {}

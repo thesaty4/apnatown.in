@@ -2932,6 +2932,472 @@
           "users"
         ]
       }
+    },
+    "/geo/cities": {
+      "get": {
+        "operationId": "geoCities",
+        "parameters": [
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 2048,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeoCityPageDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth and own-account responses are private, no-store."
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query or cursor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth and own-account responses are private, no-store."
+              }
+            }
+          },
+          "403": {
+            "description": "Untrusted Origin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth and own-account responses are private, no-store."
+              }
+            }
+          },
+          "429": {
+            "description": "Read limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth and own-account responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds until this rate-limit window resets"
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth and own-account responses are private, no-store."
+              }
+            }
+          },
+          "503": {
+            "description": "Read service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth and own-account responses are private, no-store."
+              }
+            }
+          }
+        },
+        "summary": "List selectable cities",
+        "tags": [
+          "geo"
+        ]
+      }
+    },
+    "/geo/cities/{cityId}/areas": {
+      "get": {
+        "operationId": "geoCityAreas",
+        "parameters": [
+          {
+            "name": "cityId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 2048,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "type": "integer"
+            }
+          },
+          {
+            "required": false,
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "pinCode",
+            "in": "query",
+            "schema": {
+              "pattern": "^\\d{6}$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeoAreaPageDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth and own-account responses are private, no-store."
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query or cursor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth and own-account responses are private, no-store."
+              }
+            }
+          },
+          "403": {
+            "description": "Untrusted Origin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth and own-account responses are private, no-store."
+              }
+            }
+          },
+          "404": {
+            "description": "City not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth and own-account responses are private, no-store."
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid PIN code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth and own-account responses are private, no-store."
+              }
+            }
+          },
+          "429": {
+            "description": "Read limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth and own-account responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds until this rate-limit window resets"
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth and own-account responses are private, no-store."
+              }
+            }
+          },
+          "503": {
+            "description": "Read service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth and own-account responses are private, no-store."
+              }
+            }
+          }
+        },
+        "summary": "Find areas within a city",
+        "tags": [
+          "geo"
+        ]
+      }
     }
   },
   "info": {
@@ -3329,6 +3795,127 @@
             ]
           }
         },
+        "additionalProperties": false
+      },
+      "GeoCityPageDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "slug": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "nameEn": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "nameHi": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "enabled",
+                    "disabled",
+                    "coming_soon"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "slug",
+                "nameEn",
+                "nameHi",
+                "status"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "nullable": true
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "additionalProperties": false
+      },
+      "GeoAreaPageDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "cityId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "slug": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "nameEn": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "nameHi": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "pinCode": {
+                  "type": "string",
+                  "pattern": "^\\d{6}$",
+                  "nullable": true
+                }
+              },
+              "required": [
+                "id",
+                "cityId",
+                "slug",
+                "nameEn",
+                "nameHi",
+                "pinCode"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "nullable": true
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor"
+        ],
         "additionalProperties": false
       }
     }

@@ -166,6 +166,7 @@ model Area {
   @@unique([cityId, slug], map: "areas_city_slug_key")
   @@index([cityId, nameEn, id], map: "areas_city_name_en_id_idx")
   @@index([cityId, pinCode], map: "areas_city_pin_code_idx")
+  @@index([nameEn(ops: raw("gin_trgm_ops")), nameHi(ops: raw("gin_trgm_ops"))], type: Gin, map: "areas_names_trgm_idx")
   @@map("areas")
 }
 

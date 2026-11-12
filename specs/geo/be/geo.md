@@ -20,6 +20,17 @@ Own cities, customer-facing areas, service zones, delivery-fee slabs and service
 
 City states map to the prototype's `active`/`planned`/`soon` labels as enabled/disabled/coming_soon. Preserve the observed toggle edges and keep Q-17/G-11 visible. Hindi city names are required; see Q-36/G-12. Active-zone overlap is rejected until Q-37 is resolved.
 
+The additive Geo migrations and public city/area reads are implemented. Their
+keyset indexes append `id` to the listed name sorts; area-name filtering uses
+a shared EN/HI `gin_trgm_ops` index. Cities sort by `(status,name_en,id)`, areas
+by `(name_en,id)`, ascending. Area query text is a literal case-insensitive
+substring, not a SQL wildcard. Cursors are signed and bound to endpoint,
+city and normalized filters. Both reads share a 60-per-minute/IP limit and
+page default 20/hard cap 50. No locations or fees are seeded; migrations,
+query plans and HTTP behavior remain unverified against a live database.
+Location resolution, waitlist writes, internal owner ports and admin mutations
+remain separate implementation slices.
+
 ## Endpoints
 
 | Method | Path | Auth, role, permission, scope | Request → response | Errors | Idempotent | Features / screens |

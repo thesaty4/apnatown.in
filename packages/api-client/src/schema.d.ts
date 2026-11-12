@@ -80,6 +80,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/geo/cities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List selectable cities */
+        get: operations["geoCities"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/geo/cities/{cityId}/areas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Find areas within a city */
+        get: operations["geoCityAreas"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health/live": {
         parameters: {
             query?: never;
@@ -184,6 +218,31 @@ export interface components {
             };
             message_key: string;
             status: number;
+        };
+        GeoAreaPageDto: {
+            items: {
+                /** Format: uuid */
+                cityId: string;
+                /** Format: uuid */
+                id: string;
+                nameEn: string;
+                nameHi: string;
+                pinCode: string | null;
+                slug: string;
+            }[];
+            nextCursor: string | null;
+        };
+        GeoCityPageDto: {
+            items: {
+                /** Format: uuid */
+                id: string;
+                nameEn: string;
+                nameHi: string;
+                slug: string;
+                /** @enum {string} */
+                status: "enabled" | "disabled" | "coming_soon";
+            }[];
+            nextCursor: string | null;
         };
         HealthDto: {
             /** @enum {string} */
@@ -982,6 +1041,226 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    geoCities: {
+        parameters: {
+            query?: {
+                cursor?: string;
+                limit?: number;
+            };
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoCityPageDto"];
+                };
+            };
+            /** @description Invalid query or cursor */
+            400: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Untrusted Origin */
+            403: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Read limit exceeded */
+            429: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Unexpected failure */
+            500: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Read service unavailable */
+            503: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    geoCityAreas: {
+        parameters: {
+            query?: {
+                cursor?: string;
+                limit?: number;
+                pinCode?: string;
+                query?: string;
+            };
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path: {
+                cityId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeoAreaPageDto"];
+                };
+            };
+            /** @description Invalid query or cursor */
+            400: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Untrusted Origin */
+            403: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description City not found */
+            404: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Invalid PIN code */
+            422: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Read limit exceeded */
+            429: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Unexpected failure */
+            500: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Read service unavailable */
+            503: {
+                headers: {
+                    /** @description Auth and own-account responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
                 };
             };
         };
