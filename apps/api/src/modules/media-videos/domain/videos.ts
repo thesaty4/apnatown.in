@@ -66,6 +66,10 @@ export interface VideoReportPosition {
 
 export const VIDEO_REPOSITORY = Symbol('VIDEO_REPOSITORY');
 export interface VideoRepository {
+  savedCards(
+    tx: TxContext,
+    ids: readonly string[],
+  ): Promise<Array<{ id: string; caption: string }>>;
   insert(tx: TxContext, row: StoredVideo): Promise<void>;
   mine(
     tx: TxContext,
@@ -85,6 +89,7 @@ export interface VideoRepository {
     cityId: string | null;
     areaId: string | null;
     public: boolean;
+    mediaKind: 'video' | 'reel';
   } | null>;
   moderationPage(
     tx: TxContext,

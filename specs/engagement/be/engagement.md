@@ -46,6 +46,33 @@ All customer writes require login; guest calls return `AUTH_REQUIRED` so the FE 
 
 ## Rules and use-cases
 
+### EG1 Saved implementation slice
+
+- `GET /engagement/me/saved` accepts `tab=shops|media`,
+  `mediaFilter=all|videos|reels`, an opaque cursor and `limit` (default 20,
+  maximum 50). Unsupported service/photo requests fail validation rather than
+  returning fabricated empty data.
+- Customer authority is rechecked in the read transaction; the session supplies
+  the owner. Signed cursors bind owner, tab and filter. Following sorts by
+  `(last_followed_at,business_id)` descending; video hearts sort by
+  `(created_at,target_id)` descending, preserving microsecond precision.
+- Businesses and Media supply purpose-limited public cards through owner ports.
+  Hidden, removed, suspended or inactive-owner targets return only the customer's
+  relationship metadata and `available:false`/`reasonKey`; names, captions and
+  links are omitted. Existing relationship-only DELETE routes remove these items.
+- `hearts.media_kind` retains `video|reel` classification for filtering even after
+  a target becomes unavailable. YouTube Shorts and Instagram Reels are reels;
+  other accepted video sources are videos. Existing surviving targets are
+  backfilled; orphaned historical hearts retain null and remain removable under
+  All, without inventing their missing classification.
+- The additive `20261112130000_engagement_saved` migration adds the classification
+  and matching keyset indexes. It is authored, not applied. Forward repair can
+  rebuild indexes without removing relationships; preserve classification data
+  when repairing because a deleted source cannot reconstruct it.
+- Service bookmarks, photo hearts, profile navigation and bell editing on Saved
+  remain deferred to their owning surfaces. Following includes shops and providers;
+  it never creates a second business bookmark table.
+
 ### EG3 video-detail implementation slice
 
 - `follows` stores one `(user_id,business_id)` relationship, including
@@ -88,9 +115,9 @@ All customer writes require login; guest calls return `AUTH_REQUIRED` so the FE 
   approved/public video through Media; DELETE removes only the caller's row and
   does not require the video to remain public. Both operations are naturally
   idempotent and require a customer session plus CSRF.
-- Gallery/photo target validation and Saved-page listing/removal remain
-  unimplemented until the Media gallery and EG1 surfaces exist. Migration remains
-  unapplied.
+- Saved-page video listing/removal is implemented by EG1. Gallery/photo target
+  validation remains unimplemented until the Media gallery exists. Migrations
+  remain unapplied.
 
 ### EG6 implementation slice
 

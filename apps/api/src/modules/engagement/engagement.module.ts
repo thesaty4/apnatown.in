@@ -1,4 +1,8 @@
 import { Module, type DynamicModule } from '@nestjs/common';
+import { SavedController } from './presentation/saved.controller';
+import { SavedService } from './application/saved.service';
+import { SAVED_REPOSITORY } from './domain/saved';
+import { PrismaSavedRepository } from './infrastructure/prisma-saved.repository';
 import { VideoLikesService } from './application/video-likes.service';
 import { FollowsService } from './application/follows.service';
 import { VIDEO_LIKE_REPOSITORY } from './domain/likes';
@@ -32,11 +36,13 @@ export class EngagementModule {
     audit: DynamicModule,
     settings: DynamicModule,
     media: DynamicModule,
+    businesses: DynamicModule,
   ): DynamicModule {
     return {
       module: EngagementModule,
-      imports: [runtime, admin, audit, settings, media],
+      imports: [runtime, admin, audit, settings, media, businesses],
       controllers: [
+        SavedController,
         VideoLikesController,
         VideoFollowsController,
         VideoSharesController,
@@ -45,14 +51,25 @@ export class EngagementModule {
         AdminVideoCommentsController,
       ],
       providers: [
+        SavedService,
+        { provide: SAVED_REPOSITORY, useClass: PrismaSavedRepository },
         { provide: VIDEO_LIKE_REPOSITORY, useClass: PrismaVideoLikeRepository },
-        { provide: VIDEO_HEART_REPOSITORY, useClass: PrismaVideoHeartRepository },
+        {
+          provide: VIDEO_HEART_REPOSITORY,
+          useClass: PrismaVideoHeartRepository,
+        },
         { provide: FOLLOW_REPOSITORY, useClass: PrismaFollowRepository },
         VideoLikesService,
         FollowsService,
-        { provide: VIDEO_SHARE_REPOSITORY, useClass: PrismaVideoShareRepository },
+        {
+          provide: VIDEO_SHARE_REPOSITORY,
+          useClass: PrismaVideoShareRepository,
+        },
         VideoSharesService,
-        { provide: VIDEO_COMMENT_REPOSITORY, useClass: PrismaVideoCommentRepository },
+        {
+          provide: VIDEO_COMMENT_REPOSITORY,
+          useClass: PrismaVideoCommentRepository,
+        },
         VideoCommentsService,
         VideoCommentEvents,
         VideoCommentModerationService,

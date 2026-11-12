@@ -7,7 +7,11 @@ import type { VideoHeartRepository } from '../domain/hearts';
 export class PrismaVideoHeartRepository implements VideoHeartRepository {
   constructor(private readonly database: PrismaDatabase) {}
 
-  async findOwned(tx: TxContext, userId: string | null, videoIds: readonly string[]) {
+  async findOwned(
+    tx: TxContext,
+    userId: string | null,
+    videoIds: readonly string[],
+  ) {
     if (!userId || videoIds.length === 0) return [];
     const rows = await this.database.client(tx).$queryRaw<
       Array<{ targetId: string }>
@@ -22,13 +26,13 @@ export class PrismaVideoHeartRepository implements VideoHeartRepository {
 
   async set(
     tx: TxContext,
-    input: { userId: string; videoId: string; hearted: boolean; at: Date },
+    input: Parameters<VideoHeartRepository['set']>[1],
   ): Promise<void> {
     const client = this.database.client(tx);
     if (input.hearted) {
       await client.$executeRaw`
-        INSERT INTO hearts (user_id, target_type, target_id, created_at)
-        VALUES (${input.userId}::uuid, 'video', ${input.videoId}::uuid, ${input.at})
+        INSERT INTO hearts (user_id, target_type, target_id, created_at, media_kind)
+        VALUES (${input.userId}::uuid, 'video', ${input.videoId}::uuid, ${input.at}, ${input.mediaKind})
         ON CONFLICT (user_id, target_type, target_id) DO NOTHING`;
       return;
     }

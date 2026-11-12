@@ -30,7 +30,9 @@ function withLike(
     ...state,
     likedVideoIds,
     videoCounts: state.videoCounts.map((count) =>
-      count.videoId === videoId ? { ...count, likeCount: result.likeCount } : count,
+      count.videoId === videoId
+        ? { ...count, likeCount: result.likeCount }
+        : count,
     ),
     heartedTargets: state.heartedTargets,
   };
@@ -51,10 +53,10 @@ export function useVideoLikes(
     ...privateQueryOptions(queryKey, epoch, lifecycle, (signal) =>
       getEngagementState(api, ids, businesses, signal),
     ),
-    enabled: ids.length > 0 && (
-      state.kind === 'ready' ||
-      (state.kind === 'error' && state.code === 'SESSION_EXPIRED')
-    ),
+    enabled:
+      ids.length > 0 &&
+      (state.kind === 'ready' ||
+        (state.kind === 'error' && state.code === 'SESSION_EXPIRED')),
     staleTime: 30_000,
     retry: false,
   });
@@ -64,20 +66,34 @@ export function useVideoLikes(
       await client.cancelQueries({ queryKey, exact: true });
       assertCurrent();
       const previous = client.getQueryData<EngagementState>(queryKey);
-      const count = previous?.videoCounts.find((item) => item.videoId === input.videoId);
-      if (!previous || !count) throw new ApiFailure('MEDIA_VIDEO_NOT_PUBLISHED');
+      const count = previous?.videoCounts.find(
+        (item) => item.videoId === input.videoId,
+      );
+      if (!previous || !count)
+        throw new ApiFailure('MEDIA_VIDEO_NOT_PUBLISHED');
       const wasLiked = previous.likedVideoIds.includes(input.videoId);
       const delta = input.liked === wasLiked ? 0 : input.liked ? 1 : -1;
-      client.setQueryData(queryKey, withLike(previous, input.videoId, {
-        liked: input.liked,
-        likeCount: Math.max(0, count.likeCount + delta),
-      }));
+      client.setQueryData(
+        queryKey,
+        withLike(previous, input.videoId, {
+          liked: input.liked,
+          likeCount: Math.max(0, count.likeCount + delta),
+        }),
+      );
       try {
-        const result = await setVideoLike(api, input.videoId, input.liked, assertCurrent);
+        const result = await setVideoLike(
+          api,
+          input.videoId,
+          input.liked,
+          assertCurrent,
+        );
         assertCurrent();
         await client.cancelQueries({ queryKey, exact: true });
         assertCurrent();
-        client.setQueryData(queryKey, withLike(previous, input.videoId, result));
+        client.setQueryData(
+          queryKey,
+          withLike(previous, input.videoId, result),
+        );
         await client.invalidateQueries({ queryKey: rootKey });
         return result;
       } catch (error) {
@@ -100,11 +116,21 @@ export function useVideoHeartActions(
   const client = useQueryClient();
   const scope = state.kind === 'ready' ? accountScope(state.data, epoch) : null;
   const businesses = [...new Set(businessIds)].sort();
-  const queryKey = queryKeys.engagementState(scope, epoch, [videoId], businesses);
+  const queryKey = queryKeys.engagementState(
+    scope,
+    epoch,
+    [videoId],
+    businesses,
+  );
   const mutation = usePrivateMutation(
     lifecycle,
     async (input: { hearted: boolean }, assertCurrent) => {
-      const result = await setVideoHeart(api, videoId, input.hearted, assertCurrent);
+      const result = await setVideoHeart(
+        api,
+        videoId,
+        input.hearted,
+        assertCurrent,
+      );
       assertCurrent();
       await client.cancelQueries({ queryKey, exact: true });
       assertCurrent();
@@ -112,7 +138,8 @@ export function useVideoHeartActions(
         current
           ? {
               ...current,
-              heartedTargets: withHeart(current, videoId, result).heartedTargets,
+              heartedTargets: withHeart(current, videoId, result)
+                .heartedTargets,
             }
           : current,
       );
@@ -120,6 +147,13 @@ export function useVideoHeartActions(
         queryKey,
         exact: true,
         refetchType: 'none',
+      });
+      if (scope)
+        await client.invalidateQueries({
+          queryKey: queryKeys.savedRoot(scope),
+        });
+      await client.invalidateQueries({
+        queryKey: queryKeys.engagementStateRoot(scope, epoch),
       });
       return result;
     },
@@ -132,15 +166,17 @@ export function useVideoHeartActions(
   };
 }
 
-export function useBusinessFollowActions(
-  videoId: string,
-  businessId: string,
-) {
+export function useBusinessFollowActions(videoId: string, businessId: string) {
   const { api, lifecycle, state, epoch } = useSession();
   const client = useQueryClient();
   const scope = state.kind === 'ready' ? accountScope(state.data, epoch) : null;
   const rootKey = queryKeys.engagementStateRoot(scope, epoch);
-  const queryKey = queryKeys.engagementState(scope, epoch, [videoId], [businessId]);
+  const queryKey = queryKeys.engagementState(
+    scope,
+    epoch,
+    [videoId],
+    [businessId],
+  );
   const mutation = usePrivateMutation(
     lifecycle,
     async (
@@ -150,7 +186,9 @@ export function useBusinessFollowActions(
       await client.cancelQueries({ queryKey, exact: true });
       assertCurrent();
       const previous = client.getQueryData<EngagementState>(queryKey);
-      if (!previous?.businessStates.some((item) => item.businessId === businessId))
+      if (
+        !previous?.businessStates.some((item) => item.businessId === businessId)
+      )
         throw new ApiFailure('MEDIA_VIDEO_NOT_PUBLISHED');
       client.setQueryData<EngagementState>(queryKey, (current) =>
         current
@@ -158,7 +196,11 @@ export function useBusinessFollowActions(
               ...current,
               businessStates: current.businessStates.map((item) =>
                 item.businessId === businessId
-                  ? { ...item, following: input.following, bellOn: input.following && input.bellOn }
+                  ? {
+                      ...item,
+                      following: input.following,
+                      bellOn: input.following && input.bellOn,
+                    }
                   : item,
               ),
             }
@@ -192,6 +234,10 @@ export function useBusinessFollowActions(
             : current,
         );
         await client.invalidateQueries({ queryKey: rootKey });
+        if (scope)
+          await client.invalidateQueries({
+            queryKey: queryKeys.savedRoot(scope),
+          });
         return result;
       } catch (error) {
         lifecycle.assert(epoch);
@@ -212,6 +258,7 @@ function withHeart(
   const heartedTargets = state.heartedTargets.filter(
     (target) => target.targetType !== 'video' || target.targetId !== videoId,
   );
-  if (result.hearted) heartedTargets.push({ targetType: 'video', targetId: videoId });
+  if (result.hearted)
+    heartedTargets.push({ targetType: 'video', targetId: videoId });
   return { ...state, heartedTargets };
 }

@@ -58,12 +58,21 @@ export const queryKeys = {
     ['private', scope, 'media', 'video-comments', id] as const,
   engagementStateRoot: (scope: AccountScope | null, epoch: number) =>
     ['private', scope ?? { epoch }, 'engagement', 'state'] as const,
+  savedRoot: (scope: AccountScope) =>
+    ['private', scope, 'engagement', 'saved'] as const,
+  saved: (scope: AccountScope, tab: string, mediaFilter: string) =>
+    [...queryKeys.savedRoot(scope), tab, mediaFilter] as const,
   engagementState: (
     scope: AccountScope | null,
     epoch: number,
     videoIds: readonly string[],
     businessIds: readonly string[] = [],
-  ) => [...queryKeys.engagementStateRoot(scope, epoch), videoIds, businessIds] as const,
+  ) =>
+    [
+      ...queryKeys.engagementStateRoot(scope, epoch),
+      videoIds,
+      businessIds,
+    ] as const,
   // Admin taxonomy reads. Suggestion pages are keyed by the URL status tab.
   adminCatalog: (scope: AccountScope) =>
     ['private', scope, 'admin', 'catalog'] as const,
@@ -94,11 +103,7 @@ export const queryKeys = {
     scopeRevision: string,
     tab: string,
   ) =>
-    [
-      ...queryKeys.adminVideoModerationRoot(scope),
-      scopeRevision,
-      tab,
-    ] as const,
+    [...queryKeys.adminVideoModerationRoot(scope), scopeRevision, tab] as const,
   // Admin reads are scoped by account/roles/epoch like every private key. The
   // free-text search never enters a key (it may hold a phone or email); the
   // caller keys it by an in-memory revision instead.

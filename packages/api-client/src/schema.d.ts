@@ -738,6 +738,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/engagement/me/saved": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List own followed businesses or saved videos, including removable unavailable items */
+        get: operations["engagementSaved"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/engagement/me/state": {
         parameters: {
             query?: never;
@@ -746,7 +763,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Read own video likes, hearts and public counts in one bounded batch
+         * Read own video likes, hearts, follows and public counts in one bounded batch
          * @description Guests receive empty relationship flags. Counts omit unavailable videos.
          */
         get: operations["engagementState"];
@@ -3339,6 +3356,39 @@ export interface components {
                 };
                 changed: boolean;
             };
+        };
+        SavedPageDto: {
+            items: ({
+                /** @enum {boolean} */
+                available: false;
+                bellOn: boolean;
+                /** @enum {string|null} */
+                mediaKind: "video" | "reel" | null;
+                /** @enum {string} */
+                reasonKey: "engagement.saved.unavailable";
+                /** Format: date-time */
+                savedAt: string;
+                /** Format: uuid */
+                targetId: string;
+                /** @enum {string} */
+                targetType: "business" | "video";
+            } | {
+                /** @enum {boolean} */
+                available: true;
+                bellOn: boolean;
+                canonicalPath: string | null;
+                labelEn: string;
+                labelHi: string | null;
+                /** @enum {string|null} */
+                mediaKind: "video" | "reel" | null;
+                /** Format: date-time */
+                savedAt: string;
+                /** Format: uuid */
+                targetId: string;
+                /** @enum {string} */
+                targetType: "business" | "video";
+            })[];
+            nextCursor: string | null;
         };
         SavedSettingDto: {
             /** Format: uuid */
@@ -12722,6 +12772,157 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["VideoLikeResultDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    engagementSaved: {
+        parameters: {
+            query?: {
+                cursor?: string;
+                limit?: number;
+                mediaFilter?: "all" | "videos" | "reels";
+                tab?: "shops" | "media";
+            };
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SavedPageDto"];
                 };
             };
             /** @description Flat error envelope; no submitted values or credentials. */

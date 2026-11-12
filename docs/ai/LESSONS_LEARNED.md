@@ -5,6 +5,15 @@ Format: see `.github/skills/lessons-learned/SKILL.md`. Newest at the
 top; developer bug-fix work and any agent that catches a reusable mistake add an
 entry here.
 
+## Include feature translations in the client provider
+
+What: engagement keys existed in both generated catalogs, but video controls
+could not read them because the root client provider omitted that namespace.
+Rule: wire a new feature namespace into the provider's explicit message
+projection as well as both catalogs; generated files alone do not prove that
+client translations are available.
+Enforced in: `i18n-a11y.instructions.md` and the EG1 frontend spec.
+
 ## Public images use gateway paths, not provider URLs
 
 What: business and catalog image DTOs allowed unrestricted absolute

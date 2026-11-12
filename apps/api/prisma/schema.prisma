@@ -829,11 +829,14 @@ model Heart {
   userId     String   @map("user_id") @db.Uuid
   targetType String   @map("target_type")
   targetId   String   @map("target_id") @db.Uuid
+  mediaKind  String?  @map("media_kind")
   createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   user       User     @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "hearts_user_id_fkey")
 
   @@id([userId, targetType, targetId], map: "hearts_pkey")
   @@index([userId, createdAt(sort: Desc), targetId], map: "hearts_user_created_target_idx")
+  @@index([userId, targetType, createdAt(sort: Desc), targetId(sort: Desc)], map: "hearts_saved_page_idx")
+  @@index([userId, targetType, mediaKind, createdAt(sort: Desc), targetId(sort: Desc)], map: "hearts_saved_kind_page_idx")
   @@map("hearts")
 }
 
@@ -850,6 +853,7 @@ model Follow {
   @@id([userId, businessId], map: "follows_pkey")
   @@index([businessId, userId], where: raw("\"unfollowed_at\" IS NULL"), map: "follows_business_user_active_idx")
   @@index([userId], where: raw("\"unfollowed_at\" IS NULL"), map: "follows_user_active_idx")
+  @@index([userId, lastFollowedAt(sort: Desc), businessId(sort: Desc)], where: raw("\"unfollowed_at\" IS NULL"), map: "follows_saved_page_idx")
   @@map("follows")
 }
 

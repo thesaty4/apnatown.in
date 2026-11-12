@@ -37,6 +37,8 @@ export async function setBusinessFollow(
   input: { following: boolean; bellOn: boolean },
   assertCurrent: () => void,
 ) {
+  if (!input.following)
+    return removeBusinessFollow(api, businessId, assertCurrent);
   const headers = await api.mutationHeaders();
   assertCurrent();
   const options = {
@@ -45,13 +47,26 @@ export async function setBusinessFollow(
       header: headers,
     },
   };
-  const result = input.following
-    ? await api.PUT('/engagement/follows/{businessId}', {
-        ...options,
-        body: { sourceVideoId, bellOn: input.bellOn },
-      })
-    : await api.DELETE('/engagement/follows/{businessId}', options);
+  const result = await api.PUT('/engagement/follows/{businessId}', {
+    ...options,
+    body: { sourceVideoId, bellOn: input.bellOn },
+  });
   return unwrap(result, FollowResultSchema);
+}
+
+export async function removeBusinessFollow(
+  api: BrowserApi,
+  businessId: string,
+  assertCurrent: () => void,
+) {
+  const headers = await api.mutationHeaders();
+  assertCurrent();
+  return unwrap(
+    await api.DELETE('/engagement/follows/{businessId}', {
+      params: { path: { businessId }, header: headers },
+    }),
+    FollowResultSchema,
+  );
 }
 
 export async function setVideoHeart(

@@ -12,9 +12,16 @@ import { VideoService } from './application/video.service';
 import { VideoModerationService } from './application/video-moderation.service';
 import { VideoCommentTargetService } from './application/video-comment-target.service';
 import { MEDIA_COMMENT_TARGET } from './application/video-comment-target.port';
+import {
+  VIDEO_SAVED_CARDS,
+  VideoSavedCardsService,
+} from './application/video-saved-cards';
 import { VIDEO_REPOSITORY } from './domain/videos';
 import { PrismaVideoRepository } from './infrastructure/video.repository';
-import { OwnerVideoController, PublicVideoController } from './presentation/video.controller';
+import {
+  OwnerVideoController,
+  PublicVideoController,
+} from './presentation/video.controller';
 import {
   AdminMediaReportController,
   VideoModerationController,
@@ -24,12 +31,17 @@ import {
 export class MediaStorageModule {
   static forRoot(runtime: DynamicModule, cleanup = false): DynamicModule {
     return {
-      module: MediaStorageModule, imports: [runtime],
+      module: MediaStorageModule,
+      imports: [runtime],
       providers: [
         { provide: MEDIA_IMAGES, useClass: PrismaImageRepository },
         { provide: IMAGE_PROCESSOR, useClass: SharpImageProcessor },
-        { provide: IMAGE_STORAGE, inject: [RUNTIME_CONFIG],
-          useFactory: (config: RuntimeConfig) => new CloudinaryImageStorage(config) },
+        {
+          provide: IMAGE_STORAGE,
+          inject: [RUNTIME_CONFIG],
+          useFactory: (config: RuntimeConfig) =>
+            new CloudinaryImageStorage(config),
+        },
         ...(cleanup ? [ImageCleanup] : []),
       ],
       exports: [MEDIA_IMAGES, IMAGE_PROCESSOR, IMAGE_STORAGE],
@@ -40,7 +52,8 @@ export class MediaStorageModule {
 export class MediaModule {
   static forRoot(imports: DynamicModule[]): DynamicModule {
     return {
-      module: MediaModule, imports,
+      module: MediaModule,
+      imports,
       controllers: [
         ImageController,
         OwnerVideoController,
@@ -54,10 +67,14 @@ export class MediaModule {
         VideoService,
         VideoModerationService,
         VideoCommentTargetService,
-        { provide: MEDIA_COMMENT_TARGET, useExisting: VideoCommentTargetService },
+        { provide: VIDEO_SAVED_CARDS, useClass: VideoSavedCardsService },
+        {
+          provide: MEDIA_COMMENT_TARGET,
+          useExisting: VideoCommentTargetService,
+        },
         { provide: VIDEO_REPOSITORY, useClass: PrismaVideoRepository },
       ],
-      exports: [MEDIA_COMMENT_TARGET],
+      exports: [MEDIA_COMMENT_TARGET, VIDEO_SAVED_CARDS],
     };
   }
 }

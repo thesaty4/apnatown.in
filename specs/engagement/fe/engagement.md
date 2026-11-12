@@ -36,6 +36,29 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) for standard states,
 
 ## Feature components (used across modules)
 
+### EG1 Saved implementation slice
+
+- `/saved` is a private, dynamic Server Component route with a no-store first-page
+  read and request-local React Query hydration. Private keys include account,
+  roles, session epoch, tab and media filter; stale time is 30 seconds, cache
+  lifetime five minutes, focus/reconnect refetch enabled, no automatic retries.
+- Following and saved Videos/Reels have real paginated API data and Load more.
+  Services and Photos show an explicit not-yet-available state, not mock lists
+  or success-shaped empty data. Existing business profile routes/cards are not
+  wired, so Following shows public names and bell state without broken links or
+  fabricated images, ratings, distances and totals.
+- Tab/filter selections live in `?tab=shops|services|media&media=all|photos|videos|reels`.
+  Back restores URL state; invalid values show a reset action. Guest login
+  preserves the selected Saved URL. Tabs support arrows/Home/End; media filters
+  use the shared Chip; all feedback is bilingual and wraps.
+- Removal reuses unfollow/heart DELETE. Unfollow asks confirmation; unavailable
+  targets remain removable. Successful removal updates all Saved pages, refetches
+  the list and invalidates video engagement state. Video follow/heart writes
+  invalidate Saved in return. Failures are explicit and never optimistically
+  claim success; logout/scope changes cancel and clear private state.
+- The root provider now supplies the engagement catalog for both existing video
+  controls and Saved. Header navigation exposes Saved without requiring a direct URL.
+
 | Component | Behaviour | Used in |
 |---|---|---|
 | `FollowButton` (shared) | Follow / Following + separate bell; following alone sends no follower notifications; new/refollow bell **off/unset**, explicit PUT `{bellOn}` toggles it; unfollow confirmation clears bell; login gate | profiles, cards, Reels overlay, Videos tab |
@@ -65,7 +88,7 @@ The video detail page uses `HeartButton` with the batched React Query engagement
 state and session-scoped cache. It updates the returned heart flag after the
 authoritative write, gates guests to login with a return to the same video, and
 shows loading, unavailable, retry, write-error and non-customer states. Photo
-hearts and the Saved tab remain separate features.
+hearts remain separate; EG1 lists and removes saved videos.
 
 ### EG3 video-detail implementation slice
 
@@ -73,7 +96,7 @@ The public video detail uses `FollowButton` for its owning business. Follow
 state shares the same batched React Query request as video likes/hearts. New
 follows start with notifications off; the customer can toggle the bell, and
 unfollow requires confirmation and clears the bell. Guest actions preserve the
-video return path. Business profile/cards, the Reels feed, Saved/Following and
+video return path. Business profile/cards, the Reels feed and
 notification fan-out remain separate work.
 
 ### EG6 implementation slice
@@ -95,6 +118,25 @@ errors remain visible; EN/HI copy wraps within the shared Sheet.
 Prefixes `engagement.*`, `saved.*`, `vendor.followers.*`. Events: `follow_toggled`, `bell_toggled`, `like_toggled`, `heart_toggled`, `bookmark_toggled`, `share_clicked` (channel), `comment_posted`, `announcement_sent`.
 
 ## Verification
+
+### EG1 build evidence (2026-11-12)
+
+| Check | Result |
+|---|---|
+| `pnpm build` | Passed: shared schemas, Prisma client generation, Nest API/OpenAPI, typed client, UI and Next production build; `/saved` is dynamic SSR |
+| `pnpm check:generated` | Passed: design tokens, EN/HI catalogs, OpenAPI and client are current |
+| `git diff --name-only -z HEAD -- '*.ts' '*.tsx' \| xargs -0 -r pnpm exec eslint` | Passed, zero errors; generated API declaration ignored as configured |
+| `git diff --check HEAD` | Passed |
+| `security-auditor` static review | PASS: complete implementation diff reviewed; no high-confidence exploitable findings |
+| `node scripts/validate-ai-setup.mjs` | Blocked by existing missing testing/specs-and-docs instruction links and the untouched backend instruction's 4,000-character budget violation |
+
+Migration execution and runtime checks were not performed. Human acceptance:
+save a video/reel and follow its business, open Saved, reload and paginate;
+change filters and use Back; remove available and subsequently hidden targets;
+verify another customer cannot reuse the cursor or see the first customer's
+list; exercise logout/account switch while reads/writes are in flight; verify
+guest login returns to the selected tab; check failed writes, offline/retry,
+keyboard/focus and Hindi/light/dark layouts. No automated test files were added.
 
 Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 

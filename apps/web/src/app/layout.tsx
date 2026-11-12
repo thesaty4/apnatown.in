@@ -50,6 +50,7 @@ export default async function RootLayout({
     geo: catalogue.geo,
     catalog: catalogue.catalog,
     reels: catalogue.reels,
+    engagement: catalogue.engagement,
     help: catalogue.help,
     system: catalogue.system,
   };

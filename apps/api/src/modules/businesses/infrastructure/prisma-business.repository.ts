@@ -83,6 +83,19 @@ const likePattern = (q: string) => `%${q.replace(/[\\%_]/g, '\\$&')}%`;
 export class PrismaBusinessRepository implements BusinessRepository {
   constructor(private readonly database: PrismaDatabase) {}
 
+  savedCards(tx: TxContext, ids: readonly string[]) {
+    return this.database.client(tx).$queryRaw<
+      Array<{ id: string; labelEn: string; labelHi: string | null }>
+    >`
+      SELECT b.id, b.name_en AS "labelEn", b.name_hi AS "labelHi"
+      FROM businesses b
+      JOIN users u ON u.id = b.owner_user_id
+      WHERE b.id = ANY(${[...ids]}::uuid[])
+        AND b.status = 'approved' AND b.deleted_at IS NULL
+        AND b.name_en IS NOT NULL
+        AND u.account_status = 'active' AND u.deleted_at IS NULL`;
+  }
+
   async find(
     tx: TxContext,
     id: string,
@@ -261,7 +274,9 @@ export class PrismaBusinessRepository implements BusinessRepository {
           (business_id, day_of_week, opens_at, closes_at, is_closed)
         VALUES ${Prisma.join(
           hours.map(
-            (day) => Prisma.sql`(${businessId}::uuid, ${day.dayOfWeek}::smallint,
+            (
+              day,
+            ) => Prisma.sql`(${businessId}::uuid, ${day.dayOfWeek}::smallint,
               ${day.opensAt}::time, ${day.closesAt}::time, ${day.isClosed})`,
           ),
         )}`,
@@ -429,10 +444,12 @@ export class PrismaBusinessRepository implements BusinessRepository {
     approvedShop: number;
     approvedProvider: number;
   }> {
-    const rows = await this.database.client(tx).$queryRaw<
-      { pending: number; approvedShop: number; approvedProvider: number }[]
-    >(
-      Prisma.sql`SELECT
+    const rows = await this.database
+      .client(tx)
+      .$queryRaw<
+        { pending: number; approvedShop: number; approvedProvider: number }[]
+      >(
+        Prisma.sql`SELECT
           count(*) FILTER (WHERE b.status = 'pending')::int AS pending,
           count(*) FILTER (WHERE b.status = 'approved' AND b.kind = 'shop')::int
             AS "approvedShop",
@@ -440,7 +457,7 @@ export class PrismaBusinessRepository implements BusinessRepository {
             AS "approvedProvider"
         FROM businesses b
         WHERE b.deleted_at IS NULL AND ${visible(visibility)}`,
-    );
+      );
     return rows[0]!;
   }
 
@@ -449,13 +466,13 @@ export class PrismaBusinessRepository implements BusinessRepository {
     businessIds: readonly string[],
   ): Promise<Map<string, string>> {
     if (!businessIds.length) return new Map();
-    const rows = await this.database.client(tx).$queryRaw<
-      { businessId: string; categoryId: string }[]
-    >(
-      Prisma.sql`SELECT business_id AS "businessId", category_id AS "categoryId"
+    const rows = await this.database
+      .client(tx)
+      .$queryRaw<{ businessId: string; categoryId: string }[]>(
+        Prisma.sql`SELECT business_id AS "businessId", category_id AS "categoryId"
         FROM business_categories
         WHERE is_primary AND business_id = ANY(${[...businessIds]}::uuid[])`,
-    );
+      );
     return new Map(rows.map((row) => [row.businessId, row.categoryId]));
   }
 
@@ -602,30 +619,34 @@ export class PrismaBusinessRepository implements BusinessRepository {
     tx: TxContext,
     input: { businessId: string; fromIstDate: string; toIstDate: string },
   ): Promise<Map<string, number>> {
-    const rows = await this.database.client(tx).$queryRaw<
-      { date: string; views: number }[]
-    >(
-      Prisma.sql`SELECT to_char(ist_date, 'YYYY-MM-DD') AS date,
+    const rows = await this.database
+      .client(tx)
+      .$queryRaw<{ date: string; views: number }[]>(
+        Prisma.sql`SELECT to_char(ist_date, 'YYYY-MM-DD') AS date,
           views::float8 AS views
         FROM business_daily_views
         WHERE business_id = ${input.businessId}::uuid
           AND ist_date BETWEEN ${input.fromIstDate}::date
             AND ${input.toIstDate}::date`,
-    );
+      );
     return new Map(rows.map((row) => [row.date, row.views]));
   }
 
   async coverageStartedAt(tx: TxContext): Promise<string | null> {
-    const rows = await this.database.client(tx).$queryRaw<
-      { startedAt: string }[]
-    >(
-      Prisma.sql`SELECT ${timestamp('started_at')} AS "startedAt"
+    const rows = await this.database
+      .client(tx)
+      .$queryRaw<{ startedAt: string }[]>(
+        Prisma.sql`SELECT ${timestamp('started_at')} AS "startedAt"
         FROM business_reporting_coverage WHERE metric = 'profile_views'`,
-    );
+      );
     return rows[0]?.startedAt ?? null;
   }
 
-  deleteViewClaims(tx: TxContext, before: Date, limit: number): Promise<number> {
+  deleteViewClaims(
+    tx: TxContext,
+    before: Date,
+    limit: number,
+  ): Promise<number> {
     return this.database.client(tx).$executeRaw`
       WITH expired AS (
         SELECT session_subject_hash, window_start, business_id

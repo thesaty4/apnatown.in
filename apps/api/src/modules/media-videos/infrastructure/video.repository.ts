@@ -107,6 +107,21 @@ const videoReportColumns = Prisma.sql`
 export class PrismaVideoRepository implements VideoRepository {
   constructor(private readonly database: PrismaDatabase) {}
 
+  savedCards(tx: TxContext, ids: readonly string[]) {
+    return this.database.client(tx).$queryRaw<
+      Array<{ id: string; caption: string }>
+    >`
+      SELECT v.id, v.caption
+      FROM videos v
+      JOIN businesses b ON b.id = v.business_id
+      JOIN users u ON u.id = b.owner_user_id
+      WHERE v.id = ANY(${[...ids]}::uuid[])
+        AND v.status = 'approved' AND v.show_in_reels = TRUE
+        AND v.owner_deleted_at IS NULL
+        AND b.status = 'approved' AND b.deleted_at IS NULL
+        AND u.account_status = 'active' AND u.deleted_at IS NULL`;
+  }
+
   async insert(tx: TxContext, row: StoredVideo): Promise<void> {
     await this.database.client(tx).$executeRaw`
       INSERT INTO videos (
@@ -138,7 +153,9 @@ export class PrismaVideoRepository implements VideoRepository {
   }
 
   async findPublic(tx: TxContext, id: string): Promise<StoredVideo | null> {
-    const rows = await this.database.client(tx).$queryRaw<StoredVideo[]>(Prisma.sql`
+    const rows = await this.database.client(tx).$queryRaw<
+      StoredVideo[]
+    >(Prisma.sql`
       SELECT ${videoColumns} FROM videos v
       JOIN businesses b ON b.id = v.business_id
       WHERE v.id = ${id}::uuid AND v.status = 'approved'
@@ -156,6 +173,7 @@ export class PrismaVideoRepository implements VideoRepository {
     cityId: string | null;
     areaId: string | null;
     public: boolean;
+    mediaKind: 'video' | 'reel';
   } | null> {
     const rows = await this.database.client(tx).$queryRaw<
       Array<{
@@ -164,9 +182,12 @@ export class PrismaVideoRepository implements VideoRepository {
         cityId: string | null;
         areaId: string | null;
         public: boolean;
+        mediaKind: 'video' | 'reel';
       }>
     >(Prisma.sql`
       SELECT v.id, v.business_id AS "businessId",
+             CASE WHEN v.provider_kind IN ('shorts', 'reel')
+               THEN 'reel' ELSE 'video' END AS "mediaKind",
              b.city_id AS "cityId", b.area_id AS "areaId",
              (v.status = 'approved' AND v.show_in_reels = TRUE
                AND v.owner_deleted_at IS NULL
@@ -191,7 +212,9 @@ export class PrismaVideoRepository implements VideoRepository {
       ? Prisma.sql`AND (v.created_at, v.id) <
           (${input.after.createdAt}::timestamptz, ${input.after.id}::uuid)`
       : Prisma.empty;
-    return this.database.client(tx).$queryRaw<StoredModerationVideo[]>(Prisma.sql`
+    return this.database.client(tx).$queryRaw<
+      StoredModerationVideo[]
+    >(Prisma.sql`
       SELECT ${moderationColumns} FROM videos v
       JOIN businesses b ON b.id = v.business_id
       WHERE v.status = ${input.tab}
@@ -226,13 +249,15 @@ export class PrismaVideoRepository implements VideoRepository {
       JOIN businesses b ON b.id = v.business_id
       WHERE v.owner_deleted_at IS NULL
         AND ${scopePredicate(scope)}`);
-    return rows[0] ?? {
-      pending: 0,
-      approved: 0,
-      rejected: 0,
-      removed: 0,
-      reported: 0,
-    };
+    return (
+      rows[0] ?? {
+        pending: 0,
+        approved: 0,
+        rejected: 0,
+        removed: 0,
+        reported: 0,
+      }
+    );
   }
 
   async reportedPage(

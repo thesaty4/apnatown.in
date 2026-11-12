@@ -107,6 +107,10 @@ export interface AdminVisibility {
 
 export const BUSINESS_REPOSITORY = Symbol('BUSINESS_REPOSITORY');
 export interface BusinessRepository {
+  savedCards(
+    tx: TxContext,
+    ids: readonly string[],
+  ): Promise<Array<{ id: string; labelEn: string; labelHi: string | null }>>;
   find(
     tx: TxContext,
     id: string,

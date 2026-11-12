@@ -11,7 +11,10 @@ import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
 import { BusinessContextModule } from './modules/businesses/business-context.module';
-import { MediaModule, MediaStorageModule } from './modules/media-videos/media.module';
+import {
+  MediaModule,
+  MediaStorageModule,
+} from './modules/media-videos/media.module';
 import { GeoAdminModule } from './modules/geo/geo-admin.module';
 import { GeoModule } from './modules/geo/geo.module';
 import { MaintenanceGuard } from './modules/settings/application/maintenance.guard';
@@ -33,7 +36,14 @@ export class AppModule {
     const geoAdmin = GeoAdminModule.forRoot(runtime, audit, admin, settings);
     const mediaStorage = MediaStorageModule.forRoot(runtime);
     const businessContext = BusinessContextModule.forRoot(runtime, users);
-    const catalog = CatalogModule.forRoot(runtime, users, audit, admin, businessContext, mediaStorage);
+    const catalog = CatalogModule.forRoot(
+      runtime,
+      users,
+      audit,
+      admin,
+      businessContext,
+      mediaStorage,
+    );
     const media = MediaModule.forRoot([
       runtime,
       users,
@@ -50,6 +60,7 @@ export class AppModule {
       audit,
       settings,
       media,
+      businessContext,
     );
     return {
       module: AppModule,

@@ -1,6 +1,8 @@
 export { ErrorResponseSchema, HealthResponseSchema } from './wire.js';
 export type { ErrorResponse, HealthResponse } from './wire.js';
 export { Money } from './money.js';
+export { SavedQuerySchema, SavedItemSchema, SavedPageSchema } from './saved.js';
+export type { SavedQuery, SavedItem, SavedPage } from './saved.js';
 export {
   MediaGatewayPathSchema,
   TaxonomyUploadBodySchema,

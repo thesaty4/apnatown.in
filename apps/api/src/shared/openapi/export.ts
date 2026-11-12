@@ -80,11 +80,14 @@ import { VideoFollowsController } from '../../modules/engagement/presentation/vi
 import { FollowsService } from '../../modules/engagement/application/follows.service';
 import { VideoSharesController } from '../../modules/engagement/presentation/video-shares.controller';
 import { VideoSharesService } from '../../modules/engagement/application/video-shares.service';
+import { SavedController } from '../../modules/engagement/presentation/saved.controller';
+import { SavedService } from '../../modules/engagement/application/saved.service';
 
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
 @Module({
   controllers: [
+    SavedController,
     VideoLikesController,
     VideoFollowsController,
     VideoSharesController,
@@ -121,6 +124,7 @@ import { VideoSharesService } from '../../modules/engagement/application/video-s
     AdminVideoCommentsController,
   ],
   providers: [
+    SavedService,
     VideoLikesService,
     FollowsService,
     VideoSharesService,
