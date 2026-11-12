@@ -42,6 +42,7 @@ import {
   FILTER_NOTES,
   requireCorrelationId,
 } from './audit.dto';
+import { MaintenanceAdmission } from '../../../shared/maintenance/admission';
 
 const SUPER_ONLY =
   'super_admin only; platform-wide including global/unscoped rows. actorRole narrows by the recorded actor role; actorId is the exact Admin-card shortcut.';
@@ -49,6 +50,7 @@ const SUPER_ONLY =
 @ApiTags('super-admin')
 @PrivateApi()
 @Roles('super_admin')
+@MaintenanceAdmission('super')
 @Controller('super-admin/activity')
 export class SuperAdminActivityController {
   constructor(private readonly audit: AuditReadService) {}

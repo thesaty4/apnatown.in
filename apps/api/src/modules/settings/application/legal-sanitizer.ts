@@ -5,19 +5,32 @@
  * targets without credentials; reference definitions/code spans are dropped.
  * Clients still render the result as Markdown without raw HTML.
  */
+// Control, bidi and zero-width characters (newline/tab are kept).
+const invisible = (code: number): boolean =>
+  (code <= 0x1f && code !== 0x09 && code !== 0x0a) ||
+  (code >= 0x7f && code <= 0x9f) ||
+  (code >= 0x200b && code <= 0x200f) ||
+  (code >= 0x2028 && code <= 0x202e) ||
+  (code >= 0x2060 && code <= 0x2064) ||
+  code === 0xfeff;
+
+const stripInvisible = (value: string): string =>
+  Array.from(value)
+    .filter((char) => !invisible(char.codePointAt(0) ?? 0))
+    .join('');
+
 export function sanitizeLegalMarkdown(input: string): string {
-  let text = input
-    .replace(/\r\n?/g, '\n')
-    // eslint-disable-next-line no-control-regex
-    .replace(/[\u0000-\u0008\u000B-\u001F\u007F-\u009F\u200B-\u200F\u2028-\u202E\u2060-\u2064\uFEFF]/g, '');
+  let text = stripInvisible(input.replace(/\r\n?/g, '\n'));
   text = text
     .replace(/<!--[\s\S]*?(-->|$)/g, '')
     .replace(/<\/?[A-Za-z][^>]*>?/g, '')
     .replace(/[<>]/g, '')
     // Images: keep alt text only (no remote fetches from legal pages).
     .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
-    .replace(/\[([^\]]*)\]\(([^)\s]*)(?:\s+"[^"]*")?\)/g, (_match, label: string, href: string) =>
-      safeHttps(href) ? `[${label}](${href})` : label,
+    .replace(
+      /\[([^\]]*)\]\(([^)\s]*)(?:\s+"[^"]*")?\)/g,
+      (_match, label: string, href: string) =>
+        safeHttps(href) ? `[${label}](${href})` : label,
     )
     // Reference-style definitions could smuggle unsafe targets.
     .replace(/^\s{0,3}\[[^\]]+\]:.*$/gm, '')
@@ -35,7 +48,10 @@ function safeHttps(href: string): boolean {
   try {
     const url = new URL(href);
     return (
-      url.protocol === 'https:' && !url.username && !url.password && !!url.hostname
+      url.protocol === 'https:' &&
+      !url.username &&
+      !url.password &&
+      !!url.hostname
     );
   } catch {
     return false;

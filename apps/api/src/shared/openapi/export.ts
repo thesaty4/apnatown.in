@@ -33,6 +33,15 @@ import { RolesService } from '../../modules/admin/application/roles.service';
 import { AdminAuditController } from '../../modules/audit/presentation/admin-audit.controller';
 import { SuperAdminActivityController } from '../../modules/audit/presentation/super-admin-activity.controller';
 import { AuditReadService } from '../../modules/audit/application/audit-read.service';
+import { PublicSettingsController } from '../../modules/settings/presentation/public-settings.controller';
+import { SuperAdminSettingsController } from '../../modules/settings/presentation/super-admin-settings.controller';
+import {
+  AdminSupportMessagesController,
+  SupportMessagesController,
+} from '../../modules/settings/presentation/support.controller';
+import { PublicSettingsService } from '../../modules/settings/application/public-settings.service';
+import { SettingsService } from '../../modules/settings/application/settings.service';
+import { SupportService } from '../../modules/settings/application/support.service';
 
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
@@ -52,6 +61,10 @@ import { AuditReadService } from '../../modules/audit/application/audit-read.ser
     SuperAdminRolesController,
     AdminAuditController,
     SuperAdminActivityController,
+    PublicSettingsController,
+    SuperAdminSettingsController,
+    SupportMessagesController,
+    AdminSupportMessagesController,
   ],
   providers: [
     ReadinessService,
@@ -66,9 +79,14 @@ import { AuditReadService } from '../../modules/audit/application/audit-read.ser
     AdminAccountsService,
     RolesService,
     AuditReadService,
+    PublicSettingsService,
+    SettingsService,
+    SupportService,
   ].map((provide) => ({ provide, useValue: Object.freeze({}) })),
 })
 class OpenApiModule {}
+
+const PROBE_PATHS = new Set(['/health/live', '/health/ready']);
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2).filter((arg) => arg !== '--');
@@ -101,7 +119,7 @@ async function main(): Promise<void> {
     const document = cleanupOpenApiDoc(
       SwaggerModule.createDocument(app, config),
     );
-    for (const item of Object.values(document.paths)) {
+    for (const [path, item] of Object.entries(document.paths)) {
       for (const operation of [
         item.get,
         item.head,
@@ -121,6 +139,17 @@ async function main(): Promise<void> {
             pattern: '^[A-Za-z0-9_-]+$',
           },
         });
+        // Every non-probe route can be refused by the global maintenance guard.
+        if (!PROBE_PATHS.has(path))
+          operation.responses['503'] ??= {
+            description:
+              'MAINTENANCE (errors.system.maintenance) while maintenance mode is on and this route is not admitted',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/ErrorDto' },
+              },
+            },
+          };
         for (const [status, response] of Object.entries(operation.responses)) {
           if (response && !('$ref' in response))
             response.headers = {
@@ -140,6 +169,15 @@ async function main(): Promise<void> {
                       schema: { type: 'string', pattern: '^[0-9]+$' },
                       description:
                         'Seconds until this rate-limit window resets',
+                    },
+                  }
+                : {}),
+              ...(status === '503'
+                ? {
+                    'Retry-After': {
+                      schema: { type: 'string', pattern: '^[0-9]+$' },
+                      description:
+                        'Seconds before retrying; sent with MAINTENANCE',
                     },
                   }
                 : {}),

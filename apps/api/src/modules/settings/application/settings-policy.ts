@@ -50,7 +50,9 @@ function invalid(key: SettingKey, issues: readonly z.core.$ZodIssue[]) {
   ]
     .filter((path) => path.length <= 100 && FIELD_PATH.test(path))
     .slice(0, 50);
-  return new DomainError('SETTINGS_INVALID', { fields: fields.length ? fields : [key] });
+  return new DomainError('SETTINGS_INVALID', {
+    fields: fields.length ? fields : [key],
+  });
 }
 
 /**

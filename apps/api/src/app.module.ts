@@ -10,6 +10,8 @@ import { AdminModule } from './modules/admin/admin.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { GeoModule } from './modules/geo/geo.module';
+import { MaintenanceGuard } from './modules/settings/application/maintenance.guard';
+import { SettingsModule } from './modules/settings/settings.module';
 import { UsersModule } from './modules/users/users.module';
 import { RuntimeModule } from './shared/health/runtime.module';
 import { RateLimitGuard } from './shared/rate-limit/rate-limit';
@@ -22,6 +24,7 @@ export class AppModule {
     const users = UsersModule.forRoot(runtime, geo);
     const audit = AuditModule.forApi(runtime, users);
     const admin = AdminModule.forRoot(runtime, geo, users, audit);
+    const settings = SettingsModule.forRoot(runtime, users, audit, admin);
     return {
       module: AppModule,
       imports: [
@@ -30,11 +33,14 @@ export class AppModule {
         geo,
         audit,
         admin,
+        settings,
       ],
       controllers: [HealthController],
       providers: [
         { provide: APP_PIPE, useClass: ZodValidationPipe },
         { provide: APP_FILTER, useClass: ErrorFilter },
+        // Maintenance admission runs first so blocked routes do no other work.
+        { provide: APP_GUARD, useExisting: MaintenanceGuard },
         { provide: APP_GUARD, useClass: AuthGuard },
         { provide: APP_GUARD, useClass: RateLimitGuard },
         // Role/permission/scope checks run after authentication and rate limits.

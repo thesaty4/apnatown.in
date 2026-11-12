@@ -70,12 +70,7 @@ import {
 } from './settings-policy';
 import { SettingsReader, parseStored } from './settings-reader';
 
-const LEGAL_AUDIT_FIELDS = [
-  'titleEn',
-  'titleHi',
-  'bodyEn',
-  'bodyHi',
-] as const;
+const LEGAL_AUDIT_FIELDS = ['titleEn', 'titleHi', 'bodyEn', 'bodyHi'] as const;
 
 function entry(key: SettingKey, row: StoredSetting | undefined): SettingEntry {
   return SettingEntrySchema.parse({
@@ -92,7 +87,8 @@ function entry(key: SettingKey, row: StoredSetting | undefined): SettingEntry {
 export class SettingsService {
   constructor(
     @Inject(UNIT_OF_WORK) private readonly uow: UnitOfWork,
-    @Inject(SETTINGS_REPOSITORY) private readonly repository: SettingsRepository,
+    @Inject(SETTINGS_REPOSITORY)
+    private readonly repository: SettingsRepository,
     @Inject(AUDIT_WRITER) private readonly audit: AuditWriter,
     @Inject(RUNTIME_CONFIG) private readonly config: RuntimeConfig,
     @Inject(CLOCK) private readonly clock: Clock,
@@ -279,7 +275,8 @@ export class SettingsService {
       input,
       async (tx, actor) => {
         const current = await this.repository.lockFlag(tx, key);
-        if (!current) throw new DomainError('SETTINGS_INVALID', { field: 'key' });
+        if (!current)
+          throw new DomainError('SETTINGS_INVALID', { field: 'key' });
         const now = this.clock.now();
         if (
           current.version !== input.expectedVersion ||
@@ -318,7 +315,8 @@ export class SettingsService {
         // Replay returns the current flag state (re-read after the recheck).
         replay: async (tx) => {
           const [flag] = await this.repository.readFlags(tx, [key]);
-          if (!flag) throw new DomainError('SETTINGS_INVALID', { field: 'key' });
+          if (!flag)
+            throw new DomainError('SETTINGS_INVALID', { field: 'key' });
           return this.flag(flag) as FeatureFlag & JsonValue;
         },
       },
@@ -337,7 +335,8 @@ export class SettingsService {
       bodyHi: sanitizeLegalMarkdown(input.bodyHi),
     };
     const empty = LEGAL_AUDIT_FIELDS.filter((field) => !clean[field]);
-    if (empty.length) throw new DomainError('SETTINGS_INVALID', { fields: empty });
+    if (empty.length)
+      throw new DomainError('SETTINGS_INVALID', { fields: empty });
     return this.commands.run(
       command,
       {
@@ -409,7 +408,11 @@ export class SettingsService {
     actor: SuperActor,
     changeSetId: string,
     correlationId: string,
-    updates: readonly { key: SettingKey; value: unknown; expectedVersion: number }[],
+    updates: readonly {
+      key: SettingKey;
+      value: unknown;
+      expectedVersion: number;
+    }[],
     group?: SettingsGroup,
   ): Promise<StoredSetting[]> {
     const values = updates.map((update) => ({

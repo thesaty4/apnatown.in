@@ -51,9 +51,12 @@ import {
   SessionDto,
   VerifyInputDto,
 } from './dto';
+import { MaintenanceAdmission } from '../../../shared/maintenance/admission';
 
 @ApiTags('auth')
 @PrivateApi()
+// Auth recovery stays reachable during maintenance (normal Auth controls apply).
+@MaintenanceAdmission('always')
 @Controller('auth')
 export class AuthController {
   constructor(

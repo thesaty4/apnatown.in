@@ -13,8 +13,6 @@ export const MAINTENANCE_ADMISSION = 'apnatown:maintenance-admission';
  * - `consent-withdrawal`: only a `granted: false` consent choice is admitted.
  */
 export type MaintenanceAdmissionClass =
-  | 'always'
-  | 'super'
-  | 'consent-withdrawal';
+  'always' | 'super' | 'consent-withdrawal';
 export const MaintenanceAdmission = (admission: MaintenanceAdmissionClass) =>
   SetMetadata(MAINTENANCE_ADMISSION, admission);

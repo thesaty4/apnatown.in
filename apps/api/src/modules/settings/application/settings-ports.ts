@@ -1,4 +1,3 @@
-import type { Page } from '@apnatown/shared/wire';
 import type {
   FeatureFlagKey,
   SettingKey,
@@ -70,6 +69,11 @@ export interface SettingsTaxPort {
 }
 
 export const SUPPORT_READ = Symbol('SUPPORT_READ');
+export interface Page<T> {
+  readonly items: readonly T[];
+  /** Signed cursor bound to the caller's scope revision. */
+  readonly nextCursor: string | null;
+}
 export interface SupportAlert {
   readonly id: string;
   readonly createdAt: string;

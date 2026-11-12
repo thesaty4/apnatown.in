@@ -38,6 +38,13 @@ export const RateLimit = (
   return SetMetadata(RATE_LIMIT_POLICY, Object.freeze(parsed));
 };
 
+/** Keyed subject hash shared by the guard and in-process (delegated) limits. */
+export function rateLimitSubjectHash(signingKey: string, subject: string) {
+  return createHmac('sha256', signingKey)
+    .update(`rate-limit-v1\0${subject}`)
+    .digest();
+}
+
 interface RateLimitRequest extends Request {
   rateLimitPrincipalId?: string;
   rateLimitSessionId?: string;
@@ -84,10 +91,10 @@ export class RateLimitGuard implements CanActivate {
     policy: RateLimitPolicy,
     subject: string,
   ): Promise<void> {
-
-    const subjectHash = createHmac('sha256', this.config.CURSOR_SIGNING_KEY)
-      .update(`rate-limit-v1\0${subject}`)
-      .digest();
+    const subjectHash = rateLimitSubjectHash(
+      this.config.CURSOR_SIGNING_KEY,
+      subject,
+    );
     let result: Awaited<ReturnType<RateLimitRepository['consume']>>;
     try {
       result = await this.repository.consume({

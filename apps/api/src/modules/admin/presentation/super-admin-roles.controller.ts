@@ -53,6 +53,7 @@ import {
   UpdateRoleDto,
   adminCommand,
 } from './admin.dto';
+import { MaintenanceAdmission } from '../../../shared/maintenance/admission';
 
 const ROLE_ID = { name: 'id', schema: { type: 'string', format: 'uuid' } };
 const WRITE_LIMIT = {
@@ -65,6 +66,7 @@ const WRITE_LIMIT = {
 @ApiTags('super-admin')
 @PrivateApi()
 @Roles('super_admin')
+@MaintenanceAdmission('super')
 @Controller('super-admin/roles')
 export class SuperAdminRolesController {
   constructor(private readonly roles: RolesService) {}

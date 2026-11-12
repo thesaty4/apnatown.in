@@ -51,9 +51,9 @@ export class PrismaSupportMessageRepository implements SupportMessageRepository 
   async read(tx: TxContext, id: string): Promise<StoredSupportMessage | null> {
     const rows = await this.database
       .client(tx)
-      .$queryRaw<
-        StoredSupportMessage[]
-      >(Prisma.sql`SELECT ${columns} FROM support_messages WHERE id = ${id}::uuid`);
+      .$queryRaw<StoredSupportMessage[]>(
+        Prisma.sql`SELECT ${columns} FROM support_messages WHERE id = ${id}::uuid`,
+      );
     return rows[0] ?? null;
   }
 
@@ -98,9 +98,9 @@ export class PrismaSupportMessageRepository implements SupportMessageRepository 
   async existsForUser(tx: TxContext, userId: string): Promise<boolean> {
     const rows = await this.database
       .client(tx)
-      .$queryRaw<
-        { one: number }[]
-      >(Prisma.sql`SELECT 1 AS one FROM support_messages WHERE user_id = ${userId}::uuid LIMIT 1`);
+      .$queryRaw<{ one: number }[]>(
+        Prisma.sql`SELECT 1 AS one FROM support_messages WHERE user_id = ${userId}::uuid LIMIT 1`,
+      );
     return rows.length > 0;
   }
 }

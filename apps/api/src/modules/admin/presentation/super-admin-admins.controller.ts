@@ -56,6 +56,7 @@ import {
   SetAdminStatusDto,
   adminCommand,
 } from './admin.dto';
+import { MaintenanceAdmission } from '../../../shared/maintenance/admission';
 
 const ADMIN_ID = { name: 'id', schema: { type: 'string', format: 'uuid' } };
 const WRITE_LIMIT = {
@@ -68,6 +69,7 @@ const WRITE_LIMIT = {
 @ApiTags('super-admin')
 @PrivateApi()
 @Roles('super_admin')
+@MaintenanceAdmission('super')
 @Controller('super-admin/admins')
 export class SuperAdminAdminsController {
   constructor(private readonly accounts: AdminAccountsService) {}

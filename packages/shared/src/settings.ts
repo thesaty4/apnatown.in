@@ -125,7 +125,9 @@ export const DeliverySlabsSchema = z.strictObject({
     .max(3)
     // Strictly ascending distance bands; Geo owns zone overrides.
     .refine((slabs) =>
-      slabs.every((slab, index) => !index || slab.uptoKm > slabs[index - 1]!.uptoKm),
+      slabs.every(
+        (slab, index) => !index || slab.uptoKm > slabs[index - 1]!.uptoKm,
+      ),
     ),
 });
 export const RiderEarningSchema = z.strictObject({
@@ -137,15 +139,15 @@ export const CommissionSchema = z.strictObject({
   platformFeePaise: PaiseSchema,
 });
 const PlanBaseSchema = z.strictObject({
-    code,
-    nameEn: text(60),
-    nameHi: text(60),
-    pricePaise: PaiseSchema,
-    commissionBps: BpsSchema,
-    enabled: z.boolean(),
-    premium: z.boolean(),
-    billingPeriodMonths: z.literal(1),
-  });
+  code,
+  nameEn: text(60),
+  nameHi: text(60),
+  pricePaise: PaiseSchema,
+  commissionBps: BpsSchema,
+  enabled: z.boolean(),
+  premium: z.boolean(),
+  billingPeriodMonths: z.literal(1),
+});
 // Paid (Premium) plans need an explicit price; a free plan is never Premium.
 export const PlanSchema = PlanBaseSchema.refine(
   (plan) => plan.premium === plan.pricePaise > 0,
@@ -159,14 +161,14 @@ export const PromotionKindSchema = z.enum([
   'featured_business',
 ]);
 const PromotionFeeBaseSchema = z.strictObject({
-    code,
-    nameEn: text(60),
-    nameHi: text(60),
-    pricePaise: PaiseSchema,
-    enabled: z.boolean(),
-    kind: PromotionKindSchema,
-    durationDays: z.literal(7),
-  });
+  code,
+  nameEn: text(60),
+  nameHi: text(60),
+  pricePaise: PaiseSchema,
+  enabled: z.boolean(),
+  kind: PromotionKindSchema,
+  durationDays: z.literal(7),
+});
 // An enabled paid promotion cannot be sold without an explicit price.
 export const PromotionFeeSchema = PromotionFeeBaseSchema.refine(
   (fee) => !fee.enabled || fee.pricePaise > 0,
@@ -388,9 +390,7 @@ export const TaxSettingsSchema = z
   })
   .refine((tax) =>
     FEE_TAX_CODE_KEYS.every((key) =>
-      tax.classifications.some(
-        (item) => item.code === tax.feeTaxCodes[key],
-      ),
+      tax.classifications.some((item) => item.code === tax.feeTaxCodes[key]),
     ),
   );
 export type TaxSettings = z.infer<typeof TaxSettingsSchema>;
@@ -714,7 +714,9 @@ export const SettingsUpdatedPayloadSchema = z.strictObject({
 });
 export const SettingsGroupUpdatedPayloadSchema = z.strictObject({
   group: SettingsGroupSchema,
-  keys: z.array(z.strictObject({ key: SettingKeySchema, version: VersionSchema })),
+  keys: z.array(
+    z.strictObject({ key: SettingKeySchema, version: VersionSchema }),
+  ),
   changeSetId: IdSchema,
 });
 export const FeatureFlagUpdatedPayloadSchema = z.strictObject({
@@ -731,7 +733,9 @@ export const SupportMessageSubmittedPayloadSchema = z.strictObject({
   messageId: IdSchema,
   scope: SupportScopeSchema,
 });
-export type SettingsUpdatedPayload = z.infer<typeof SettingsUpdatedPayloadSchema>;
+export type SettingsUpdatedPayload = z.infer<
+  typeof SettingsUpdatedPayloadSchema
+>;
 export type SettingsGroupUpdatedPayload = z.infer<
   typeof SettingsGroupUpdatedPayloadSchema
 >;

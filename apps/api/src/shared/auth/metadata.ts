@@ -7,12 +7,7 @@ export const ROLES_ROUTE = 'apnatown:roles';
 export const PERMISSION_ROUTE = 'apnatown:permission';
 export const SCOPED_ROUTE = 'apnatown:scoped';
 export type AuthRoutePolicy =
-  | 'public-read'
-  | 'csrf'
-  | 'guest'
-  | 'session'
-  | 'own'
-  | 'role';
+  'public-read' | 'csrf' | 'guest' | 'session' | 'own' | 'role';
 /** Public reads only; this NEVER exempts a mutation from authorization or CSRF. */
 export const PublicRoute = () => SetMetadata(AUTH_ROUTE, 'public-read');
 /** Own-account access, not an admin/seller/rider permission grant. */

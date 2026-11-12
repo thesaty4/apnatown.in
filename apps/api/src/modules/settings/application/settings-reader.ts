@@ -57,7 +57,8 @@ export class SettingsReader implements SettingsReadPort, SettingsTaxPort {
 
   constructor(
     @Inject(UNIT_OF_WORK) private readonly uow: UnitOfWork,
-    @Inject(SETTINGS_REPOSITORY) private readonly repository: SettingsRepository,
+    @Inject(SETTINGS_REPOSITORY)
+    private readonly repository: SettingsRepository,
     @Inject(CLOCK) private readonly clock: Clock,
   ) {}
 
@@ -88,7 +89,8 @@ export class SettingsReader implements SettingsReadPort, SettingsTaxPort {
         version: row?.version ?? 0,
       };
     });
-    if (!tx) this.groups.set(group, { value: tuple, expiresAt: now + CACHE_TTL_MS });
+    if (!tx)
+      this.groups.set(group, { value: tuple, expiresAt: now + CACHE_TTL_MS });
     return tuple;
   }
 

@@ -3,6 +3,8 @@ import type { RuntimeConfig } from '../../shared/config/config';
 import { IDENTITY_CRYPTO, NodeIdentityCrypto } from '../../shared/auth/crypto';
 import { privateStorageProvider } from '../../integrations/storage/provider';
 import { AuthSessionsModule } from '../auth/auth-sessions.module';
+import { SupportDataOwner } from '../settings/application/support-data-owner';
+import { SettingsDataModule } from '../settings/settings.module';
 import { ADDRESS_REPOSITORY } from './domain/address';
 import { CONSENT_REPOSITORY } from './domain/consent';
 import { DATA_REQUEST_REPOSITORY } from './domain/data-request';
@@ -34,7 +36,11 @@ export class UsersDataWorkerModule {
   static forRoot(runtime: DynamicModule, config: RuntimeConfig): DynamicModule {
     return {
       module: UsersDataWorkerModule,
-      imports: [runtime, AuthSessionsModule.forRoot(runtime)],
+      imports: [
+        runtime,
+        AuthSessionsModule.forRoot(runtime),
+        SettingsDataModule.forRoot(runtime),
+      ],
       providers: [
         {
           provide: IDENTITY_CRYPTO,
@@ -59,7 +65,13 @@ export class UsersDataWorkerModule {
         {
           provide: USER_DATA_OWNERS,
           useFactory: (...owners: UserDataPort[]) => Object.freeze(owners),
-          inject: [ProfileDataOwner, AddressDataOwner, ConsentDataOwner],
+          // Support first: its retention block stops erasure before others run.
+          inject: [
+            SupportDataOwner,
+            ProfileDataOwner,
+            AddressDataOwner,
+            ConsentDataOwner,
+          ],
         },
         DataRequestEvents,
         DataRequestProcessor,

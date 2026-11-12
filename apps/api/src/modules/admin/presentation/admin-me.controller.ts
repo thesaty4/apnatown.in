@@ -8,10 +8,12 @@ import { InputPipe } from '../../../shared/auth/validation';
 import { RateLimit } from '../../../shared/rate-limit/rate-limit';
 import { AdminAccountsService } from '../application/admin-accounts.service';
 import { AdminErrors, AdminMeDto } from './admin.dto';
+import { MaintenanceAdmission } from '../../../shared/maintenance/admission';
 
 @ApiTags('admin')
 @PrivateApi()
 @Roles('admin', 'super_admin')
+@MaintenanceAdmission('super')
 @Controller('admin')
 export class AdminMeController {
   constructor(private readonly accounts: AdminAccountsService) {}

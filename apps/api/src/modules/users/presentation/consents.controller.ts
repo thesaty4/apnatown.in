@@ -32,6 +32,7 @@ import {
   ConsentRecordDto,
   UpdateConsentDto,
 } from './consents.dto';
+import { MaintenanceAdmission } from '../../../shared/maintenance/admission';
 
 @ApiTags('users')
 @PrivateApi()
@@ -62,6 +63,8 @@ export class ConsentsController {
     );
   }
   @Put(':purpose')
+  // Only a withdrawal (granted: false) is admitted during maintenance.
+  @MaintenanceAdmission('consent-withdrawal')
   @BrowserMutation()
   @ApiOperation({
     summary: 'Record an own consent choice',

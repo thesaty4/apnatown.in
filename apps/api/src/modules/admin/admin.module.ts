@@ -46,7 +46,8 @@ export class AdminModule {
         AdminAccountsService,
         RolesService,
       ],
-      exports: [ADMIN_SCOPE, ADMIN_RECIPIENTS],
+      // AdminCommands is the shared super-admin command boundary (Settings).
+      exports: [ADMIN_SCOPE, ADMIN_RECIPIENTS, AdminCommands],
     };
   }
 }

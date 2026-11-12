@@ -8,12 +8,12 @@ import {
   SETTING_KEYS,
   type FeatureFlagKey,
   type LegalPage,
+  type LegalQuery,
   type LegalSlug,
   type PlatformHealth,
   type PublicSettings,
   type SettingKey,
 } from '@apnatown/shared/settings';
-import type { Locale } from '@apnatown/shared/users';
 import {
   RUNTIME_CONFIG,
   type RuntimeConfig,
@@ -37,7 +37,8 @@ import { SETTINGS_READ, type SettingsReadPort } from './settings-ports';
 export class PublicSettingsService {
   constructor(
     @Inject(UNIT_OF_WORK) private readonly uow: UnitOfWork,
-    @Inject(SETTINGS_REPOSITORY) private readonly repository: SettingsRepository,
+    @Inject(SETTINGS_REPOSITORY)
+    private readonly repository: SettingsRepository,
     @Inject(SETTINGS_READ) private readonly reader: SettingsReadPort,
     @Inject(RUNTIME_CONFIG) private readonly config: RuntimeConfig,
     @Inject(CLOCK) private readonly clock: Clock,
@@ -133,7 +134,7 @@ export class PublicSettingsService {
     });
   }
 
-  legal(slug: LegalSlug, locale: Locale): Promise<LegalPage> {
+  legal(slug: LegalSlug, locale: LegalQuery['locale']): Promise<LegalPage> {
     return this.uow.run(async (tx) => {
       const [page] = await this.repository.readLegal(tx, [slug]);
       // Unpublished pages (Q-12 copy pending) are an explicit not-found.

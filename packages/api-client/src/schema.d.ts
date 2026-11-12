@@ -59,6 +59,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/admin/support/messages/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read one support message for the overview alert
+         * @description Requires an active admin with users:view and the exact resolved scope of the message (area grant or whole-city grant); unscoped/global guest messages are super_admin only. Returns plain text to render inert, with an optional author display label; no reporter contact or export. Linked from /admin/overview?supportMessageId={id}. private, no-store.
+         */
+        get: operations["adminSupportMessage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/csrf": {
         parameters: {
             query?: never;
@@ -214,6 +234,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Platform status
+         * @description HTTP 200 with status ok or maintenance and checkedAt; always admitted, no-store, no dependency or secret details. Infrastructure probes use /health/live and /health/ready.
+         */
+        get: operations["healthStatus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health/live": {
         parameters: {
             query?: never;
@@ -240,6 +280,46 @@ export interface paths {
         };
         /** Runtime prerequisites readiness */
         get: operations["healthReady"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/legal/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read a published legal page
+         * @description Localized title and sanitised Markdown-subset body (headings, paragraphs, lists, https links); render without raw HTML. Web caches under the ISR tag legal:{slug}, revalidated by legal.updated. Admitted during maintenance.
+         */
+        get: operations["legalPage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/settings/public": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read the safe public settings projection
+         * @description Branding, current feature flags, checkout payment-method availability (flag on and prerequisites configured), approved refund policy, safe upload constraints, SEO defaults, enabled public plan/promotion prices, configured support Call/WhatsApp E.164 contacts (null when not configured) and version metadata. Unconfigured keys are null. Never returns credentials, sender secrets, supplier evidence or internal tax configuration. Not cached (current flags); admitted during maintenance.
+         */
+        get: operations["settingsPublic"];
         put?: never;
         post?: never;
         delete?: never;
@@ -432,6 +512,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/super-admin/feature-flags/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Toggle a feature flag
+         * @description Versioned toggle. booking and donations can never be enabled; payments_online and whatsapp cannot be enabled until their adapter is configured. Disabling is always allowed. Emits feature_flag.updated; consumers recheck the authoritative flag. super_admin only; admitted during maintenance for recovery. Rechecks super_admin in the transaction, writes one audit entry and its outbox events atomically.
+         */
+        put: operations["superAdminUpdateFeatureFlag"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/super-admin/legal/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Publish a legal page
+         * @description EN and HI title/body are sanitised to the allow-listed Markdown subset (headings, paragraphs, lists, https links); HTML, scripts, images and non-https links are removed before storage. expectedVersion 0 publishes the first version. Emits legal.updated (web revalidates legal:{slug}). super_admin only; admitted during maintenance for recovery. Rechecks super_admin in the transaction, writes one audit entry and its outbox events atomically.
+         */
+        put: operations["superAdminUpdateLegalPage"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/super-admin/roles": {
         parameters: {
             query?: never;
@@ -494,6 +614,86 @@ export interface paths {
          * @description Creates a non-system role named "Copy of <name>" (truncated to 40 characters) with the same description and permissions. Audited and emits role.updated.
          */
         post: operations["SuperAdminRolesController_duplicate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/super-admin/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read all settings, flags, legal pages and readiness
+         * @description Every setting key with value (null when never configured or invalid), version (0 when absent), group membership and updatedAt; feature flags with enablable; legal page status (version 0 = unpublished); integrationStatus {configured} from deployment configuration only (never secrets); readiness for plans, promotions, tax and images. private, no-store.
+         */
+        get: operations["superAdminSettings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/super-admin/settings/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Save one ungrouped setting key
+         * @description Ungrouped keys only (branding, payments, uploads, integrations, seo, tax); group members must use PUT /super-admin/settings/groups/{group}. value is validated against the key's schema (money integer paise, bps 0..10000, E.164 contacts, upload limits within hard ceilings, provider IDs only for configured adapters, complete tax references). expectedVersion 0 creates a never-configured key. Emits settings.updated. super_admin only; admitted during maintenance for recovery. Rechecks super_admin in the transaction, writes one audit entry and its outbox events atomically.
+         */
+        put: operations["superAdminUpdateSetting"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/super-admin/settings/groups/{group}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Atomically save a settings group
+         * @description Groups: delivery_rider_pay = delivery + rider_earning; commission_plans = commission + plans + promotion_fees; policies_reviews = policies + reviews. Supply every member key exactly once with its expectedVersion (0 = never configured). All keys are validated, locked in stable order and committed together with one audit entry, settings.updated per key and settings.group_updated; any invalid or stale key rolls all back. Same key and payload replays the saved group. super_admin only; admitted during maintenance for recovery. Rechecks super_admin in the transaction, writes one audit entry and its outbox events atomically.
+         */
+        put: operations["superAdminUpdateSettingsGroup"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/support/messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send a message to support
+         * @description Guest (anonymous browser session) or signed-in user; no phone or login required. Message-only plain text, trimmed 1..1000 characters; author and scope are derived server-side, never from the body. The message and the admin-notification outbox event commit together before 202; no ticket, reply channel or response time is promised. Limited to 5 per hour per user/anonymous session and per network address. Blocked with MAINTENANCE while maintenance mode is on.
+         */
+        post: operations["supportMessageCreate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1042,6 +1242,9 @@ export interface components {
                 users?: ("view" | "create" | "edit" | "delete" | "export")[];
             };
         };
+        CreateSupportMessageDto: {
+            message: string;
+        };
         CsrfDto: {
             csrfToken: string;
         };
@@ -1130,6 +1333,17 @@ export interface components {
                     /** @enum {string} */
                     status: "unavailable";
                 };
+                support_messages: {
+                    items: {
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: uuid */
+                        id: string;
+                        message: string;
+                    }[];
+                    /** @enum {string} */
+                    status: "included";
+                };
             };
         };
         DataRequestAcceptedDto: {
@@ -1181,6 +1395,15 @@ export interface components {
             message_key: string;
             status: number;
         };
+        FeatureFlagDto: {
+            enablable: boolean;
+            enabled: boolean;
+            /** @enum {string} */
+            key: "reviews" | "guest_browse" | "whatsapp" | "booking" | "donations" | "payments_online" | "payments_cod" | "maintenance";
+            /** Format: date-time */
+            updatedAt: string;
+            version: number;
+        };
         GeoAreaPageDto: {
             items: {
                 /** Format: uuid */
@@ -1210,9 +1433,37 @@ export interface components {
             /** @enum {string} */
             status: "ok";
         };
+        LegalPageAdminDto: {
+            bodyEn: string;
+            bodyHi: string;
+            /** Format: date-time */
+            publishedAt: string;
+            /** @enum {string} */
+            slug: "terms" | "privacy" | "refund" | "about";
+            titleEn: string;
+            titleHi: string;
+            version: number;
+        };
+        LegalPageDto: {
+            body: string;
+            /** @enum {string} */
+            locale: "en" | "hi";
+            /** @enum {string} */
+            slug: "terms" | "privacy" | "refund" | "about";
+            title: string;
+            /** Format: date-time */
+            updatedAt: string;
+            version: number;
+        };
         LogoutDto: {
             /** @enum {boolean} */
             loggedOut: true;
+        };
+        PlatformHealthDto: {
+            /** Format: date-time */
+            checkedAt: string;
+            /** @enum {string} */
+            status: "ok" | "maintenance";
         };
         PreferencesDto: {
             /** @enum {string} */
@@ -1228,6 +1479,84 @@ export interface components {
             /** Format: uuid */
             userId: string;
             version: number;
+        };
+        PublicSettingsDto: {
+            branding: {
+                nameEn: string;
+                nameHi: string;
+                taglineEn: string;
+                taglineHi: string;
+            } | null;
+            flags: {
+                booking: boolean;
+                donations: boolean;
+                guest_browse: boolean;
+                maintenance: boolean;
+                payments_cod: boolean;
+                payments_online: boolean;
+                reviews: boolean;
+                whatsapp: boolean;
+            };
+            /** Format: date-time */
+            generatedAt: string;
+            paymentMethods: {
+                cod: boolean;
+                online: boolean;
+            };
+            plans: {
+                /** @enum {number} */
+                billingPeriodMonths: 1;
+                code: string;
+                nameEn: string;
+                nameHi: string;
+                premium: boolean;
+                pricePaise: number;
+            }[];
+            promotions: {
+                code: string;
+                /** @enum {number} */
+                durationDays: 7;
+                /** @enum {string} */
+                kind: "homepage_banner" | "featured_business";
+                nameEn: string;
+                nameHi: string;
+                pricePaise: number;
+            }[];
+            refundPolicy: {
+                refundWindowHours: number;
+            } | null;
+            seo: {
+                descriptionEn: string;
+                descriptionHi: string;
+                titleEn: string;
+                titleHi: string;
+            } | null;
+            support: {
+                callPhoneE164: string | null;
+                whatsappPhoneE164: string | null;
+            };
+            uploads: {
+                purposes: {
+                    [key: string]: {
+                        allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                        enabled: boolean;
+                        maxBytes: number;
+                        maxHeight: number;
+                        maxPixels: number;
+                        maxWidth: number;
+                        minHeight: number;
+                        minWidth: number;
+                    };
+                };
+            } | null;
+            versions: {
+                flags: {
+                    [key: string]: number;
+                };
+                settings: {
+                    [key: string]: number;
+                };
+            };
         };
         RoleDeletedDto: {
             /** @enum {boolean} */
@@ -1343,6 +1672,784 @@ export interface components {
                 changed: boolean;
             };
         };
+        SavedSettingDto: {
+            /** Format: uuid */
+            changeSetId: string;
+            entry: {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "branding";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    nameEn: string;
+                    nameHi: string;
+                    taglineEn: string;
+                    taglineHi: string;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "delivery";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    slabs: {
+                        feePaise: number;
+                        uptoKm: number;
+                    }[];
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "rider_earning";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    basePaise: number;
+                    perKmPaise: number;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "commission";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    defaultBps: number;
+                    platformFeePaise: number;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "plans";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    /** @enum {number} */
+                    billingPeriodMonths: 1;
+                    code: string;
+                    commissionBps: number;
+                    enabled: boolean;
+                    nameEn: string;
+                    nameHi: string;
+                    premium: boolean;
+                    pricePaise: number;
+                }[] | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "promotion_fees";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    code: string;
+                    /** @enum {number} */
+                    durationDays: 7;
+                    enabled: boolean;
+                    /** @enum {string} */
+                    kind: "homepage_banner" | "featured_business";
+                    nameEn: string;
+                    nameHi: string;
+                    pricePaise: number;
+                }[] | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "payments";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    gatewayId: string | null;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "policies";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    refundWindowHours: number;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "reviews";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    blockedWords: string[];
+                    ruleEn: string;
+                    ruleHi: string;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "uploads";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    purposes: {
+                        business_profile_cover: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        business_profile_logo: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        catalog_taxonomy: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        gallery: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        offer_banner: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        product: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        review_photo: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        service: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        video_thumbnail: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                    };
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "integrations";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    /** Format: email */
+                    emailSender: string | null;
+                    smsProviderId: string | null;
+                    supportCallE164: string | null;
+                    supportWhatsappE164: string | null;
+                    whatsappNumber: string | null;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "seo";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    descriptionEn: string;
+                    descriptionHi: string;
+                    titleEn: string;
+                    titleHi: string;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "tax";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    classifications: {
+                        cessRateBps: number;
+                        code: string;
+                        gstRateBps: number;
+                        hsnOrSac: string;
+                        /** @enum {string} */
+                        supplyType: "taxable" | "exempt" | "nil_rated";
+                        unitCode: string;
+                    }[];
+                    feeTaxCodes: {
+                        commission: string;
+                        platformDelivery: string;
+                        platformFee: string;
+                        promotion: string;
+                        subscription: string;
+                    };
+                    platformSupplier: {
+                        address: string;
+                        authorizedSignatoryRef: string;
+                        gstin?: string;
+                        legalName: string;
+                        /** @enum {string} */
+                        registrationMode: "regular" | "composition" | "exempt" | "unregistered";
+                        requiresIrn: boolean;
+                        stateCode: string;
+                        supplierRef: string;
+                        version: number;
+                    };
+                    versionEvidence: {
+                        evidenceRef: string;
+                        /** @enum {boolean} */
+                        verified: true;
+                        /** Format: date-time */
+                        verifiedAt: string;
+                    };
+                } | null;
+                version: number;
+            };
+        };
+        SavedSettingsGroupDto: {
+            /** Format: uuid */
+            changeSetId: string;
+            /** @enum {string} */
+            group: "delivery_rider_pay" | "commission_plans" | "policies_reviews";
+            values: ({
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "branding";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    nameEn: string;
+                    nameHi: string;
+                    taglineEn: string;
+                    taglineHi: string;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "delivery";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    slabs: {
+                        feePaise: number;
+                        uptoKm: number;
+                    }[];
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "rider_earning";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    basePaise: number;
+                    perKmPaise: number;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "commission";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    defaultBps: number;
+                    platformFeePaise: number;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "plans";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    /** @enum {number} */
+                    billingPeriodMonths: 1;
+                    code: string;
+                    commissionBps: number;
+                    enabled: boolean;
+                    nameEn: string;
+                    nameHi: string;
+                    premium: boolean;
+                    pricePaise: number;
+                }[] | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "promotion_fees";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    code: string;
+                    /** @enum {number} */
+                    durationDays: 7;
+                    enabled: boolean;
+                    /** @enum {string} */
+                    kind: "homepage_banner" | "featured_business";
+                    nameEn: string;
+                    nameHi: string;
+                    pricePaise: number;
+                }[] | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "payments";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    gatewayId: string | null;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "policies";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    refundWindowHours: number;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "reviews";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    blockedWords: string[];
+                    ruleEn: string;
+                    ruleHi: string;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "uploads";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    purposes: {
+                        business_profile_cover: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        business_profile_logo: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        catalog_taxonomy: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        gallery: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        offer_banner: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        product: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        review_photo: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        service: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        video_thumbnail: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                    };
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "integrations";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    /** Format: email */
+                    emailSender: string | null;
+                    smsProviderId: string | null;
+                    supportCallE164: string | null;
+                    supportWhatsappE164: string | null;
+                    whatsappNumber: string | null;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "seo";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    descriptionEn: string;
+                    descriptionHi: string;
+                    titleEn: string;
+                    titleHi: string;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "tax";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    classifications: {
+                        cessRateBps: number;
+                        code: string;
+                        gstRateBps: number;
+                        hsnOrSac: string;
+                        /** @enum {string} */
+                        supplyType: "taxable" | "exempt" | "nil_rated";
+                        unitCode: string;
+                    }[];
+                    feeTaxCodes: {
+                        commission: string;
+                        platformDelivery: string;
+                        platformFee: string;
+                        promotion: string;
+                        subscription: string;
+                    };
+                    platformSupplier: {
+                        address: string;
+                        authorizedSignatoryRef: string;
+                        gstin?: string;
+                        legalName: string;
+                        /** @enum {string} */
+                        registrationMode: "regular" | "composition" | "exempt" | "unregistered";
+                        requiresIrn: boolean;
+                        stateCode: string;
+                        supplierRef: string;
+                        version: number;
+                    };
+                    versionEvidence: {
+                        evidenceRef: string;
+                        /** @enum {boolean} */
+                        verified: true;
+                        /** Format: date-time */
+                        verifiedAt: string;
+                    };
+                } | null;
+                version: number;
+            })[];
+        };
         SessionDto: {
             /** @enum {string} */
             accountStatus: "active" | "suspended" | "deleting";
@@ -1386,6 +2493,469 @@ export interface components {
             /** @enum {string} */
             status: "active" | "inactive";
         };
+        SuperAdminSettingsDto: {
+            flags: {
+                enablable: boolean;
+                enabled: boolean;
+                /** @enum {string} */
+                key: "reviews" | "guest_browse" | "whatsapp" | "booking" | "donations" | "payments_online" | "payments_cod" | "maintenance";
+                /** Format: date-time */
+                updatedAt: string;
+                version: number;
+            }[];
+            integrationStatus: {
+                email: {
+                    configured: boolean;
+                };
+                gateway: {
+                    configured: boolean;
+                };
+                sms: {
+                    configured: boolean;
+                };
+                whatsapp: {
+                    configured: boolean;
+                };
+            };
+            legal: {
+                page: {
+                    bodyEn: string;
+                    bodyHi: string;
+                    /** Format: date-time */
+                    publishedAt: string;
+                    /** @enum {string} */
+                    slug: "terms" | "privacy" | "refund" | "about";
+                    titleEn: string;
+                    titleHi: string;
+                    version: number;
+                } | null;
+                /** @enum {string} */
+                slug: "terms" | "privacy" | "refund" | "about";
+                version: number;
+            }[];
+            readiness: {
+                images: {
+                    missingFields: string[];
+                    ready: boolean;
+                };
+                plans: {
+                    missingFields: string[];
+                    ready: boolean;
+                };
+                promotions: {
+                    missingFields: string[];
+                    ready: boolean;
+                };
+                tax: {
+                    missingFields: string[];
+                    ready: boolean;
+                };
+            };
+            settings: ({
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "branding";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    nameEn: string;
+                    nameHi: string;
+                    taglineEn: string;
+                    taglineHi: string;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "delivery";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    slabs: {
+                        feePaise: number;
+                        uptoKm: number;
+                    }[];
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "rider_earning";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    basePaise: number;
+                    perKmPaise: number;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "commission";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    defaultBps: number;
+                    platformFeePaise: number;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "plans";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    /** @enum {number} */
+                    billingPeriodMonths: 1;
+                    code: string;
+                    commissionBps: number;
+                    enabled: boolean;
+                    nameEn: string;
+                    nameHi: string;
+                    premium: boolean;
+                    pricePaise: number;
+                }[] | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "promotion_fees";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    code: string;
+                    /** @enum {number} */
+                    durationDays: 7;
+                    enabled: boolean;
+                    /** @enum {string} */
+                    kind: "homepage_banner" | "featured_business";
+                    nameEn: string;
+                    nameHi: string;
+                    pricePaise: number;
+                }[] | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "payments";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    gatewayId: string | null;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "policies";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    refundWindowHours: number;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "reviews";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    blockedWords: string[];
+                    ruleEn: string;
+                    ruleHi: string;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "uploads";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    purposes: {
+                        business_profile_cover: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        business_profile_logo: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        catalog_taxonomy: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        gallery: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        offer_banner: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        product: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        review_photo: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        service: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        video_thumbnail: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                    };
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "integrations";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    /** Format: email */
+                    emailSender: string | null;
+                    smsProviderId: string | null;
+                    supportCallE164: string | null;
+                    supportWhatsappE164: string | null;
+                    whatsappNumber: string | null;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "seo";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    descriptionEn: string;
+                    descriptionHi: string;
+                    titleEn: string;
+                    titleHi: string;
+                } | null;
+                version: number;
+            } | {
+                /** @enum {string|null} */
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews" | null;
+                /** @enum {string} */
+                key: "tax";
+                /** Format: date-time */
+                updatedAt: string | null;
+                value: {
+                    classifications: {
+                        cessRateBps: number;
+                        code: string;
+                        gstRateBps: number;
+                        hsnOrSac: string;
+                        /** @enum {string} */
+                        supplyType: "taxable" | "exempt" | "nil_rated";
+                        unitCode: string;
+                    }[];
+                    feeTaxCodes: {
+                        commission: string;
+                        platformDelivery: string;
+                        platformFee: string;
+                        promotion: string;
+                        subscription: string;
+                    };
+                    platformSupplier: {
+                        address: string;
+                        authorizedSignatoryRef: string;
+                        gstin?: string;
+                        legalName: string;
+                        /** @enum {string} */
+                        registrationMode: "regular" | "composition" | "exempt" | "unregistered";
+                        requiresIrn: boolean;
+                        stateCode: string;
+                        supplierRef: string;
+                        version: number;
+                    };
+                    versionEvidence: {
+                        evidenceRef: string;
+                        /** @enum {boolean} */
+                        verified: true;
+                        /** Format: date-time */
+                        verifiedAt: string;
+                    };
+                } | null;
+                version: number;
+            })[];
+        };
+        SupportMessageAcceptedDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            status: "accepted";
+        };
+        SupportMessageDetailDto: {
+            authorLabel?: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: uuid */
+            id: string;
+            message: string;
+            scope: {
+                /** Format: uuid */
+                areaId: string | null;
+                /** Format: uuid */
+                cityId: string | null;
+            };
+        };
         UpdateAddressDto: {
             addressText?: string;
             /** Format: uuid */
@@ -1405,6 +2975,17 @@ export interface components {
             channel?: "in_app" | "email" | "whatsapp";
             granted: boolean;
             noticeVersion?: string;
+        };
+        UpdateFeatureFlagDto: {
+            enabled: boolean;
+            expectedVersion: number;
+        };
+        UpdateLegalPageDto: {
+            bodyEn: string;
+            bodyHi: string;
+            expectedVersion: number;
+            titleEn: string;
+            titleHi: string;
         };
         UpdatePreferencesDto: {
             /** @enum {string} */
@@ -1431,6 +3012,550 @@ export interface components {
                 reviews?: ("view" | "create" | "edit" | "delete" | "export")[];
                 users?: ("view" | "create" | "edit" | "delete" | "export")[];
             };
+        };
+        UpdateSettingDto: {
+            expectedVersion: number;
+            value: {
+                nameEn: string;
+                nameHi: string;
+                taglineEn: string;
+                taglineHi: string;
+            } | {
+                slabs: {
+                    feePaise: number;
+                    uptoKm: number;
+                }[];
+            } | {
+                basePaise: number;
+                perKmPaise: number;
+            } | {
+                defaultBps: number;
+                platformFeePaise: number;
+            } | {
+                /** @enum {number} */
+                billingPeriodMonths: 1;
+                code: string;
+                commissionBps: number;
+                enabled: boolean;
+                nameEn: string;
+                nameHi: string;
+                premium: boolean;
+                pricePaise: number;
+            }[] | {
+                code: string;
+                /** @enum {number} */
+                durationDays: 7;
+                enabled: boolean;
+                /** @enum {string} */
+                kind: "homepage_banner" | "featured_business";
+                nameEn: string;
+                nameHi: string;
+                pricePaise: number;
+            }[] | {
+                gatewayId: string | null;
+            } | {
+                refundWindowHours: number;
+            } | {
+                blockedWords: string[];
+                ruleEn: string;
+                ruleHi: string;
+            } | {
+                purposes: {
+                    business_profile_cover: {
+                        allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                        enabled: boolean;
+                        maxBytes: number;
+                        maxHeight: number;
+                        maxPixels: number;
+                        maxWidth: number;
+                        minHeight: number;
+                        /** @enum {number} */
+                        minQuality: 60;
+                        minWidth: number;
+                        /** @enum {number} */
+                        quality: 80;
+                        variants: {
+                            maxBytes: number;
+                            width: number;
+                        }[];
+                        version: number;
+                    };
+                    business_profile_logo: {
+                        allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                        enabled: boolean;
+                        maxBytes: number;
+                        maxHeight: number;
+                        maxPixels: number;
+                        maxWidth: number;
+                        minHeight: number;
+                        /** @enum {number} */
+                        minQuality: 60;
+                        minWidth: number;
+                        /** @enum {number} */
+                        quality: 80;
+                        variants: {
+                            maxBytes: number;
+                            width: number;
+                        }[];
+                        version: number;
+                    };
+                    catalog_taxonomy: {
+                        allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                        enabled: boolean;
+                        maxBytes: number;
+                        maxHeight: number;
+                        maxPixels: number;
+                        maxWidth: number;
+                        minHeight: number;
+                        /** @enum {number} */
+                        minQuality: 60;
+                        minWidth: number;
+                        /** @enum {number} */
+                        quality: 80;
+                        variants: {
+                            maxBytes: number;
+                            width: number;
+                        }[];
+                        version: number;
+                    };
+                    gallery: {
+                        allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                        enabled: boolean;
+                        maxBytes: number;
+                        maxHeight: number;
+                        maxPixels: number;
+                        maxWidth: number;
+                        minHeight: number;
+                        /** @enum {number} */
+                        minQuality: 60;
+                        minWidth: number;
+                        /** @enum {number} */
+                        quality: 80;
+                        variants: {
+                            maxBytes: number;
+                            width: number;
+                        }[];
+                        version: number;
+                    };
+                    offer_banner: {
+                        allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                        enabled: boolean;
+                        maxBytes: number;
+                        maxHeight: number;
+                        maxPixels: number;
+                        maxWidth: number;
+                        minHeight: number;
+                        /** @enum {number} */
+                        minQuality: 60;
+                        minWidth: number;
+                        /** @enum {number} */
+                        quality: 80;
+                        variants: {
+                            maxBytes: number;
+                            width: number;
+                        }[];
+                        version: number;
+                    };
+                    product: {
+                        allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                        enabled: boolean;
+                        maxBytes: number;
+                        maxHeight: number;
+                        maxPixels: number;
+                        maxWidth: number;
+                        minHeight: number;
+                        /** @enum {number} */
+                        minQuality: 60;
+                        minWidth: number;
+                        /** @enum {number} */
+                        quality: 80;
+                        variants: {
+                            maxBytes: number;
+                            width: number;
+                        }[];
+                        version: number;
+                    };
+                    review_photo: {
+                        allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                        enabled: boolean;
+                        maxBytes: number;
+                        maxHeight: number;
+                        maxPixels: number;
+                        maxWidth: number;
+                        minHeight: number;
+                        /** @enum {number} */
+                        minQuality: 60;
+                        minWidth: number;
+                        /** @enum {number} */
+                        quality: 80;
+                        variants: {
+                            maxBytes: number;
+                            width: number;
+                        }[];
+                        version: number;
+                    };
+                    service: {
+                        allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                        enabled: boolean;
+                        maxBytes: number;
+                        maxHeight: number;
+                        maxPixels: number;
+                        maxWidth: number;
+                        minHeight: number;
+                        /** @enum {number} */
+                        minQuality: 60;
+                        minWidth: number;
+                        /** @enum {number} */
+                        quality: 80;
+                        variants: {
+                            maxBytes: number;
+                            width: number;
+                        }[];
+                        version: number;
+                    };
+                    video_thumbnail: {
+                        allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                        enabled: boolean;
+                        maxBytes: number;
+                        maxHeight: number;
+                        maxPixels: number;
+                        maxWidth: number;
+                        minHeight: number;
+                        /** @enum {number} */
+                        minQuality: 60;
+                        minWidth: number;
+                        /** @enum {number} */
+                        quality: 80;
+                        variants: {
+                            maxBytes: number;
+                            width: number;
+                        }[];
+                        version: number;
+                    };
+                };
+            } | {
+                /** Format: email */
+                emailSender: string | null;
+                smsProviderId: string | null;
+                supportCallE164: string | null;
+                supportWhatsappE164: string | null;
+                whatsappNumber: string | null;
+            } | {
+                descriptionEn: string;
+                descriptionHi: string;
+                titleEn: string;
+                titleHi: string;
+            } | {
+                classifications: {
+                    cessRateBps: number;
+                    code: string;
+                    gstRateBps: number;
+                    hsnOrSac: string;
+                    /** @enum {string} */
+                    supplyType: "taxable" | "exempt" | "nil_rated";
+                    unitCode: string;
+                }[];
+                feeTaxCodes: {
+                    commission: string;
+                    platformDelivery: string;
+                    platformFee: string;
+                    promotion: string;
+                    subscription: string;
+                };
+                platformSupplier: {
+                    address: string;
+                    authorizedSignatoryRef: string;
+                    gstin?: string;
+                    legalName: string;
+                    /** @enum {string} */
+                    registrationMode: "regular" | "composition" | "exempt" | "unregistered";
+                    requiresIrn: boolean;
+                    stateCode: string;
+                    supplierRef: string;
+                    version: number;
+                };
+                versionEvidence: {
+                    evidenceRef: string;
+                    /** @enum {boolean} */
+                    verified: true;
+                    /** Format: date-time */
+                    verifiedAt: string;
+                };
+            };
+        };
+        UpdateSettingsGroupDto: {
+            updates: {
+                expectedVersion: number;
+                /** @enum {string} */
+                key: "branding" | "delivery" | "rider_earning" | "commission" | "plans" | "promotion_fees" | "payments" | "policies" | "reviews" | "uploads" | "integrations" | "seo" | "tax";
+                value: {
+                    nameEn: string;
+                    nameHi: string;
+                    taglineEn: string;
+                    taglineHi: string;
+                } | {
+                    slabs: {
+                        feePaise: number;
+                        uptoKm: number;
+                    }[];
+                } | {
+                    basePaise: number;
+                    perKmPaise: number;
+                } | {
+                    defaultBps: number;
+                    platformFeePaise: number;
+                } | {
+                    /** @enum {number} */
+                    billingPeriodMonths: 1;
+                    code: string;
+                    commissionBps: number;
+                    enabled: boolean;
+                    nameEn: string;
+                    nameHi: string;
+                    premium: boolean;
+                    pricePaise: number;
+                }[] | {
+                    code: string;
+                    /** @enum {number} */
+                    durationDays: 7;
+                    enabled: boolean;
+                    /** @enum {string} */
+                    kind: "homepage_banner" | "featured_business";
+                    nameEn: string;
+                    nameHi: string;
+                    pricePaise: number;
+                }[] | {
+                    gatewayId: string | null;
+                } | {
+                    refundWindowHours: number;
+                } | {
+                    blockedWords: string[];
+                    ruleEn: string;
+                    ruleHi: string;
+                } | {
+                    purposes: {
+                        business_profile_cover: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        business_profile_logo: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        catalog_taxonomy: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        gallery: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        offer_banner: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        product: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        review_photo: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        service: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                        video_thumbnail: {
+                            allowedMimeTypes: ("image/jpeg" | "image/png" | "image/webp")[];
+                            enabled: boolean;
+                            maxBytes: number;
+                            maxHeight: number;
+                            maxPixels: number;
+                            maxWidth: number;
+                            minHeight: number;
+                            /** @enum {number} */
+                            minQuality: 60;
+                            minWidth: number;
+                            /** @enum {number} */
+                            quality: 80;
+                            variants: {
+                                maxBytes: number;
+                                width: number;
+                            }[];
+                            version: number;
+                        };
+                    };
+                } | {
+                    /** Format: email */
+                    emailSender: string | null;
+                    smsProviderId: string | null;
+                    supportCallE164: string | null;
+                    supportWhatsappE164: string | null;
+                    whatsappNumber: string | null;
+                } | {
+                    descriptionEn: string;
+                    descriptionHi: string;
+                    titleEn: string;
+                    titleHi: string;
+                } | {
+                    classifications: {
+                        cessRateBps: number;
+                        code: string;
+                        gstRateBps: number;
+                        hsnOrSac: string;
+                        /** @enum {string} */
+                        supplyType: "taxable" | "exempt" | "nil_rated";
+                        unitCode: string;
+                    }[];
+                    feeTaxCodes: {
+                        commission: string;
+                        platformDelivery: string;
+                        platformFee: string;
+                        promotion: string;
+                        subscription: string;
+                    };
+                    platformSupplier: {
+                        address: string;
+                        authorizedSignatoryRef: string;
+                        gstin?: string;
+                        legalName: string;
+                        /** @enum {string} */
+                        registrationMode: "regular" | "composition" | "exempt" | "unregistered";
+                        requiresIrn: boolean;
+                        stateCode: string;
+                        supplierRef: string;
+                        version: number;
+                    };
+                    versionEvidence: {
+                        evidenceRef: string;
+                        /** @enum {boolean} */
+                        verified: true;
+                        /** Format: date-time */
+                        verifiedAt: string;
+                    };
+                };
+            }[];
         };
         VerifyInputDto: {
             code: string;
@@ -1589,6 +3714,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -1735,6 +3862,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -1879,6 +4008,156 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    adminSupportMessage: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SupportMessageDetailDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_FORBIDDEN without users:view; ADMIN_SCOPE_FORBIDDEN outside the message scope; ADMIN_INACTIVE for a deactivated admin. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description SUPPORT_MESSAGE_NOT_FOUND. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on (admins are not admitted). */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -2023,6 +4302,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -2173,6 +4454,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -2323,6 +4606,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -2475,6 +4760,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -2619,6 +4906,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -2699,6 +4988,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -2800,6 +5091,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -2895,6 +5188,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -3020,6 +5315,102 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    healthStatus: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformHealthDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Untrusted Origin */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED: read limit exceeded */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Unexpected failure */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description COMMON_UNAVAILABLE: settings store unavailable */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -3191,6 +5582,213 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    legalPage: {
+        parameters: {
+            query?: {
+                locale?: string;
+            };
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path: {
+                slug: "terms" | "privacy" | "refund" | "about";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalPageDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Untrusted Origin */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description LEGAL_PAGE_NOT_FOUND until the page is published (approved copy pending). */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED: read limit exceeded */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Unexpected failure */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description COMMON_UNAVAILABLE: settings store unavailable */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    settingsPublic: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicSettingsDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Untrusted Origin */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED: read limit exceeded */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Unexpected failure */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description COMMON_UNAVAILABLE: settings store unavailable */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -3347,6 +5945,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -3493,6 +6093,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -3663,6 +6265,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -3816,6 +6420,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -3883,7 +6489,7 @@ export interface operations {
                     "application/json": components["schemas"]["AuthErrorDto"];
                 };
             };
-            /** @description ACCOUNT_UNAVAILABLE when the phone belongs to an unavailable account. */
+            /** @description Flat error envelope; no submitted values or credentials. */
             403: {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
@@ -3896,7 +6502,7 @@ export interface operations {
                     "application/json": components["schemas"]["AuthErrorDto"];
                 };
             };
-            /** @description ROLE_NOT_FOUND or AREA_NOT_FOUND. */
+            /** @description ROLE_NOT_FOUND, AREA_NOT_FOUND, or USER_NOT_FOUND when the phone has no usable verified account. */
             404: {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
@@ -3968,6 +6574,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -4122,6 +6730,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -4268,6 +6878,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -4422,6 +7034,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -4576,6 +7190,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -4743,6 +7359,346 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    superAdminUpdateFeatureFlag: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive command key. Retry the identical command within 24 hours; replay rechecks current super_admin access and returns the current state. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                key: "reviews" | "guest_browse" | "whatsapp" | "booking" | "donations" | "payments_online" | "payments_cod" | "maintenance";
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateFeatureFlagDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FeatureFlagDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description SETTINGS_VERSION_CONFLICT when expectedVersion is stale; FEATURE_NOT_AVAILABLE when enabling a future or unconfigured feature. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description SETTINGS_INVALID for an unknown flag row. */
+            422: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) with Retry-After for an authenticated non-super session while maintenance is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    superAdminUpdateLegalPage: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive command key. Retry the identical command within 24 hours; replay rechecks current super_admin access and returns the current state. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                slug: "terms" | "privacy" | "refund" | "about";
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateLegalPageDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LegalPageAdminDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description SETTINGS_VERSION_CONFLICT when expectedVersion is stale. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description SETTINGS_INVALID when a field is empty after sanitising. */
+            422: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) with Retry-After for an authenticated non-super session while maintenance is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -4890,6 +7846,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -5042,6 +8000,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -5194,6 +8154,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -5348,6 +8310,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -5502,6 +8466,607 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    superAdminSettings: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuperAdminSettingsDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) with Retry-After for an authenticated non-super session while maintenance is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    superAdminUpdateSetting: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive command key. Retry the identical command within 24 hours; replay rechecks current super_admin access and returns the current state. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                key: "branding" | "delivery" | "rider_earning" | "commission" | "plans" | "promotion_fees" | "payments" | "policies" | "reviews" | "uploads" | "integrations" | "seo" | "tax";
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateSettingDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SavedSettingDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description SETTINGS_VERSION_CONFLICT when expectedVersion is stale. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description SETTINGS_INVALID for an invalid value (details.fields); SETTINGS_GROUP_REQUIRED for a grouped member key. */
+            422: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) with Retry-After for an authenticated non-super session while maintenance is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    superAdminUpdateSettingsGroup: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive command key. Retry the identical command within 24 hours; replay rechecks current super_admin access and returns the current state. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                group: "delivery_rider_pay" | "commission_plans" | "policies_reviews";
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateSettingsGroupDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SavedSettingsGroupDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description SETTINGS_VERSION_CONFLICT when any expectedVersion is stale (nothing saved). */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description SETTINGS_INVALID for missing, duplicate or extra keys or any invalid value (details.fields lists offending paths). */
+            422: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) with Retry-After for an authenticated non-super session while maintenance is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    supportMessageCreate: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive key; retry the identical message within 24 hours to replay the accepted result. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateSupportMessageDto"];
+            };
+        };
+        responses: {
+            202: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SupportMessageAcceptedDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for an empty, oversized or control-character message or unexpected fields; COMMON_VALIDATION_FAILED for a missing/invalid Idempotency-Key. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CSRF_INVALID for a missing session, Origin or CSRF token. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Idempotency-Key reused with a different message, or the original request is still in progress. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED with Retry-After. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Unexpected failure. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) with Retry-After while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -5591,6 +9156,21 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) while maintenance mode is on and this route is not admitted */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
                 };
             };
         };
@@ -5729,6 +9309,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -5879,6 +9461,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -6026,6 +9610,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -6178,6 +9764,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -6332,6 +9920,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -6486,6 +10076,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -6630,6 +10222,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -6795,6 +10389,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -6947,6 +10543,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -7093,6 +10691,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -7241,6 +10841,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -7385,6 +10987,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;
@@ -7535,6 +11139,8 @@ export interface operations {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
                     /** @description Validated or generated request ID */
                     "X-Correlation-ID"?: string;
                     [name: string]: unknown;

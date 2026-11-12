@@ -22,6 +22,7 @@ import {
   ConsentInputPipe,
   UpdateConsentDto,
 } from './consents.dto';
+import { MaintenanceAdmission } from '../../../shared/maintenance/admission';
 
 const pending =
   'COMMON_UNAVAILABLE (errors.common.unavailable): anonymous consent identity and cookie categories are pending policy approval (Q-31). Nothing is read or recorded.';
@@ -60,6 +61,8 @@ export class AnonymousConsentsController {
     return this.consents.anonymousUnavailable();
   }
   @Put(':purpose')
+  // Only a withdrawal (granted: false) is admitted during maintenance.
+  @MaintenanceAdmission('consent-withdrawal')
   @LoginRoute()
   @BrowserMutation()
   @ApiSecurity('sessionCookie')
