@@ -31,6 +31,16 @@ export const EngagementStateSchema = z.strictObject({
 });
 export type EngagementState = z.infer<typeof EngagementStateSchema>;
 
+export const VideoShareChannelSchema = z.enum(['whatsapp', 'copy', 'native']);
+export type VideoShareChannel = z.infer<typeof VideoShareChannelSchema>;
+
+export const VideoShareCreateSchema = z.strictObject({
+  targetType: z.literal('video'),
+  targetId: IdSchema,
+  channel: VideoShareChannelSchema,
+});
+export type VideoShareCreate = z.infer<typeof VideoShareCreateSchema>;
+
 export const VideoCommentStatusSchema = z.enum(['pending', 'published', 'removed']);
 export type VideoCommentStatus = z.infer<typeof VideoCommentStatusSchema>;
 export const VideoCommentTextSchema = z.string().trim().min(1).max(500);

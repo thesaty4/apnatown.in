@@ -76,12 +76,15 @@ import {
 
 import { VideoLikesController } from '../../modules/engagement/presentation/video-likes.controller';
 import { VideoLikesService } from '../../modules/engagement/application/video-likes.service';
+import { VideoSharesController } from '../../modules/engagement/presentation/video-shares.controller';
+import { VideoSharesService } from '../../modules/engagement/application/video-shares.service';
 
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
 @Module({
   controllers: [
     VideoLikesController,
+    VideoSharesController,
     ImageController,
     OwnerVideoController,
     PublicVideoController,
@@ -116,6 +119,7 @@ import { VideoLikesService } from '../../modules/engagement/application/video-li
   ],
   providers: [
     VideoLikesService,
+    VideoSharesService,
     ImageService,
     ImageDeliveryService,
     VideoService,

@@ -38,7 +38,7 @@ All customer writes require login; guest calls return `AUTH_REQUIRED` so the FE 
 | GET | `/videos/{videoId}/comments?cursor=` | Public | → published comments + caller's own pending ones; `canDelete` is server-derived per item and never exposes the author ID | — | Yes | F-EG-005 |
 | POST | `/videos/{videoId}/comments` | Customer | `{text}` → comment with status | `VALIDATION_ERROR`, `RATE_LIMITED` | Required key | F-EG-005 |
 | DELETE | `/videos/{videoId}/comments/{id}` | Author | → 204 | `ENGAGEMENT_TARGET_NOT_FOUND` | Yes | F-EG-005 |
-| POST | `/engagement/shares` | Public | `{targetType:'video'\|'shop'\|'provider'\|'product'\|'service',targetId,channel:'whatsapp'\|'copy'\|'native'}` → 204 | — | Yes | F-EG-006 |
+| POST | `/engagement/shares` | Public session | Current slice: `{targetType:'video',targetId,channel:'whatsapp'\|'copy'\|'native'}` → 204; other target types are not wired yet | `MEDIA_VIDEO_NOT_PUBLISHED` | Yes | F-EG-006 |
 | GET | `/businesses/me/followers` | Approved vendor/provider; own business from session | → `{followers,gainedThisWeek,approvedVideos,growth:[{start,end,total,gained}],asOf,definitionVersion?,unavailable[],recentAnnouncements[]}`; eight weekly buckets, latest three announcements | — | Yes | F-VD-015, S-VEND-15, S-PROV-11 |
 | POST | `/businesses/me/announcements` | Approved vendor/provider; own; shared abuse limiter, no product quota assumed | `{kind:'product'\|'service'\|'offer'\|'video',targetId?,messageEn,messageHi?}` → `{announcementId,status:'queued',eligibleRecipients}`; not a claim of delivery | `ENGAGEMENT_TARGET_NOT_FOUND`, `COMMON_RATE_LIMITED` | Required key | F-NT-003 |
 | GET | `/admin/comments?status=pending\|published\|removed&cursor=&limit=` | Admin **`reviews:view`** + exact video's business scope; super_admin | → page `{id,videoId,businessId,authorLabel,text,status,reason?,version,allowedActions}` + scoped counts | `ADMIN_SCOPE_FORBIDDEN` | Yes | F-EG-005, S-ADMN-11 |
@@ -64,6 +64,21 @@ All customer writes require login; guest calls return `AUTH_REQUIRED` so the FE 
   Users-orchestrated export/erasure remain their separate integration slices.
 - Migration is additive and is not applied during implementation. Forward
   repair can rebuild counts from `likes`; dropping tables loses relationship data.
+
+### EG6 implementation slice
+
+- `POST /engagement/shares` currently accepts `targetType:'video'`, a video ID,
+  and `channel:'whatsapp'|'copy'|'native'`. It accepts no caller URL; Media
+  verifies the video and current public eligibility before writing.
+- Each action requires an idempotency key and is limited to 30 actions/minute
+  per session. The unique command record, `video_engagement_counts.share_count`
+  increment, version, and `engagement.shared` outbox event commit together.
+  Replays revalidate visibility and do not increment twice.
+- The table addition is forward-only and additive. Counts can be rebuilt from
+  retained `engagement.shared` events. The migration is not applied here.
+- This implementation wires the existing video-detail screen. Other target
+  types in the broader share contract are not exposed until their public target
+  read seams and screens are available.
 
 ### Shared rules
 

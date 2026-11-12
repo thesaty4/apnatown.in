@@ -28,7 +28,7 @@ import {
 import { failureCode } from '../../shared/api/result';
 import { AccessState, Failure } from '../../shared/auth/AccessState';
 import { useSession } from '../../shared/auth/SessionProvider';
-import { CommentsPanel, LikeButton } from '../engagement';
+import { CommentsPanel, LikeButton, ShareSheet } from '../engagement';
 import { EmbedCard } from './EmbedCard';
 import {
   useCreateOwnerVideo,
@@ -330,6 +330,7 @@ export function PublicVideo({ id, nonce }: { id: string; nonce: string }) {
         <p className="m-0 [overflow-wrap:anywhere]">{video.caption}</p>
       )}
       <LikeButton videoId={video.id} />
+      <ShareSheet videoId={video.id} />
       <CommentsPanel videoId={video.id} />
       <div className="flex flex-wrap items-center gap-3">
         <Button variant="outline" onClick={() => setReportOpen(true)}>

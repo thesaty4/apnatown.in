@@ -825,6 +825,7 @@ model Like {
 model VideoEngagementCounts {
   videoId   String   @id @map("video_id") @db.Uuid
   likeCount BigInt   @default(0) @map("like_count")
+  shareCount BigInt  @default(0) @map("share_count")
   version   BigInt   @default(1)
   updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
   video     Video    @relation(fields: [videoId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "video_engagement_counts_video_id_fkey")

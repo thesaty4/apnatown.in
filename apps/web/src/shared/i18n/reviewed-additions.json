@@ -5386,6 +5386,50 @@
     "en": "Could not update your like. Please try again.",
     "hi": "आपकी पसंद अपडेट नहीं हो सकी। कृपया फिर कोशिश करें।"
   },
+  "engagement.share.open": {
+    "en": "Share",
+    "hi": "साझा करें"
+  },
+  "engagement.share.title": {
+    "en": "Share this video",
+    "hi": "यह वीडियो साझा करें"
+  },
+  "engagement.share.description": {
+    "en": "Choose how you want to share this video.",
+    "hi": "चुनें कि आप यह वीडियो कैसे साझा करना चाहते हैं।"
+  },
+  "engagement.share.close": {
+    "en": "Close",
+    "hi": "बंद करें"
+  },
+  "engagement.share.whatsapp": {
+    "en": "Share on WhatsApp",
+    "hi": "WhatsApp पर साझा करें"
+  },
+  "engagement.share.copy": {
+    "en": "Copy link",
+    "hi": "लिंक कॉपी करें"
+  },
+  "engagement.share.native": {
+    "en": "More sharing options",
+    "hi": "साझा करने के अन्य विकल्प"
+  },
+  "engagement.share.copied": {
+    "en": "Video link copied.",
+    "hi": "वीडियो लिंक कॉपी हो गया।"
+  },
+  "engagement.share.copyFailed": {
+    "en": "Could not copy the link. Check browser permissions and try again.",
+    "hi": "लिंक कॉपी नहीं हो सका। ब्राउज़र की अनुमति जाँचकर फिर कोशिश करें।"
+  },
+  "engagement.share.rateLimited": {
+    "en": "Too many share actions. Wait a moment, then try again.",
+    "hi": "बहुत अधिक शेयर किए गए हैं। थोड़ी देर रुककर फिर कोशिश करें।"
+  },
+  "engagement.share.failed": {
+    "en": "Could not record this share. Please try again.",
+    "hi": "यह शेयर दर्ज नहीं हो सका। कृपया फिर कोशिश करें।"
+  },
   "engagement.comments.title": {
     "en": "Comments",
     "hi": "टिप्पणियाँ"

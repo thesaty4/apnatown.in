@@ -909,6 +909,322 @@
         ]
       }
     },
+    "/engagement/shares": {
+      "post": {
+        "description": "Accepts a target ID rather than a URL. The server validates current visibility and commits its count and event atomically.",
+        "operationId": "engagementVideoShare",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Retry the same share action within 24 hours.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{256}$"
+            }
+          },
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VideoShareCreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "",
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "400": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "401": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "403": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "404": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "409": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "410": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "429": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds until this rate-limit window resets"
+              }
+            }
+          },
+          "500": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "503": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds before retrying; sent with MAINTENANCE"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Record a share of a currently public video",
+        "tags": [
+          "engagement"
+        ]
+      }
+    },
     "/media/policies/catalog_taxonomy": {
       "get": {
         "operationId": "mediaTaxonomyImagePolicy",
@@ -31819,6 +32135,36 @@
         "required": [
           "liked",
           "likeCount"
+        ],
+        "additionalProperties": false
+      },
+      "VideoShareCreateDto": {
+        "type": "object",
+        "properties": {
+          "targetType": {
+            "type": "string",
+            "enum": [
+              "video"
+            ]
+          },
+          "targetId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+          },
+          "channel": {
+            "type": "string",
+            "enum": [
+              "whatsapp",
+              "copy",
+              "native"
+            ]
+          }
+        },
+        "required": [
+          "targetType",
+          "targetId",
+          "channel"
         ],
         "additionalProperties": false
       },

@@ -42,7 +42,7 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) for standard states,
 | `HeartButton` | Heart with scale animation; reduced-motion → instant fill + text change (EG2) | gallery lightbox, Reels, media tiles |
 | `LikeButton` | Toggle with count (EG4) | Reels overlay |
 | `BookmarkButton` | Save/Saved for services only (EG7); shop/provider cards use the canonical FollowButton relationship | cards, service details |
-| `ShareSheet` | WhatsApp (`wa.me` with encoded canonical URL), Copy link (toast), native `navigator.share` when available (EG6); posts `/engagement/shares` | Reels, profiles, products, services |
+| `ShareSheet` | WhatsApp (`wa.me` with encoded canonical URL), Copy link (status), native `navigator.share` when available (EG6); posts `/engagement/shares` | Video detail; other target screens when available |
 | `CommentsPanel` | Public list + composer (required 1–500 trimmed chars), own pending “Awaiting moderation”, server-derived `canDelete` for author DELETE; reconcile server count on removal, rollback failed writes | Reels |
 
 All buttons use foundation touch-target tokens, `aria-pressed` where appropriate, EN/HI labels and icon+text status. Follow does not grant marketing consent.
@@ -58,6 +58,15 @@ show the existing login gate preserving the same video URL. Zero is a valid coun
 unavailable, loading, read/retry, write-error and non-customer states are explicit.
 The eventual Reels feed reuses the control/batch pattern; this slice does not
 implement or claim the feed itself.
+
+### EG6 implementation slice
+
+The video detail page uses `ShareSheet` with WhatsApp, Copy link, and native
+share when supported. It builds the same-origin canonical `/videos/:id` URL,
+never accepts a caller URL, and records the selected channel through a
+React Query mutation only after a successful copy/native action or an explicit
+WhatsApp click. Native-share cancellation is not recorded. Clipboard and API
+errors remain visible; EN/HI copy wraps within the shared Sheet.
 
 ### Comments moderation integration — existing S-ADMN-11
 - Media FE owns `/admin/videos`; its Pending/Removed content selector includes Comments per G-09, using `GET /admin/comments` and `POST /admin/comments/{id}/decision`.

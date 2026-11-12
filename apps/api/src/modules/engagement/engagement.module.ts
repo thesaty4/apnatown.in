@@ -3,6 +3,10 @@ import { VideoLikesService } from './application/video-likes.service';
 import { VIDEO_LIKE_REPOSITORY } from './domain/likes';
 import { PrismaVideoLikeRepository } from './infrastructure/prisma-video-like.repository';
 import { VideoLikesController } from './presentation/video-likes.controller';
+import { VideoSharesService } from './application/video-shares.service';
+import { VIDEO_SHARE_REPOSITORY } from './domain/shares';
+import { PrismaVideoShareRepository } from './infrastructure/prisma-video-share.repository';
+import { VideoSharesController } from './presentation/video-shares.controller';
 import { PrismaVideoCommentRepository } from './infrastructure/prisma-video-comment.repository';
 import { VIDEO_COMMENT_REPOSITORY } from './domain/comments';
 import { VideoCommentsService } from './application/video-comments.service';
@@ -28,6 +32,7 @@ export class EngagementModule {
       imports: [runtime, admin, audit, settings, media],
       controllers: [
         VideoLikesController,
+        VideoSharesController,
         PublicVideoCommentsController,
         VideoCommentsController,
         AdminVideoCommentsController,
@@ -35,6 +40,8 @@ export class EngagementModule {
       providers: [
         { provide: VIDEO_LIKE_REPOSITORY, useClass: PrismaVideoLikeRepository },
         VideoLikesService,
+        { provide: VIDEO_SHARE_REPOSITORY, useClass: PrismaVideoShareRepository },
+        VideoSharesService,
         { provide: VIDEO_COMMENT_REPOSITORY, useClass: PrismaVideoCommentRepository },
         VideoCommentsService,
         VideoCommentEvents,

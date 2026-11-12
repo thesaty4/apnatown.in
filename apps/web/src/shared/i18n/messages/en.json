@@ -1824,6 +1824,19 @@
       "restrictedTitle": "Customer access required",
       "unavailableMessage": "This video is no longer available for likes.",
       "unavailableTitle": "Video unavailable"
+    },
+    "share": {
+      "close": "Close",
+      "copied": "Video link copied.",
+      "copy": "Copy link",
+      "copyFailed": "Could not copy the link. Check browser permissions and try again.",
+      "description": "Choose how you want to share this video.",
+      "failed": "Could not record this share. Please try again.",
+      "native": "More sharing options",
+      "open": "Share",
+      "rateLimited": "Too many share actions. Wait a moment, then try again.",
+      "title": "Share this video",
+      "whatsapp": "Share on WhatsApp"
     }
   },
   "errors": {
