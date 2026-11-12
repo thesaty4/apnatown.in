@@ -20,10 +20,11 @@ export function MapView({
   selectedId?: string | undefined;
   onSelect: (id: string) => void;
   position?: { lat: number; lng: number } | null | undefined;
-  labels: { map: string; loading: string; failed: string; retry: string; privacy: string };
+  labels: { map: string; loading: string; failed: string; retry: string; privacy: string; zoomIn: string; zoomOut: string };
 }) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<LeafletMap | null>(null);
+  const extent = useRef<{ markers: readonly MapMarker[]; position: typeof position } | null>(null);
   const select = useRef(onSelect);
   useEffect(() => { select.current = onSelect; }, [onSelect]);
   const [state, setState] = useState<'loading' | 'ready' | 'failed'>('loading');
@@ -36,10 +37,12 @@ export function MapView({
     void import('leaflet').then((L) => {
       if (disposed || !container.current) return;
       const instance = L.map(container.current, {
-        attributionControl: false, scrollWheelZoom: false,
+        attributionControl: false, scrollWheelZoom: false, zoomControl: false,
         zoomAnimation: false, fadeAnimation: false, markerZoomAnimation: false,
       });
       map.current = instance;
+      extent.current = null;
+      L.control.zoom({ zoomInTitle: labels.zoomIn, zoomOutTitle: labels.zoomOut }).addTo(instance);
       L.tileLayer(config.urlTemplate, {
         maxZoom: config.maxZoom, keepBuffer: 0, updateWhenIdle: true,
         crossOrigin: false, referrerPolicy: 'strict-origin-when-cross-origin',
@@ -54,7 +57,7 @@ export function MapView({
       map.current?.remove();
       map.current = null;
     };
-  }, [config.urlTemplate, config.maxZoom, attempt]);
+  }, [config.urlTemplate, config.maxZoom, attempt, labels.zoomIn, labels.zoomOut]);
 
   useEffect(() => {
     if (state !== 'ready' || !map.current) return;
@@ -82,11 +85,14 @@ export function MapView({
         points.push(point);
         L.circleMarker(point, { radius: 5, color: primary }).addTo(layer);
       }
-      if (points.length) instance.fitBounds(points, { padding: [24, 24], maxZoom: 15, animate: false });
+      if (points.length && (extent.current?.markers !== markers || extent.current.position !== position)) {
+        instance.fitBounds(points, { padding: [24, 24], maxZoom: Math.min(15, config.maxZoom), animate: false });
+        extent.current = { markers, position };
+      }
       remove = () => layer.remove();
     }).catch(() => { if (!disposed) setState('failed'); });
     return () => { disposed = true; remove?.(); };
-  }, [markers, position, selectedId, state, attempt]);
+  }, [markers, position, selectedId, state, attempt, config.maxZoom]);
 
   return (
     <section aria-label={labels.map} className="grid gap-2">

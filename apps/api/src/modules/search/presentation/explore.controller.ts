@@ -1,4 +1,4 @@
-import { Controller, Get, Header, Headers, Query } from '@nestjs/common';
+import { Controller, Get, Header, Req, Query } from '@nestjs/common';
 import { ApiHeader, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   ExploreQuerySchema,
@@ -6,7 +6,7 @@ import {
   DiscoveryLocationSchema,
   type ExploreQuery,
 } from '@apnatown/shared/search';
-import { PublicRoute } from '../../../shared/auth';
+import { PublicRoute, type AuthRequest } from '../../../shared/auth';
 import { InputPipe } from '../../../shared/auth/validation';
 import { ErrorDto } from '../../../shared/health/health.controller';
 import { RateLimit } from '../../../shared/rate-limit/rate-limit';
@@ -63,9 +63,10 @@ export class ExploreController {
   @ApiResponse({ status: 422, type: ErrorDto, description: 'SEARCH_LOCATION_REQUIRED' })
   async read(
     @Query(new InputPipe(ExploreQuerySchema)) query: ExploreQuery,
-    @Headers('x-discovery-latitude') latitude?: string,
-    @Headers('x-discovery-longitude') longitude?: string,
+    @Req() request: AuthRequest,
   ) {
+    const latitude = request.headers['x-discovery-latitude'];
+    const longitude = request.headers['x-discovery-longitude'];
     let location = null;
     if (latitude !== undefined || longitude !== undefined) {
       const parsed = DiscoveryLocationSchema.safeParse({ latitude, longitude });

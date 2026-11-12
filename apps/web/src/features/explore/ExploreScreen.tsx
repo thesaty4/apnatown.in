@@ -3,7 +3,7 @@
 import { HydrationBoundary, useInfiniteQuery, useQuery, useQueryClient, type DehydratedState } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { MapConfiguration } from '@apnatown/ui/geo/MapView';
 import { Skeleton } from '@apnatown/ui/feedback/Skeleton';
 import { EmptyState, ErrorState, NoPermissionState } from '@apnatown/ui/feedback/StateViews';
@@ -15,6 +15,7 @@ import { failureCode } from '../../shared/api/result';
 import { useSession } from '../../shared/auth/SessionProvider';
 import { LocationBar, preciseBrowseLocation, useBrowseLocation } from '../geo';
 import { categoriesOptions, catalogName } from '../catalog';
+import { useOnline } from '../../shared/hooks/use-online';
 import { exploreOptions } from './api';
 import { ExploreCards } from './ExploreCards';
 import { ExploreFilterPanel } from './ExploreFilterPanel';
@@ -60,17 +61,20 @@ function ExploreContent({ filters, mapConfig, screen }: {
   const { api } = useSession();
   const location = useBrowseLocation();
   const position = preciseBrowseLocation();
+  const online = useOnline();
   const effective = {
     ...filters,
     ...(location.selection && !filters.cityId && { cityId: location.selection.city.id }),
     ...(location.selection?.area && !filters.areaId && (!filters.cityId || filters.cityId === location.selection.city.id) && { areaId: location.selection.area.id }),
+    ...(filters.view === 'map' && filters.radiusKm === undefined && (position || filters.areaId || location.selection?.area) && { radiusKm: 6 }),
   };
   const results = useInfiniteQuery(exploreOptions(api, effective, location.revision, screen, position));
   const categories = useQuery(categoriesOptions(api));
   const first = results.data?.pages[0];
   const current = first?.normalizedFilters ?? effective;
   const items = results.data?.pages.flatMap((page) => page.page.items) ?? [];
-  const pins = [...new Map((results.data?.pages.flatMap((page) => page.mapPins) ?? []).map((pin) => [pin.businessId, pin])).values()];
+  const pins = useMemo(() => [...new Map((results.data?.pages.flatMap((page) => page.mapPins) ?? [])
+    .map((pin) => [pin.businessId, pin])).values()], [results.data]);
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'failed'>('idle');
   const [draft, setDraft] = useState<URLSearchParams | null>(null);
   const draftFilters = draft ? readFilters(draft) : null;
@@ -136,7 +140,8 @@ function ExploreContent({ filters, mapConfig, screen }: {
           <p role="status" className="text-small text-text-2">{copyStatus === 'copied' ? t('linkCopied') : ''}</p>
           {copyStatus === 'failed' && <p role="alert" className="text-small text-error">{share('copyFailed')}</p>}
           <ExploreFilterChips filters={current} facets={first?.facets} onChange={setFilter} />
-          {results.isPending ? <Skeleton label={t('loading')} />
+          {!online && <p role="status" className="rounded-md border border-warning p-3">{t('offlineMessage')}</p>}
+          {results.isPending ? online ? <Skeleton label={t('loading')} /> : <ErrorState title={t('offlineTitle')} message={t('offlineMessage')} action={<Button onClick={() => void results.refetch()}>{t('retry')}</Button>} />
             : denied ? <NoPermissionState title={permission('title')} message={permission('message')} action={null} />
             : results.isError && !items.length ? (
               <ErrorState title={code === 'SEARCH_LOCATION_REQUIRED' ? t('locationRequired') : t('errorTitle')}
@@ -147,7 +152,7 @@ function ExploreContent({ filters, mapConfig, screen }: {
                 </div>} />
             ) : <>
               {current.view === 'map' && <ExploreMap key={`${current.tab}.${current.radiusKm ?? ''}`} config={mapConfig}
-                pins={pins} radius={current.radiusKm} position={position} onChange={setFilter} />}
+                pins={pins} radius={current.radiusKm} position={position} locationAvailable={Boolean(position || current.areaId)} onChange={setFilter} />}
               {items.length ? <ExploreCards tab={current.tab} items={items} locale={locale} />
                 : <EmptyState title={t(activeCount ? 'emptyFiltered' : `emptyNone.${current.tab}`)}
                     message={t(activeCount ? 'emptyFilteredMessage' : 'emptyNoneMessage')}

@@ -12,11 +12,12 @@ import { DirectionsAction } from '../geo';
 import { publicHref } from '../../shared/i18n/preferences';
 import type { FilterPatch } from './url-state';
 
-export function ExploreMap({ config, pins, radius, position, onChange }: {
+export function ExploreMap({ config, pins, radius, position, locationAvailable, onChange }: {
   config: MapConfiguration;
   pins: ExploreMapPin[];
   radius?: number | undefined;
   position: { lat: number; lng: number } | null;
+  locationAvailable: boolean;
   onChange: (patch: FilterPatch) => void;
 }) {
   const t = useTranslations('explore.screen');
@@ -33,15 +34,16 @@ export function ExploreMap({ config, pins, radius, position, onChange }: {
     <section className="grid gap-3">
       <label className="grid gap-2 font-semibold">
         {geo('radius', { km: radiusDraft })}
-        <input type="range" min={1} max={12} step={1} value={radiusDraft}
+        <input type="range" min={1} max={12} step={1} value={radiusDraft} disabled={!locationAvailable}
           onChange={(event) => setRadiusDraft(Number(event.target.value))}
           onPointerUp={() => onChange({ radiusKm: radiusDraft })}
           onKeyUp={() => onChange({ radiusKm: radiusDraft })}
           className="min-h-touch w-full accent-primary" />
       </label>
+      {!locationAvailable && <p className="text-small text-muted">{t('locationRequiredMessage')}</p>}
       {pins.length || position ? (
         <MapView config={config} markers={markers} selectedId={selectedId} onSelect={setSelectedId}
-          position={position} labels={{ map: geo('map'), loading: t('loading'), failed: geo('mapUnavailable'), retry: t('retry'), privacy: t('mapPrivacy') }} />
+          position={position} labels={{ map: geo('map'), loading: t('loading'), failed: geo('mapUnavailable'), retry: t('retry'), privacy: t('mapPrivacy'), zoomIn: t('zoomIn'), zoomOut: t('zoomOut') }} />
       ) : <EmptyState title={geo('noPins')} message={geo('locationOff')} action={null} />}
       {pins.length > 0 && (
         <ul aria-label={geo('pinsLabel')} className="flex flex-wrap gap-2">

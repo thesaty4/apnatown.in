@@ -7,6 +7,10 @@ import type { ExploreFilters } from '@apnatown/shared/search';
 
 export type FilterPatch = Record<string, string | number | null | undefined>;
 export const sortsFor = (tab: ExploreTab) => EXPLORE_SORTS_BY_TAB[tab];
+export const sortMessages = {
+  relevance: 'sort.relevance', distance: 'sort.distance', rating: 'sort.rating',
+  newest: 'sort.newest', price_asc: 'sort.priceAsc', price_desc: 'sort.priceDesc',
+} as const;
 export const hasVerified = (tab: ExploreTab) => tab !== 'products';
 export const selectedValues = (value: string | undefined) => value ? value.split(',') : [];
 
@@ -43,6 +47,7 @@ export function resetFilters(params: URLSearchParams) {
   if (!filters) throw new Error('INVALID_EXPLORE_URL');
   const next = new URLSearchParams(params);
   for (const key of EXPLORE_FILTER_KEYS[filters.tab]) next.delete(key);
+  next.set('view', 'list');
   next.set('sort', 'relevance');
   next.set('category', '');
   if (filters.tab !== 'shops') next.set('subcategory', '');

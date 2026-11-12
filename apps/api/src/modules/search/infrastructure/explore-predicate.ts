@@ -9,7 +9,9 @@ export function explorePredicate(selection: ExploreSelection, tab: ExploreTab, o
   const f = tabFilters(filters, tab);
   const where: Prisma.Sql[] = [Prisma.sql`x.kind=${{ products: 'product', shops: 'shop', services: 'service' }[tab]}`];
   if (tab === 'shops') where.push(Prisma.sql`x.business_kind='shop'`);
-  if (tab === 'services' && selection.emptyServices) where.push(Prisma.sql`false`);
+  // The no-related-services state is an implicit category restriction. Remove
+  // it for category facet counts so a user can explicitly choose another one.
+  if (tab === 'services' && selection.emptyServices && omit !== 'category') where.push(Prisma.sql`false`);
   if (filters.cityId) where.push(Prisma.sql`x.city_id=${filters.cityId}::uuid`);
   if (filters.areaId) where.push(Prisma.sql`x.area_id=${filters.areaId}::uuid`);
   if (f.category && omit !== 'category') where.push(Prisma.sql`EXISTS (

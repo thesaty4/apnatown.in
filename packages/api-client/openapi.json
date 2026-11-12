@@ -3812,7 +3812,7 @@
             "in": "query",
             "schema": {
               "minimum": 1,
-              "maximum": 640,
+              "maximum": 1920,
               "type": "integer"
             }
           },
@@ -34125,22 +34125,6 @@
             }
           },
           {
-            "name": "x-discovery-latitude",
-            "required": true,
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "x-discovery-longitude",
-            "required": true,
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "required": false,
             "name": "cursor",
             "in": "query",
@@ -34320,9 +34304,38 @@
             "name": "distanceKm",
             "in": "query",
             "schema": {
-              "minimum": 0,
-              "maximum": 12,
-              "type": "number"
+              "anyOf": [
+                {
+                  "type": "number",
+                  "enum": [
+                    0
+                  ]
+                },
+                {
+                  "type": "number",
+                  "enum": [
+                    1
+                  ]
+                },
+                {
+                  "type": "number",
+                  "enum": [
+                    3
+                  ]
+                },
+                {
+                  "type": "number",
+                  "enum": [
+                    5
+                  ]
+                },
+                {
+                  "type": "number",
+                  "enum": [
+                    10
+                  ]
+                }
+              ]
             }
           },
           {
@@ -34480,9 +34493,38 @@
             "name": "products.distanceKm",
             "in": "query",
             "schema": {
-              "minimum": 0,
-              "maximum": 12,
-              "type": "number"
+              "anyOf": [
+                {
+                  "type": "number",
+                  "enum": [
+                    0
+                  ]
+                },
+                {
+                  "type": "number",
+                  "enum": [
+                    1
+                  ]
+                },
+                {
+                  "type": "number",
+                  "enum": [
+                    3
+                  ]
+                },
+                {
+                  "type": "number",
+                  "enum": [
+                    5
+                  ]
+                },
+                {
+                  "type": "number",
+                  "enum": [
+                    10
+                  ]
+                }
+              ]
             }
           },
           {
@@ -34517,9 +34559,38 @@
             "name": "shops.distanceKm",
             "in": "query",
             "schema": {
-              "minimum": 0,
-              "maximum": 12,
-              "type": "number"
+              "anyOf": [
+                {
+                  "type": "number",
+                  "enum": [
+                    0
+                  ]
+                },
+                {
+                  "type": "number",
+                  "enum": [
+                    1
+                  ]
+                },
+                {
+                  "type": "number",
+                  "enum": [
+                    3
+                  ]
+                },
+                {
+                  "type": "number",
+                  "enum": [
+                    5
+                  ]
+                },
+                {
+                  "type": "number",
+                  "enum": [
+                    10
+                  ]
+                }
+              ]
             }
           },
           {
@@ -34636,9 +34707,38 @@
             "name": "services.distanceKm",
             "in": "query",
             "schema": {
-              "minimum": 0,
-              "maximum": 12,
-              "type": "number"
+              "anyOf": [
+                {
+                  "type": "number",
+                  "enum": [
+                    0
+                  ]
+                },
+                {
+                  "type": "number",
+                  "enum": [
+                    1
+                  ]
+                },
+                {
+                  "type": "number",
+                  "enum": [
+                    3
+                  ]
+                },
+                {
+                  "type": "number",
+                  "enum": [
+                    5
+                  ]
+                },
+                {
+                  "type": "number",
+                  "enum": [
+                    10
+                  ]
+                }
+              ]
             }
           },
           {
@@ -35009,6 +35109,16 @@
         "operationId": "getPublicProduct",
         "parameters": [
           {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+              "maxLength": 80
+            }
+          },
+          {
             "name": "X-Correlation-ID",
             "in": "header",
             "required": false,
@@ -35135,6 +35245,16 @@
         "operationId": "getPublicService",
         "parameters": [
           {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+              "maxLength": 80
+            }
+          },
+          {
             "name": "X-Correlation-ID",
             "in": "header",
             "required": false,
@@ -35260,6 +35380,16 @@
       "get": {
         "operationId": "getPublicBusiness",
         "parameters": [
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+              "maxLength": 80
+            }
+          },
           {
             "name": "X-Correlation-ID",
             "in": "header",
@@ -53522,7 +53652,7 @@
                           "bytes": {
                             "type": "integer",
                             "exclusiveMinimum": true,
-                            "maximum": 122880,
+                            "maximum": 358400,
                             "minimum": 0
                           },
                           "path": {
@@ -53677,7 +53807,7 @@
                         "bytes": {
                           "type": "integer",
                           "exclusiveMinimum": true,
-                          "maximum": 122880,
+                          "maximum": 358400,
                           "minimum": 0
                         },
                         "path": {
@@ -53824,7 +53954,7 @@
                           "bytes": {
                             "type": "integer",
                             "exclusiveMinimum": true,
-                            "maximum": 122880,
+                            "maximum": 358400,
                             "minimum": 0
                           },
                           "path": {
@@ -53981,7 +54111,7 @@
                         "bytes": {
                           "type": "integer",
                           "exclusiveMinimum": true,
-                          "maximum": 122880,
+                          "maximum": 358400,
                           "minimum": 0
                         },
                         "path": {
@@ -54126,7 +54256,7 @@
                         "bytes": {
                           "type": "integer",
                           "exclusiveMinimum": true,
-                          "maximum": 122880,
+                          "maximum": 358400,
                           "minimum": 0
                         },
                         "path": {
@@ -54289,7 +54419,7 @@
                           "bytes": {
                             "type": "integer",
                             "exclusiveMinimum": true,
-                            "maximum": 122880,
+                            "maximum": 358400,
                             "minimum": 0
                           },
                           "path": {
@@ -54453,7 +54583,7 @@
                                 "bytes": {
                                   "type": "integer",
                                   "exclusiveMinimum": true,
-                                  "maximum": 122880,
+                                  "maximum": 358400,
                                   "minimum": 0
                                 },
                                 "path": {
@@ -55192,7 +55322,7 @@
                     "bytes": {
                       "type": "integer",
                       "exclusiveMinimum": true,
-                      "maximum": 122880,
+                      "maximum": 358400,
                       "minimum": 0
                     },
                     "path": {
@@ -55454,7 +55584,7 @@
                     "bytes": {
                       "type": "integer",
                       "exclusiveMinimum": true,
-                      "maximum": 122880,
+                      "maximum": 358400,
                       "minimum": 0
                     },
                     "path": {
@@ -57243,7 +57373,7 @@
                                   "bytes": {
                                     "type": "integer",
                                     "exclusiveMinimum": true,
-                                    "maximum": 122880,
+                                    "maximum": 358400,
                                     "minimum": 0
                                   },
                                   "path": {
@@ -57399,7 +57529,7 @@
                                     "bytes": {
                                       "type": "integer",
                                       "exclusiveMinimum": true,
-                                      "maximum": 122880,
+                                      "maximum": 358400,
                                       "minimum": 0
                                     },
                                     "path": {
@@ -57599,7 +57729,7 @@
                                         "bytes": {
                                           "type": "integer",
                                           "exclusiveMinimum": true,
-                                          "maximum": 122880,
+                                          "maximum": 358400,
                                           "minimum": 0
                                         },
                                         "path": {
@@ -57751,7 +57881,7 @@
                                           "bytes": {
                                             "type": "integer",
                                             "exclusiveMinimum": true,
-                                            "maximum": 122880,
+                                            "maximum": 358400,
                                             "minimum": 0
                                           },
                                           "path": {
@@ -57975,9 +58105,38 @@
                 ]
               },
               "distanceKm": {
-                "type": "number",
-                "minimum": 0,
-                "maximum": 12
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "enum": [
+                      0
+                    ]
+                  },
+                  {
+                    "type": "number",
+                    "enum": [
+                      1
+                    ]
+                  },
+                  {
+                    "type": "number",
+                    "enum": [
+                      3
+                    ]
+                  },
+                  {
+                    "type": "number",
+                    "enum": [
+                      5
+                    ]
+                  },
+                  {
+                    "type": "number",
+                    "enum": [
+                      10
+                    ]
+                  }
+                ]
               },
               "radiusKm": {
                 "type": "number",
@@ -58088,9 +58247,38 @@
                 ]
               },
               "products.distanceKm": {
-                "type": "number",
-                "minimum": 0,
-                "maximum": 12
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "enum": [
+                      0
+                    ]
+                  },
+                  {
+                    "type": "number",
+                    "enum": [
+                      1
+                    ]
+                  },
+                  {
+                    "type": "number",
+                    "enum": [
+                      3
+                    ]
+                  },
+                  {
+                    "type": "number",
+                    "enum": [
+                      5
+                    ]
+                  },
+                  {
+                    "type": "number",
+                    "enum": [
+                      10
+                    ]
+                  }
+                ]
               },
               "products.offerId": {
                 "type": "string",
@@ -58113,9 +58301,38 @@
                 "maxLength": 2000
               },
               "shops.distanceKm": {
-                "type": "number",
-                "minimum": 0,
-                "maximum": 12
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "enum": [
+                      0
+                    ]
+                  },
+                  {
+                    "type": "number",
+                    "enum": [
+                      1
+                    ]
+                  },
+                  {
+                    "type": "number",
+                    "enum": [
+                      3
+                    ]
+                  },
+                  {
+                    "type": "number",
+                    "enum": [
+                      5
+                    ]
+                  },
+                  {
+                    "type": "number",
+                    "enum": [
+                      10
+                    ]
+                  }
+                ]
               },
               "shops.radiusKm": {
                 "type": "number",
@@ -58205,9 +58422,38 @@
                 "maxLength": 2000
               },
               "services.distanceKm": {
-                "type": "number",
-                "minimum": 0,
-                "maximum": 12
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "enum": [
+                      0
+                    ]
+                  },
+                  {
+                    "type": "number",
+                    "enum": [
+                      1
+                    ]
+                  },
+                  {
+                    "type": "number",
+                    "enum": [
+                      3
+                    ]
+                  },
+                  {
+                    "type": "number",
+                    "enum": [
+                      5
+                    ]
+                  },
+                  {
+                    "type": "number",
+                    "enum": [
+                      10
+                    ]
+                  }
+                ]
               },
               "services.radiusKm": {
                 "type": "number",
@@ -58528,7 +58774,7 @@
                         "bytes": {
                           "type": "integer",
                           "exclusiveMinimum": true,
-                          "maximum": 122880,
+                          "maximum": 358400,
                           "minimum": 0
                         },
                         "path": {
@@ -59134,7 +59380,7 @@
                   "bytes": {
                     "type": "integer",
                     "exclusiveMinimum": true,
-                    "maximum": 122880,
+                    "maximum": 358400,
                     "minimum": 0
                   },
                   "path": {
@@ -59297,7 +59543,7 @@
                 "bytes": {
                   "type": "integer",
                   "exclusiveMinimum": true,
-                  "maximum": 122880,
+                  "maximum": 358400,
                   "minimum": 0
                 },
                 "path": {
@@ -59515,7 +59761,7 @@
                   "bytes": {
                     "type": "integer",
                     "exclusiveMinimum": true,
-                    "maximum": 122880,
+                    "maximum": 358400,
                     "minimum": 0
                   },
                   "path": {
@@ -59678,7 +59924,7 @@
                 "bytes": {
                   "type": "integer",
                   "exclusiveMinimum": true,
-                  "maximum": 122880,
+                  "maximum": 358400,
                   "minimum": 0
                 },
                 "path": {
@@ -59899,7 +60145,7 @@
                   "bytes": {
                     "type": "integer",
                     "exclusiveMinimum": true,
-                    "maximum": 122880,
+                    "maximum": 358400,
                     "minimum": 0
                   },
                   "path": {
@@ -60062,7 +60308,7 @@
                 "bytes": {
                   "type": "integer",
                   "exclusiveMinimum": true,
-                  "maximum": 122880,
+                  "maximum": 358400,
                   "minimum": 0
                 },
                 "path": {

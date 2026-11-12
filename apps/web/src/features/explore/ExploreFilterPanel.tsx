@@ -5,7 +5,7 @@ import type { ExploreFacet, ExploreResponse } from '@apnatown/shared/search';
 import { Button } from '@apnatown/ui/primitives/Button';
 import { Checkbox } from '@apnatown/ui/primitives/Selection';
 import { Select } from '@apnatown/ui/primitives/Select';
-import { sortsFor, type ExploreFilters, type FilterPatch } from './url-state';
+import { sortsFor, sortMessages, type ExploreFilters, type FilterPatch } from './url-state';
 import { PriceFilter } from './PriceFilter';
 import { ServiceCategoryFilter } from './ServiceCategoryFilter';
 
@@ -71,7 +71,7 @@ export function ExploreFilterPanel({ filters, facets, onChange, onReset }: {
           ...[1, 3, 5, 10].map((km) => ({ value: String(km), label: t('withinKm', { km }) }))]}
         onChange={(event) => onChange({ distanceKm: event.target.value ? Number(event.target.value) : null })} />
       <Select label={t('sortBy')} value={filters.sort}
-        options={sortsFor(filters.tab).map((value) => ({ value, label: t(`sort.${value}`) }))}
+        options={sortsFor(filters.tab).map((value) => ({ value, label: t(sortMessages[value]) }))}
         onChange={(event) => onChange({ sort: event.target.value })} />
     </div>
   );

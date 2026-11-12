@@ -26,7 +26,7 @@ export function listingRows(source: Prisma.Sql, location: DiscoveryLocation | nu
     LEFT JOIN catalog_discovery_subcategories sc ON sc.id=x.subcategory_id
     LEFT JOIN LATERAL (SELECT m.image FROM media_public_listing_images m
       WHERE m.placement_id=x.id AND m.placement_type=CASE x.kind WHEN 'shop' THEN 'business' ELSE x.kind END
-      ORDER BY m.position,m.width DESC LIMIT 1) image ON true`;
+      ORDER BY m.position,(m.width<=640) DESC,m.width DESC LIMIT 1) image ON true`;
 }
 
 /** The caller supplies only rows of listingRows as alias x. */

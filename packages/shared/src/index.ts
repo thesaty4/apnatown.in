@@ -1,7 +1,7 @@
 export { ErrorResponseSchema, HealthResponseSchema } from './wire.js';
 export type { ErrorResponse, HealthResponse } from './wire.js';
 export { Money } from './money.js';
-export { formatDistanceKm } from './formatters.js';
+export { formatDistanceKm, formatMoney, parseRupees, formatLocalBusinessTime } from './formatters.js';
 export { SavedQuerySchema, SavedItemSchema, SavedPageSchema } from './saved.js';
 export type { SavedQuery, SavedItem, SavedPage } from './saved.js';
 export {

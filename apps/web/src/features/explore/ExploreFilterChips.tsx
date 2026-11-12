@@ -4,7 +4,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { EXPLORE_FILTER_KEYS, type ExploreResponse } from '@apnatown/shared/search';
 import { formatMoney, formatDistanceKm } from '@apnatown/shared/formatters';
 import { Chip } from '@apnatown/ui/primitives/Chip';
-import { selectedValues, type ExploreFilters, type FilterPatch } from './url-state';
+import { selectedValues, sortMessages, type ExploreFilters, type FilterPatch } from './url-state';
 
 export function activeFilterCount(filters: ExploreFilters) {
   return EXPLORE_FILTER_KEYS[filters.tab].filter((key) => {
@@ -43,14 +43,14 @@ export function ExploreFilterChips({ filters, facets, onChange }: {
             return <Chip key={`${key}.${selected}`} label={label} removable removeLabel={t('removeFilter', { label })} onRemove={remove} />;
           });
         }
-        const formatted = key === 'sort' ? t(`sort.${value}`)
+        const formatted = key === 'sort' ? t(sortMessages[filters.sort])
           : key === 'priceMinPaise' || key === 'priceMaxPaise' ? formatMoney(Number(value), locale)
-          : key === 'distanceKm' ? formatDistanceKm(Number(value), locale)
+          : key === 'distanceKm' || key === 'radiusKm' ? formatDistanceKm(Number(value), locale)
           : String(value);
         const label = value === 'true' || key === 'offerId' ? t(key)
           : t('filterValue', { label: t(key === 'sort' ? 'sortBy' : key), value: formatted });
         return [<Chip key={key} label={label} removable removeLabel={t('removeFilter', { label })}
-          onRemove={() => onChange({ [key]: null })} />];
+          onRemove={() => onChange({ [key]: null, ...(key === 'radiusKm' && { view: 'list' }) })} />];
       })}
     </div>
   );

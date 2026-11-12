@@ -3156,7 +3156,7 @@ export interface components {
                 contextCategory?: string;
                 /** @enum {string} */
                 deliversToMe?: "true" | "false";
-                distanceKm?: number;
+                distanceKm?: 0 | 1 | 3 | 5 | 10;
                 /** @enum {string} */
                 featured?: "true" | "false";
                 /** @enum {string} */
@@ -3177,7 +3177,7 @@ export interface components {
                 "products.category"?: string;
                 /** @enum {string} */
                 "products.deliversToMe"?: "true" | "false";
-                "products.distanceKm"?: number;
+                "products.distanceKm"?: 0 | 1 | 3 | 5 | 10;
                 /** @enum {string} */
                 "products.featured"?: "true" | "false";
                 /** @enum {string} */
@@ -3200,7 +3200,7 @@ export interface components {
                 /** @enum {string} */
                 "services.availableToday"?: "true" | "false";
                 "services.category"?: string;
-                "services.distanceKm"?: number;
+                "services.distanceKm"?: 0 | 1 | 3 | 5 | 10;
                 /** @enum {string} */
                 "services.offers"?: "true" | "false";
                 "services.priceMaxPaise"?: number;
@@ -3217,7 +3217,7 @@ export interface components {
                 "shops.category"?: string;
                 /** @enum {string} */
                 "shops.deliversToMe"?: "true" | "false";
-                "shops.distanceKm"?: number;
+                "shops.distanceKm"?: 0 | 1 | 3 | 5 | 10;
                 /** @enum {string} */
                 "shops.featured"?: "true" | "false";
                 /** @enum {string} */
@@ -9199,7 +9199,9 @@ export interface operations {
             header?: {
                 "X-Correlation-ID"?: string;
             };
-            path?: never;
+            path: {
+                slug: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -14214,7 +14216,7 @@ export interface operations {
                 contextCategory?: string;
                 cursor?: string;
                 deliversToMe?: string;
-                distanceKm?: number;
+                distanceKm?: 0 | 1 | 3 | 5 | 10;
                 featured?: string;
                 inStock?: string;
                 limit?: number;
@@ -14228,7 +14230,7 @@ export interface operations {
                 "products.brand"?: string;
                 "products.category"?: string;
                 "products.deliversToMe"?: string;
-                "products.distanceKm"?: number;
+                "products.distanceKm"?: 0 | 1 | 3 | 5 | 10;
                 "products.featured"?: string;
                 "products.inStock"?: string;
                 "products.offerId"?: string;
@@ -14244,7 +14246,7 @@ export interface operations {
                 rating?: 0 | 3 | 4 | 4.5;
                 "services.availableToday"?: string;
                 "services.category"?: string;
-                "services.distanceKm"?: number;
+                "services.distanceKm"?: 0 | 1 | 3 | 5 | 10;
                 "services.offers"?: string;
                 "services.priceMaxPaise"?: number;
                 "services.priceMinPaise"?: number;
@@ -14256,7 +14258,7 @@ export interface operations {
                 "services.verified"?: string;
                 "shops.category"?: string;
                 "shops.deliversToMe"?: string;
-                "shops.distanceKm"?: number;
+                "shops.distanceKm"?: 0 | 1 | 3 | 5 | 10;
                 "shops.featured"?: string;
                 "shops.offers"?: string;
                 "shops.openNow"?: string;
@@ -14270,12 +14272,10 @@ export interface operations {
                 verified?: string;
                 view?: string;
             };
-            header: {
+            header?: {
                 "X-Correlation-ID"?: string;
-                "x-discovery-latitude": string;
                 /** @description Optional ephemeral latitude; send together with longitude. */
                 "X-Discovery-Latitude"?: string;
-                "x-discovery-longitude": string;
                 /** @description Optional ephemeral longitude; never put precise location in URLs. */
                 "X-Discovery-Longitude"?: string;
             };
@@ -17050,7 +17050,9 @@ export interface operations {
             header?: {
                 "X-Correlation-ID"?: string;
             };
-            path?: never;
+            path: {
+                slug: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -17210,7 +17212,9 @@ export interface operations {
             header?: {
                 "X-Correlation-ID"?: string;
             };
-            path?: never;
+            path: {
+                slug: string;
+            };
             cookie?: never;
         };
         requestBody?: never;

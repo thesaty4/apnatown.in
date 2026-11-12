@@ -4,7 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { CatalogSlugSchema } from '@apnatown/shared/catalog';
 import { ProductPublicSchema, ServicePublicSchema, BusinessDiscoveryDetailSchema } from '@apnatown/shared/public-listings';
-import { formatMoney } from '@apnatown/shared/formatters';
+import { formatLocalBusinessTime, formatMoney } from '@apnatown/shared/formatters';
 import { Card } from '@apnatown/ui/cards/Card';
 import { ErrorState, NoPermissionState } from '@apnatown/ui/feedback/StateViews';
 import { StatusBadge } from '@apnatown/ui/primitives/Badge';
@@ -86,7 +86,8 @@ export async function PublicListingPage({ kind, slug }: { kind: ListingKind; slu
     {'hours' in result.data && result.data.hours.length > 0 && <Card padded>
       <h2 className="text-h3">{t('businessHours')}</h2>
       <dl className="grid gap-2">{result.data.hours.map((day) => <div key={day.dayOfWeek} className="flex flex-wrap justify-between gap-2">
-        <dt>{t(`day.${day.dayOfWeek}`)}</dt><dd>{day.isClosed ? t('closed') : t('hoursRange', { opens: day.opensAt ?? '', closes: day.closesAt ?? '' })}</dd>
+        <dt>{t(`day.d${day.dayOfWeek}`)}</dt><dd>{day.isClosed ? t('closed') : day.opensAt && day.closesAt
+          ? t('hoursRange', { opens: formatLocalBusinessTime(day.opensAt, locale), closes: formatLocalBusinessTime(day.closesAt, locale) }) : t('hoursUnavailable')}</dd>
       </div>)}</dl>
     </Card>}
     {'orderability' in result.data && !result.data.orderability.orderable && <p role="status">{t('orderingUnavailable')}</p>}

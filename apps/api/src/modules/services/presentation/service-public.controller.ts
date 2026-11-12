@@ -1,5 +1,5 @@
 import { Controller, Get, Header, Param } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { createZodDto } from 'nestjs-zod';
 import { PublicListingParamsSchema, ServicePublicSchema } from '@apnatown/shared';
 import { PublicRoute } from '../../../shared/auth';
@@ -17,6 +17,7 @@ export class ServicePublicController {
   @Header('Cache-Control', 'private, no-store')
   @RateLimit({ key: 'services.public-read', subject: 'ip', maximumHits: 120, windowSeconds: 60 })
   @ApiOperation({ operationId: 'getPublicService', summary: 'Public service detail for /service/[slug]' })
+  @ApiParam({ name: 'slug', schema: { type: 'string', pattern: '^[a-z0-9]+(-[a-z0-9]+)*$', maxLength: 80 } })
   @ApiResponse({ status: 200, type: ServicePublicDto })
   @ApiResponse({ status: 404, type: ErrorDto })
   @ApiResponse({ status: 400, type: ErrorDto })

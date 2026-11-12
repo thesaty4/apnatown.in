@@ -5,6 +5,12 @@ import { queryKeys } from '../../shared/api/query-keys';
 import { normalizeFailure, unwrap } from '../../shared/api/result';
 import type { ExploreFilters } from './url-state';
 
+function defined<T extends object>(value: T) {
+  return Object.fromEntries(Object.entries(value).filter(([, item]) => item !== undefined)) as {
+    [K in keyof T]: Exclude<T[K], undefined>;
+  };
+}
+
 export async function getExplore(
   api: Pick<BrowserApi, 'GET'>,
   filters: ExploreFilters,
@@ -12,11 +18,11 @@ export async function getExplore(
   signal?: AbortSignal,
   position?: { lat: number; lng: number } | null,
 ) {
-  const query = {
+  const query = defined({
     ...filters,
     limit: 20,
     ...(cursor ? { cursor } : {}),
-  };
+  });
   return unwrap(
     await api.GET('/explore', {
       params: { query },
