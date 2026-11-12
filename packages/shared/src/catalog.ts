@@ -6,6 +6,7 @@ import {
   TimestampSchema,
   VersionSchema,
 } from './wire.js';
+import { MediaGatewayPathSchema } from './media.js';
 
 /**
  * Catalog wire contracts (F-HM-003/004, F-SV-008, F-VD-006, F-AD-005/006/015,
@@ -117,7 +118,7 @@ const atLeastOneChange = (value: Record<string, unknown>) =>
 
 export const TaxonomyImageSchema = z.strictObject({
   assetId: IdSchema,
-  publicUrl: z.url(),
+  path: MediaGatewayPathSchema,
   mimeType: z.string().min(1).max(100),
   width: z.number().int().positive(),
   height: z.number().int().positive(),

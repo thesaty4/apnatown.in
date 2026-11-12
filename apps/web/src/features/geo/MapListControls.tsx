@@ -67,10 +67,10 @@ export type MapPin = {
 };
 
 /**
- * S-CUST-02 map/list controls. No map provider is approved, so map mode shows
- * a dependency-free pin list (keyboard selectable) instead of tiles. Distance
- * and "delivers to your address" stay separate, and "you are here" appears
- * only when a real location is available — never fabricated.
+ * S-CUST-02 map/list controls. Leaflet/OSM is selected, but the shared MapView
+ * is not wired yet; map mode retains this keyboard-selectable list fallback.
+ * Distance and "delivers to your address" stay separate, and "you are here"
+ * appears only when a real location is available — never fabricated.
  */
 export function MapListControls({
   view,
@@ -128,7 +128,10 @@ export function MapListControls({
       {view === 'map' && (
         <div className="grid gap-3">
           <div className="grid gap-1">
-            <label htmlFor={`${id}-radius`} className="text-field-label font-semibold">
+            <label
+              htmlFor={`${id}-radius`}
+              className="text-field-label font-semibold"
+            >
               {t('radius', { km: km(draft) })}
             </label>
             <input
@@ -150,7 +153,10 @@ export function MapListControls({
           {pins.length === 0 ? (
             <GeoNote tone="info" message={t('noPins')} />
           ) : (
-            <ul aria-label={t('pinsLabel')} className="m-0 grid list-none gap-2 p-0">
+            <ul
+              aria-label={t('pinsLabel')}
+              className="m-0 grid list-none gap-2 p-0"
+            >
               {locationAvailable && (
                 <li className="flex items-center gap-2 px-3 text-small font-semibold">
                   <span aria-hidden="true">🔵</span>

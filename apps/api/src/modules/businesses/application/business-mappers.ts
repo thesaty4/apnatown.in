@@ -43,7 +43,9 @@ function location(business: StoredBusiness) {
 }
 
 function primaryOf(aggregate: BusinessAggregate): string | null {
-  return aggregate.categories.find((link) => link.isPrimary)?.categoryId ?? null;
+  return (
+    aggregate.categories.find((link) => link.isPrimary)?.categoryId ?? null
+  );
 }
 
 export function ownerDto(
@@ -100,7 +102,7 @@ export function summaryDto(business: StoredBusiness): BusinessSummary {
 
 export interface PublicImage {
   assetId: string;
-  publicUrl: string;
+  path: string;
   width: number;
   height: number;
 }

@@ -5,6 +5,16 @@ Format: see `.github/skills/lessons-learned/SKILL.md`. Newest at the
 top; developer bug-fix work and any agent that catches a reusable mistake add an
 entry here.
 
+## Public images use gateway paths, not provider URLs
+
+What: business and catalog image DTOs allowed unrestricted absolute
+`publicUrl` values, so a future provider adapter could bypass current
+placement authorization and revocation.
+Rule: expose only a root-relative same-origin Media gateway path validated
+by `MediaGatewayPathSchema`; the gateway reauthorizes each request.
+Enforced in: `backend.instructions.md`,
+`specs/_foundation/media-and-maps.md`, and `packages/shared/src/media.ts`.
+
 ## Keep runtime configuration wired through launcher allow-lists
 
 What: retry, lease and relay settings were declared in the runtime schema and

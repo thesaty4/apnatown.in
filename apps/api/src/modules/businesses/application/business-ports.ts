@@ -88,7 +88,11 @@ export interface BusinessAdminDetail extends BusinessApplicationCard {
   logoAssetId: string | null;
   coverAssetId: string | null;
   /** Only for approval viewers; never public URLs. */
-  documents: { documentId: string; kind: BusinessDocumentKind; assetId: string }[];
+  documents: {
+    documentId: string;
+    kind: BusinessDocumentKind;
+    assetId: string;
+  }[];
 }
 export interface BusinessAdminReadPort {
   list(
@@ -246,7 +250,10 @@ export interface BusinessMediaAssetPort {
   describePublic(
     assetIds: readonly string[],
   ): Promise<
-    Map<string, { assetId: string; publicUrl: string; width: number; height: number }>
+    Map<
+      string,
+      { assetId: string; path: string; width: number; height: number }
+    >
   >;
 }
 
@@ -283,7 +290,10 @@ export class UnavailableBusinessMediaAssets implements BusinessMediaAssetPort {
   }
 
   describePublic(): Promise<
-    Map<string, { assetId: string; publicUrl: string; width: number; height: number }>
+    Map<
+      string,
+      { assetId: string; path: string; width: number; height: number }
+    >
   > {
     return Promise.resolve(new Map());
   }

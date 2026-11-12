@@ -9,7 +9,8 @@ export type DirectionsDestination = { lat: number; lng: number };
 /** Builds a device-maps link from validated numbers only — never from a
  * client-supplied URL. `geo:` (RFC 5870) opens the platform maps app; Apple
  * devices do not register it, so they use the Apple Maps universal link.
- * TODO(verify): no maps/directions provider is approved yet. */
+ * Leaflet/OSM is for in-app maps; directions intentionally open the device map
+ * app rather than introducing a routing provider. */
 export function directionsHref(
   destination: DirectionsDestination,
   apple: boolean,

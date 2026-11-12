@@ -79,7 +79,7 @@ export function categoryTiles(
     href: href(category),
     label: catalogName(category, locale),
     icon: category.icon,
-    imageSrc: category.image?.publicUrl,
+    imageSrc: category.image?.path,
   }));
 }
 
@@ -95,7 +95,7 @@ export function subcategoryTiles(
     label: catalogName(subcategory, locale),
     // Subcategories have no icon field; the parent icon is the fallback art.
     icon: category.icon,
-    imageSrc: subcategory.image?.publicUrl,
+    imageSrc: subcategory.image?.path,
   }));
 }
 

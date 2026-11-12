@@ -14,6 +14,7 @@ import {
   PrivateRefSchema,
   StateCodeSchema,
 } from './settings.js';
+import { MediaGatewayPathSchema } from './media.js';
 
 /**
  * Businesses wire contracts (F-PF-001..013, F-VD-001..003/011/018,
@@ -67,9 +68,7 @@ export type BusinessDecisionAction = z.infer<
 >;
 
 /** Recurring IST wall-clock time `HH:MM` (not an instant). */
-export const WallTimeSchema = z
-  .string()
-  .regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/);
+export const WallTimeSchema = z.string().regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/);
 export const IstDateSchema = z.iso.date();
 
 const plain = (min: number, max: number) =>
@@ -267,10 +266,10 @@ export const BusinessOwnerSchema = z.strictObject({
 });
 export type BusinessOwner = z.infer<typeof BusinessOwnerSchema>;
 
-/** Resolved public image; never a raw storage key. */
+/** Resolved public image; path is same-origin and reauthorized by Media. */
 export const BusinessPublicImageSchema = z.strictObject({
   assetId: IdSchema,
-  publicUrl: z.url(),
+  path: MediaGatewayPathSchema,
   width: z.number().int().positive(),
   height: z.number().int().positive(),
 });
@@ -452,7 +451,14 @@ export type BusinessAnalytics = z.infer<typeof BusinessAnalyticsSchema>;
 
 export const BusinessApplicationQuerySchema = z.strictObject({
   status: z
-    .enum(['pending', 'changes_requested', 'rejected', 'approved', 'suspended', 'inactive'])
+    .enum([
+      'pending',
+      'changes_requested',
+      'rejected',
+      'approved',
+      'suspended',
+      'inactive',
+    ])
     .default('pending'),
   kind: BusinessKindSchema.optional(),
   cursor: CursorSchema.optional(),
@@ -610,6 +616,8 @@ export const BillingDecisionSchema = z
       input.decision === 'reject'
         ? !!input.reason
         : !!input.verificationEvidenceRef && input.requiresIrn !== undefined,
-    { message: 'Approve needs evidence and IRN applicability; reject a reason' },
+    {
+      message: 'Approve needs evidence and IRN applicability; reject a reason',
+    },
   );
 export type BillingDecision = z.infer<typeof BillingDecisionSchema>;

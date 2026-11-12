@@ -143,7 +143,7 @@ export async function CategoryLanding({
         <Avatar
           label=""
           emoji={category.icon || '🏷️'}
-          {...(image ? { src: image.publicUrl } : {})}
+          {...(image ? { src: image.path } : {})}
         />
         <div className="grid min-w-0 flex-1 gap-1">
           <h1 className="text-h1 [overflow-wrap:anywhere]">

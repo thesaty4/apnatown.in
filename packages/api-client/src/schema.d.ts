@@ -1518,8 +1518,8 @@ export interface components {
                 assetId: string;
                 height: number;
                 mimeType: string;
-                /** Format: uri */
-                publicUrl: string;
+                /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                path: string;
                 width: number;
             };
             /** Format: uuid */
@@ -1548,8 +1548,8 @@ export interface components {
                     assetId: string;
                     height: number;
                     mimeType: string;
-                    /** Format: uri */
-                    publicUrl: string;
+                    /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                    path: string;
                     width: number;
                 };
                 /** Format: uuid */
@@ -1574,8 +1574,8 @@ export interface components {
                         assetId: string;
                         height: number;
                         mimeType: string;
-                        /** Format: uri */
-                        publicUrl: string;
+                        /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                        path: string;
                         width: number;
                     };
                     /** Format: uuid */
@@ -1869,8 +1869,8 @@ export interface components {
                 assetId: string;
                 height: number;
                 mimeType: string;
-                /** Format: uri */
-                publicUrl: string;
+                /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                path: string;
                 width: number;
             };
             /** Format: uuid */
@@ -1995,8 +1995,8 @@ export interface components {
                     assetId: string;
                     height: number;
                     mimeType: string;
-                    /** Format: uri */
-                    publicUrl: string;
+                    /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                    path: string;
                     width: number;
                 };
                 /** @enum {string} */
@@ -2017,8 +2017,8 @@ export interface components {
                     assetId: string;
                     height: number;
                     mimeType: string;
-                    /** Format: uri */
-                    publicUrl: string;
+                    /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                    path: string;
                     width: number;
                 };
                 nameEn: string;
@@ -2039,8 +2039,8 @@ export interface components {
                     assetId: string;
                     height: number;
                     mimeType: string;
-                    /** Format: uri */
-                    publicUrl: string;
+                    /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                    path: string;
                     width: number;
                 };
                 /** @enum {string} */
@@ -3634,8 +3634,8 @@ export interface components {
                     assetId: string;
                     height: number;
                     mimeType: string;
-                    /** Format: uri */
-                    publicUrl: string;
+                    /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                    path: string;
                     width: number;
                 };
                 /** @enum {string} */
@@ -3656,8 +3656,8 @@ export interface components {
                     assetId: string;
                     height: number;
                     mimeType: string;
-                    /** Format: uri */
-                    publicUrl: string;
+                    /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                    path: string;
                     width: number;
                 };
                 nameEn: string;

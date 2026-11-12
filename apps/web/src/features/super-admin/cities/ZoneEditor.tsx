@@ -28,10 +28,10 @@ type Save =
   | { kind: 'update'; zoneId: string; patch: UpdateZoneBody };
 
 /**
- * S-SUPR-05 zone create/edit. No map provider is approved, so the boundary is
- * edited as an ordered corner list (lat/lng) with a schematic outline preview;
- * fee slabs take INR and are sent as integer paise. A version conflict
- * refetches the zone (shared command) while this draft is kept.
+ * S-SUPR-05 zone create/edit. Until the shared Leaflet/Geoman editor is wired,
+ * the boundary is edited as an ordered corner list (lat/lng) with a schematic
+ * outline preview; fee slabs take INR and are sent as integer paise. A version
+ * conflict refetches the zone (shared command) while this draft is kept.
  */
 export function ZoneEditor({
   cityId,
@@ -159,7 +159,11 @@ export function ZoneEditor({
           {issues.has('corners') && (
             <p role="alert" className="flex gap-2 text-small text-error">
               <span aria-hidden="true">⚠️</span>
-              {t(draft.corners.length < MIN_CORNERS ? 'tooFewCorners' : 'shapeInvalid')}
+              {t(
+                draft.corners.length < MIN_CORNERS
+                  ? 'tooFewCorners'
+                  : 'shapeInvalid',
+              )}
             </p>
           )}
           {draft.corners.length === 0 ? (
@@ -179,7 +183,9 @@ export function ZoneEditor({
                     onChange={(event) =>
                       set({
                         corners: draft.corners.map((item, at) =>
-                          at === index ? { ...item, lat: event.target.value } : item,
+                          at === index
+                            ? { ...item, lat: event.target.value }
+                            : item,
                         ),
                       })
                     }
@@ -192,7 +198,9 @@ export function ZoneEditor({
                     onChange={(event) =>
                       set({
                         corners: draft.corners.map((item, at) =>
-                          at === index ? { ...item, lng: event.target.value } : item,
+                          at === index
+                            ? { ...item, lng: event.target.value }
+                            : item,
                         ),
                       })
                     }
@@ -214,7 +222,9 @@ export function ZoneEditor({
             <Button
               variant="outline"
               disabled={draft.corners.length >= MAX_CORNERS}
-              onClick={() => setCorners([...draft.corners, { lat: '', lng: '' }])}
+              onClick={() =>
+                setCorners([...draft.corners, { lat: '', lng: '' }])
+              }
             >
               <span aria-hidden="true">＋</span>
               {t('addCorner')}
@@ -258,12 +268,16 @@ export function ZoneEditor({
                     inputMode="decimal"
                     value={slab.km}
                     error={
-                      issues.has(`slab.${index}.km`) ? t('kmInvalid') : undefined
+                      issues.has(`slab.${index}.km`)
+                        ? t('kmInvalid')
+                        : undefined
                     }
                     onChange={(event) =>
                       set({
                         slabs: draft.slabs.map((item, at) =>
-                          at === index ? { ...item, km: event.target.value } : item,
+                          at === index
+                            ? { ...item, km: event.target.value }
+                            : item,
                         ),
                       })
                     }
@@ -279,12 +293,16 @@ export function ZoneEditor({
                         : undefined
                     }
                     error={
-                      issues.has(`slab.${index}.fee`) ? t('feeInvalid') : undefined
+                      issues.has(`slab.${index}.fee`)
+                        ? t('feeInvalid')
+                        : undefined
                     }
                     onChange={(event) =>
                       set({
                         slabs: draft.slabs.map((item, at) =>
-                          at === index ? { ...item, fee: event.target.value } : item,
+                          at === index
+                            ? { ...item, fee: event.target.value }
+                            : item,
                         ),
                       })
                     }
@@ -294,7 +312,9 @@ export function ZoneEditor({
                     disabled={draft.slabs.length <= 1}
                     aria-label={t('removeSlab', { n: index + 1 })}
                     onClick={() =>
-                      set({ slabs: draft.slabs.filter((_, at) => at !== index) })
+                      set({
+                        slabs: draft.slabs.filter((_, at) => at !== index),
+                      })
                     }
                   >
                     {t('remove')}

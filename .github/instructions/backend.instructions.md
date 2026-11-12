@@ -1,5 +1,5 @@
 ---
-applyTo: "apps/api/**,packages/shared/**"
+applyTo: 'apps/api/**,packages/shared/**'
 ---
 
 # Backend
@@ -33,6 +33,8 @@ transactions through ports (`database.instructions.md`).
 - Responses are explicit DTOs (never leak ORM/DB entities); money as
   integer paise, timestamps as ISO-8601 UTC, enums as the shared
   string union — client formats for IST/locale display.
+- Public image DTOs use `MediaGatewayPathSchema` root-relative paths;
+  never return absolute provider URLs that bypass Media authorization.
 
 ## Pagination and filtering
 
@@ -45,7 +47,13 @@ transactions through ports (`database.instructions.md`).
 ## Error contract
 
 ```json
-{"code":"COMMON_NOT_FOUND","message_key":"errors.common.notFound","status":404,"details":{},"correlationId":"request-id"}
+{
+  "code": "COMMON_NOT_FOUND",
+  "message_key": "errors.common.notFound",
+  "status": 404,
+  "details": {},
+  "correlationId": "request-id"
+}
 ```
 
 - All five fields are required; HTTP status matches `status`. The
