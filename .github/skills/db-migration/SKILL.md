@@ -19,6 +19,10 @@ and the owning module's BE spec. Path rules:
    Enable required extensions with the migration role, never runtime
    credentials. Add indexes supporting the specified filter/sort
    combinations, not blindly one per field.
+   Every new table/view must `GRANT` least-privilege access to
+   `apnatown_runtime` in the same migration; there are no default
+   privileges. Use column-scoped `UPDATE` grants and remember that
+   `SELECT ... FOR UPDATE` also needs `UPDATE`.
 4. Document forward repair/restore and data-loss risks. Destructive
    changes require explicit human sign-off; do not promise an automatic
    production down migration.
@@ -47,6 +51,7 @@ CREATE INDEX idx_products_owner_page
 - [ ] Forward-only; no edits to a merged migration.
 - [ ] One logical change per migration.
 - [ ] Indexes added alongside new filterable/sortable fields.
+- [ ] New tables/views grant least-privilege runtime access.
 - [ ] Forward repair/restore documented; data-loss risk flagged for sign-off.
 - [ ] Naming matches convention and shared status enum values.
 - [ ] Generated client and affected build pass; migration/seed execution deferred.

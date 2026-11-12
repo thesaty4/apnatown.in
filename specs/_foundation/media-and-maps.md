@@ -172,6 +172,11 @@ sequenceDiagram
 
 ## Leaflet and OpenStreetMap
 
+Explore now uses `packages/ui/src/geo/MapView.tsx` with locally bundled
+Leaflet 1.9.4 and typed props; the wrapper supplies pins, radius, Directions
+and list fallback. This read-only integration does not install Geoman or
+claim zone editing/live delivery implementation.
+
 - Implement one client-only `MapView` and reuse it for Explore, address/
   business pins, city zones and live-delivery maps. Lazy-import Leaflet
   inside a client boundary; no `window` access during SSR. Clean up the
@@ -210,10 +215,12 @@ sequenceDiagram
 
 ## Configuration and readiness
 
-Planned keys below must be implemented together in typed config, owner
-allow-lists/launchers, `.env.example` and deployment documentation when the
-adapter/UI lands. This documentation change does not install dependencies,
-modify runtime env loading, provision accounts or activate integrations.
+Map keys below are implemented in Web's typed config, launcher allow-lists
+and `.env.example`. The exact validated tile origin is added to CSP and only
+public map configuration reaches the client. Operators must verify the chosen
+tile provider's policy, attribution, supported zoom and traffic capacity
+before deployment; standard OSM has no SLA. No account provisioning or live
+provider readiness checks were performed during implementation.
 
 | Key / setting | Owner and rule |
 |---|---|

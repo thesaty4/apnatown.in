@@ -1,8 +1,20 @@
 {
-  "source": "docs/design-context/reference/prototype-source/style.css: .wrap, .state, .btn, .skel, h1/h2 desktop overrides; .row/.stack (61), .field/.input/.hint/.errmsg (125-138), .chip/.badge (144-146), .art (160-165), .scrim/.sheet/.grab (207-214), .mini (248), .sfn (284)",
+  "source": "docs/design-context/reference/prototype-source/style.css: .wrap, .state, .btn, .skel, h1/h2 desktop overrides; .row/.stack (61), .field/.input/.hint/.errmsg (125-138), .chip/.badge (144-146), .auto/.auto-s (157), .art (160-165), .scrim/.sheet/.grab (207-214), .mini (248), .shopgrid/.exlay/.exside (266-269), .sfn (284), .reels/.rtop/.rpill/.rfeed/.rv/.rshade/.rinfo/.rrail/.rpp/.rside/.rstate (287-298); reel-open/reel-closed reuse the pack's dark success/error because the reel canvas is always dark",
   "tokens": {
     "color": {
-      "switch-thumb": "#FFFFFF"
+      "switch-thumb": "#FFFFFF",
+      "reel-canvas": "#000000",
+      "reel-surface": "#111111",
+      "reel-text": "#FFFFFF",
+      "reel-text-2": "#CFC4B6",
+      "reel-liked": "#FB7185",
+      "reel-verified": "#5EEAD4",
+      "reel-hashtag": "#FDBA74",
+      "reel-open": "#4ADE80",
+      "reel-closed": "#F87171",
+      "reel-panel": "#1A1612",
+      "reel-panel-card": "#26201A",
+      "reel-panel-border": "#3A3228"
     },
     "border-width": {
       "chip-border": "1.5px"
@@ -32,12 +44,20 @@
       "sheet-pop": "apnatown-sheet-pop var(--at-dur-3) var(--at-ease)"
     },
     "breakpoint": {
-      "sheet": "700px"
+      "sheet": "700px",
+      "shop-grid": "480px",
+      "wide": "1200px"
     },
     "radius": {
-      "sheet-grab": "3px"
+      "sheet-grab": "3px",
+      "reel-frame": "16px"
     },
     "spacing": {
+      "explore-sidebar": "270px",
+      "explore-sidebar-top": "76px",
+      "explore-sidebar-max": "calc(100dvh - 96px)",
+      "product-card-min": "160px",
+      "service-card-min": "250px",
       "page-gutter": "14px",
       "state-gap": "10px",
       "state-inline": "18px",
@@ -64,10 +84,19 @@
       "sheet-max": "88vh",
       "sheet-bottom": "calc(18px + var(--at-sab))",
       "sheet-grab-width": "44px",
-      "sheet-grab-height": "5px"
+      "sheet-grab-height": "5px",
+      "reel-pill-height": "40px",
+      "reel-avatar": "40px",
+      "reel-rail-bottom": "90px",
+      "reel-info-end": "76px",
+      "reel-progress": "3px",
+      "reel-pause": "72px"
     },
     "container": {
       "state-copy": "38ch",
+      "reel-feed": "440px",
+      "reel-side": "340px",
+      "reel-state-copy": "30ch",
       "sheet": "min(560px,94vw)",
       "sheet-wide": "min(820px,94vw)"
     },
@@ -79,7 +108,9 @@
       "field-error": ".82rem",
       "chip": ".9rem",
       "art": "2.4rem",
-      "art-mini": "1.6rem"
+      "art-mini": "1.6rem",
+      "reel-pill-text": ".85rem",
+      "reel-count": ".72rem"
     }
   }
 }

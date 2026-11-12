@@ -14,7 +14,12 @@ import { currentLocale } from '../support/metadata';
 
 export type ExploreSearchParams = Record<string, string | string[] | undefined>;
 
-export async function ExploreResults({ searchParams, defaults = {}, screen = 'explore', path = '/explore' }: {
+export async function ExploreResults({
+  searchParams,
+  defaults = {},
+  screen = 'explore',
+  path = '/explore',
+}: {
   searchParams: Promise<ExploreSearchParams>;
   defaults?: Partial<ExploreFilters>;
   screen?: 'explore' | 'search' | 'category';
@@ -28,14 +33,26 @@ export async function ExploreResults({ searchParams, defaults = {}, screen = 'ex
   for (const [key, value] of Object.entries(defaults))
     if (!params.has(key) && value !== undefined) params.set(key, String(value));
   const filters = readFilters(params);
-  const result = filters ? await resource(async () => ({
-    pages: [await getExplore(createPublicServerApi(), filters)],
-    pageParams: [null],
-  })) : undefined;
-  if (result?.kind === 'error' && result.code === 'MAINTENANCE')
-    redirect(maintenanceHref(`${path}?${params}`, (await currentLocale()) === 'hi'));
-  const initial = filters && result
-    ? await hydrateResource(queryKeys.explore(filters, 0, screen), result)
+  const result = filters
+    ? await resource(async () => ({
+        pages: [await getExplore(createPublicServerApi(), filters)],
+        pageParams: [null],
+      }))
     : undefined;
-  return <ExploreScreen initial={initial} defaults={defaults} screen={screen} mapConfig={mapConfiguration(getWebEnvironment())} />;
+  if (result?.kind === 'error' && result.code === 'MAINTENANCE')
+    redirect(
+      maintenanceHref(`${path}?${params}`, (await currentLocale()) === 'hi'),
+    );
+  const initial =
+    filters && result
+      ? await hydrateResource(queryKeys.explore(filters, 0, screen), result)
+      : undefined;
+  return (
+    <ExploreScreen
+      initial={initial}
+      defaults={defaults}
+      screen={screen}
+      mapConfig={mapConfiguration(getWebEnvironment())}
+    />
+  );
 }

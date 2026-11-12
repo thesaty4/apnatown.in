@@ -46,3 +46,13 @@ export function formatDistanceKm(
     maximumFractionDigits: 1,
   }).format(distanceKm);
 }
+
+/** Short social count (1.2K / 1.5L in en-IN); exact counts belong in labels. */
+export function formatCompactCount(count: number, locale: 'en' | 'hi'): string {
+  if (!Number.isSafeInteger(count) || count < 0)
+    throw new RangeError('INVALID_COUNT');
+  return new Intl.NumberFormat(locale === 'hi' ? 'hi-IN' : 'en-IN', {
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }).format(count);
+}

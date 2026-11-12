@@ -89,18 +89,25 @@ Roles: customer. Backend module(s): `search, catalog, products, services, busine
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| EX1 | tabs Products \| Shops \| Services with result counts | `specs/search/be/search.md` | `specs/search/fe/search.md` | partial: Products/Shops/Services tabs with counts from `GET /explore` (Products is 0 until the Products module exists; inactive-tab counts are unfiltered) |
-| EX2 | category pre-applied from home as removable pill, changeable | `specs/search/be/search.md` | `specs/search/fe/search.md` | partial: URL `category` (from Home tiles) is a removable chip and editable in the Category select; carried between Products and Shops |
-| EX3 | per-tab filters remembered when switching tabs | `specs/search/be/search.md` | `specs/search/fe/search.md` | implemented: inactive-tab filters stashed in the URL as `<tab>.category|verified|sort` and restored on switch |
-| EX4 | Products filters (price range, rating, category+subcategory, brand, offers, in stock, delivery/pickup, distance, sort) | `specs/search/be/search.md` | `specs/search/fe/search.md` | partial: category and sort (relevance/newest) only; results wait for the Products module |
-| EX5 | Shops filters (category, distance, rating, open now, delivers to me, offers, verified, sort) | `specs/search/be/search.md` | `specs/search/fe/search.md` | partial: category, verified and sort (relevance/newest) over approved shops; distance, rating, open now, delivers, offers and featured wait for their modules |
-| EX6 | Services filter: Category multi-select + Subcategory multi-select grouped under category headings, checkboxes with counts, Select all/Clear per group, inner search when >8, "Show more", disabled when count 0, OR logic, removing a category removes its subcategories, removable chips + Clear all, loading skeleton, long-Hindi-safe, keyboard/screen-reader grouped list | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
-| EX7 | filter UI: bottom sheet (mobile, sticky "Show N results"), left sidebar (desktop, live results), horizontal filter bar with count badge (tablet) | `specs/search/be/search.md` | `specs/search/fe/search.md` | partial: desktop left sidebar and stacked panel on mobile/tablet with live results; bottom sheet and filter bar pending |
-| EX8 | shareable URL `/explore?tab=services&category=wedding-events&subcategory=dj-sound,tent-lighting` | `specs/search/be/search.md` | `specs/search/fe/search.md` | partial: shareable `/explore?tab=&category=&verified=&sort=` with Copy link; `subcategory` waits for EX6 |
-| EX9 | browser Back restores previous page and scroll | `specs/search/be/search.md` | `specs/search/fe/search.md` | implemented for the current slice: history entries restore filters and bounded per-URL scroll after results load; cached Load-more pages survive SSR return; browser verification deferred |
-| EX10 | empty state per tab with "Clear category" and suggestions | `specs/search/be/search.md` | `specs/search/fe/search.md` | partial: per-tab empty state with Clear category and Reset filters; category suggestions pending |
-| EX11 | map/list toggle with pins for shops and service providers | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
-| EX12 | reusable Services filter on Explore, Search Services tab and service category pages | `specs/search/be/search.md` | `specs/search/fe/search.md` | spec written |
+| EX1 | tabs Products \| Shops \| Services with result counts | `specs/search/be/search.md` | `specs/search/fe/search.md` | implemented: real owner listing projections, tab-specific counts, signed keyset pages |
+| EX2 | category pre-applied from home as removable pill, changeable | `specs/search/be/search.md` | `specs/search/fe/search.md` | implemented: shared context, related-category initialization, change/clear controls |
+| EX3 | per-tab filters remembered when switching tabs | `specs/search/be/search.md` | `specs/search/fe/search.md` | implemented: complete inactive `<tab>.*` namespaces and explicit clear markers |
+| EX4 | Products filters (price range, rating, category+subcategory, brand, offers, in stock, delivery/pickup, distance, sort) | `specs/search/be/search.md` | `specs/search/fe/search.md` | implemented: typed URL controls, SQL predicates/facets and actual inventory/pricing signals |
+| EX5 | Shops filters (category, distance, rating, open now, delivers to me, offers, verified, sort) | `specs/search/be/search.md` | `specs/search/fe/search.md` | implemented: full filters over eligible shops, authoritative geo and opening hours |
+| EX6 | Services filter: Category multi-select + Subcategory multi-select grouped under category headings, checkboxes with counts, Select all/Clear per group, inner search when >8, "Show more", disabled when count 0, OR logic, removing a category removes its subcategories, removable chips + Clear all, loading skeleton, long-Hindi-safe, keyboard/screen-reader grouped list | `specs/search/be/search.md` | `specs/search/fe/search.md` | implemented: shared `ServiceCategoryFilter` with real facets and individual Services results |
+| EX7 | filter UI: bottom sheet (mobile, sticky "Show N results"), left sidebar (desktop, live results), horizontal filter bar with count badge (tablet) | `specs/search/be/search.md` | `specs/search/fe/search.md` | implemented: draft-only sheet/preview/Apply/Cancel/Reset, live sidebar and filter-count bar |
+| EX8 | shareable URL `/explore?tab=services&category=wedding-events&subcategory=dj-sound,tent-lighting` | `specs/search/be/search.md` | `specs/search/fe/search.md` | implemented: complete validated URL state and Copy link; precise location is excluded |
+| EX9 | browser Back restores previous page and scroll | `specs/search/be/search.md` | `specs/search/fe/search.md` | implemented: bounded URL scroll history and cached Load-more pages survive SSR return |
+| EX10 | empty state per tab with "Clear category" and suggestions | `specs/search/be/search.md` | `specs/search/fe/search.md` | implemented: clear/reset actions and real category-count suggestions |
+| EX11 | map/list toggle with pins for shops and service providers | `specs/search/be/search.md` | `specs/search/fe/search.md` | implemented: shared Leaflet, radius, loaded-page pins, Directions and list fallback; Products pins deduplicate owning shops |
+| EX12 | reusable Services filter on Explore, Search Services tab and service category pages | `specs/search/be/search.md` | `specs/search/fe/search.md` | implemented: `ExploreResults` composition with independent query families on all three surfaces |
+
+Explore evidence: affected builds and security re-review passed; migrations
+are authored but unapplied. Runtime data/performance, responsive/a11y and
+browser Back/map/bookmark acceptance remain deferred, as recorded in the
+[FE verification notes](../specs/search/fe/search.md#s-cust-02--explore).
+This does not mark full Search, listing managers, checkout or full detail
+flows complete.
 
 ## SR. Search
 
@@ -235,13 +242,13 @@ Roles: customer. Backend module(s): `engagement`. Frontend route/screen: `/saved
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| EG1 | Saved: tabs Following \| Services \| Photos & Videos (filters Photos/Videos/Reels, remove) | `specs/engagement/be/engagement.md` | `specs/engagement/fe/engagement.md` | DB/API/SSR + React Query Saved page for Following and saved Videos/Reels, cursor pagination, unavailable-item removal and URL filters; services/photos deferred; migration and runtime checks pending |
+| EG1 | Saved: tabs Following \| Services \| Photos & Videos (filters Photos/Videos/Reels, remove) | `specs/engagement/be/engagement.md` | `specs/engagement/fe/engagement.md` | DB/API/SSR + React Query for Following, Services and saved Videos/Reels; cursor pagination, unavailable-item removal and URL filters; Photos deferred; builds/security review passed, migrations/runtime pending |
 | EG2 | heart on any photo/video/reel | `specs/engagement/be/engagement.md` | `specs/engagement/fe/engagement.md` | implemented for videos: DB/API/React Query HeartButton on video detail; photo/gallery hearts pending |
 | EG3 | follow/unfollow with confirmation and bell | `specs/engagement/be/engagement.md` | `specs/engagement/fe/engagement.md` | implemented on video detail: DB/API/React Query FollowButton with bell + unfollow confirmation; profiles, Reels feed and notification fan-out remain pending |
 | EG4 | like on videos | `specs/engagement/be/engagement.md` | `specs/engagement/fe/engagement.md` | implemented on video detail: DB/API/React Query LikeButton; Reels feed remains separate |
 | EG5 | comments (moderated, "awaiting moderation") | `specs/engagement/be/engagement.md` | `specs/engagement/fe/engagement.md` | implemented: moderated comments and admin queue on video detail/admin videos |
 | EG6 | share sheet (WhatsApp, copy link, native share) | `specs/engagement/be/engagement.md` | `specs/engagement/fe/engagement.md` | implemented for videos: DB/API/React Query ShareSheet on video detail; other targets remain pending |
-| EG7 | bookmarks of businesses/providers/services | `specs/engagement/be/eg7-bookmarks-of-businesses-providers-se.md` | `specs/engagement/fe/eg7-bookmarks-of-businesses-providers-se.md` | not started |
+| EG7 | bookmarks of businesses/providers/services | `specs/engagement/be/engagement.md` | `specs/engagement/fe/engagement.md` | service Save/Saved integrated on Explore and service detail; own-customer batch state and mutations, export/erasure contribution; businesses/providers retain canonical Follow, not duplicate bookmarks; runtime pending |
 
 ## RL. Videos and reels
 

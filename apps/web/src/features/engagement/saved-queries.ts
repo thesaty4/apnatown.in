@@ -6,6 +6,7 @@ import { queryKeys, type AccountScope } from '../../shared/api/query-keys';
 import { usePrivateMutation } from '../../shared/api/use-private-mutation';
 import { useSession } from '../../shared/auth/SessionProvider';
 import { removeBusinessFollow, setVideoHeart } from './likes-api';
+import { setServiceBookmark } from './service-bookmarks';
 
 export function useRemoveSaved(scope: AccountScope) {
   const { api, lifecycle } = useSession();
@@ -15,6 +16,8 @@ export function useRemoveSaved(scope: AccountScope) {
     async (item: SavedItem, assertCurrent) => {
       if (item.targetType === 'business')
         await removeBusinessFollow(api, item.targetId, assertCurrent);
+      else if (item.targetType === 'service')
+        await setServiceBookmark(api, item.targetId, false, assertCurrent);
       else await setVideoHeart(api, item.targetId, false, assertCurrent);
       assertCurrent();
       const root = queryKeys.savedRoot(scope);

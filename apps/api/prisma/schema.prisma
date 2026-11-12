@@ -331,6 +331,7 @@ model RateLimitBucket {
 }
 
 model User {
+  bookmarks Bookmark[]
   authoredReviews Review[]
   billingPurchases BillingPurchase[]
   reviewedOffers Offer[]
@@ -378,6 +379,17 @@ model User {
 
   @@index([deletedAt], where: raw("\"deleted_at\" IS NULL"), map: "users_active_deleted_at_idx")
   @@map("users")
+}
+
+model Bookmark {
+  userId String @map("user_id") @db.Uuid
+  targetType String @map("target_type")
+  targetId String @map("target_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  user User @relation(fields:[userId],references:[id],onDelete:Restrict,onUpdate:Restrict)
+  @@id([userId,targetType,targetId])
+  @@index([userId,targetType,createdAt(sort:Desc),targetId(sort:Desc)],map:"bookmarks_saved_page_idx")
+  @@map("bookmarks")
 }
 
 model UserRole {

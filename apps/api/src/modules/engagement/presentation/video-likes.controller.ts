@@ -37,10 +37,11 @@ export class VideoLikesController {
 
   @Get('me/state')
   @SessionRoute()
+  @RateLimit({ key: 'engagement.state.read', maximumHits: 120, windowSeconds: 60, subject: 'ip' })
   @ApiQuery({ type: EngagementStateQueryDto })
   @ApiOperation({
     operationId: 'engagementState',
-    summary: 'Read own video likes, hearts, follows and public counts in one bounded batch',
+    summary: 'Read own video likes, hearts, service bookmarks, follows and public counts in one bounded batch',
     description: 'Guests receive empty relationship flags. Counts omit unavailable videos.',
   })
   @ApiOkResponse({ type: EngagementStateDto })

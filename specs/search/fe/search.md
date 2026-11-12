@@ -41,12 +41,12 @@ Standard default, skeleton, empty, error+retry, offline and no-permission behavi
 
 ### S-CUST-02 — Explore
 
-Current delivery is the user-approved businesses-only slice described in the
-[BE implementation status](../be/search.md#endpoints), not the full listing
-contract below. Shops and provider-business cards use real API data; Products
-is empty until its owner module exists. All category selectors in this slice
-use actual product-kind business memberships; service-specific categories and
-subcategories are not treated as provider memberships.
+The full Explore implementation supersedes the earlier businesses-only slice
+(D-11). Products, Shops and individual Services now use owner-owned public
+read projections through `GET /explore`. Prices, inventory, ratings, offers,
+featured status, public contacts and location eligibility are server-derived;
+missing records are not replaced with sample listings or fabricated signals.
+See the [BE implementation status](../be/search.md#endpoints).
 
 The first result page is a no-store SSR read hydrated into React Query.
 Subsequent tab/filter changes use Next's native-history URL integration and
@@ -60,41 +60,80 @@ Back/Forward restores URL state and ephemeral per-URL scroll positions after
 results load. On return, cached Load-more pages are not overwritten by an SSR
 first page; scroll history is bounded to 50 URLs and not persisted to storage.
 Category reads, pagination and clipboard failures are explicit and retryable;
-tab keys include arrows, Home and End. Mobile uses the current stacked filter
-panel; service multi-select, full facets, map, advanced filters, profile links
-and the prototype filter sheet remain deferred.
+tab keys include arrows, Home and End. Invalid/expired cursors restart the
+query rather than repeatedly submitting the rejected cursor.
 
-Verification (2026-11-12): `pnpm --dir apps/api db:generate`,
-`pnpm --dir packages/shared build`, `pnpm api:openapi`,
-`pnpm client:generate`, and
+`ExploreFilterPanel` implements tab-specific filters and sorts; reusable
+`ServiceCategoryFilter` implements grouped, counted OR multi-select. Mobile
+uses a draft sheet with sticky result-count Apply, Cancel and Reset; desktop
+commits live, and the smaller-screen filter bar shows the active count.
+Without selected categories, eligible subcategory groups are collapsed;
+selected groups remain visible/open, including zero-count removable selections.
+Group eligibility uses subcategory facet counts (excluding the current
+subcategory restriction), so selecting one group does not hide other groups.
+Choosing the first category narrows category-free selections to its children,
+avoiding a request that pairs a selected category with another parent's child.
+Canonical subcategory values are `categorySlug/subcategorySlug`, because slugs
+are unique only within a category. Legacy bare-slug links normalize only when
+unambiguous in their category context; chips include the parent label. Draft
+controls adopt normalized values only for their current response, not stale
+preview data.
+`ExploreFilterChips` and empty-state suggestions use actual server facets.
+`ExploreResults` supplies the same component on Explore, `/search` and
+category/subcategory routes with independent query families.
+
+`ExploreCards` matches the reference product pricing/MRP/discount/stock badges
+and shop/service contact actions. Service Save uses Engagement's account-scoped
+batch state and CSRF-protected bookmark mutations, including login return-to-origin
+and Saved Services. WhatsApp uses the business's explicitly public contact.
+Card links open real `/product/:slug`, `/service/:slug`, `/shop/:slug` and
+`/provider/:slug` read pages. These are minimal owner detail destinations:
+checkout, owner managers and the full PD/PF/SV flows are not claimed complete.
+
+`ExploreMap` uses the shared lazy Leaflet `MapView`, authorized public business
+pins, keyboard-accessible pin buttons, Directions and list fallback on tile
+failure. All tabs support Map; Products deduplicates owning shops (prototype
+`js16.js`), not invented product coordinates. Pins cover loaded result pages.
+With a usable GPS point or selected area, radius defaults to 6 km and is
+adjustable from 1 to 12 km. Radius constrains server results/counts; clearing
+it or resetting filters returns to List. Precise coordinates remain only in
+memory and request headers, never URL, storage or query keys.
+
+Verification (2026-11-12): Prisma generation; shared, API, API-client and UI
+builds; OpenAPI/client generation and API/client generated checks passed.
+The final integrated command
 `APP_ENV=local APP_BASE_URL=http://localhost:3000 API_INTERNAL_ORIGIN=http://localhost:3001 pnpm --dir apps/web build`
-passed. Targeted ESLint/Prettier and `check:generated` in web, API and API client
-passed. `node scripts/validate-ai-setup.mjs` still fails with the identical
-93-error baseline (missing links and an instruction size-budget violation).
-No migrations/seeds, runtime services, browser checks or automated test files
-were executed/created.
-
-Static secure-coding self-review (not a security-auditor sign-off):
-- [x] Checklist 1/3: bound SQL values, allow-listed sorts, strict DTOs and limits.
-- [x] Checklist 2: public read; approved business, live owner and enabled-city
-  eligibility apply to both cards and counts.
-- [x] Checklist 6: business/category/area names are React text, not HTML.
-- [x] Checklist 11/12: no credentials, private contacts, documents or owner
-  identifiers added to responses, logging or source.
-- [x] Checklist 4/5/7/8/9/10/13/14/15: no changed OTP/session/mutation,
-  embed/upload/CSV/webhook, admin audit, consent or map flows in this slice.
+and targeted frontend ESLint passed. Security-auditor re-review returned PASS
+after image GET/HEAD budgeting, bounded provider downloads and metadata-only
+authorized HEAD/304 handling; service bookmarks/export/erasure were included.
+`pnpm --dir packages/ui check:generated`, `pnpm --dir apps/web check:generated`,
+`pnpm --dir apps/api check:generated` and
+`pnpm --dir packages/api-client check:generated` passed. Documentation validation
+still reports the 93-error baseline: missing instruction links and the existing
+backend-instruction size overage. The changed integration instruction remains
+within its 4,000-character budget.
+No migrations/seeds, runtime services, browser/API/DB checks or automated
+test files were executed/created.
 
 Deferred runtime acceptance:
-- With approved/draft/suspended/deleted businesses and active/blocked/deleted
-  owners, only approved businesses of active owners in enabled cities appear
-  in cards and counts; a secondary category membership does not duplicate rows.
-- More than one result page, including equal creation timestamps, pages once
-  per ID in both sort orders; a changed-filter or tampered cursor is rejected.
+- Migrate an isolated database and verify real source eligibility, offer/feature
+  time boundaries, paise/stock badges, IST opening hours, facet counts and all
+  sorts; secondary memberships must not duplicate rows.
+- Verify equal-sort pagination, expiry/tampered/filter-bound cursors, refresh
+  after source eligibility changes, and query performance at realistic scale.
 - Change/clear a category, switch tabs and return, then navigate away and Back:
-  the cleared filter, loaded pages and scroll position survive.
-- Reject unsupported `subcategory` links, malformed booleans and duplicate
-  query keys; show errors for failed taxonomy, next-page and clipboard requests.
-- Check EN/HI, mobile/desktop, light/dark, keyboard tabs, empty and denied states.
+  filters, cached pages and scroll survive; cancelled mobile drafts do not apply.
+- With both Mechanic and Electrician selected, independently toggle each
+  `appliance-repair` subcategory, Select all/Clear its group and remove its
+  parent; the other category's selection/counts must remain independent.
+  Without categories, expand a group and select a subcategory directly, then
+  add a second group's subcategory without losing that group's controls.
+- Verify optional/denied GPS, selected-area distance, radius/count/pin parity,
+  tile retry/attribution, deduplicated Products pins and provider Directions.
+- Verify guest login return, account switching, CSRF/role negatives, bookmark
+  retries, unavailable Saved removal, export/erasure and image throttling.
+- Check EN/HI, mobile/tablet/desktop, light/dark, keyboard/focus, clipboard,
+  pending/offline/error states and stale-response races with actual services.
 
 - Screenshots: `d-customer-explore.jpg`, `m-customer-explore.jpg`.
 - Layout: Products/Shops/Services tabs with counts; category pill; mobile filter sheet, tablet filter bar and desktop sidebar; responsive result cards; list/map toggle. Reuse shared `ShopCard`, `ProductCard`, `ServiceCard`, `FilterPanel`, `ActiveFilterChips`, `MapView`, and the one `SubcategoryMultiSelect`.
@@ -117,6 +156,11 @@ Deferred runtime acceptance:
   - Given no location is available, when Distance/Delivers-to-me is selected, then the Geo picker explains the requirement while ordinary browsing still works; never invent a pin or silently ignore the filter.
 
 ### S-CUST-03 — Search
+
+Current delivery reuses Explore's real Products/Shops/Services results and
+filters under an independent Search query family, satisfying EX12 reuse.
+The separate All/Videos, autocomplete, popular/recent and grouped Search
+requirements below remain pending; this is not full SR1–SR10 delivery.
 
 - Screenshots: `d-customer-search.jpg`, `m-customer-search.jpg`.
 - Layout: SearchBar and grouped autocomplete; empty-query recent/popular chips; tabs All/Products/Shops/Services/Videos with counts; All tab grouped results and “See all”; product/shop/service filters and sort. Videos use approved media only.

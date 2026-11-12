@@ -4,7 +4,7 @@ import {
   type CallHandler, type ExecutionContext,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiCreatedResponse, ApiOkResponse, ApiOperation,
+import { ApiBody, ApiConsumes, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiResponse,
   ApiParam, ApiProduces, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { createZodDto } from 'nestjs-zod';
 import { finalize } from 'rxjs';
@@ -22,6 +22,14 @@ import { RateLimit } from '../../../shared/rate-limit/rate-limit';
 import { adminCommand, IdempotentAdmin, AdminErrors } from '../../admin/presentation/admin.dto';
 import { ImageService } from '../application/image.service';
 import { ImageDeliveryService } from '../application/image-delivery.service';
+import { ErrorDto } from '../../../shared/health/health.controller';
+import { imageByteRange, imageNotModified } from './image-read-headers';
+
+// One shared client bucket across GET, explicit HEAD and Express's GET->HEAD
+// fallback. Method switching must never buy another provider/metadata budget.
+const PUBLIC_IMAGE_READ = {
+  key: 'media.public.read',maximumHits: 120,windowSeconds: 60,subject: 'ip',
+} as const;
 
 class MediaUploadDto extends createZodDto(MediaUploadResultSchema) {}
 class MediaPolicyDto extends createZodDto(MediaPolicyResultSchema) {}
@@ -105,40 +113,54 @@ export class ImageController {
 
   @Get('public/:assetId')
   @PublicRoute()
+  @RateLimit(PUBLIC_IMAGE_READ)
   @ApiParam({ name: 'assetId', schema: { type: 'string', format: 'uuid' } })
   @ApiQuery({ type: MediaPublicQueryDto })
   @ApiProduces('image/webp')
   @ApiOperation({ operationId: 'mediaPublicImage', summary: 'Read a currently published image placement' })
+  @ApiResponse({ status: 304, description: 'Authorized current representation matches If-None-Match; no provider download' })
+  @ApiResponse({ status: 416, type: ErrorDto, description: 'Unsupported or unsatisfiable single byte range' })
+  @ApiResponse({ status: 429, type: ErrorDto, description: 'Shared image read budget or bounded provider download capacity exhausted' })
   async publicImage(@Req() req: AuthRequest,
     @Param(new InputPipe(MediaAssetParamsSchema)) params: { assetId: string },
     @Query(new InputPipe(MediaPublicQuerySchema)) query: MediaPublicQuery,
     @Res() res: Response) {
-    const body = await this.delivery.read(params.assetId, query);
     this.headers(res);
+    const metadata = await this.delivery.describe(params.assetId,query);
     const etag = `"${params.assetId}-${query.assetVersion}-${query.variantWidth}"`;
     res.setHeader('ETag', etag);
     res.setHeader('Accept-Ranges', 'bytes');
-    if (req.headers['if-none-match'] === etag) return res.status(304).end();
+    if (imageNotModified(req.headers['if-none-match'],etag)) return res.status(304).end();
+    // RFC 9110: Range is a GET modifier, not a HEAD modifier. Persisted ready
+    // variant metadata gives exactly the headers of the complete representation.
+    if (req.method === 'HEAD') {
+      res.setHeader('Content-Length',metadata.bytes);
+      return res.end();
+    }
     const range = req.headers.range;
     if (range && (!req.headers['if-range'] || req.headers['if-range'] === etag)) {
-      const match = /^bytes=(\d*)-(\d*)$/.exec(range);
-      if (!match || (!match[1] && !match[2])) throw new DomainError('MEDIA_RANGE_INVALID');
-      const start = match[1] ? Number(match[1]) : Math.max(0, body.length - Number(match[2]));
-      const end = match[1] && match[2] ? Math.min(Number(match[2]), body.length - 1) : body.length - 1;
-      if (!Number.isSafeInteger(start) || !Number.isSafeInteger(end) || start > end ||
-          start >= body.length || (!match[1] && Number(match[2]) === 0))
-        throw new DomainError('MEDIA_RANGE_INVALID');
-      const partial = body.subarray(start, end + 1);
-      res.status(206).setHeader('Content-Range', `bytes ${start}-${end}/${body.length}`);
+      res.setHeader('Content-Range',`bytes */${metadata.bytes}`);
+      const selected = imageByteRange(range,metadata.bytes);
+      res.removeHeader('Content-Range');
+      const partial = await this.delivery.read(params.assetId,query,selected);
+      res.status(206).setHeader('Content-Range', `bytes ${selected.start}-${selected.end}/${metadata.bytes}`);
       res.setHeader('Content-Length', partial.length);
-      return res.end(req.method === 'HEAD' ? undefined : partial);
+      return res.end(partial);
     }
+    const body = await this.delivery.read(params.assetId,query);
     res.setHeader('Content-Length', body.length);
-    return res.end(req.method === 'HEAD' ? undefined : body);
+    return res.end(body);
   }
 
   @Head('public/:assetId')
   @PublicRoute()
+  @RateLimit(PUBLIC_IMAGE_READ)
+  @ApiParam({ name: 'assetId', schema: { type: 'string', format: 'uuid' } })
+  @ApiQuery({ type: MediaPublicQueryDto })
+  @ApiOperation({ operationId: 'mediaPublicImageHead', summary: 'Authorize current placement and read trusted image metadata without downloading bytes' })
+  @ApiResponse({ status: 200, description: 'Current authorized variant metadata; private/no-store' })
+  @ApiResponse({ status: 304, description: 'Current authorized variant matches If-None-Match' })
+  @ApiResponse({ status: 429, type: ErrorDto, description: 'Same client read budget as image GET' })
   head(@Req() req: AuthRequest,
     @Param(new InputPipe(MediaAssetParamsSchema)) params: { assetId: string },
     @Query(new InputPipe(MediaPublicQuerySchema)) query: MediaPublicQuery,

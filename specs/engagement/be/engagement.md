@@ -48,15 +48,15 @@ All customer writes require login; guest calls return `AUTH_REQUIRED` so the FE 
 
 ### EG1 Saved implementation slice
 
-- `GET /engagement/me/saved` accepts `tab=shops|media`,
+- `GET /engagement/me/saved` accepts `tab=shops|services|media`,
   `mediaFilter=all|videos|reels`, an opaque cursor and `limit` (default 20,
-  maximum 50). Unsupported service/photo requests fail validation rather than
+  maximum 50). Unsupported photo requests fail validation rather than
   returning fabricated empty data.
 - Customer authority is rechecked in the read transaction; the session supplies
   the owner. Signed cursors bind owner, tab and filter. Following sorts by
   `(last_followed_at,business_id)` descending; video hearts sort by
   `(created_at,target_id)` descending, preserving microsecond precision.
-- Businesses and Media supply purpose-limited public cards through owner ports.
+- Businesses, Services and Media supply purpose-limited public cards through owner ports.
   Hidden, removed, suspended or inactive-owner targets return only the customer's
   relationship metadata and `available:false`/`reasonKey`; names, captions and
   links are omitted. Existing relationship-only DELETE routes remove these items.
@@ -69,9 +69,26 @@ All customer writes require login; guest calls return `AUTH_REQUIRED` so the FE 
   and matching keyset indexes. It is authored, not applied. Forward repair can
   rebuild indexes without removing relationships; preserve classification data
   when repairing because a deleted source cannot reconstruct it.
-- Service bookmarks, photo hearts, profile navigation and bell editing on Saved
+- Photo hearts, Following profile navigation and bell editing on Saved
   remain deferred to their owning surfaces. Following includes shops and providers;
   it never creates a second business bookmark table.
+
+### EG7 service bookmarks
+
+- `20261112184300_service_bookmarks` adds the service-only relationship and
+  Saved keyset index; migration is authored, not applied. PUT rechecks public
+  service eligibility; DELETE needs only the caller's relationship, even when
+  its target is no longer public. Both use customer/session/CSRF/rate guards
+  and naturally idempotent writes.
+- Batched state accepts `targets=service:<id>` within its shared max-50 bound,
+  returning `bookmarkedServiceIds` (default `[]`). Media-heart target schemas
+  remain photo/video-only. Saved services sort by `(created_at,target_id)`;
+  owner ports redact unavailable rows while keeping them removable.
+- `ServiceBookmarkDataOwner` contributes only the requesting user's
+  relationships to export and erasure with existing deletion fences.
+- Shared/API/client builds and generated checks passed; security-auditor
+  re-review passed. Migration execution, live authorization negatives,
+  concurrency, tombstone removal and export/erasure remain unverified.
 
 ### EG3 video-detail implementation slice
 

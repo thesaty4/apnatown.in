@@ -44,9 +44,10 @@ export interface ImageProcessor {
 export interface ImageStorage {
   readonly configured: boolean;
   put(publicId: string, image: ProcessedImage['variants'][number]): Promise<StoredVariant>;
-  get(variant: StoredVariant): Promise<Buffer>;
+  get(variant: StoredVariant, range?: ImageByteRange): Promise<Buffer>;
   remove(publicId: string): Promise<void>;
 }
+export interface ImageByteRange { readonly start: number; readonly end: number }
 export interface StoredImage {
   id: string;
   ownerUserId: string;

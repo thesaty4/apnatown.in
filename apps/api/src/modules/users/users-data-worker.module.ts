@@ -5,6 +5,8 @@ import { privateStorageProvider } from '../../integrations/storage/provider';
 import { AuthSessionsModule } from '../auth/auth-sessions.module';
 import { SupportDataOwner } from '../settings/application/support-data-owner';
 import { SettingsDataModule } from '../settings/settings.module';
+import { EngagementDataModule } from '../engagement/engagement-data.module';
+import { ServiceBookmarkDataOwner } from '../engagement/application/service-bookmark-data-owner';
 import { ADDRESS_REPOSITORY } from './domain/address';
 import { CONSENT_REPOSITORY } from './domain/consent';
 import { DATA_REQUEST_REPOSITORY } from './domain/data-request';
@@ -28,7 +30,7 @@ import { PrismaUsersRepository } from './infrastructure/users.repository';
 
 /**
  * Worker composition for Users data requests: the outbox handler plus the
- * owner registry (UserDataPort). Future owners (orders, bookmarks, reviews)
+ * owner registry (UserDataPort). Future owners (orders, reviews)
  * add their port implementation to USER_DATA_OWNERS.
  */
 @Module({})
@@ -40,6 +42,7 @@ export class UsersDataWorkerModule {
         runtime,
         AuthSessionsModule.forRoot(runtime),
         SettingsDataModule.forRoot(runtime),
+        EngagementDataModule.forRoot(runtime),
       ],
       providers: [
         {
@@ -71,6 +74,7 @@ export class UsersDataWorkerModule {
             ProfileDataOwner,
             AddressDataOwner,
             ConsentDataOwner,
+            ServiceBookmarkDataOwner,
           ],
         },
         DataRequestEvents,

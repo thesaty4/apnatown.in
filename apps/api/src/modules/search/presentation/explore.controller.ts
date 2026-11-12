@@ -26,7 +26,7 @@ const readLimit = {
   status: 400,
   type: ErrorDto,
   description:
-    'VALIDATION_ERROR; SEARCH_FILTER_INVALID for an unknown category',
+    'VALIDATION_ERROR; SEARCH_FILTER_INVALID for unknown taxonomy, ambiguous bare subcategories, parent mismatches or duplicate resolved identities',
 })
 @ApiResponse({ status: 403, type: ErrorDto, description: 'Untrusted Origin' })
 @ApiResponse({

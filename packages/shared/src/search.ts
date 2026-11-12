@@ -32,7 +32,7 @@ export const ExploreSortSchema = z.enum(EXPLORE_SORTS);
 export type ExploreSort = z.infer<typeof ExploreSortSchema>;
 
 export const EXPLORE_FILTER_KEYS = {
-  products: ['category', 'subcategory', 'brand', 'priceMinPaise', 'priceMaxPaise', 'rating', 'offers', 'inStock', 'deliversToMe', 'pickup', 'featured', 'distanceKm', 'offerId', 'sort'],
+  products: ['category', 'subcategory', 'brand', 'priceMinPaise', 'priceMaxPaise', 'rating', 'offers', 'inStock', 'deliversToMe', 'pickup', 'featured', 'distanceKm', 'radiusKm', 'offerId', 'sort'],
   shops: ['category', 'distanceKm', 'radiusKm', 'rating', 'openNow', 'deliversToMe', 'offers', 'verified', 'featured', 'sort'],
   services: ['category', 'subcategory', 'distanceKm', 'radiusKm', 'rating', 'priceMinPaise', 'priceMaxPaise', 'priceOnEnquiry', 'availableToday', 'offers', 'verified', 'sort'],
 } as const;
@@ -47,17 +47,25 @@ const numericWire = <T extends z.ZodType>(schema: T) => z.preprocess(
     ? Number(value) : value,
   schema,
 );
-const slugList = z.string().max(2000).refine((value) => {
+// A qualified value contains two Catalog slugs (80 chars each). Bound all 50
+// canonical values so expanding an accepted legacy link cannot overflow it.
+const slugList = (allowQualified = false) => z.string().max(allowQualified ? 8099 : 2000).refine((value) => {
   if (value === '') return true;
   const slugs = value.split(',');
   return slugs.length <= 50 && new Set(slugs).size === slugs.length
-    && slugs.every((slug) => CatalogSlugSchema.safeParse(slug).success);
-}, 'Expected unique comma-separated category slugs');
+    && slugs.every((slug) => {
+      const parts = slug.split('/');
+      return parts.length <= (allowQualified ? 2 : 1)
+        && parts.every((part) => CatalogSlugSchema.safeParse(part).success);
+    });
+}, 'Expected unique comma-separated taxonomy values');
 const bool = z.enum(['true', 'false']).optional();
 const price = numericWire(z.number().int().safe().nonnegative()).optional();
 const filterShape = {
-  category: slugList.optional(),
-  subcategory: slugList.optional(),
+  category: slugList().optional(),
+  subcategory: slugList(true).describe(
+    'Comma-separated categorySlug/subcategorySlug identities; legacy bare slugs require an unambiguous active Catalog category context. Empty string explicitly clears the selection.',
+  ).optional(),
   brand: z.string().min(1).max(120).optional(),
   priceMinPaise: price,
   priceMaxPaise: price,
@@ -95,7 +103,6 @@ function validateExplore(
 ) {
   const values = query as Record<string, unknown>;
   const issue = (key: string) => ctx.addIssue({ code: 'custom', path: [key], message: 'Incompatible Explore filter' });
-  if (query.tab === 'products' && query.view === 'map') issue('view');
   for (const tab of EXPLORE_TABS) {
     const prefix = tab === query.tab ? '' : `${tab}.`;
     const allowed: readonly string[] = EXPLORE_FILTER_KEYS[tab];
@@ -166,6 +173,10 @@ export const ExploreCardSchema = z.strictObject({
   delivers: z.boolean().nullable(),
   /** Businesses' explicitly public contact, never the owner's login phone. */
   phone: z.string().regex(/^\+[1-9]\d{7,14}$/).nullable(),
+  /** Explicit Businesses public WhatsApp contact; no login-phone fallback. */
+  whatsappPhone: z.string().regex(/^\+[1-9]\d{7,14}$/).nullable(),
+  discountPercent: z.number().int().min(0).max(100).nullable(),
+  lowStockQuantity: z.number().int().positive().nullable(),
   path: z.string().regex(/^\/(?:product|service|shop|provider)\/[a-z0-9-]+$/),
 });
 export type ExploreCard = z.infer<typeof ExploreCardSchema>;

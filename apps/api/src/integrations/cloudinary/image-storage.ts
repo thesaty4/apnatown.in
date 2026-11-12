@@ -8,6 +8,7 @@ import {
   type ImageStorage,
   type ProcessedImage,
   type StoredVariant,
+  type ImageByteRange,
 } from '../../modules/media-videos/domain/images';
 
 const providerResult = z.object({
@@ -28,6 +29,10 @@ const notFound = (error: unknown) =>
 
 /** Only this adapter knows Cloudinary credentials or delivery URLs. */
 export class CloudinaryImageStorage implements ImageStorage {
+  // Process-wide, fail-fast capacity for every image download (including
+  // owner previews). No unbounded queue and no per-URL/per-method escape.
+  private static activeDownloads = 0;
+  private static readonly MAX_DOWNLOADS = 4;
   readonly configured: boolean;
   constructor(config: RuntimeConfig) {
     this.configured = Boolean(config.CLOUDINARY_CLOUD_NAME &&
@@ -78,8 +83,22 @@ export class CloudinaryImageStorage implements ImageStorage {
     });
   }
 
-  async get(variant: StoredVariant): Promise<Buffer> {
+  async get(variant: StoredVariant, range?: ImageByteRange): Promise<Buffer> {
     this.requireConfiguration();
+    if (range && (!Number.isSafeInteger(range.start) || !Number.isSafeInteger(range.end)
+      || range.start < 0 || range.end < range.start || range.end >= variant.bytes))
+      throw new DomainError('MEDIA_RANGE_INVALID');
+    if (CloudinaryImageStorage.activeDownloads >= CloudinaryImageStorage.MAX_DOWNLOADS)
+      throw new DomainError('COMMON_RATE_LIMITED',{},1);
+    CloudinaryImageStorage.activeDownloads++;
+    try {
+      return await this.download(variant,range);
+    } finally {
+      CloudinaryImageStorage.activeDownloads--;
+    }
+  }
+
+  private async download(variant: StoredVariant, range?: ImageByteRange): Promise<Buffer> {
     const url = cloudinary.url(variant.publicId, {
       secure: true, resource_type: 'image', type: 'authenticated',
       sign_url: true, long_url_signature: true,
@@ -88,9 +107,21 @@ export class CloudinaryImageStorage implements ImageStorage {
     try {
       const response = await fetch(url, {
         redirect: 'error', signal: AbortSignal.timeout(10_000), cache: 'no-store',
+        ...(range ? { headers: { Range: `bytes=${range.start}-${range.end}` } } : {}),
       });
-      if (!response.ok || response.headers.get('content-type')?.split(';')[0] !== 'image/webp' ||
-          !response.body) throw new DomainError('MEDIA_STORAGE_UNAVAILABLE');
+      const partial = Boolean(range && response.status === 206);
+      if ((response.status !== 200 && !partial) ||
+          response.headers.get('content-type')?.split(';')[0] !== 'image/webp' || !response.body) {
+        await response.body?.cancel();
+        throw new DomainError('MEDIA_STORAGE_UNAVAILABLE');
+      }
+      if (partial && response.headers.get('content-range') !== `bytes ${range!.start}-${range!.end}/${variant.bytes}`) {
+        await response.body.cancel();
+        throw new DomainError('MEDIA_STORAGE_UNAVAILABLE');
+      }
+      // Some image origins ignore Range and send 200. Only a complete, verified
+      // in-budget representation may then be sliced; never fake a partial body.
+      const expectedBytes = partial ? range!.end-range!.start+1 : variant.bytes;
       const reader = response.body.getReader();
       const chunks: Buffer[] = [];
       let size = 0;
@@ -99,14 +130,15 @@ export class CloudinaryImageStorage implements ImageStorage {
           const part = await reader.read();
           if (part.done) break;
           size += part.value.byteLength;
-          if (size > variant.bytes) throw new DomainError('MEDIA_STORAGE_UNAVAILABLE');
+          if (size > expectedBytes) throw new DomainError('MEDIA_STORAGE_UNAVAILABLE');
           chunks.push(Buffer.from(part.value));
         }
       } finally {
         await reader.cancel();
       }
-      if (size !== variant.bytes) throw new DomainError('MEDIA_STORAGE_UNAVAILABLE');
-      return Buffer.concat(chunks);
+      if (size !== expectedBytes) throw new DomainError('MEDIA_STORAGE_UNAVAILABLE');
+      const body = Buffer.concat(chunks);
+      return range && !partial ? body.subarray(range.start,range.end+1) : body;
     } catch {
       throw new DomainError('MEDIA_STORAGE_UNAVAILABLE');
     }

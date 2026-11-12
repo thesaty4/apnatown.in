@@ -29,6 +29,7 @@ import {
   type VideoHeartRepository,
 } from '../domain/hearts';
 import { FOLLOW_REPOSITORY, type FollowRepository } from '../domain/follows';
+import { SERVICE_BOOKMARK_REPOSITORY, type ServiceBookmarkRepository } from '../domain/bookmarks';
 import {
   VIDEO_LIKE_REPOSITORY,
   type VideoLikeRepository,
@@ -44,6 +45,7 @@ export class VideoLikesService {
     @Inject(VIDEO_HEART_REPOSITORY)
     private readonly hearts: VideoHeartRepository,
     @Inject(FOLLOW_REPOSITORY) private readonly follows: FollowRepository,
+    @Inject(SERVICE_BOOKMARK_REPOSITORY) private readonly bookmarks: ServiceBookmarkRepository,
     @Inject(MEDIA_COMMENT_TARGET)
     private readonly media: MediaCommentTargetPort,
     @Inject(CLOCK) private readonly clock: Clock,
@@ -86,6 +88,14 @@ export class VideoLikesService {
         ...new Set(heartVideoIds),
       ]);
       const businessStates = await this.follows.state(tx, userId, businessIds);
+      const serviceIds = [...new Set((query.targets?.toLowerCase().split(',') ?? [])
+        .flatMap((target) => {
+          const [kind,id] = target.split(':');
+          return kind === 'service' && id ? [id] : [];
+        }))];
+      // One owner-scoped query, never one visibility query per service. Own
+      // stale flags remain removable; public hydration belongs to Services.
+      const bookmarkedServiceIds = await this.bookmarks.findOwned(tx,userId,serviceIds);
       return {
         ...state,
         heartedTargets: heartedVideoIds.map((targetId) => ({
@@ -93,6 +103,7 @@ export class VideoLikesService {
           targetId,
         })),
         businessStates,
+        bookmarkedServiceIds,
       };
     });
   }

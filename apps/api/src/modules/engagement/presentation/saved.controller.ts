@@ -21,7 +21,7 @@ export class SavedController {
   @ApiOperation({
     operationId: 'engagementSaved',
     summary:
-      'List own followed businesses or saved videos, including removable unavailable items',
+      'List own followed businesses, saved services or saved videos, including removable unavailable items',
   })
   @ApiOkResponse({ type: SavedPageDto })
   async list(

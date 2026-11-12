@@ -701,6 +701,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/engagement/bookmarks/{targetType}/{targetId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Save a public service; retries preserve the original save time */
+        put: operations["engagementServiceBookmark"];
+        post?: never;
+        /** Remove own service bookmark, including unavailable or deleted targets */
+        delete: operations["engagementServiceUnbookmark"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/engagement/follows/{businessId}": {
         parameters: {
             query?: never;
@@ -762,7 +780,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List own followed businesses or saved videos, including removable unavailable items */
+        /** List own followed businesses, saved services or saved videos, including removable unavailable items */
         get: operations["engagementSaved"];
         put?: never;
         post?: never;
@@ -780,7 +798,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Read own video likes, hearts, follows and public counts in one bounded batch
+         * Read own video likes, hearts, service bookmarks, follows and public counts in one bounded batch
          * @description Guests receive empty relationship flags. Counts omit unavailable videos.
          */
         get: operations["engagementState"];
@@ -1139,7 +1157,8 @@ export interface paths {
         post?: never;
         delete?: never;
         options?: never;
-        head: operations["ImageController_head"];
+        /** Authorize current placement and read trusted image metadata without downloading bytes */
+        head: operations["mediaPublicImageHead"];
         patch?: never;
         trace?: never;
     };
@@ -2555,6 +2574,7 @@ export interface components {
                     slug: string;
                 } | null;
                 delivers: boolean | null;
+                discountPercent: number | null;
                 distanceKm: number | null;
                 featured: boolean;
                 /** Format: uuid */
@@ -2571,6 +2591,7 @@ export interface components {
                 inStock: boolean | null;
                 /** @enum {string} */
                 kind: "shop";
+                lowStockQuantity: number | null;
                 mrpPaise: number | null;
                 nameEn: string;
                 nameHi: string | null;
@@ -2593,6 +2614,7 @@ export interface components {
                 } | null;
                 unit: string | null;
                 verified: boolean;
+                whatsappPhone: string | null;
             };
         };
         CategoryDetailDto: {
@@ -2925,6 +2947,17 @@ export interface components {
                     status: "included";
                 };
                 bookmarks: {
+                    items: {
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: uuid */
+                        targetId: string;
+                        /** @enum {string} */
+                        targetType: "service";
+                    }[];
+                    /** @enum {string} */
+                    status: "included";
+                } | {
                     /** @enum {string} */
                     reasonCode: "OWNER_NOT_IMPLEMENTED";
                     /** @enum {string} */
@@ -3052,6 +3085,8 @@ export interface components {
         EmptyBodyDto: Record<string, never>;
         EmptyDto: Record<string, never>;
         EngagementStateDto: {
+            /** @default [] */
+            bookmarkedServiceIds: string[];
             /** @default [] */
             businessStates: {
                 bellOn: boolean;
@@ -3190,9 +3225,11 @@ export interface components {
                 "products.pickup"?: "true" | "false";
                 "products.priceMaxPaise"?: number;
                 "products.priceMinPaise"?: number;
+                "products.radiusKm"?: number;
                 "products.rating"?: 0 | 3 | 4 | 4.5;
                 /** @enum {string} */
                 "products.sort"?: "relevance" | "distance" | "price_asc" | "price_desc" | "rating" | "newest";
+                /** @description Comma-separated categorySlug/subcategorySlug identities; legacy bare slugs require an unambiguous active Catalog category context. Empty string explicitly clears the selection. */
                 "products.subcategory"?: string;
                 q?: string;
                 radiusKm?: number;
@@ -3211,6 +3248,7 @@ export interface components {
                 "services.rating"?: 0 | 3 | 4 | 4.5;
                 /** @enum {string} */
                 "services.sort"?: "relevance" | "distance" | "price_asc" | "price_desc" | "rating" | "newest";
+                /** @description Comma-separated categorySlug/subcategorySlug identities; legacy bare slugs require an unambiguous active Catalog category context. Empty string explicitly clears the selection. */
                 "services.subcategory"?: string;
                 /** @enum {string} */
                 "services.verified"?: "true" | "false";
@@ -3235,6 +3273,7 @@ export interface components {
                  * @enum {string}
                  */
                 sort: "relevance" | "distance" | "price_asc" | "price_desc" | "rating" | "newest";
+                /** @description Comma-separated categorySlug/subcategorySlug identities; legacy bare slugs require an unambiguous active Catalog category context. Empty string explicitly clears the selection. */
                 subcategory?: string;
                 /**
                  * @default products
@@ -3270,6 +3309,7 @@ export interface components {
                         slug: string;
                     } | null;
                     delivers: boolean | null;
+                    discountPercent: number | null;
                     distanceKm: number | null;
                     featured: boolean;
                     /** Format: uuid */
@@ -3286,6 +3326,7 @@ export interface components {
                     inStock: boolean | null;
                     /** @enum {string} */
                     kind: "product" | "shop" | "service";
+                    lowStockQuantity: number | null;
                     mrpPaise: number | null;
                     nameEn: string;
                     nameHi: string | null;
@@ -3308,6 +3349,7 @@ export interface components {
                     } | null;
                     unit: string | null;
                     verified: boolean;
+                    whatsappPhone: string | null;
                 }[];
                 nextCursor: string | null;
             };
@@ -3614,6 +3656,7 @@ export interface components {
                     slug: string;
                 } | null;
                 delivers: boolean | null;
+                discountPercent: number | null;
                 distanceKm: number | null;
                 featured: boolean;
                 /** Format: uuid */
@@ -3630,6 +3673,7 @@ export interface components {
                 inStock: boolean | null;
                 /** @enum {string} */
                 kind: "product";
+                lowStockQuantity: number | null;
                 mrpPaise: number | null;
                 nameEn: string;
                 nameHi: string | null;
@@ -3652,6 +3696,7 @@ export interface components {
                 } | null;
                 unit: string | null;
                 verified: boolean;
+                whatsappPhone: string | null;
             };
             orderability: {
                 /** @enum {boolean} */
@@ -3875,7 +3920,7 @@ export interface components {
                 /** Format: uuid */
                 targetId: string;
                 /** @enum {string} */
-                targetType: "business" | "video";
+                targetType: "business" | "video" | "service";
             } | {
                 /** @enum {boolean} */
                 available: true;
@@ -3890,7 +3935,7 @@ export interface components {
                 /** Format: uuid */
                 targetId: string;
                 /** @enum {string} */
-                targetType: "business" | "video";
+                targetType: "business" | "video" | "service";
             })[];
             nextCursor: string | null;
         };
@@ -4820,6 +4865,9 @@ export interface components {
                 supportingText: string | null;
             })[];
         };
+        ServiceBookmarkResultDto: {
+            bookmarked: boolean;
+        };
         ServicePublicDto: {
             description: string | null;
             excluded: string[];
@@ -4854,6 +4902,7 @@ export interface components {
                     slug: string;
                 } | null;
                 delivers: boolean | null;
+                discountPercent: number | null;
                 distanceKm: number | null;
                 featured: boolean;
                 /** Format: uuid */
@@ -4870,6 +4919,7 @@ export interface components {
                 inStock: boolean | null;
                 /** @enum {string} */
                 kind: "service";
+                lowStockQuantity: number | null;
                 mrpPaise: number | null;
                 nameEn: string;
                 nameHi: string | null;
@@ -4892,6 +4942,7 @@ export interface components {
                 } | null;
                 unit: string | null;
                 verified: boolean;
+                whatsappPhone: string | null;
             };
             serviceArea: string | null;
         };
@@ -12846,6 +12897,308 @@ export interface operations {
             };
         };
     };
+    engagementServiceBookmark: {
+        parameters: {
+            query?: never;
+            header: {
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                targetId: string;
+                targetType: "service";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ServiceBookmarkResultDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    engagementServiceUnbookmark: {
+        parameters: {
+            query?: never;
+            header: {
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                targetId: string;
+                targetType: "service";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ServiceBookmarkResultDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
     engagementFollowBusiness: {
         parameters: {
             query?: never;
@@ -13758,7 +14111,7 @@ export interface operations {
                 cursor?: string;
                 limit?: number;
                 mediaFilter?: "all" | "videos" | "reels";
-                tab?: "shops" | "media";
+                tab?: "shops" | "services" | "media";
             };
             header?: {
                 "X-Correlation-ID"?: string;
@@ -14238,8 +14591,10 @@ export interface operations {
                 "products.pickup"?: string;
                 "products.priceMaxPaise"?: number;
                 "products.priceMinPaise"?: number;
+                "products.radiusKm"?: number;
                 "products.rating"?: 0 | 3 | 4 | 4.5;
                 "products.sort"?: string;
+                /** @description Comma-separated categorySlug/subcategorySlug identities; legacy bare slugs require an unambiguous active Catalog category context. Empty string explicitly clears the selection. */
                 "products.subcategory"?: string;
                 q?: string;
                 radiusKm?: number;
@@ -14254,6 +14609,7 @@ export interface operations {
                 "services.radiusKm"?: number;
                 "services.rating"?: 0 | 3 | 4 | 4.5;
                 "services.sort"?: string;
+                /** @description Comma-separated categorySlug/subcategorySlug identities; legacy bare slugs require an unambiguous active Catalog category context. Empty string explicitly clears the selection. */
                 "services.subcategory"?: string;
                 "services.verified"?: string;
                 "shops.category"?: string;
@@ -14267,6 +14623,7 @@ export interface operations {
                 "shops.sort"?: string;
                 "shops.verified"?: string;
                 sort?: string;
+                /** @description Comma-separated categorySlug/subcategorySlug identities; legacy bare slugs require an unambiguous active Catalog category context. Empty string explicitly clears the selection. */
                 subcategory?: string;
                 tab?: string;
                 verified?: string;
@@ -14296,7 +14653,7 @@ export interface operations {
                     "application/json": components["schemas"]["ExploreResponseDto"];
                 };
             };
-            /** @description VALIDATION_ERROR; SEARCH_FILTER_INVALID for an unknown category */
+            /** @description VALIDATION_ERROR; SEARCH_FILTER_INVALID for unknown taxonomy, ambiguous bare subcategories, parent mismatches or duplicate resolved identities */
             400: {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
@@ -16794,7 +17151,8 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: {
+            /** @description Authorized current representation matches If-None-Match; no provider download */
+            304: {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
                     "Cache-Control"?: string;
@@ -16803,6 +17161,34 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Unsupported or unsatisfiable single byte range */
+            416: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/webp": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Shared image read budget or bounded provider download capacity exhausted */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/webp": components["schemas"]["ErrorDto"];
+                };
             };
             /** @description MAINTENANCE (errors.system.maintenance) while maintenance mode is on and this route is not admitted */
             503: {
@@ -16821,17 +17207,26 @@ export interface operations {
             };
         };
     };
-    ImageController_head: {
+    mediaPublicImageHead: {
         parameters: {
-            query?: never;
+            query: {
+                assetVersion: number;
+                placementId: string;
+                placementType: string;
+                surface: string;
+                variantWidth: number;
+            };
             header?: {
                 "X-Correlation-ID"?: string;
             };
-            path?: never;
+            path: {
+                assetId: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
+            /** @description Current authorized variant metadata; private/no-store */
             200: {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */
@@ -16841,6 +17236,32 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Current authorized variant matches If-None-Match */
+            304: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Same client read budget as image GET */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
             };
             /** @description MAINTENANCE (errors.system.maintenance) while maintenance mode is on and this route is not admitted */
             503: {

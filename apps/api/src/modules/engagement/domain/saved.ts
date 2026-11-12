@@ -6,7 +6,7 @@ export interface SavedPosition {
   targetId: string;
 }
 export interface SavedRelationship extends SavedPosition {
-  targetType: 'business' | 'video';
+  targetType: 'business' | 'video' | 'service';
   bellOn: boolean;
   mediaKind: 'video' | 'reel' | null;
 }

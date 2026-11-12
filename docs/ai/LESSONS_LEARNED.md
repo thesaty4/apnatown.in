@@ -5,6 +5,37 @@ Format: see `.github/skills/lessons-learned/SKILL.md`. Newest at the
 top; developer bug-fix work and any agent that catches a reusable mistake add an
 entry here.
 
+## Preserve category-scoped subcategory identity
+
+What: grouped service filters used bare subcategory slugs, conflating the
+existing `appliance-repair` options under Mechanic and Electrician.
+Rule: qualify subcategory selection/facet/SQL identity by its category;
+normalize legacy bare links only when unambiguous. Labels are not identifiers.
+Enforced in: [catalog/search instructions](../../.github/instructions/domain-catalog-search.instructions.md)
+and the Explore query contract.
+
+## Budget image reads before provider downloads
+
+What: public image HEAD/conditional requests could trigger full provider
+downloads because metadata and byte retrieval shared one eager path.
+Rule: authorize first, share the GET/HEAD client budget, bound provider
+concurrency, and use trusted metadata for HEAD/304 without fetching bytes.
+Keep current-placement authorization for every response variant.
+Enforced in: [integrations instructions](../../.github/instructions/integrations.instructions.md)
+and Media's image delivery service/controller.
+
+## Grant runtime access in the migration that creates a table
+
+What: `GET /videos/feed` returned 500 `COMMON_INTERNAL_ERROR`. The engagement
+migrations created `likes`, `hearts`, `follows`, `video_comments` and
+`video_engagement_counts` without grants, so the feed's join failed with
+PostgreSQL "permission denied" under `apnatown_runtime`. The runtime role
+has no memberships or default privileges by design.
+Rule: every new table/view grants least-privilege runtime access in the same
+migration, with column-scoped `UPDATE` where possible. Fix an omission with a
+new forward-only grant migration, never by editing the applied one.
+Enforced in: `db-migration` skill (step 3 and checklist).
+
 ## Keep public pages in `app/[locale]`
 
 What: the Videos tab showed "Page not found". The Reels pages live in

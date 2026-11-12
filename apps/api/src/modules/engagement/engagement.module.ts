@@ -18,6 +18,9 @@ import { VIDEO_SHARE_REPOSITORY } from './domain/shares';
 import { PrismaVideoShareRepository } from './infrastructure/prisma-video-share.repository';
 import { VideoSharesController } from './presentation/video-shares.controller';
 import { PrismaVideoCommentRepository } from './infrastructure/prisma-video-comment.repository';
+import { EngagementDataModule } from './engagement-data.module';
+import { ServiceBookmarksController } from './presentation/service-bookmarks.controller';
+import { ServiceBookmarksService } from './application/service-bookmarks.service';
 import { VIDEO_COMMENT_REPOSITORY } from './domain/comments';
 import { VideoCommentsService } from './application/video-comments.service';
 import { VideoCommentEvents } from './application/video-comment-events';
@@ -37,12 +40,14 @@ export class EngagementModule {
     settings: DynamicModule,
     media: DynamicModule,
     businesses: DynamicModule,
+    services: DynamicModule,
   ): DynamicModule {
     return {
       module: EngagementModule,
-      imports: [runtime, admin, audit, settings, media, businesses],
+      imports: [runtime, admin, audit, settings, media, businesses,services,EngagementDataModule.forRoot(runtime)],
       controllers: [
         SavedController,
+        ServiceBookmarksController,
         VideoLikesController,
         VideoFollowsController,
         VideoSharesController,
@@ -52,6 +57,7 @@ export class EngagementModule {
       ],
       providers: [
         SavedService,
+        ServiceBookmarksService,
         { provide: SAVED_REPOSITORY, useClass: PrismaSavedRepository },
         { provide: VIDEO_LIKE_REPOSITORY, useClass: PrismaVideoLikeRepository },
         {

@@ -6,7 +6,9 @@ import { normalizeFailure, unwrap } from '../../shared/api/result';
 import type { ExploreFilters } from './url-state';
 
 function defined<T extends object>(value: T) {
-  return Object.fromEntries(Object.entries(value).filter(([, item]) => item !== undefined)) as {
+  return Object.fromEntries(
+    Object.entries(value).filter(([, item]) => item !== undefined),
+  ) as {
     [K in keyof T]: Exclude<T[K], undefined>;
   };
 }
@@ -26,10 +28,12 @@ export async function getExplore(
   return unwrap(
     await api.GET('/explore', {
       params: { query },
-      ...(position && { headers: {
-        'X-Discovery-Latitude': String(position.lat),
-        'X-Discovery-Longitude': String(position.lng),
-      } }),
+      ...(position && {
+        headers: {
+          'X-Discovery-Latitude': String(position.lat),
+          'X-Discovery-Longitude': String(position.lng),
+        },
+      }),
       ...(signal && { signal }),
     }),
     ExploreResponseSchema,
@@ -48,7 +52,13 @@ export function exploreOptions(
     initialPageParam: null as string | null,
     queryFn: async ({ pageParam, signal }) => {
       try {
-        return await getExplore(api, filters, pageParam ?? undefined, signal, position);
+        return await getExplore(
+          api,
+          filters,
+          pageParam ?? undefined,
+          signal,
+          position,
+        );
       } catch (error) {
         signal.throwIfAborted();
         throw normalizeFailure(error);

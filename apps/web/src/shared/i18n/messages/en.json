@@ -1793,6 +1793,16 @@
     }
   },
   "engagement": {
+    "bookmark": {
+      "customerOnly": "Saving services is available to customer accounts.",
+      "failed": "The saved service could not be updated. Try again.",
+      "loginPrompt": "Log in to save this service and find it later.",
+      "readFailed": "Saved status could not load. Try again before changing it.",
+      "retry": "Retry saved status",
+      "save": "Save",
+      "saved": "Saved",
+      "unavailable": "This service is no longer available."
+    },
     "comments": {
       "addLabel": "Add a comment",
       "deleteFailed": "The comment could not be deleted. Please try again.",
@@ -1869,6 +1879,7 @@
       "browse": "Back to home",
       "emptyFollowing": "Follow a business from its video to see it here.",
       "emptyMedia": "Tap Save on a video or reel to keep it here.",
+      "emptyServices": "Save a service from Explore to find it here.",
       "emptyTitle": "Nothing here yet",
       "filterLabel": "Saved media filters",
       "guestMessage": "Keep your followed businesses and saved videos in one place.",
@@ -1892,6 +1903,7 @@
       "restrictedMessage": "Saved items are available to customer accounts.",
       "restrictedTitle": "Customer account required",
       "seeAll": "See all",
+      "service": "Service",
       "services": "Services",
       "shops": "Following",
       "title": "Saved",
@@ -1945,6 +1957,7 @@
       "categoryCount": "{name} ({count, number})",
       "categoryError": "Categories could not load. Try again to change the category filter.",
       "changeCategory": "Change category",
+      "changeLocation": "Choose or change location",
       "clear": "Clear",
       "clearAll": "Clear all",
       "clearCategories": "Clear categories and subcategories",
@@ -1968,6 +1981,7 @@
       "delivers": "Delivers to you",
       "deliversToMe": "Delivers to my address",
       "description": "Browse local shops and service providers in your town.",
+      "discountOff": "{percent, number}% OFF",
       "distanceKm": "Distance / radius",
       "emptyCategory": {
         "products": "No products for {category}",
@@ -1982,6 +1996,7 @@
         "shops": "No shops yet"
       },
       "emptyNoneMessage": "Listings appear here once they are approved.",
+      "enquiryText": "Hi, I saw {name} on ApnaTown and would like to enquire.",
       "errorMessage": "We couldn’t load results. Please try again.",
       "errorTitle": "Something went wrong",
       "excluded": "Not included",
@@ -2005,6 +2020,7 @@
       "loadMore": "Load more",
       "locationRequired": "Choose a location",
       "locationRequiredMessage": "Choose an area or use your location for distance and delivery filters. You can also reset these filters and browse without location.",
+      "lowStock": "Only {count, number} left",
       "mapPrivacy": "The map loads tiles from the configured map provider. Your browser shares its network address and the viewed map area. The results list remains available if tiles cannot load.",
       "nearbyExplanation": "Nearby means distance from your selected location (the area centre when an area is selected). Delivers to you means delivery is available at that location. They are different.",
       "noDelivery": "Outside delivery area",
@@ -2059,9 +2075,19 @@
       },
       "tabs": "Explore tabs",
       "title": "Explore nearby",
+      "unit": {
+        "day": "day",
+        "event": "event",
+        "hour": "hour",
+        "plate": "plate",
+        "squareFoot": "sq ft",
+        "unit": "unit",
+        "visit": "visit"
+      },
       "upTo": "Up to {price}",
       "verified": "Verified",
       "view": "View",
+      "whatsapp": "WhatsApp",
       "withinKm": "Within {km, number} km",
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out"

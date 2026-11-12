@@ -21,6 +21,8 @@ BR-18). Covers `catalog`, `products`,
   submission and again at admin review.
 - Each **service** has **exactly one** subcategory (SV8, BR-08);
   products use category + subcategory (not single-valued the same way).
+- Subcategory slugs are category-scoped, not globally unique. Use a qualified
+  category/subcategory identity in filters, facets and grouped selections.
 - A provider can be "expert in" **several** subcategories (many-to-many,
   `docs/project/05-domain-model.md` data relationships) — don't conflate
   this with a service's single subcategory.

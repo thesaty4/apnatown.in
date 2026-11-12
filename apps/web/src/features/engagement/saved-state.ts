@@ -8,11 +8,7 @@ export const SavedViewSchema = z.object({
 export type SavedView = z.infer<typeof SavedViewSchema>;
 
 export function savedRequest(view: SavedView): SavedQuery | null {
-  if (
-    view.tab === 'services' ||
-    (view.tab === 'media' && view.media === 'photos')
-  )
-    return null;
+  if (view.tab === 'media' && view.media === 'photos') return null;
   return {
     tab: view.tab,
     mediaFilter:

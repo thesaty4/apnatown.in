@@ -32,6 +32,8 @@ routing or fee decisions. Honor tile attribution/limits; no offline downloads.
 Wire documented configuration through schema, launcher allow-lists and env
 template together; report unconfigured/unavailable states without fallback
 to another provider.
+Image gateway GET/HEAD share a client budget and bounded provider concurrency;
+authorize before metadata-only HEAD/304 responses without downloading bytes.
 
 ## Local adapters
 

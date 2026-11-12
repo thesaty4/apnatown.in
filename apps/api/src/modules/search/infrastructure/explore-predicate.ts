@@ -17,7 +17,10 @@ export function explorePredicate(selection: ExploreSelection, tab: ExploreTab, o
   if (f.category && omit !== 'category') where.push(Prisma.sql`EXISTS (
     SELECT 1 FROM catalog_discovery_categories c WHERE c.id=ANY(x.category_ids)
       AND c.slug IN (${Prisma.join(String(f.category).split(','))}))`);
-  if (f.subcategory && omit !== 'subcategory') where.push(Prisma.sql`x.subcategory_slug IN (${Prisma.join(String(f.subcategory).split(','))})`);
+  if (f.subcategory && omit !== 'subcategory') where.push(Prisma.sql`x.subcategory_id IN (
+    SELECT sc.id FROM catalog_discovery_subcategories sc
+    JOIN catalog_discovery_categories parent ON parent.id=sc.category_id
+    WHERE parent.slug||'/'||sc.slug IN (${Prisma.join(String(f.subcategory).split(','))}))`);
   if (f.brand && omit !== 'brand') where.push(Prisma.sql`x.brand=${f.brand}`);
   if (omit !== 'price') {
     if (f.priceMinPaise !== undefined) where.push(Prisma.sql`coalesce(x.price_paise,0)>=${f.priceMinPaise}::bigint`);

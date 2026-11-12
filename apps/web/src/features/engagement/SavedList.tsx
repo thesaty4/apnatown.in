@@ -19,6 +19,7 @@ import { AccessState, Failure } from '../../shared/auth/AccessState';
 import { useSession } from '../../shared/auth/SessionProvider';
 import { savedOptions } from './saved-api';
 import { useRemoveSaved } from './saved-queries';
+import { publicHref } from '../../shared/i18n/preferences';
 
 export function SavedList({
   scope,
@@ -29,7 +30,7 @@ export function SavedList({
 }) {
   const t = useTranslations('engagement.saved');
   const follow = useTranslations('engagement.follow');
-  const locale = useLocale();
+  const locale = useLocale() === 'hi' ? 'hi' : 'en';
   const { api, lifecycle } = useSession();
   const query = useInfiniteQuery(savedOptions(api, scope, lifecycle, request));
   const remove = useRemoveSaved(scope);
@@ -94,7 +95,13 @@ export function SavedList({
       {items.length === 0 ? (
         <EmptyState
           title={t('emptyTitle')}
-          message={t(request.tab === 'shops' ? 'emptyFollowing' : 'emptyMedia')}
+          message={t(
+            request.tab === 'shops'
+              ? 'emptyFollowing'
+              : request.tab === 'services'
+                ? 'emptyServices'
+                : 'emptyMedia',
+          )}
           action={
             <Link className={buttonClassName} href="/">
               {t('browse')}
@@ -107,7 +114,8 @@ export function SavedList({
             const label = item.available
               ? (locale === 'hi'
                   ? (item.labelHi ?? item.labelEn)
-                  : item.labelEn) || t('video')
+                  : item.labelEn) ||
+                t(item.targetType === 'service' ? 'service' : 'video')
               : t('unavailable');
             return (
               <Card
@@ -120,13 +128,15 @@ export function SavedList({
                     ? '⊘'
                     : item.targetType === 'business'
                       ? '✓'
-                      : '▶'}
+                      : item.targetType === 'service'
+                        ? '▣'
+                        : '▶'}
                 </span>
                 <div className="min-w-0 flex-1">
                   {item.available && item.canonicalPath ? (
                     <Link
                       className="inline-flex min-h-touch items-center font-semibold underline"
-                      href={item.canonicalPath}
+                      href={publicHref(item.canonicalPath, locale)}
                     >
                       {label}
                     </Link>

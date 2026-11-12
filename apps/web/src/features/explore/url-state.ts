@@ -1,6 +1,9 @@
 import {
-  EXPLORE_TABS, EXPLORE_FILTER_KEYS, EXPLORE_SORTS_BY_TAB,
-  ExploreQuerySchema, type ExploreTab,
+  EXPLORE_TABS,
+  EXPLORE_FILTER_KEYS,
+  EXPLORE_SORTS_BY_TAB,
+  ExploreQuerySchema,
+  type ExploreTab,
 } from '@apnatown/shared/search';
 export type { ExploreFilters } from '@apnatown/shared/search';
 import type { ExploreFilters } from '@apnatown/shared/search';
@@ -8,15 +11,21 @@ import type { ExploreFilters } from '@apnatown/shared/search';
 export type FilterPatch = Record<string, string | number | null | undefined>;
 export const sortsFor = (tab: ExploreTab) => EXPLORE_SORTS_BY_TAB[tab];
 export const sortMessages = {
-  relevance: 'sort.relevance', distance: 'sort.distance', rating: 'sort.rating',
-  newest: 'sort.newest', price_asc: 'sort.priceAsc', price_desc: 'sort.priceDesc',
+  relevance: 'sort.relevance',
+  distance: 'sort.distance',
+  rating: 'sort.rating',
+  newest: 'sort.newest',
+  price_asc: 'sort.priceAsc',
+  price_desc: 'sort.priceDesc',
 } as const;
 export const hasVerified = (tab: ExploreTab) => tab !== 'products';
-export const selectedValues = (value: string | undefined) => value ? value.split(',') : [];
+export const selectedValues = (value: string | undefined) =>
+  value ? value.split(',') : [];
 
 export function readFilters(params: URLSearchParams): ExploreFilters | null {
   for (const key of params.keys())
-    if (params.getAll(key).length !== 1 || key === 'cursor' || key === 'limit') return null;
+    if (params.getAll(key).length !== 1 || key === 'cursor' || key === 'limit')
+      return null;
   const parsed = ExploreQuerySchema.safeParse(Object.fromEntries(params));
   if (!parsed.success) return null;
   const { cursor: _cursor, limit: _limit, ...filters } = parsed.data;
@@ -70,11 +79,15 @@ export function withTab(params: URLSearchParams, tab: ExploreTab) {
     if (value !== null) next.set(key, value);
     next.delete(`${tab}.${key}`);
   }
-  if (!current.contextCategory && current.tab !== 'services' && tab !== 'services' &&
-      !params.has(`${tab}.sort`) && current.category)
+  if (
+    !current.contextCategory &&
+    current.tab !== 'services' &&
+    tab !== 'services' &&
+    !params.has(`${tab}.sort`) &&
+    current.category
+  )
     next.set('category', current.category);
   next.set('tab', tab);
-  if (tab === 'products') { next.set('view', 'list'); next.delete('radiusKm'); }
   return next;
 }
 
@@ -83,7 +96,8 @@ export function withContext(params: URLSearchParams, category: string | null) {
   if (category) next.set('contextCategory', category);
   else next.delete('contextCategory');
   for (const prefix of ['', ...EXPLORE_TABS.map((tab) => `${tab}.`)])
-    for (const key of ['category', 'subcategory']) next.delete(`${prefix}${key}`);
+    for (const key of ['category', 'subcategory'])
+      next.delete(`${prefix}${key}`);
   if (!category) {
     const active = params.get('tab') ?? 'products';
     for (const tab of EXPLORE_TABS) {

@@ -37,7 +37,7 @@ export function normalizeExplore(query: ExploreQuery, context: DiscoveryContext)
           : related.find((c) => c.kind === 'product')?.slug ?? '';
       }
     }
-    validateTaxonomy(tab, prefix, result, context);
+    normalizeTaxonomy(tab, prefix, result, context);
   }
   if (context.cityId) result.cityId = context.cityId;
   const filters = ExploreFiltersSchema.parse(result);
@@ -50,15 +50,31 @@ export function normalizeExplore(query: ExploreQuery, context: DiscoveryContext)
   return { filters, emptyServices };
 }
 
-function validateTaxonomy(tab: ExploreTab, prefix: string, values: Record<string, unknown>, context: DiscoveryContext) {
+function normalizeTaxonomy(tab: ExploreTab, prefix: string, values: Record<string, unknown>, context: DiscoveryContext) {
   const kind = tab === 'services' ? 'service' : 'product';
   const selected = slugs(values[`${prefix}category`] as string | undefined);
   const categories = context.categories.filter((c) => c.kind === kind && selected.includes(c.slug));
   if (categories.length !== selected.length) invalid(`${prefix}category`);
-  const subcategories = slugs(values[`${prefix}subcategory`] as string | undefined);
-  for (const slug of subcategories) {
-    if (!context.subcategories.some((s) => s.kind === kind && s.slug === slug
-      && (!categories.length || categories.some((c) => c.id === s.categoryId))))
-      invalid(`${prefix}subcategory`);
-  }
+  const key = `${prefix}subcategory`;
+  // Preserve absent and explicitly cleared values. Context defaults were
+  // applied above; each inactive namespace uses its own category selection.
+  if (!values[key]) return;
+  const parents = new Map((selected.length ? categories : context.categories.filter((c) => c.kind === kind))
+    .map((category) => [category.id, category]));
+  const canonical = slugs(values[key] as string).map((value) => {
+    const parts = value.split('/');
+    const categorySlug = parts.length === 2 ? parts[0] : undefined;
+    const slug = parts.at(-1);
+    const matches = context.subcategories.filter((subcategory) => {
+      const parent = parents.get(subcategory.categoryId);
+      return subcategory.kind === kind && subcategory.slug === slug && parent
+        && (categorySlug === undefined || parent.slug === categorySlug);
+    });
+    // Never choose a first match or disambiguate by current result counts.
+    if (matches.length !== 1) return invalid(key);
+    const subcategory = matches[0]!;
+    return `${parents.get(subcategory.categoryId)!.slug}/${subcategory.slug}`;
+  });
+  if (new Set(canonical).size !== canonical.length) invalid(key);
+  values[key] = canonical.join(',');
 }

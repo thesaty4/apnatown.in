@@ -58,6 +58,7 @@ export class AppModule {
       catalog,
       businessContext,
     ]);
+    const services = ServicesModule.forRoot(runtime);
     const engagement = EngagementModule.forRoot(
       runtime,
       admin,
@@ -65,6 +66,7 @@ export class AppModule {
       settings,
       media,
       businessContext,
+      services,
     );
     return {
       module: AppModule,
@@ -81,7 +83,7 @@ export class AppModule {
         engagement,
         SearchModule.forRoot(runtime, catalog, businessContext),
         ProductsModule.forRoot(runtime),
-        ServicesModule.forRoot(runtime),
+        services,
         BusinessPublicModule.forRoot(runtime),
       ],
       controllers: [HealthController],

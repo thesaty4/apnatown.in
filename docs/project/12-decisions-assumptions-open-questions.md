@@ -24,7 +24,7 @@ into the list below (one is now resolved).
 | D-08 | Explore filter state is a shareable URL (BR-15, EX8). |
 | D-09 | Confirmed 2026-11-12: Cloudinary for public-purpose images through Media's sanitized upload and authorized same-origin delivery; KYC/evidence/exports remain separate private storage. See [integration contract](../../specs/_foundation/media-and-maps.md). |
 | D-10 | Confirmed 2026-11-12: shared Leaflet maps with Geoman Free and policy-compliant OSM tiles; no new geocoding/routing provider. Attribution, tile limits and list/manual fallback are mandatory. |
-| D-11 | Confirmed 2026-11-12: implement Explore on existing database-backed businesses first (Shops = approved shops, Services = approved provider businesses, Products empty until its module exists). Do not build onboarding or Products/Services modules in this slice and do not fabricate results. See [current Explore contract](../../specs/search/be/search.md#endpoints). |
+| D-11 | Superseded 2026-11-12 by the explicit request to cover the complete Explore HTML reference. Implement real Products, Shops and individual Services, full filters/counts, shared Services filter, maps and service Save using owner-owned read sources. Products Map pins owning shops as in prototype `js16.js`; it does not invent product coordinates. No fabricated listings, onboarding managers or checkout expansion. See [current Explore contract](../../specs/search/be/search.md#endpoints) and [frontend coverage/evidence](../../specs/search/fe/search.md#s-cust-02--explore). |
 
 ## 2. Assumptions `[ASSUMPTION]`
 

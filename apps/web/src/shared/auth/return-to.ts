@@ -10,12 +10,23 @@ const implemented = new Set([
   '/account/addresses',
   '/videos',
   '/hi/videos',
+  '/explore',
+  '/hi/explore',
+  '/search',
+  '/hi/search',
+  '/services',
+  '/hi/services',
+  '/saved',
   '/admin/profile',
   '/super-admin/admins',
   '/super-admin/roles',
 ]);
 const implementedVideoPath =
   /^\/(?:hi\/)?videos\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
+const implementedListingPath =
+  /^\/(?:hi\/)?(?:product|service|shop|provider)\/[a-z0-9]+(?:-[a-z0-9]+)*$/u;
+const implementedCategoryPath =
+  /^\/(?:hi\/)?category\/[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)?$/u;
 
 /** Only implemented, non-operational destinations; auth loops and encoded paths fail closed. */
 export function safeReturnTo(input: unknown): string | undefined {
@@ -34,7 +45,9 @@ export function safeReturnTo(input: unknown): string | undefined {
   if (
     url.origin !== 'https://return.invalid' ||
     (!implemented.has(url.pathname) &&
-      !implementedVideoPath.test(url.pathname)) ||
+      !implementedVideoPath.test(url.pathname) &&
+      !implementedListingPath.test(url.pathname) &&
+      !implementedCategoryPath.test(url.pathname)) ||
     input.split(/[?#]/)[0] !== url.pathname
   )
     return;

@@ -1,17 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Prisma } from '../../../shared/persistence/generated/client';
 import { PrismaDatabase } from '../../../shared/persistence/prisma-database';
 import type { TxContext } from '../../../shared/persistence/ports';
 import type { SavedRelationship, SavedRepository } from '../domain/saved';
+import { SERVICE_BOOKMARK_REPOSITORY, type ServiceBookmarkRepository } from '../domain/bookmarks';
 
 @Injectable()
 export class PrismaSavedRepository implements SavedRepository {
-  constructor(private readonly database: PrismaDatabase) {}
+  constructor(
+    private readonly database: PrismaDatabase,
+    @Inject(SERVICE_BOOKMARK_REPOSITORY) private readonly bookmarks: ServiceBookmarkRepository,
+  ) {}
 
   page(
     tx: TxContext,
     { userId, query, after }: Parameters<SavedRepository['page']>[1],
   ) {
+    if (query.tab === 'services') {
+      return this.bookmarks.page(tx,{
+        userId,limit: query.limit,
+        ...(after ? { after: { createdAt: after.savedAt,targetId: after.targetId } } : {}),
+      }).then((rows) => rows.map((row): SavedRelationship => ({
+        targetType: 'service',targetId: row.targetId,savedAt: row.createdAt,bellOn: false,mediaKind: null,
+      })));
+    }
     if (query.tab === 'shops') {
       return this.database.client(tx).$queryRaw<SavedRelationship[]>(Prisma.sql`
         SELECT 'business' AS "targetType", business_id AS "targetId",

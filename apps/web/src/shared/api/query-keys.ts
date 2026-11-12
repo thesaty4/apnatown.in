@@ -43,8 +43,11 @@ export const queryKeys = {
   catalogCategories: (kind?: 'product' | 'service') =>
     ['catalog', 'categories', kind ?? 'all'] as const,
   catalogCategory: (slug: string) => ['catalog', 'category', slug] as const,
-  explore: (filters: ExploreFilters, locationRevision = 0, screen = 'explore') =>
-    ['public', screen, filters, locationRevision] as const,
+  explore: (
+    filters: ExploreFilters,
+    locationRevision = 0,
+    screen = 'explore',
+  ) => ['public', screen, filters, locationRevision] as const,
   catalogDuplicateCheck: (
     scope: AccountScope,
     check: Readonly<Record<string, string | undefined>>,

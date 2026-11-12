@@ -42,8 +42,8 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) for standard states,
   read and request-local React Query hydration. Private keys include account,
   roles, session epoch, tab and media filter; stale time is 30 seconds, cache
   lifetime five minutes, focus/reconnect refetch enabled, no automatic retries.
-- Following and saved Videos/Reels have real paginated API data and Load more.
-  Services and Photos show an explicit not-yet-available state, not mock lists
+- Following, Services and saved Videos/Reels have real paginated API data and Load more.
+  Photos show an explicit not-yet-available state, not mock lists
   or success-shaped empty data. Existing business profile routes/cards are not
   wired, so Following shows public names and bell state without broken links or
   fabricated images, ratings, distances and totals.
@@ -51,13 +51,21 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) for standard states,
   Back restores URL state; invalid values show a reset action. Guest login
   preserves the selected Saved URL. Tabs support arrows/Home/End; media filters
   use the shared Chip; all feedback is bilingual and wraps.
-- Removal reuses unfollow/heart DELETE. Unfollow asks confirmation; unavailable
+- Removal reuses unfollow/heart/service-bookmark DELETE. Unfollow asks confirmation; unavailable
   targets remain removable. Successful removal updates all Saved pages, refetches
   the list and invalidates video engagement state. Video follow/heart writes
   invalidate Saved in return. Failures are explicit and never optimistically
   claim success; logout/scope changes cancel and clear private state.
 - The root provider now supplies the engagement catalog for both existing video
   controls and Saved. Header navigation exposes Saved without requiring a direct URL.
+- Explore service cards and service details use `ServiceBookmarkButton` with
+  max-50 batched state reads, account/epoch-scoped queries and lifecycle-fenced
+  private mutations. Successful Save/removal invalidates Engagement and Saved;
+  pending/read-retry/write-error/non-customer states are explicit. No fake
+  optimistic success is shown. Login preserves the originating browse/detail URL.
+  Unavailable services remain removable without exposing private target data.
+  Shared/API/client/UI/web builds and security re-review passed; live
+  account-switch, export/erasure and unavailable-target checks remain deferred.
 
 | Component | Behaviour | Used in |
 |---|---|---|

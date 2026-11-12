@@ -11,6 +11,7 @@ export function listingRows(source: Prisma.Sql, location: DiscoveryLocation | nu
     : Prisma.sql`NULL::geography`;
   return Prisma.sql`
     SELECT x.*,b.verified,b.open_now,b.pickup,b.city_id,b.area_id,b.phone,
+      contact.whatsapp_phone,badges.discount_percent,badges.low_stock_quantity,
       b.slug AS business_slug,b.kind AS business_kind,b.name_en AS business_name_en,b.name_hi AS business_name_hi,
       b.area_name_en,b.area_name_hi,c.slug AS category_slug,c.name_en AS category_name_en,c.name_hi AS category_name_hi,
       sc.slug AS subcategory_slug,sc.name_en AS subcategory_name_en,sc.name_hi AS subcategory_name_hi,
@@ -22,6 +23,8 @@ export function listingRows(source: Prisma.Sql, location: DiscoveryLocation | nu
       '/'||CASE x.kind WHEN 'product' THEN 'product' WHEN 'service' THEN 'service'
         ELSE CASE b.kind WHEN 'provider' THEN 'provider' ELSE 'shop' END END||'/'||x.slug AS path
     FROM (${source}) x JOIN businesses_public_context b ON b.id=x.business_id
+    LEFT JOIN businesses_public_contacts contact ON contact.business_id=b.id
+    LEFT JOIN products_public_badges badges ON x.kind='product' AND badges.product_id=x.id
     LEFT JOIN catalog_discovery_categories c ON c.id=x.category_ids[1]
     LEFT JOIN catalog_discovery_subcategories sc ON sc.id=x.subcategory_id
     LEFT JOIN LATERAL (SELECT m.image FROM media_public_listing_images m
@@ -44,9 +47,12 @@ export const listingCard = Prisma.sql`jsonb_build_object(
   'pricePaise',x.price_paise,'mrpPaise',x.mrp_paise,'priceMaxPaise',x.price_max_paise,
   'priceType',x.price_type,'unit',x.unit,'distanceKm',x.distance_km,
   'verified',x.verified,'featured',x.featured,'openNow',x.open_now,'offers',x.offers,
-  'inStock',x.in_stock,'pickup',x.pickup,'delivers',x.delivers,'path',x.path,'phone',x.phone)`;
+  'inStock',x.in_stock,'pickup',x.pickup,'delivers',x.delivers,'path',x.path,'phone',x.phone,
+  'whatsappPhone',x.whatsapp_phone,'discountPercent',x.discount_percent,'lowStockQuantity',x.low_stock_quantity)`;
 
-export const listingPin = Prisma.sql`CASE WHEN x.kind='product' OR x.lat IS NULL OR x.lng IS NULL THEN NULL
+// All listing tabs pin the public owning business, never a product/service
+// location. Explore deduplicates these business IDs within the returned page.
+export const listingPin = Prisma.sql`CASE WHEN x.lat IS NULL OR x.lng IS NULL THEN NULL
   ELSE jsonb_build_object('id',x.business_id,'businessId',x.business_id,'lat',x.lat,'lng',x.lng,
     'nameEn',x.business_name_en,'nameHi',x.business_name_hi,'distanceKm',x.distance_km,'delivers',x.delivers,
     'path','/'||CASE x.business_kind WHEN 'provider' THEN 'provider' ELSE 'shop' END||'/'||x.business_slug) END`;

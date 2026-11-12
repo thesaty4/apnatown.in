@@ -20,10 +20,11 @@ export async function exploreFacets(client: Prisma.TransactionClient, base: Pris
     FROM catalog_discovery_categories c WHERE c.kind=${kind} ORDER BY c.sort_order,c.id`);
   const subcategories = tab === 'shops' ? [] : await client.$queryRaw<FacetRow[]>(Prisma.sql`
     WITH base AS MATERIALIZED (${base})
-    SELECT c.id,c.slug AS value,c.category_id AS "categoryId",c.name_en AS "labelEn",c.name_hi AS "labelHi",
+    SELECT c.id,parent.slug||'/'||c.slug AS value,c.category_id AS "categoryId",c.name_en AS "labelEn",c.name_hi AS "labelHi",
       (SELECT count(*)::integer FROM base x WHERE ${explorePredicate(selection, tab, 'subcategory')}
         AND x.subcategory_id=c.id) AS count
-    FROM catalog_discovery_subcategories c WHERE c.kind=${kind} ORDER BY c.category_id,c.sort_order,c.id`);
+    FROM catalog_discovery_subcategories c JOIN catalog_discovery_categories parent ON parent.id=c.category_id
+    WHERE c.kind=${kind} ORDER BY c.category_id,c.sort_order,c.id`);
   const brands = tab !== 'products' ? [] : await client.$queryRaw<FacetRow[]>(Prisma.sql`
     WITH base AS MATERIALIZED (${base}), brands AS (
       SELECT DISTINCT brand FROM base WHERE kind='product' AND brand IS NOT NULL

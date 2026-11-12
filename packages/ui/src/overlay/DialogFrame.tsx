@@ -130,7 +130,15 @@ export function DialogFrame({
           </p>
         )}
         {children}
-        {footer && <footer className={stickyFooter ? 'sticky bottom-0 z-10 bg-surface' : undefined}>{footer}</footer>}
+        {footer && (
+          <footer
+            className={
+              stickyFooter ? 'sticky bottom-0 z-10 bg-surface' : undefined
+            }
+          >
+            {footer}
+          </footer>
+        )}
       </div>
     </dialog>
   );

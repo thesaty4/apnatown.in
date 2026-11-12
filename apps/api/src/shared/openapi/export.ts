@@ -86,6 +86,8 @@ import { SearchHomeController } from '../../modules/search/presentation/search-h
 import { SearchHomeService } from '../../modules/search/application/search-home.service';
 import { ExploreController } from '../../modules/search/presentation/explore.controller';
 import { ExploreService } from '../../modules/search/application/explore.service';
+import { ServiceBookmarksController } from '../../modules/engagement/presentation/service-bookmarks.controller';
+import { ServiceBookmarksService } from '../../modules/engagement/application/service-bookmarks.service';
 import { ProductPublicController } from '../../modules/products/presentation/product-public.controller';
 import { ProductReadService } from '../../modules/products/application/product-read.service';
 import { ServicePublicController } from '../../modules/services/presentation/service-public.controller';
@@ -98,6 +100,7 @@ import { BusinessDiscoveryDetailService } from '../../modules/businesses/applica
 @Module({
   controllers: [
     SavedController,
+    ServiceBookmarksController,
     VideoLikesController,
     VideoFollowsController,
     VideoSharesController,
@@ -140,6 +143,7 @@ import { BusinessDiscoveryDetailService } from '../../modules/businesses/applica
   ],
   providers: [
     SavedService,
+    ServiceBookmarksService,
     VideoLikesService,
     FollowsService,
     VideoSharesService,

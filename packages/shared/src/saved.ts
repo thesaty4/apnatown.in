@@ -7,13 +7,13 @@ import {
 } from './wire.js';
 
 export const SavedQuerySchema = PageQuerySchema.extend({
-  tab: z.enum(['shops', 'media']).default('shops'),
+  tab: z.enum(['shops', 'services', 'media']).default('shops'),
   mediaFilter: z.enum(['all', 'videos', 'reels']).default('all'),
 });
 export type SavedQuery = z.infer<typeof SavedQuerySchema>;
 
 const relationship = {
-  targetType: z.enum(['business', 'video']),
+  targetType: z.enum(['business', 'video', 'service']),
   targetId: IdSchema,
   savedAt: TimestampSchema,
   bellOn: z.boolean(),
@@ -33,7 +33,7 @@ export const SavedItemSchema = z.discriminatedUnion('available', [
     labelHi: z.string().max(500).nullable(),
     canonicalPath: z
       .string()
-      .regex(/^\/videos\/[0-9a-f-]{36}$/)
+      .regex(/^(?:\/videos\/[0-9a-f-]{36}|\/service\/[a-z0-9]+(?:-[a-z0-9]+)*)$/)
       .nullable(),
   }),
 ]);

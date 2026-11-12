@@ -19,13 +19,22 @@ const variants = {
   text: 'border-transparent bg-transparent text-primary hover:bg-primary-soft',
   danger: 'border-transparent bg-error text-on-primary',
   ghost: 'border-border bg-surface-2 text-text',
+  /** Light-on-dark action for always-dark immersive surfaces such as Reels. */
+  inverse: 'border-transparent bg-reel-text text-reel-canvas',
 } as const;
 
-export const buttonClassName = `${baseClassName} ${variants.primary}`;
+export type ButtonVariant = keyof typeof variants;
+
+/** Button appearance for non-button elements such as links. */
+export function buttonVariantClassName(variant: ButtonVariant = 'primary') {
+  return `${baseClassName} ${variants[variant]}`;
+}
+
+export const buttonClassName = buttonVariantClassName('primary');
 
 export type ButtonProps = ComponentPropsWithRef<'button'> & {
   loading?: boolean;
-  variant?: keyof typeof variants;
+  variant?: ButtonVariant;
 };
 
 export function Button({
@@ -42,7 +51,7 @@ export function Button({
       {...props}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
-      className={`${baseClassName} ${variants[variant]} ${className}`}
+      className={`${buttonVariantClassName(variant)} ${className}`}
     >
       {children}
       {loading && (

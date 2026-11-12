@@ -8,6 +8,7 @@ import {
   EmptyState,
   ErrorState,
   NoPermissionState,
+  type StateTone,
 } from '@apnatown/ui/feedback/StateViews';
 import { Skeleton } from '@apnatown/ui/feedback/Skeleton';
 import { loginHref, safeReturnTo } from './return-to';
@@ -38,19 +39,29 @@ export function Failure({
   code,
   retry,
   retryDisabled = false,
+  tone = 'surface',
+  headingLevel,
 }: {
   code: string;
   retry: () => void;
   retryDisabled?: boolean;
+  tone?: StateTone;
+  headingLevel?: 'h1' | 'h2';
 }) {
   const t = useTranslations('auth.feedback');
   const State = code === 'ACCOUNT_UNAVAILABLE' ? NoPermissionState : ErrorState;
   return (
     <State
+      tone={tone}
+      headingLevel={headingLevel}
       title={t('title')}
       message={t(failureMessageKey(code))}
       action={
-        <Button disabled={retryDisabled} onClick={retry}>
+        <Button
+          variant={tone === 'immersive' ? 'inverse' : 'primary'}
+          disabled={retryDisabled}
+          onClick={retry}
+        >
           {t('retry')}
         </Button>
       }

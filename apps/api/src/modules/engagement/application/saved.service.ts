@@ -26,6 +26,7 @@ import {
   type VideoSavedCards,
 } from '../../media-videos/application/video-saved-cards';
 import { SAVED_REPOSITORY, type SavedRepository } from '../domain/saved';
+import { SERVICE_SAVED_CARDS, type ServiceSavedCards } from '../../services/application/service-saved-cards';
 
 const positionSchema = z.tuple([TimestampSchema, IdSchema]);
 
@@ -39,6 +40,7 @@ export class SavedService {
     @Inject(BUSINESS_SAVED_CARDS)
     private readonly businesses: BusinessSavedCards,
     @Inject(VIDEO_SAVED_CARDS) private readonly videos: VideoSavedCards,
+    @Inject(SERVICE_SAVED_CARDS) private readonly services: ServiceSavedCards,
   ) {}
 
   list(session: SessionBinding, query: SavedQuery) {
@@ -73,6 +75,8 @@ export class SavedService {
               ...card,
               canonicalPath: null,
             }))
+          : query.tab === 'services'
+          ? await this.services.cards(tx,ids)
           : (await this.videos.cards(tx, ids)).map((card) => ({
               id: card.id,
               labelEn: card.caption,

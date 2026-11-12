@@ -20,12 +20,21 @@ export const EngagementTargetSchema = z.strictObject({
 });
 export type EngagementTarget = z.infer<typeof EngagementTargetSchema>;
 
-const EngagementTargetQuerySchema = z.string().min(1).max(2149).refine(
+export const ServiceBookmarkTargetTypeSchema = z.literal('service');
+export const ServiceBookmarkTargetSchema = z.strictObject({
+  targetType: ServiceBookmarkTargetTypeSchema,
+  targetId: IdSchema,
+});
+export type ServiceBookmarkTarget = z.infer<typeof ServiceBookmarkTargetSchema>;
+export const ServiceBookmarkResultSchema = z.strictObject({ bookmarked: z.boolean() });
+export type ServiceBookmarkResult = z.infer<typeof ServiceBookmarkResultSchema>;
+
+const EngagementTargetQuerySchema = z.string().min(1).max(2249).refine(
   (value) => value.split(',').length <= 50 && value.split(',').every((target) => {
     const [targetType, targetId, ...extra] = target.split(':');
     return (
       extra.length === 0 &&
-      (targetType === 'photo' || targetType === 'video') &&
+      (targetType === 'photo' || targetType === 'video' || targetType === 'service') &&
       IdSchema.safeParse(targetId).success
     );
   }),
@@ -75,6 +84,7 @@ export const EngagementStateSchema = z.strictObject({
     likeCount: CountSchema,
   })).max(50),
   heartedTargets: z.array(EngagementTargetSchema).max(50).default([]),
+  bookmarkedServiceIds: z.array(IdSchema).max(50).default([]),
   businessStates: z.array(EngagementBusinessStateSchema).max(50).default([]),
 });
 export type EngagementState = z.infer<typeof EngagementStateSchema>;

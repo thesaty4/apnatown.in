@@ -293,6 +293,11 @@ export const SupportMessageExportSchema = z.strictObject({
   message: z.string(),
   createdAt: TimestampSchema,
 });
+export const ServiceBookmarkExportSchema = z.strictObject({
+  targetType: z.literal('service'),
+  targetId: IdSchema,
+  createdAt: TimestampSchema,
+});
 const UnavailableExportSectionSchema = z.strictObject({
   status: z.literal('unavailable'),
   reasonCode: z.literal('OWNER_NOT_IMPLEMENTED'),
@@ -311,7 +316,8 @@ export const DataExportSchema = z.strictObject({
     addresses: includedSection(AddressSchema),
     consents: includedSection(ConsentRecordSchema),
     orders: UnavailableExportSectionSchema,
-    bookmarks: UnavailableExportSectionSchema,
+    // Retain readability of unexpired exports produced before this owner landed.
+    bookmarks: z.union([includedSection(ServiceBookmarkExportSchema), UnavailableExportSectionSchema]),
     reviews: UnavailableExportSectionSchema,
     support_messages: includedSection(SupportMessageExportSchema),
   }),
