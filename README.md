@@ -25,6 +25,7 @@ npx --yes pnpm@10.34.9 env:local
 npx --yes pnpm@10.34.9 generate
 npx --yes pnpm@10.34.9 db:up
 npx --yes pnpm@10.34.9 db:migrate
+npx --yes pnpm@10.34.9 db:seed   # optional local demo data
 npx --yes pnpm@10.34.9 dev
 ```
 
@@ -42,9 +43,21 @@ Run `db:migrate` after pulling new migrations and before starting the app:
 it applies the reviewed schema changes, installs/upgrades pg-boss, provisions
 the outbox queue and grants its runtime permissions. `db:up` alone does not
 perform those steps. The command does not reset or replace the database.
-`db:seed` currently fails with `C02_REQUIRED_NO_DOMAIN_SEED_ADAPTER`; there is
-no implemented demo-data seeder. Seeding does not fix missing translations
-or queue connection failures.
+`db:seed` loads local/test-only demo data adapted from
+[`10-sample-data.json`](docs/design-context/10-sample-data.json): the Padrauna
+city and its seven areas, one owner account per sample business (with the
+`customer` plus `vendor`/`provider` role), the 22 approved sample shops and
+service providers with category, hours and settings, and their 13 link
+videos (10 approved; one each pending, rejected and removed). Run it after
+`db:migrate`; it needs the compiled API from `pnpm generate` (also run by
+`pnpm build`/`pnpm dev`), otherwise it fails with `API_BUILD_REQUIRED`.
+It is idempotent: existing rows are never updated, and a sample business whose
+slug or owner/kind already exists is skipped with its videos. Likes, shares,
+comments, follows, products, orders and social links are not seeded. Only the
+YouTube sample videos play; the Instagram sample IDs are placeholders, so those
+reels will not play. Sample owners sign in through the normal OTP
+flow with their fictional `98765xxxxx` sample numbers. Seeding does not fix
+missing translations or queue connection failures.
 
 If an earlier local attempt at `20261112105000_media_reports` failed with
 duplicate `media_reports_resolution_check`, the corrected SQL uses a distinct

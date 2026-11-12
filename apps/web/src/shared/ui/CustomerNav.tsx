@@ -23,6 +23,7 @@ export function CustomerMenu() {
   if (!customer) return null;
   const items = [
     ['home', publicHref('/', locale), path === '/'],
+    ['explore', publicHref('/explore', locale), path.startsWith('/explore')],
     ['videos', '/videos', path.startsWith('/videos')],
     ['services', publicHref('/services', locale), path.startsWith('/services')],
   ] as const;
@@ -52,6 +53,12 @@ export function CustomerTabBar() {
   if (!customer) return null;
   const items: readonly [NavIconName, string, string, boolean][] = [
     ['home', t('home'), publicHref('/', locale), path === '/'],
+    [
+      'map',
+      t('explore'),
+      publicHref('/explore', locale),
+      path.startsWith('/explore'),
+    ],
     ['play', t('videos'), '/videos', path.startsWith('/videos')],
     [
       'user',

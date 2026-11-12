@@ -16,6 +16,8 @@ import type {
   BusinessAggregate,
   BusinessChanges,
   BusinessRepository,
+  DiscoveryFilter,
+  DiscoveryRow,
   StoredBilling,
   StoredBusiness,
   StoredCategoryLink,
@@ -78,6 +80,23 @@ function visible(visibility: AdminVisibility): Prisma.Sql {
 }
 
 const likePattern = (q: string) => `%${q.replace(/[\\%_]/g, '\\$&')}%`;
+
+/** Public Explore visibility: approved, named, live owner, plus filters. */
+function discoverable(input: DiscoveryFilter): Prisma.Sql {
+  return Prisma.sql`b.status = 'approved' AND b.deleted_at IS NULL
+    AND b.kind = ${input.kind}
+    AND b.name_en IS NOT NULL AND b.slug IS NOT NULL
+    AND u.account_status = 'active' AND u.deleted_at IS NULL
+    AND EXISTS (SELECT 1 FROM cities city
+      WHERE city.id = b.city_id AND city.status = 'enabled')
+    ${input.verified ? Prisma.sql`AND b.verified_at IS NOT NULL` : Prisma.empty}
+    ${
+      input.categoryId
+        ? Prisma.sql`AND EXISTS (SELECT 1 FROM business_categories c
+            WHERE c.business_id = b.id AND c.category_id = ${input.categoryId}::uuid)`
+        : Prisma.empty
+    }`;
+}
 
 @Injectable()
 export class PrismaBusinessRepository implements BusinessRepository {
@@ -511,6 +530,52 @@ export class PrismaBusinessRepository implements BusinessRepository {
         ORDER BY b.created_at, b.id
         LIMIT ${input.limit + 1}`,
     );
+  }
+
+  async discoveryPage(
+    tx: TxContext,
+    input: DiscoveryFilter & {
+      newest: boolean;
+      after?: [string, string];
+      limit: number;
+    },
+  ): Promise<DiscoveryRow[]> {
+    const order = input.newest ? Prisma.sql`DESC` : Prisma.sql`ASC`;
+    const after = input.after
+      ? input.newest
+        ? Prisma.sql`AND (b.created_at, b.id) <
+            (${input.after[0]}::timestamptz, ${input.after[1]}::uuid)`
+        : Prisma.sql`AND (b.created_at, b.id) >
+            (${input.after[0]}::timestamptz, ${input.after[1]}::uuid)`
+      : Prisma.empty;
+    return this.database.client(tx).$queryRaw<DiscoveryRow[]>(
+      Prisma.sql`SELECT b.id, b.kind, b.name_en AS "nameEn",
+          b.name_hi AS "nameHi", b.slug, b.verified_at IS NOT NULL AS verified,
+          ${timestamp('b.created_at')} AS "createdAt",
+          pc.category_id AS "categoryId",
+          a.name_en AS "areaNameEn", a.name_hi AS "areaNameHi"
+        FROM businesses b
+        JOIN users u ON u.id = b.owner_user_id
+        LEFT JOIN business_categories pc
+          ON pc.business_id = b.id AND pc.is_primary
+        LEFT JOIN areas a ON a.id = b.area_id
+        WHERE ${discoverable(input)} ${after}
+        ORDER BY b.created_at ${order}, b.id ${order}
+        LIMIT ${input.limit + 1}`,
+    );
+  }
+
+  async discoveryCount(
+    tx: TxContext,
+    input: DiscoveryFilter,
+  ): Promise<number> {
+    const rows = await this.database.client(tx).$queryRaw<{ total: number }[]>(
+      Prisma.sql`SELECT count(*)::int AS total
+        FROM businesses b
+        JOIN users u ON u.id = b.owner_user_id
+        WHERE ${discoverable(input)}`,
+    );
+    return rows[0]?.total ?? 0;
   }
 
   findMany(tx: TxContext, ids: readonly string[]): Promise<StoredBusiness[]> {

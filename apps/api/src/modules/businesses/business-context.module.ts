@@ -8,6 +8,10 @@ import {
   BUSINESS_SAVED_CARDS,
   BusinessSavedCardsService,
 } from './application/business-saved-cards';
+import {
+  BUSINESS_DISCOVERY,
+  BusinessDiscoveryService,
+} from './application/business-discovery';
 
 @Module({})
 export class BusinessContextModule {
@@ -19,6 +23,7 @@ export class BusinessContextModule {
         { provide: BUSINESS_REPOSITORY, useClass: PrismaBusinessRepository },
         BusinessOwnerContext,
         { provide: BUSINESS_SAVED_CARDS, useClass: BusinessSavedCardsService },
+        { provide: BUSINESS_DISCOVERY, useClass: BusinessDiscoveryService },
         {
           provide: CATALOG_BUSINESS_CONTEXT,
           useClass: CatalogBusinessContextAdapter,
@@ -28,6 +33,7 @@ export class BusinessContextModule {
         CATALOG_BUSINESS_CONTEXT,
         BusinessOwnerContext,
         BUSINESS_SAVED_CARDS,
+        BUSINESS_DISCOVERY,
       ],
     };
   }

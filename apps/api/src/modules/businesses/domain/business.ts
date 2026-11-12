@@ -105,6 +105,24 @@ export interface AdminVisibility {
   areaIds: readonly string[];
 }
 
+export interface DiscoveryFilter {
+  kind: BusinessKind;
+  categoryId?: string;
+  verified?: boolean;
+}
+export interface DiscoveryRow {
+  id: string;
+  kind: BusinessKind;
+  nameEn: string;
+  nameHi: string | null;
+  slug: string;
+  verified: boolean;
+  createdAt: string;
+  categoryId: string | null;
+  areaNameEn: string | null;
+  areaNameHi: string | null;
+}
+
 export const BUSINESS_REPOSITORY = Symbol('BUSINESS_REPOSITORY');
 export interface BusinessRepository {
   savedCards(
@@ -234,6 +252,16 @@ export interface BusinessRepository {
       limit: number;
     },
   ): Promise<StoredBusiness[]>;
+  /** Public Explore page: approved, named, active-owner listings. */
+  discoveryPage(
+    tx: TxContext,
+    input: DiscoveryFilter & {
+      newest: boolean;
+      after?: [string, string];
+      limit: number;
+    },
+  ): Promise<DiscoveryRow[]>;
+  discoveryCount(tx: TxContext, input: DiscoveryFilter): Promise<number>;
   findMany(tx: TxContext, ids: readonly string[]): Promise<StoredBusiness[]>;
   findBilling(
     tx: TxContext,

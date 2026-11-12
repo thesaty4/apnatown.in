@@ -41,6 +41,42 @@ Standard default, skeleton, empty, error+retry, offline and no-permission behavi
 
 ### S-CUST-02 — Explore
 
+Current delivery is the user-approved businesses-only slice described in the
+[BE implementation status](../be/search.md#endpoints), not the full listing
+contract below. Shops and provider-business cards use real API data; Products
+is empty until its owner module exists. All category selectors in this slice
+use actual product-kind business memberships; service-specific categories and
+subcategories are not treated as provider memberships.
+
+The first result page is a no-store SSR read hydrated into React Query.
+Subsequent tab/filter changes use Next's native-history URL integration and
+the typed API client, without re-running that initial server read. Inactive
+tab namespaces preserve explicit defaults as well as selections, so clearing
+a category survives a round trip through another tab. Unsupported, duplicate
+or malformed URL filters display a resettable error, never broader results.
+Explore is `noindex,follow` with no canonical for filter combinations.
+
+Back/Forward restores URL state and ephemeral per-URL scroll positions after
+results load. On return, cached Load-more pages are not overwritten by an SSR
+first page; scroll history is bounded to 50 URLs and not persisted to storage.
+Category reads, pagination and clipboard failures are explicit and retryable;
+tab keys include arrows, Home and End. Mobile uses the current stacked filter
+panel; service multi-select, full facets, map, advanced filters, profile links
+and the prototype filter sheet remain deferred.
+
+Build-time verification covers the shared schemas, generated API client and
+both builds. Deferred runtime acceptance:
+- With approved/draft/suspended/deleted businesses and active/blocked/deleted
+  owners, only approved businesses of active owners in enabled cities appear
+  in cards and counts; a secondary category membership does not duplicate rows.
+- More than one result page, including equal creation timestamps, pages once
+  per ID in both sort orders; a changed-filter or tampered cursor is rejected.
+- Change/clear a category, switch tabs and return, then navigate away and Back:
+  the cleared filter, loaded pages and scroll position survive.
+- Reject unsupported `subcategory` links, malformed booleans and duplicate
+  query keys; show errors for failed taxonomy, next-page and clipboard requests.
+- Check EN/HI, mobile/desktop, light/dark, keyboard tabs, empty and denied states.
+
 - Screenshots: `d-customer-explore.jpg`, `m-customer-explore.jpg`.
 - Layout: Products/Shops/Services tabs with counts; category pill; mobile filter sheet, tablet filter bar and desktop sidebar; responsive result cards; list/map toggle. Reuse shared `ShopCard`, `ProductCard`, `ServiceCard`, `FilterPanel`, `ActiveFilterChips`, `MapView`, and the one `SubcategoryMultiSelect`.
 - Data: `GET /explore`; filter option counts and results update from the same API contract. Public cards use owner-module fields; map pins include shops and service providers only.

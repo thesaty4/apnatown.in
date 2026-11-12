@@ -84,6 +84,8 @@ import { SavedController } from '../../modules/engagement/presentation/saved.con
 import { SavedService } from '../../modules/engagement/application/saved.service';
 import { SearchHomeController } from '../../modules/search/presentation/search-home.controller';
 import { SearchHomeService } from '../../modules/search/application/search-home.service';
+import { ExploreController } from '../../modules/search/presentation/explore.controller';
+import { ExploreService } from '../../modules/search/application/explore.service';
 
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
@@ -125,6 +127,7 @@ import { SearchHomeService } from '../../modules/search/application/search-home.
     VideoCommentsController,
     AdminVideoCommentsController,
     SearchHomeController,
+    ExploreController,
   ],
   providers: [
     SavedService,
@@ -160,6 +163,7 @@ import { SearchHomeService } from '../../modules/search/application/search-home.
     VideoCommentModerationService,
     VideoCommentEvents,
     SearchHomeService,
+    ExploreService,
   ].map((provide) => ({ provide, useValue: Object.freeze({}) })),
 })
 class OpenApiModule {}

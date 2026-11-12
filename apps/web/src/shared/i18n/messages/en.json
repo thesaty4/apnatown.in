@@ -1722,6 +1722,7 @@
     },
     "navigation": {
       "account": "Account",
+      "explore": "Explore",
       "home": "Home",
       "logo": "ApnaTown.in home",
       "main": "Main",
@@ -1923,6 +1924,62 @@
       "typeNotAllowed": "This image type is not allowed.",
       "uploadPolicyRequired": "Image uploads are not configured or are disabled.",
       "videoSourceInvalid": "Enter a valid YouTube watch/Shorts link or Instagram Reel/public post link."
+    }
+  },
+  "explore": {
+    "screen": {
+      "allCategories": "All categories",
+      "category": "Category",
+      "categoryError": "Categories could not load. Try again to change the category filter.",
+      "clearAll": "Clear all",
+      "clearCategory": "Clear category",
+      "copyLink": "Copy link",
+      "count": {
+        "products": "{count, number} products",
+        "services": "{count, number} service providers",
+        "shops": "{count, number} shops"
+      },
+      "description": "Browse local shops and service providers in your town.",
+      "emptyCategory": {
+        "products": "No products for {category}",
+        "services": "No services for {category}",
+        "shops": "No shops for {category}"
+      },
+      "emptyFiltered": "Nothing matches these filters",
+      "emptyFilteredMessage": "Try removing a filter.",
+      "emptyNone": {
+        "products": "No products yet",
+        "services": "No services yet",
+        "shops": "No shops yet"
+      },
+      "emptyNoneMessage": "Listings appear here once they are approved.",
+      "errorMessage": "We couldn’t load results. Please try again.",
+      "errorTitle": "Something went wrong",
+      "filters": "Filters",
+      "invalidCategory": "This category isn’t available",
+      "invalidFilters": "This Explore link has unsupported filters",
+      "invalidFiltersMessage": "Reset filters to browse. Service listings and subcategory filters are not available yet.",
+      "linkCopied": "Link copied",
+      "loading": "Loading results",
+      "loadMore": "Load more",
+      "removeFilter": "Remove filter: {label}",
+      "reset": "Reset",
+      "resetFilters": "Reset filters",
+      "retry": "Try again",
+      "sort": {
+        "newest": "Newest",
+        "relevance": "Relevance"
+      },
+      "sortBy": "Sort by",
+      "sortChip": "Sort: {label}",
+      "tab": {
+        "products": "Products",
+        "services": "Services",
+        "shops": "Shops"
+      },
+      "tabs": "Explore tabs",
+      "title": "Explore nearby",
+      "verified": "Verified"
     }
   },
   "geo": {

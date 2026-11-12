@@ -1722,6 +1722,7 @@
     },
     "navigation": {
       "account": "खाता",
+      "explore": "खोजें",
       "home": "होम",
       "logo": "अपना टाउन.in होम",
       "main": "मुख्य",
@@ -1923,6 +1924,62 @@
       "typeNotAllowed": "इस प्रकार की तस्वीर की अनुमति नहीं है।",
       "uploadPolicyRequired": "तस्वीर अपलोड की सेटिंग नहीं हुई है या सुविधा बंद है।",
       "videoSourceInvalid": "मान्य YouTube वॉच/शॉर्ट्स लिंक या Instagram Reel/सार्वजनिक पोस्ट लिंक डालें।"
+    }
+  },
+  "explore": {
+    "screen": {
+      "allCategories": "सभी श्रेणियाँ",
+      "category": "श्रेणी",
+      "categoryError": "श्रेणियाँ लोड नहीं हो सकीं। श्रेणी फ़िल्टर बदलने के लिए फिर कोशिश करें।",
+      "clearAll": "सब हटाएँ",
+      "clearCategory": "श्रेणी हटाएँ",
+      "copyLink": "लिंक कॉपी करें",
+      "count": {
+        "products": "{count, number} प्रोडक्ट",
+        "services": "{count, number} सेवा प्रदाता",
+        "shops": "{count, number} दुकानें"
+      },
+      "description": "अपने शहर की दुकानें और सेवा देने वाले देखें।",
+      "emptyCategory": {
+        "products": "{category} के लिए कोई प्रोडक्ट नहीं",
+        "services": "{category} के लिए कोई सेवा नहीं",
+        "shops": "{category} के लिए कोई दुकान नहीं"
+      },
+      "emptyFiltered": "इन फ़िल्टर से कुछ नहीं मिला",
+      "emptyFilteredMessage": "कोई फ़िल्टर हटाकर देखें।",
+      "emptyNone": {
+        "products": "अभी कोई प्रोडक्ट नहीं",
+        "services": "अभी कोई सेवा नहीं",
+        "shops": "अभी कोई दुकान नहीं"
+      },
+      "emptyNoneMessage": "मंज़ूरी मिलते ही लिस्टिंग यहाँ दिखेंगी।",
+      "errorMessage": "नतीजे लोड नहीं हो सके। फिर कोशिश करें।",
+      "errorTitle": "कुछ गड़बड़ हो गई",
+      "filters": "फ़िल्टर",
+      "invalidCategory": "यह श्रेणी उपलब्ध नहीं है",
+      "invalidFilters": "इस खोज लिंक में ऐसे फ़िल्टर हैं जो अभी उपलब्ध नहीं हैं",
+      "invalidFiltersMessage": "देखने के लिए फ़िल्टर रीसेट करें। सेवा लिस्टिंग और उपश्रेणी फ़िल्टर अभी उपलब्ध नहीं हैं।",
+      "linkCopied": "लिंक कॉपी हुआ",
+      "loading": "नतीजे लोड हो रहे हैं",
+      "loadMore": "और दिखाएँ",
+      "removeFilter": "फ़िल्टर हटाएँ: {label}",
+      "reset": "रीसेट",
+      "resetFilters": "फ़िल्टर रीसेट करें",
+      "retry": "फिर कोशिश करें",
+      "sort": {
+        "newest": "नवीनतम",
+        "relevance": "प्रासंगिकता"
+      },
+      "sortBy": "ऐसे क्रम में",
+      "sortChip": "क्रमबद्ध: {label}",
+      "tab": {
+        "products": "प्रोडक्ट",
+        "services": "सेवाएँ",
+        "shops": "दुकानें"
+      },
+      "tabs": "खोज टैब",
+      "title": "आसपास खोजें",
+      "verified": "वेरिफ़ाइड"
     }
   },
   "geo": {

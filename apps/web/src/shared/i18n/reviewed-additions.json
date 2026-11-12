@@ -6718,5 +6718,220 @@
     "en": "See all",
     "hi": "सब देखें",
     "source": "specs/search/fe/search.md#S-CUST-01"
+  },
+  "common.navigation.explore": {
+    "en": "Explore",
+    "hi": "खोजें",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.title": {
+    "en": "Explore nearby",
+    "hi": "आसपास खोजें",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.description": {
+    "en": "Browse local shops and service providers in your town.",
+    "hi": "अपने शहर की दुकानें और सेवा देने वाले देखें।",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.tabs": {
+    "en": "Explore tabs",
+    "hi": "खोज टैब",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.tab.products": {
+    "en": "Products",
+    "hi": "प्रोडक्ट",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.tab.shops": {
+    "en": "Shops",
+    "hi": "दुकानें",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.tab.services": {
+    "en": "Services",
+    "hi": "सेवाएँ",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.filters": {
+    "en": "Filters",
+    "hi": "फ़िल्टर",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.category": {
+    "en": "Category",
+    "hi": "श्रेणी",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.allCategories": {
+    "en": "All categories",
+    "hi": "सभी श्रेणियाँ",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.verified": {
+    "en": "Verified",
+    "hi": "वेरिफ़ाइड",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.sortBy": {
+    "en": "Sort by",
+    "hi": "ऐसे क्रम में",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.sort.relevance": {
+    "en": "Relevance",
+    "hi": "प्रासंगिकता",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.sort.newest": {
+    "en": "Newest",
+    "hi": "नवीनतम",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.sortChip": {
+    "en": "Sort: {label}",
+    "hi": "क्रमबद्ध: {label}",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.reset": {
+    "en": "Reset",
+    "hi": "रीसेट",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.count.products": {
+    "en": "{count, number} products",
+    "hi": "{count, number} प्रोडक्ट",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.count.shops": {
+    "en": "{count, number} shops",
+    "hi": "{count, number} दुकानें",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.count.services": {
+    "en": "{count, number} service providers",
+    "hi": "{count, number} सेवा प्रदाता",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.clearAll": {
+    "en": "Clear all",
+    "hi": "सब हटाएँ",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.copyLink": {
+    "en": "Copy link",
+    "hi": "लिंक कॉपी करें",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.linkCopied": {
+    "en": "Link copied",
+    "hi": "लिंक कॉपी हुआ",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.removeFilter": {
+    "en": "Remove filter: {label}",
+    "hi": "फ़िल्टर हटाएँ: {label}",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.emptyFiltered": {
+    "en": "Nothing matches these filters",
+    "hi": "इन फ़िल्टर से कुछ नहीं मिला",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.emptyFilteredMessage": {
+    "en": "Try removing a filter.",
+    "hi": "कोई फ़िल्टर हटाकर देखें।",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.emptyCategory.products": {
+    "en": "No products for {category}",
+    "hi": "{category} के लिए कोई प्रोडक्ट नहीं",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.emptyCategory.shops": {
+    "en": "No shops for {category}",
+    "hi": "{category} के लिए कोई दुकान नहीं",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.emptyCategory.services": {
+    "en": "No services for {category}",
+    "hi": "{category} के लिए कोई सेवा नहीं",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.emptyNone.products": {
+    "en": "No products yet",
+    "hi": "अभी कोई प्रोडक्ट नहीं",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.emptyNone.shops": {
+    "en": "No shops yet",
+    "hi": "अभी कोई दुकान नहीं",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.emptyNone.services": {
+    "en": "No services yet",
+    "hi": "अभी कोई सेवा नहीं",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.emptyNoneMessage": {
+    "en": "Listings appear here once they are approved.",
+    "hi": "मंज़ूरी मिलते ही लिस्टिंग यहाँ दिखेंगी।",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.clearCategory": {
+    "en": "Clear category",
+    "hi": "श्रेणी हटाएँ",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.resetFilters": {
+    "en": "Reset filters",
+    "hi": "फ़िल्टर रीसेट करें",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.loadMore": {
+    "en": "Load more",
+    "hi": "और दिखाएँ",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.loading": {
+    "en": "Loading results",
+    "hi": "नतीजे लोड हो रहे हैं",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.errorTitle": {
+    "en": "Something went wrong",
+    "hi": "कुछ गड़बड़ हो गई",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.errorMessage": {
+    "en": "We couldn’t load results. Please try again.",
+    "hi": "नतीजे लोड नहीं हो सके। फिर कोशिश करें।",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.invalidCategory": {
+    "en": "This category isn’t available",
+    "hi": "यह श्रेणी उपलब्ध नहीं है",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.invalidFilters": {
+    "en": "This Explore link has unsupported filters",
+    "hi": "इस खोज लिंक में ऐसे फ़िल्टर हैं जो अभी उपलब्ध नहीं हैं",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.invalidFiltersMessage": {
+    "en": "Reset filters to browse. Service listings and subcategory filters are not available yet.",
+    "hi": "देखने के लिए फ़िल्टर रीसेट करें। सेवा लिस्टिंग और उपश्रेणी फ़िल्टर अभी उपलब्ध नहीं हैं।",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.categoryError": {
+    "en": "Categories could not load. Try again to change the category filter.",
+    "hi": "श्रेणियाँ लोड नहीं हो सकीं। श्रेणी फ़िल्टर बदलने के लिए फिर कोशिश करें।",
+    "source": "specs/search/fe/search.md#S-CUST-02"
   }
 }

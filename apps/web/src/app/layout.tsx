@@ -60,6 +60,7 @@ export default async function RootLayout({
     catalog: catalogue.catalog,
     reels: catalogue.reels,
     engagement: catalogue.engagement,
+    explore: catalogue.explore,
     help: catalogue.help,
     system: catalogue.system,
   };

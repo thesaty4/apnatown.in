@@ -795,6 +795,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/explore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Browse public shops and service providers
+         * @description S-CUST-02 businesses-only subset. Shops/Services list approved, non-deleted businesses with an active, non-deleted owner in an enabled city. Category filters use existing product-kind business memberships; service-listing taxonomy is not available yet. Relevance orders by creation time then ID; newest reverses that order (Shops only). Pagination uses a signed keyset cursor. Products is empty until its module exists.
+         */
+        get: operations["explore"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/geo/admin/cities": {
         parameters: {
             query?: never;
@@ -2937,6 +2957,35 @@ export interface components {
         };
         ExpectedVersionBodyDto: {
             expectedVersion: number;
+        };
+        ExploreResponseDto: {
+            counts: {
+                products: number;
+                services: number;
+                shops: number;
+            };
+            items: {
+                area: {
+                    nameEn: string;
+                    nameHi: string | null;
+                } | null;
+                category: {
+                    nameEn: string;
+                    nameHi: string | null;
+                    slug: string;
+                } | null;
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "shop" | "provider";
+                nameEn: string;
+                nameHi: string | null;
+                slug: string;
+                verified: boolean;
+            }[];
+            nextCursor: string | null;
+            /** @enum {string} */
+            tab: "products" | "shops" | "services";
         };
         FeatureFlagDto: {
             enablable: boolean;
@@ -13596,6 +13645,107 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    explore: {
+        parameters: {
+            query?: {
+                category?: string;
+                cursor?: string;
+                limit?: number;
+                sort?: string;
+                tab?: string;
+                verified?: string;
+            };
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExploreResponseDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR; SEARCH_FILTER_INVALID for an unknown category */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Untrusted Origin */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED: read limit exceeded */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Unexpected failure */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
                 };
             };
         };

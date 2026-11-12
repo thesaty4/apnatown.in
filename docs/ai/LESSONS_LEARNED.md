@@ -5,6 +5,18 @@ Format: see `.github/skills/lessons-learned/SKILL.md`. Newest at the
 top; developer bug-fix work and any agent that catches a reusable mistake add an
 entry here.
 
+## Empty local feeds usually mean unseeded data
+
+What: Reels showed no videos on a fresh local database. Migrations seed only
+catalog taxonomy, settings and flags, and the feed correctly requires approved
+videos of approved businesses with active owners, so nothing qualified.
+Rule: when triaging an empty public list, check the query's visibility
+predicates against the database contents before changing code. Load demo data
+with `pnpm db:seed`, and never relax the visibility filters to make data
+appear.
+Enforced in: [README local development](../../README.md#local-development) and
+[data-model persistence rule 4](../../specs/_foundation/data-model.md#migrations-seeds-and-isolation).
+
 ## Avoid collisions with generated constraint names
 
 What: the reports migration failed because PostgreSQL named an inline
@@ -147,5 +159,10 @@ shareable links, and resetting scroll position on every filter change
 or Back navigation frustrates users scrolling through long lists.
 Rule: filter state lives in the URL; browser Back restores both the
 previous filter state and the previous scroll position.
+Explore example: preserve an explicit default when stashing inactive tabs
+(absence must not reapply a cleared category), and do not hydrate a fresh SSR
+first page over an existing infinite-query page stack on Back. Otherwise the
+saved scroll position no longer corresponds to rendered content.
 Enforced in: `frontend.instructions.md`,
-`.github/skills/explore-filter-url-state/SKILL.md`.
+`.github/skills/explore-filter-url-state/SKILL.md` and the S-CUST-02
+implementation contract in `specs/search/fe/search.md`.

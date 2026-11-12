@@ -10,7 +10,8 @@ import {
 @Injectable()
 export class SearchHomeService {
   constructor(
-    @Inject(CATALOG_HOME_READ) private readonly catalogHome: CatalogHomeReadPort,
+    @Inject(CATALOG_HOME_READ)
+    private readonly catalogHome: CatalogHomeReadPort,
     @Inject(CLOCK) private readonly clock: Clock,
   ) {}
 

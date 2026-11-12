@@ -53,6 +53,16 @@ const ownerKeys = {
     'MIGRATION_DATABASE_URL',
     'SHADOW_DATABASE_URL',
   ],
+  // Demo seed hashes/encrypts fixture owner phones exactly like the API.
+  seed: [
+    'APP_ENV',
+    'NODE_ENV',
+    'DATABASE_URL',
+    'MIGRATION_DATABASE_URL',
+    'SHADOW_DATABASE_URL',
+    'PII_ENCRYPTION_KEY',
+    'PHONE_LOOKUP_HASH_KEY',
+  ],
   compose: ['POSTGRES_PASSWORD'],
   build: [],
 };

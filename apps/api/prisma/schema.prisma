@@ -772,6 +772,8 @@ model Business {
   @@unique([ownerUserId, kind], map: "businesses_owner_kind_key")
   @@index([ownerUserId, status], map: "businesses_owner_status_idx")
   @@index([status, areaId, createdAt, id], map: "businesses_queue_idx")
+  @@index([kind, createdAt, id], where: raw("status = 'approved' AND deleted_at IS NULL AND name_en IS NOT NULL AND slug IS NOT NULL"), map: "businesses_discovery_page_idx")
+  @@index([kind, createdAt, id], where: raw("status = 'approved' AND deleted_at IS NULL AND name_en IS NOT NULL AND slug IS NOT NULL AND verified_at IS NOT NULL"), map: "businesses_discovery_verified_page_idx")
   @@index([areaId, cityId], map: "businesses_area_city_idx")
   @@index([location], type: Gist, map: "businesses_location_gist_idx")
   @@map("businesses")

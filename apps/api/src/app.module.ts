@@ -76,7 +76,7 @@ export class AppModule {
         catalog,
         media,
         engagement,
-        SearchModule.forRoot(runtime, catalog),
+        SearchModule.forRoot(runtime, catalog, businessContext),
       ],
       controllers: [HealthController],
       providers: [
