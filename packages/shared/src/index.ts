@@ -9,8 +9,15 @@ export {
   MediaPolicyResultSchema,
   MediaAssetParamsSchema,
   MediaPublicQuerySchema,
+  VideoSourceSchema,
+  SafeVideoPlaybackSchema,
 } from './media.js';
-export type { MediaUploadResult, MediaPublicQuery } from './media.js';
+export type {
+  MediaUploadResult,
+  MediaPublicQuery,
+  VideoSource,
+  VideoPlayback,
+} from './media.js';
 export { canonicalJson } from './json.js';
 export type { JsonValue } from './json.js';
 export {

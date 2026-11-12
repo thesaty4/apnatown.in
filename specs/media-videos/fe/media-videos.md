@@ -68,7 +68,7 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 
 ## Feature components
 
-`ReelsFeed`, `ReelOverlay`, `FeedPills`, `GalleryGrid`, `VideoGrid`, `VideoEditorSheet`, `VideoAnalyticsTable` in `src/features/reels` and `src/features/gallery`. Shared: `ReelsPlayer`, `LinkedItemsStrip`, `ShopThisVideoSheet`, `EmbedCard`, `FullScreenViewer`, `MediaConsentToggle`, `FollowButton`, `ModerationQueueItem`, `DataTable`, `Skeleton`.
+`ReelsFeed`, `ReelOverlay`, `FeedPills`, `GalleryGrid`, `VideoGrid`, `VideoEditorSheet`, `VideoAnalyticsTable` in `src/features/reels` and `src/features/gallery`. Shared: `ReelsPlayer`, `LinkedItemsStrip`, `ShopThisVideoSheet`, `EmbedCard`, `FullScreenViewer`, `MediaConsentToggle`, `FollowButton`, `ModerationQueueItem`, `DataTable`, `Skeleton`. `EmbedCard` accepts only validated `VideoPlaybackDTO` values; it loads the active YouTube iframe or trusted Instagram embed script and uses the canonical provider Open link when embeds are disabled or unavailable.
 
 ## i18n and analytics
 

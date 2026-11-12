@@ -53,3 +53,53 @@ export const MediaPublicQuerySchema = z.strictObject({
   assetVersion: z.coerce.number().int().positive(),
 });
 export type MediaPublicQuery = z.infer<typeof MediaPublicQuerySchema>;
+
+const VideoIdSchema = z.string().regex(/^[A-Za-z0-9_-]{11}$/);
+const InstagramCodeSchema = z.string().min(1).max(64).regex(/^[A-Za-z0-9_-]+$/);
+const HttpsUrlSchema = z.string().url().refine((value) => {
+  const url = new URL(value);
+  return url.protocol === 'https:' && !url.username && !url.password && !url.port;
+});
+
+export const VideoSourceSchema = z.discriminatedUnion('provider', [
+  z.strictObject({
+    provider: z.literal('youtube'),
+    kind: z.enum(['watch', 'shorts', 'share']),
+    providerId: VideoIdSchema,
+  }),
+  z.strictObject({
+    provider: z.literal('instagram'),
+    kind: z.enum(['reel', 'p']),
+    providerId: InstagramCodeSchema,
+  }),
+]);
+export type VideoSource = z.infer<typeof VideoSourceSchema>;
+
+export const VideoPlaybackSchema = z.discriminatedUnion('render', [
+  z.strictObject({
+    provider: z.literal('youtube'),
+    render: z.literal('iframe'),
+    embedUrl: HttpsUrlSchema.regex(/^https:\/\/www\.youtube-nocookie\.com\/embed\/[A-Za-z0-9_-]{11}$/),
+    openUrl: HttpsUrlSchema.regex(/^https:\/\/www\.youtube\.com\/watch\?v=[A-Za-z0-9_-]{11}$/),
+  }),
+  z.strictObject({
+    provider: z.literal('instagram'),
+    render: z.literal('instagram'),
+    permalink: HttpsUrlSchema.regex(/^https:\/\/www\.instagram\.com\/(?:reel|p)\/[A-Za-z0-9_-]{1,64}\/$/),
+    openUrl: HttpsUrlSchema.regex(/^https:\/\/www\.instagram\.com\/(?:reel|p)\/[A-Za-z0-9_-]{1,64}\/$/),
+  }),
+  z.strictObject({
+    provider: z.enum(['youtube', 'instagram']),
+    render: z.literal('fallback'),
+    openUrl: HttpsUrlSchema,
+    reason: z.enum(['disabled', 'unavailable']),
+  }),
+]);
+export const SafeVideoPlaybackSchema = VideoPlaybackSchema.superRefine((value, context) => {
+  if (value.render !== 'fallback') return;
+  const valid = value.provider === 'youtube'
+    ? /^https:\/\/www\.youtube\.com\/watch\?v=[A-Za-z0-9_-]{11}$/.test(value.openUrl)
+    : /^https:\/\/www\.instagram\.com\/(?:reel|p)\/[A-Za-z0-9_-]{1,64}\/$/.test(value.openUrl);
+  if (!valid) context.addIssue({ code: 'custom', path: ['openUrl'], message: 'Expected canonical provider URL' });
+});
+export type VideoPlayback = z.infer<typeof SafeVideoPlaybackSchema>;

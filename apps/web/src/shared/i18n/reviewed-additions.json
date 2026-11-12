@@ -5110,6 +5110,22 @@
     "en": "The requested image range is invalid.",
     "hi": "तस्वीर का माँगा गया हिस्सा मान्य नहीं है।"
   },
+  "errors.media.videoSourceInvalid": {
+    "en": "Enter a valid YouTube watch/Shorts link or Instagram Reel/public post link.",
+    "hi": "मान्य YouTube वॉच/शॉर्ट्स लिंक या Instagram Reel/सार्वजनिक पोस्ट लिंक डालें।"
+  },
+  "reels.embed.youtubeTitle": {
+    "en": "YouTube video player",
+    "hi": "YouTube वीडियो प्लेयर"
+  },
+  "reels.embed.openProvider": {
+    "en": "Open video on its original platform",
+    "hi": "वीडियो को मूल प्लेटफ़ॉर्म पर खोलें"
+  },
+  "reels.embed.openUnavailable": {
+    "en": "This embed is unavailable. Open it on the original platform.",
+    "hi": "यह एम्बेड उपलब्ध नहीं है। इसे मूल प्लेटफ़ॉर्म पर खोलें।"
+  },
   "catalog.admin.sections.title": { "en": "Home sections", "hi": "होम सेक्शन" },
   "catalog.admin.sections.intro": {
     "en": "Choose which category rows customers see on Home. New sections start inactive; activate when ready. Products and services are never mixed in one section.",

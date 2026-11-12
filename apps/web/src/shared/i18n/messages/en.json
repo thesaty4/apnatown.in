@@ -1716,7 +1716,8 @@
       "storageUnavailable": "Image storage is temporarily unavailable. Please retry.",
       "tooLarge": "The image exceeds the configured size limit.",
       "typeNotAllowed": "This image type is not allowed.",
-      "uploadPolicyRequired": "Image uploads are not configured or are disabled."
+      "uploadPolicyRequired": "Image uploads are not configured or are disabled.",
+      "videoSourceInvalid": "Enter a valid YouTube watch/Shorts link or Instagram Reel/public post link."
     }
   },
   "geo": {
@@ -2069,6 +2070,13 @@
       "neutralMessage": "There is nothing to show on this page. You can continue browsing ApnaTown.",
       "neutralTitle": "Welcome to ApnaTown",
       "title": "Your account was deleted"
+    }
+  },
+  "reels": {
+    "embed": {
+      "openProvider": "Open video on its original platform",
+      "openUnavailable": "This embed is unavailable. Open it on the original platform.",
+      "youtubeTitle": "YouTube video player"
     }
   },
   "superAdmin": {

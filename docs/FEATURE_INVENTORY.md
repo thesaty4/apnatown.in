@@ -258,7 +258,7 @@ Roles: customer, vendor, provider. Backend module(s): `media-videos, engagement`
 | RL7 | guest like/follow/comment -> login prompt -> back to the same video | `specs/media-videos/be/rl7-guest-like-follow-comment-login-prom.md` | `specs/media-videos/fe/rl7-guest-like-follow-comment-login-prom.md` | not started |
 | RL8 | states: empty Following, no videos nearby, skeleton, failed to load with retry, offline, removed/unavailable | `specs/media-videos/be/rl8-states-empty-following.md` | `specs/media-videos/fe/rl8-states-empty-following.md` | not started |
 | RL9 | deep link `/videos/:id` starts at that video; ranking frozen per session | `specs/media-videos/be/rl9-deep-link-videos-id-starts-at-that-v.md` | `specs/media-videos/fe/rl9-deep-link-videos-id-starts-at-that-v.md` | not started |
-| RL10 | YouTube/Instagram links only; typed safe playback and Open fallback; direct video uploads disabled | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | spec written |
+| RL10 | YouTube/Instagram links only; typed safe playback and Open fallback; direct video uploads disabled | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | in progress — server source parser and typed provider renderer |
 
 ## NT. Notifications
 
