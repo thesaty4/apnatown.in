@@ -11,11 +11,13 @@ export function PriceFilter({
   max,
   range,
   onChange,
+  service = false,
 }: {
   min?: number | undefined;
   max?: number | undefined;
   range: { minPaise: number; maxPaise: number } | null;
   onChange: (patch: FilterPatch) => void;
+  service?: boolean;
 }) {
   const t = useTranslations('explore.screen');
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
@@ -53,7 +55,9 @@ export function PriceFilter({
   };
   return (
     <form onSubmit={submit} className="grid gap-2">
-      <h3 className="font-semibold">{t('price')}</h3>
+      <h3 className="text-field-label font-semibold">
+        {t(service ? 'startsFrom' : 'price')}
+      </h3>
       <div className="grid grid-cols-2 gap-2">
         <Input
           value={values.min}
@@ -81,28 +85,31 @@ export function PriceFilter({
           error={error}
         />
       </div>
-      {range && range.maxPaise > range.minPaise && sliderPrice != null && (
-        <label className="grid gap-2 text-small">
-          {t('upTo', { price: formatMoney(sliderPrice, locale) })}
-          <input
-            type="range"
-            min={0}
-            max={range.maxPaise}
-            step={1}
-            value={Math.min(sliderPrice, range.maxPaise)}
-            onChange={(event) =>
-              setValues({
-                ...values,
-                max: String(Number(event.target.value) / 100),
-              })
-            }
-            onPointerUp={() => submit()}
-            onKeyUp={() => submit()}
-            aria-label={t('priceMaxPaise')}
-            className="min-h-touch w-full accent-primary"
-          />
-        </label>
-      )}
+      {!service &&
+        range &&
+        range.maxPaise > range.minPaise &&
+        sliderPrice != null && (
+          <label className="grid gap-2 text-small-min text-muted">
+            <input
+              type="range"
+              min={0}
+              max={range.maxPaise}
+              step={1}
+              value={Math.min(sliderPrice, range.maxPaise)}
+              onChange={(event) =>
+                setValues({
+                  ...values,
+                  max: String(Number(event.target.value) / 100),
+                })
+              }
+              onPointerUp={() => submit()}
+              onKeyUp={() => submit()}
+              aria-label={t('priceMaxPaise')}
+              className="w-full accent-primary"
+            />
+            {t('upTo', { price: formatMoney(sliderPrice, locale) })}
+          </label>
+        )}
       <button type="submit" className="sr-only">
         {t('apply')}
       </button>

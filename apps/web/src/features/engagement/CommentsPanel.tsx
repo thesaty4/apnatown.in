@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useId, useState, type FormEvent } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   VideoCommentCreateSchema,
@@ -93,8 +93,16 @@ function CommentItem({
   );
 }
 
-export function CommentsPanel({ videoId }: { videoId: string }) {
+export function CommentsPanel({
+  videoId,
+  showHeading = true,
+}: {
+  videoId: string;
+  /** Hide when a surrounding sheet already titles the comments. */
+  showHeading?: boolean;
+}) {
   const t = useTranslations('engagement.comments');
+  const headingId = useId();
   const { state } = useSession();
   const { query } = useVideoComments(videoId);
   const actions = useVideoCommentActions(videoId);
@@ -141,10 +149,16 @@ export function CommentsPanel({ videoId }: { videoId: string }) {
   const deleteError = deleteCode && t('deleteFailed');
 
   return (
-    <section aria-labelledby="video-comments-heading" className="grid gap-4">
-      <h2 id="video-comments-heading" className="m-0 text-h3">
-        {t('title')}
-      </h2>
+    <section
+      aria-labelledby={showHeading ? headingId : undefined}
+      aria-label={showHeading ? undefined : t('title')}
+      className="grid gap-4"
+    >
+      {showHeading && (
+        <h2 id={headingId} className="m-0 text-h3">
+          {t('title')}
+        </h2>
+      )}
       {canComment ? (
         <Card padded className="grid gap-3">
           <form onSubmit={submit} className="grid gap-3">

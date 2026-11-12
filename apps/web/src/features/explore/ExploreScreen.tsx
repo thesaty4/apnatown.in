@@ -48,6 +48,7 @@ import {
   type FilterPatch,
 } from './url-state';
 import { useExploreScroll } from './use-explore-scroll';
+import { NavIcon } from '../../shared/ui/NavIcon';
 
 type Props = {
   initial?: DehydratedState | undefined;
@@ -211,6 +212,13 @@ function ExploreContent({
   const contextLabel = context
     ? catalogName(context, locale)
     : current.contextCategory;
+  const area = location.selection?.area;
+  const place =
+    area && current.areaId === area.id
+      ? locale === 'hi'
+        ? area.nameHi
+        : area.nameEn
+      : t('selectedLocation');
   return (
     <div className="grid min-w-0 gap-stack-gap">
       {screen === 'search' && (
@@ -220,40 +228,54 @@ function ExploreContent({
         />
       )}
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex flex-wrap gap-2">
-          {contextLabel ? (
-            <Chip
-              label={contextLabel}
-              removable
-              removeLabel={t('clearCategory')}
-              onRemove={clearContext}
-            />
-          ) : (
-            <span className="self-center text-small text-muted">
-              {t('allCategories')}
-            </span>
-          )}
-          <Button variant="text" onClick={() => setChangingCategory(true)}>
-            {t('changeCategory')}
-          </Button>
-        </div>
-        <div role="group" aria-label={geo('viewLabel')} className="flex gap-2">
+        {screen === 'explore' && (
+          <h1 className="text-h1 desktop:text-h1-desktop">{t('title')}</h1>
+        )}
+        <div
+          role="group"
+          aria-label={geo('viewLabel')}
+          className="flex gap-row-gap"
+        >
           {(['list', 'map'] as const).map((view) => (
-            <Button
+            <Chip
               key={view}
-              variant={current.view === view ? 'primary' : 'outline'}
-              aria-pressed={current.view === view}
+              label={geo(view)}
+              icon={<NavIcon name={view} className="size-4" />}
+              selected={current.view === view}
+              className="min-h-button-small!"
               onClick={() =>
                 setFilter({
                   view,
                   ...(view === 'list' && { radiusKm: null }),
                 })
               }
-            >
-              {geo(view)}
-            </Button>
+            />
           ))}
         </div>
+      </div>
+      <div className="flex flex-wrap items-center gap-row-gap">
+        {contextLabel ? (
+          <>
+            <span className="text-small text-muted">{t('category')}:</span>
+            <Chip
+              label={contextLabel}
+              removable
+              removeLabel={t('clearCategory')}
+              onRemove={clearContext}
+            />
+          </>
+        ) : (
+          <span className="self-center text-small text-muted">
+            {t('allCategories')}
+          </span>
+        )}
+        <Button
+          variant="text"
+          size="small"
+          onClick={() => setChangingCategory(true)}
+        >
+          {t('changeCategory')}
+        </Button>
       </div>
       {screen !== 'category' && (
         <ExploreTabs
@@ -262,20 +284,26 @@ function ExploreContent({
           onChange={(tab) => go(withTab(filterParams(current), tab))}
         />
       )}
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-info bg-info-soft p-3 text-small">
-        <p>
-          <span aria-hidden="true">ⓘ </span>
-          {t('nearbyExplanation')}
+      <div className="flex items-start gap-row-gap rounded-md border border-info bg-info-soft px-field-inline py-3 text-product-title">
+        <NavIcon name="info" className="mt-0.5 size-5 text-info" />
+        <p className="min-w-0 flex-1">
+          {t.rich('nearbyExplanation', {
+            place,
+            strong: (children) => <strong>{children}</strong>,
+          })}
         </p>
-        <Button
-          variant="text"
-          onClick={() => {
-            setLocationStep({ kind: 'choose' });
-            setLocationOpen(true);
-          }}
-        >
-          {t('changeLocation')}
-        </Button>
+        {!location.selection && (
+          <Button
+            variant="text"
+            size="small"
+            onClick={() => {
+              setLocationStep({ kind: 'choose' });
+              setLocationOpen(true);
+            }}
+          >
+            {t('changeLocation')}
+          </Button>
+        )}
       </div>
       <div
         id="explore-panel"
@@ -290,26 +318,29 @@ function ExploreContent({
           aria-label={t('filters')}
           className="hidden rounded-lg border border-border bg-surface p-4 shadow-1 desktop:sticky desktop:top-explore-sidebar-top desktop:block desktop:max-h-explore-sidebar-max desktop:overflow-auto"
         >
-          {first ? (
-            <ExploreFilterPanel
-              filters={current}
-              facets={first.facets}
-              onChange={setFilter}
-              onReset={reset}
-            />
-          ) : results.isPending ? (
-            <Skeleton label={t('loading')} />
-          ) : (
-            <Button onClick={reset}>{t('resetFilters')}</Button>
-          )}
+          <ExploreFilterPanel
+            filters={current}
+            facets={first?.facets}
+            onChange={setFilter}
+            onReset={reset}
+          />
         </aside>
-        <section className="grid min-w-0 gap-3" aria-busy={results.isFetching}>
+        <section
+          className="grid min-w-0 content-start gap-stack-gap"
+          aria-busy={results.isFetching}
+        >
           <Button
             variant="ghost"
-            className="w-full tablet:w-auto tablet:justify-self-start desktop:hidden"
+            className="w-full desktop:hidden"
             onClick={() => setDraft(filterParams(current))}
           >
-            {t('filtersWithCount', { count: activeCount })}
+            <NavIcon name="filter" className="size-4" />
+            {t('filters')}
+            {activeCount > 0 && (
+              <span className="rounded-pill bg-primary px-1.5 text-tab-count text-on-primary">
+                {activeCount}
+              </span>
+            )}
           </Button>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <b aria-live="polite">
@@ -319,18 +350,22 @@ function ExploreContent({
                   })
                 : null}
             </b>
-            <div className="flex flex-wrap gap-2">
-              {activeCount > 0 && (
-                <Button variant="text" onClick={reset}>
-                  {t('clearAll')}
-                </Button>
-              )}
-              <Button variant="text" onClick={copyLink}>
-                {t('copyLink')}
+            {activeCount > 0 && (
+              <Button variant="text" size="small" onClick={reset}>
+                {t('clearAll')}
               </Button>
-            </div>
+            )}
+            <Button variant="text" size="small" onClick={copyLink}>
+              <NavIcon name="copy" className="size-4" />
+              {t('copyLink')}
+            </Button>
           </div>
-          <p role="status" className="text-small text-text-2">
+          <p
+            role="status"
+            className={
+              copyStatus === 'copied' ? 'text-small text-text-2' : 'sr-only'
+            }
+          >
             {copyStatus === 'copied' ? t('linkCopied') : ''}
           </p>
           {copyStatus === 'failed' && (
@@ -338,11 +373,13 @@ function ExploreContent({
               {share('copyFailed')}
             </p>
           )}
-          <ExploreFilterChips
-            filters={current}
-            facets={first?.facets}
-            onChange={setFilter}
-          />
+          {activeCount > 0 && (
+            <ExploreFilterChips
+              filters={current}
+              facets={first?.facets}
+              onChange={setFilter}
+            />
+          )}
           {!online && (
             <p role="status" className="rounded-md border border-warning p-3">
               {t('offlineMessage')}
@@ -405,7 +442,12 @@ function ExploreContent({
                 />
               )}
               {items.length ? (
-                <ExploreCards tab={current.tab} items={items} locale={locale} />
+                <ExploreCards
+                  tab={current.tab}
+                  items={items}
+                  locale={locale}
+                  categories={categories.data?.items ?? []}
+                />
               ) : (
                 <EmptyState
                   title={t(
@@ -540,10 +582,10 @@ function ExploreContent({
           </div>
         }
       >
-        {draftCurrent && draftPage && (
+        {draftCurrent && (
           <ExploreFilterPanel
             filters={draftCurrent}
-            facets={draftPage.facets}
+            facets={draftPage?.facets}
             onChange={(patch) =>
               setDraft(withFilters(filterParams(draftCurrent), patch))
             }

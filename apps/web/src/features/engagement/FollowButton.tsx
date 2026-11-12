@@ -8,8 +8,7 @@ import { EmptyState, NoPermissionState } from '@apnatown/ui/feedback/StateViews'
 import { Skeleton } from '@apnatown/ui/feedback/Skeleton';
 import { failureCode } from '../../shared/api/result';
 import { AccessState, Failure } from '../../shared/auth/AccessState';
-import { useSession } from '../../shared/auth/SessionProvider';
-import { useBusinessFollowActions, useVideoLikes } from './likes-queries';
+import { useBusinessFollowAction } from './engagement-actions';
 
 export function FollowButton({
   videoId,
@@ -19,15 +18,13 @@ export function FollowButton({
   businessId: string;
 }) {
   const t = useTranslations('engagement.follow');
-  const { state } = useSession();
-  const { query } = useVideoLikes([videoId], [businessId]);
-  const follow = useBusinessFollowActions(videoId, businessId);
+  const follow = useBusinessFollowAction(videoId, businessId);
+  const { query, business } = follow;
   const [loginPrompt, setLoginPrompt] = useState(false);
   const [confirmUnfollow, setConfirmUnfollow] = useState(false);
 
-  if (state.kind === 'loading') return <Skeleton label={t('loading')} />;
-  if (state.kind === 'error' && state.code !== 'SESSION_EXPIRED')
-    return <AccessState guest />;
+  if (follow.access === 'pending') return <Skeleton label={t('loading')} />;
+  if (follow.access === 'unavailable') return <AccessState guest />;
   if (query.isPending) return <Skeleton label={t('loading')} />;
   if (query.isError)
     return (
@@ -38,9 +35,6 @@ export function FollowButton({
       />
     );
 
-  const business = query.data.businessStates.find(
-    (item) => item.businessId === businessId,
-  );
   if (!business)
     return (
       <EmptyState
@@ -50,15 +44,9 @@ export function FollowButton({
       />
     );
 
-  const canFollow = state.kind === 'ready' && state.data.roles.includes('customer');
-  const forbidden = state.kind === 'ready' && !canFollow;
-  const error = follow.mutation.isError
-    ? failureCode(follow.mutation.error)
-    : undefined;
-
-  function setFollow(following: boolean, bellOn: boolean, onSuccess?: () => void) {
-    void follow.mutation.run({ following, bellOn }, onSuccess);
-  }
+  const canFollow = follow.access === 'customer';
+  const forbidden = follow.access === 'forbidden';
+  const setFollow = follow.set;
 
   return (
     <div className="grid gap-3">
@@ -66,7 +54,7 @@ export function FollowButton({
         <Button
           variant={business.following ? 'outline' : 'primary'}
           aria-pressed={business.following}
-          loading={follow.mutation.isPending}
+          loading={follow.busy}
           disabled={forbidden}
           onClick={() => {
             if (!canFollow) setLoginPrompt(true);
@@ -81,7 +69,7 @@ export function FollowButton({
             variant="outline"
             aria-pressed={business.bellOn}
             aria-label={t(business.bellOn ? 'bellOn' : 'bellOff')}
-            loading={follow.mutation.isPending}
+            loading={follow.busy}
             disabled={forbidden}
             onClick={() => setFollow(true, !business.bellOn)}
           >
@@ -109,9 +97,9 @@ export function FollowButton({
           action={null}
         />
       )}
-      {error && (
+      {follow.errorKey && (
         <p role="alert" className="m-0 text-error [overflow-wrap:anywhere]">
-          {t(error === 'COMMON_RATE_LIMITED' ? 'rateLimited' : 'failed')}
+          {t(follow.errorKey)}
         </p>
       )}
       <ConfirmDialog
@@ -120,7 +108,7 @@ export function FollowButton({
         impact={t('unfollowImpact')}
         cancelLabel={t('cancel')}
         confirmLabel={t('unfollow')}
-        busy={follow.mutation.isPending}
+        busy={follow.busy}
         onOpenChange={setConfirmUnfollow}
         onConfirm={() => setFollow(false, false, () => setConfirmUnfollow(false))}
       />

@@ -8,6 +8,7 @@ import {
   ServiceBookmarkResultSchema,
 } from '@apnatown/shared';
 import { Button } from '@apnatown/ui/primitives/Button';
+import { NavIcon } from '../../shared/ui/NavIcon';
 import { useSession } from '../../shared/auth/SessionProvider';
 import { AccessState } from '../../shared/auth/AccessState';
 import { accountScope, queryKeys } from '../../shared/api/query-keys';
@@ -95,9 +96,11 @@ type BookmarkState = ReturnType<ReturnType<typeof useServiceBookmarks>>;
 export function ServiceBookmarkButton({
   serviceId,
   bookmark,
+  compact = false,
 }: {
   serviceId: string;
   bookmark: BookmarkState;
+  compact?: boolean;
 }) {
   const t = useTranslations('engagement.bookmark');
   const { api, lifecycle, state, epoch } = useSession();
@@ -130,9 +133,12 @@ export function ServiceBookmarkButton({
     },
   );
   return (
-    <div className="grid gap-2">
+    <div className={`grid gap-2 ${compact ? 'min-w-0 flex-1' : ''}`}>
       <Button
-        variant={bookmark.bookmarked ? 'primary' : 'outline'}
+        variant={
+          bookmark.bookmarked ? 'primary' : compact ? 'ghost' : 'outline'
+        }
+        size={compact ? 'card' : 'default'}
         aria-pressed={bookmark.bookmarked}
         aria-label={t(bookmark.bookmarked ? 'saved' : 'save')}
         loading={
@@ -145,8 +151,15 @@ export function ServiceBookmarkButton({
           else void mutation.run(!bookmark.bookmarked);
         }}
       >
-        <span aria-hidden="true">▣</span>
-        {t(bookmark.failed ? 'retry' : bookmark.bookmarked ? 'saved' : 'save')}
+        <NavIcon
+          name="bookmark"
+          className={`size-4 ${bookmark.bookmarked ? 'fill-current' : ''}`}
+        />
+        <span className={compact ? 'sr-only' : undefined}>
+          {t(
+            bookmark.failed ? 'retry' : bookmark.bookmarked ? 'saved' : 'save',
+          )}
+        </span>
       </Button>
       {forbidden && (
         <p className="text-small text-muted">{t('customerOnly')}</p>

@@ -77,7 +77,7 @@ export default async function RootLayout({
         >
           <SkipLink label={t('navigation.skipToContent')} targetId="main" />
           <header className="sticky top-sat z-60 border-b border-border bg-surface shadow-1">
-            <div className="mx-auto flex min-h-nav-h max-w-page flex-wrap items-center gap-x-2.5 gap-y-2 px-page-gutter py-1.5 desktop:flex-nowrap">
+            <div className="mx-auto flex min-h-nav-h max-w-page-padded flex-wrap items-center gap-x-2.5 gap-y-2 px-page-gutter py-1 desktop:flex-nowrap">
               <Link
                 href={publicHref('/', locale)}
                 aria-label={t('navigation.logo')}
@@ -92,7 +92,7 @@ export default async function RootLayout({
               <Preferences initialTheme={theme} />
             </div>
           </header>
-          <div className="mx-auto max-w-page px-page-gutter">
+          <div className="mx-auto max-w-page-padded px-page-gutter">
             <main
               id="main"
               tabIndex={-1}

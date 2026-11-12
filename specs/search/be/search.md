@@ -37,6 +37,67 @@ The additive migrations `20261112180000_listing_read_sources`, `20261112180100_d
 
 Read-foundation adaptation: `business_subscriptions.purchase_id` links directly to the documented verified `billing_purchases` evidence, without implementing payment attempts/gateway/checkout. Its purchase snapshot requires explicit `premium`, `commissionBps`, `periodRules` and nonempty `taxSnapshot`; its subscription snapshot requires matching `planKey`, `premium`, `commissionBps`. No public writer creates these facts. Owner managers, review submission/moderation, offer approval, payment verification and product/service uploads are **not** claimed implemented by this discovery task. Existing/externally migrated legitimate source data can be read; empty sources legitimately return empty results/null ratings, stock or location signals.
 
+Local seed follow-up (2026-11-12): **authored; migration/seed execution and runtime
+acceptance deferred**. Source inspection confirmed the prior explicit seed only
+created businesses/videos, so empty Products/Services projections were expected.
+`apps/api/prisma/seed-listing-fixtures.mjs` adapts the reference JSON into
+53 Products rows, 53 Inventory rows and 38 individual Services rows (7 shop,
+31 provider); `seed-listings.mjs` provisions them through the existing explicit
+`seed.mjs` transaction/advisory lock. No endpoint, manager, projection, runtime
+privilege or frontend fallback is changed.
+
+The target remains local/test only at `127.0.0.1:5434/apnatown_local`, validated
+by `localTargets` before connection. Explicit provisioning uses its migration
+role rather than widening SELECT-only runtime listing grants. The 17 seeded
+category identities and category-scoped service subcategory identities are
+reused exactly, including the distinct `appliance-repair` identities; 36 missing
+product subcategories are insert-only local fixture data. EN-only product
+subcategory labels fill the required Hindi column without fabricated
+translations. Missing/mismatched reference taxonomy fails the transaction;
+existing inactive taxonomy is never reactivated.
+
+Stable listing IDs and slugs make retries insert-only. Unlike the prior
+business/video early skip, listing backfill also runs for existing fixture
+businesses after matching ID, slug, kind, resolved owner and phone hash; deleted
+businesses/owners and unrelated slug/owner conflicts are skipped. Existing
+listing ID/slug/SKU conflicts receive no inventory or updates; stock is created
+only with a new product. Status/approval, edits, soft deletions and business
+settings are never reset. Gallery defaults use the current setting. Original
+stock/availability and exact integer paise are preserved. `free` maps to fixed
+zero, supported display units map to existing enum values (`/ chair` -> `unit`),
+and the three unsupported monthly fees become enquiry/null amounts/unit with
+their original quote retained in description. There is no new price/unit enum.
+
+Scope limitation from source inspection: `businesses_public_context` still
+requires PRODUCT-category business memberships. The reference providers only
+have SERVICE memberships, so their 31 service rows remain outside that public
+projection; no false memberships are seeded to bypass it. Unchanged eligible
+shops supply 53 products and 7 shop services before filters. Full reference
+provider visibility is not claimed by this seed-only fix. Reference emoji
+images are omitted; no asset/media delivery changes, invented ratings,
+verified experience, offers, Premium purchases/subscriptions or delivery
+configuration are added. Owner read projections remain authoritative.
+See [local provisioning and rerun behavior](../../../README.md#local-development).
+
+Seed follow-up verification: `pnpm --filter @apnatown/api build`, `node --check`
+for all four `apps/api/prisma/seed*.mjs` files, targeted ESLint, targeted
+Prettier and the owned `git diff --check` all passed. Initial formatting
+warnings were corrected before the final checks. No seed/fixture execution,
+automated tests, migration application, services, API or database checks were
+run; rerun/conflict/visibility behavior is source-reviewed, not runtime-proven.
+Security self-review for this bounded provisioning change:
+- [x] SQL values are bound; identifiers are static; money/enums and qualified
+  taxonomy are validated using the existing shared contracts where available.
+- [x] Local target and fixture owner/business identity guards remain explicit;
+  no runtime grants, public authorization or owner visibility predicates change.
+- [x] No new credentials, session/OTP bypass, secret/PII output or external
+  calls; the CLI's existing redacted error handling remains in place.
+- [x] Only explicit column allow-lists and insert-only writes; no fixture stock
+  reset, reapproval, media URLs or fabricated review/financial evidence.
+- [ ] Endpoint CSRF/session/OTP, upload/embed/CSV/webhook, admin audit and
+  marketing-consent checklist items: not applicable; these paths are unchanged.
+No independent security/architecture approval is claimed for this follow-up.
+
 Cursors bind the full normalized active/inactive/context/query/sort/location context and a digest of current effective public eligibility/ordering inputs. They carry a signed `asOf` (15-minute maximum), full sort tuple and stable ID. A changed effective projection, expiry or cross-filter replay invalidates the cursor; timestamps retain PostgreSQL microseconds, numeric keys retain database precision and null prices sort last in both directions. All Explore/detail responses use `private, no-store` so stale caches cannot preserve expired entitlement or precise location. Ordinary map/list browsing needs no GPS; explicit distance/radius/delivery filters do. Area centroid is the Geo-owned fallback.
 
 Owner GET endpoints are registered in AppModule and the metadata-only OpenAPI composition: `/products/{slug}`, `/services/{slug}`, `/businesses/public/{slug}`. Shared `ProductPublicSchema`, `ServicePublicSchema`, `BusinessDiscoveryDetailSchema` expose `{item,description,images}` plus service included/excluded/area/experience and business hours. Product detail explicitly reports `orderability:{orderable:false,reasonCode:'CHECKOUT_UNAVAILABLE'}`; missing fiscal or checkout implementation cannot imply orderability. `item` is the same public card projection, with nullable `phone` from Businesses' documented public contact (never Users' login phone), nullable range `priceMaxPaise`, and canonical paths `/product/{slug}`, `/service/{slug}`, `/shop/{slug}`, `/provider/{slug}` from the owning FE route tables. Provider business detail uses `item.kind='shop'` as the business-card discriminant and `item.business.kind='provider'`.

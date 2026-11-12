@@ -48,12 +48,61 @@ perform those steps. The command does not reset or replace the database.
 city and its seven areas, one owner account per sample business (with the
 `customer` plus `vendor`/`provider` role), the 22 approved sample shops and
 service providers with category, hours and settings, and their 13 link
-videos (10 approved; one each pending, rejected and removed). Run it after
-`db:migrate`; it needs the compiled API from `pnpm generate` (also run by
+videos (10 approved; one each pending, rejected and removed). It also provisions
+**53 products with 53 inventory rows, 36 category-scoped product subcategories,
+and 38 individual services** (7 from shops, 31 from providers). These are source
+rows for the existing discovery projections, not API/UI fallback data.
+
+Run it explicitly after `db:migrate`, including the listing/read-projection
+migrations; it needs the compiled API from `pnpm generate` (also run by
 `pnpm build`/`pnpm dev`), otherwise it fails with `API_BUILD_REQUIRED`.
-It is idempotent: existing rows are never updated, and a sample business whose
-slug or owner/kind already exists is skipped with its videos. Likes, shares,
-comments, follows, products, orders and social links are not seeded. Only the
+There is **no startup seed**. The unchanged target guard requires
+`APP_ENV=local|test`, `127.0.0.1:5434`, matching runtime/migration
+`apnatown_local` URLs and the `apnatown_shadow` migration target. The explicit
+seed now connects as the validated `apnatown_migrator` for isolated demo
+provisioning: runtime has SELECT-only access to products/inventory/services,
+and those grants are **not widened**. Credentials remain private environment
+configuration; output contains counts only. No schema/grant changes are
+performed by seeding. Migration and seed execution for this extension are
+deferred to a separately authorized local run.
+
+It is insert-only and transactional, with the existing advisory lock and
+stable fixture IDs. Existing businesses and videos are still skipped, but
+missing listings are backfilled for an existing fixture business only when
+its ID, slug, kind, resolved owner and owner's phone hash match; deleted
+businesses/owners and unrelated slug/owner conflicts are not adopted.
+Existing listing IDs/slugs/SKUs are skipped without updates. Inventory is
+created only alongside a newly inserted product: reruns never replenish stock
+or restore missing inventory for an existing product. Existing approval,
+account visibility, taxonomy activation, settings and listing edits remain
+unchanged. Counts above describe the full source fixture, not guaranteed
+inserted/public counts on an edited database.
+
+Categories reuse the reference migration identities; each service resolves
+its own category + subcategory (not its provider's category or a bare slug).
+Only missing product subcategories are added; their EN-only reference labels
+are also used in the required Hindi column, without invented translations.
+Product/service prices convert exactly to integer paise. Free services use
+`fixed` zero; `/ sq ft`, `/ plate`, `/ unit` and `/ chair` map to existing
+`sq_ft`, `plate` and `unit` values. The three `/ month` quotes use `enquiry`
+with null amounts/unit because the schema has no monthly unit; original
+service quote text is retained in the description. Service Gallery preference
+comes from the existing business setting; missing settings skip that service.
+
+Discovery still applies current owner/business/city/taxonomy visibility.
+In particular, the current `businesses_public_context` projection requires a
+PRODUCT-category membership, while reference providers have SERVICE
+memberships. Their 31 service rows are provisioned but remain excluded by that
+projection unless legitimate qualifying memberships already exist. This seed
+does not add false memberships or relax visibility. With unchanged reference
+shops, 53 products and the 7 shop services have the required source visibility;
+active filters can still reduce those results.
+
+No images are generated/uploaded: reference emoji media is not a storage
+asset. Ratings/reviews, offers, subscriptions/payments, verified experience,
+provider expertise, variants, delivery settings, orders, likes, shares,
+comments, follows and social links are not added by this extension. Selected
+product featuring flags grant no Premium entitlement. Only the
 YouTube sample videos play; the Instagram sample IDs are placeholders, so those
 reels will not play. Sample owners sign in through the normal OTP
 flow with their fictional `98765xxxxx` sample numbers. Seeding does not fix

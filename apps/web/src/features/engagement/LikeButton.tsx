@@ -7,8 +7,7 @@ import { Skeleton } from '@apnatown/ui/feedback/Skeleton';
 import { EmptyState, NoPermissionState } from '@apnatown/ui/feedback/StateViews';
 import { failureCode } from '../../shared/api/result';
 import { AccessState, Failure } from '../../shared/auth/AccessState';
-import { useSession } from '../../shared/auth/SessionProvider';
-import { useVideoLikes } from './likes-queries';
+import { useVideoLikeAction } from './engagement-actions';
 
 function LikeControl({
   liked,
@@ -53,42 +52,39 @@ export function LikeButton({
   businessId: string;
 }) {
   const t = useTranslations('engagement.likes');
-  const { state } = useSession();
-  const { query, mutation } = useVideoLikes([videoId], [businessId]);
+  const like = useVideoLikeAction(videoId, businessId);
+  const { query } = like;
   const [loginPrompt, setLoginPrompt] = useState(false);
-  if (state.kind === 'loading') return <Skeleton label={t('loading')} />;
-  if (state.kind === 'error' && state.code !== 'SESSION_EXPIRED') return <AccessState guest />;
+  if (like.access === 'pending') return <Skeleton label={t('loading')} />;
+  if (like.access === 'unavailable') return <AccessState guest />;
   if (query.isPending) return <Skeleton label={t('loading')} />;
   if (query.isError) {
     return <Failure code={failureCode(query.error)} retry={() => void query.refetch()} retryDisabled={query.isFetching} />;
   }
-  const count = query.data.videoCounts.find((item) => item.videoId === videoId);
-  if (!count) {
+  if (!like.available) {
     return <EmptyState title={t('unavailableTitle')} message={t('unavailableMessage')} action={null} />;
   }
-  const liked = query.data.likedVideoIds.includes(videoId);
-  const canLike = state.kind === 'ready' && state.data.roles.includes('customer');
-  const forbidden = state.kind === 'ready' && !canLike;
-  const error = mutation.isError ? failureCode(mutation.error) : undefined;
+  const canLike = like.access === 'customer';
+  const forbidden = like.access === 'forbidden';
   return (
     <div className="grid gap-3">
       <LikeControl
-        liked={liked}
-        count={count.likeCount}
-        busy={mutation.isPending}
+        liked={like.liked}
+        count={like.count}
+        busy={like.busy}
         disabled={forbidden}
         onClick={() => {
           if (!canLike) setLoginPrompt(true);
-          else void mutation.run({ videoId, liked: !liked });
+          else like.toggle();
         }}
       />
       {loginPrompt && !canLike && !forbidden && <AccessState guest guestMessage={t('loginPrompt')} />}
       {forbidden && (
         <NoPermissionState title={t('restrictedTitle')} message={t('restrictedMessage')} action={null} />
       )}
-      {error && (
+      {like.errorKey && (
         <p role="alert" className="m-0 text-error [overflow-wrap:anywhere]">
-          {t(error === 'COMMON_RATE_LIMITED' ? 'rateLimited' : 'failed')}
+          {t(like.errorKey)}
         </p>
       )}
     </div>

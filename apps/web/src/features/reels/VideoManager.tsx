@@ -3,11 +3,8 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { useTranslations } from 'next-intl';
 import {
-  CreateVideoReportSchema,
   CreateVideoSchema,
-  MediaReportReasonSchema,
   type CreateVideo,
-  type CreateVideoReport,
   type Video,
 } from '@apnatown/shared';
 import type { BusinessKind } from '@apnatown/shared/businesses';
@@ -15,10 +12,8 @@ import { Button } from '@apnatown/ui/primitives/Button';
 import { Input } from '@apnatown/ui/primitives/Input';
 import { Select } from '@apnatown/ui/primitives/Select';
 import { Switch } from '@apnatown/ui/primitives/Selection';
-import { TextArea } from '@apnatown/ui/primitives/TextArea';
 import { StatusBadge, type BadgeTone } from '@apnatown/ui/primitives/Badge';
 import { Card } from '@apnatown/ui/cards/Card';
-import { Sheet } from '@apnatown/ui/overlay/Sheet';
 import { Skeleton } from '@apnatown/ui/feedback/Skeleton';
 import {
   EmptyState,
@@ -40,8 +35,8 @@ import {
   useCreateOwnerVideo,
   useOwnerVideos,
   usePublicVideo,
-  useReportVideo,
 } from './queries';
+import { VideoReportSheet } from './VideoReportSheet';
 
 const statusPresentation: Record<
   Video['status'],
@@ -280,12 +275,7 @@ export function VideoManager({ kind }: { kind: BusinessKind }) {
 export function PublicVideo({ id, nonce }: { id: string; nonce: string }) {
   const t = useTranslations('reels.viewer');
   const query = usePublicVideo(id);
-  const report = useReportVideo(id);
   const [reportOpen, setReportOpen] = useState(false);
-  const [reportReason, setReportReason] =
-    useState<CreateVideoReport['reason']>('inappropriate');
-  const [reportDetails, setReportDetails] = useState('');
-  const [reportInvalid, setReportInvalid] = useState(false);
   const [reported, setReported] = useState(false);
   if (query.isPending) return <Skeleton label={t('loading')} />;
   if (query.isError) {
@@ -307,27 +297,6 @@ export function PublicVideo({ id, nonce }: { id: string; nonce: string }) {
     );
   }
   const video = query.data;
-  const reportCode = report.mutation.isError
-    ? failureCode(report.mutation.error)
-    : undefined;
-  function submitReport(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const parsed = CreateVideoReportSchema.safeParse({
-      reason: reportReason,
-      details: reportDetails,
-    });
-    if (!parsed.success) {
-      setReportInvalid(true);
-      return;
-    }
-    setReportInvalid(false);
-    setReported(false);
-    report.submit(parsed.data, () => {
-      setReportOpen(false);
-      setReportDetails('');
-      setReported(true);
-    });
-  }
   return (
     <article className="mx-auto grid max-w-prose gap-4">
       <h1 className="m-0 font-display text-h2">{t('title')}</h1>
@@ -341,7 +310,13 @@ export function PublicVideo({ id, nonce }: { id: string; nonce: string }) {
       <ShareSheet videoId={video.id} />
       <CommentsPanel videoId={video.id} />
       <div className="flex flex-wrap items-center gap-3">
-        <Button variant="outline" onClick={() => setReportOpen(true)}>
+        <Button
+          variant="outline"
+          onClick={() => {
+            setReported(false);
+            setReportOpen(true);
+          }}
+        >
           {t('report.open')}
         </Button>
         {reported && (
@@ -350,67 +325,12 @@ export function PublicVideo({ id, nonce }: { id: string; nonce: string }) {
           </p>
         )}
       </div>
-      <Sheet
+      <VideoReportSheet
+        videoId={video.id}
         open={reportOpen}
         onOpenChange={setReportOpen}
-        title={t('report.title')}
-        description={t('report.description')}
-        closeLabel={t('report.cancel')}
-        busy={report.mutation.isPending}
-      >
-        <form onSubmit={submitReport} className="grid gap-4">
-          <Select
-            label={t('report.reasonLabel')}
-            value={reportReason}
-            onChange={(event) => {
-              const parsed = MediaReportReasonSchema.safeParse(
-                event.currentTarget.value,
-              );
-              if (parsed.success) setReportReason(parsed.data);
-            }}
-            options={[
-              { value: 'inappropriate', label: t('report.reasons.inappropriate') },
-              { value: 'misleading', label: t('report.reasons.misleading') },
-              { value: 'spam', label: t('report.reasons.spam') },
-              { value: 'copyright', label: t('report.reasons.copyright') },
-              { value: 'other', label: t('report.reasons.other') },
-            ]}
-          />
-          <TextArea
-            label={t('report.detailsLabel')}
-            value={reportDetails}
-            maxLength={500}
-            onChange={(event) => setReportDetails(event.currentTarget.value)}
-          />
-          {reportInvalid && (
-            <p role="alert" className="m-0 text-error [overflow-wrap:anywhere]">
-              {t('report.validation')}
-            </p>
-          )}
-          {reportCode && (
-            <p role="alert" className="m-0 text-error [overflow-wrap:anywhere]">
-              {t(
-                reportCode === 'COMMON_RATE_LIMITED'
-                  ? 'report.rateLimited'
-                  : 'report.failed',
-              )}
-            </p>
-          )}
-          <div className="flex flex-wrap justify-end gap-2">
-            <Button
-              type="button"
-              variant="ghost"
-              disabled={report.mutation.isPending}
-              onClick={() => setReportOpen(false)}
-            >
-              {t('report.cancel')}
-            </Button>
-            <Button type="submit" loading={report.mutation.isPending}>
-              {t(report.mutation.isPending ? 'report.submitting' : 'report.submit')}
-            </Button>
-          </div>
-        </form>
-      </Sheet>
+        onReported={() => setReported(true)}
+      />
     </article>
   );
 }

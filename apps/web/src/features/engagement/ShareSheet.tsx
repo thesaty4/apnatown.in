@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button, buttonClassName } from '@apnatown/ui/primitives/Button';
 import { Sheet } from '@apnatown/ui/overlay/Sheet';
@@ -8,7 +8,14 @@ import { failureCode } from '../../shared/api/result';
 import { publicHref } from '../../shared/i18n/preferences';
 import { useVideoShare } from './shares-queries';
 
-export function ShareSheet({ videoId }: { videoId: string }) {
+export function ShareSheet({
+  videoId,
+  renderTrigger,
+}: {
+  videoId: string;
+  /** Custom opener, e.g. the Reels rail icon; defaults to an outline button. */
+  renderTrigger?: (open: () => void) => ReactNode;
+}) {
   const t = useTranslations('engagement.share');
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
   const [open, setOpen] = useState(false);
@@ -72,9 +79,13 @@ export function ShareSheet({ videoId }: { videoId: string }) {
 
   return (
     <>
-      <Button variant="outline" onClick={() => setOpen(true)}>
-        {t('open')}
-      </Button>
+      {renderTrigger ? (
+        renderTrigger(() => setOpen(true))
+      ) : (
+        <Button variant="outline" onClick={() => setOpen(true)}>
+          {t('open')}
+        </Button>
+      )}
       <Sheet
         open={open}
         onOpenChange={setOpen}

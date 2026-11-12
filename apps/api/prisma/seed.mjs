@@ -2,6 +2,8 @@ import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { withDatabase } from './database.mjs';
 import { buildFixtures, FIXTURE_CLOCK } from './seed-fixtures.mjs';
+import { buildListingFixtures } from './seed-listing-fixtures.mjs';
+import { seedBusinessListings, seedListingTaxonomy } from './seed-listings.mjs';
 import { localTargets } from './targets.mjs';
 
 const require = createRequire(import.meta.url);
@@ -26,6 +28,8 @@ function loadHelpers(env) {
       videos: require('../dist/modules/media-videos/domain/video-source.js'),
       catalog: require('@apnatown/shared/catalog'),
       users: require('@apnatown/shared/users'),
+      wire: require('@apnatown/shared/wire'),
+      search: require('@apnatown/shared/search'),
     };
   } catch (error) {
     if (error.code === 'MODULE_NOT_FOUND')
@@ -38,6 +42,10 @@ function loadHelpers(env) {
       env.PHONE_LOOKUP_HASH_KEY,
     ),
     slug: modules.catalog.catalogSlug,
+    slugSchema: modules.catalog.CatalogSlugSchema,
+    normalizeCatalogText: modules.catalog.normalizeCatalogText,
+    paiseSchema: modules.wire.PaiseSchema,
+    servicePriceTypeSchema: modules.search.ExploreCardSchema.shape.priceType,
     normalizePhone: modules.users.normalizePhone,
     parseVideoSource: modules.videos.parseVideoSource,
   };
@@ -215,17 +223,29 @@ async function seedBusiness(client, business, ownerId, cityId, areaId) {
   return videos;
 }
 
-async function apply(client, fixtures, crypto) {
-  const counts = { businesses: 0, videos: 0, existing: 0, conflicts: 0 };
+async function apply(client, fixtures, listings, crypto) {
+  const counts = {
+    businesses: 0,
+    videos: 0,
+    existing: 0,
+    conflicts: 0,
+    productSubcategories: 0,
+    products: 0,
+    inventory: 0,
+    services: 0,
+    listingsSkipped: 0,
+  };
+  const taxonomyIds = await seedListingTaxonomy(
+    client,
+    listings.taxonomy,
+    counts,
+  );
   const cityId = await seedCity(client, fixtures.city);
   const areaIds = await seedAreas(client, cityId, fixtures.areas);
   const owners = new Map(fixtures.owners.map((owner) => [owner.key, owner]));
   for (const business of fixtures.businesses) {
-    const ownerId = await seedOwner(
-      client,
-      crypto,
-      owners.get(business.ownerKey),
-    );
+    const owner = owners.get(business.ownerKey);
+    const ownerId = await seedOwner(client, crypto, owner);
     const areaId = areaIds.get(business.areaKey);
     const videos = await seedBusiness(
       client,
@@ -237,13 +257,22 @@ async function apply(client, fixtures, crypto) {
     if (videos !== null) {
       counts.businesses += 1;
       counts.videos += videos;
-      continue;
+    } else {
+      const { rowCount } = await client.query(
+        'SELECT 1 FROM businesses WHERE id = $1::uuid',
+        [business.id],
+      );
+      counts[rowCount ? 'existing' : 'conflicts'] += 1;
     }
-    const { rowCount } = await client.query(
-      'SELECT 1 FROM businesses WHERE id = $1::uuid',
-      [business.id],
+    await seedBusinessListings(
+      client,
+      business,
+      ownerId,
+      Buffer.from(crypto.phoneHash(owner.phone)),
+      listings.byBusiness.get(business.key),
+      taxonomyIds,
+      counts,
     );
-    counts[rowCount ? 'existing' : 'conflicts'] += 1;
   }
   return counts;
 }
@@ -266,20 +295,27 @@ async function inTransaction(client, work) {
 
 /**
  * Local/test-only synthetic demo data from the design-context sample file,
- * written through the least-privilege runtime role. Idempotent: rows are keyed
- * by stable aliases and never updated; a business whose slug or owner/kind
- * already exists is skipped together with its videos. Output has counts only.
+ * Explicit provisioning through the validated migration target: runtime has
+ * SELECT-only listing grants, which must not be widened for this command.
+ * Stable insert-only rows; existing businesses/videos remain untouched while
+ * matching fixture businesses can receive missing listings. Counts-only output.
  */
 export async function seed(env) {
   const targets = localTargets(env);
   const helpers = loadHelpers(env);
   const sample = JSON.parse(await readFile(SAMPLE_DATA, 'utf8'));
   const fixtures = buildFixtures(sample, helpers);
-  const counts = await withDatabase(targets.runtime, (client) =>
-    inTransaction(client, (tx) => apply(tx, fixtures, helpers.crypto)),
+  const listings = buildListingFixtures(sample, helpers);
+  const counts = await withDatabase(targets.migration, (client) =>
+    inTransaction(client, (tx) =>
+      apply(tx, fixtures, listings, helpers.crypto),
+    ),
   );
   process.stdout.write(
     `Demo seed: ${counts.businesses} businesses and ${counts.videos} videos added; ` +
-      `${counts.existing} already present; ${counts.conflicts} skipped (slug or owner conflict)\n`,
+      `${counts.existing} businesses already present; ${counts.conflicts} business conflicts; ` +
+      `${counts.productSubcategories} product subcategories, ${counts.products} products, ` +
+      `${counts.inventory} inventory rows and ${counts.services} services added; ` +
+      `${counts.listingsSkipped} listings skipped (existing, conflicting or missing settings)\n`,
   );
 }

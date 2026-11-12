@@ -7,8 +7,7 @@ import { EmptyState, NoPermissionState } from '@apnatown/ui/feedback/StateViews'
 import { Skeleton } from '@apnatown/ui/feedback/Skeleton';
 import { failureCode } from '../../shared/api/result';
 import { AccessState, Failure } from '../../shared/auth/AccessState';
-import { useSession } from '../../shared/auth/SessionProvider';
-import { useVideoHeartActions, useVideoLikes } from './likes-queries';
+import { useVideoSaveAction } from './engagement-actions';
 
 export function HeartButton({
   videoId,
@@ -18,14 +17,12 @@ export function HeartButton({
   businessId: string;
 }) {
   const t = useTranslations('engagement.heart');
-  const { state } = useSession();
-  const { query } = useVideoLikes([videoId], [businessId]);
-  const heart = useVideoHeartActions(videoId, [businessId]);
+  const save = useVideoSaveAction(videoId, businessId);
+  const { query } = save;
   const [loginPrompt, setLoginPrompt] = useState(false);
 
-  if (state.kind === 'loading') return <Skeleton label={t('loading')} />;
-  if (state.kind === 'error' && state.code !== 'SESSION_EXPIRED')
-    return <AccessState guest />;
+  if (save.access === 'pending') return <Skeleton label={t('loading')} />;
+  if (save.access === 'unavailable') return <AccessState guest />;
   if (query.isPending) return <Skeleton label={t('loading')} />;
   if (query.isError)
     return (
@@ -36,8 +33,7 @@ export function HeartButton({
       />
     );
 
-  const available = query.data.videoCounts.some((item) => item.videoId === videoId);
-  if (!available)
+  if (!save.available)
     return (
       <EmptyState
         title={t('unavailableTitle')}
@@ -46,23 +42,20 @@ export function HeartButton({
       />
     );
 
-  const hearted = query.data.heartedTargets.some(
-    (target) => target.targetType === 'video' && target.targetId === videoId,
-  );
-  const canHeart = state.kind === 'ready' && state.data.roles.includes('customer');
-  const forbidden = state.kind === 'ready' && !canHeart;
-  const error = heart.mutation.isError ? failureCode(heart.mutation.error) : undefined;
+  const hearted = save.saved;
+  const canHeart = save.access === 'customer';
+  const forbidden = save.access === 'forbidden';
 
   return (
     <div className="grid gap-3">
       <Button
         variant={hearted ? 'primary' : 'outline'}
         aria-pressed={hearted}
-        loading={heart.mutation.isPending}
+        loading={save.busy}
         disabled={forbidden}
         onClick={() => {
           if (!canHeart) setLoginPrompt(true);
-          else heart.toggle(!hearted);
+          else save.toggle();
         }}
       >
         <svg
@@ -87,9 +80,9 @@ export function HeartButton({
           action={null}
         />
       )}
-      {error && (
+      {save.errorKey && (
         <p role="alert" className="m-0 text-error [overflow-wrap:anywhere]">
-          {t(error === 'COMMON_RATE_LIMITED' ? 'rateLimited' : 'failed')}
+          {t(save.errorKey)}
         </p>
       )}
     </div>

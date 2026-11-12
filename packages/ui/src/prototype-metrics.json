@@ -1,5 +1,6 @@
 {
-  "source": "docs/design-context/reference/prototype-source/style.css: .wrap, .state, .btn, .skel, h1/h2 desktop overrides; .row/.stack (61), .field/.input/.hint/.errmsg (125-138), .chip/.badge (144-146), .auto/.auto-s (157), .art (160-165), .scrim/.sheet/.grab (207-214), .mini (248), .shopgrid/.exlay/.exside (266-269), .sfn (284), .reels/.rtop/.rpill/.rfeed/.rv/.rshade/.rinfo/.rrail/.rpp/.rside/.rstate (287-298); reel-open/reel-closed reuse the pack's dark success/error because the reel canvas is always dark",
+  "source": "docs/design-context/reference/prototype-source/style.css: .wrap, .state, .btn, .skel, h1/h2 desktop overrides; .row/.stack (61), .field/.input/.hint/.errmsg (125-138), .chip/.badge (144-146), .auto/.auto-s (157), .art (160-165), .scrim/.sheet/.grab (207-214), .mini (248), .shopgrid/.exlay/.exside (266-269), .sfn (284), .reels/.rtop/.rpill/.rfeed/.rv/.rshade/.rinfo/.rrail/.rside/.rstate/.rsave (287-299); reel-open/reel-closed reuse the pack's dark success/error because the reel canvas is always dark",
+  "paritySource": "style.css: .wrap (1200px content plus 28px external gutter), .btn.sm (40px), .tabs (46px), .pcard .t (.92rem, 2.4em, 1.3), .shopcard .cover (3rem); 10-sample-data.json categories/serviceCategories supply decorative category fallback hues, not listing photos.",
   "tokens": {
     "color": {
       "switch-thumb": "#FFFFFF",
@@ -29,6 +30,26 @@
       "badge-fill": "color-mix(in srgb,currentColor 12%,var(--at-surface))"
     },
     "art": {
+      "listing-hue-grocery": "30",
+      "listing-hue-medical": "160",
+      "listing-hue-electronics": "215",
+      "listing-hue-mobile": "260",
+      "listing-hue-food-sweets": "350",
+      "listing-hue-clothing": "300",
+      "listing-hue-hardware": "200",
+      "listing-hue-stationery": "50",
+      "listing-hue-furniture": "20",
+      "listing-hue-jewellery": "45",
+      "listing-hue-wedding-events": "330",
+      "listing-hue-home-builders": "25",
+      "listing-hue-home-construction": "25",
+      "listing-hue-mechanic-repair": "200",
+      "listing-hue-mechanic": "200",
+      "listing-hue-coaching-education": "240",
+      "listing-hue-coaching": "240",
+      "listing-hue-electrician": "48",
+      "listing-hue-plumber": "190",
+      "listing-hue-other-services": "120",
       "art-hue-default": "25",
       "art-angle": "135deg",
       "art-start-saturation": "85%",
@@ -53,6 +74,9 @@
       "reel-frame": "16px"
     },
     "spacing": {
+      "button-small": "40px",
+      "explore-tab": "46px",
+      "product-title-min": "2.4em",
       "explore-sidebar": "270px",
       "explore-sidebar-top": "76px",
       "explore-sidebar-max": "calc(100dvh - 96px)",
@@ -85,14 +109,12 @@
       "sheet-bottom": "calc(18px + var(--at-sab))",
       "sheet-grab-width": "44px",
       "sheet-grab-height": "5px",
-      "reel-pill-height": "40px",
-      "reel-avatar": "40px",
+      "reel-compact": "40px",
       "reel-rail-bottom": "90px",
-      "reel-info-end": "76px",
-      "reel-progress": "3px",
-      "reel-pause": "72px"
+      "reel-info-end": "76px"
     },
     "container": {
+      "page-padded": "1228px",
       "state-copy": "38ch",
       "reel-feed": "440px",
       "reel-side": "340px",
@@ -100,7 +122,13 @@
       "sheet": "min(560px,94vw)",
       "sheet-wide": "min(820px,94vw)"
     },
+    "leading": {
+      "listing-title": "1.3"
+    },
     "text": {
+      "product-title": ".92rem",
+      "listing-art": "3rem",
+      "tab-count": ".72rem",
       "state-icon": "2.6rem",
       "h1-desktop": "2.2rem",
       "h2-desktop": "1.65rem",

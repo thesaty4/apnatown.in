@@ -42,11 +42,10 @@ export function ServiceCategoryFilter({
         .join(','),
     });
   return (
-    <fieldset className="grid min-w-0 gap-3">
-      <legend className="mb-2 font-semibold">
-        {t('categoryAndSubcategory')}
-      </legend>
-      <div className="grid gap-1">
+    <fieldset className="grid min-w-0 gap-1.5">
+      <legend className="sr-only">{t('categoryAndSubcategory')}</legend>
+      <h3 className="text-field-label">{t('category')}</h3>
+      <div className="grid gap-0.5">
         {categories.map((facet) => (
           <Checkbox
             key={facet.id}
@@ -74,6 +73,7 @@ export function ServiceCategoryFilter({
           />
         ))}
       </div>
+      <h3 className="pt-3 text-field-label">{t('subcategory')}</h3>
       {categories
         .filter(
           (facet) =>
@@ -134,6 +134,7 @@ export function ServiceCategoryFilter({
           })}
           <Button
             variant="text"
+            size="small"
             onClick={() => onChange({ category: '', subcategory: '' })}
           >
             {t('clearCategories')}
@@ -172,12 +173,15 @@ function SubcategoryGroup({
     (value) => !options.some((option) => option.value === value),
   );
   return (
-    <details open={open} className="rounded-md border border-border p-3">
-      <summary className="cursor-pointer font-semibold">{label}</summary>
+    <details open={open} className="rounded-md border border-border p-2.5">
+      <summary className="min-h-button-small cursor-pointer text-small font-semibold">
+        {label}
+      </summary>
       <div className="grid gap-2 pt-2">
         <div className="flex flex-wrap gap-2">
           <Button
             variant="text"
+            size="small"
             onClick={() =>
               onChange([
                 ...new Set([
@@ -191,7 +195,7 @@ function SubcategoryGroup({
           >
             {t('selectAll')}
           </Button>
-          <Button variant="text" onClick={() => onChange(outside)}>
+          <Button variant="text" size="small" onClick={() => onChange(outside)}>
             {t('clear')}
           </Button>
         </div>

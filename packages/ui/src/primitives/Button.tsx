@@ -6,9 +6,8 @@ export const buttonInteractionClassName =
   'motion-reduce:transition-none';
 
 const baseClassName =
-  'inline-flex min-h-button-min-height max-w-full items-center justify-center gap-2 ' +
-  'rounded-md border-2 px-button-inline py-2 ' +
-  'text-button font-semibold whitespace-normal break-words text-center ' +
+  'inline-flex max-w-full items-center justify-center gap-2 border-2 ' +
+  'font-semibold whitespace-normal break-words text-center ' +
   'transition-colors duration-2 ease-standard hover:brightness-95 ' +
   buttonInteractionClassName;
 
@@ -24,10 +23,20 @@ const variants = {
 } as const;
 
 export type ButtonVariant = keyof typeof variants;
+type ButtonSize = 'default' | 'small' | 'card';
+const sizes = {
+  default:
+    'min-h-button-min-height rounded-md px-button-inline py-2 text-button',
+  small: 'min-h-button-small rounded-sm px-field-inline py-1 text-chip',
+  card: 'min-h-11 rounded-md px-2.5 py-1 text-small',
+} as const;
 
 /** Button appearance for non-button elements such as links. */
-export function buttonVariantClassName(variant: ButtonVariant = 'primary') {
-  return `${baseClassName} ${variants[variant]}`;
+export function buttonVariantClassName(
+  variant: ButtonVariant = 'primary',
+  size: ButtonSize = 'default',
+) {
+  return `${baseClassName} ${sizes[size]} ${variants[variant]}`;
 }
 
 export const buttonClassName = buttonVariantClassName('primary');
@@ -35,12 +44,14 @@ export const buttonClassName = buttonVariantClassName('primary');
 export type ButtonProps = ComponentPropsWithRef<'button'> & {
   loading?: boolean;
   variant?: ButtonVariant;
+  size?: ButtonSize;
 };
 
 export function Button({
   loading = false,
   disabled,
   variant = 'primary',
+  size = 'default',
   className = '',
   children,
   ...props
@@ -51,7 +62,7 @@ export function Button({
       {...props}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
-      className={`${buttonVariantClassName(variant)} ${className}`}
+      className={`${buttonVariantClassName(variant, size)} ${className}`}
     >
       {children}
       {loading && (

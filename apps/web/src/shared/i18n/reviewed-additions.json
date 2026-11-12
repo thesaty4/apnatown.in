@@ -7224,9 +7224,29 @@
     "source": "specs/search/fe/search.md#S-CUST-02"
   },
   "explore.screen.nearbyExplanation": {
-    "en": "Nearby means distance from your selected location (the area centre when an area is selected). Delivers to you means delivery is available at that location. They are different.",
-    "hi": "आसपास का मतलब आपकी चुनी हुई जगह से दूरी है (क्षेत्र चुनने पर उसके केंद्र से)। आप तक डिलीवरी का मतलब उस जगह पर डिलीवरी उपलब्ध होना है। दोनों अलग हैं।",
+    "en": "<strong>Nearby</strong> = how far it is from {place}. <strong>Delivers to you</strong> = it delivers to your selected address.",
+    "hi": "<strong>आसपास</strong> = {place} से कितनी दूरी है। <strong>आप तक डिलीवरी</strong> = आपके चुने हुए पते पर डिलीवरी उपलब्ध है।",
     "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.selectedLocation": {
+    "en": "your selected location",
+    "hi": "आपकी चुनी हुई जगह",
+    "source": "specs/search/fe/search.md#S-CUST-02"
+  },
+  "explore.screen.deliveryPickup": {
+    "en": "Delivery or pickup",
+    "hi": "डिलीवरी या सेल्फ-पिकअप",
+    "source": "docs/design-context/reference/prototype-source/js16.js"
+  },
+  "explore.screen.ratingReviews": {
+    "en": "Rating & reviews",
+    "hi": "रेटिंग और समीक्षाएँ",
+    "source": "docs/design-context/reference/prototype-source/js16.js"
+  },
+  "explore.screen.startsFrom": {
+    "en": "Starts from (₹)",
+    "hi": "शुरुआती कीमत (₹)",
+    "source": "docs/design-context/reference/prototype-source/js16.js"
   },
   "explore.screen.locationRequired": {
     "en": "Choose a location",
@@ -7437,6 +7457,11 @@
     "en": "day",
     "hi": "दिन",
     "source": "specs/services/fe/services.md"
+  },
+  "explore.screen.unit.month": {
+    "en": "month",
+    "hi": "महीना",
+    "source": "docs/design-context/reference/prototype-source/js22.js"
   },
   "explore.screen.unit.event": {
     "en": "event",

@@ -23,7 +23,7 @@ export function ExploreTabs({
     <div
       role="tablist"
       aria-label={t('tabs')}
-      className="flex flex-wrap gap-2 border-b border-border"
+      className="mb-stack-gap flex gap-1 overflow-x-auto border-b-2 border-border"
     >
       {EXPLORE_TABS.map((item, index) => (
         <button
@@ -34,7 +34,7 @@ export function ExploreTabs({
           aria-selected={tab === item}
           aria-controls="explore-panel"
           tabIndex={tab === item ? 0 : -1}
-          className={`inline-flex min-h-touch min-w-touch items-center gap-2 rounded-sm px-3 py-2 font-semibold whitespace-normal ${buttonInteractionClassName} ${tab === item ? 'border-b-2 border-primary text-primary' : 'text-text-2'}`}
+          className={`-mb-0.5 inline-flex min-h-explore-tab shrink-0 items-center gap-1.5 border-b-3 px-field-inline font-semibold ${buttonInteractionClassName} ${tab === item ? 'border-primary text-primary' : 'border-transparent text-muted'}`}
           onClick={() => onChange(item)}
           onKeyDown={(event) => {
             const targetIndex =
@@ -56,7 +56,9 @@ export function ExploreTabs({
         >
           {t(`tab.${item}`)}
           {counts && (
-            <span className="min-w-count rounded-pill bg-surface-2 px-2 text-caption text-text">
+            <span
+              className={`inline-grid h-5.5 min-w-5.5 place-items-center rounded-pill px-1.5 text-tab-count ${tab === item ? 'bg-primary text-on-primary' : 'bg-surface-2 text-text'}`}
+            >
               {format.number(counts[item])}
             </span>
           )}

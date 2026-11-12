@@ -79,8 +79,7 @@ export function AccessState({
 }) {
   const { state, refresh } = useSession();
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
-  const path = usePathname();
-  const searchParams = useSearchParams();
+  const returnTo = useSafeReturnTo();
   const t = useTranslations('auth.feedback');
   if (state.kind === 'loading') return <Skeleton label={t('loading')} />;
   if (state.kind !== 'error') return null;
@@ -93,8 +92,6 @@ export function AccessState({
         }}
       />
     );
-  const returnTo =
-    safeReturnTo(videoFeedReturnTo(path, searchParams, locale)) ?? '/account';
   const href = guest
     ? loginHref(locale, returnTo)
     : `${publicHref('/session-expired', locale)}?${new URLSearchParams({ returnTo })}`;
@@ -109,6 +106,21 @@ export function AccessState({
         </Link>
       }
     />
+  );
+}
+
+/** Login URL that returns to the current screen (video feed state included). */
+export function useLoginHref() {
+  const locale = useLocale() === 'hi' ? 'hi' : 'en';
+  return loginHref(locale, useSafeReturnTo());
+}
+
+function useSafeReturnTo() {
+  const locale = useLocale() === 'hi' ? 'hi' : 'en';
+  const path = usePathname();
+  const searchParams = useSearchParams();
+  return (
+    safeReturnTo(videoFeedReturnTo(path, searchParams, locale)) ?? '/account'
   );
 }
 

@@ -58,7 +58,7 @@ export function Chip({
     >
       {(selected || icon) && (
         <span aria-hidden="true" className="shrink-0">
-          {selected ? '✓' : icon}
+          {icon ?? '✓'}
         </span>
       )}
       <span className="min-w-0">{label}</span>
