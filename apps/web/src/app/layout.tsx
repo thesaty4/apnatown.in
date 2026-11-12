@@ -8,8 +8,12 @@ import { isLocale, parseTheme, themeCookie } from '../shared/i18n/preferences';
 import { getWebEnvironment } from '../shared/config/server';
 import { Preferences } from '../shared/ui/Preferences';
 import { Providers } from './providers';
-import en from '../shared/i18n/messages/bootstrap.en.json';
-import hi from '../shared/i18n/messages/bootstrap.hi.json';
+import en from '../shared/i18n/messages/en.json';
+import hi from '../shared/i18n/messages/hi.json';
+import { readSession } from '../shared/auth/server';
+import { AccountNavigation } from '../shared/auth/AccountNavigation';
+import { hydrateResource } from '../shared/api/hydration';
+import { queryKeys } from '../shared/api/query-keys';
 import './globals.css';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -31,18 +35,28 @@ export default async function RootLayout({
   const locale = isLocale(requested) ? requested : 'en';
   const theme = parseTheme((await cookies()).get(themeCookie)?.value);
   const t = await getTranslations('common');
-  // Only bootstrap messages cross the RSC boundary, not all 927 source strings.
-  const bootstrapMessages = locale === 'hi' ? hi : en;
+  // Only this slice's messages cross the RSC boundary, not the full prototype catalogue.
+  const catalogue = locale === 'hi' ? hi : en;
+  const { copy: _unused, ...common } = catalogue.common;
+  const messages = { common, auth: catalogue.auth, account: catalogue.account };
   return (
     <html lang={locale} data-theme={theme} className={fontVariables}>
       <body>
-        <Providers locale={locale} messages={bootstrapMessages}>
+        <Providers
+          locale={locale}
+          messages={messages}
+          session={await hydrateResource(
+            queryKeys.session,
+            await readSession(),
+          )}
+        >
           <SkipLink label={t('navigation.skipToContent')} targetId="main" />
           <div className="mx-auto max-w-page px-page-gutter">
             <header className="flex min-h-nav-h flex-wrap items-center justify-between gap-4 border-b border-border py-2">
               <span className="font-display font-bold text-primary">
                 {t('app.welcome')}
               </span>
+              <AccountNavigation />
               <Preferences initialTheme={theme} />
             </header>
             <main

@@ -3,6 +3,7 @@ import { NextResponse, NextRequest } from 'next/server';
 import { routing } from './shared/i18n/routing';
 import { parseWebEnvironment } from './shared/config/schema';
 import { contentSecurityPolicy } from './shared/config/content-security';
+import { isPrivatePath } from './shared/i18n/preferences';
 
 const internationalize = createMiddleware(routing);
 const { APP_BASE_URL } = parseWebEnvironment(process.env);
@@ -22,10 +23,15 @@ export default function proxy(request: NextRequest) {
     process.env.NODE_ENV === 'development',
   );
   const headers = new Headers(request.headers);
+  headers.delete('x-apnatown-private');
   headers.set('x-nonce', nonce);
   // Next extracts this trusted request nonce and applies it to its own scripts.
   headers.set('Content-Security-Policy', policy);
-  const response = internationalize(new NextRequest(request, { headers }));
+  const privatePath = isPrivatePath(path);
+  if (privatePath) headers.set('x-apnatown-private', '1');
+  const response = privatePath
+    ? NextResponse.next({ request: { headers } })
+    : internationalize(new NextRequest(request, { headers }));
   response.headers.set('Content-Security-Policy', policy);
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');

@@ -31,7 +31,7 @@ and the owning module FE/BE specs for the components being built.
   No duplicated API DTOs or unrelated documentation.
 
 ## REQUIRED CONTENTS
-Implement [frontend-shared.md](../../specs/_foundation/frontend-shared.md): deterministic token/Tailwind and semantic EN/HI catalogue generation, the specified fonts/theme, Server Component root and bounded client providers, standard loading/error/offline/empty/disabled states, shared primitives and typed hooks. Use the generated API client and common browser/server cookie/CSRF wrappers; no handwritten duplicate DTOs or business logic in UI.
+Implement [frontend-shared.md](../../specs/_foundation/frontend-shared.md): deterministic token/Tailwind and semantic EN/HI catalogue generation, the specified fonts/theme, Server Component root and bounded client providers, standard loading/error/offline/empty/disabled states, shared primitives and typed hooks. Implement the mandatory [React Query API integration contract](../../specs/_foundation/frontend-shared.md#api-integration-with-react-query) over the generated API client and common browser/server cookie/CSRF wrappers, including its provider, hydration and acceptance tests; no handwritten duplicate DTOs or business logic in UI.
 
 Build the catalogued components in small owner-linked batches, reusing Button/Input and URL/Back-scroll contracts. Apply the specified rendering, metadata, accessibility, low-bandwidth and PWA rules. Keep unapproved route/copy/button metrics explicit rather than inventing them. Verify real transport only after its API dependencies exist; otherwise report the check as pending, not passed with intercepted success responses.
 

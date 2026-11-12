@@ -10,15 +10,19 @@ Builds on `.github/copilot-instructions.md`. Templates:
 ## Spec-driven rules
 
 - No non-trivial feature is implemented without a spec in
-  `specs/<module>/{be,fe}/` first (written by `spec-writer`,
-  `.github/agents/spec-writer.agent.md`); trivial bug fixes are the
-  exception (`bug-fixer` writes a regression test instead).
+  `specs/<module>/{be,fe}/` first (written by `architect` in specification
+  mode, `.github/agents/architect.agent.md`); trivial bug fixes are the
+  exception (the owning developer writes a regression test instead).
 - `<module>` must be one of the 21 modules in `docs/architecture.md`;
   don't invent a new module name without updating
   `docs/architecture.md` and getting human sign-off (via an ADR).
 - A BE spec and its FE spec link to each other. Writing a spec means
   writing only the spec files: no inventory/progress/register updates
   unless asked, and no speculative design beyond the features (KISS).
+- FE specs must follow the [React Query API integration contract](../../specs/_foundation/frontend-shared.md#api-integration-with-react-query).
+  Record endpoint/hook mapping, scoped keys, freshness/retries, mutation
+  invalidation, SSR hydration where needed and relevant acceptance tests;
+  React Query is mandatory, not an optional library proposal.
 
 ## Given/When/Then
 

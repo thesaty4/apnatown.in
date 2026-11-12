@@ -83,6 +83,7 @@ model User {
   updatedAt       DateTime   @map("updated_at") @db.Timestamptz(6)
   roles           UserRole[]
   sessions        Session[]
+  addresses       Address[]
 
   @@index([deletedAt], where: raw("\"deleted_at\" IS NULL"), map: "users_active_deleted_at_idx")
   @@map("users")
@@ -97,6 +98,32 @@ model UserRole {
   @@id([userId, role], map: "user_roles_pkey")
   @@index([role, userId], map: "user_roles_role_user_id_idx")
   @@map("user_roles")
+}
+
+model Address {
+  id          String                                @id @db.Uuid
+  userId      String                                @map("user_id") @db.Uuid
+  label       String
+  addressText String                                @map("address_text")
+  landmark    String?
+  pinCode     String                                @map("pin_code")
+  cityId      String                                @map("city_id") @db.Uuid
+  areaId      String?                               @map("area_id") @db.Uuid
+  location    Unsupported("geography(Point,4326)")?
+  isDefault   Boolean                               @default(false) @map("is_default")
+  version     Int                                   @default(1)
+  deletedAt   DateTime?                             @map("deleted_at") @db.Timestamptz(6)
+  createdAt   DateTime                              @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime                              @map("updated_at") @db.Timestamptz(6)
+  user        User                                  @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "addresses_user_id_fkey")
+  city        City                                  @relation(fields: [cityId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "addresses_city_id_fkey")
+  area        Area?                                 @relation(fields: [areaId, cityId], references: [id, cityId], onDelete: Restrict, onUpdate: Restrict, map: "addresses_area_city_fkey")
+
+  @@unique([userId], where: raw("\"is_default\" AND \"deleted_at\" IS NULL"), map: "addresses_live_default_key")
+  @@index([userId, deletedAt, createdAt(sort: Desc), id(sort: Desc)], map: "addresses_owner_page_idx")
+  @@index([cityId], map: "addresses_city_id_idx")
+  @@index([areaId, cityId], map: "addresses_area_city_idx")
+  @@map("addresses")
 }
 
 model OtpChallenge {
@@ -146,6 +173,7 @@ model City {
   areas     Area[]
   zones     Zone[]
   waitlist  ServiceAreaWaitlist[]
+  addresses Address[]
 
   @@index([status, nameEn, id], map: "cities_status_name_en_id_idx")
   @@map("cities")
@@ -162,7 +190,9 @@ model Area {
   createdAt DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime                              @default(now()) @map("updated_at") @db.Timestamptz(6)
   city      City                                  @relation(fields: [cityId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "areas_city_id_fkey")
+  addresses Address[]
 
+  @@unique([id, cityId], map: "areas_id_city_id_key")
   @@unique([cityId, slug], map: "areas_city_slug_key")
   @@index([cityId, nameEn, id], map: "areas_city_name_en_id_idx")
   @@index([cityId, pinCode], map: "areas_city_pin_code_idx")

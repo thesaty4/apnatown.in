@@ -6,7 +6,7 @@ Implement the task described below, following `AGENTS.md`'s read order
 and lifecycle.
 
 1. If no spec exists yet for a non-trivial feature, invoke
-   `spec-writer` first (`.github/agents/spec-writer.agent.md`,
+   `architect` in specification mode (`.github/agents/architect.agent.md`,
    `.github/skills/spec-writing/SKILL.md`).
 2. Implement with `developer-backend` and/or `developer-frontend`
    (`.github/agents/developer-backend.agent.md`,
@@ -16,10 +16,12 @@ and lifecycle.
 3. If the task touches auth, payments, uploads/CSV, embeds, admin
    permissions, or communications, run `security-auditor` before
    review.
-4. Run `code-reviewer`; address any Blocker and re-submit (max 3
+4. Run `architect` in read-only code-review mode; address any Blocker and re-submit (max 3
    loops, then escalate).
-5. On `APPROVE` (and `security-auditor` `PASS` if required), run
-   `pr-creator` to open the PR.
+5. On architect `APPROVE` (and `security-auditor` `PASS` if required),
+   the owning developer uses `.github/skills/pr-description/SKILL.md`
+   to open the PR and request human review. Select one PR owner for
+   combined BE/FE work; agents never approve or merge their own PRs.
 
 Task:
 

@@ -9,6 +9,7 @@ generator without fallback. The first keyboard-focusable link targets `#main`
 ## Contents
 
 - [Structure and imports](#structure-and-imports)
+- [API integration with React Query](#api-integration-with-react-query)
 - [Rendering and SEO](#rendering-and-seo)
 - [Tokens and typography](#tokens-and-typography)
 - [Shared components](#shared-components)
@@ -33,10 +34,39 @@ packages/shared/src/         # shared Zod schemas, types, enums, formatters
 - `apps/web/src/shared/ui` only re-exports `packages/ui`; it must not contain a second implementation. A feature may import `packages/shared`, `packages/ui`, `apps/web/src/shared`, and another feature's public `index.ts` only. Never import another feature's internals.
 - Shared UI never imports a feature; it renders props and callbacks only—no business logic, API calls or data fetching.
 - Server Components are the default. Add Client Components only for browser state, forms, media, gestures or live updates. API access uses the generated/typed OpenAPI client.
-- Use TanStack Query only in client islands that need client-side cache, mutation or live-update behavior; keep server data loading in Server Components.
+- TanStack React Query (`@tanstack/react-query`) is required for client-side API integration in every module; follow the [shared contract](#api-integration-with-react-query). Keep server-only data loading in Server Components.
 - Bootstrap, root layout/providers/loading/error/not-found, package exports/`transpilePackages`, generated-client commands and same-origin `/api` cookie/CSRF wrappers are specified in [architecture](./architecture.md#runtime-composition-and-lifecycle). Use those shared wrappers, not component fetches. Browser auth always comes from the live Auth contract; no cookie-role or UI-only authorization.
-- `shared/i18n/request.ts` supplies validated `en|hi` request config to the next-intl plugin; root `NextIntlClientProvider` receives the needed locale/messages. Query clients are request-local on SSR and stable per browser session, cleared on logout/account switch. No `"use client"` root layout or global private query cache.
+- `shared/i18n/request.ts` supplies validated `en|hi` request config to the next-intl plugin; root `NextIntlClientProvider` receives the needed locale/messages. No `"use client"` root layout or global private query cache.
 - Vendor/provider owner wrappers set `X-Business-Kind: shop|provider` explicitly and key private caches by that context; never select the first business implicitly. `BUSINESS_CONTEXT_REQUIRED` is an explicit error, not empty data. Pending-applicant profile capabilities and approved selling roles come from live server contracts, not this header or the role switcher.
+
+## API integration with React Query
+
+This contract applies to **all module FE specs**, including public client islands, account, vendor/provider, rider and admin surfaces. React Query owns API server-state; the generated OpenAPI client remains the transport and type source. It is not an optional per-feature library choice.
+
+| Concern | Required contract |
+|---|---|
+| Ownership | Feature `api` modules define typed operations, reusable query keys/options and mutation functions; feature hooks use `useQuery`, `useInfiniteQuery` and `useMutation`. Shared query setup belongs in Web's shared API layer, not `packages/ui`. No component `fetch`/Axios, `useEffect` request lifecycle, SWR or second Context/store copy of API responses. Forms/UI state stay local; filters stay in the URL. |
+| Transport and errors | Query/mutation functions call the [browser/server wrappers](./architecture.md#browser-and-server-api-transport), preserving cookies, CSRF, business context and idempotency. Unwrap successful generated-client results; throw normalized API errors (including resolved `{ error, response }` results) with `code`, `message_key`, `status`, safe `details` and `correlationId`. Never resolve failures as `undefined`, empty data or success. Forward query `AbortSignal` through the typed operation to the transport. CSRF bootstrap/rotation stays an internal transport responsibility, not query-cached security material. |
+| Provider and SSR | The existing client providers boundary owns `QueryClientProvider` with a stable browser `QueryClient`, not one recreated on render. Server-only reads may call the typed server client directly. When an SSR result is also client-owned, prefetch with a request-local `QueryClient`, then `dehydrate` into `HydrationBoundary` using the same key/options and a documented freshness policy; do not independently fetch the same initial data twice. Never share a server query client between requests or turn the root layout into a Client Component. |
+| Keys and scope | Keys include resource/operation, normalized response-affecting params, locale where relevant, and current account/role/business/permission scope for private data. Explore and Search use distinct namespaces derived from their own validated URL state. Use an in-memory location-context revision for precise-location changes, not raw coordinates in keys. No tokens, OTPs, contact details or private document contents in keys. |
+| Freshness and pagination | Each feature records `staleTime`, `gcTime`, refetch triggers and any polling interval according to its existing endpoint/visibility contract; freshness is not authorization. Use `useInfiniteQuery` with opaque `pageParam`/`nextCursor`, a filter-scoped key and Load more fallback for accumulating cursor pages. Filter/scope changes reset the page set; unrelated or out-of-order responses cannot replace current results. |
+| Mutations and realtime | Use `useMutation` for client API commands. After confirmed success, update authoritative cached results or invalidate affected detail/list/count keys via `queryClient`; document cross-feature invalidation through public APIs. Optimistic updates require the owning spec's permission, cancellation of conflicting reads, snapshot/rollback and reconciliation. Never infer payment, order, code-verification or approval success locally. Existing SSE handlers update/invalidate the same cache; they do not create a parallel store or re-rank a frozen Reels session. |
+| Retry and offline | Set retry policy explicitly: bounded retries only for safe transient reads; no automatic validation/auth/permission/conflict retries, and respect server rate-limit/cooldown responses. Mutations default to `retry: false`; any allowed retry reuses the same logical idempotency key/payload under the BE contract. Never queue sensitive actions for automatic offline replay or turn a read Retry button into a repeated command. |
+| Privacy and lifecycle | Private data is memory-only where its owning contract permits it; HTTP `no-store` and existing no-cache rules still apply. Do not persist query/mutation caches to browser storage or service workers, or dehydrate secrets/private documents. Clear sensitive mutation variables/results after the flow no longer needs them. On logout, expiry, account/business/scope change or revocation, cancel affected reads, clear affected query/mutation state, and prevent old in-flight completions from repopulating it before rendering the new context. Cached state never grants permission. |
+| UX | Map query/mutation pending, error and paused/offline states to the shared state views, retaining permitted drafts and surfacing localized errors. Initial loading differs from background refresh; show an empty state only after a successful empty response. Preserve the login/session-expired flow for 401 and no-permission handling for 403. Never keep displaying revoked content as stale data. |
+
+### API integration acceptance and tests
+
+Use a fresh `QueryClient`/provider per RTL test; disable retries unless testing retry behavior and clean up outstanding queries/mutations. Mock typed transport boundaries in component tests, not query hooks; real browser-to-API journeys still follow the [architecture test contract](./architecture.md#verification-and-clean-checkout-ci).
+
+| Given | When | Then |
+|---|---|---|
+| Two consumers share a key, or an SSR-prefetched query is still fresh | They mount/hydrate | The request is deduplicated or hydrated without an unnecessary second initial fetch; another SSR request receives a separate cache. |
+| A typed client returns an API error or a network request fails | The query/mutation settles | Localized error/retry or permission UX appears, never empty/success; retries follow the declared policy. |
+| URL filters, locale, location or ownership scope changes | New results arrive before an old request | Only the current key's data is shown; cursor pages reset and Explore/Search remain independent. |
+| A mutation changes a detail/list/count | It succeeds, fails or conflicts | Affected queries reconcile on success; permitted optimistic state rolls back on failure and drafts/errors remain visible. |
+| A session or business/scope context changes while requests are in flight | Old responses or callbacks finish | Private data cannot repopulate the new context's cache, and sensitive mutation state is cleared. |
+| The browser is offline or a command's outcome is unknown | Connectivity returns or the user retries | No sensitive command replays automatically; any authorized retry preserves the BE idempotency contract. |
 
 ## Rendering and SEO
 
@@ -196,7 +226,7 @@ Owner paths are under `packages/ui/src`; grouped names share the stated file unl
 |---|---|
 | `useUrlState` | `apps/web/src/shared/hooks/use-url-state.ts`; schema-validate and serialize URL params, preserve Back/Forward. |
 | `useBackScroll`, `useDebounce`, `useMediaQuery` | `apps/web/src/shared/hooks/`; restore per-screen scroll, debounce input, subscribe to media queries with cleanup. |
-| `useCart`, `useAuthGate`, `useFollow`, `useLike`, `useI18n` | `apps/web/src/shared/hooks/`; use typed API/client contracts; login gate returns to a validated origin. |
+| `useCart`, `useAuthGate`, `useFollow`, `useLike`, `useI18n` | `apps/web/src/shared/hooks/`; API-backed behavior follows the [React Query contract](#api-integration-with-react-query), without a second response store; login gate returns to a validated origin. |
 | `formatInr(paise)`, `formatDateIst`, `formatTimeIst`, `formatDistanceKm`, `formatPhone`, `slugify` | `packages/shared`; one implementation shared by web and API where applicable. |
 | `buildEmbedUrl` | `apps/api/src/modules/media-videos`; server-only allow-list and reconstruction—never build an embed from a client URL. |
 

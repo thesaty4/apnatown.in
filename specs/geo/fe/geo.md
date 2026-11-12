@@ -2,6 +2,8 @@
 
 Features: F-LC-001, F-LC-002, F-LC-003, F-LC-004, F-LC-005, F-SA-004 | Screens: S-CUST-01, S-CUST-02, S-CUST-06, S-CUST-07, S-CUST-09, S-SUPR-04, S-SUPR-05 | Flows: J10
 
+API integration: [shared React Query contract](../../_foundation/frontend-shared.md#api-integration-with-react-query), including private location-context keys.
+
 ## Routes and rendering
 
 | Route | Screen ID | Rendering + reason | Auth / role | Index policy |

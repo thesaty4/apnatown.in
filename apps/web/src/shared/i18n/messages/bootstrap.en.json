@@ -19,7 +19,8 @@
     "language": {
       "english": "English",
       "hindi": "हिन्दी",
-      "label": "Language"
+      "label": "Language",
+      "switch": "Switch language to {language}"
     },
     "loading": {
       "label": "Loading"
@@ -41,6 +42,9 @@
     },
     "offline": {
       "title": "No internet connection"
+    },
+    "preferences": {
+      "saveFailed": "Your preference could not be saved. Please try selecting it again."
     },
     "theme": {
       "auto": "Auto",

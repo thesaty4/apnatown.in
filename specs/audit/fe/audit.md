@@ -4,6 +4,8 @@ Features: F-X-014, F-AD-014, F-SA-007 | Screens: S-ADMN-16, S-SUPR-08 | Flows: J
 
 Backend contract: [BE audit](../be/audit.md)
 
+API integration: [shared React Query contract](../../_foundation/frontend-shared.md#api-integration-with-react-query).
+
 Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Tests](#tests)
 
 ## Routes and rendering

@@ -1,4 +1,108 @@
 {
+  "account": {
+    "common": {
+      "emptyMessage": "Your profile could not be found. Try loading it again.",
+      "emptyTitle": "No profile available",
+      "loading": "Loading your account…",
+      "retry": "Try again"
+    },
+    "menu": {
+      "cancel": "Cancel",
+      "complete": "Complete your profile",
+      "edit": "Edit",
+      "logout": "Log out",
+      "logoutMessage": "You can log back in anytime with your mobile number.",
+      "logoutTitle": "Log out?",
+      "operationsUnavailable": "Operational dashboards and approval checks are not available here. Your role does not grant operational access on this screen.",
+      "preferences": "Language & theme",
+      "profile": "Profile",
+      "title": "Account",
+      "unavailable": "Addresses, payment methods, notifications and privacy requests are not available yet."
+    },
+    "preferences": {
+      "consentUnavailable": "Notification channels, WhatsApp and cookie consent are not available here. Saving language or theme does not grant consent.",
+      "save": "Save changes",
+      "saved": "Preferences saved",
+      "title": "Language & theme"
+    },
+    "profile": {
+      "addName": "Add your name",
+      "completeTitle": "Almost done",
+      "email": "Email (optional)",
+      "emptyMessage": "Tell us your name to complete your profile",
+      "emptyTitle": "Complete your profile",
+      "finish": "Finish",
+      "invalidEmail": "Enter a valid email address or leave it empty.",
+      "invalidName": "Enter a name of 2–60 characters without angle brackets or control characters.",
+      "name": "Name",
+      "phone": "Mobile number",
+      "phoneReadOnly": "Your verified login number cannot be changed here.",
+      "save": "Save changes",
+      "saved": "Profile saved",
+      "skip": "Skip for now",
+      "title": "Profile"
+    }
+  },
+  "auth": {
+    "entry": {
+      "discoveryUnavailable": "Shopping and local discovery are not available here yet. You can manage your profile and preferences.",
+      "guest": "Continue as guest",
+      "intro": "Choose your language, sign in or continue as a guest.",
+      "login": "Log in / Sign up",
+      "title": "Welcome to ApnaTown"
+    },
+    "feedback": {
+      "csrf": "Your security context changed. Try again to refresh it. Nothing was confirmed.",
+      "deliveryFailed": "The SMS could not be sent. Please try again later.",
+      "expired": "Log in with your mobile number to continue. Your last action has not been repeated.",
+      "expiredCode": "This code has expired. Request another code.",
+      "expiredTitle": "Session expired",
+      "guestMessage": "Log in to manage your profile and preferences.",
+      "guestTitle": "You are browsing as a guest",
+      "invalidCode": "That code is incorrect. Check the SMS and try again.",
+      "loading": "Checking your session…",
+      "lockedCode": "Too many attempts. Wait for resend to become available, then request a new code.",
+      "login": "Log in / Sign up",
+      "missingCode": "This code is no longer usable. Request a new code.",
+      "missingProfile": "Your profile is unavailable. Try loading it again.",
+      "rateLimited": "Too many requests. Please wait before trying again.",
+      "requestFailed": "We could not confirm the response. Check your connection and try again.",
+      "retry": "Try again",
+      "title": "Unable to continue",
+      "unavailable": "This account is unavailable. No access has been granted.",
+      "validation": "Check the highlighted fields and try again."
+    },
+    "login": {
+      "account": "Account",
+      "alternativeUnavailable": "Email and Google sign-in are not available yet.",
+      "changeNumber": "Change number",
+      "codeLabel": "6-digit OTP",
+      "codeSent": "Enter the code sent to your mobile number.",
+      "continue": "Continue",
+      "countryCode": "+91",
+      "digit": "Digit {number, number} of 6",
+      "email": "Continue with email",
+      "enterCode": "Enter OTP",
+      "expired": "This code has expired. Request another code.",
+      "google": "Continue with Google",
+      "guest": "Continue as guest",
+      "incompleteCode": "Enter all six digits.",
+      "intro": "Log in or sign up with your mobile number",
+      "invalidPhone": "Enter a valid 10-digit Indian mobile number.",
+      "legalUnavailable": "Terms and privacy notices are awaiting publication. No consent choice is recorded on this screen.",
+      "loading": "Checking your session…",
+      "login": "Log in / Sign up",
+      "phone": "Mobile number",
+      "phoneHint": "We will send a 6-digit OTP by SMS",
+      "resend": "Resend OTP",
+      "resendReady": "You can now request another OTP.",
+      "resendWait": "Resend OTP in {seconds, number} seconds",
+      "send": "Send OTP",
+      "signedIn": "You are signed in",
+      "title": "Welcome to ApnaTown",
+      "verify": "Verify & continue"
+    }
+  },
   "common": {
     "actions": {
       "checkAgain": "Check again",
@@ -927,7 +1031,8 @@
     "language": {
       "english": "English",
       "hindi": "हिन्दी",
-      "label": "Language"
+      "label": "Language",
+      "switch": "Switch language to {language}"
     },
     "loading": {
       "label": "Loading"
@@ -949,6 +1054,9 @@
     },
     "offline": {
       "title": "No internet connection"
+    },
+    "preferences": {
+      "saveFailed": "Your preference could not be saved. Please try selecting it again."
     },
     "theme": {
       "auto": "Auto",

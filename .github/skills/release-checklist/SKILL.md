@@ -1,11 +1,13 @@
 ---
 name: release-checklist
-description: Recipe used by the release-manager agent to prepare release notes and a migration/config/rollback checklist after a batch of PRs merge.
+description: Recipe for architect to prepare release notes and a migration/config/rollback checklist after a batch of PRs merge.
 ---
 
 # Release checklist
 
-Used by `.github/agents/release-manager.agent.md`.
+Used by `.github/agents/architect.agent.md` in release preparation mode.
+Run only for a requested, already merged batch; never deploy, run
+production migrations or change live feature flags.
 
 ## Steps
 
@@ -25,8 +27,8 @@ Used by `.github/agents/release-manager.agent.md`.
    - Manual admin setup needed (new permission entries, communication
      templates, category/zone data).
 4. Feature-flag and rollback plan: which changes are flag-gated, the
-   rollback step for each risk (flag off / revert PR / migration
-   down-path), and what to monitor post-release (error rates, queue
+   rollback step for each risk (flag off / revert PR / forward-fix
+   migration or documented recovery), and what to monitor post-release (error rates, queue
    depth, payment/OTP failure rates — `backend.instructions.md`
    observability).
 5. Hand the release notes + checklist to a human; never execute the

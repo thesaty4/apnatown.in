@@ -2,7 +2,7 @@
 
 Seeded with recurring footguns this setup is designed to prevent.
 Format: see `.github/skills/lessons-learned/SKILL.md`. Newest at the
-top; `bug-fixer` and any agent that catches a reusable mistake adds an
+top; developer bug-fix work and any agent that catches a reusable mistake add an
 entry here.
 
 ## Keep runtime configuration wired through launcher allow-lists

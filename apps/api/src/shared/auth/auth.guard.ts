@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import type { Response } from 'express';
-import { EmptyRequestSchema } from '@apnatown/shared/wire';
 import { SessionService } from '../../modules/auth/application/session.service';
 import { RUNTIME_CONFIG, type RuntimeConfig } from '../config/config';
 import { DomainError } from '../errors/errors';
@@ -47,8 +46,6 @@ export class AuthGuard implements CanActivate {
       throw new DomainError('COMMON_FORBIDDEN');
     response.setHeader('Cache-Control', 'private, no-store');
     response.setHeader('Vary', 'Cookie, Origin');
-    if (!EmptyRequestSchema.safeParse(request.query).success)
-      throw new DomainError('VALIDATION_ERROR');
     this.checkOrigin(request, policy === 'csrf');
     if (policy === 'csrf') {
       if (!read) throw new DomainError('COMMON_FORBIDDEN');

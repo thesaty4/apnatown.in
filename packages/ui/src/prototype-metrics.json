@@ -1,5 +1,5 @@
 {
-  "source": "docs/design-context/reference/prototype-source/style.css: .wrap, .state, .btn, .skel, h1/h2 desktop overrides; .field/.input/.hint/.errmsg (125-138), .chip/.badge (144-146), .art (160-165), .mini (248), .sfn (284)",
+  "source": "docs/design-context/reference/prototype-source/style.css: .wrap, .state, .btn, .skel, h1/h2 desktop overrides; .row/.stack (61), .field/.input/.hint/.errmsg (125-138), .chip/.badge (144-146), .art (160-165), .scrim/.sheet/.grab (207-214), .mini (248), .sfn (284)",
   "tokens": {
     "color": {
       "switch-thumb": "#FFFFFF"
@@ -26,7 +26,16 @@
     },
     "animate": {
       "skeleton": "apnatown-shimmer 1.3s infinite",
-      "spinner": "apnatown-spin .7s linear infinite"
+      "spinner": "apnatown-spin .7s linear infinite",
+      "overlay-fade": "apnatown-overlay-fade var(--at-dur-2)",
+      "sheet-up": "apnatown-sheet-up var(--at-dur-3) var(--at-ease)",
+      "sheet-pop": "apnatown-sheet-pop var(--at-dur-3) var(--at-ease)"
+    },
+    "breakpoint": {
+      "sheet": "700px"
+    },
+    "radius": {
+      "sheet-grab": "3px"
     },
     "spacing": {
       "page-gutter": "14px",
@@ -49,10 +58,18 @@
       "badge-block": "2px",
       "count": "28px",
       "count-block": "1px",
-      "avatar-mini": "56px"
+      "avatar-mini": "56px",
+      "stack-gap": "14px",
+      "row-gap": "10px",
+      "sheet-max": "88vh",
+      "sheet-bottom": "calc(18px + var(--at-sab))",
+      "sheet-grab-width": "44px",
+      "sheet-grab-height": "5px"
     },
     "container": {
-      "state-copy": "38ch"
+      "state-copy": "38ch",
+      "sheet": "min(560px,94vw)",
+      "sheet-wide": "min(820px,94vw)"
     },
     "text": {
       "state-icon": "2.6rem",

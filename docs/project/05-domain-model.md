@@ -1,7 +1,7 @@
 # 05 — Domain Model
 
 **Purpose:** Conceptual entities, their relationships, and every status/lifecycle model — **not** a database schema.
-**Audience:** Backend engineers, `architect`, `spec-writer`.
+**Audience:** Backend engineers and `architect` in specification/design mode.
 **Related files:** [docs/PROJECT.md](../PROJECT.md) (index) · [04-business-rules.md](./04-business-rules.md) · [`docs/architecture.md`](../architecture.md) (module map) · [`database.instructions.md`](../../.github/instructions/database.instructions.md)
 **Last updated:** 2026-11-09
 **Owner:** Architecture

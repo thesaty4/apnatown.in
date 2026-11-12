@@ -9,10 +9,17 @@ start from, and who to ask when stuck.
 
 | Situation | Prompt | Leads to |
 |---|---|---|
-| New feature, no spec yet | `.github/prompts/write-spec.prompt.md` | `spec-writer` (-> `architect` if cross-module) |
-| Spec exists, ready to build | `.github/prompts/implement-task.prompt.md` | `developer-backend`/`developer-frontend` -> (`security-auditor` if sensitive) -> `code-reviewer` -> `pr-creator` |
-| Reviewing an open PR | `.github/prompts/review-pr.prompt.md` | `code-reviewer` |
-| A bug report | `.github/prompts/fix-bug.prompt.md` | `bug-fixer` -> same security/review/PR steps as above |
+| New feature, no spec yet | `.github/prompts/write-spec.prompt.md` | `architect` in specification/design mode |
+| Spec exists, ready to build | `.github/prompts/implement-task.prompt.md` | `developer-backend`/`developer-frontend` -> (`security-auditor` if sensitive) -> `architect` code review -> owning developer opens PR |
+| Reviewing an open PR | `.github/prompts/review-pr.prompt.md` | `architect` in read-only code-review mode |
+| A bug report | `.github/prompts/fix-bug.prompt.md` | Owning developer -> same security/review/PR steps as above |
+| Release preparation after merge | `.github/skills/release-checklist/SKILL.md` | `architect` prepares notes/checklists -> human executes release |
+
+The roster has four agents; their responsibilities and PR gates are in
+[AGENTS.md](../../AGENTS.md#3-agent-roster). A developer resumes PR creation
+only after architect `APPROVE` and required security `PASS`; review is a
+separate read-only stage, not self-approval. For combined BE/FE tasks, select
+one developer as PR owner.
 
 ## Keeping the setup itself healthy
 
@@ -30,5 +37,5 @@ start from, and who to ask when stuck.
   ask a human, don't guess.
 - Design/module-boundary conflict -> `architect`.
 - Security trade-off -> `security-auditor`.
-- Still blocked after 3 `code-reviewer` loops -> escalate to a human
+- Still blocked after 3 architect code-review loops -> escalate to a human
   (`AGENTS.md` escalation rules).

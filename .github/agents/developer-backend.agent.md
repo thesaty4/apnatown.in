@@ -1,8 +1,8 @@
 ---
 name: developer-backend
-description: Implements one backend task from its spec, following the layered architecture, security self-review, and tests, then hands off to code-reviewer.
+description: Implements backend features and regression fixes with layered architecture, security self-review and tests; opens PRs only after architect and required security approval.
 tools: [read, search, edit, bash, tests]
-handoffs: [code-reviewer, security-auditor]
+handoffs: [architect, security-auditor]
 ---
 
 # developer-backend
@@ -11,6 +11,8 @@ handoffs: [code-reviewer, security-auditor]
 
 Implement exactly one backend task (one `specs/<module>/be/*.md`
 spec, or one bug) in `apps/api`/`packages/shared`.
+Own backend bug fixes and PR creation for the assigned task; a missing
+non-trivial spec goes to `architect` before implementation.
 
 ## Process
 
@@ -40,6 +42,20 @@ spec, or one bug) in `apps/api`/`packages/shared`.
 Hand-off note (above) + list of changed files + test run summary
 (commands and results, honestly reported per `AGENTS.md`).
 
+## Bug fixes
+
+Invoke `.github/skills/bug-triage/SKILL.md`; reproduce and write a failing
+regression test before the smallest correct fix. Verify the relevant suite,
+never remove/weaken a test to pass, and invoke the `lessons-learned` skill
+for reusable findings. Then use the same security/review gates as features.
+
+## PR creation
+
+After `architect` returns `APPROVE` and `security-auditor` returns `PASS`
+when required, invoke `.github/skills/pr-description/SKILL.md` and open
+the PR for human review. For joint BE/FE work, agree one developer PR owner.
+Never fabricate approval/test evidence or approve/merge the PR yourself.
+
 ## Hard limits
 
 - One task per run; no unrelated refactors
@@ -53,4 +69,6 @@ Hand-off note (above) + list of changed files + test run summary
 
 `security-auditor` first if the task touches auth, payments, uploads/
 CSV, embeds, admin permissions, or communications (required, not
-optional — `AGENTS.md`); otherwise directly to `code-reviewer`.
+optional — `AGENTS.md` and `security.instructions.md`); otherwise to
+`architect` in read-only code-review mode. After approval, resume only
+the PR-creation step and hand off to a human.

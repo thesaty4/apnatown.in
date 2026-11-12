@@ -5,7 +5,8 @@ description: Recipe for triaging a reported bug before fixing it — reproduce, 
 
 # Bug triage
 
-Used by `.github/agents/bug-fixer.agent.md` before the fix step.
+Used by `.github/agents/developer-backend.agent.md` or
+`.github/agents/developer-frontend.agent.md` before the fix step.
 
 ## Steps
 
@@ -19,12 +20,12 @@ Used by `.github/agents/bug-fixer.agent.md` before the fix step.
 3. Find the owning spec (`specs/<module>/`) and the relevant
    `.github/instructions/domain-*.instructions.md` file to understand
    intended behaviour before concluding it's actually a bug (vs. a
-   spec gap — hand that to `spec-writer` instead).
+   spec gap — hand that to `architect` in specification mode instead).
 4. Check `docs/ai/LESSONS_LEARNED.md` for a similar past issue.
 5. If it's a security-sensitive area (auth/payments/uploads/admin-
    permission/communications), flag that `security-auditor` will be
    required after the fix.
-6. Hand off to the fix step (`bug-fixer` agent) with: root cause
+6. Continue with the owning developer's fix step using: root cause
    hypothesis, severity/area classification, and the spec/instruction
    references used.
 

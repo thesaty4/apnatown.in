@@ -2,6 +2,31 @@
 
 Features: F-AU-004, F-AU-006, F-AU-007 | Screens: S-CUST-27, S-CUST-28 | Flows: J4, J12
 
+API integration: [shared React Query contract](../../_foundation/frontend-shared.md#api-integration-with-react-query), including the transport-owned CSRF boundary.
+
+### Implemented Auth/account query policy
+
+| Surface | Query key / mutation hook | Policy |
+|---|---|---|
+| Session | `sessionOptions`, `['auth','session']` | Fresh for 30 seconds; successful sessions revalidate on focus/reconnect. Expiry, cross-tab events and BFCache restoration invalidate authority. |
+| Profile/account summary | `profileOptions`, `['private',scope,'profile']`; `useSaveProfile` | Fresh for 30 seconds; confirmed saves cancel matching reads, set the authoritative result and invalidate without an immediate duplicate GET. |
+| Account/global preferences | `preferencesOptions`, `['private',scope,'preferences']`; `useSavePreferences` | Same policy; global preference controls share this cache, with no separate response store. |
+| OTP challenge/resend/verify and logout | `usePrivateMutation` through feature hooks | No automatic retry or offline replay; reset transient inputs/results after the flow. CSRF stays outside query data. |
+
+Scope includes user ID, sorted roles, approval states and the in-memory auth
+revision; no phone, OTP, credentials or private document data enters keys.
+These responses are locale-independent, so locale is not a key dimension.
+Query GC is five minutes; mutations use GC zero. Reads use `retry: false` and
+`retryOnMount: false`, with explicit Retry UI. Mutations use
+`networkMode: 'always'` so offline commands fail rather than resume later.
+Request-local SSR caches hydrate already-read results through
+`HydrationBoundary`; no server cache is shared across requests. Logout, expiry
+or identity changes cancel/remove private data and fence stale callbacks.
+
+The focused offline Auth/query suite covers hydration, deduplication, errors,
+scope changes, invalidation and stale read/mutation races. Mounted browser
+journeys, cross-tab/BFCache events and interactive accessibility remain unverified.
+
 ## Routes and rendering
 
 | Route | Screen ID | Rendering + reason | Auth / role | Index |

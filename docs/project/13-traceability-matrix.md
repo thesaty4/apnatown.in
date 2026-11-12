@@ -1,7 +1,7 @@
 # 13 — Traceability Matrix
 
 **Purpose:** Every feature ID mapped to roles, rules, statuses, entities, screens, journeys, backend module(s) and frontend area — the completeness check required by quality gate 1.
-**Audience:** `code-reviewer`, `architect`, anyone auditing coverage.
+**Audience:** `architect` in specification/code-review modes and anyone auditing coverage.
 **Related files:** [docs/PROJECT.md](../PROJECT.md) (index) · [03-feature-catalog.md](./03-feature-catalog.md) · [04-business-rules.md](./04-business-rules.md) · [05-domain-model.md](./05-domain-model.md) · [06-user-journeys.md](./06-user-journeys.md) · [07-screens-routes-sitemap.md](./07-screens-routes-sitemap.md)
 **Last updated:** 2026-11-09
 **Owner:** Architecture

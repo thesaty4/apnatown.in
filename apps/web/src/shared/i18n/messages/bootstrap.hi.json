@@ -19,7 +19,8 @@
     "language": {
       "english": "English",
       "hindi": "हिन्दी",
-      "label": "भाषा"
+      "label": "भाषा",
+      "switch": "{language} भाषा चुनें"
     },
     "loading": {
       "label": "लोड हो रहा है"
@@ -41,6 +42,9 @@
     },
     "offline": {
       "title": "इंटरनेट नहीं है"
+    },
+    "preferences": {
+      "saveFailed": "आपकी पसंद सहेजी नहीं जा सकी। कृपया इसे फिर चुनकर कोशिश करें।"
     },
     "theme": {
       "auto": "ऑटो",

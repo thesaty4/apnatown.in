@@ -2,6 +2,13 @@ export const locales = ['en', 'hi'] as const;
 export type Locale = (typeof locales)[number];
 export type Theme = 'light' | 'dark' | 'auto';
 export const themeCookie = 'apnatown-theme';
+export const localeCookie = 'apnatown-locale';
+
+export function isPrivatePath(path: string) {
+  return /^\/(?:account|orders|saved|my-reviews|checkout|bill|vendor|rider|admin|super-admin)(?:\/|$)/.test(
+    path,
+  );
+}
 
 export function isLocale(value: unknown): value is Locale {
   return value === 'en' || value === 'hi';

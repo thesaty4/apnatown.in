@@ -83,6 +83,7 @@
   --at-otp-height: 54p;
   --at-otp-width: 46px;
   --at-overlay: rgba(31,26,20,.55);
+  --at-overlay-fade: apnatown-overlay-fade var(--at-dur-2);
   --at-page: 1200px;
   --at-page-gutter: 14px;
   --at-price: 1.1rem;
@@ -94,6 +95,7 @@
   --at-r-pill: 999px;
   --at-r-sm: 10px;
   --at-r-xs: 6px;
+  --at-row-gap: 10px;
   --at-sab: env(safe-area-inset-bottom,0px);
   --at-sat: env(safe-area-inset-top,0px);
   --at-searchbar-min-height: 44px;
@@ -104,6 +106,15 @@
   --at-sh-1: 0 1px 2px rgba(60,40,20,.08),0 1px 3px rgba(60,40,20,.06);
   --at-sh-2: 0 4px 12px rgba(60,40,20,.10),0 2px 4px rgba(60,40,20,.06);
   --at-sh-3: 0 16px 40px rgba(60,40,20,.18);
+  --at-sheet: min(560px,94vw);
+  --at-sheet-bottom: calc(18px + var(--at-sab));
+  --at-sheet-grab: 3px;
+  --at-sheet-grab-height: 5px;
+  --at-sheet-grab-width: 44px;
+  --at-sheet-max: 88vh;
+  --at-sheet-pop: apnatown-sheet-pop var(--at-dur-3) var(--at-ease);
+  --at-sheet-up: apnatown-sheet-up var(--at-dur-3) var(--at-ease);
+  --at-sheet-wide: min(820px,94vw);
   --at-skeleton: apnatown-shimmer 1.3s infinite;
   --at-small: 0.875rem;
   --at-small-min: 0.8rem;
@@ -117,6 +128,7 @@
   --at-st-preparing: #B45309;
   --at-st-ready: #6D28D9;
   --at-st-refunded: #475569;
+  --at-stack-gap: 14px;
   --at-star: #F59E0B;
   --at-state-block: 36px;
   --at-state-copy: 38ch;

@@ -4,6 +4,8 @@ Features: F-AD-012 | Screens: S-ADMN-13 | Flows: J10
 
 Backend contract: [BE communications](../be/communications.md)
 
+API integration: [shared React Query contract](../../_foundation/frontend-shared.md#api-integration-with-react-query).
+
 Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Tests](#tests)
 
 ## Routes and rendering

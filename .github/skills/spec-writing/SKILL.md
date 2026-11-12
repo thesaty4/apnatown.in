@@ -1,11 +1,11 @@
 ---
 name: spec-writing
-description: Lean recipe for writing module BE and FE specs (spec files only, no extra documentation upkeep), used by the spec-writer agent.
+description: Lean recipe for architect to write module BE and FE specs with the required React Query API contract (spec files only, no extra documentation upkeep).
 ---
 
 # Spec writing
 
-Used by `.github/agents/spec-writer.agent.md`. Governing prompt and
+Used by `.github/agents/architect.agent.md` in specification mode. Governing prompt and
 templates: `docs/prompts/LEAN-SPECS.md`.
 
 ## Scope (no over-engineering)
@@ -30,7 +30,9 @@ templates: `docs/prompts/LEAN-SPECS.md`.
    `02-*`, `07-*`, `08-*` and the prototype in `reference/`.
 2. Write `specs/<module>/be/<module>.md` and `specs/<module>/fe/<module>.md`
    using the LEAN-SPECS templates; list every F-ID and S-ID explicitly
-   (no ranges).
+   (no ranges). FE specs follow the [mandatory React Query contract](../../../specs/_foundation/frontend-shared.md#api-integration-with-react-query):
+   map endpoints to queries/mutations, define key scope, freshness/retries,
+   invalidation, SSR hydration where needed and relevant acceptance tests.
 3. Ambiguity: note it in the spec as `Open question:` with the
    assumption used; don't invent behaviour.
 4. Acceptance criteria as Given/When/Then incl. one authorisation
@@ -43,3 +45,5 @@ templates: `docs/prompts/LEAN-SPECS.md`.
 - [ ] BE and FE within ~250 lines each, IDs listed explicitly.
 - [ ] Authorisation = role + ownership + city/area scope + permission.
 - [ ] Given/When/Then with a negative case.
+- [ ] FE API integration follows the shared React Query contract, not an
+  optional library choice or a second API-response store.

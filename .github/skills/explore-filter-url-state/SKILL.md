@@ -27,7 +27,11 @@ Covers EX1-EX11, SR7, SR10 (`domain-catalog-search.instructions.md`).
    removable chips + Clear all. Reuse it unmodified on Search (Services
    tab) and service category pages (`solid-dry-design.instructions.md`).
 6. Render counts live per filter option based on the current combination
-   of other active filters.
+   of other active filters. Load client results/counts with React Query
+   through the typed API client, following the [shared API contract](../../../specs/_foundation/frontend-shared.md#api-integration-with-react-query).
+   Derive distinct Explore/Search keys from validated URL state and
+   location context; cancel superseded reads and reset cursor pages when
+   filters change. Query cache is not the filter source of truth.
 
 ## Skeleton
 
@@ -52,3 +56,5 @@ function useExploreFilters() {
 - [ ] Back restores filters and scroll position.
 - [ ] Services filter component reused unmodified across screens.
 - [ ] Counts reflect the current combined filter state.
+- [ ] React Query keys isolate each screen/filter context; late responses
+  cannot replace current results or counts.

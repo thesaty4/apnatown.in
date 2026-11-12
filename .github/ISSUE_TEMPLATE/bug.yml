@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a bug for the bug-fixer agent or a human to triage.
+description: Report a bug for the owning developer-backend/developer-frontend agent or a human to triage.
 title: "[bug]: "
 labels: ["bug"]
 body:
@@ -43,7 +43,7 @@ body:
     id: sensitive
     attributes:
       label: Sensitive area
-      description: Check all that apply — these require a security-auditor PASS before pr-creator.
+      description: Check all that apply — these require a security-auditor PASS before the owning developer opens a PR.
       options:
         - label: Touches auth
         - label: Touches payments

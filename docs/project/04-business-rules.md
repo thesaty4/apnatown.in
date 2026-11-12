@@ -1,7 +1,7 @@
 # 04 — Business Rules
 
 **Purpose:** Every product invariant (BR-01..BR-22), plus the formulas and defaults that back them, in one place.
-**Audience:** Everyone implementing or reviewing a feature — this is what `code-reviewer` checks on every PR.
+**Audience:** Everyone implementing or reviewing a feature — this is what `architect` checks in code-review mode on every PR.
 **Related files:** [docs/PROJECT.md](../PROJECT.md) (index) · [03-feature-catalog.md](./03-feature-catalog.md) (Rules column) · [05-domain-model.md](./05-domain-model.md) · [13-traceability-matrix.md](./13-traceability-matrix.md) · [`security.instructions.md`](../../.github/instructions/security.instructions.md)
 **Last updated:** 2026-11-09
 **Owner:** Product

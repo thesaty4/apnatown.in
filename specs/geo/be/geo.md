@@ -28,8 +28,10 @@ substring, not a SQL wildcard. Cursors are signed and bound to endpoint,
 city and normalized filters. Both reads share a 60-per-minute/IP limit and
 page default 20/hard cap 50. No locations or fees are seeded; migrations,
 query plans and HTTP behavior remain unverified against a live database.
-Location resolution, waitlist writes, internal owner ports and admin mutations
-remain separate implementation slices.
+The `GeoScopePort.assertAreasInCity` read-validation capability is implemented
+for Users saved addresses, including city-only selection and transaction-bound
+reference locks. Location/zone resolution, other internal owner capabilities,
+waitlist writes and admin mutations remain separate implementation slices.
 
 ## Endpoints
 

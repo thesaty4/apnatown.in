@@ -1,5 +1,5 @@
 name: Spec request
-description: Request a BE/FE spec be written for a feature in docs/FEATURE_INVENTORY.md, for the spec-writer agent.
+description: Request linked BE/FE specs for a feature in docs/FEATURE_INVENTORY.md, for architect in specification mode.
 title: "[spec]: "
 labels: ["spec-request"]
 body:
@@ -22,13 +22,13 @@ body:
     id: context
     attributes:
       label: Additional context
-      description: Anything beyond the one-line description in docs/FEATURE_INVENTORY.md that the spec-writer agent should know — related journeys (docs/project/06-user-journeys.md, J1-J14), dependencies on other specs, known constraints.
+      description: Anything beyond the one-line description in docs/FEATURE_INVENTORY.md that architect should know — related journeys (docs/project/06-user-journeys.md, J1-J14), dependencies on other specs, known constraints.
     validations:
       required: false
   - type: textarea
     id: open-questions
     attributes:
       label: Known open questions
-      description: Anything already known to be ambiguous — the spec-writer agent will add these to docs/project/12-decisions-assumptions-open-questions.md if not already recorded.
+      description: Anything already known to be ambiguous — architect will ask for clarification and record open questions in the owning spec.
     validations:
       required: false

@@ -1,6 +1,6 @@
-import { SystemShell } from '../../../shared/ui/SystemShell';
+import { Entry } from '../../../features/auth/Entry';
 
 // C00 bootstrap only: no Home composition, catalogue data or fake health-driven UI.
-export default function Bootstrap() {
-  return <SystemShell kind="empty" />;
+export default function EntryPage() {
+  return <Entry />;
 }

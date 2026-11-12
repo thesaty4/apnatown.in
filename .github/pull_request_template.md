@@ -42,11 +42,11 @@ docs/project/12-decisions-assumptions-open-questions.md entry if one was raised.
 ## Risk and rollback
 
 <!-- What could break, and how to revert (feature flag off, revert
-commit, migration down-path). -->
+commit, forward-fix migration or documented recovery). -->
 
 ## Agent review summary
 
-- `code-reviewer` verdict: <!-- APPROVE / CHANGES_REQUESTED -->
+- `architect` code-review verdict: <!-- APPROVE / CHANGES_REQUESTED -->
 - `security-auditor` verdict (if required): <!-- PASS / FAIL / n/a -->
 
 ## Human review guide

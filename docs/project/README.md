@@ -72,6 +72,6 @@ history so old links and specs still resolve to something meaningful.
 
 Any PR that changes behaviour covered by a `docs/project/*.md` file
 must update that file in the **same PR** — not as follow-up work. This
-is checked by `code-reviewer` and by
+is checked by `architect` in code-review mode and by
 `scripts/validate-project-docs.mjs` (which can't check behaviour, only
 structure — the review step is what catches a stale description).

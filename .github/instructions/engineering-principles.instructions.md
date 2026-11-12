@@ -76,7 +76,8 @@ before implementing any feature.
   `.github/pull_request_template.md`.
 - **Humans merge. Agents never merge, force-push `main`, or delete
   branches other than their own.**
-- `security-auditor` review is required before `pr-creator` for changes
+- `architect` code-review `APPROVE` is required before the owning developer
+  opens a PR. `security-auditor` review is also required for changes
   touching `auth`, `payments`, uploads/CSV, embeds, admin permissions,
   or `communications`.
 

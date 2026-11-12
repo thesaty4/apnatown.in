@@ -1,7 +1,7 @@
 # 07 — Screens, Routes, Sitemap
 
 **Purpose:** Every production route, its screen ID, entry points, key components and states.
-**Audience:** Frontend engineers, `developer-frontend`, `spec-writer`.
+**Audience:** Frontend engineers, `developer-frontend`, `architect` in specification mode.
 **Related files:** [docs/PROJECT.md](../PROJECT.md) (index) · [03-feature-catalog.md](./03-feature-catalog.md) · [08-design-system.md](./08-design-system.md) · [06-user-journeys.md](./06-user-journeys.md)
 **Last updated:** 2026-11-09
 **Owner:** Frontend

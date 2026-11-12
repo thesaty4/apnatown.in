@@ -1,12 +1,20 @@
 ---
 name: pr-description
-description: Recipe for filling the PR template honestly and completely, used by the pr-creator agent.
+description: Recipe for developer-backend or developer-frontend to fill the PR template and open a PR after architect and required security approval.
 ---
 
 # PR description
 
-Used by `.github/agents/pr-creator.agent.md`. Template:
+Used by the owning `.github/agents/developer-backend.agent.md` or
+`.github/agents/developer-frontend.agent.md`. Template:
 `.github/pull_request_template.md`.
+
+## Preconditions
+
+- `architect` code-review verdict for the current diff is `APPROVE`.
+- `security-auditor` verdict for the current diff is `PASS` when sensitive.
+- If either required verdict is missing or failing, return to that review
+  stage; do not open the PR. For combined BE/FE work, use one developer PR owner.
 
 ## Steps
 
@@ -25,11 +33,18 @@ Used by `.github/agents/pr-creator.agent.md`. Template:
 6. Assumptions: anything interpreted from an ambiguous spec, with a
    link to the "Open questions" entry if one was raised.
 7. Risk and rollback: what could break, and how to revert (feature
-   flag off, revert commit, migration down-path).
-8. Agent review summary: `code-reviewer` verdict and
+   flag off, revert commit, forward-fix migration or documented recovery).
+8. Agent review summary: `architect` code-review verdict and
    `security-auditor` verdict (if applicable), quoted verbatim.
 9. Human review guide/checklist: 3-5 specific things a human reviewer
    should pay attention to for this change.
+10. Push the task branch and open the PR against `main`. Apply appropriate
+    area/review labels and request human review from `.github/CODEOWNERS`;
+    never approve or merge the PR yourself.
+
+Output the PR URL/number and the quoted required verdicts. If publication
+is blocked by missing access/tooling, report it explicitly rather than
+claiming the PR was created.
 
 ## Checklist
 

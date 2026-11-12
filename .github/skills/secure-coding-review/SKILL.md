@@ -1,6 +1,6 @@
 ---
 name: secure-coding-review
-description: Step-by-step self-review against the ApnaTown security checklist before handing off to security-auditor or code-reviewer.
+description: Step-by-step self-review against the ApnaTown security checklist before security-auditor review or architect code review.
 ---
 
 # Secure coding review

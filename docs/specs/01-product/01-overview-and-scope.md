@@ -16,7 +16,7 @@
 ApnaTown.in is a mobile-first hyperlocal marketplace and local business discovery platform launching in Padrauna, Kushinagar, Uttar Pradesh. Local businesses list products and services; customers discover nearby businesses, order by delivery/self-pickup, enquire, watch videos/reels, follow and review. The design serves first-time shoppers and non-technical shopkeepers on mid-range Android and slow 3G/4G; English/Hindi, light/dark mode and WCAG 2.2 AA accessibility are required.
 
 - **Brand:** ApnaTown — “Apna Shehar, Apni Dukaan”.
-- **Fixed stack:** Next.js App Router + TypeScript + Tailwind, NestJS + TypeScript, PostgreSQL.
+- **Fixed stack:** Next.js App Router + TypeScript + Tailwind + TanStack React Query (`@tanstack/react-query`) for frontend API integration, NestJS + TypeScript, PostgreSQL. Server/client boundaries follow the [shared API contract](../../../specs/_foundation/frontend-shared.md#api-integration-with-react-query).
 - **Canonical source:** [Design Context Pack](../../design-context/README.md); prototype HTML and stylesheet control visual/behaviour conflicts, which must be appended to [open issues](../../design-context/11-open-issues-and-assumptions.md).
 - **Coverage size:** 206 feature IDs/22 areas; 105 screens; 14 journeys; 16 state models; 22 BRs; 927 EN/HI string pairs.
 

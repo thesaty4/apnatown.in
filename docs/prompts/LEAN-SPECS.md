@@ -21,7 +21,7 @@ Fill the existing folders `specs/<module>/be/` and `specs/<module>/fe/` (they ex
 1. **Reference, never repeat.** Do not re-describe things the pack already defines. Cite IDs (F-, S-, BR-, ST-, J-) and screenshot file names. Standard UX states (default, skeleton, empty, error + retry, no-permission, offline) are defined once in the foundation file; screens list only their **special** states.
 2. **Size limits:** a module BE spec <= ~250 lines, a module FE spec <= ~250 lines, each foundation file <= ~300 lines. Tables and bullets, no prose padding, no marketing text, no repeated explanations.
 3. **Build only what the features need.** Forbidden unless a feature in the pack requires it: microservices, Kubernetes, event sourcing, CQRS, GraphQL, an external search engine, a service mesh, a data lake, multi-region, custom auth protocols, generic plugin systems.
-4. **Default lean choices** (change only with a one-line justification in `architecture.md`): modular monolith; REST + OpenAPI generated from DTOs; zod schemas shared between web and api; PostgreSQL with PostGIS (geo), pg_trgm + unaccent + full-text (search); a Postgres-based job queue (pg-boss) and a transactional outbox, so **no Redis at launch**; SSE for realtime (order tracking, rider requests, live map); httpOnly cookie sessions; Next.js cache + ISR for public pages, TanStack Query only where a client island needs it; next-intl for English/Hindi; adapters (ports) for payment gateway, OTP/SMS, WhatsApp, email, maps and file storage with fakes for tests; money in integer paise.
+4. **Default lean choices** (change only with a one-line justification in `architecture.md`; the fixed React Query requirement is not optional): modular monolith; REST + OpenAPI generated from DTOs; zod schemas shared between web and api; PostgreSQL with PostGIS (geo), pg_trgm + unaccent + full-text (search); a Postgres-based job queue (pg-boss) and a transactional outbox, so **no Redis at launch**; SSE for realtime (order tracking, rider requests, live map); httpOnly cookie sessions; Next.js cache + ISR for public pages, mandatory TanStack React Query (`@tanstack/react-query`) for all client API reads/mutations per the [shared contract](../../specs/_foundation/frontend-shared.md#api-integration-with-react-query); next-intl for English/Hindi; adapters (ports) for payment gateway, OTP/SMS, WhatsApp, email, maps and file storage with fakes for tests; money in integer paise.
 5. **One place per fact.** Each table is defined in exactly one module BE spec. Each reusable thing is defined once in a foundation file and only referenced elsewhere.
 6. **Do not invent requirements.** Unknowns go to `docs/design-context/11-open-issues-and-assumptions.md` (append: ID, question, assumption used) and you continue.
 
@@ -42,6 +42,7 @@ Fill the existing folders `specs/<module>/be/` and `specs/<module>/fe/` (they ex
 **`specs/_foundation/frontend-shared.md`**
 - `apps/web` folder tree: route groups `(public) (account) (vendor) (provider) (rider) (admin) (super-admin)`, `src/features/<feature>/{components,hooks,api,schemas,server}`, `src/shared/{ui,hooks,lib,i18n}`; import rules (features import only shared or other features' `index.ts`; shared never imports features; UI components hold no business logic or data fetching).
 - **Rendering strategy table by route group** (SSG / ISR with revalidate tags / SSR / CSR) with the reason, plus SEO rules per public page type in a compact table (URL pattern, title/description template EN/HI, JSON-LD type, canonical, index/noindex; filter combinations noindex except category and subcategory landing pages; sitemaps; hreflang EN/HI).
+- **API integration:** define the shared React Query contract once: typed transport and errors, provider/request-local SSR hydration, key scope, freshness/retries, pagination, mutation invalidation/rollback, session cleanup and acceptance tests. Module specs reference it and add only endpoint-specific details; Server Components remain the default.
 - Tokens -> Tailwind mapping (CSS variables for light/dark from `04-design-tokens.json`, no raw hex in components), fonts (Poppins, Noto Sans, Noto Sans Devanagari via next/font), breakpoints 600/900.
 - **Shared component list** (every component in `06-component-catalogue.md`): name, props one-liner, variants, owner file path. Plus shared hooks/utilities (`useUrlState`, `useBackScroll`, `useAuthGate`, formatters).
 - Standard UX states component set and rules; i18n rules (keys, EN/HI, long Hindi); auth gate and return-to-origin; URL-state contract for Explore/Search/Reels; performance budgets (LCP < 2.5 s slow 4G, route JS ~170 KB gzip, CLS < 0.1) and image/video rules; PWA/offline/data-saver basics.
@@ -168,14 +169,14 @@ Features: F-... | Screens: S-... | Flows: J..
 ## Screens (one compact block each; every screen of this module in `02`)
 - Screen S-.. name | route | screenshot files (`m-...`, `d-...`) to match
 - Layout: mobile / tablet / desktop regions (shared components named from `frontend-shared.md`)
-- Data: endpoints used (from the BE specs), cache/revalidate
+- Data: endpoints (from BE specs), server-only reads vs required React Query hooks; scoped keys, freshness/retries, mutation invalidation/rollback and hydration where needed (reference the shared API contract)
 - Special states (beyond the standard set) and their copy keys
 - Interactions: bullets (incl. keyboard, Esc/back, URL state)
 - Validation and rules (BR/ST refs)
 - Acceptance criteria (Given/When/Then, 3-6; include permission, empty/error, Hindi/dark where relevant)
 ## Feature components (only those not in shared) and shared components used
 ## i18n key prefix, analytics events (name + trigger only)
-## Tests (component, e2e journey ids)
+## Tests (component including relevant shared React Query acceptance cases, e2e journey ids)
 ```
 
 Backend-only modules (payments, audit, notifications BE) may have a very short FE spec that says what screens exist. Every authorisation rule must say **role + ownership + city/area scope + module permission** where applicable.

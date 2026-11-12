@@ -1,8 +1,8 @@
 # Specs templates
 
 Every feature in `docs/FEATURE_INVENTORY.md` gets a backend spec and a
-frontend spec before implementation, written by the `spec-writer` agent
-(see `.github/agents/spec-writer.agent.md` and
+frontend spec before implementation, written by `architect` in specification mode
+(see `.github/agents/architect.agent.md` and
 `.github/skills/spec-writing/SKILL.md`).
 
 - Copy `feature-be.md` to `specs/<module>/be/<id>-<slug>.md`.
@@ -14,6 +14,5 @@ frontend spec before implementation, written by the `spec-writer` agent
   ("BE spec" / "FE spec" fields) and to the same feature ID row.
 - Given/When/Then is mandatory for every acceptance criterion
   (`specs-and-docs.instructions.md`).
-- After writing a spec, update its row's status in
-  `docs/FEATURE_INVENTORY.md` to `spec written` and fill in the real
-  spec paths.
+- Write only requested specs; update inventory status/paths only when
+  explicitly asked, per the `spec-writing` skill.

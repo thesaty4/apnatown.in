@@ -22,7 +22,9 @@ providers are chosen yet.
 Use the foundation's pnpm workspace/package and version-pinning contracts:
 
 - `apps/web`: Next.js (App Router), React, TypeScript strict, Tailwind
-  CSS with design tokens from `docs/design-system.md`, TanStack Query,
+  CSS with design tokens from `docs/design-system.md`, mandatory
+  TanStack React Query (`@tanstack/react-query`) for client API integration
+  per the [shared contract](../../specs/_foundation/frontend-shared.md#api-integration-with-react-query),
   `react-hook-form` + `zod`, `next-intl` for EN/HI, Playwright + React
   Testing Library for tests.
 - `apps/api`: NestJS + TypeScript, layered (controller -> service ->

@@ -47,6 +47,14 @@
       "types": "./dist/data/Avatar.d.ts",
       "import": "./dist/data/Avatar.js"
     },
+    "./overlay/Sheet": {
+      "types": "./dist/overlay/Sheet.d.ts",
+      "import": "./dist/overlay/Sheet.js"
+    },
+    "./overlay/ConfirmDialog": {
+      "types": "./dist/overlay/ConfirmDialog.d.ts",
+      "import": "./dist/overlay/ConfirmDialog.js"
+    },
     "./feedback/Skeleton": {
       "types": "./dist/feedback/Skeleton.d.ts",
       "import": "./dist/feedback/Skeleton.js"

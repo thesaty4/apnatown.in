@@ -4,10 +4,251 @@
     "hi": "English",
     "source": "reference/prototype-source/js7.js accountLinks: language endonym"
   },
+  "common.language.switch": {
+    "en": "Switch language to {language}",
+    "hi": "{language} भाषा चुनें"
+  },
+  "common.preferences.saveFailed": {
+    "en": "Your preference could not be saved. Please try selecting it again.",
+    "hi": "आपकी पसंद सहेजी नहीं जा सकी। कृपया इसे फिर चुनकर कोशिश करें।"
+  },
+  "auth.login.resendReady": {
+    "en": "You can now request another OTP.",
+    "hi": "अब आप नया OTP मँगा सकते हैं।"
+  },
   "common.language.hindi": {
     "en": "हिन्दी",
     "hi": "हिन्दी",
     "source": "reference/prototype-source/js7.js accountLinks: language endonym"
+  },
+  "auth.entry.title": {
+    "en": "Welcome to ApnaTown",
+    "hi": "अपना टाउन में स्वागत है"
+  },
+  "auth.entry.intro": {
+    "en": "Choose your language, sign in or continue as a guest.",
+    "hi": "अपनी भाषा चुनें, लॉग इन करें या मेहमान के तौर पर जारी रखें।"
+  },
+  "auth.entry.login": { "en": "Log in / Sign up", "hi": "लॉग इन / साइन अप" },
+  "auth.entry.guest": {
+    "en": "Continue as guest",
+    "hi": "मेहमान के तौर पर जारी रखें"
+  },
+  "auth.entry.discoveryUnavailable": {
+    "en": "Shopping and local discovery are not available here yet. You can manage your profile and preferences.",
+    "hi": "खरीदारी और आसपास की दुकानें खोजना यहाँ अभी उपलब्ध नहीं है। आप अपनी प्रोफ़ाइल और पसंद प्रबंधित कर सकते हैं।"
+  },
+  "auth.login.title": {
+    "en": "Welcome to ApnaTown",
+    "hi": "अपना टाउन में स्वागत है"
+  },
+  "auth.login.intro": {
+    "en": "Log in or sign up with your mobile number",
+    "hi": "मोबाइल नंबर से लॉग इन या साइन अप करें"
+  },
+  "auth.login.login": { "en": "Log in / Sign up", "hi": "लॉग इन / साइन अप" },
+  "auth.login.account": { "en": "Account", "hi": "खाता" },
+  "auth.login.loading": {
+    "en": "Checking your session…",
+    "hi": "आपके सत्र की जाँच हो रही है…"
+  },
+  "auth.login.phone": { "en": "Mobile number", "hi": "मोबाइल नंबर" },
+  "auth.login.phoneHint": {
+    "en": "We will send a 6-digit OTP by SMS",
+    "hi": "हम SMS से 6 अंकों का OTP भेजेंगे"
+  },
+  "auth.login.countryCode": { "en": "+91", "hi": "+91" },
+  "auth.login.invalidPhone": {
+    "en": "Enter a valid 10-digit Indian mobile number.",
+    "hi": "भारत का मान्य 10 अंकों वाला मोबाइल नंबर डालें।"
+  },
+  "auth.login.send": { "en": "Send OTP", "hi": "OTP भेजें" },
+  "auth.login.enterCode": { "en": "Enter OTP", "hi": "OTP डालें" },
+  "auth.login.codeSent": {
+    "en": "Enter the code sent to your mobile number.",
+    "hi": "आपके मोबाइल नंबर पर भेजा गया कोड डालें।"
+  },
+  "auth.login.codeLabel": { "en": "6-digit OTP", "hi": "6 अंकों का OTP" },
+  "auth.login.digit": {
+    "en": "Digit {number, number} of 6",
+    "hi": "6 में से अंक {number, number}"
+  },
+  "auth.login.changeNumber": { "en": "Change number", "hi": "नंबर बदलें" },
+  "auth.login.verify": { "en": "Verify & continue", "hi": "सत्यापित करके आगे बढ़ें" },
+  "auth.login.incompleteCode": {
+    "en": "Enter all six digits.",
+    "hi": "सभी छह अंक डालें।"
+  },
+  "auth.login.expired": {
+    "en": "This code has expired. Request another code.",
+    "hi": "इस कोड की अवधि समाप्त हो गई है। नया कोड मँगाएँ।"
+  },
+  "auth.login.resendWait": {
+    "en": "Resend OTP in {seconds, number} seconds",
+    "hi": "{seconds, number} सेकंड बाद OTP फिर भेजें"
+  },
+  "auth.login.resend": { "en": "Resend OTP", "hi": "OTP फिर भेजें" },
+  "auth.login.email": { "en": "Continue with email", "hi": "ईमेल से जारी रखें" },
+  "auth.login.google": {
+    "en": "Continue with Google",
+    "hi": "Google से जारी रखें"
+  },
+  "auth.login.alternativeUnavailable": {
+    "en": "Email and Google sign-in are not available yet.",
+    "hi": "ईमेल और Google से लॉग इन करना अभी उपलब्ध नहीं है।"
+  },
+  "auth.login.legalUnavailable": {
+    "en": "Terms and privacy notices are awaiting publication. No consent choice is recorded on this screen.",
+    "hi": "शर्तें और गोपनीयता सूचनाएँ अभी प्रकाशित नहीं हुई हैं। इस स्क्रीन पर सहमति का कोई विकल्प दर्ज नहीं किया जाता है।"
+  },
+  "auth.login.guest": {
+    "en": "Continue as guest",
+    "hi": "मेहमान के तौर पर जारी रखें"
+  },
+  "auth.login.signedIn": { "en": "You are signed in", "hi": "आप लॉग इन हैं" },
+  "auth.login.continue": { "en": "Continue", "hi": "आगे बढ़ें" },
+  "auth.feedback.title": { "en": "Unable to continue", "hi": "आगे नहीं बढ़ सके" },
+  "auth.feedback.retry": { "en": "Try again", "hi": "फिर कोशिश करें" },
+  "auth.feedback.loading": {
+    "en": "Checking your session…",
+    "hi": "आपके सत्र की जाँच हो रही है…"
+  },
+  "auth.feedback.invalidCode": {
+    "en": "That code is incorrect. Check the SMS and try again.",
+    "hi": "यह कोड सही नहीं है। SMS देखकर फिर कोशिश करें।"
+  },
+  "auth.feedback.expiredCode": {
+    "en": "This code has expired. Request another code.",
+    "hi": "इस कोड की अवधि समाप्त हो गई है। नया कोड मँगाएँ।"
+  },
+  "auth.feedback.lockedCode": {
+    "en": "Too many attempts. Wait for resend to become available, then request a new code.",
+    "hi": "बहुत बार कोशिश हो चुकी है। फिर भेजने का विकल्प उपलब्ध होने पर नया कोड मँगाएँ।"
+  },
+  "auth.feedback.missingCode": {
+    "en": "This code is no longer usable. Request a new code.",
+    "hi": "यह कोड अब इस्तेमाल नहीं किया जा सकता। नया कोड मँगाएँ।"
+  },
+  "auth.feedback.rateLimited": {
+    "en": "Too many requests. Please wait before trying again.",
+    "hi": "बहुत अधिक अनुरोध हैं। फिर कोशिश करने से पहले थोड़ा इंतज़ार करें।"
+  },
+  "auth.feedback.deliveryFailed": {
+    "en": "The SMS could not be sent. Please try again later.",
+    "hi": "SMS नहीं भेजा जा सका। कृपया थोड़ी देर बाद फिर कोशिश करें।"
+  },
+  "auth.feedback.csrf": {
+    "en": "Your security context changed. Try again to refresh it. Nothing was confirmed.",
+    "hi": "आपके सत्र की सुरक्षा जानकारी बदल गई है। इसे ताज़ा करने के लिए फिर कोशिश करें। किसी बदलाव की पुष्टि नहीं हुई है।"
+  },
+  "auth.feedback.unavailable": {
+    "en": "This account is unavailable. No access has been granted.",
+    "hi": "यह खाता उपलब्ध नहीं है। कोई पहुँच नहीं दी गई है।"
+  },
+  "auth.feedback.expired": {
+    "en": "Log in with your mobile number to continue. Your last action has not been repeated.",
+    "hi": "आगे बढ़ने के लिए मोबाइल नंबर से लॉग इन करें। आपकी पिछली कार्रवाई दोबारा नहीं की गई है।"
+  },
+  "auth.feedback.expiredTitle": { "en": "Session expired", "hi": "सत्र समाप्त" },
+  "auth.feedback.validation": {
+    "en": "Check the highlighted fields and try again.",
+    "hi": "चिह्नित जानकारी जाँचें और फिर कोशिश करें।"
+  },
+  "auth.feedback.missingProfile": {
+    "en": "Your profile is unavailable. Try loading it again.",
+    "hi": "आपकी प्रोफ़ाइल उपलब्ध नहीं है। इसे फिर लोड करके देखें।"
+  },
+  "auth.feedback.requestFailed": {
+    "en": "We could not confirm the response. Check your connection and try again.",
+    "hi": "जवाब की पुष्टि नहीं हो सकी। अपना इंटरनेट कनेक्शन जाँचें और फिर कोशिश करें।"
+  },
+  "auth.feedback.guestTitle": {
+    "en": "You are browsing as a guest",
+    "hi": "आप मेहमान की तरह देख रहे हैं"
+  },
+  "auth.feedback.guestMessage": {
+    "en": "Log in to manage your profile and preferences.",
+    "hi": "अपनी प्रोफ़ाइल और पसंद प्रबंधित करने के लिए लॉग इन करें।"
+  },
+  "auth.feedback.login": { "en": "Log in / Sign up", "hi": "लॉग इन / साइन अप" },
+  "account.common.loading": {
+    "en": "Loading your account…",
+    "hi": "आपका खाता लोड हो रहा है…"
+  },
+  "account.common.emptyTitle": {
+    "en": "No profile available",
+    "hi": "प्रोफ़ाइल उपलब्ध नहीं है"
+  },
+  "account.common.emptyMessage": {
+    "en": "Your profile could not be found. Try loading it again.",
+    "hi": "आपकी प्रोफ़ाइल नहीं मिली। इसे फिर लोड करके देखें।"
+  },
+  "account.common.retry": { "en": "Try again", "hi": "फिर कोशिश करें" },
+  "account.menu.title": { "en": "Account", "hi": "खाता" },
+  "account.menu.complete": {
+    "en": "Complete your profile",
+    "hi": "अपनी प्रोफ़ाइल पूरी करें"
+  },
+  "account.menu.edit": { "en": "Edit", "hi": "संपादित करें" },
+  "account.menu.profile": { "en": "Profile", "hi": "प्रोफ़ाइल" },
+  "account.menu.preferences": { "en": "Language & theme", "hi": "भाषा और थीम" },
+  "account.menu.logout": { "en": "Log out", "hi": "लॉग आउट" },
+  "account.menu.logoutTitle": { "en": "Log out?", "hi": "लॉग आउट करें?" },
+  "account.menu.logoutMessage": {
+    "en": "You can log back in anytime with your mobile number.",
+    "hi": "आप कभी भी मोबाइल नंबर से फिर लॉग इन कर सकते हैं।"
+  },
+  "account.menu.cancel": { "en": "Cancel", "hi": "रद्द करें" },
+  "account.menu.operationsUnavailable": {
+    "en": "Operational dashboards and approval checks are not available here. Your role does not grant operational access on this screen.",
+    "hi": "कारोबार के डैशबोर्ड और मंज़ूरी की जाँच यहाँ उपलब्ध नहीं हैं। आपकी भूमिका से इस स्क्रीन पर कारोबार संबंधी पहुँच नहीं मिलती है।"
+  },
+  "account.menu.unavailable": {
+    "en": "Addresses, payment methods, notifications and privacy requests are not available yet.",
+    "hi": "पते, भुगतान के तरीके, सूचनाएँ और गोपनीयता संबंधी अनुरोध अभी उपलब्ध नहीं हैं।"
+  },
+  "account.profile.title": { "en": "Profile", "hi": "प्रोफ़ाइल" },
+  "account.profile.completeTitle": { "en": "Almost done", "hi": "बस हो गया" },
+  "account.profile.emptyTitle": {
+    "en": "Complete your profile",
+    "hi": "अपनी प्रोफ़ाइल पूरी करें"
+  },
+  "account.profile.emptyMessage": {
+    "en": "Tell us your name to complete your profile",
+    "hi": "प्रोफ़ाइल पूरी करने के लिए अपना नाम बताएँ"
+  },
+  "account.profile.addName": { "en": "Add your name", "hi": "अपना नाम जोड़ें" },
+  "account.profile.name": { "en": "Name", "hi": "नाम" },
+  "account.profile.phone": { "en": "Mobile number", "hi": "मोबाइल नंबर" },
+  "account.profile.phoneReadOnly": {
+    "en": "Your verified login number cannot be changed here.",
+    "hi": "लॉग इन के लिए सत्यापित मोबाइल नंबर यहाँ नहीं बदला जा सकता।"
+  },
+  "account.profile.email": { "en": "Email (optional)", "hi": "ईमेल (वैकल्पिक)" },
+  "account.profile.invalidName": {
+    "en": "Enter a name of 2–60 characters without angle brackets or control characters.",
+    "hi": "2–60 अक्षरों का नाम डालें। कोणीय कोष्ठक या नियंत्रण अक्षर इस्तेमाल न करें।"
+  },
+  "account.profile.invalidEmail": {
+    "en": "Enter a valid email address or leave it empty.",
+    "hi": "मान्य ईमेल पता डालें या इसे खाली छोड़ें।"
+  },
+  "account.profile.save": { "en": "Save changes", "hi": "बदलाव सहेजें" },
+  "account.profile.finish": { "en": "Finish", "hi": "पूरा करें" },
+  "account.profile.saved": { "en": "Profile saved", "hi": "प्रोफ़ाइल सहेजी गई" },
+  "account.profile.skip": { "en": "Skip for now", "hi": "अभी छोड़ें" },
+  "account.preferences.title": {
+    "en": "Language & theme",
+    "hi": "भाषा और थीम"
+  },
+  "account.preferences.save": { "en": "Save changes", "hi": "बदलाव सहेजें" },
+  "account.preferences.saved": {
+    "en": "Preferences saved",
+    "hi": "आपकी पसंद सहेज ली गई है"
+  },
+  "account.preferences.consentUnavailable": {
+    "en": "Notification channels, WhatsApp and cookie consent are not available here. Saving language or theme does not grant consent.",
+    "hi": "सूचना चैनल, WhatsApp और कुकी सहमति यहाँ उपलब्ध नहीं हैं। भाषा या थीम सहेजने से सहमति नहीं दी जाती है।"
   },
   "common.navigation.skipToContent": {
     "en": "Skip to content",

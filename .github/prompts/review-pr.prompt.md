@@ -1,9 +1,9 @@
 ---
-description: Run the code-reviewer (and security-auditor if required) against an open pull request.
+description: Run architect in read-only code-review mode, with security-auditor when required, against an open pull request.
 ---
 
 Review the pull request described below using
-`.github/agents/code-reviewer.agent.md`.
+`.github/agents/architect.agent.md` in **read-only code-review mode**.
 
 1. Read the linked spec(s) in `specs/<module>/` and confirm every
    acceptance criterion is met.
@@ -18,7 +18,7 @@ Review the pull request described below using
    attached, that is a Blocker by itself — request it before
    proceeding.
 6. Output the structured Blocker/Major/Minor/Nit review with a verdict
-   (`code-reviewer.agent.md` output format).
+   (`architect.agent.md` code-review output format).
 
 Pull request:
 

@@ -12,7 +12,6 @@ import {
 import { OTP_DELIVERY } from '../../integrations/otp/port';
 import { PrivateLocalOtpDelivery } from '../../integrations/otp/private-local';
 import { UnavailableOtpDelivery } from '../../integrations/otp/unavailable';
-import { UsersModule } from '../users/users.module';
 import { SESSION_REPOSITORY } from './domain/session';
 import { CHALLENGE_REPOSITORY } from './domain/challenge';
 import { CSRF_TOKENS } from './application/csrf-port';
@@ -27,14 +26,18 @@ import { AuthController } from './presentation/auth.controller';
 @Global()
 @Module({})
 export class AuthModule {
-  static forRoot(runtime: DynamicModule, config: RuntimeConfig): DynamicModule {
+  static forRoot(
+    runtime: DynamicModule,
+    config: RuntimeConfig,
+    users: DynamicModule,
+  ): DynamicModule {
     // Provider selection/credentials, approved TTL/attempt policy and fallback remain release gates.
     // Never start production with a successful-looking local/no-op delivery adapter.
     if (config.APP_ENV === 'production')
       throw new Error('OTP_PROVIDER_NOT_CONFIGURED');
     return {
       module: AuthModule,
-      imports: [runtime, UsersModule.forRoot(runtime)],
+      imports: [runtime, users],
       controllers: [AuthController],
       providers: [
         {

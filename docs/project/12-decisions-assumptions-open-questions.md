@@ -1,7 +1,7 @@
 # 12 — Decisions, Assumptions, Open Questions
 
 **Purpose:** Every product decision made, every assumption not yet confirmed, and every open question — so no one guesses.
-**Audience:** Everyone, especially before starting ambiguous work. This is where `spec-writer` and any agent record instead of inventing.
+**Audience:** Everyone, especially before starting ambiguous work. This is where `architect` and any agent record instead of inventing.
 **Related files:** [docs/PROJECT.md](../PROJECT.md) (index) · [`docs/adr/0001-tech-stack.md`](../adr/0001-tech-stack.md) (tech-stack ADR — not repeated here) · [04-business-rules.md](./04-business-rules.md) · [`specs-and-docs.instructions.md`](../../.github/instructions/specs-and-docs.instructions.md)
 **Last updated:** 2026-11-09
 **Owner:** Product

@@ -5,7 +5,7 @@ description: How and when to add an entry to docs/ai/LESSONS_LEARNED.md so recur
 
 # Lessons learned
 
-Use at the end of a `bug-fixer` run, or any time a non-obvious mistake
+Use at the end of a developer's bug-fix run, or any time a non-obvious mistake
 was caught in review that could recur elsewhere. Target file:
 `docs/ai/LESSONS_LEARNED.md`.
 

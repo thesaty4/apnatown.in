@@ -28,8 +28,8 @@ migration cover only `users` and `user_roles`, the identity prerequisites for
 Auth. No accounts or privileged memberships are seeded. Identity resolution,
 live-principal lookup, encrypted profile fields and own profile/preferences
 endpoints are implemented for local use. Privileged approval integrations and
-role-grant use-cases remain unavailable; addresses, consent and data-request
-persistence remain separate slices.
+role-grant use-cases remain unavailable; consent and data-request persistence
+remain separate slices. Saved-address implementation status follows below.
 
 SQL CHECK constraints enforce locale/theme/status/role values, positive version,
 optional 2-60-character display names and paired phone fields. Non-deleted rows
@@ -57,6 +57,36 @@ CHECK constraints and grants. Database application, permission/constraint
 execution and runtime queries have not been verified; no database was started.
 
 ## Endpoints
+
+### Saved-address implementation status
+
+Saved-address CRUD, owner-bound signed pagination (default 20, cap 50),
+optimistic versions, soft deletion and `UsersAddressPort.forCheckout` are
+implemented. Geo's `assertAreasInCity` validates the selected city even with no
+area, joining the same transaction; this does not establish zone membership or
+checkout serviceability. Default changes serialize on the user row, including
+versioned demotion; deletion never selects a successor.
+
+POST/PATCH/DELETE require `Idempotency-Key`. The command UoW commits the write
+and an encrypted original-result receipt together; replay rechecks the live
+session, account and address ownership (including tombstones) before decrypting.
+Address text/landmark and replay snapshots use user/address/field-bound AEAD.
+The local retry horizon is 24 hours. Technical input bounds are label 60,
+address text 1000 and landmark 200 characters, plain text only.
+TODO(verify): approve these limits and the retry/receipt-retention horizon for
+production; they are not an approved DPDP retention policy.
+
+The additive
+[`20261112001000_users_addresses`](../../../apps/api/prisma/migrations/20261112001000_users_addresses/migration.sql)
+migration adds the owner-page index, live-default unique index, FK indexes and
+composite area/city FK. These indexes add write/storage cost; representative
+query plans remain a rollout gate. Runtime grants forbid hard deletion and
+rewriting `user_id`, `id` or `created_at`. No accounts/addresses are seeded.
+Recovery is forward repair or an approved restore, not dropping populated tables.
+Focused offline checks cover DTOs, owner/Geo validation, replay, default/version
+logic, query-pipe regression and parameterized adapter SQL. Database migration
+execution, concurrency/permissions/constraints, HTTP runtime checks and security
+audit remain release gates; static checks do not establish those results.
 
 | Method | Path | Auth / scope | Request → response | Errors | Idempotent | Features |
 |---|---|---|---|---|---|---|

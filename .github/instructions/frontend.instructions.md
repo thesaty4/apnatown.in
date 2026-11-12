@@ -1,4 +1,5 @@
 ---
+description: "Frontend screens, React Query API integration, URL state, design tokens and client security."
 applyTo: "apps/web/**,packages/ui/**"
 ---
 
@@ -17,6 +18,13 @@ Builds on `.github/copilot-instructions.md`. Design tokens/components:
 - API access only through a typed client generated from the OpenAPI
   contract (`backend.instructions.md`); never hand-write `fetch` calls
   scattered through components.
+- **React Query is required:** use `@tanstack/react-query` for every
+  client-side API read/mutation, through feature query/mutation hooks.
+  Server-only reads stay in Server Components; do not make routes client-only.
+  Follow the [shared API contract](../../specs/_foundation/frontend-shared.md#api-integration-with-react-query)
+  for provider/hydration, typed errors, scoped keys, retries, invalidation,
+  privacy and tests. No `useEffect` fetching, SWR or duplicate API-response
+  stores; keep form/UI and URL state separate.
 - Pages/routes stay thin; business logic (filter resolution, cart
   totals display) lives in hooks/services, is unit-tested.
 

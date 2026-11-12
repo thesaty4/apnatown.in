@@ -5,6 +5,7 @@ import {
   HttpCode,
   Param,
   Post,
+  Query,
   Req,
   Res,
 } from '@nestjs/common';
@@ -78,6 +79,8 @@ export class AuthController {
   async csrf(
     @Req() request: AuthRequest,
     @Res({ passthrough: true }) response: Response,
+    @Query(new InputPipe(EmptyRequestSchema))
+    _query: Record<string, never> = {},
   ) {
     try {
       const state = await this.sessions.bootstrap(this.cookie.read(request));
@@ -107,6 +110,8 @@ export class AuthController {
   async challenge(
     @Req() request: AuthRequest,
     @Body(new InputPipe(ChallengeInputSchema)) input: ChallengeInput,
+    @Query(new InputPipe(EmptyRequestSchema))
+    _query: Record<string, never> = {},
   ) {
     return ChallengeSchema.parse(
       await this.otp.challenge(sessionBinding(request), input.phone),
@@ -131,6 +136,8 @@ export class AuthController {
     params: { challengeId: string },
     @Body(new InputPipe(VerifyInputSchema)) input: VerifyInput,
     @Res({ passthrough: true }) response: Response,
+    @Query(new InputPipe(EmptyRequestSchema))
+    _query: Record<string, never> = {},
   ) {
     const result = await this.otp.verify(
       sessionBinding(request),
@@ -154,7 +161,11 @@ export class AuthController {
     subject: 'principal',
   })
   @ApiOkResponse({ type: SessionDto })
-  async session(@Req() request: AuthRequest) {
+  async session(
+    @Req() request: AuthRequest,
+    @Query(new InputPipe(EmptyRequestSchema))
+    _query: Record<string, never> = {},
+  ) {
     return SessionSchema.parse(
       await this.sessions.read(sessionBinding(request)),
     );
@@ -176,6 +187,8 @@ export class AuthController {
     @Body(new InputPipe(EmptyRequestSchema.default({})))
     _body: Record<string, never>,
     @Res({ passthrough: true }) response: Response,
+    @Query(new InputPipe(EmptyRequestSchema))
+    _query: Record<string, never> = {},
   ) {
     await this.sessions.logout(sessionBinding(request));
     this.cookie.clear(response);

@@ -1,7 +1,7 @@
 # 03 — Feature Catalog
 
 **Purpose:** Every feature ID (X1-SA8), its behaviour, applicable business rules, entities and screens.
-**Audience:** Everyone building or reviewing a feature; the primary lookup table (`spec-writer`, `code-reviewer`).
+**Audience:** Everyone building or reviewing a feature; the primary lookup table for `architect` specification and code-review modes.
 **Related files:** [docs/PROJECT.md](../PROJECT.md) (index) · [04-business-rules.md](./04-business-rules.md) · [05-domain-model.md](./05-domain-model.md) · [07-screens-routes-sitemap.md](./07-screens-routes-sitemap.md) · [13-traceability-matrix.md](./13-traceability-matrix.md)
 **Last updated:** 2026-11-09
 **Owner:** Product

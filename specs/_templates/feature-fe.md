@@ -35,8 +35,19 @@ uses; note any new component this spec requires adding there.
 
 ## 5. Data and API calls
 
-Which BE endpoint(s) (link the BE spec), loading/caching behaviour
-(TanStack Query keys), optimistic updates if any.
+Follow the mandatory [React Query API integration contract](../_foundation/frontend-shared.md#api-integration-with-react-query).
+When copying this template into a module's `fe/` folder, update that link
+to `../../_foundation/frontend-shared.md#api-integration-with-react-query`.
+
+- BE endpoints and typed operations; server-only reads versus React Query
+  hooks for client reads, cursor pagination and mutations.
+- Query-key namespace and response-affecting inputs, identity/business/scope,
+  URL filters; freshness, garbage collection and refetch/retry policy.
+- SSR prefetch/hydration where client-owned data is server-rendered.
+- Mutation invalidation/update targets, permitted optimistic rollback,
+  idempotency and session/scope cleanup.
+- Loading, empty, error/permission and offline handling; local form state
+  remains separate from API server-state.
 
 ## 6. i18n and accessibility
 
@@ -61,6 +72,8 @@ screen.
 ## 9. Test plan
 
 - Component tests: <list>
+- React Query cases: shared contract acceptance tests relevant to these
+  operations (errors, key isolation, hydration, invalidation/rollback, retries).
 - Playwright journey(s): <reference J-number from
   `docs/project/06-user-journeys.md` if applicable>
 - Screenshots required: 360px + desktop, light + dark, EN + HI.

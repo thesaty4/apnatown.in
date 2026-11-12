@@ -26,6 +26,9 @@ Full rules: `testing.instructions.md`.
      limited stock).
    - Accessibility (automated a11y check + keyboard-only pass) for new
      interactive UI.
+   - Frontend API integration: cover the relevant [React Query acceptance cases](../../../specs/_foundation/frontend-shared.md#api-integration-acceptance-and-tests).
+     Use an isolated `QueryClient`/provider and fake typed transport;
+     exercise actual query/mutation hooks, errors, keys and invalidation.
 4. Use fakes for integration ports (`integrations.instructions.md`);
    never call real external providers in tests.
 5. Run the full relevant suite, not just the new test, before handing
@@ -55,3 +58,4 @@ describe('order state machine', () => {
 - [ ] Concurrency/idempotency case included for stock/payment/webhook
   changes.
 - [ ] a11y check included for new interactive UI.
+- [ ] Changed frontend API operations cover the shared React Query cases.

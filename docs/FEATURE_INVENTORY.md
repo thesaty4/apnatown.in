@@ -5,9 +5,9 @@ tracker** (BE/FE spec path + status); for the full behaviour description
 of each feature, see `docs/project/03-feature-catalog.md` (the product
 knowledge base's richer, canonical feature catalog — don't duplicate its
 text here).
-Status starts at `not started` for all rows and is updated by the `spec-writer` agent and developers 
-as specs and implementations land. BE/FE spec paths are placeholders the `spec-writer` agent fills in; 
-see `specs/_templates/`.
+Status starts at `not started` and is updated by developers as implementations
+land. `architect` writes linked BE/FE specs and updates inventory paths/status
+when requested; spec-only work does not imply tracker upkeep. See `specs/_templates/`.
 
 Role(s), BE module(s), and FE route/screen are constant per area and stated once in that area's 
 heading below (not repeated per row) — see `docs/architecture.md` for the authoritative module map.
@@ -277,7 +277,7 @@ Roles: customer. Backend module(s): `users, settings`. Frontend route/screen: `/
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| AC1 | profile edit | `specs/users/be/users.md` | `specs/users/fe/users.md` | spec written |
+| AC1 | profile edit | `specs/users/be/users.md` | `specs/users/fe/users.md` | BE profile + saved addresses implemented offline; runtime/security gates pending |
 | AC2 | saved addresses | `specs/users/be/users.md` | `specs/users/fe/users.md` | spec written |
 | AC3 | payment methods | `specs/users/be/users.md` | `specs/users/fe/users.md` | spec written |
 | AC4 | language/theme | `specs/users/be/users.md` | `specs/users/fe/users.md` | spec written |

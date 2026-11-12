@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Patch, Req } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Query, Req } from '@nestjs/common';
+import { EmptyRequestSchema } from '@apnatown/shared/wire';
 import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { createZodDto } from 'nestjs-zod';
 import {
@@ -38,7 +39,11 @@ export class UsersController {
     windowSeconds: 60,
     subject: 'principal',
   })
-  async profile(@Req() request: AuthRequest) {
+  async profile(
+    @Req() request: AuthRequest,
+    @Query(new InputPipe(EmptyRequestSchema))
+    _query: Record<string, never> = {},
+  ) {
     return ProfileSchema.parse(
       await this.profiles.profile(sessionBinding(request)),
     );
@@ -56,6 +61,8 @@ export class UsersController {
   async updateProfile(
     @Req() request: AuthRequest,
     @Body(new InputPipe(UpdateProfileSchema)) input: UpdateProfile,
+    @Query(new InputPipe(EmptyRequestSchema))
+    _query: Record<string, never> = {},
   ) {
     return ProfileSchema.parse(
       await this.profiles.updateProfile(sessionBinding(request), input),
@@ -69,7 +76,11 @@ export class UsersController {
     windowSeconds: 60,
     subject: 'principal',
   })
-  async preferences(@Req() request: AuthRequest) {
+  async preferences(
+    @Req() request: AuthRequest,
+    @Query(new InputPipe(EmptyRequestSchema))
+    _query: Record<string, never> = {},
+  ) {
     return PreferencesSchema.parse(
       await this.profiles.preferences(sessionBinding(request)),
     );
@@ -87,6 +98,8 @@ export class UsersController {
   async updatePreferences(
     @Req() request: AuthRequest,
     @Body(new InputPipe(UpdatePreferencesSchema)) input: UpdatePreferences,
+    @Query(new InputPipe(EmptyRequestSchema))
+    _query: Record<string, never> = {},
   ) {
     return PreferencesSchema.parse(
       await this.profiles.updatePreferences(sessionBinding(request), input),

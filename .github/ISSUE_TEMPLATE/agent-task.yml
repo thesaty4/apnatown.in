@@ -44,14 +44,14 @@ body:
     id: description
     attributes:
       label: What needs to be done
-      description: Reference the spec path if one exists (specs/<module>/{be,fe}/...); if not, the spec-writer agent should run first.
+      description: Reference the spec path if one exists (specs/<module>/{be,fe}/...); if not, architect should write the linked specs first.
     validations:
       required: true
   - type: checkboxes
     id: sensitive
     attributes:
       label: Sensitive area
-      description: Check all that apply — these require a security-auditor PASS before pr-creator (AGENTS.md).
+      description: Check all that apply — these require a security-auditor PASS before the owning developer opens a PR (AGENTS.md).
       options:
         - label: Touches auth
         - label: Touches payments

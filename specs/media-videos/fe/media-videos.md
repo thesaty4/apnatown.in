@@ -4,6 +4,8 @@ Features: F-RL-001, F-RL-002, F-RL-003, F-RL-004, F-RL-005, F-RL-006, F-RL-007, 
 
 Backend contract: [BE media-videos](../be/media-videos.md)
 
+API integration: [shared React Query contract](../../_foundation/frontend-shared.md#api-integration-with-react-query), preserving the frozen feed snapshot.
+
 Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Tests](#tests)
 
 ## Routes and rendering

@@ -22,8 +22,11 @@ specific database driver (see `database.instructions.md` and
 `backend.instructions.md`).
 
 `apps/web` features call `apps/api` only through a generated/typed API
-client built on the OpenAPI contract; no feature imports another
-feature's internals (see `frontend.instructions.md`).
+client built on the OpenAPI contract. TanStack React Query
+(`@tanstack/react-query`) is the required client-side API server-state
+layer; server-only reads remain in Server Components. Follow the
+[API integration contract](../specs/_foundation/frontend-shared.md#api-integration-with-react-query);
+no feature imports another feature's internals (see `frontend.instructions.md`).
 
 ## 2. Module map (21 modules)
 
