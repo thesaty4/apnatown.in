@@ -111,7 +111,8 @@
       "unavailable": "Payment methods, notifications and privacy requests are not available yet."
     },
     "preferences": {
-      "consentUnavailable": "Notification channels, WhatsApp and cookie consent are not available here. Saving language or theme does not grant consent.",
+      "cookiesUnavailable": "Cookie choices are not available yet. Saving language or theme does not grant consent.",
+      "guestMessage": "Log in to manage your language, theme and consent choices.",
       "save": "Save changes",
       "saved": "Preferences saved",
       "title": "Language & theme"
@@ -1154,6 +1155,47 @@
       "dark": "Dark",
       "label": "Theme",
       "light": "Light"
+    }
+  },
+  "consent": {
+    "preferences": {
+      "emptyMessage": "No communication choices are available right now. Try loading them again.",
+      "emptyTitle": "No consent choices",
+      "errors": {
+        "noticeChanged": "The consent notice has changed. Your choices have been refreshed — please review them and try again.",
+        "purposeInvalid": "This choice is no longer available. Refresh to see the current choices.",
+        "saveFailed": "Your choice could not be saved. The switch shows what is currently recorded."
+      },
+      "granted": "Granted",
+      "loading": "Loading your consent choices…",
+      "neverRecorded": "No choice recorded yet",
+      "notGranted": "Not granted",
+      "noticeUnavailable": "Turning on new messages is unavailable until the consent notice is published. You can still turn off any choice.",
+      "purposes": {
+        "enquiryUpdates": {
+          "about": "Replies to your enquiries, sent on WhatsApp only if you turn this on.",
+          "title": "Enquiry replies",
+          "whatsapp": "Enquiry replies on WhatsApp"
+        },
+        "marketing": {
+          "about": "Messages about offers and promotions. They are sent only on the channels you turn on.",
+          "email": "Offers & promotions by email",
+          "inApp": "Offers & promotions in the app",
+          "title": "Offers & promotions",
+          "whatsapp": "Offers & promotions on WhatsApp"
+        },
+        "orderUpdates": {
+          "about": "Updates about your orders, sent on WhatsApp only if you turn this on.",
+          "title": "Order updates",
+          "whatsapp": "Order updates on WhatsApp"
+        }
+      },
+      "recordedAt": "Recorded: {time}",
+      "refresh": "Refresh",
+      "retry": "Try again",
+      "saved": "Choice saved",
+      "saving": "Saving your choice…",
+      "title": "Notification & consent"
     }
   }
 }

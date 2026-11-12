@@ -246,9 +246,125 @@
     "en": "Preferences saved",
     "hi": "आपकी पसंद सहेज ली गई है"
   },
-  "account.preferences.consentUnavailable": {
-    "en": "Notification channels, WhatsApp and cookie consent are not available here. Saving language or theme does not grant consent.",
-    "hi": "सूचना चैनल, WhatsApp और कुकी सहमति यहाँ उपलब्ध नहीं हैं। भाषा या थीम सहेजने से सहमति नहीं दी जाती है।"
+  "account.preferences.cookiesUnavailable": {
+    "en": "Cookie choices are not available yet. Saving language or theme does not grant consent.",
+    "hi": "कुकी विकल्प अभी उपलब्ध नहीं हैं। भाषा या थीम सहेजने से सहमति नहीं दी जाती है।"
+  },
+  "account.preferences.guestMessage": {
+    "en": "Log in to manage your language, theme and consent choices.",
+    "hi": "अपनी भाषा, थीम और सहमति के विकल्प बदलने के लिए लॉग इन करें।"
+  },
+  "consent.preferences.title": {
+    "en": "Notification & consent",
+    "hi": "सूचना व सहमति",
+    "source": "docs/design-context/09a-i18n-en-hi.json + reference/prototype-source/js7.js V.prefs"
+  },
+  "consent.preferences.loading": {
+    "en": "Loading your consent choices…",
+    "hi": "आपकी सहमति के विकल्प लोड हो रहे हैं…"
+  },
+  "consent.preferences.emptyTitle": {
+    "en": "No consent choices",
+    "hi": "सहमति का कोई विकल्प नहीं"
+  },
+  "consent.preferences.emptyMessage": {
+    "en": "No communication choices are available right now. Try loading them again.",
+    "hi": "अभी संदेशों का कोई विकल्प उपलब्ध नहीं है। इन्हें फिर लोड करके देखें।"
+  },
+  "consent.preferences.refresh": {
+    "en": "Refresh",
+    "hi": "रीफ़्रेश करें"
+  },
+  "consent.preferences.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें"
+  },
+  "consent.preferences.granted": {
+    "en": "Granted",
+    "hi": "सहमति दी गई"
+  },
+  "consent.preferences.notGranted": {
+    "en": "Not granted",
+    "hi": "सहमति नहीं दी गई"
+  },
+  "consent.preferences.recordedAt": {
+    "en": "Recorded: {time}",
+    "hi": "दर्ज: {time}"
+  },
+  "consent.preferences.neverRecorded": {
+    "en": "No choice recorded yet",
+    "hi": "अभी कोई विकल्प दर्ज नहीं"
+  },
+  "consent.preferences.saving": {
+    "en": "Saving your choice…",
+    "hi": "आपका विकल्प सहेजा जा रहा है…"
+  },
+  "consent.preferences.saved": {
+    "en": "Choice saved",
+    "hi": "विकल्प सहेजा गया"
+  },
+  "consent.preferences.noticeUnavailable": {
+    "en": "Turning on new messages is unavailable until the consent notice is published. You can still turn off any choice.",
+    "hi": "सहमति सूचना प्रकाशित होने तक नए संदेश चालू नहीं किए जा सकते। आप कोई भी विकल्प अब भी बंद कर सकते हैं।"
+  },
+  "consent.preferences.errors.noticeChanged": {
+    "en": "The consent notice has changed. Your choices have been refreshed — please review them and try again.",
+    "hi": "सहमति सूचना बदल गई है। आपके विकल्प रीफ़्रेश कर दिए गए हैं — कृपया उन्हें देखकर फिर कोशिश करें।"
+  },
+  "consent.preferences.errors.purposeInvalid": {
+    "en": "This choice is no longer available. Refresh to see the current choices.",
+    "hi": "यह विकल्प अब उपलब्ध नहीं है। मौजूदा विकल्प देखने के लिए रीफ़्रेश करें।"
+  },
+  "consent.preferences.errors.saveFailed": {
+    "en": "Your choice could not be saved. The switch shows what is currently recorded.",
+    "hi": "आपका विकल्प सहेजा नहीं जा सका। स्विच वही दिखा रहा है जो अभी दर्ज है।"
+  },
+  "consent.preferences.purposes.marketing.title": {
+    "en": "Offers & promotions",
+    "hi": "ऑफ़र व प्रमोशन"
+  },
+  "consent.preferences.purposes.marketing.about": {
+    "en": "Messages about offers and promotions. They are sent only on the channels you turn on.",
+    "hi": "ऑफ़र और प्रमोशन के संदेश। ये सिर्फ़ उन्हीं माध्यमों पर भेजे जाते हैं जिन्हें आप चालू करते हैं।"
+  },
+  "consent.preferences.purposes.marketing.inApp": {
+    "en": "Offers & promotions in the app",
+    "hi": "ऑफ़र व प्रमोशन ऐप में"
+  },
+  "consent.preferences.purposes.marketing.email": {
+    "en": "Offers & promotions by email",
+    "hi": "ऑफ़र व प्रमोशन ईमेल पर"
+  },
+  "consent.preferences.purposes.marketing.whatsapp": {
+    "en": "Offers & promotions on WhatsApp",
+    "hi": "ऑफ़र व प्रमोशन WhatsApp पर",
+    "source": "docs/design-context/09a-i18n-en-hi.json + reference/prototype-source/js7.js V.prefs"
+  },
+  "consent.preferences.purposes.orderUpdates.title": {
+    "en": "Order updates",
+    "hi": "ऑर्डर अपडेट"
+  },
+  "consent.preferences.purposes.orderUpdates.about": {
+    "en": "Updates about your orders, sent on WhatsApp only if you turn this on.",
+    "hi": "आपके ऑर्डर के अपडेट, जो WhatsApp पर सिर्फ़ तभी भेजे जाते हैं जब आप इसे चालू करें।"
+  },
+  "consent.preferences.purposes.orderUpdates.whatsapp": {
+    "en": "Order updates on WhatsApp",
+    "hi": "ऑर्डर अपडेट WhatsApp पर",
+    "source": "docs/design-context/09a-i18n-en-hi.json + reference/prototype-source/js7.js V.prefs"
+  },
+  "consent.preferences.purposes.enquiryUpdates.title": {
+    "en": "Enquiry replies",
+    "hi": "पूछताछ के जवाब"
+  },
+  "consent.preferences.purposes.enquiryUpdates.about": {
+    "en": "Replies to your enquiries, sent on WhatsApp only if you turn this on.",
+    "hi": "आपकी पूछताछ के जवाब, जो WhatsApp पर सिर्फ़ तभी भेजे जाते हैं जब आप इसे चालू करें।"
+  },
+  "consent.preferences.purposes.enquiryUpdates.whatsapp": {
+    "en": "Enquiry replies on WhatsApp",
+    "hi": "पूछताछ के जवाब WhatsApp पर",
+    "source": "docs/design-context/09a-i18n-en-hi.json + reference/prototype-source/js7.js V.prefs"
   },
   "account.menu.addresses": { "en": "Saved addresses", "hi": "सहेजे पते" },
   "account.addresses.title": { "en": "Saved addresses", "hi": "सहेजे पते" },

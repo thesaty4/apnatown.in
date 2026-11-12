@@ -16,7 +16,8 @@ import { failureCode } from '../../shared/api/result';
 import { applyPreferences } from '../../shared/i18n/browser-preferences';
 import { preferencesOptions } from '../../shared/i18n/preferences-api';
 import { useSavePreferences } from '../../shared/i18n/preferences-query';
-import { OwnResource } from './OwnResource';
+import { OwnBoundary, ResourceBody } from './OwnResource';
+import { Consents } from './Consents';
 
 export function Preferences({
   initial,
@@ -25,10 +26,32 @@ export function Preferences({
   initial: DehydratedState;
   owner?: string | undefined;
 }) {
+  const t = useTranslations('account.preferences');
   return (
-    <OwnResource initial={initial} owner={owner} options={preferencesOptions}>
-      {(preferences) => <PreferencesForm preferences={preferences} />}
-    </OwnResource>
+    <div className="grid gap-6">
+      <h1 className="text-h1">{t('title')}</h1>
+      <OwnBoundary
+        initial={initial}
+        owner={owner}
+        guestMessage={t('guestMessage')}
+      >
+        {(context) => (
+          <>
+            <ResourceBody
+              options={preferencesOptions(
+                context.api,
+                context.scope,
+                context.lifecycle,
+              )}
+            >
+              {(preferences) => <PreferencesForm preferences={preferences} />}
+            </ResourceBody>
+            <Consents {...context} />
+          </>
+        )}
+      </OwnBoundary>
+      <p className="text-small text-muted">{t('cookiesUnavailable')}</p>
+    </div>
   );
 }
 
@@ -66,7 +89,6 @@ function PreferencesForm({ preferences }: { preferences: PreferencesData }) {
   }
   return (
     <div className="grid gap-4">
-      <h1 className="text-h1">{t('title')}</h1>
       <Card padded>
         <form
           className="grid gap-4"
@@ -118,7 +140,6 @@ function PreferencesForm({ preferences }: { preferences: PreferencesData }) {
           }}
         />
       )}
-      <p className="text-small text-muted">{t('consentUnavailable')}</p>
     </div>
   );
 }

@@ -85,7 +85,7 @@ export function OwnResource<T>({
   );
 }
 
-function ResourceBody<T>({
+export function ResourceBody<T>({
   options,
   children,
 }: {

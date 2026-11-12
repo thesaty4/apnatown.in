@@ -22,6 +22,7 @@ export const queryKeys = {
   pendingPreferences: (epoch: number) =>
     ['private', 'login-preferences', epoch] as const,
   addresses: (scope: AccountScope) => ['private', scope, 'addresses'] as const,
+  consents: (scope: AccountScope) => ['private', scope, 'consents'] as const,
   // Public reference data: both EN and HI names are in every response.
   geoCities: ['geo', 'cities'] as const,
   geoAreas: (cityId: string) => ['geo', 'cities', cityId, 'areas'] as const,
