@@ -16,8 +16,10 @@ authorize committing or pushing unreviewed changes.
 
 ## 2. Current specifications
 
-[LEAN-SPECS.md](./LEAN-SPECS.md) supersedes P02-P11. Use the four
-[foundation specs](../../specs/_foundation/) and 21 module BE/FE pairs
+[LEAN-SPECS.md](./LEAN-SPECS.md) supersedes P02-P11. Use the current
+[foundation specs](../../specs/_foundation/), including
+[media and maps](../../specs/_foundation/media-and-maps.md),
+and 21 module BE/FE pairs
 under [specs/](../../specs/). Repair only a relevant spec gap; do not
 regenerate inventories/progress files or create missing legacy outputs.
 Run `node scripts/check-spec-coverage.mjs` for structural coverage and
