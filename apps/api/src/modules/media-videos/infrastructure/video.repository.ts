@@ -1,18 +1,30 @@
 import { Injectable } from '@nestjs/common';
+import { z } from 'zod';
 import { Prisma } from '../../../shared/persistence/generated/client';
 import { PrismaDatabase } from '../../../shared/persistence/prisma-database';
 import type { TxContext } from '../../../shared/persistence/ports';
 import type {
+  ReelRankSnapshot,
+  ReelRankEntry,
   StoredModerationVideo,
   StoredVideo,
   StoredVideoReport,
+  VideoFeedRecord,
   VideoModerationCounts,
   VideoModerationScope,
+  VideoFeedFilter,
   VideoPosition,
   VideoReportPosition,
   VideoRepository,
 } from '../domain/videos';
 
+const rankEntriesSchema = z.array(
+  z.strictObject({
+    videoId: z.string().uuid(),
+    score10: z.string().regex(/^\d+$/u),
+    ordinal: z.number().int().positive(),
+  }),
+);
 const createdAtSql = Prisma.raw(
   `to_char(v.created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"')`,
 );
@@ -107,6 +119,165 @@ const videoReportColumns = Prisma.sql`
 export class PrismaVideoRepository implements VideoRepository {
   constructor(private readonly database: PrismaDatabase) {}
 
+  async rankCandidates(tx: TxContext): Promise<ReelRankEntry[]> {
+    const rows = await this.database.client(tx).$queryRaw<ReelRankEntry[]>`
+      WITH candidates AS (
+        SELECT v.id,
+          (COALESCE(c.like_count, v.like_count) * 10::numeric
+            + v.view_count::numeric) AS score10,
+          ROW_NUMBER() OVER (ORDER BY v.created_at DESC, v.id DESC) AS candidate_ordinal
+        FROM videos v
+        JOIN businesses b ON b.id = v.business_id
+        JOIN users u ON u.id = b.owner_user_id
+        LEFT JOIN video_engagement_counts c ON c.video_id = v.id
+        WHERE v.status = 'approved' AND v.show_in_reels = TRUE
+          AND v.owner_deleted_at IS NULL
+          AND b.status = 'approved' AND b.deleted_at IS NULL
+          AND u.account_status = 'active' AND u.deleted_at IS NULL
+      ), ranked AS (
+        SELECT id, score10::text AS "score10",
+          ROW_NUMBER() OVER (ORDER BY score10 DESC, candidate_ordinal)::int AS ordinal
+        FROM candidates
+      )
+      SELECT id AS "videoId", "score10", ordinal
+      FROM ranked
+      ORDER BY ordinal`;
+    return rankEntriesSchema.parse(rows);
+  }
+
+  async insertRankSnapshot(
+    tx: TxContext,
+    snapshot: ReelRankSnapshot,
+  ): Promise<void> {
+    await this.database.client(tx).$executeRaw`
+      INSERT INTO reel_rank_snapshots (
+        id, session_subject_hash, ranked_items, created_at, expires_at
+      ) VALUES (
+        ${snapshot.id}::uuid, ${snapshot.sessionSubjectHash},
+        ${JSON.stringify(snapshot.rankedItems)}::jsonb,
+        ${snapshot.createdAt}, ${snapshot.expiresAt}
+      )`;
+  }
+
+  async findRankSnapshot(
+    tx: TxContext,
+    id: string,
+  ): Promise<ReelRankSnapshot | null> {
+    const rows = await this.database.client(tx).$queryRaw<
+      Array<{
+        id: string;
+        sessionSubjectHash: Uint8Array;
+        rankedItems: unknown;
+        createdAt: Date;
+        expiresAt: Date;
+      }>
+    >`
+      SELECT id, session_subject_hash AS "sessionSubjectHash",
+        ranked_items AS "rankedItems", created_at AS "createdAt",
+        expires_at AS "expiresAt"
+      FROM reel_rank_snapshots
+      WHERE id = ${id}::uuid`;
+    const row = rows[0];
+    if (!row) return null;
+    return {
+      id: row.id,
+      sessionSubjectHash: row.sessionSubjectHash,
+      rankedItems: rankEntriesSchema.parse(row.rankedItems),
+      createdAt: row.createdAt,
+      expiresAt: row.expiresAt,
+    };
+  }
+
+  feedPage(
+    tx: TxContext,
+    input: VideoFeedFilter & {
+      snapshotId: string;
+      afterOrdinal: number;
+      limit: number;
+    },
+  ): Promise<VideoFeedRecord[]> {
+    const filter = this.feedFilter(input);
+    const distance = input.lat !== undefined && input.lng !== undefined
+      ? Prisma.sql`ST_Distance(
+          b.location,
+          ST_SetSRID(ST_MakePoint(${input.lng}, ${input.lat}), 4326)::geography
+        ) / 1000.0`
+      : Prisma.sql`NULL::double precision`;
+    return this.database.client(tx).$queryRaw<VideoFeedRecord[]>(Prisma.sql`
+      WITH ranked AS (
+        SELECT (entry->>'videoId')::uuid AS video_id,
+          (entry->>'ordinal')::int AS ordinal
+        FROM reel_rank_snapshots s
+        CROSS JOIN LATERAL jsonb_array_elements(s.ranked_items) entry
+        WHERE s.id = ${input.snapshotId}::uuid
+      )
+      SELECT ${videoColumns},
+        r.ordinal,
+        b.name_en AS "businessNameEn", b.name_hi AS "businessNameHi",
+        (b.verified_at IS NOT NULL) AS verified,
+        ${distance}::double precision AS "distanceKm",
+        CASE
+          WHEN COALESCE(bs.temporarily_closed, FALSE) THEN FALSE
+          WHEN bh.business_id IS NULL THEN NULL
+          WHEN bh.is_closed THEN FALSE
+          ELSE (timezone('Asia/Kolkata', now())::time
+            BETWEEN bh.opens_at AND bh.closes_at)
+        END AS "isOpen",
+        v.view_count::text AS "viewCount",
+        COALESCE(vc.like_count, v.like_count)::text AS "likeCount",
+        v.comment_count::text AS "commentCount",
+        COALESCE(vc.share_count, v.share_count)::text AS "shareCount"
+      FROM ranked r
+      JOIN videos v ON v.id = r.video_id
+      JOIN businesses b ON b.id = v.business_id
+      JOIN users u ON u.id = b.owner_user_id
+      LEFT JOIN video_engagement_counts vc ON vc.video_id = v.id
+      LEFT JOIN business_settings bs ON bs.business_id = b.id
+      LEFT JOIN business_hours bh ON bh.business_id = b.id
+        AND bh.day_of_week = EXTRACT(DOW FROM timezone('Asia/Kolkata', now()))::int
+      WHERE r.ordinal > ${input.afterOrdinal}
+        AND v.status = 'approved' AND v.show_in_reels = TRUE
+        AND v.owner_deleted_at IS NULL
+        AND b.status = 'approved' AND b.deleted_at IS NULL
+        AND u.account_status = 'active' AND u.deleted_at IS NULL
+        ${filter}
+      ORDER BY r.ordinal ASC
+      LIMIT ${input.limit + 1}`);
+  }
+
+  private feedFilter(input: VideoFeedFilter) {
+    if (input.pill === 'following') {
+      return input.userId
+        ? Prisma.sql`AND EXISTS (
+            SELECT 1 FROM follows f
+            WHERE f.user_id = ${input.userId}::uuid
+              AND f.business_id = b.id AND f.unfollowed_at IS NULL
+          )`
+        : Prisma.sql`AND FALSE`;
+    }
+    if (input.pill === 'nearby') {
+      if (input.lat === undefined || input.lng === undefined)
+        return Prisma.sql`AND FALSE`;
+      return Prisma.sql`AND b.location IS NOT NULL
+        AND ST_DWithin(
+          b.location,
+          ST_SetSRID(ST_MakePoint(${input.lng}, ${input.lat}), 4326)::geography,
+          2500
+        )`;
+    }
+    if (input.pill === 'category') {
+      if (!input.category) return Prisma.sql`AND FALSE`;
+      return Prisma.sql`AND EXISTS (
+        SELECT 1
+        FROM business_categories bc
+        JOIN categories c ON c.id = bc.category_id
+        WHERE bc.business_id = b.id AND c.slug = ${input.category}
+          AND c.active = TRUE
+      )`;
+    }
+    return Prisma.empty;
+  }
+
   savedCards(tx: TxContext, ids: readonly string[]) {
     return this.database.client(tx).$queryRaw<
       Array<{ id: string; caption: string }>
@@ -158,9 +329,11 @@ export class PrismaVideoRepository implements VideoRepository {
     >(Prisma.sql`
       SELECT ${videoColumns} FROM videos v
       JOIN businesses b ON b.id = v.business_id
+      JOIN users u ON u.id = b.owner_user_id
       WHERE v.id = ${id}::uuid AND v.status = 'approved'
         AND v.show_in_reels = TRUE AND v.owner_deleted_at IS NULL
-        AND b.status = 'approved' AND b.deleted_at IS NULL`);
+        AND b.status = 'approved' AND b.deleted_at IS NULL
+        AND u.account_status = 'active' AND u.deleted_at IS NULL`);
     return rows[0] ?? null;
   }
 
@@ -191,9 +364,11 @@ export class PrismaVideoRepository implements VideoRepository {
              b.city_id AS "cityId", b.area_id AS "areaId",
              (v.status = 'approved' AND v.show_in_reels = TRUE
                AND v.owner_deleted_at IS NULL
-               AND b.status = 'approved' AND b.deleted_at IS NULL) AS public
+               AND b.status = 'approved' AND b.deleted_at IS NULL
+               AND u.account_status = 'active' AND u.deleted_at IS NULL) AS public
       FROM videos v
       JOIN businesses b ON b.id = v.business_id
+      JOIN users u ON u.id = b.owner_user_id
       WHERE v.id = ${id}::uuid
       FOR SHARE OF v, b`);
     return rows[0] ?? null;

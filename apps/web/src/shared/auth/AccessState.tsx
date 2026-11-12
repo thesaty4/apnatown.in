@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { Button, buttonClassName } from '@apnatown/ui/primitives/Button';
 import {
   EmptyState,
@@ -69,6 +69,7 @@ export function AccessState({
   const { state, refresh } = useSession();
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
   const path = usePathname();
+  const searchParams = useSearchParams();
   const t = useTranslations('auth.feedback');
   if (state.kind === 'loading') return <Skeleton label={t('loading')} />;
   if (state.kind !== 'error') return null;
@@ -81,7 +82,7 @@ export function AccessState({
         }}
       />
     );
-  const returnTo = safeReturnTo(path) ?? '/account';
+  const returnTo = safeReturnTo(videoFeedReturnTo(path, searchParams)) ?? '/account';
   const href = guest
     ? loginHref(locale, returnTo)
     : `${publicHref('/session-expired', locale)}?${new URLSearchParams({ returnTo })}`;
@@ -97,4 +98,28 @@ export function AccessState({
       }
     />
   );
+}
+
+function videoFeedReturnTo(
+  path: string,
+  searchParams: URLSearchParams,
+): string {
+  if (path !== '/videos') return path;
+  const safe = new URLSearchParams();
+  const pill = searchParams.get('pill');
+  if (pill && ['for_you', 'following', 'nearby', 'category'].includes(pill))
+    safe.set('pill', pill);
+  const category = searchParams.get('category');
+  if (category && /^[a-z0-9]+(?:-[a-z0-9]+)*$/u.test(category))
+    safe.set('category', category);
+  const video = searchParams.get('video');
+  if (
+    video &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu.test(
+      video,
+    )
+  )
+    safe.set('video', video);
+  const query = safe.toString();
+  return query ? `${path}?${query}` : path;
 }

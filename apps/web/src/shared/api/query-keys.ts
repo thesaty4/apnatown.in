@@ -49,6 +49,21 @@ export const queryKeys = {
   // Owner suggestion history (the business is resolved server-side).
   catalogSuggestions: (scope: AccountScope) =>
     ['private', scope, 'catalog', 'suggestions'] as const,
+  videoFeed: (
+    viewer: string,
+    pill: string,
+    category: string | undefined,
+    locationRevision: number,
+  ) =>
+    [
+      'private',
+      viewer,
+      'media',
+      'reels-feed',
+      pill,
+      category ?? null,
+      locationRevision,
+    ] as const,
   mediaVideos: (scope: AccountScope, kind: 'shop' | 'provider') =>
     ['private', scope, 'media', 'videos', kind] as const,
   mediaVideo: (id: string) => ['public', 'media', 'video', id] as const,

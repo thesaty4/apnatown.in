@@ -5,8 +5,11 @@ import {
   VideoReportAcceptedSchema,
   VideoPageSchema,
   VideoSchema,
+  VideoFeedPageSchema,
+  VideoFeedQuerySchema,
   type CreateVideoReport,
   type CreateVideo,
+  type VideoFeedQuery,
 } from '@apnatown/shared';
 import type { BrowserApi } from '../../shared/api/browser';
 import { unwrap } from '../../shared/api/result';
@@ -68,6 +71,35 @@ export async function getPublicVideo(
       ...withSignal(signal),
     }),
     VideoSchema,
+  );
+}
+
+export async function getVideoFeed(
+  api: BrowserApi,
+  input: VideoFeedQuery,
+  signal?: AbortSignal,
+) {
+  const query = VideoFeedQuerySchema.parse(input);
+  await api.mutationHeaders();
+  signal?.throwIfAborted();
+  return unwrap(
+    await api.GET('/videos/feed', {
+      params: {
+        query: {
+          ...(query.category !== undefined && { category: query.category }),
+          ...(query.cursor !== undefined && { cursor: query.cursor }),
+          ...(query.lat !== undefined && { lat: query.lat }),
+          ...(query.limit !== undefined && { limit: query.limit }),
+          ...(query.lng !== undefined && { lng: query.lng }),
+          ...(query.pill !== undefined && { pill: query.pill }),
+          ...(query.snapshotId !== undefined && {
+            snapshotId: query.snapshotId,
+          }),
+        },
+      },
+      ...withSignal(signal),
+    }),
+    VideoFeedPageSchema,
   );
 }
 

@@ -1,6 +1,7 @@
 export { ErrorResponseSchema, HealthResponseSchema } from './wire.js';
 export type { ErrorResponse, HealthResponse } from './wire.js';
 export { Money } from './money.js';
+export { formatDistanceKm } from './formatters.js';
 export { SavedQuerySchema, SavedItemSchema, SavedPageSchema } from './saved.js';
 export type { SavedQuery, SavedItem, SavedPage } from './saved.js';
 export {
@@ -17,6 +18,10 @@ export {
   CreateVideoSchema,
   VideoStatusSchema,
   VideoSchema,
+  VideoFeedPillSchema,
+  VideoFeedQuerySchema,
+  VideoFeedItemSchema,
+  VideoFeedPageSchema,
   VideoPageSchema,
   VideoModerationTabSchema,
   VideoModerationQuerySchema,
@@ -39,6 +44,10 @@ export type {
   VideoPlayback,
   CreateVideo,
   Video,
+  VideoFeedPill,
+  VideoFeedQuery,
+  VideoFeedItem,
+  VideoFeedPage,
   VideoModerationTab,
   VideoModerationQuery,
   VideoModerationItem,

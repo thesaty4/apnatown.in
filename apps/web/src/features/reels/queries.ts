@@ -2,7 +2,11 @@
 
 import { queryOptions, useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { BusinessKind } from '@apnatown/shared/businesses';
-import type { CreateVideo, CreateVideoReport } from '@apnatown/shared';
+import type {
+  CreateVideo,
+  CreateVideoReport,
+  VideoFeedQuery,
+} from '@apnatown/shared';
 import { accountScope, queryKeys } from '../../shared/api/query-keys';
 import { privateInfiniteQueryOptions } from '../../shared/api/private-query';
 import { useIdempotencyKey } from '../../shared/api/idempotency';
@@ -12,6 +16,7 @@ import {
   createOwnerVideo,
   createVideoReport,
   getPublicVideo,
+  getVideoFeed,
   listOwnerVideos,
 } from './api';
 
@@ -84,6 +89,51 @@ export function publicVideoOptions(api: ReturnType<typeof useSession>['api'], id
 export function usePublicVideo(id: string) {
   const { api } = useSession();
   return useQuery(publicVideoOptions(api, id));
+}
+
+type FeedPageParam = { snapshotId?: string; cursor?: string };
+
+export function useVideoFeed(
+  input: Pick<VideoFeedQuery, 'pill' | 'category'>,
+  location: { lat: number; lng: number } | null,
+  locationRevision: number,
+) {
+  const { api, state, epoch } = useSession();
+  const viewer =
+    state.kind === 'ready'
+      ? `user:${state.data.userId}:${epoch}`
+      : `guest:${epoch}`;
+  const key = queryKeys.videoFeed(
+    viewer,
+    input.pill,
+    input.category,
+    locationRevision,
+  );
+  const query = useInfiniteQuery({
+    queryKey: key,
+    initialPageParam: {} as FeedPageParam,
+    queryFn: ({ signal, pageParam }) =>
+      getVideoFeed(
+        api,
+        {
+          ...input,
+          ...(input.pill === 'nearby' && location
+            ? { lat: location.lat, lng: location.lng }
+            : {}),
+          ...pageParam,
+          limit: 10,
+        },
+        signal,
+      ),
+    getNextPageParam: (page) =>
+      page.nextCursor
+        ? { snapshotId: page.snapshotId, cursor: page.nextCursor }
+        : undefined,
+    enabled: input.pill !== 'nearby' || location !== null,
+    retry: false,
+    staleTime: 30_000,
+  });
+  return { query, key };
 }
 
 export function useReportVideo(id: string) {

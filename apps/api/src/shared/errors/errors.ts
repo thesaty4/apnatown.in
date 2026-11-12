@@ -9,6 +9,7 @@ const catalogue = {
   MEDIA_NOT_FOUND: [404, 'errors.media.notFound'],
   MEDIA_RANGE_INVALID: [416, 'errors.media.rangeInvalid'],
   MEDIA_VIDEO_SOURCE_INVALID: [422, 'errors.media.videoSourceInvalid'],
+  MEDIA_FEED_EXPIRED: [410, 'errors.media.feedExpired'],
   OTP_INVALID: [401, 'errors.auth.otp.invalid'],
   OTP_NOT_FOUND: [404, 'errors.auth.otp.notFound'],
   OTP_EXPIRED: [410, 'errors.auth.otp.expired'],

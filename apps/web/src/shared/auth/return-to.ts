@@ -8,6 +8,7 @@ const implemented = new Set([
   '/account/profile',
   '/account/preferences',
   '/account/addresses',
+  '/videos',
   '/admin/profile',
   '/super-admin/admins',
   '/super-admin/roles',

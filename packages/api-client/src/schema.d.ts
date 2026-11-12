@@ -1785,6 +1785,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/videos/feed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Read an immutable, session-bound Reels feed
+         * @description Ranks eligible videos once for 30 minutes. Supported filters are For You, Following, Nearby (2.5 km) and active business categories. Offer/product/service item filters await their owning read paths.
+         */
+        get: operations["mediaVideoFeed"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -5657,6 +5677,68 @@ export interface components {
             /** @enum {string} */
             status: "pending" | "approved" | "rejected" | "removed";
             version: number;
+        };
+        VideoFeedPageDto: {
+            /** @enum {string} */
+            effectiveFilter: "for_you" | "following" | "nearby" | "category";
+            /** Format: date-time */
+            expiresAt: string;
+            items: {
+                /** Format: uuid */
+                businessId: string;
+                businessNameEn: string | null;
+                businessNameHi: string | null;
+                caption: string;
+                commentCount: number;
+                /** Format: date-time */
+                createdAt: string;
+                distanceKm: number | null;
+                hashtags: string[];
+                /** Format: uuid */
+                id: string;
+                isOpen: boolean | null;
+                /** @enum {string} */
+                kind: "watch" | "shorts" | "share" | "reel" | "p";
+                likeCount: number;
+                playback: {
+                    embedUrl: string;
+                    openUrl: string;
+                    /** @enum {string} */
+                    provider: "youtube";
+                    /** @enum {string} */
+                    render: "iframe";
+                } | {
+                    openUrl: string;
+                    permalink: string;
+                    /** @enum {string} */
+                    provider: "instagram";
+                    /** @enum {string} */
+                    render: "instagram";
+                } | {
+                    /** Format: uri */
+                    openUrl: string;
+                    /** @enum {string} */
+                    provider: "youtube" | "instagram";
+                    /** @enum {string} */
+                    reason: "disabled" | "unavailable";
+                    /** @enum {string} */
+                    render: "fallback";
+                };
+                /** @enum {string} */
+                provider: "youtube" | "instagram";
+                providerId: string;
+                shareCount: number;
+                showInGallery: boolean;
+                showInReels: boolean;
+                /** @enum {string} */
+                status: "pending" | "approved" | "rejected" | "removed";
+                verified: boolean;
+                version: number;
+                viewCount: number;
+            }[];
+            nextCursor: string | null;
+            /** Format: uuid */
+            snapshotId: string;
         };
         VideoHeartResultDto: {
             hearted: boolean;
@@ -22084,6 +22166,108 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    mediaVideoFeed: {
+        parameters: {
+            query?: {
+                category?: string;
+                cursor?: string;
+                lat?: number;
+                limit?: number;
+                lng?: number;
+                pill?: string;
+                snapshotId?: string;
+            };
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VideoFeedPageDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for malformed filters or mismatched cursors. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description CSRF_INVALID for an untrusted browser session. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MEDIA_FEED_EXPIRED when the snapshot has expired or belongs to another session. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED with Retry-After. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE (errors.system.maintenance) while maintenance mode is on and this route is not admitted */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
                 };
             };
         };

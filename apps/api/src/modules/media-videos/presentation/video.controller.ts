@@ -25,9 +25,12 @@ import {
   CreateVideoSchema,
   VideoPageSchema,
   VideoReportAcceptedSchema,
+  VideoFeedPageSchema,
+  VideoFeedQuerySchema,
   VideoSchema,
   type CreateVideo,
   type CreateVideoReport,
+  type VideoFeedQuery,
 } from '@apnatown/shared';
 import {
   BUSINESS_KIND_HEADER,
@@ -56,6 +59,7 @@ import { RateLimit } from '../../../shared/rate-limit/rate-limit';
 import { AdminErrors } from '../../admin/presentation/admin.dto';
 import { VideoService } from '../application/video.service';
 import type {
+  VideoFeedRequest,
   VideoOwnerRequest,
   VideoReportRequest,
 } from '../domain/videos';
@@ -64,6 +68,8 @@ class CreateVideoDto extends createZodDto(CreateVideoSchema) {}
 class VideoDto extends createZodDto(VideoSchema) {}
 class VideoPageDto extends createZodDto(VideoPageSchema) {}
 class VideoPageQueryDto extends createZodDto(PageQuerySchema) {}
+class VideoFeedQueryDto extends createZodDto(VideoFeedQuerySchema) {}
+class VideoFeedPageDto extends createZodDto(VideoFeedPageSchema) {}
 class CreateVideoReportDto extends createZodDto(CreateVideoReportSchema) {}
 class VideoReportAcceptedDto extends createZodDto(VideoReportAcceptedSchema) {}
 
@@ -109,6 +115,13 @@ function reportRequest(request: AuthRequest): VideoReportRequest {
     reporterUserId: request.principal?.userId ?? null,
     correlationId,
     key: request.headers['idempotency-key'],
+    session: sessionBinding(request),
+  };
+}
+
+function feedRequest(request: AuthRequest): VideoFeedRequest {
+  return {
+    userId: request.principal?.userId ?? null,
     session: sessionBinding(request),
   };
 }
@@ -182,6 +195,46 @@ export class OwnerVideoController {
 @Controller('videos')
 export class PublicVideoController {
   constructor(private readonly videos: VideoService) {}
+
+  @Get('feed')
+  @SessionRoute()
+  @ApiSecurity('sessionCookie')
+  @ApiQuery({ type: VideoFeedQueryDto })
+  @ApiOperation({
+    operationId: 'mediaVideoFeed',
+    summary: 'Read an immutable, session-bound Reels feed',
+    description:
+      'Ranks eligible videos once for 30 minutes. Supported filters are For You, Following, Nearby (2.5 km) and active business categories. Offer/product/service item filters await their owning read paths.',
+  })
+  @ApiOkResponse({ type: VideoFeedPageDto })
+  @AdminErrors({
+    400: 'VALIDATION_ERROR for malformed filters or mismatched cursors.',
+    403: 'CSRF_INVALID for an untrusted browser session.',
+    410: 'MEDIA_FEED_EXPIRED when the snapshot has expired or belongs to another session.',
+    429: 'COMMON_RATE_LIMITED with Retry-After.',
+  })
+  @RateLimit(
+    {
+      key: 'media.videos.feed.session',
+      maximumHits: 120,
+      windowSeconds: 60,
+      subject: 'session',
+    },
+    {
+      key: 'media.videos.feed.ip',
+      maximumHits: 240,
+      windowSeconds: 60,
+      subject: 'ip',
+    },
+  )
+  async feed(
+    @Req() request: AuthRequest,
+    @Query(new InputPipe(VideoFeedQuerySchema)) query: VideoFeedQuery,
+  ) {
+    return VideoFeedPageSchema.parse(
+      await this.videos.feed(feedRequest(request), query),
+    );
+  }
 
   @Get(':id')
   @HttpCode(200)

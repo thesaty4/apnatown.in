@@ -1,5 +1,11 @@
 import { z } from 'zod';
-import { IdSchema, PageQuerySchema, TimestampSchema } from './wire.js';
+import {
+  CountSchema,
+  CursorSchema,
+  IdSchema,
+  PageQuerySchema,
+  TimestampSchema,
+} from './wire.js';
 import { ImagePolicySchema } from './settings.js';
 
 /**
@@ -162,6 +168,84 @@ function refineVideo(video: z.infer<typeof VideoBaseSchema>, context: z.Refineme
 
 export const VideoSchema = VideoBaseSchema.superRefine(refineVideo);
 export type Video = z.infer<typeof VideoSchema>;
+
+export const VideoFeedPillSchema = z.enum([
+  'for_you',
+  'following',
+  'nearby',
+  'category',
+]);
+export type VideoFeedPill = z.infer<typeof VideoFeedPillSchema>;
+export const VideoFeedQuerySchema = z
+  .strictObject({
+    pill: VideoFeedPillSchema.default('for_you'),
+    category: z
+      .string()
+      .min(1)
+      .max(64)
+      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+      .optional(),
+    lat: z.coerce.number().finite().min(-90).max(90).optional(),
+    lng: z.coerce.number().finite().min(-180).max(180).optional(),
+    snapshotId: IdSchema.optional(),
+    cursor: CursorSchema.optional(),
+    limit: z.coerce.number().int().min(1).max(10).default(10),
+  })
+  .superRefine((query, context) => {
+    if (query.pill === 'category' && !query.category)
+      context.addIssue({
+        code: 'custom',
+        path: ['category'],
+        message: 'A category is required for the category filter',
+      });
+    if (query.pill !== 'category' && query.category)
+      context.addIssue({
+        code: 'custom',
+        path: ['category'],
+        message: 'Category is valid only for the category filter',
+      });
+    if (query.pill === 'nearby' && (query.lat === undefined || query.lng === undefined))
+      context.addIssue({
+        code: 'custom',
+        path: ['lat'],
+        message: 'Nearby requires both coordinates',
+      });
+    if ((query.lat === undefined) !== (query.lng === undefined))
+      context.addIssue({
+        code: 'custom',
+        path: ['lng'],
+        message: 'Coordinates must be supplied together',
+      });
+    if (query.cursor && !query.snapshotId)
+      context.addIssue({
+        code: 'custom',
+        path: ['snapshotId'],
+        message: 'A cursor requires its snapshot',
+      });
+  });
+export type VideoFeedQuery = z.infer<typeof VideoFeedQuerySchema>;
+
+export const VideoFeedItemSchema = VideoBaseSchema.extend({
+  businessNameEn: z.string().max(200).nullable(),
+  businessNameHi: z.string().max(200).nullable(),
+  verified: z.boolean(),
+  distanceKm: z.number().finite().nonnegative().nullable(),
+  isOpen: z.boolean().nullable(),
+  viewCount: CountSchema,
+  likeCount: CountSchema,
+  commentCount: CountSchema,
+  shareCount: CountSchema,
+}).superRefine(refineVideo);
+export type VideoFeedItem = z.infer<typeof VideoFeedItemSchema>;
+
+export const VideoFeedPageSchema = z.strictObject({
+  snapshotId: IdSchema,
+  expiresAt: TimestampSchema,
+  effectiveFilter: VideoFeedPillSchema,
+  items: z.array(VideoFeedItemSchema).max(10),
+  nextCursor: CursorSchema.nullable(),
+});
+export type VideoFeedPage = z.infer<typeof VideoFeedPageSchema>;
 
 export const VideoPageSchema = z.strictObject({
   items: z.array(VideoSchema).max(50),

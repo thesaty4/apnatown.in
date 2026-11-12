@@ -1,3 +1,4 @@
+import { timingSafeEqual } from 'node:crypto';
 import { Inject, Injectable } from '@nestjs/common';
 import type { JsonValue } from '@apnatown/shared';
 import {
@@ -8,8 +9,13 @@ import {
   VideoPageSchema,
   VideoSchema,
   VideoSourceSchema,
+  VideoFeedItemSchema,
+  VideoFeedPageSchema,
+  VideoFeedQuerySchema,
   type CreateVideo,
   type CreateVideoReport,
+  type VideoFeedPage,
+  type VideoFeedQuery,
   type VideoReportAccepted,
   type Video,
 } from '@apnatown/shared';
@@ -45,11 +51,16 @@ import {
   type VideoOwnerRequest,
   type VideoPosition,
   type VideoReportRequest,
+  type VideoFeedRequest,
+  type VideoFeedRecord,
+  type ReelRankSnapshot,
   type VideoRepository,
 } from '../domain/videos';
 
 const positionSchema = z.tuple([TimestampSchema, IdSchema]);
+const feedPositionSchema = z.tuple([z.number().int().nonnegative(), IdSchema]);
 const RECEIPT_TTL_MS = 24 * 60 * 60 * 1000;
+const FEED_SNAPSHOT_TTL_MS = 30 * 60 * 1000;
 
 @Injectable()
 export class VideoService {
@@ -166,6 +177,64 @@ export class VideoService {
     });
   }
 
+  feed(request: VideoFeedRequest, input: VideoFeedQuery): Promise<VideoFeedPage> {
+    const query = VideoFeedQuerySchema.parse(input);
+    const subjectHash = rateLimitSubjectHash(
+      this.config.CURSOR_SIGNING_KEY,
+      `session:${request.session.id}`,
+    );
+    return this.uow.run(async (tx) => {
+      const snapshot = query.snapshotId
+        ? await this.videos.findRankSnapshot(tx, query.snapshotId)
+        : await this.createFeedSnapshot(tx, subjectHash);
+      if (!snapshot || !this.ownsSnapshot(snapshot, subjectHash))
+        throw new DomainError('MEDIA_FEED_EXPIRED');
+      if (snapshot.expiresAt.getTime() <= this.clock.now().getTime())
+        throw new DomainError('MEDIA_FEED_EXPIRED');
+
+      const binding: CursorBinding = {
+        operation: 'media.videos.feed',
+        sort: 'frozen-ordinal-asc',
+        filters: {
+          pill: query.pill,
+          category: query.category ?? null,
+          lat: query.lat ?? null,
+          lng: query.lng ?? null,
+        },
+        scope: {
+          snapshotId: snapshot.id,
+          subjectHash: Buffer.from(subjectHash).toString('hex'),
+          expiresAt: snapshot.expiresAt.toISOString(),
+        },
+      };
+      const afterOrdinal = query.cursor
+        ? this.feedPosition(query.cursor, binding, snapshot.id)
+        : 0;
+      const rows = await this.videos.feedPage(tx, {
+        snapshotId: snapshot.id,
+        afterOrdinal,
+        limit: query.limit,
+        pill: query.pill,
+        ...(query.category ? { category: query.category } : {}),
+        ...(query.lat !== undefined ? { lat: query.lat } : {}),
+        ...(query.lng !== undefined ? { lng: query.lng } : {}),
+        userId: request.userId,
+      });
+      const visibleRows = rows.slice(0, query.limit);
+      const last = visibleRows.at(-1);
+      return VideoFeedPageSchema.parse({
+        snapshotId: snapshot.id,
+        expiresAt: snapshot.expiresAt.toISOString(),
+        effectiveFilter: query.pill,
+        items: visibleRows.map((row) => this.feedDto(row)),
+        nextCursor:
+          rows.length > query.limit && last
+            ? this.cursors.encode(binding, [last.ordinal, snapshot.id])
+            : null,
+      });
+    });
+  }
+
   report(
     request: VideoReportRequest,
     videoId: string,
@@ -232,6 +301,63 @@ export class VideoService {
         policy,
       )
       .then((result) => VideoReportAcceptedSchema.parse(result));
+  }
+
+  private async createFeedSnapshot(
+    tx: TxContext,
+    sessionSubjectHash: Uint8Array,
+  ): Promise<ReelRankSnapshot> {
+    const createdAt = this.clock.now();
+    const snapshot: ReelRankSnapshot = {
+      id: this.ids.uuidv7(),
+      sessionSubjectHash,
+      rankedItems: await this.videos.rankCandidates(tx),
+      createdAt,
+      expiresAt: new Date(createdAt.getTime() + FEED_SNAPSHOT_TTL_MS),
+    };
+    await this.videos.insertRankSnapshot(tx, snapshot);
+    return snapshot;
+  }
+
+  private ownsSnapshot(
+    snapshot: ReelRankSnapshot,
+    sessionSubjectHash: Uint8Array,
+  ): boolean {
+    const stored = Buffer.from(snapshot.sessionSubjectHash);
+    const expected = Buffer.from(sessionSubjectHash);
+    return stored.length === expected.length && timingSafeEqual(stored, expected);
+  }
+
+  private feedPosition(
+    cursor: string,
+    binding: CursorBinding,
+    snapshotId: string,
+  ): number {
+    const parsed = feedPositionSchema.safeParse(this.cursors.decode(cursor, binding));
+    if (!parsed.success || parsed.data[1] !== snapshotId)
+      throw new DomainError('VALIDATION_ERROR', { field: 'cursor' });
+    return parsed.data[0];
+  }
+
+  private feedDto(row: VideoFeedRecord) {
+    const count = (value: string) => {
+      const parsed = Number(value);
+      if (!Number.isSafeInteger(parsed) || parsed < 0)
+        throw new DomainError('COMMON_INTERNAL_ERROR');
+      return parsed;
+    };
+    return VideoFeedItemSchema.parse({
+      ...this.dto(row),
+      businessNameEn: row.businessNameEn,
+      businessNameHi: row.businessNameHi,
+      verified: row.verified,
+      distanceKm: row.distanceKm,
+      isOpen: row.isOpen,
+      viewCount: count(row.viewCount),
+      likeCount: count(row.likeCount),
+      commentCount: count(row.commentCount),
+      shareCount: count(row.shareCount),
+    });
   }
 
   private async owner(tx: TxContext, request: VideoOwnerRequest) {

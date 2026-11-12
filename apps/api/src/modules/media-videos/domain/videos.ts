@@ -1,4 +1,5 @@
 import type { BusinessKind } from '@apnatown/shared/businesses';
+import type { VideoFeedPill } from '@apnatown/shared';
 import type { SessionBinding } from '../../../shared/auth';
 import type { TxContext } from '../../../shared/persistence/ports';
 
@@ -64,8 +65,54 @@ export interface VideoReportPosition {
   id: string;
 }
 
+export interface ReelRankEntry {
+  videoId: string;
+  score10: string;
+  ordinal: number;
+}
+
+export interface ReelRankSnapshot {
+  id: string;
+  sessionSubjectHash: Uint8Array;
+  rankedItems: ReelRankEntry[];
+  createdAt: Date;
+  expiresAt: Date;
+}
+
+export interface VideoFeedRecord extends StoredVideo {
+  ordinal: number;
+  businessNameEn: string | null;
+  businessNameHi: string | null;
+  verified: boolean;
+  distanceKm: number | null;
+  isOpen: boolean | null;
+  viewCount: string;
+  likeCount: string;
+  commentCount: string;
+  shareCount: string;
+}
+
+export interface VideoFeedFilter {
+  pill: VideoFeedPill;
+  category?: string;
+  lat?: number;
+  lng?: number;
+  userId: string | null;
+}
+
 export const VIDEO_REPOSITORY = Symbol('VIDEO_REPOSITORY');
 export interface VideoRepository {
+  rankCandidates(tx: TxContext): Promise<ReelRankEntry[]>;
+  insertRankSnapshot(tx: TxContext, snapshot: ReelRankSnapshot): Promise<void>;
+  findRankSnapshot(tx: TxContext, id: string): Promise<ReelRankSnapshot | null>;
+  feedPage(
+    tx: TxContext,
+    input: VideoFeedFilter & {
+      snapshotId: string;
+      afterOrdinal: number;
+      limit: number;
+    },
+  ): Promise<VideoFeedRecord[]>;
   savedCards(
     tx: TxContext,
     ids: readonly string[],
@@ -172,6 +219,11 @@ export interface VideoReportRequest {
   reporterUserId: string | null;
   correlationId: string;
   key: unknown;
+  session: SessionBinding;
+}
+
+export interface VideoFeedRequest {
+  userId: string | null;
   session: SessionBinding;
 }
 

@@ -868,6 +868,18 @@ model VideoEngagementCounts {
   @@map("video_engagement_counts")
 }
 
+model ReelRankSnapshot {
+  id                String   @id @db.Uuid
+  sessionSubjectHash Bytes   @map("session_subject_hash")
+  rankedItems       Json     @map("ranked_items") @db.JsonB
+  createdAt         DateTime @map("created_at") @db.Timestamptz(6)
+  expiresAt         DateTime @map("expires_at") @db.Timestamptz(6)
+
+  @@index([sessionSubjectHash, expiresAt], map: "reel_rank_snapshots_subject_expiry_idx")
+  @@index([expiresAt], map: "reel_rank_snapshots_expiry_idx")
+  @@map("reel_rank_snapshots")
+}
+
 model VideoComment {
   id            String   @id @db.Uuid
   videoId       String   @map("video_id") @db.Uuid
