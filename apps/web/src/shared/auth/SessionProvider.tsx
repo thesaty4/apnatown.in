@@ -15,6 +15,7 @@ import { failureCode, resource, type Resource } from '../api/result';
 import { PrivateLifecycle } from '../api/private-lifecycle';
 import { usePrivateMutation } from '../api/use-private-mutation';
 import { queryKeys, type Session } from '../api/query-keys';
+import { showMaintenance } from '../api/maintenance';
 import { postLogout, sessionOptions } from './api';
 
 type AuthContext = {
@@ -34,6 +35,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     const api = createBrowserApi((code) => {
       if (['SESSION_EXPIRED', 'ACCOUNT_UNAVAILABLE'].includes(code))
         lifecycle.expire(code);
+      if (code === 'MAINTENANCE') showMaintenance();
     });
     const lifecycle = new PrivateLifecycle(client, () => api.reset());
     return { api, lifecycle };

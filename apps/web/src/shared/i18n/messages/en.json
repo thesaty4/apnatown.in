@@ -213,9 +213,12 @@
       "exists": "An admin with this phone or email already exists.",
       "expired": "Your session expired. Sign in again.",
       "failed": "Something went wrong",
+      "featureUnavailable": "This feature isn’t available yet, so it can’t be turned on.",
       "forbidden": "You don’t have permission for this action.",
       "inactive": "Your admin account is inactive.",
       "inProgress": "This change is still being processed. Try again in a moment.",
+      "legalNotFound": "This page hasn’t been published yet.",
+      "maintenance": "ApnaTown is under maintenance. Please try again in a few minutes.",
       "rateLimited": "Too many attempts. Wait a moment and try again.",
       "reportTooLarge": "Too many entries to export. Narrow the date range or filters and try again.",
       "retry": "Try again",
@@ -223,6 +226,8 @@
       "roleNameTaken": "A role with this name already exists",
       "roleNotFound": "This role no longer exists. The list has been refreshed.",
       "self": "You can’t change your own status.",
+      "settingsConflict": "These settings were changed elsewhere. Reload the latest version — your edits stay in the form — then save again.",
+      "settingsInvalid": "Some values aren’t allowed. Check the highlighted fields and try again.",
       "systemLocked": "System roles can’t be changed or deleted.",
       "unavailable": "This isn’t available right now.",
       "validation": "Some details aren’t valid. Check the fields and try again."
@@ -277,6 +282,7 @@
       "platform": "Platform",
       "profile": "Profile",
       "roles": "Roles & permissions",
+      "settings": "Global settings",
       "superAdmin": "Super Admin",
       "system": "System"
     },
@@ -1276,6 +1282,8 @@
     },
     "error": {
       "message": "Please check your connection and try again.",
+      "reference": "Error ID: {id}",
+      "snag": "We hit a snag",
       "title": "Something went wrong"
     },
     "language": {
@@ -1354,6 +1362,85 @@
       "saved": "Choice saved",
       "saving": "Saving your choice…",
       "title": "Notification & consent"
+    }
+  },
+  "help": {
+    "contact": {
+      "call": "Call",
+      "callUnavailable": "Phone support isn’t available right now.",
+      "checking": "Checking support contacts…",
+      "loadFailed": "Couldn’t load support contacts.",
+      "newWindow": "(opens in a new window)",
+      "retry": "Try again",
+      "whatsapp": "WhatsApp",
+      "whatsappUnavailable": "WhatsApp support isn’t available right now."
+    },
+    "faq": {
+      "order": {
+        "answer": "Pick a shop, add items to the cart and choose home delivery or self-pickup. Pay online or in cash.",
+        "question": "How do I order?"
+      },
+      "otp": {
+        "answer": "You get a 4-digit OTP. Tell it to the rider only when you receive your order.",
+        "question": "How does delivery OTP work?"
+      },
+      "outside": {
+        "answer": "We are live in Padrauna now. Choose “Other cities” in the location picker to join the waitlist.",
+        "question": "I am outside Padrauna"
+      },
+      "refunds": {
+        "answer": "Cancel or request a refund from the order page. Admin and the shop are notified and will contact you.",
+        "question": "How do refunds work?"
+      },
+      "split": {
+        "answer": "Each shop prepares its own order, so one checkout creates one order per shop with separate IDs.",
+        "question": "Why was my order split?"
+      },
+      "title": "Frequently asked questions"
+    },
+    "form": {
+      "errors": {
+        "empty": "Write a message (up to 1000 characters).",
+        "failed": "Your message couldn’t be sent. Please try again — your draft is kept.",
+        "inProgress": "This message is still being sent. Please wait a moment.",
+        "invalid": "This message can’t be sent. Check it and try again.",
+        "maintenance": "ApnaTown is under maintenance. Please try again in a few minutes.",
+        "rateLimited": "Too many messages for now. Please try again later — your draft is kept."
+      },
+      "message": "Your message",
+      "offline": "You are offline. Reconnect to send your message — your draft is kept.",
+      "send": "Send",
+      "sending": "Sending…",
+      "sent": "Message sent. Thank you for contacting us.",
+      "title": "Contact support"
+    },
+    "page": {
+      "title": "Help & support"
+    }
+  },
+  "legal": {
+    "about": {
+      "fastDelivery": "Fast delivery",
+      "localShops": "Local shops",
+      "trustedServices": "Trusted services"
+    },
+    "footer": {
+      "about": "About us",
+      "company": "Company",
+      "design": "Design system",
+      "help": "Contact & help",
+      "legal": "Legal",
+      "privacy": "Privacy",
+      "refund": "Refund policy",
+      "terms": "Terms"
+    },
+    "page": {
+      "updated": "Last updated {date}"
+    },
+    "privacy": {
+      "actions": "Your data",
+      "delete": "Delete my account",
+      "download": "Download my data"
     }
   },
   "privacy": {
@@ -1604,6 +1691,266 @@
       "viewName": "View {name}",
       "viewRole": "View role"
     },
+    "settings": {
+      "add": "Add",
+      "branding": {
+        "nameEn": "Brand name (English)",
+        "nameHi": "Brand name (हिन्दी)",
+        "taglineEn": "Tagline (English)",
+        "taglineHi": "Tagline (हिन्दी)"
+      },
+      "cancel": "Cancel",
+      "checkAgain": "Check again",
+      "close": "Close",
+      "conflict": "These settings were changed elsewhere. Reload the latest version — your edits stay in the form — then save again.",
+      "delivery": {
+        "addSlab": "Add slab",
+        "base": "Base per ride (₹)",
+        "example": "Example: 3 km ride earns {amount}",
+        "fee": "Fee (₹)",
+        "perKm": "Per km (₹)",
+        "removeSlab": "Remove slab {row}",
+        "riderTitle": "Rider earning rule",
+        "save": "Save rules",
+        "slabOrder": "Each “Up to (km)” must be greater than the row above it.",
+        "slabsTitle": "Delivery fee slabs (ApnaTown riders)",
+        "uptoKm": "Up to (km)"
+      },
+      "discard": {
+        "confirm": "Discard",
+        "impact": "Your unsaved changes in this section will be lost.",
+        "keep": "Keep editing",
+        "title": "Discard changes?"
+      },
+      "edit": "Edit",
+      "enabled": "Enabled",
+      "english": "English",
+      "errors": {
+        "code": "Use 2–40 lowercase letters, numbers or _ , starting with a letter.",
+        "field": "Enter a valid value.",
+        "summary": "Check the highlighted fields and try again.",
+        "text": "Enter text without < or > characters, within the length limit."
+      },
+      "errorTitle": "Couldn’t load settings",
+      "flags": {
+        "future": "Not available yet. This feature hasn’t been built, so it stays off.",
+        "immediate": "Switches take effect immediately — no Save needed.",
+        "labels": {
+          "booking": "Service booking",
+          "donations": "Donations",
+          "guestBrowse": "Guest browsing",
+          "maintenance": "Maintenance mode",
+          "paymentsCod": "Cash on delivery / pay at pickup",
+          "paymentsOnline": "Online payments (UPI, cards, net banking, wallets)",
+          "reviews": "Customer reviews",
+          "whatsapp": "Enable WhatsApp messages"
+        },
+        "maintenanceHint": "Blocks marketplace pages and actions. Sign-in, Super Admin settings, legal pages and the health check stay available so you can turn it off.",
+        "needsSetup": "Complete the required setup before turning this on.",
+        "turnedOff": "{name} turned off",
+        "turnedOn": "{name} turned on"
+      },
+      "forbiddenTitle": "You don’t have permission",
+      "hindi": "हिन्दी",
+      "integrations": {
+        "adapters": {
+          "email": "Email",
+          "gateway": "Payment gateway",
+          "sms": "SMS",
+          "whatsapp": "WhatsApp"
+        },
+        "emailSender": "Email sender",
+        "invalid": {
+          "email": "Enter a valid email address.",
+          "tel": "Enter a number like +, country code, then the number.",
+          "text": "Use 2–40 lowercase letters, numbers or -, starting with a letter."
+        },
+        "phoneHint": "International format starting with +, then country code and number.",
+        "smsHint": "Approved SMS adapter ID. Secrets are never shown here.",
+        "smsProviderId": "SMS provider",
+        "supportCallE164": "Support call number",
+        "supportHint": "Shown on Help & support only when set. Leave blank to hide the Call or WhatsApp action.",
+        "supportTitle": "Support contacts",
+        "supportWhatsappE164": "Support WhatsApp number",
+        "title": "Messaging integrations",
+        "whatsappNumber": "WhatsApp Business number"
+      },
+      "legal": {
+        "body": "Page text",
+        "bodyHint": "Plain text with simple formatting: # headings, - lists, blank lines between paragraphs and https links as [text](https://…). Other markup is removed.",
+        "editAria": "Edit {page}",
+        "editTitle": "Edit {page}",
+        "languages": "Language",
+        "notPublished": "Not published",
+        "pages": {
+          "about": "About us",
+          "privacy": "Privacy policy",
+          "refund": "Refund & cancellation policy",
+          "terms": "Terms of use"
+        },
+        "pageTitle": "Title",
+        "publish": "Publish",
+        "published": "Published",
+        "saved": "{page} published",
+        "updated": "Updated {date}"
+      },
+      "loading": "Loading settings",
+      "money": {
+        "addPlan": "Add plan",
+        "addPromo": "Add promotion",
+        "code": "Code",
+        "codeHint": "Can’t be changed after saving.",
+        "defaultCommission": "Default commission (%)",
+        "kind": "Placement",
+        "kinds": {
+          "featuredBusiness": "Featured business",
+          "homepageBanner": "Homepage banner"
+        },
+        "nameEn": "Name (English)",
+        "nameHi": "Name (हिन्दी)",
+        "planCommission": "Commission (%)",
+        "planPrice": "Price (₹/mo)",
+        "planRow": "Plan {row}",
+        "plansTerm": "Plans are billed monthly.",
+        "plansTitle": "Subscription plans",
+        "platformFee": "Platform fee per order (₹)",
+        "premium": "Premium",
+        "premiumHint": "Premium plans must have a price; free plans can’t be Premium.",
+        "premiumRule": "A plan with a price must be Premium, and a free plan can’t be Premium.",
+        "promoPrice": "Price (₹)",
+        "promoPriceRule": "An enabled promotion needs a price above ₹0.",
+        "promoRow": "Promotion {row}",
+        "promosTerm": "Promotions run for 7 days.",
+        "promosTitle": "Promotion fees",
+        "uniqueCode": "Each code must be unique."
+      },
+      "newOrdersOnly": "Changes apply to new orders only. Existing orders keep the values they were placed with.",
+      "payments": {
+        "gateway": "Payment gateway",
+        "gatewayHint": "No payment gateway adapter is available yet. Online payments stay unavailable until one is set up.",
+        "gatewayInvalid": "This gateway isn’t available. Choose “No gateway”.",
+        "noGateway": "No gateway"
+      },
+      "policies": {
+        "addWord": "Add a blocked word",
+        "blockedWords": "Blocked words",
+        "blockedWordsRule": "Each blocked word must be unique (ignoring capitals).",
+        "noBlockedWords": "No blocked words yet.",
+        "refundWindow": "Refund request window (hours after delivery)",
+        "removeWord": "Remove “{word}”",
+        "ruleEn": "Review rule (English)",
+        "ruleHi": "Review rule (हिन्दी)"
+      },
+      "preview": "Preview",
+      "reload": "Reload latest",
+      "remove": "Remove",
+      "retry": "Try again",
+      "save": "Save",
+      "saved": "Saved",
+      "saving": "Saving…",
+      "sections": {
+        "branding": "Branding",
+        "commission": "Commission & plans",
+        "delivery": "Delivery & rider pay",
+        "flags": "Feature flags",
+        "legal": "Legal pages",
+        "notifications": "Notifications & WhatsApp",
+        "payments": "Payments",
+        "policies": "Policies & reviews",
+        "seo": "SEO defaults"
+      },
+      "sectionsLabel": "Settings sections",
+      "seo": {
+        "description": "Default description",
+        "title": "Default title"
+      },
+      "setup": {
+        "title": "Setup needed — these fields are missing:"
+      },
+      "status": {
+        "configured": "Configured",
+        "notConfigured": "Not configured"
+      },
+      "tax": {
+        "addClassification": "Add classification",
+        "address": "Registered address",
+        "cessRate": "Cess rate (%)",
+        "chooseCode": "Choose a classification",
+        "classificationRow": "Classification {row}",
+        "classifications": "Tax classifications",
+        "classificationsRule": "Add at least one classification, and give each a unique code.",
+        "code": "Code",
+        "evidence": "Verification",
+        "evidenceRef": "Verification evidence reference",
+        "exemptZero": "Exempt and nil-rated classifications must have 0% GST and cess.",
+        "feeCodes": "Tax code for each platform fee",
+        "feeCodesRule": "Every platform fee needs a tax code from the classifications above.",
+        "fees": {
+          "commission": "Commission",
+          "platformDelivery": "Platform delivery",
+          "platformFee": "Platform fee",
+          "promotion": "Promotion",
+          "subscription": "Subscription"
+        },
+        "gstin": "GSTIN",
+        "gstinHint": "Required for Regular and Composition. The first two digits must match the state code.",
+        "gstinState": "Regular and Composition need a GSTIN whose first two digits match the state code.",
+        "gstRate": "GST rate (%)",
+        "hsnOrSac": "HSN/SAC (4–8 digits)",
+        "intro": "Used for platform invoices. Enter the details from your verified GST records; nothing is filled in for you.",
+        "irnUnavailable": "E-invoicing isn’t supported yet, so this must stay off.",
+        "legalName": "Legal name",
+        "modes": {
+          "composition": "Composition",
+          "exempt": "Exempt",
+          "regular": "Regular",
+          "unregistered": "Unregistered"
+        },
+        "newQuotesOnly": "Changes apply to new quotes and invoices only.",
+        "registrationMode": "GST registration",
+        "requiresIrn": "E-invoice (IRN) required",
+        "requiresIrnHint": "E-invoicing isn’t supported yet.",
+        "signatoryRef": "Authorised signatory reference",
+        "stateCode": "State code (2 digits)",
+        "supplier": "Platform supplier",
+        "supplierRef": "Supplier record reference",
+        "supplies": {
+          "exempt": "Exempt",
+          "nilRated": "Nil rated",
+          "taxable": "Taxable"
+        },
+        "supplyType": "Supply type",
+        "title": "Tax setup (GST)",
+        "unitCode": "Unit code (3 letters)",
+        "verified": "I have verified these tax details against official records",
+        "verifyRequired": "Confirm verification and add an evidence reference before saving. Any edit needs a fresh confirmation."
+      },
+      "title": "Global settings",
+      "unsaved": "Unsaved changes",
+      "uploads": {
+        "ceiling": "Platform limit: at least {width}×{height}px, sizes {widths}px, up to {kb} KB each",
+        "ceilingRule": "Limits can only be tighter than the platform limit for each image type.",
+        "limits": {
+          "maxBytes": "Max file size (bytes)",
+          "maxHeight": "Max height (px)",
+          "maxWidth": "Max width (px)",
+          "minHeight": "Min height (px)",
+          "minWidth": "Min width (px)"
+        },
+        "purposes": {
+          "businessProfileCover": "Business cover",
+          "businessProfileLogo": "Business logo",
+          "catalogTaxonomy": "Category images",
+          "gallery": "Gallery",
+          "offerBanner": "Offer banners",
+          "product": "Product photos",
+          "reviewPhoto": "Review photos",
+          "service": "Service photos",
+          "videoThumbnail": "Video thumbnails"
+        },
+        "title": "Image upload limits"
+      }
+    },
     "sheet": {
       "cancel": "Cancel"
     },
@@ -1622,6 +1969,42 @@
       "openCases": "Open cases in scope",
       "unavailable": "Not available",
       "uncovered": "Areas left without an active admin"
+    }
+  },
+  "system": {
+    "design": {
+      "checklist": "Update checklist",
+      "checks": {
+        "keyboard": "Usable by keyboard with a visible focus ring and screen-reader labels.",
+        "languages": "English and Hindi copy fit, including long Hindi text.",
+        "states": "Every screen has default, loading, empty, error with retry and no-permission states.",
+        "tokens": "Uses design tokens only — no raw colours or sizes.",
+        "viewports": "Checked at 360px and desktop, in light and dark themes."
+      },
+      "colours": "Colour tokens",
+      "components": "Components",
+      "intro": "Tokens, components, patterns and the screen inventory. Everything here is rendered with the live app styles.",
+      "loading": "Loading",
+      "pages": {
+        "error": "Server error",
+        "maintenance": "Under maintenance",
+        "notFound": "Not found",
+        "offline": "No internet"
+      },
+      "sample": "अपना टाउन · ApnaTown",
+      "sampleField": "Sample field",
+      "systemPages": "Error & system pages",
+      "title": "ApnaTown design system",
+      "typography": "Typography"
+    },
+    "maintenance": {
+      "checking": "Checking…",
+      "failed": "Couldn’t check right now. Check your connection and try again.",
+      "still": "Still under maintenance. Please try again in a few minutes."
+    },
+    "offline": {
+      "message": "You can still view saved pages. Reconnect to place orders.",
+      "tryAgain": "Try again"
     }
   }
 }

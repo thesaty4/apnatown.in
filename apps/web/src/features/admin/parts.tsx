@@ -38,6 +38,12 @@ const errors: Record<string, string> = {
   SESSION_EXPIRED: 'expired',
   VALIDATION_ERROR: 'validation',
   COMMON_VALIDATION_FAILED: 'validation',
+  SETTINGS_INVALID: 'settingsInvalid',
+  SETTINGS_VERSION_CONFLICT: 'settingsConflict',
+  SETTINGS_GROUP_REQUIRED: 'settingsInvalid',
+  FEATURE_NOT_AVAILABLE: 'featureUnavailable',
+  LEGAL_PAGE_NOT_FOUND: 'legalNotFound',
+  MAINTENANCE: 'maintenance',
 };
 /** `admin.errors` key for a normalized code; never server text. */
 export const adminErrorKey = (code: string) => errors[code] ?? 'failed';

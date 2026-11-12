@@ -2290,5 +2290,1252 @@
   "superAdmin.activity.exportDone": {
     "en": "CSV downloaded for the current filters.",
     "hi": "मौजूदा फ़िल्टर की CSV डाउनलोड हो गई।"
+  },
+  "admin.shell.settings": {
+    "en": "Global settings",
+    "hi": "वैश्विक सेटिंग",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "admin.errors.settingsInvalid": {
+    "en": "Some values aren’t allowed. Check the highlighted fields and try again.",
+    "hi": "कुछ मान मान्य नहीं हैं। चिह्नित जानकारी जाँचें और फिर कोशिश करें।"
+  },
+  "admin.errors.settingsConflict": {
+    "en": "These settings were changed elsewhere. Reload the latest version — your edits stay in the form — then save again.",
+    "hi": "ये सेटिंग कहीं और बदली गई हैं। नया वर्ज़न लोड करें — आपके बदलाव फ़ॉर्म में बने रहेंगे — फिर दोबारा सहेजें।"
+  },
+  "admin.errors.featureUnavailable": {
+    "en": "This feature isn’t available yet, so it can’t be turned on.",
+    "hi": "यह फ़ीचर अभी उपलब्ध नहीं है, इसलिए इसे चालू नहीं किया जा सकता।"
+  },
+  "admin.errors.legalNotFound": {
+    "en": "This page hasn’t been published yet.",
+    "hi": "यह पेज अभी प्रकाशित नहीं हुआ है।"
+  },
+  "admin.errors.maintenance": {
+    "en": "ApnaTown is under maintenance. Please try again in a few minutes.",
+    "hi": "अपना टाउन में अभी रखरखाव चल रहा है। कुछ मिनट बाद फिर कोशिश करें।"
+  },
+  "superAdmin.settings.title": {
+    "en": "Global settings",
+    "hi": "वैश्विक सेटिंग",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.loading": {
+    "en": "Loading settings",
+    "hi": "सेटिंग लोड हो रही हैं"
+  },
+  "superAdmin.settings.forbiddenTitle": {
+    "en": "You don’t have permission",
+    "hi": "आपको अनुमति नहीं है"
+  },
+  "superAdmin.settings.checkAgain": {
+    "en": "Check again",
+    "hi": "फिर जाँचें",
+    "source": "reference/prototype-source/hi.json Check again"
+  },
+  "superAdmin.settings.errorTitle": {
+    "en": "Couldn’t load settings",
+    "hi": "सेटिंग लोड नहीं हो सकीं"
+  },
+  "superAdmin.settings.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें",
+    "source": "reference/prototype-source/hi.json Try again"
+  },
+  "superAdmin.settings.sectionsLabel": {
+    "en": "Settings sections",
+    "hi": "सेटिंग के सेक्शन"
+  },
+  "superAdmin.settings.saved": {
+    "en": "Saved",
+    "hi": "सहेजा",
+    "source": "reference/prototype-source/js12.js Saved"
+  },
+  "superAdmin.settings.save": {
+    "en": "Save",
+    "hi": "सहेजें",
+    "source": "reference/prototype-source/js12.js Save"
+  },
+  "superAdmin.settings.saving": {
+    "en": "Saving…",
+    "hi": "सहेजा जा रहा है…"
+  },
+  "superAdmin.settings.unsaved": {
+    "en": "Unsaved changes",
+    "hi": "बिना सहेजे बदलाव",
+    "source": "reference/prototype-source/hi.json Unsaved changes"
+  },
+  "superAdmin.settings.conflict": {
+    "en": "These settings were changed elsewhere. Reload the latest version — your edits stay in the form — then save again.",
+    "hi": "ये सेटिंग कहीं और बदली गई हैं। नया वर्ज़न लोड करें — आपके बदलाव फ़ॉर्म में बने रहेंगे — फिर दोबारा सहेजें।"
+  },
+  "superAdmin.settings.reload": {
+    "en": "Reload latest",
+    "hi": "नया वर्ज़न लोड करें"
+  },
+  "superAdmin.settings.newOrdersOnly": {
+    "en": "Changes apply to new orders only. Existing orders keep the values they were placed with.",
+    "hi": "बदलाव सिर्फ़ नए ऑर्डर पर लागू होंगे। पुराने ऑर्डर अपने समय के मान ही रखेंगे।"
+  },
+  "superAdmin.settings.remove": {
+    "en": "Remove",
+    "hi": "हटाएँ",
+    "source": "reference/prototype-source/hi.json Remove"
+  },
+  "superAdmin.settings.add": {
+    "en": "Add",
+    "hi": "जोड़ें",
+    "source": "reference/prototype-source/hi.json Add"
+  },
+  "superAdmin.settings.enabled": {
+    "en": "Enabled",
+    "hi": "चालू",
+    "source": "reference/prototype-source/hi.json Enabled"
+  },
+  "superAdmin.settings.edit": {
+    "en": "Edit",
+    "hi": "बदलें",
+    "source": "reference/prototype-source/hi.json Edit"
+  },
+  "superAdmin.settings.close": {
+    "en": "Close",
+    "hi": "बंद करें",
+    "source": "reference/prototype-source/hi.json Close"
+  },
+  "superAdmin.settings.cancel": {
+    "en": "Cancel",
+    "hi": "रद्द करें",
+    "source": "reference/prototype-source/hi.json Cancel"
+  },
+  "superAdmin.settings.english": {
+    "en": "English",
+    "hi": "English",
+    "source": "reference/prototype-source/js7.js language endonym"
+  },
+  "superAdmin.settings.hindi": {
+    "en": "हिन्दी",
+    "hi": "हिन्दी",
+    "source": "reference/prototype-source/js7.js language endonym"
+  },
+  "superAdmin.settings.preview": {
+    "en": "Preview",
+    "hi": "पूर्वावलोकन",
+    "source": "reference/prototype-source/hi.json Preview"
+  },
+  "superAdmin.settings.discard.title": {
+    "en": "Discard changes?",
+    "hi": "बदलाव छोड़ें?"
+  },
+  "superAdmin.settings.discard.impact": {
+    "en": "Your unsaved changes in this section will be lost.",
+    "hi": "इस सेक्शन के बिना सहेजे बदलाव हट जाएँगे।"
+  },
+  "superAdmin.settings.discard.keep": {
+    "en": "Keep editing",
+    "hi": "बदलाव जारी रखें"
+  },
+  "superAdmin.settings.discard.confirm": {
+    "en": "Discard",
+    "hi": "छोड़ें"
+  },
+  "superAdmin.settings.errors.summary": {
+    "en": "Check the highlighted fields and try again.",
+    "hi": "चिह्नित जानकारी जाँचें और फिर कोशिश करें।"
+  },
+  "superAdmin.settings.errors.field": {
+    "en": "Enter a valid value.",
+    "hi": "सही मान डालें।"
+  },
+  "superAdmin.settings.errors.text": {
+    "en": "Enter text without < or > characters, within the length limit.",
+    "hi": "< या > के बिना, तय सीमा के अंदर टेक्स्ट लिखें।"
+  },
+  "superAdmin.settings.errors.code": {
+    "en": "Use 2–40 lowercase letters, numbers or _ , starting with a letter.",
+    "hi": "2–40 छोटे अक्षर, अंक या _ इस्तेमाल करें, शुरुआत अक्षर से हो।"
+  },
+  "superAdmin.settings.status.configured": {
+    "en": "Configured",
+    "hi": "कॉन्फ़िगर है"
+  },
+  "superAdmin.settings.status.notConfigured": {
+    "en": "Not configured",
+    "hi": "कॉन्फ़िगर नहीं है"
+  },
+  "superAdmin.settings.setup.title": {
+    "en": "Setup needed — these fields are missing:",
+    "hi": "सेटअप ज़रूरी — ये जानकारी बाकी है:"
+  },
+  "superAdmin.settings.sections.branding": {
+    "en": "Branding",
+    "hi": "ब्रांडिंग",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.sections.delivery": {
+    "en": "Delivery & rider pay",
+    "hi": "डिलीवरी व राइडर भुगतान",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.sections.commission": {
+    "en": "Commission & plans",
+    "hi": "कमीशन व प्लान",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.sections.payments": {
+    "en": "Payments",
+    "hi": "पेमेंट",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.sections.policies": {
+    "en": "Policies & reviews",
+    "hi": "नीतियाँ व समीक्षाएँ",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.sections.notifications": {
+    "en": "Notifications & WhatsApp",
+    "hi": "सूचना व WhatsApp",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.sections.seo": {
+    "en": "SEO defaults",
+    "hi": "SEO डिफ़ॉल्ट",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.sections.flags": {
+    "en": "Feature flags",
+    "hi": "फ़ीचर फ़्लैग",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.sections.legal": {
+    "en": "Legal pages",
+    "hi": "कानूनी पेज",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.delivery.slabsTitle": {
+    "en": "Delivery fee slabs (ApnaTown riders)",
+    "hi": "डिलीवरी शुल्क स्लैब (अपना टाउन राइडर)",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.delivery.save": {
+    "en": "Save rules",
+    "hi": "नियम सहेजें",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.delivery.slabOrder": {
+    "en": "Each “Up to (km)” must be greater than the row above it.",
+    "hi": "हर “किमी तक” मान ऊपर वाली पंक्ति से ज़्यादा होना चाहिए।"
+  },
+  "superAdmin.settings.delivery.uptoKm": {
+    "en": "Up to (km)",
+    "hi": "किमी तक",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.delivery.fee": {
+    "en": "Fee (₹)",
+    "hi": "शुल्क (₹)",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.delivery.removeSlab": {
+    "en": "Remove slab {row}",
+    "hi": "स्लैब {row} हटाएँ"
+  },
+  "superAdmin.settings.delivery.addSlab": {
+    "en": "Add slab",
+    "hi": "स्लैब जोड़ें"
+  },
+  "superAdmin.settings.delivery.riderTitle": {
+    "en": "Rider earning rule",
+    "hi": "राइडर कमाई नियम",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.delivery.base": {
+    "en": "Base per ride (₹)",
+    "hi": "हर राइड का बेस (₹)",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.delivery.perKm": {
+    "en": "Per km (₹)",
+    "hi": "प्रति किमी (₹)",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.delivery.example": {
+    "en": "Example: 3 km ride earns {amount}",
+    "hi": "उदाहरण: 3 किमी की राइड पर कमाई {amount}",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.branding.nameEn": {
+    "en": "Brand name (English)",
+    "hi": "ब्रांड नाम (English)",
+    "source": "reference/prototype-source/js12.js Brand name"
+  },
+  "superAdmin.settings.branding.nameHi": {
+    "en": "Brand name (हिन्दी)",
+    "hi": "ब्रांड नाम (हिन्दी)",
+    "source": "reference/prototype-source/js12.js Brand name"
+  },
+  "superAdmin.settings.branding.taglineEn": {
+    "en": "Tagline (English)",
+    "hi": "टैगलाइन (English)",
+    "source": "reference/prototype-source/js12.js Tagline"
+  },
+  "superAdmin.settings.branding.taglineHi": {
+    "en": "Tagline (हिन्दी)",
+    "hi": "टैगलाइन (हिन्दी)",
+    "source": "reference/prototype-source/js12.js Tagline"
+  },
+  "superAdmin.settings.seo.title": {
+    "en": "Default title",
+    "hi": "डिफ़ॉल्ट शीर्षक"
+  },
+  "superAdmin.settings.seo.description": {
+    "en": "Default description",
+    "hi": "डिफ़ॉल्ट विवरण"
+  },
+  "superAdmin.settings.money.code": {
+    "en": "Code",
+    "hi": "कोड"
+  },
+  "superAdmin.settings.money.codeHint": {
+    "en": "Can’t be changed after saving.",
+    "hi": "सहेजने के बाद बदला नहीं जा सकता।"
+  },
+  "superAdmin.settings.money.nameEn": {
+    "en": "Name (English)",
+    "hi": "नाम (English)"
+  },
+  "superAdmin.settings.money.nameHi": {
+    "en": "Name (हिन्दी)",
+    "hi": "नाम (हिन्दी)"
+  },
+  "superAdmin.settings.money.defaultCommission": {
+    "en": "Default commission (%)",
+    "hi": "डिफ़ॉल्ट कमीशन (%)"
+  },
+  "superAdmin.settings.money.platformFee": {
+    "en": "Platform fee per order (₹)",
+    "hi": "हर ऑर्डर पर प्लेटफ़ॉर्म शुल्क (₹)",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.money.plansTitle": {
+    "en": "Subscription plans",
+    "hi": "सब्सक्रिप्शन प्लान",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.money.plansTerm": {
+    "en": "Plans are billed monthly.",
+    "hi": "प्लान का बिल हर महीने बनता है।"
+  },
+  "superAdmin.settings.money.planRow": {
+    "en": "Plan {row}",
+    "hi": "प्लान {row}"
+  },
+  "superAdmin.settings.money.planPrice": {
+    "en": "Price (₹/mo)",
+    "hi": "कीमत (₹/माह)",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.money.planCommission": {
+    "en": "Commission (%)",
+    "hi": "कमीशन (%)"
+  },
+  "superAdmin.settings.money.premium": {
+    "en": "Premium",
+    "hi": "प्रीमियम"
+  },
+  "superAdmin.settings.money.premiumHint": {
+    "en": "Premium plans must have a price; free plans can’t be Premium.",
+    "hi": "प्रीमियम प्लान की कीमत होनी चाहिए; मुफ़्त प्लान प्रीमियम नहीं हो सकता।"
+  },
+  "superAdmin.settings.money.addPlan": {
+    "en": "Add plan",
+    "hi": "प्लान जोड़ें"
+  },
+  "superAdmin.settings.money.promosTitle": {
+    "en": "Promotion fees",
+    "hi": "प्रमोशन शुल्क",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.money.promosTerm": {
+    "en": "Promotions run for 7 days.",
+    "hi": "प्रमोशन 7 दिन चलते हैं।"
+  },
+  "superAdmin.settings.money.promoRow": {
+    "en": "Promotion {row}",
+    "hi": "प्रमोशन {row}"
+  },
+  "superAdmin.settings.money.kind": {
+    "en": "Placement",
+    "hi": "जगह"
+  },
+  "superAdmin.settings.money.kinds.homepageBanner": {
+    "en": "Homepage banner",
+    "hi": "होमपेज बैनर"
+  },
+  "superAdmin.settings.money.kinds.featuredBusiness": {
+    "en": "Featured business",
+    "hi": "फ़ीचर्ड बिज़नेस"
+  },
+  "superAdmin.settings.money.promoPrice": {
+    "en": "Price (₹)",
+    "hi": "कीमत (₹)",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.money.addPromo": {
+    "en": "Add promotion",
+    "hi": "प्रमोशन जोड़ें"
+  },
+  "superAdmin.settings.money.premiumRule": {
+    "en": "A plan with a price must be Premium, and a free plan can’t be Premium.",
+    "hi": "कीमत वाला प्लान प्रीमियम होना चाहिए, और मुफ़्त प्लान प्रीमियम नहीं हो सकता।"
+  },
+  "superAdmin.settings.money.promoPriceRule": {
+    "en": "An enabled promotion needs a price above ₹0.",
+    "hi": "चालू प्रमोशन की कीमत ₹0 से ज़्यादा होनी चाहिए।"
+  },
+  "superAdmin.settings.money.uniqueCode": {
+    "en": "Each code must be unique.",
+    "hi": "हर कोड अलग होना चाहिए।"
+  },
+  "superAdmin.settings.tax.title": {
+    "en": "Tax setup (GST)",
+    "hi": "टैक्स सेटअप (GST)"
+  },
+  "superAdmin.settings.tax.intro": {
+    "en": "Used for platform invoices. Enter the details from your verified GST records; nothing is filled in for you.",
+    "hi": "प्लेटफ़ॉर्म इनवॉइस के लिए। अपने सत्यापित GST रिकॉर्ड से जानकारी भरें; कुछ भी अपने-आप नहीं भरा जाता।"
+  },
+  "superAdmin.settings.tax.supplier": {
+    "en": "Platform supplier",
+    "hi": "प्लेटफ़ॉर्म सप्लायर"
+  },
+  "superAdmin.settings.tax.legalName": {
+    "en": "Legal name",
+    "hi": "कानूनी नाम"
+  },
+  "superAdmin.settings.tax.stateCode": {
+    "en": "State code (2 digits)",
+    "hi": "राज्य कोड (2 अंक)"
+  },
+  "superAdmin.settings.tax.address": {
+    "en": "Registered address",
+    "hi": "पंजीकृत पता"
+  },
+  "superAdmin.settings.tax.registrationMode": {
+    "en": "GST registration",
+    "hi": "GST पंजीकरण"
+  },
+  "superAdmin.settings.tax.modes.regular": {
+    "en": "Regular",
+    "hi": "रेगुलर"
+  },
+  "superAdmin.settings.tax.modes.composition": {
+    "en": "Composition",
+    "hi": "कंपोज़िशन"
+  },
+  "superAdmin.settings.tax.modes.exempt": {
+    "en": "Exempt",
+    "hi": "छूट प्राप्त"
+  },
+  "superAdmin.settings.tax.modes.unregistered": {
+    "en": "Unregistered",
+    "hi": "अपंजीकृत"
+  },
+  "superAdmin.settings.tax.gstin": {
+    "en": "GSTIN",
+    "hi": "GSTIN"
+  },
+  "superAdmin.settings.tax.gstinHint": {
+    "en": "Required for Regular and Composition. The first two digits must match the state code.",
+    "hi": "रेगुलर और कंपोज़िशन के लिए ज़रूरी। पहले दो अंक राज्य कोड से मेल खाने चाहिए।"
+  },
+  "superAdmin.settings.tax.supplierRef": {
+    "en": "Supplier record reference",
+    "hi": "सप्लायर रिकॉर्ड संदर्भ"
+  },
+  "superAdmin.settings.tax.signatoryRef": {
+    "en": "Authorised signatory reference",
+    "hi": "अधिकृत हस्ताक्षरकर्ता संदर्भ"
+  },
+  "superAdmin.settings.tax.requiresIrn": {
+    "en": "E-invoice (IRN) required",
+    "hi": "ई-इनवॉइस (IRN) ज़रूरी"
+  },
+  "superAdmin.settings.tax.requiresIrnHint": {
+    "en": "E-invoicing isn’t supported yet.",
+    "hi": "ई-इनवॉइस अभी समर्थित नहीं है।"
+  },
+  "superAdmin.settings.tax.irnUnavailable": {
+    "en": "E-invoicing isn’t supported yet, so this must stay off.",
+    "hi": "ई-इनवॉइस अभी समर्थित नहीं है, इसलिए इसे बंद रखें।"
+  },
+  "superAdmin.settings.tax.classifications": {
+    "en": "Tax classifications",
+    "hi": "टैक्स वर्गीकरण"
+  },
+  "superAdmin.settings.tax.classificationRow": {
+    "en": "Classification {row}",
+    "hi": "वर्गीकरण {row}"
+  },
+  "superAdmin.settings.tax.code": {
+    "en": "Code",
+    "hi": "कोड"
+  },
+  "superAdmin.settings.tax.hsnOrSac": {
+    "en": "HSN/SAC (4–8 digits)",
+    "hi": "HSN/SAC (4–8 अंक)"
+  },
+  "superAdmin.settings.tax.unitCode": {
+    "en": "Unit code (3 letters)",
+    "hi": "यूनिट कोड (3 अक्षर)"
+  },
+  "superAdmin.settings.tax.supplyType": {
+    "en": "Supply type",
+    "hi": "सप्लाई प्रकार"
+  },
+  "superAdmin.settings.tax.supplies.taxable": {
+    "en": "Taxable",
+    "hi": "टैक्स योग्य"
+  },
+  "superAdmin.settings.tax.supplies.exempt": {
+    "en": "Exempt",
+    "hi": "छूट प्राप्त"
+  },
+  "superAdmin.settings.tax.supplies.nilRated": {
+    "en": "Nil rated",
+    "hi": "शून्य दर"
+  },
+  "superAdmin.settings.tax.gstRate": {
+    "en": "GST rate (%)",
+    "hi": "GST दर (%)"
+  },
+  "superAdmin.settings.tax.cessRate": {
+    "en": "Cess rate (%)",
+    "hi": "सेस दर (%)"
+  },
+  "superAdmin.settings.tax.addClassification": {
+    "en": "Add classification",
+    "hi": "वर्गीकरण जोड़ें"
+  },
+  "superAdmin.settings.tax.feeCodes": {
+    "en": "Tax code for each platform fee",
+    "hi": "हर प्लेटफ़ॉर्म शुल्क का टैक्स कोड"
+  },
+  "superAdmin.settings.tax.chooseCode": {
+    "en": "Choose a classification",
+    "hi": "वर्गीकरण चुनें"
+  },
+  "superAdmin.settings.tax.fees.platformFee": {
+    "en": "Platform fee",
+    "hi": "प्लेटफ़ॉर्म शुल्क"
+  },
+  "superAdmin.settings.tax.fees.platformDelivery": {
+    "en": "Platform delivery",
+    "hi": "प्लेटफ़ॉर्म डिलीवरी"
+  },
+  "superAdmin.settings.tax.fees.subscription": {
+    "en": "Subscription",
+    "hi": "सब्सक्रिप्शन"
+  },
+  "superAdmin.settings.tax.fees.promotion": {
+    "en": "Promotion",
+    "hi": "प्रमोशन"
+  },
+  "superAdmin.settings.tax.fees.commission": {
+    "en": "Commission",
+    "hi": "कमीशन"
+  },
+  "superAdmin.settings.tax.evidence": {
+    "en": "Verification",
+    "hi": "सत्यापन"
+  },
+  "superAdmin.settings.tax.evidenceRef": {
+    "en": "Verification evidence reference",
+    "hi": "सत्यापन प्रमाण संदर्भ"
+  },
+  "superAdmin.settings.tax.verified": {
+    "en": "I have verified these tax details against official records",
+    "hi": "मैंने ये टैक्स जानकारी आधिकारिक रिकॉर्ड से जाँच ली है"
+  },
+  "superAdmin.settings.tax.verifyRequired": {
+    "en": "Confirm verification and add an evidence reference before saving. Any edit needs a fresh confirmation.",
+    "hi": "सहेजने से पहले सत्यापन की पुष्टि करें और प्रमाण संदर्भ जोड़ें। हर बदलाव के बाद फिर से पुष्टि ज़रूरी है।"
+  },
+  "superAdmin.settings.tax.gstinState": {
+    "en": "Regular and Composition need a GSTIN whose first two digits match the state code.",
+    "hi": "रेगुलर और कंपोज़िशन के लिए ऐसा GSTIN चाहिए जिसके पहले दो अंक राज्य कोड से मेल खाएँ।"
+  },
+  "superAdmin.settings.tax.exemptZero": {
+    "en": "Exempt and nil-rated classifications must have 0% GST and cess.",
+    "hi": "छूट प्राप्त और शून्य दर वर्गीकरण में GST और सेस 0% होना चाहिए।"
+  },
+  "superAdmin.settings.tax.classificationsRule": {
+    "en": "Add at least one classification, and give each a unique code.",
+    "hi": "कम से कम एक वर्गीकरण जोड़ें, और हर एक का अलग कोड रखें।"
+  },
+  "superAdmin.settings.tax.feeCodesRule": {
+    "en": "Every platform fee needs a tax code from the classifications above.",
+    "hi": "हर प्लेटफ़ॉर्म शुल्क के लिए ऊपर के वर्गीकरण से टैक्स कोड चुनें।"
+  },
+  "superAdmin.settings.tax.newQuotesOnly": {
+    "en": "Changes apply to new quotes and invoices only.",
+    "hi": "बदलाव सिर्फ़ नए कोट और इनवॉइस पर लागू होंगे।"
+  },
+  "superAdmin.settings.payments.gateway": {
+    "en": "Payment gateway",
+    "hi": "पेमेंट गेटवे",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.payments.noGateway": {
+    "en": "No gateway",
+    "hi": "कोई गेटवे नहीं"
+  },
+  "superAdmin.settings.payments.gatewayHint": {
+    "en": "No payment gateway adapter is available yet. Online payments stay unavailable until one is set up.",
+    "hi": "अभी कोई पेमेंट गेटवे एडैप्टर उपलब्ध नहीं है। सेटअप होने तक ऑनलाइन पेमेंट बंद रहेंगे।"
+  },
+  "superAdmin.settings.payments.gatewayInvalid": {
+    "en": "This gateway isn’t available. Choose “No gateway”.",
+    "hi": "यह गेटवे उपलब्ध नहीं है। “कोई गेटवे नहीं” चुनें।"
+  },
+  "superAdmin.settings.policies.refundWindow": {
+    "en": "Refund request window (hours after delivery)",
+    "hi": "रिफ़ंड अनुरोध की समय-सीमा (डिलीवरी के बाद घंटे)",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.policies.ruleEn": {
+    "en": "Review rule (English)",
+    "hi": "समीक्षा नियम (English)",
+    "source": "reference/prototype-source/js12.js Review rule"
+  },
+  "superAdmin.settings.policies.ruleHi": {
+    "en": "Review rule (हिन्दी)",
+    "hi": "समीक्षा नियम (हिन्दी)",
+    "source": "reference/prototype-source/js12.js Review rule"
+  },
+  "superAdmin.settings.policies.blockedWords": {
+    "en": "Blocked words",
+    "hi": "प्रतिबंधित शब्द"
+  },
+  "superAdmin.settings.policies.blockedWordsRule": {
+    "en": "Each blocked word must be unique (ignoring capitals).",
+    "hi": "हर प्रतिबंधित शब्द अलग होना चाहिए (बड़े-छोटे अक्षर का फ़र्क नहीं)।"
+  },
+  "superAdmin.settings.policies.removeWord": {
+    "en": "Remove “{word}”",
+    "hi": "“{word}” हटाएँ"
+  },
+  "superAdmin.settings.policies.noBlockedWords": {
+    "en": "No blocked words yet.",
+    "hi": "अभी कोई प्रतिबंधित शब्द नहीं।"
+  },
+  "superAdmin.settings.policies.addWord": {
+    "en": "Add a blocked word",
+    "hi": "प्रतिबंधित शब्द जोड़ें"
+  },
+  "superAdmin.settings.uploads.title": {
+    "en": "Image upload limits",
+    "hi": "इमेज अपलोड सीमाएँ"
+  },
+  "superAdmin.settings.uploads.ceiling": {
+    "en": "Platform limit: at least {width}×{height}px, sizes {widths}px, up to {kb} KB each",
+    "hi": "प्लेटफ़ॉर्म सीमा: कम से कम {width}×{height}px, साइज़ {widths}px, हर एक {kb} KB तक"
+  },
+  "superAdmin.settings.uploads.ceilingRule": {
+    "en": "Limits can only be tighter than the platform limit for each image type.",
+    "hi": "हर इमेज प्रकार की सीमा प्लेटफ़ॉर्म सीमा से सिर्फ़ सख़्त हो सकती है।"
+  },
+  "superAdmin.settings.uploads.purposes.catalogTaxonomy": {
+    "en": "Category images",
+    "hi": "कैटेगरी इमेज"
+  },
+  "superAdmin.settings.uploads.purposes.offerBanner": {
+    "en": "Offer banners",
+    "hi": "ऑफ़र बैनर"
+  },
+  "superAdmin.settings.uploads.purposes.product": {
+    "en": "Product photos",
+    "hi": "प्रोडक्ट फ़ोटो"
+  },
+  "superAdmin.settings.uploads.purposes.service": {
+    "en": "Service photos",
+    "hi": "सर्विस फ़ोटो"
+  },
+  "superAdmin.settings.uploads.purposes.businessProfileLogo": {
+    "en": "Business logo",
+    "hi": "बिज़नेस लोगो"
+  },
+  "superAdmin.settings.uploads.purposes.businessProfileCover": {
+    "en": "Business cover",
+    "hi": "बिज़नेस कवर"
+  },
+  "superAdmin.settings.uploads.purposes.gallery": {
+    "en": "Gallery",
+    "hi": "गैलरी"
+  },
+  "superAdmin.settings.uploads.purposes.videoThumbnail": {
+    "en": "Video thumbnails",
+    "hi": "वीडियो थंबनेल"
+  },
+  "superAdmin.settings.uploads.purposes.reviewPhoto": {
+    "en": "Review photos",
+    "hi": "समीक्षा फ़ोटो"
+  },
+  "superAdmin.settings.uploads.limits.maxBytes": {
+    "en": "Max file size (bytes)",
+    "hi": "अधिकतम फ़ाइल साइज़ (बाइट)"
+  },
+  "superAdmin.settings.uploads.limits.minWidth": {
+    "en": "Min width (px)",
+    "hi": "न्यूनतम चौड़ाई (px)"
+  },
+  "superAdmin.settings.uploads.limits.minHeight": {
+    "en": "Min height (px)",
+    "hi": "न्यूनतम ऊँचाई (px)"
+  },
+  "superAdmin.settings.uploads.limits.maxWidth": {
+    "en": "Max width (px)",
+    "hi": "अधिकतम चौड़ाई (px)"
+  },
+  "superAdmin.settings.uploads.limits.maxHeight": {
+    "en": "Max height (px)",
+    "hi": "अधिकतम ऊँचाई (px)"
+  },
+  "superAdmin.settings.integrations.title": {
+    "en": "Messaging integrations",
+    "hi": "मैसेजिंग इंटीग्रेशन"
+  },
+  "superAdmin.settings.integrations.supportTitle": {
+    "en": "Support contacts",
+    "hi": "सहायता संपर्क"
+  },
+  "superAdmin.settings.integrations.supportHint": {
+    "en": "Shown on Help & support only when set. Leave blank to hide the Call or WhatsApp action.",
+    "hi": "सेट होने पर ही मदद व सहायता पर दिखेगा। कॉल या WhatsApp बटन छिपाने के लिए खाली छोड़ें।"
+  },
+  "superAdmin.settings.integrations.phoneHint": {
+    "en": "International format starting with +, then country code and number.",
+    "hi": "अंतरराष्ट्रीय फ़ॉर्मैट: + से शुरू, फिर देश कोड और नंबर।"
+  },
+  "superAdmin.settings.integrations.smsHint": {
+    "en": "Approved SMS adapter ID. Secrets are never shown here.",
+    "hi": "स्वीकृत SMS एडैप्टर ID। सीक्रेट यहाँ कभी नहीं दिखते।"
+  },
+  "superAdmin.settings.integrations.adapters.whatsapp": {
+    "en": "WhatsApp",
+    "hi": "WhatsApp"
+  },
+  "superAdmin.settings.integrations.adapters.sms": {
+    "en": "SMS",
+    "hi": "SMS"
+  },
+  "superAdmin.settings.integrations.adapters.email": {
+    "en": "Email",
+    "hi": "ईमेल"
+  },
+  "superAdmin.settings.integrations.adapters.gateway": {
+    "en": "Payment gateway",
+    "hi": "पेमेंट गेटवे",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.integrations.whatsappNumber": {
+    "en": "WhatsApp Business number",
+    "hi": "WhatsApp बिज़नेस नंबर",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.integrations.smsProviderId": {
+    "en": "SMS provider",
+    "hi": "SMS प्रोवाइडर",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.integrations.emailSender": {
+    "en": "Email sender",
+    "hi": "ईमेल भेजने वाला",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.integrations.supportCallE164": {
+    "en": "Support call number",
+    "hi": "सहायता कॉल नंबर"
+  },
+  "superAdmin.settings.integrations.supportWhatsappE164": {
+    "en": "Support WhatsApp number",
+    "hi": "सहायता WhatsApp नंबर"
+  },
+  "superAdmin.settings.integrations.invalid.tel": {
+    "en": "Enter a number like +, country code, then the number.",
+    "hi": "+, देश कोड और फिर नंबर के रूप में डालें।"
+  },
+  "superAdmin.settings.integrations.invalid.email": {
+    "en": "Enter a valid email address.",
+    "hi": "सही ईमेल पता डालें।"
+  },
+  "superAdmin.settings.integrations.invalid.text": {
+    "en": "Use 2–40 lowercase letters, numbers or -, starting with a letter.",
+    "hi": "2–40 छोटे अक्षर, अंक या - इस्तेमाल करें, शुरुआत अक्षर से हो।"
+  },
+  "superAdmin.settings.flags.immediate": {
+    "en": "Switches take effect immediately — no Save needed.",
+    "hi": "स्विच तुरंत लागू होते हैं — सहेजने की ज़रूरत नहीं।"
+  },
+  "superAdmin.settings.flags.future": {
+    "en": "Not available yet. This feature hasn’t been built, so it stays off.",
+    "hi": "अभी उपलब्ध नहीं। यह फ़ीचर अभी बना नहीं है, इसलिए बंद रहेगा।"
+  },
+  "superAdmin.settings.flags.needsSetup": {
+    "en": "Complete the required setup before turning this on.",
+    "hi": "इसे चालू करने से पहले ज़रूरी सेटअप पूरा करें।"
+  },
+  "superAdmin.settings.flags.maintenanceHint": {
+    "en": "Blocks marketplace pages and actions. Sign-in, Super Admin settings, legal pages and the health check stay available so you can turn it off.",
+    "hi": "मार्केटप्लेस पेज और काम रुक जाते हैं। साइन-इन, सुपर एडमिन सेटिंग, कानूनी पेज और हेल्थ चेक चालू रहते हैं ताकि आप इसे बंद कर सकें।"
+  },
+  "superAdmin.settings.flags.turnedOn": {
+    "en": "{name} turned on",
+    "hi": "{name} चालू हुआ"
+  },
+  "superAdmin.settings.flags.turnedOff": {
+    "en": "{name} turned off",
+    "hi": "{name} बंद हुआ"
+  },
+  "superAdmin.settings.flags.labels.reviews": {
+    "en": "Customer reviews",
+    "hi": "ग्राहक समीक्षाएँ"
+  },
+  "superAdmin.settings.flags.labels.guestBrowse": {
+    "en": "Guest browsing",
+    "hi": "बिना लॉगिन ब्राउज़िंग"
+  },
+  "superAdmin.settings.flags.labels.whatsapp": {
+    "en": "Enable WhatsApp messages",
+    "hi": "WhatsApp मैसेज चालू करें",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.flags.labels.maintenance": {
+    "en": "Maintenance mode",
+    "hi": "रखरखाव मोड"
+  },
+  "superAdmin.settings.flags.labels.booking": {
+    "en": "Service booking",
+    "hi": "सर्विस बुकिंग"
+  },
+  "superAdmin.settings.flags.labels.donations": {
+    "en": "Donations",
+    "hi": "दान"
+  },
+  "superAdmin.settings.flags.labels.paymentsOnline": {
+    "en": "Online payments (UPI, cards, net banking, wallets)",
+    "hi": "ऑनलाइन पेमेंट (UPI, कार्ड, नेट बैंकिंग, वॉलेट)",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.flags.labels.paymentsCod": {
+    "en": "Cash on delivery / pay at pickup",
+    "hi": "कैश ऑन डिलीवरी / पिकअप पर भुगतान",
+    "source": "reference/prototype-source/js12.js xsettings"
+  },
+  "superAdmin.settings.legal.editTitle": {
+    "en": "Edit {page}",
+    "hi": "{page} बदलें"
+  },
+  "superAdmin.settings.legal.editAria": {
+    "en": "Edit {page}",
+    "hi": "{page} बदलें"
+  },
+  "superAdmin.settings.legal.publish": {
+    "en": "Publish",
+    "hi": "प्रकाशित करें"
+  },
+  "superAdmin.settings.legal.languages": {
+    "en": "Language",
+    "hi": "भाषा"
+  },
+  "superAdmin.settings.legal.pageTitle": {
+    "en": "Title",
+    "hi": "शीर्षक"
+  },
+  "superAdmin.settings.legal.body": {
+    "en": "Page text",
+    "hi": "पेज का टेक्स्ट"
+  },
+  "superAdmin.settings.legal.bodyHint": {
+    "en": "Plain text with simple formatting: # headings, - lists, blank lines between paragraphs and https links as [text](https://…). Other markup is removed.",
+    "hi": "सरल फ़ॉर्मैटिंग वाला सादा टेक्स्ट: # शीर्षक, - सूची, पैराग्राफ़ के बीच खाली लाइन और https लिंक [text](https://…) के रूप में। बाकी मार्कअप हटा दिया जाता है।"
+  },
+  "superAdmin.settings.legal.published": {
+    "en": "Published",
+    "hi": "प्रकाशित"
+  },
+  "superAdmin.settings.legal.notPublished": {
+    "en": "Not published",
+    "hi": "प्रकाशित नहीं"
+  },
+  "superAdmin.settings.legal.updated": {
+    "en": "Updated {date}",
+    "hi": "{date} को अपडेट"
+  },
+  "superAdmin.settings.legal.saved": {
+    "en": "{page} published",
+    "hi": "{page} प्रकाशित हुआ"
+  },
+  "superAdmin.settings.legal.pages.terms": {
+    "en": "Terms of use",
+    "hi": "उपयोग की शर्तें",
+    "source": "reference/prototype-source/hi.json Terms of use"
+  },
+  "superAdmin.settings.legal.pages.privacy": {
+    "en": "Privacy policy",
+    "hi": "गोपनीयता नीति",
+    "source": "reference/prototype-source/hi.json Privacy policy"
+  },
+  "superAdmin.settings.legal.pages.refund": {
+    "en": "Refund & cancellation policy",
+    "hi": "रिफ़ंड व रद्द करने की नीति",
+    "source": "reference/prototype-source/hi.json Refund & cancellation policy"
+  },
+  "superAdmin.settings.legal.pages.about": {
+    "en": "About us",
+    "hi": "हमारे बारे में",
+    "source": "reference/prototype-source/hi.json About us"
+  },
+  "help.page.title": {
+    "en": "Help & support",
+    "hi": "मदद व सहायता",
+    "source": "reference/prototype-source/js7.js help"
+  },
+  "help.faq.title": {
+    "en": "Frequently asked questions",
+    "hi": "अक्सर पूछे जाने वाले सवाल"
+  },
+  "help.faq.order.question": {
+    "en": "How do I order?",
+    "hi": "ऑर्डर कैसे करूँ?",
+    "source": "reference/prototype-source/js7.js help FAQ"
+  },
+  "help.faq.order.answer": {
+    "en": "Pick a shop, add items to the cart and choose home delivery or self-pickup. Pay online or in cash.",
+    "hi": "दुकान चुनें, सामान कार्ट में डालें और होम डिलीवरी या सेल्फ-पिकअप चुनें। ऑनलाइन या नकद दें।",
+    "source": "reference/prototype-source/js7.js help FAQ"
+  },
+  "help.faq.split.question": {
+    "en": "Why was my order split?",
+    "hi": "मेरा ऑर्डर अलग-अलग क्यों बँटा?",
+    "source": "reference/prototype-source/js7.js help FAQ"
+  },
+  "help.faq.split.answer": {
+    "en": "Each shop prepares its own order, so one checkout creates one order per shop with separate IDs.",
+    "hi": "हर दुकान अपना ऑर्डर तैयार करती है, इसलिए एक चेकआउट से हर दुकान का अलग ऑर्डर बनता है।",
+    "source": "reference/prototype-source/js7.js help FAQ"
+  },
+  "help.faq.otp.question": {
+    "en": "How does delivery OTP work?",
+    "hi": "डिलीवरी OTP कैसे काम करता है?",
+    "source": "reference/prototype-source/js7.js help FAQ"
+  },
+  "help.faq.otp.answer": {
+    "en": "You get a 4-digit OTP. Tell it to the rider only when you receive your order.",
+    "hi": "आपको 4 अंकों का OTP मिलता है। ऑर्डर मिलने पर ही राइडर को बताएँ।",
+    "source": "reference/prototype-source/js7.js help FAQ"
+  },
+  "help.faq.refunds.question": {
+    "en": "How do refunds work?",
+    "hi": "रिफ़ंड कैसे काम करता है?",
+    "source": "reference/prototype-source/js7.js help FAQ"
+  },
+  "help.faq.refunds.answer": {
+    "en": "Cancel or request a refund from the order page. Admin and the shop are notified and will contact you.",
+    "hi": "ऑर्डर पेज से रद्द करें या रिफ़ंड माँगें। एडमिन और दुकान को खबर जाएगी और वे आपसे संपर्क करेंगे।",
+    "source": "reference/prototype-source/js7.js help FAQ"
+  },
+  "help.faq.outside.question": {
+    "en": "I am outside Padrauna",
+    "hi": "मैं पडरौना से बाहर हूँ",
+    "source": "reference/prototype-source/js7.js help FAQ"
+  },
+  "help.faq.outside.answer": {
+    "en": "We are live in Padrauna now. Choose “Other cities” in the location picker to join the waitlist.",
+    "hi": "हम अभी पडरौना में चालू हैं। वेटलिस्ट में जुड़ने के लिए लोकेशन में “अन्य शहर” चुनें।",
+    "source": "reference/prototype-source/js7.js help FAQ"
+  },
+  "help.form.title": {
+    "en": "Contact support",
+    "hi": "सहायता से संपर्क करें"
+  },
+  "help.form.message": {
+    "en": "Your message",
+    "hi": "आपका संदेश",
+    "source": "reference/prototype-source/js7.js help"
+  },
+  "help.form.send": {
+    "en": "Send",
+    "hi": "भेजें",
+    "source": "reference/prototype-source/js7.js help"
+  },
+  "help.form.sending": {
+    "en": "Sending…",
+    "hi": "भेजा जा रहा है…"
+  },
+  "help.form.sent": {
+    "en": "Message sent. Thank you for contacting us.",
+    "hi": "संदेश भेजा गया। संपर्क करने के लिए धन्यवाद।",
+    "source": "reference/prototype-source/js7.js help: “Message sent.” (reply promise removed per SET-Q1)"
+  },
+  "help.form.offline": {
+    "en": "You are offline. Reconnect to send your message — your draft is kept.",
+    "hi": "आप ऑफ़लाइन हैं। संदेश भेजने के लिए इंटरनेट जोड़ें — आपका ड्राफ़्ट बना रहेगा।"
+  },
+  "help.form.errors.empty": {
+    "en": "Write a message (up to 1000 characters).",
+    "hi": "संदेश लिखें (1000 अक्षर तक)।"
+  },
+  "help.form.errors.invalid": {
+    "en": "This message can’t be sent. Check it and try again.",
+    "hi": "यह संदेश भेजा नहीं जा सकता। जाँचकर फिर कोशिश करें।"
+  },
+  "help.form.errors.rateLimited": {
+    "en": "Too many messages for now. Please try again later — your draft is kept.",
+    "hi": "अभी बहुत ज़्यादा संदेश भेजे गए हैं। बाद में फिर कोशिश करें — आपका ड्राफ़्ट बना रहेगा।"
+  },
+  "help.form.errors.inProgress": {
+    "en": "This message is still being sent. Please wait a moment.",
+    "hi": "यह संदेश अभी भेजा जा रहा है। थोड़ा इंतज़ार करें।"
+  },
+  "help.form.errors.maintenance": {
+    "en": "ApnaTown is under maintenance. Please try again in a few minutes.",
+    "hi": "अपना टाउन में अभी रखरखाव चल रहा है। कुछ मिनट बाद फिर कोशिश करें।",
+    "source": "reference/prototype-source/js13.js maintenance (EN)"
+  },
+  "help.form.errors.failed": {
+    "en": "Your message couldn’t be sent. Please try again — your draft is kept.",
+    "hi": "आपका संदेश भेजा नहीं जा सका। फिर कोशिश करें — आपका ड्राफ़्ट बना रहेगा।"
+  },
+  "help.contact.call": {
+    "en": "Call",
+    "hi": "कॉल",
+    "source": "reference/prototype-source/js7.js help"
+  },
+  "help.contact.whatsapp": {
+    "en": "WhatsApp",
+    "hi": "WhatsApp",
+    "source": "reference/prototype-source/js7.js help"
+  },
+  "help.contact.newWindow": {
+    "en": "(opens in a new window)",
+    "hi": "(नई विंडो में खुलेगा)"
+  },
+  "help.contact.checking": {
+    "en": "Checking support contacts…",
+    "hi": "सहायता संपर्क देखे जा रहे हैं…"
+  },
+  "help.contact.loadFailed": {
+    "en": "Couldn’t load support contacts.",
+    "hi": "सहायता संपर्क लोड नहीं हो सके।"
+  },
+  "help.contact.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें",
+    "source": "reference/prototype-source/hi.json Try again"
+  },
+  "help.contact.callUnavailable": {
+    "en": "Phone support isn’t available right now.",
+    "hi": "फ़ोन सहायता अभी उपलब्ध नहीं है।"
+  },
+  "help.contact.whatsappUnavailable": {
+    "en": "WhatsApp support isn’t available right now.",
+    "hi": "WhatsApp सहायता अभी उपलब्ध नहीं है।"
+  },
+  "legal.page.updated": {
+    "en": "Last updated {date}",
+    "hi": "अंतिम अपडेट {date}"
+  },
+  "legal.about.localShops": {
+    "en": "Local shops",
+    "hi": "स्थानीय दुकानें",
+    "source": "reference/prototype-source/js7.js about"
+  },
+  "legal.about.trustedServices": {
+    "en": "Trusted services",
+    "hi": "भरोसेमंद सेवाएँ",
+    "source": "reference/prototype-source/js7.js about"
+  },
+  "legal.about.fastDelivery": {
+    "en": "Fast delivery",
+    "hi": "तेज़ डिलीवरी",
+    "source": "reference/prototype-source/js7.js about"
+  },
+  "legal.privacy.actions": {
+    "en": "Your data",
+    "hi": "आपका डेटा"
+  },
+  "legal.privacy.download": {
+    "en": "Download my data",
+    "hi": "मेरा डेटा डाउनलोड करें",
+    "source": "reference/prototype-source/js7.js privacy"
+  },
+  "legal.privacy.delete": {
+    "en": "Delete my account",
+    "hi": "मेरा खाता हटाएँ",
+    "source": "reference/prototype-source/js7.js privacy"
+  },
+  "legal.footer.company": {
+    "en": "Company",
+    "hi": "कंपनी",
+    "source": "reference/prototype-source/js3.js footer"
+  },
+  "legal.footer.legal": {
+    "en": "Legal",
+    "hi": "कानूनी",
+    "source": "reference/prototype-source/js3.js footer"
+  },
+  "legal.footer.about": {
+    "en": "About us",
+    "hi": "हमारे बारे में",
+    "source": "reference/prototype-source/js3.js footer"
+  },
+  "legal.footer.help": {
+    "en": "Contact & help",
+    "hi": "संपर्क व मदद",
+    "source": "reference/prototype-source/js3.js footer"
+  },
+  "legal.footer.terms": {
+    "en": "Terms",
+    "hi": "शर्तें",
+    "source": "reference/prototype-source/js3.js footer"
+  },
+  "legal.footer.privacy": {
+    "en": "Privacy",
+    "hi": "गोपनीयता",
+    "source": "reference/prototype-source/js3.js footer"
+  },
+  "legal.footer.refund": {
+    "en": "Refund policy",
+    "hi": "रिफ़ंड नीति",
+    "source": "reference/prototype-source/js3.js footer"
+  },
+  "legal.footer.design": {
+    "en": "Design system",
+    "hi": "डिज़ाइन सिस्टम",
+    "source": "reference/prototype-source/js3.js footer"
+  },
+  "common.error.snag": {
+    "en": "We hit a snag",
+    "hi": "कुछ गड़बड़ हुई",
+    "source": "specs/settings/fe/settings.md S-CUST-35; HI adapted from hi.json “This page hit a snag.”"
+  },
+  "common.error.reference": {
+    "en": "Error ID: {id}",
+    "hi": "एरर ID: {id}"
+  },
+  "system.offline.message": {
+    "en": "You can still view saved pages. Reconnect to place orders.",
+    "hi": "सहेजे पेज अब भी देख सकते हैं। ऑर्डर के लिए इंटरनेट जोड़ें।",
+    "source": "reference/prototype-source/js13.js offline"
+  },
+  "system.offline.tryAgain": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें",
+    "source": "reference/prototype-source/hi.json Try again"
+  },
+  "system.maintenance.checking": {
+    "en": "Checking…",
+    "hi": "जाँच हो रही है…"
+  },
+  "system.maintenance.still": {
+    "en": "Still under maintenance. Please try again in a few minutes.",
+    "hi": "रखरखाव अभी जारी है। कुछ मिनट बाद फिर कोशिश करें।"
+  },
+  "system.maintenance.failed": {
+    "en": "Couldn’t check right now. Check your connection and try again.",
+    "hi": "अभी जाँच नहीं हो सकी। अपना कनेक्शन जाँचें और फिर कोशिश करें।"
+  },
+  "system.design.title": {
+    "en": "ApnaTown design system",
+    "hi": "अपना टाउन डिज़ाइन सिस्टम",
+    "source": "reference/prototype-source/js13.js design"
+  },
+  "system.design.intro": {
+    "en": "Tokens, components, patterns and the screen inventory. Everything here is rendered with the live app styles.",
+    "hi": "टोकन, कंपोनेंट, पैटर्न और स्क्रीन सूची। यहाँ सब कुछ ऐप की असली स्टाइल से दिखता है।",
+    "source": "reference/prototype-source/js28.js design (EN)"
+  },
+  "system.design.colours": {
+    "en": "Colour tokens",
+    "hi": "रंग टोकन",
+    "source": "reference/prototype-source/js13.js design (EN)"
+  },
+  "system.design.typography": {
+    "en": "Typography",
+    "hi": "टाइपोग्राफ़ी",
+    "source": "reference/prototype-source/js13.js design (EN)"
+  },
+  "system.design.components": {
+    "en": "Components",
+    "hi": "कंपोनेंट",
+    "source": "reference/prototype-source/js20.js design tabs (EN)"
+  },
+  "system.design.systemPages": {
+    "en": "Error & system pages",
+    "hi": "एरर व सिस्टम पेज",
+    "source": "reference/prototype-source/js13.js design (EN)"
+  },
+  "system.design.checklist": {
+    "en": "Update checklist",
+    "hi": "अपडेट चेकलिस्ट",
+    "source": "reference/prototype-source/js20.js design tabs (EN)"
+  },
+  "system.design.sample": {
+    "en": "अपना टाउन · ApnaTown",
+    "hi": "अपना टाउन · ApnaTown"
+  },
+  "system.design.sampleField": {
+    "en": "Sample field",
+    "hi": "नमूना फ़ील्ड"
+  },
+  "system.design.loading": {
+    "en": "Loading",
+    "hi": "लोड हो रहा है"
+  },
+  "system.design.pages.notFound": {
+    "en": "Not found",
+    "hi": "नहीं मिला",
+    "source": "reference/prototype-source/js13.js design (EN)"
+  },
+  "system.design.pages.error": {
+    "en": "Server error",
+    "hi": "सर्वर एरर",
+    "source": "reference/prototype-source/js13.js design (EN)"
+  },
+  "system.design.pages.offline": {
+    "en": "No internet",
+    "hi": "इंटरनेट नहीं",
+    "source": "reference/prototype-source/js13.js design (EN)"
+  },
+  "system.design.pages.maintenance": {
+    "en": "Under maintenance",
+    "hi": "रखरखाव जारी",
+    "source": "reference/prototype-source/js13.js design (EN)"
+  },
+  "system.design.checks.states": {
+    "en": "Every screen has default, loading, empty, error with retry and no-permission states.",
+    "hi": "हर स्क्रीन में डिफ़ॉल्ट, लोडिंग, खाली, एरर व दोबारा कोशिश और अनुमति नहीं वाली स्थिति हो।",
+    "source": "specs/_foundation/frontend-shared.md five UX states"
+  },
+  "system.design.checks.languages": {
+    "en": "English and Hindi copy fit, including long Hindi text.",
+    "hi": "English और हिन्दी टेक्स्ट ठीक दिखे, लंबे हिन्दी टेक्स्ट समेत।",
+    "source": ".github/instructions/i18n-a11y.instructions.md"
+  },
+  "system.design.checks.viewports": {
+    "en": "Checked at 360px and desktop, in light and dark themes.",
+    "hi": "360px और डेस्कटॉप पर, लाइट और डार्क थीम में जाँचा गया।",
+    "source": ".github/pull_request_template.md"
+  },
+  "system.design.checks.keyboard": {
+    "en": "Usable by keyboard with a visible focus ring and screen-reader labels.",
+    "hi": "कीबोर्ड से इस्तेमाल हो, फ़ोकस दिखे और स्क्रीन-रीडर लेबल हों।",
+    "source": ".github/instructions/i18n-a11y.instructions.md"
+  },
+  "system.design.checks.tokens": {
+    "en": "Uses design tokens only — no raw colours or sizes.",
+    "hi": "सिर्फ़ डिज़ाइन टोकन — कोई सीधा रंग या साइज़ नहीं।",
+    "source": "docs/design-system.md"
   }
 }

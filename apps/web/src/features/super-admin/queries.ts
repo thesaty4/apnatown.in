@@ -84,6 +84,9 @@ const refreshCodes = new Set([
   'ROLE_NOT_FOUND',
   'ROLE_IN_USE',
   'ROLE_SYSTEM_LOCKED',
+  'SETTINGS_VERSION_CONFLICT',
+  'FEATURE_NOT_AVAILABLE',
+  'LEGAL_PAGE_NOT_FOUND',
 ]);
 
 /** One super-admin command. No automatic retry; the caller supplies the

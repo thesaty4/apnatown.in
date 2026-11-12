@@ -31,6 +31,9 @@ export const queryKeys = {
   // completion capability.
   deletionCompletion: (requestId: string) =>
     ['data-request-completion', requestId] as const,
+  // Public, locale-independent safe projections (both EN/HI values inside).
+  publicSettings: ['public', 'settings'] as const,
+  health: ['public', 'health'] as const,
   // Public reference data: both EN and HI names are in every response.
   geoCities: ['geo', 'cities'] as const,
   geoAreas: (cityId: string) => ['geo', 'cities', cityId, 'areas'] as const,
@@ -58,6 +61,9 @@ export const queryKeys = {
   adminImpact: (scope: AccountScope, adminId: string) =>
     ['private', scope, 'admin', 'admins', adminId, 'impact'] as const,
   roles: (scope: AccountScope) => ['private', scope, 'admin', 'roles'] as const,
+  // All super-admin settings, flags, legal versions and integration status.
+  settings: (scope: AccountScope) =>
+    ['private', scope, 'admin', 'settings'] as const,
   // Audit search terms are already visible URL state and hold redacted action
   // text, so the validated filters key the list. The admin scope revision
   // separates pages read under older area/city grants.

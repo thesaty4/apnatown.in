@@ -25,7 +25,7 @@ export async function SystemShell({ kind }: { kind: keyof typeof states }) {
   const State = states[kind];
   return (
     <State
-      title={t(`${kind}.title`)}
+      title={t(kind === 'error' ? 'error.snag' : `${kind}.title`)}
       message={t(kind === 'offline' ? 'error.message' : `${kind}.message`)}
       action={
         kind === 'notFound' ? (

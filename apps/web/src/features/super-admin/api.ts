@@ -78,7 +78,7 @@ export async function listRoles(
 }
 
 /** CSRF/Origin come from the session transport; the caller owns the command key. */
-async function commandHeaders(
+export async function commandHeaders(
   api: BrowserApi,
   key: string,
   assertCurrent: () => void,

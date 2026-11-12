@@ -14,6 +14,7 @@ import { readSession } from '../shared/auth/server';
 import { AccountNavigation } from '../shared/auth/AccountNavigation';
 import { hydrateResource } from '../shared/api/hydration';
 import { queryKeys } from '../shared/api/query-keys';
+import { SiteFooter } from '../features/support/SiteFooter';
 import './globals.css';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -46,6 +47,8 @@ export default async function RootLayout({
     privacy: catalogue.privacy,
     admin: catalogue.admin,
     superAdmin: catalogue.superAdmin,
+    help: catalogue.help,
+    system: catalogue.system,
   };
   return (
     <html lang={locale} data-theme={theme} className={fontVariables}>
@@ -74,6 +77,7 @@ export default async function RootLayout({
             >
               {children}
             </main>
+            <SiteFooter />
           </div>
         </Providers>
       </body>

@@ -206,6 +206,7 @@ function Shell({ me, children }: { me: AdminMe; children: ReactNode }) {
             items: [
               item('/super-admin/admins', t('admins'), '🛡️'),
               item('/super-admin/roles', t('roles'), '🔑'),
+              item('/super-admin/settings', t('settings'), '🎚️'),
             ],
           },
         ]

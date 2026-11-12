@@ -1,4 +1,8 @@
-import { SystemShell } from '../../../../shared/ui/SystemShell';
-export default function OfflineShell() {
-  return <SystemShell kind="offline" />;
+import { OfflineScreen } from '../../../../features/support/OfflineScreen';
+import { noindex } from '../../../../features/support/metadata';
+
+export const metadata = noindex;
+
+export default function OfflinePage() {
+  return <OfflineScreen />;
 }

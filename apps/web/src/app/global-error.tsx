@@ -9,6 +9,7 @@ import './globals.css';
 
 /** Root failure cannot rely on a working provider/request/API. Show both local copies. */
 export default function GlobalError({
+  error,
   reset,
 }: {
   error: Error & { digest?: string };
@@ -17,7 +18,7 @@ export default function GlobalError({
   return (
     <html lang="en" data-theme="light" className={fontVariables}>
       <head>
-        <title>{en.common.error.title}</title>
+        <title>{en.common.error.snag}</title>
       </head>
       <body>
         <main>
@@ -30,10 +31,17 @@ export default function GlobalError({
             <ErrorState
               key={lang}
               lang={lang}
-              title={copy.error.title}
+              title={copy.error.snag}
               message={copy.error.message}
               action={
-                <Button onClick={() => reset()}>{copy.actions.retry}</Button>
+                <div className="grid justify-items-center gap-2">
+                  <Button onClick={() => reset()}>{copy.actions.retry}</Button>
+                  {error.digest && (
+                    <p className="text-caption text-muted [overflow-wrap:anywhere]">
+                      {copy.error.reference.replace('{id}', error.digest)}
+                    </p>
+                  )}
+                </div>
               }
             />
           ))}
