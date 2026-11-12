@@ -5,6 +5,16 @@ Format: see `.github/skills/lessons-learned/SKILL.md`. Newest at the
 top; developer bug-fix work and any agent that catches a reusable mistake add an
 entry here.
 
+## Avoid collisions with generated constraint names
+
+What: the reports migration failed because PostgreSQL named an inline
+`resolution` check `media_reports_resolution_check`, the same name as an
+explicit multi-column check.
+Rule: give multi-column checks a distinct invariant name. Recover failed
+local migrations only after confirming transaction rollback and obtaining
+human approval; never mark failed SQL as applied.
+Enforced in: `database.instructions.md` and the data-model migration contract.
+
 ## Include feature translations in the client provider
 
 What: engagement keys existed in both generated catalogs, but video controls
@@ -13,6 +23,14 @@ Rule: wire a new feature namespace into the provider's explicit message
 projection as well as both catalogs; generated files alone do not prove that
 client translations are available.
 Enforced in: `i18n-a11y.instructions.md` and the EG1 frontend spec.
+
+## Keep translations in the generator source
+
+What: Reels feed strings existed only in the generated EN/HI catalogs, so the
+next generation removed them and broke navigation and feed labels.
+Rule: add feature translations to `reviewed-additions.json` and regenerate
+both catalogs with `pnpm i18n:generate`; output-only edits are not durable.
+Enforced in: `i18n-a11y.instructions.md`.
 
 ## Public images use gateway paths, not provider URLs
 

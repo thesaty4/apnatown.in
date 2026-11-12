@@ -249,9 +249,9 @@ Roles: customer, vendor, provider. Backend module(s): `media-videos, engagement`
 
 | ID | Feature | BE spec path | FE spec path | Status |
 |---|---|---|---|---|
-| RL1 | play icon in top bar, desktop nav and bottom navigation opens full-screen feed | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
+| RL1 | play icon in top bar and desktop navigation opens the full-screen feed | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | top/desktop Videos entry now has the play icon; mobile bottom tab awaits the customer AppShell |
 | RL2 | pills: For You \| Following \| Nearby \| Offers \| Products \| Services + category pills | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
-| RL3 | vertical snap feed, autoplay on view, tap pause/play, mute, progress bar, captions, data-saver "Tap to play", lazy loading | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
+| RL3 | vertical snap feed, autoplay on view, tap pause/play, mute, progress bar, captions, data-saver "Tap to play", lazy loading | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | partial: localized Tap to play gate for Save-Data, 2G/slow-2G, and reduced motion; automatic in-view autoplay remains pending viewer-consent gating, as do provider controls, progress, and captions |
 | RL4 | desktop: centred player + side panel (comments, linked products) + up/down arrow keys | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
 | RL5 | overlay: owner avatar/name/verified + Follow/Following/bell, like with count, comments, share, caption, hashtags, distance, open/closed, overflow menu with Report | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |
 | RL6 | linked products/services strip with Add to cart / Enquire / View and "Shop this video" sheet | `specs/media-videos/be/media-videos.md` | `specs/media-videos/fe/media-videos.md` | not started |

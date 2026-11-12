@@ -24,13 +24,41 @@ npx --yes pnpm@10.34.9 install --frozen-lockfile
 npx --yes pnpm@10.34.9 env:local
 npx --yes pnpm@10.34.9 generate
 npx --yes pnpm@10.34.9 db:up
+npx --yes pnpm@10.34.9 db:migrate
 npx --yes pnpm@10.34.9 dev
 ```
 
 The launcher creates private local-only credentials without overwriting existing
 configuration. Web runs on `localhost:3000`, API on `localhost:3001`, and internal
-worker probes on `localhost:3002`. `db:down` stops the local database **without
+worker probes default to `localhost:3002` (`WORKER_PROBE_PORT` in `.env.local`;
+choose an unused port if another local process owns it). `db:down` stops the local database **without
 deleting its volume**. No Redis or real external providers are started.
+
+Docker PostgreSQL is bound to `127.0.0.1:5434` to avoid existing Windows/WSL
+PostgreSQL services on 5432/5433. Docker Desktop must be running with WSL
+integration enabled for this distro.
+
+Run `db:migrate` after pulling new migrations and before starting the app:
+it applies the reviewed schema changes, installs/upgrades pg-boss, provisions
+the outbox queue and grants its runtime permissions. `db:up` alone does not
+perform those steps. The command does not reset or replace the database.
+`db:seed` currently fails with `C02_REQUIRED_NO_DOMAIN_SEED_ADAPTER`; there is
+no implemented demo-data seeder. Seeding does not fix missing translations
+or queue connection failures.
+
+If an earlier local attempt at `20261112105000_media_reports` failed with
+duplicate `media_reports_resolution_check`, the corrected SQL uses a distinct
+name for its multi-column check. Before retrying, have a human confirm that
+the failed transaction left no `media_reports` table/indexes and no applied
+steps; only then use Prisma `migrate resolve --rolled-back` for that exact
+failed attempt and rerun `pnpm db:migrate`. Never mark the failed SQL applied
+or reset the database to bypass it.
+
+Feature translations belong in
+[`reviewed-additions.json`](apps/web/src/shared/i18n/reviewed-additions.json);
+run `pnpm i18n:generate` to emit both EN/HI catalogs. `pnpm dev` regenerates
+and builds current sources; `pnpm start` runs existing build artifacts and
+requires a fresh `pnpm build` to include new changes.
 
 With `APP_ENV=local`, the API also serves Swagger UI at
 `http://localhost:3001/api/docs` (raw spec: `/api/docs/openapi.json` and

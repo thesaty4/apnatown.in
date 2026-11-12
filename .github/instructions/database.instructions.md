@@ -44,6 +44,7 @@ defines its domain columns/constraints; don't duplicate that schema here.
 - Tables: `snake_case`, plural (e.g. `orders`,
   `delivery_jobs`); columns: `snake_case`; foreign keys:
   `<singular_entity>_id` (e.g. `shop_id`, `rider_id`).
+- Name multi-column checks distinctly from generated `<table>_<column>_check`.
 - Status columns use the owning BE spec/shared schema's exact values,
   reconciled with the reference state machine; don't invent synonyms.
 

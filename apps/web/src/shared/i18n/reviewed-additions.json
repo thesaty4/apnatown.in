@@ -5157,6 +5157,14 @@
     "en": "This embed is unavailable. Open it on the original platform.",
     "hi": "यह एम्बेड उपलब्ध नहीं है। इसे मूल प्लेटफ़ॉर्म पर खोलें।"
   },
+  "reels.embed.tapToPlay": {
+    "en": "Tap to play",
+    "hi": "चलाने के लिए टैप करें"
+  },
+  "reels.embed.dataSaverOn": {
+    "en": "Data saver is on",
+    "hi": "डेटा सेवर चालू है"
+  },
   "reels.manager.title": {
     "en": "Videos & Reels",
     "hi": "वीडियो और रील्स"
@@ -6500,6 +6508,146 @@
     "en": "Load more",
     "hi": "और देखें",
     "source": "specs/_foundation/frontend-shared.md"
+  },
+  "errors.media.feedExpired": {
+    "en": "This feed expired. Start a fresh feed to continue.",
+    "hi": "इस फ़ीड की अवधि पूरी हो गई। आगे बढ़ने के लिए नई फ़ीड शुरू करें।"
+  },
+  "reels.feed.title": {
+    "en": "Videos & Reels",
+    "hi": "वीडियो और रील्स"
+  },
+  "reels.feed.close": {
+    "en": "Close feed",
+    "hi": "फ़ीड बंद करें"
+  },
+  "reels.feed.loading": {
+    "en": "Loading videos",
+    "hi": "वीडियो लोड हो रहे हैं"
+  },
+  "reels.feed.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें"
+  },
+  "reels.feed.forYou": {
+    "en": "For You",
+    "hi": "आपके लिए"
+  },
+  "reels.feed.following": {
+    "en": "Following",
+    "hi": "फ़ॉलो किए गए"
+  },
+  "reels.feed.nearby": {
+    "en": "Nearby",
+    "hi": "आस-पास"
+  },
+  "reels.feed.category": {
+    "en": "Category",
+    "hi": "श्रेणी"
+  },
+  "reels.feed.offers": {
+    "en": "Offers",
+    "hi": "ऑफ़र"
+  },
+  "reels.feed.products": {
+    "en": "Products",
+    "hi": "प्रोडक्ट"
+  },
+  "reels.feed.services": {
+    "en": "Services",
+    "hi": "सेवाएँ"
+  },
+  "reels.feed.offersUnavailable": {
+    "en": "Offer videos aren't available yet",
+    "hi": "ऑफ़र वाले वीडियो अभी उपलब्ध नहीं हैं"
+  },
+  "reels.feed.productsUnavailable": {
+    "en": "Product videos aren't available yet",
+    "hi": "प्रोडक्ट वाले वीडियो अभी उपलब्ध नहीं हैं"
+  },
+  "reels.feed.servicesUnavailable": {
+    "en": "Service videos aren't available yet",
+    "hi": "सेवा वाले वीडियो अभी उपलब्ध नहीं हैं"
+  },
+  "reels.feed.dependentFiltersUnavailable": {
+    "en": "Offer, product and service filters are unavailable until those listings are connected.",
+    "hi": "ऑफ़र, प्रोडक्ट और सेवा फ़िल्टर तब उपलब्ध होंगे जब उनकी लिस्टिंग जुड़ जाएगी।"
+  },
+  "reels.feed.nearbyRequiresLocation": {
+    "en": "Nearby videos need a device location.",
+    "hi": "आस-पास के वीडियो के लिए डिवाइस की लोकेशन चाहिए।"
+  },
+  "reels.feed.categoriesUnavailable": {
+    "en": "Categories could not be loaded.",
+    "hi": "श्रेणियाँ लोड नहीं हो सकीं।"
+  },
+  "reels.feed.emptyTitle": {
+    "en": "No videos to show",
+    "hi": "दिखाने के लिए वीडियो नहीं हैं"
+  },
+  "reels.feed.emptyMessage": {
+    "en": "Approved videos will appear here.",
+    "hi": "मंज़ूर किए गए वीडियो यहाँ दिखेंगे।"
+  },
+  "reels.feed.emptyFollowingTitle": {
+    "en": "No videos from businesses you follow",
+    "hi": "आपके फ़ॉलो किए व्यवसायों के वीडियो नहीं हैं"
+  },
+  "reels.feed.emptyFollowingMessage": {
+    "en": "Follow a business or explore videos picked for you.",
+    "hi": "किसी व्यवसाय को फ़ॉलो करें या आपके लिए चुने गए वीडियो देखें।"
+  },
+  "reels.feed.emptyNearbyTitle": {
+    "en": "No videos nearby",
+    "hi": "आस-पास वीडियो नहीं हैं"
+  },
+  "reels.feed.emptyNearbyMessage": {
+    "en": "Try another tab or choose a different area.",
+    "hi": "दूसरा टैब आज़माएँ या कोई अलग इलाका चुनें।"
+  },
+  "reels.feed.tryForYou": {
+    "en": "Explore For You",
+    "hi": "आपके लिए वीडियो देखें"
+  },
+  "reels.feed.signIn": {
+    "en": "Sign in to see videos from businesses you follow",
+    "hi": "आपके फ़ॉलो किए व्यवसायों के वीडियो देखने के लिए साइन इन करें"
+  },
+  "reels.feed.businessUnavailable": {
+    "en": "Local business",
+    "hi": "स्थानीय व्यवसाय"
+  },
+  "reels.feed.verified": {
+    "en": "Verified business",
+    "hi": "सत्यापित व्यवसाय"
+  },
+  "reels.feed.open": {
+    "en": "Open now",
+    "hi": "अभी खुला है"
+  },
+  "reels.feed.closed": {
+    "en": "Closed",
+    "hi": "बंद है"
+  },
+  "reels.feed.distance": {
+    "en": "{distance} away",
+    "hi": "{distance} दूर"
+  },
+  "reels.feed.views": {
+    "en": "{count, plural, one {# view} other {# views}}",
+    "hi": "{count} व्यू"
+  },
+  "reels.feed.comments": {
+    "en": "Comments",
+    "hi": "टिप्पणियाँ"
+  },
+  "reels.feed.loadMore": {
+    "en": "Load more videos",
+    "hi": "और वीडियो लोड करें"
+  },
+  "reels.feed.feedExpired": {
+    "en": "This feed expired. Start a fresh feed to continue.",
+    "hi": "इस फ़ीड की अवधि पूरी हो गई। आगे बढ़ने के लिए नई फ़ीड शुरू करें।"
   },
   "reels.feed.startFresh": {
     "en": "Start a fresh feed",

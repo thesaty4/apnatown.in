@@ -27,7 +27,7 @@ CREATE TABLE media_reports (
     (target_kind = 'photo' AND asset_id IS NOT NULL AND video_id IS NULL
       AND placement_type IS NOT NULL AND placement_id IS NOT NULL)
   ),
-  CONSTRAINT media_reports_resolution_check CHECK (
+  CONSTRAINT media_reports_resolution_state_check CHECK (
     (status = 'open' AND resolution IS NULL AND resolved_at IS NULL)
     OR (status = 'resolved' AND resolution IS NOT NULL AND resolved_at IS NOT NULL)
   )

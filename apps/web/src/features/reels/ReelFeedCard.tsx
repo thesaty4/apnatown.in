@@ -56,7 +56,12 @@ export function ReelFeedCard({
     >
       <div className="mx-auto grid w-full max-w-page gap-4 xl:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="grid min-h-[55dvh] place-items-center overflow-hidden rounded-lg bg-surface-2">
-          <EmbedCard playback={item.playback} active={active} nonce={nonce} />
+          <EmbedCard
+            playback={item.playback}
+            active={active}
+            nonce={nonce}
+            showTapToPlayWhenRestricted
+          />
         </div>
         <aside className="grid content-center gap-4 rounded-lg bg-surface p-4 shadow-sh-1">
           <div className="grid gap-2">
