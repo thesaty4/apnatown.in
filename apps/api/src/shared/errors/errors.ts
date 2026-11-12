@@ -62,6 +62,7 @@ const catalogue = {
   ROLE_IN_USE: [409, 'errors.role.inUse'],
   ROLE_VERSION_CONFLICT: [409, 'errors.role.versionConflict'],
   REPORT_TOO_LARGE: [413, 'errors.reports.tooLarge'],
+  AUDIT_NOT_FOUND: [404, 'errors.audit.notFound'],
   ADMIN_CREATION_POLICY_REQUIRED: [409, 'errors.admin.creationPolicyRequired'],
   ADMIN_INFLIGHT_POLICY_REQUIRED: [409, 'errors.admin.inflightPolicyRequired'],
   ADMIN_METRIC_POLICY_REQUIRED: [409, 'errors.admin.metricPolicyRequired'],

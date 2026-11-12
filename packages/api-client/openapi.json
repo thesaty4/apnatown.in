@@ -10842,6 +10842,1734 @@
           "super-admin"
         ]
       }
+    },
+    "/admin/audit": {
+      "get": {
+        "description": "Requires an active admin with reports:view (super_admin sees everything). A row is visible only when its own scope and every related scope pass: an exact area grant admits only that area, a city-only row needs an explicit whole-city grant, and global/unscoped rows are super_admin only. Scope filtering runs before search, ordering and pagination; cityId/areaId only narrow within that scope. Filters are allow-listed and only narrow results: q is full-text over actor label, action and the redacted summary (plain words); action/entityType are exact keys; actorId is the exact actor user ID (labels never change identity filtering); from/to are inclusive IST calendar dates (YYYY-MM-DD) converted to UTC instants. Ordered occurredAt DESC, id DESC; the opaque cursor is bound to the filters, actor and scope revision. private, no-store.",
+        "operationId": "AdminAuditController_list",
+        "parameters": [
+          {
+            "required": false,
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 2048,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "type": "integer"
+            }
+          },
+          {
+            "required": false,
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "action",
+            "in": "query",
+            "schema": {
+              "maxLength": 100,
+              "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "entityType",
+            "in": "query",
+            "schema": {
+              "maxLength": 64,
+              "pattern": "^[a-z][a-z0-9_]*$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "actorId",
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "cityId",
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "areaId",
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditPageDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_ERROR for an unknown/invalid filter, from after to, limit above 50, or a cursor issued for other filters, actor or grants.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "401": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "403": {
+            "description": "COMMON_FORBIDDEN without reports:view (even for the caller’s own actions); ADMIN_INACTIVE for a deactivated admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "404": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "409": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "410": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "429": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds until this rate-limit window resets"
+              }
+            }
+          },
+          "500": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "503": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Search the scoped audit trail",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/audit/{id}": {
+      "get": {
+        "description": "Requires an active admin with reports:view (super_admin sees everything). A row is visible only when its own scope and every related scope pass: an exact area grant admits only that area, a city-only row needs an explicit whole-city grant, and global/unscoped rows are super_admin only. before/after contain only changed allow-listed fields, recursively redacted at write time. private, no-store.",
+        "operationId": "AdminAuditController_detail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditEntryDetailDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "400": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "401": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "403": {
+            "description": "COMMON_FORBIDDEN without reports:view; ADMIN_INACTIVE for a deactivated admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "404": {
+            "description": "AUDIT_NOT_FOUND for a missing entry or one outside the caller’s scope (indistinguishable).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "409": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "410": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "429": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds until this rate-limit window resets"
+              }
+            }
+          },
+          "500": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "503": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Read one scoped audit entry with its diff",
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/super-admin/activity": {
+      "get": {
+        "description": "super_admin only; platform-wide including global/unscoped rows. actorRole narrows by the recorded actor role; actorId is the exact Admin-card shortcut. Filters are allow-listed and only narrow results: q is full-text over actor label, action and the redacted summary (plain words); action/entityType are exact keys; actorId is the exact actor user ID (labels never change identity filtering); from/to are inclusive IST calendar dates (YYYY-MM-DD) converted to UTC instants. Ordered occurredAt DESC, id DESC; the opaque cursor is bound to the filters, actor and scope revision. private, no-store.",
+        "operationId": "SuperAdminActivityController_list",
+        "parameters": [
+          {
+            "required": false,
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 2048,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "type": "integer"
+            }
+          },
+          {
+            "required": false,
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "action",
+            "in": "query",
+            "schema": {
+              "maxLength": 100,
+              "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "entityType",
+            "in": "query",
+            "schema": {
+              "maxLength": 64,
+              "pattern": "^[a-z][a-z0-9_]*$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "actorId",
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "cityId",
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "areaId",
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "actorRole",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditPageDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_ERROR for an unknown/invalid filter, from after to, limit above 50, or a cursor issued for other filters or actor.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "401": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "403": {
+            "description": "COMMON_FORBIDDEN for any non-super_admin, including admins.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "404": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "409": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "410": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "429": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds until this rate-limit window resets"
+              }
+            }
+          },
+          "500": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "503": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Platform activity monitor",
+        "tags": [
+          "super-admin"
+        ]
+      }
+    },
+    "/super-admin/activity/export.csv": {
+      "get": {
+        "description": "super_admin only; platform-wide including global/unscoped rows. actorRole narrows by the recorded actor role; actorId is the exact Admin-card shortcut. Same filters as the activity list (no cursor/limit), applied identically. Matching rows are counted first; more than 100000 is REPORT_TOO_LARGE. The export is itself audited (audit.exported, with the server-resolved filters and row count) before streaming. Columns: Time (IST), Actor, Role, Action, Entity, Summary, Before, After (redacted JSON). Cells starting with = + - @, tab or CR are prefixed with an apostrophe. Rows are limited to those recorded before the export started. private, no-store.",
+        "operationId": "SuperAdminActivityController_export",
+        "parameters": [
+          {
+            "required": false,
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "action",
+            "in": "query",
+            "schema": {
+              "maxLength": 100,
+              "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "entityType",
+            "in": "query",
+            "schema": {
+              "maxLength": 64,
+              "pattern": "^[a-z][a-z0-9_]*$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "actorId",
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "cityId",
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "areaId",
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "actorRole",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "UTF-8 CSV attachment streamed in occurredAt DESC order.",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "headers": {
+              "Content-Disposition": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "attachment; filename=\"apnatown-activity-<YYYY-MM-DD>.csv\""
+              },
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_ERROR for an unknown/invalid filter or from after to.",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "401": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "403": {
+            "description": "COMMON_FORBIDDEN for any non-super_admin, including admins.",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "404": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "409": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "410": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "413": {
+            "description": "REPORT_TOO_LARGE when more than 100000 rows match; narrow the filters.",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "429": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds until this rate-limit window resets"
+              }
+            }
+          },
+          "500": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "503": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Export platform activity as CSV",
+        "tags": [
+          "super-admin"
+        ]
+      }
+    },
+    "/super-admin/activity/{id}": {
+      "get": {
+        "description": "super_admin only; platform-wide including global/unscoped rows. actorRole narrows by the recorded actor role; actorId is the exact Admin-card shortcut. before/after contain only changed allow-listed fields, recursively redacted at write time. private, no-store.",
+        "operationId": "SuperAdminActivityController_detail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditEntryDetailDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "400": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "401": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "403": {
+            "description": "COMMON_FORBIDDEN for any non-super_admin, including admins.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "404": {
+            "description": "AUDIT_NOT_FOUND for a missing entry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "409": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "410": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "429": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds until this rate-limit window resets"
+              }
+            }
+          },
+          "500": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "503": {
+            "description": "Flat error envelope; no submitted values or credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Read one activity entry with its diff",
+        "tags": [
+          "super-admin"
+        ]
+      }
     }
   },
   "info": {
@@ -14774,6 +16502,231 @@
           "deleted",
           "reassignedTo",
           "reassignedCount"
+        ],
+        "additionalProperties": false
+      },
+      "AuditPageDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "occurredAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                },
+                "actorUserId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                  "nullable": true
+                },
+                "actorLabel": {
+                  "type": "string",
+                  "maxLength": 80
+                },
+                "actorRole": {
+                  "type": "string",
+                  "enum": [
+                    "customer",
+                    "vendor",
+                    "provider",
+                    "rider",
+                    "admin",
+                    "super_admin",
+                    "system"
+                  ]
+                },
+                "action": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "summary": {
+                  "type": "string",
+                  "maxLength": 300
+                },
+                "entityType": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "entityId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                  "nullable": true
+                },
+                "hasDiff": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "occurredAt",
+                "actorUserId",
+                "actorLabel",
+                "actorRole",
+                "action",
+                "summary",
+                "entityType",
+                "entityId",
+                "hasDiff"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "nullable": true
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "additionalProperties": false
+      },
+      "AuditEntryDetailDto__schema0": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditEntryDetailDto__schema0"
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/AuditEntryDetailDto__schema0"
+            }
+          }
+        ],
+        "nullable": true
+      },
+      "AuditEntryDetailDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "actorUserId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "nullable": true
+          },
+          "actorLabel": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "actorRole": {
+            "type": "string",
+            "enum": [
+              "customer",
+              "vendor",
+              "provider",
+              "rider",
+              "admin",
+              "super_admin",
+              "system"
+            ]
+          },
+          "action": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "entityType": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "entityId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "nullable": true
+          },
+          "hasDiff": {
+            "type": "boolean"
+          },
+          "cityId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "nullable": true
+          },
+          "areaId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "nullable": true
+          },
+          "before": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "$ref": "#/components/schemas/AuditEntryDetailDto__schema0"
+            },
+            "nullable": true
+          },
+          "after": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "$ref": "#/components/schemas/AuditEntryDetailDto__schema0"
+            },
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "occurredAt",
+          "actorUserId",
+          "actorLabel",
+          "actorRole",
+          "action",
+          "summary",
+          "entityType",
+          "entityId",
+          "hasDiff",
+          "cityId",
+          "areaId",
+          "before",
+          "after"
         ],
         "additionalProperties": false
       }

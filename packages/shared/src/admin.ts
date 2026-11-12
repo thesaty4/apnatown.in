@@ -336,3 +336,86 @@ export type AdminScopeChangedPayload = z.infer<
   typeof AdminScopeChangedPayloadSchema
 >;
 export type RoleUpdatedPayload = z.infer<typeof RoleUpdatedPayloadSchema>;
+
+// Audit search, detail and activity export (audit spec, F-AD-014, F-SA-007)
+export const AUDIT_ACTOR_ROLES = Object.freeze([
+  'customer',
+  'vendor',
+  'provider',
+  'rider',
+  'admin',
+  'super_admin',
+  'system',
+] as const);
+export const AuditActorRoleSchema = z.enum(AUDIT_ACTOR_ROLES);
+export type AuditActorRole = z.infer<typeof AuditActorRoleSchema>;
+/** Hard cap on rows in one activity CSV export. */
+export const AUDIT_EXPORT_MAX_ROWS = 100_000;
+const auditFilterShape = {
+  q: z.string().trim().min(1).max(100).optional(),
+  action: z
+    .string()
+    .max(100)
+    .regex(/^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$/)
+    .optional(),
+  entityType: z
+    .string()
+    .max(64)
+    .regex(/^[a-z][a-z0-9_]*$/)
+    .optional(),
+  actorId: IdSchema.optional(),
+  cityId: IdSchema.optional(),
+  areaId: IdSchema.optional(),
+  /** Inclusive IST calendar date (YYYY-MM-DD); server converts to UTC instants. */
+  from: z.iso.date().optional(),
+  /** Inclusive IST calendar date (YYYY-MM-DD); server converts to UTC instants. */
+  to: z.iso.date().optional(),
+};
+const actorRoleShape = { actorRole: AuditActorRoleSchema.optional() };
+const dateOrder = (query: {
+  from?: string | undefined;
+  to?: string | undefined;
+}) => !query.from || !query.to || query.from <= query.to;
+export const AuditListQuerySchema = PageQuerySchema.extend(
+  auditFilterShape,
+).refine(dateOrder, { path: ['to'] });
+export type AuditListQuery = z.infer<typeof AuditListQuerySchema>;
+export const ActivityListQuerySchema = PageQuerySchema.extend({
+  ...auditFilterShape,
+  ...actorRoleShape,
+}).refine(dateOrder, { path: ['to'] });
+export type ActivityListQuery = z.infer<typeof ActivityListQuerySchema>;
+export const ActivityExportQuerySchema = z
+  .strictObject({ ...auditFilterShape, ...actorRoleShape })
+  .refine(dateOrder, { path: ['to'] });
+export type ActivityExportQuery = z.infer<typeof ActivityExportQuerySchema>;
+export const AuditParamsSchema = z.strictObject({ id: IdSchema });
+export type AuditParams = z.infer<typeof AuditParamsSchema>;
+export const AuditEntrySummarySchema = z.strictObject({
+  id: IdSchema,
+  occurredAt: TimestampSchema,
+  actorUserId: IdSchema.nullable(),
+  /** Stored, redacted display label; never a phone or email. */
+  actorLabel: z.string().max(80),
+  actorRole: AuditActorRoleSchema,
+  action: z.string().max(100),
+  summary: z.string().max(300),
+  entityType: z.string().max(64),
+  entityId: IdSchema.nullable(),
+  hasDiff: z.boolean(),
+});
+export type AuditEntrySummary = z.infer<typeof AuditEntrySummarySchema>;
+const auditSnapshot = z.record(z.string(), z.json()).nullable();
+export const AuditEntryDetailSchema = AuditEntrySummarySchema.extend({
+  cityId: IdSchema.nullable(),
+  areaId: IdSchema.nullable(),
+  /** Changed allow-listed fields only, recursively redacted at write time. */
+  before: auditSnapshot,
+  after: auditSnapshot,
+});
+export type AuditEntryDetail = z.infer<typeof AuditEntryDetailSchema>;
+export const AuditPageSchema = z.strictObject({
+  items: z.array(AuditEntrySummarySchema).max(50),
+  nextCursor: CursorSchema.nullable(),
+});
+export type AuditPage = z.infer<typeof AuditPageSchema>;

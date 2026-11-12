@@ -30,6 +30,9 @@ import { SuperAdminAdminsController } from '../../modules/admin/presentation/sup
 import { SuperAdminRolesController } from '../../modules/admin/presentation/super-admin-roles.controller';
 import { AdminAccountsService } from '../../modules/admin/application/admin-accounts.service';
 import { RolesService } from '../../modules/admin/application/roles.service';
+import { AdminAuditController } from '../../modules/audit/presentation/admin-audit.controller';
+import { SuperAdminActivityController } from '../../modules/audit/presentation/super-admin-activity.controller';
+import { AuditReadService } from '../../modules/audit/application/audit-read.service';
 
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
@@ -47,6 +50,8 @@ import { RolesService } from '../../modules/admin/application/roles.service';
     AdminMeController,
     SuperAdminAdminsController,
     SuperAdminRolesController,
+    AdminAuditController,
+    SuperAdminActivityController,
   ],
   providers: [
     ReadinessService,
@@ -60,6 +65,7 @@ import { RolesService } from '../../modules/admin/application/roles.service';
     DataRequestService,
     AdminAccountsService,
     RolesService,
+    AuditReadService,
   ].map((provide) => ({ provide, useValue: Object.freeze({}) })),
 })
 class OpenApiModule {}

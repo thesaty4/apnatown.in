@@ -20,7 +20,7 @@ export class AppModule {
     const runtime = RuntimeModule.forRoot(config);
     const geo = GeoModule.forRoot(runtime);
     const users = UsersModule.forRoot(runtime, geo);
-    const audit = AuditModule.forRoot(runtime);
+    const audit = AuditModule.forApi(runtime, users);
     const admin = AdminModule.forRoot(runtime, geo, users, audit);
     return {
       module: AppModule,
