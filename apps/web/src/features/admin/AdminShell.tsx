@@ -193,9 +193,14 @@ function Shell({ me, children }: { me: AdminMe; children: ReactNode }) {
     current: path === href,
   });
   // Only implemented screens appear; entries never grant access.
+  const canAudit = me.isSuper || me.permissions.reports.includes('view');
   const groups = [
     ...(me.isSuper
       ? [
+          {
+            label: t('platform'),
+            items: [item('/super-admin/activity', t('activity'), '📄')],
+          },
           {
             label: t('control'),
             items: [
@@ -207,7 +212,10 @@ function Shell({ me, children }: { me: AdminMe; children: ReactNode }) {
       : []),
     {
       label: t('system'),
-      items: [item('/admin/profile', t('profile'), '👤')],
+      items: [
+        ...(canAudit ? [item('/admin/audit', t('audit'), '🗂️')] : []),
+        item('/admin/profile', t('profile'), '👤'),
+      ],
     },
   ];
   return (

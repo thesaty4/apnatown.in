@@ -18,10 +18,12 @@ export function sessionTransport(
       !url.pathname.startsWith('/api/')
     )
       throw new Error('Browser requests must use the same-origin API');
+    // Capped CSV exports (≤100 000 rows) stream far longer than JSON reads.
+    const timeoutMs = url.pathname.endsWith('.csv') ? 120_000 : 10_000;
     const signal = AbortSignal.any([
       request.signal,
       security.signal(),
-      AbortSignal.timeout(10_000),
+      AbortSignal.timeout(timeoutMs),
     ]);
     const headers = new Headers(request.headers);
     headers.set(

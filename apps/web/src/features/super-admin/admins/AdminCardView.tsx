@@ -1,11 +1,12 @@
 'use client';
 
 import type { ReactNode } from 'react';
+import Link from 'next/link';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import type { AdminCard } from '@apnatown/shared/admin';
 import { AdminCollapsibleCard } from '@apnatown/ui/admin/AdminCollapsibleCard';
 import { Badge, StatusBadge } from '@apnatown/ui/primitives/Badge';
-import { Button } from '@apnatown/ui/primitives/Button';
+import { Button, buttonClassName } from '@apnatown/ui/primitives/Button';
 import { usePermissionLabels } from '../../admin';
 import { geoName } from '../../geo/api';
 
@@ -168,19 +169,13 @@ export function AdminCardView({
           <p className="text-text-2">{t('noPermissions')}</p>
         )}
       </div>
-      <div className="grid gap-1">
-        <div>
-          <Button
-            variant="outline"
-            disabled
-            aria-describedby={`audit-${card.id}`}
-          >
-            {t('auditLog')}
-          </Button>
-        </div>
-        <p id={`audit-${card.id}`} className="text-small text-muted">
-          {t('auditUnavailable')}
-        </p>
+      <div>
+        <Link
+          className={buttonClassName}
+          href={`/super-admin/activity?${new URLSearchParams({ actorId: card.id }).toString()}`}
+        >
+          {t('auditLog')}
+        </Link>
       </div>
       <div className="flex flex-wrap gap-2">
         <Button variant="secondary" onClick={() => onAction('areas')}>

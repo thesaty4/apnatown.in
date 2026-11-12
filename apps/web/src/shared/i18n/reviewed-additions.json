@@ -1402,10 +1402,6 @@
     "hi": "ऑडिट लॉग",
     "source": "docs/design-context prototype copy"
   },
-  "superAdmin.admins.auditUnavailable": {
-    "en": "The audit log isn’t available here yet.",
-    "hi": "ऑडिट लॉग अभी यहाँ उपलब्ध नहीं है।"
-  },
   "superAdmin.admins.editAreas": {
     "en": "Edit areas",
     "hi": "इलाके बदलें",
@@ -1949,5 +1945,350 @@
   "superAdmin.roles.chooseRole": {
     "en": "Choose a role",
     "hi": "भूमिका चुनें"
+  },
+  "admin.shell.platform": {
+    "en": "Platform",
+    "hi": "प्लेटफ़ॉर्म",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.shell.activity": {
+    "en": "Activity monitor",
+    "hi": "गतिविधि मॉनिटर",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.shell.audit": {
+    "en": "Audit log",
+    "hi": "ऑडिट लॉग",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.errors.auditNotFound": {
+    "en": "This entry isn’t available. It may be outside your areas or no longer exist.",
+    "hi": "यह एंट्री उपलब्ध नहीं है। हो सकता है यह आपके इलाकों से बाहर हो या अब मौजूद न हो।"
+  },
+  "admin.errors.reportTooLarge": {
+    "en": "Too many entries to export. Narrow the date range or filters and try again.",
+    "hi": "एक्सपोर्ट के लिए एंट्री बहुत ज़्यादा हैं। तारीख़ की सीमा या फ़िल्टर छोटे करके फिर कोशिश करें।"
+  },
+  "admin.audit.title": {
+    "en": "Audit log",
+    "hi": "ऑडिट लॉग",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.search": {
+    "en": "Search actions",
+    "hi": "कार्य खोजें",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.audit.searchLabel": {
+    "en": "Search",
+    "hi": "खोजें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.filters": {
+    "en": "Filters",
+    "hi": "फ़िल्टर",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.close": {
+    "en": "Close",
+    "hi": "बंद करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.show": {
+    "en": "Show results",
+    "hi": "नतीजे दिखाएँ"
+  },
+  "admin.audit.from": {
+    "en": "From date",
+    "hi": "शुरू की तारीख़"
+  },
+  "admin.audit.to": {
+    "en": "To date",
+    "hi": "आख़िरी तारीख़"
+  },
+  "admin.audit.city": {
+    "en": "City",
+    "hi": "शहर",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.allCities": {
+    "en": "All cities",
+    "hi": "सभी शहर",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.citySelected": {
+    "en": "Selected city",
+    "hi": "चुना गया शहर"
+  },
+  "admin.audit.area": {
+    "en": "Area",
+    "hi": "इलाका"
+  },
+  "admin.audit.allAreas": {
+    "en": "All areas",
+    "hi": "सभी इलाके"
+  },
+  "admin.audit.areaSelected": {
+    "en": "Selected area",
+    "hi": "चुना गया इलाका"
+  },
+  "admin.audit.areaNeedsCity": {
+    "en": "Choose a city first.",
+    "hi": "पहले शहर चुनें।"
+  },
+  "admin.audit.role": {
+    "en": "Role",
+    "hi": "भूमिका",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.allRoles": {
+    "en": "All roles",
+    "hi": "सभी भूमिकाएँ"
+  },
+  "admin.audit.roles.customer": {
+    "en": "Customer",
+    "hi": "ग्राहक",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.roles.vendor": {
+    "en": "Vendor",
+    "hi": "वेंडर",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.roles.provider": {
+    "en": "Service provider",
+    "hi": "सर्विस प्रोवाइडर"
+  },
+  "admin.audit.roles.rider": {
+    "en": "Rider",
+    "hi": "राइडर",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.roles.admin": {
+    "en": "Admin",
+    "hi": "एडमिन",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.roles.superAdmin": {
+    "en": "Super Admin",
+    "hi": "सुपर एडमिन",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.roles.system": {
+    "en": "System",
+    "hi": "सिस्टम",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.actorChip": {
+    "en": "Person: {actor}",
+    "hi": "व्यक्ति: {actor}"
+  },
+  "admin.audit.actorSelected": {
+    "en": "Selected account",
+    "hi": "चुना गया खाता"
+  },
+  "admin.audit.actionChip": {
+    "en": "Action: {action}",
+    "hi": "कार्य: {action}"
+  },
+  "admin.audit.entityChip": {
+    "en": "Record: {entity}",
+    "hi": "रिकॉर्ड: {entity}"
+  },
+  "admin.audit.fromChip": {
+    "en": "From {date}",
+    "hi": "{date} से"
+  },
+  "admin.audit.toChip": {
+    "en": "Until {date}",
+    "hi": "{date} तक"
+  },
+  "admin.audit.removeFilter": {
+    "en": "Remove filter: {filter}",
+    "hi": "फ़िल्टर हटाएँ: {filter}",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.audit.clearFilters": {
+    "en": "Clear filters",
+    "hi": "फ़िल्टर हटाएँ",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.wholeCity": {
+    "en": "{city} (whole city)",
+    "hi": "{city} (पूरा शहर)"
+  },
+  "admin.audit.scope": {
+    "en": "You can see entries for: {places}",
+    "hi": "आप इनकी एंट्री देख सकते हैं: {places}"
+  },
+  "admin.audit.scopeNone": {
+    "en": "No areas are assigned to you, so only entries you’re allowed to see appear here.",
+    "hi": "आपको कोई इलाका नहीं सौंपा गया है, इसलिए यहाँ सिर्फ़ वही एंट्री दिखती हैं जिन्हें देखने की आपको अनुमति है।"
+  },
+  "admin.audit.forbiddenTitle": {
+    "en": "You don’t have permission",
+    "hi": "आपको अनुमति नहीं है",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.noPermission": {
+    "en": "You need permission to view reports to see the audit log. Ask a Super Admin for access.",
+    "hi": "ऑडिट लॉग देखने के लिए रिपोर्ट देखने की अनुमति चाहिए। सुपर एडमिन से अनुमति माँगें।"
+  },
+  "admin.audit.checkAgain": {
+    "en": "Check again",
+    "hi": "फिर जाँचें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.loading": {
+    "en": "Loading audit log",
+    "hi": "ऑडिट लॉग लोड हो रहा है"
+  },
+  "admin.audit.errorTitle": {
+    "en": "Couldn’t load the audit log",
+    "hi": "ऑडिट लॉग लोड नहीं हो सका"
+  },
+  "admin.audit.retry": {
+    "en": "Try again",
+    "hi": "फिर कोशिश करें",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.noMatchTitle": {
+    "en": "No activity matches",
+    "hi": "कोई गतिविधि मेल नहीं खाती",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.audit.noMatchMessage": {
+    "en": "Try another filter.",
+    "hi": "कोई दूसरा फ़िल्टर आज़माएँ।",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.audit.emptyTitle": {
+    "en": "No audit entries yet",
+    "hi": "अभी कोई ऑडिट एंट्री नहीं है"
+  },
+  "admin.audit.emptyMessage": {
+    "en": "Admin actions in your areas will appear here.",
+    "hi": "आपके इलाकों में एडमिन के कार्य यहाँ दिखेंगे।"
+  },
+  "admin.audit.shown": {
+    "en": "{count, plural, one {Showing # entry} other {Showing # entries}}",
+    "hi": "{count, plural, one {# एंट्री दिख रही है} other {# एंट्री दिख रही हैं}}"
+  },
+  "admin.audit.loadMore": {
+    "en": "Load more",
+    "hi": "और देखें",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.audit.actor": {
+    "en": "{actor} ({role})",
+    "hi": "{actor} ({role})"
+  },
+  "admin.audit.toggle": {
+    "en": "Show details: {entry}",
+    "hi": "विवरण दिखाएँ: {entry}"
+  },
+  "admin.audit.entity": {
+    "en": "Record: {entity}",
+    "hi": "रिकॉर्ड: {entity}"
+  },
+  "admin.audit.when": {
+    "en": "When",
+    "hi": "कब",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.audit.who": {
+    "en": "Who",
+    "hi": "किसने",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.audit.detail": {
+    "en": "Detail",
+    "hi": "विवरण",
+    "source": "docs/design-context prototype copy"
+  },
+  "admin.audit.onlyAction": {
+    "en": "Show only this action",
+    "hi": "सिर्फ़ यह कार्य दिखाएँ"
+  },
+  "admin.audit.onlyEntity": {
+    "en": "Show only this record type",
+    "hi": "सिर्फ़ इस तरह के रिकॉर्ड दिखाएँ"
+  },
+  "admin.audit.onlyActor": {
+    "en": "Show only this person",
+    "hi": "सिर्फ़ इस व्यक्ति के कार्य दिखाएँ"
+  },
+  "admin.audit.noDiff": {
+    "en": "No field changes were recorded for this entry.",
+    "hi": "इस एंट्री के लिए किसी फ़ील्ड का बदलाव दर्ज नहीं है।"
+  },
+  "admin.audit.loadingDiff": {
+    "en": "Loading changes",
+    "hi": "बदलाव लोड हो रहे हैं"
+  },
+  "admin.audit.diffCaption": {
+    "en": "Before and after",
+    "hi": "पहले और बाद में"
+  },
+  "admin.audit.field": {
+    "en": "Field",
+    "hi": "फ़ील्ड"
+  },
+  "admin.audit.before": {
+    "en": "Before",
+    "hi": "पहले",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.after": {
+    "en": "After",
+    "hi": "बाद में",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "admin.audit.changed": {
+    "en": "Changed",
+    "hi": "बदला गया"
+  },
+  "admin.audit.notRecorded": {
+    "en": "Not recorded",
+    "hi": "दर्ज नहीं"
+  },
+  "superAdmin.activity.title": {
+    "en": "Activity monitor",
+    "hi": "गतिविधि मॉनिटर",
+    "source": "docs/design-context/09a-i18n-en-hi.json"
+  },
+  "superAdmin.activity.search": {
+    "en": "Filter by admin, action or detail",
+    "hi": "एडमिन, कार्य या विवरण से फ़िल्टर करें",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.activity.searchLabel": {
+    "en": "Filter",
+    "hi": "फ़िल्टर",
+    "source": "docs/design-context prototype copy"
+  },
+  "superAdmin.activity.emptyTitle": {
+    "en": "No activity yet",
+    "hi": "अभी कोई गतिविधि नहीं"
+  },
+  "superAdmin.activity.emptyMessage": {
+    "en": "Actions across the platform will appear here.",
+    "hi": "पूरे प्लेटफ़ॉर्म के कार्य यहाँ दिखेंगे।"
+  },
+  "superAdmin.activity.export": {
+    "en": "Export CSV",
+    "hi": "CSV एक्सपोर्ट करें"
+  },
+  "superAdmin.activity.exporting": {
+    "en": "Exporting…",
+    "hi": "एक्सपोर्ट हो रहा है…"
+  },
+  "superAdmin.activity.exportStarted": {
+    "en": "Export started. Your CSV will download when it’s ready.",
+    "hi": "एक्सपोर्ट शुरू हो गया। तैयार होने पर आपकी CSV डाउनलोड होगी।"
+  },
+  "superAdmin.activity.exportDone": {
+    "en": "CSV downloaded for the current filters.",
+    "hi": "मौजूदा फ़िल्टर की CSV डाउनलोड हो गई।"
   }
 }

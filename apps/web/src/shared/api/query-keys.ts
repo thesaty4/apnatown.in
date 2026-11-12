@@ -58,4 +58,31 @@ export const queryKeys = {
   adminImpact: (scope: AccountScope, adminId: string) =>
     ['private', scope, 'admin', 'admins', adminId, 'impact'] as const,
   roles: (scope: AccountScope) => ['private', scope, 'admin', 'roles'] as const,
+  // Audit search terms are already visible URL state and hold redacted action
+  // text, so the validated filters key the list. The admin scope revision
+  // separates pages read under older area/city grants.
+  audit: (scope: AccountScope, section: 'audit' | 'activity') =>
+    ['private', scope, 'admin', section] as const,
+  auditList: (
+    scope: AccountScope,
+    section: 'audit' | 'activity',
+    scopeRevision: string,
+    filters: Readonly<Record<string, string | undefined>>,
+  ) =>
+    [
+      'private',
+      scope,
+      'admin',
+      section,
+      'list',
+      scopeRevision,
+      filters,
+    ] as const,
+  auditEntry: (
+    scope: AccountScope,
+    section: 'audit' | 'activity',
+    scopeRevision: string,
+    id: string,
+  ) =>
+    ['private', scope, 'admin', section, 'entry', scopeRevision, id] as const,
 };

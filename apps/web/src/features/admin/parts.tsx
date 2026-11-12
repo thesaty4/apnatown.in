@@ -30,6 +30,8 @@ const errors: Record<string, string> = {
   ROLE_IN_USE: 'roleInUse',
   AREA_NOT_FOUND: 'areaNotFound',
   USER_NOT_FOUND: 'accountUnavailable',
+  AUDIT_NOT_FOUND: 'auditNotFound',
+  REPORT_TOO_LARGE: 'reportTooLarge',
   COMMON_RATE_LIMITED: 'rateLimited',
   RATE_LIMITED: 'rateLimited',
   COMMON_UNAVAILABLE: 'unavailable',
