@@ -8,7 +8,12 @@ import { buildPersonaFixtures, seedPersonas } from './seed-personas.mjs';
 import { buildProviderFixtures, seedProviderData } from './seed-provider-data.mjs';
 import { seedLocalSettings } from './seed-settings.mjs';
 import { localTargets } from './targets.mjs';
-import { findSeedUser } from './seed-context.mjs';
+import { buildSeedContext, findSeedUser } from './seed-context.mjs';
+import { seedAccountData } from './seed-account-data.mjs';
+import { seedCatalogData } from './seed-catalog-data.mjs';
+import { seedCommerceData } from './seed-commerce-data.mjs';
+import { seedEngagementData } from './seed-engagement-data.mjs';
+import { seedNotificationData } from './seed-notification-data.mjs';
 
 const require = createRequire(import.meta.url);
 const SAMPLE_DATA = new URL(
@@ -37,6 +42,7 @@ function loadHelpers(env) {
       users: require('@apnatown/shared/users'),
       wire: require('@apnatown/shared/wire'),
       search: require('@apnatown/shared/search'),
+      notification: require('../dist/modules/notifications/application/notification-policy.js'),
     };
   } catch (error) {
     if (error.code === 'MODULE_NOT_FOUND')
@@ -59,6 +65,8 @@ function loadHelpers(env) {
     adminEmailContext: modules.adminProjection.adminEmailContext,
     permissionInputSchema: modules.admin.PermissionInputSchema,
     communicationScopeSchema: modules.admin.CommunicationScopeSchema,
+    notificationPolicy: modules.notification.TEMPLATE_POLICY,
+    notificationContentVersion: modules.notification.TEMPLATE_CONTENT_VERSION,
   };
 }
 
@@ -185,8 +193,7 @@ async function seedBusinessDetails(client, business) {
   );
 }
 
-// Like/share/comment counters stay 0: they must remain rebuildable from
-// engagement rows, which demo data does not invent.
+// Engagement fixtures add relationship-backed counts later in this transaction.
 async function seedVideo(client, video) {
   const { rowCount } = await client.query(
     `INSERT INTO videos (id, business_id, source, provider_kind,
@@ -229,7 +236,7 @@ async function seedBusiness(client, business, ownerId, cityId, areaId) {
   return videos;
 }
 
-async function apply(client, fixtures, listings, personas, providers, helpers) {
+async function apply(client, fixtures, listings, personas, providers, helpers, sample) {
   const { crypto } = helpers;
   const counts = {
     businesses: 0,
@@ -290,6 +297,16 @@ async function apply(client, fixtures, listings, personas, providers, helpers) {
   await seedPersonas(client, helpers, personas, { cityId, areaIds }, counts);
   await seedProviderData(client, helpers, providers, FIXTURE_CLOCK, counts);
   await seedLocalSettings(client, FIXTURE_CLOCK, counts);
+  const context = await buildSeedContext(client, {
+    sample, helpers, fixtures, listings, personas, cityId, areaIds,
+  });
+  counts.extended = {
+    ...await seedAccountData(client, context),
+    ...await seedCatalogData(client, context),
+    ...await seedCommerceData(client, context),
+    ...await seedEngagementData(client, context),
+    ...await seedNotificationData(client, context),
+  };
   return counts;
 }
 
@@ -326,7 +343,7 @@ export async function seed(env) {
   const providers = buildProviderFixtures(sample, helpers);
   const counts = await withDatabase(targets.migration, (client) =>
     inTransaction(client, (tx) =>
-      apply(tx, fixtures, listings, personas, providers, helpers),
+      apply(tx, fixtures, listings, personas, providers, helpers, sample),
     ),
   );
   process.stdout.write(
@@ -340,4 +357,6 @@ export async function seed(env) {
       `${counts.expertise} provider expertise rows and ${counts.enquiries} enquiries added; ` +
       `${counts.settings} local settings added\n`,
   );
+  for (const [table, inserted] of Object.entries(counts.extended))
+    process.stdout.write(`Demo seed: ${table}: ${inserted} rows added\n`);
 }

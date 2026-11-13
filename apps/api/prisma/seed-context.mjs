@@ -42,6 +42,13 @@ async function userReferences(client, input) {
       input.personas.users[index],
     );
     if (!id) throw new Error('SEED_REFERENCE_CONFLICT');
+    const roles = await client.query(
+      `SELECT role FROM user_roles WHERE user_id = $1::uuid
+       AND role = ANY($2::text[])`,
+      [id, input.personas.users[index].roles],
+    );
+    if (roles.rowCount !== input.personas.users[index].roles.length)
+      throw new Error('SEED_REFERENCE_CONFLICT');
     users.set(key, id);
   }
   return users;
