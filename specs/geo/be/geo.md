@@ -124,7 +124,7 @@ The fee port is for `apna_town_rider` delivery only. Self-delivery uses the busi
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Rules: PIN/coordinate/phone validation, city-status mapping/edges, point-to-zone lookup, zone/default fee boundaries and beyond-last-band behavior.
 - Manual API/DB: public location resolution, city/zone CRUD and default-fee fallback, PostGIS overlap validation, outbox cache invalidation, waitlist encryption/count.

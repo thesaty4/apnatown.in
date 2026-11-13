@@ -13,7 +13,7 @@
 
 Features: F-SV-001, F-SV-002, F-SV-003, F-SV-004, F-SV-005, F-SV-006, F-SV-007, F-VD-014, F-VD-016, F-PV-003, F-PV-004 | Rules: BR-02, BR-06, BR-08, BR-09, BR-10, BR-14, BR-16, BR-18 | State machines: ST-enquiry | Depends on: businesses, catalog, geo | Used by: search, businesses, offers, reviews, engagement, media-videos, notifications
 
-Frontend counterpart: [FE services](../fe/services.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Frontend counterpart: [FE services](../fe/services.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Responsibility
 
@@ -121,7 +121,7 @@ Common authentication, authorization, validation and rate-limit failures use the
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Rules: price-type constraints, category/subcategory match, enquiry transition graph and version conflict.
 - Manual API/DB: public active/paused/unapproved visibility, enquiry persistence/outbox, provider expertise save, and service search invalidation.

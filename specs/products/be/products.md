@@ -13,7 +13,7 @@
 
 Features: F-PD-001, F-PD-002, F-PD-003, F-PD-006, F-PD-008, F-PD-009, F-VD-004, F-VD-005, F-VD-009, F-PV-005 (product listing only) | Rules: BR-01, BR-02, BR-04, BR-06, BR-16 | State machines: none | Depends on: businesses, catalog | Used by: cart-checkout, search, offers, orders, reviews, engagement, media-videos, admin
 
-Frontend counterpart: [FE products](../fe/products.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Frontend counterpart: [FE products](../fe/products.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Responsibility
 
@@ -119,7 +119,7 @@ Prices and MRP are integer paise in API DTOs. Import converts valid decimal INR 
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Rules: paise parsing/validation, discount-independent price/MRP rules, variant membership, media allowlist/ownership, low-stock threshold, pill ordering, import row validation.
 - Manual API/DB: owner CRUD, keyset filtering, soft delete, inventory version conflict, bulk all-or-nothing behavior, product read visibility and cache/outbox writes.

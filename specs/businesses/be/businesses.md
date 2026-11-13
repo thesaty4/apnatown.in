@@ -2,7 +2,7 @@
 
 Features: F-PF-001, F-PF-002, F-PF-003, F-PF-004, F-PF-005, F-PF-006, F-PF-007, F-PF-011, F-PF-012, F-PF-013, F-VD-001, F-VD-002, F-VD-003, F-VD-011, F-VD-018, F-PV-001, F-PV-002, F-PV-006, F-PV-007, F-X-011 | Rules: BR-01, BR-02, BR-06, BR-08, BR-12, BR-14, BR-16 | State machines: ST-approval | Depends on: users, geo, catalog | Used by: products, services, search, offers, cart-checkout, orders, reviews, engagement, media-videos, admin
 
-Frontend counterpart: [FE businesses](../fe/businesses.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Frontend counterpart: [FE businesses](../fe/businesses.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Responsibility
 
@@ -122,6 +122,6 @@ Open question: provider product ordering is required by F-PV-005, but the provid
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Rules: state transition guards, DTO allow-list, paise/settings validation, and public-field projection. Manual API/DB: PostGIS optional point, owner/document isolation, outbox commit/retry, and version conflicts. Authorization negatives: cross-owner access, missing `approvals:view/edit`, and out-of-area admin; never use real PII or document files.

@@ -87,6 +87,6 @@ Prefixes `superAdmin.settings.*`, `help.*`, `legal.*`, `system.*`. Events: `sett
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Manual UI/accessibility: atomic group payloads/versions, error focus and retained drafts, keyboard tabs/toggles/FAQ, paise/bps transforms, Hindi/dark, legal sanitisation, message-only support and null contacts. Manual journey J10: grouped Save versus stale-member rollback; future flags remain false; support→real admin alert/detail with scope denial; flag/legal cache refresh; maintenance→Auth recovery→disable→health recovery without new-charge replay. Verify signed callbacks and admitted in-flight correctness are not intercepted by the frontend redirect.

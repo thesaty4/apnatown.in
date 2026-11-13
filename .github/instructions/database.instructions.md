@@ -16,13 +16,13 @@ defines its domain columns/constraints; don't duplicate that schema here.
   controllers use ports, never another module's repositories.
 - One repository per aggregate (e.g. `OrderRepository`,
   `ProductRepository`), matching the 21 modules in
-  `docs/architecture.md`.
+  `../../specs/_foundation/architecture.md`.
 
 ## Parameterized queries
 
 - Every query uses parameter binding; never string-concatenate or
   template-interpolate user input into a query
-  (`security.instructions.md`).
+  (`AGENTS.md`, section 4).
 - Dynamic sort/filter is built only from an allow-listed field-to-column
   map, never from a raw client field name.
 
@@ -36,8 +36,6 @@ defines its domain columns/constraints; don't duplicate that schema here.
 - Document forward repair/restore and data-loss risks; destructive
   changes require human sign-off. Do not promise automatic down
   migrations or restoration of irreversibly erased data.
-- Use `.github/skills/db-migration/SKILL.md` for the step-by-step
-  recipe and skeleton.
 
 ## Naming
 
@@ -51,7 +49,7 @@ defines its domain columns/constraints; don't duplicate that schema here.
 ## Indexes
 
 - Every field used as an Explore/Search/admin-list filter or sort
-  (`domain-catalog-search.instructions.md`, `backend.instructions.md`
+  (`../../specs/search/fe/search.md`, `backend.instructions.md`
   pagination) has a supporting index; composite indexes match the most
   common filter+sort combinations, not one index per single column
   blindly.
@@ -62,7 +60,7 @@ defines its domain columns/constraints; don't duplicate that schema here.
 - User-facing deletable records (products, services, reviews, videos)
   use a soft-delete flag/timestamp, not a hard delete, so moderation
   history, order history, and audit trails stay intact
-  (`docs/project/04-business-rules.md` BR-12, BR-14).
+  (`../../docs/design-context/07-state-machines-and-business-rules.md` BR-12, BR-14).
 - Hard delete is reserved for explicit DPDP erasure requests (BR-14),
   applied narrowly to the requester's own PII, not cascaded
   destructively through shared records (e.g. an order a vendor still
@@ -74,7 +72,7 @@ defines its domain columns/constraints; don't duplicate that schema here.
   full phone numbers where not already masked at the application layer.
 - Decryption only happens inside the repository/service boundary that
   needs it, gated by the same role+ownership+scope checks as any other
-  access (`security.instructions.md`).
+  access (`AGENTS.md`, section 4).
 
 ## No raw SQL outside repositories
 
@@ -87,7 +85,8 @@ defines its domain columns/constraints; don't duplicate that schema here.
 Keep extension checks, pg-boss schema setup, idempotent synthetic seeds
 and target safety in the database tooling. No seed/reset on API startup;
 destructive commands must verify an explicit local/test target. Never
-seed real PII or an authentication bypass (except ADR 0002). During implementation, author
+seed real PII or an authentication bypass (except the local/test demo route in
+`../../specs/auth/be/auth.md`). During implementation, author
 migrations and build generated clients only; do not start Docker, provision
 a database, or execute migrations/seeds. Runtime execution requires a
 separate explicit request.

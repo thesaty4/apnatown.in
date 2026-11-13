@@ -75,7 +75,7 @@ Shared billing confirmations show server dates (including month-end clamping), t
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Manual UI: configured/unconfigured summary, ledger empty/error, pending/failed purchase without optimistic activation, invoice rows, keyboard/dialog operation, Hindi and dark mode.
 - Journey: J1 payment failure then retry or enabled cash fallback; vendor owner views S-VEND-16; provider follows J15 on S-PROV-18, including cancellation-at-expiry and retained-selection reactivation after verified renewal.

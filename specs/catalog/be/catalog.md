@@ -2,7 +2,7 @@
 
 Features: F-HM-003, F-HM-004, F-SV-008, F-VD-006, F-AD-005, F-AD-006, F-AD-015, F-SA-008 | Rules: BR-07, BR-08, BR-12, BR-18 | State machines: ST-subcategory-suggestion | Depends on: none | Used by: businesses, products, services, search, admin
 
-Frontend counterpart: [FE catalog](../fe/catalog.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Frontend counterpart: [FE catalog](../fe/catalog.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Responsibility
 
@@ -108,6 +108,6 @@ Suggestion events carry `{suggestionId,categoryId,businessId,submitterUserId,cit
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Rules: normalization, duplicate candidates, typed target validation, transition guards. Manual API/DB: unique constraints, cursor ordering, version races, outbox atomicity. Authorization negatives: owner spoofing, non-super-admin category write, missing `catalog` permission, out-of-area queue decision. Journey: J9 suggestion-to-decision and cache invalidation.

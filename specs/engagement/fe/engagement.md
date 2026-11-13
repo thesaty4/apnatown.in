@@ -146,6 +146,6 @@ list; exercise logout/account switch while reads/writes are in flight; verify
 guest login returns to the selected tab; check failed writes, offline/retry,
 keyboard/focus and Hindi/light/dark layouts. No automated test files were added.
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Manual UI/accessibility: off-by-default bell, optimistic rollback/retry, unfollow dialog, required comment/message text, eight-week chart table, reduced-motion heart, share fallbacks, EN/HI/dark and topmost Esc. Manual journey J4: return to same video, hidden-target Saved removal after reload, comment publish/remove counters and reviews-only moderation, announcement interruption/opt-out. Account export/delete remains Users-owned; clear personal Saved/follow/comment caches when the session is invalidated.

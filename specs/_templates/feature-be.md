@@ -1,16 +1,16 @@
 # BE Spec: <Feature ID> — <Feature name>
 
 - **Feature ID:** <e.g. CK2>
-- **Module:** `<one of the 21 modules in docs/architecture.md>`
+- **Module:** `<one of the 21 modules in specs/_foundation/architecture.md>`
 - **FE spec:** `specs/<module>/fe/<id>-<slug>.md`
-- **Role(s):** <from docs/FEATURE_INVENTORY.md>
+- **Role(s):** <from docs/design-context/01-feature-inventory.md>
 - **Status:** draft | ready for dev | in review | done
 
 ## 1. Summary
 
 One paragraph: what this endpoint/service does and why, referencing the
-relevant `docs/FEATURE_INVENTORY.md` row and any business rule
-(`docs/project/04-business-rules.md`) it must preserve.
+relevant `docs/design-context/01-feature-inventory.md` row and any business rule
+(`docs/design-context/07-state-machines-and-business-rules.md`) it must preserve.
 
 ## 2. API contract
 
@@ -26,7 +26,7 @@ relevant `docs/FEATURE_INVENTORY.md` row and any business rule
 
 If this feature touches a status model (order, delivery job, approval,
 payment, refund, review, offer, video, enquiry, subcategory suggestion,
-comment, campaign — `docs/project/05-domain-model.md`), state the exact
+comment, campaign — `specs/_foundation/data-model.md`), state the exact
 states and allowed transitions here.
 
 ## 4. Acceptance criteria (Given/When/Then)
@@ -58,7 +58,7 @@ drives in the response.
 
 ## 8. Verification plan
 
-Follow the [verification policy](../../.github/instructions/testing.instructions.md);
+Follow the [verification policy](../../AGENTS.md#4-hard-limits-non-negotiable);
 adjust the relative link when copying this template. No automated test files.
 
 - Existing non-test commands and expected results: <list>
@@ -69,5 +69,5 @@ adjust the relative link when copying this template. No automated test files.
 ## 9. Open questions
 
 Anything ambiguous — record here and in
-`docs/project/12-decisions-assumptions-open-questions.md` instead of
+`docs/design-context/11-open-issues-and-assumptions.md` instead of
 guessing.

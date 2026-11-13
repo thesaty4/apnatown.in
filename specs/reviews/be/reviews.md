@@ -122,7 +122,7 @@ Implement Users' internal `UserDataPort.exportPage({userId,cursor,limit})` as `R
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Rules: AC1/9/10 target/proof matrix, boundary statuses and decision gates; required text/tags; hidden restoration and aggregate deltas. Manual API/DB: POST/PATCH hydration consistency after policy decision, report → owner/admin queues → restoration, reply/moderation notifications, asset-purpose rejection, account receipts/counters. Negatives: non-author edit, wrong proof owner/target, service versus provider ID, same-city foreign area, city-only rider. Concurrency: duplicate votes/reports/restores and repeat purchases; malicious text/photo IDs remain inert/rejected.
 

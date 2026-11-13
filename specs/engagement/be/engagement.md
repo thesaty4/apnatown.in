@@ -209,7 +209,7 @@ Consume `video.removed` and **`business.application.decision_changed`** to inval
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Rules: AC1/2/5/10 relationship transitions, typed target IDs, comment state/counter deltas. Manual API/DB: Saved tombstone removal, moderation queue/counts, out-of-order counter reconciliation, announcement worker restart/withdrawal, account receipts. Authorization negatives: guest writes, foreign saved relation/followers, non-author comment deletion, same-city foreign area, catalog-only moderator. Malicious text/IDs and duplicate/retried POSTs are bounded/inert.
 

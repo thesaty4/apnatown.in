@@ -167,7 +167,7 @@ No subscription to nonexistent `order.placed`, `business.status_changed` or gene
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Rules: all matrix rows/recipient-role-topic rules (AC1–3), five-key mutation/consent mapping, signed capability and STOP verification. Manual API/DB: fake channels with post-enqueue and pre-retry withdrawal (AC4/11), WhatsApp-only dispatch, callback dedupe/version ordering, uncertain acceptance reconciliation, interrupted fan-out, counter events and account receipts. Negatives: foreign role/ID, same-city foreign admin area, forged sender/body userId, source/content mismatch, malicious text/internal-path injection and unapproved templates. SSE/feed checks assert no unconditional in-app delivery.
 

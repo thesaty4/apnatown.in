@@ -204,7 +204,7 @@ Publishes `admin.account_status_changed` (Auth revokes sessions), `admin.scope_c
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Rules: AC2/11/15 scope algebra and permission normalization; AC4/5 role locks/reassignment; AC13 input/CSV injection. Manual API/DB: populated/empty typed projections, scope before pagination/counts, AC8/10 owner commands, report intake → event → alert, version races, UTC/IST month boundaries, export parity (AC14). Authorization negatives: every port purpose, same-city foreign area, foreign rider/doc, super-only operations and permission revocation during paging.
 

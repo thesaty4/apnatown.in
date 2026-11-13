@@ -2,7 +2,7 @@
 
 Features: F-OF-001, F-OF-002, F-OF-003, F-OF-004, F-OF-005, F-OF-006, F-PD-004, F-VD-007, F-AD-011 | Screens: S-CUST-20, S-VEND-07, S-PROV-17, S-ADMN-12 | Flows: J3
 
-Backend contract: [BE offers](../be/offers.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Backend contract: [BE offers](../be/offers.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Routes and rendering
 
@@ -95,7 +95,7 @@ The shared Coupon editor uses BE-normalized codes, server eligible-target previe
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Manual UI: offer filters/cards, expired and out-of-stock states, vendor editor validation and pending state, scoped admin queue, no-permission state, long Hindi and dark mode.
 - Journey: J3 offer → product/service/filtered Explore/shop destination; vendor create → pending approval → admin decision → public listing; rejected/expired offers never appear as active.

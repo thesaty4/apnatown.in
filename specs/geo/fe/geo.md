@@ -96,7 +96,7 @@ list/manual inputs and explicit retry, never a fabricated empty result.
 
 ## Analytics and verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Analytics: no feature-specific events are prescribed.
 - Manual UI: location picker validation/permission denial; map/list/radius controls; city status confirmation; zone editor geometry, slab validation and keyboard operation.

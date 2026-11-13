@@ -57,7 +57,7 @@ This contract applies to **all module FE specs**, including public client island
 
 ### API integration acceptance and verification
 
-Follow the [verification policy](../../.github/instructions/testing.instructions.md): manually exercise these scenarios in the local app using its real query hooks and typed transport, without generating automated tests or mocks. Inspect network activity and visible state; record expected/observed results and any gaps. Browser-to-API verification follows [architecture](./architecture.md#verification-and-clean-checkout-ci).
+Follow the [verification policy](../../AGENTS.md#4-hard-limits-non-negotiable): manually exercise these scenarios in the local app using its real query hooks and typed transport, without generating automated tests or mocks. Inspect network activity and visible state; record expected/observed results and any gaps. Browser-to-API verification follows [architecture](./architecture.md#verification-and-clean-checkout-ci).
 
 | Given | When | Then |
 |---|---|---|
@@ -240,7 +240,7 @@ Owner paths are under `packages/ui/src`; grouped names share the stated file unl
 
 ## Performance, media and PWA
 
-- Budgets: retain the existing LCP <2.5 s on slow 4G, route JS approximately 170 KB gzip and CLS <0.1 targets; verify the full API/INP/TTFB budgets in [product NFR](../../docs/specs/01-product/06-non-functional-requirements.md). Do not add targets or claim measurements without production-like verification.
+- Budgets: retain the existing LCP <2.5 s on slow 4G, route JS approximately 170 KB gzip and CLS <0.1 targets. Do not add targets or claim measurements without production-like verification.
 - Use intrinsic dimensions/aspect ratio plus responsive `sizes`; prioritize only the actual LCP image and lazy-load below-fold/category/subcategory cards. Batch owner projections and cap every rendered section/page using its module's cursor limit. Preserve skeleton/poster geometry before media. Video never autoplays in data-saver/Save-Data mode; show tap-to-play poster and respect reduced motion.
 - Follow [media and maps](./media-and-maps.md) for Cloudinary image uploads,
   typed YouTube/Instagram rendering, provider-specific playback and client-only

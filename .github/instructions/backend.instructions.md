@@ -4,7 +4,7 @@ applyTo: 'apps/api/**,packages/shared/**'
 
 # Backend
 
-Builds on `.github/copilot-instructions.md` and
+Builds on `AGENTS.md` and
 `solid-dry-design.instructions.md`. Implementation contracts:
 `specs/_foundation/backend-shared.md` and `specs/_foundation/architecture.md`.
 Implementation verification: run the affected build and fix related

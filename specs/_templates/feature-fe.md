@@ -3,13 +3,13 @@
 - **Feature ID:** <e.g. CK2>
 - **Area:** `apps/web/src/features/<area>`
 - **BE spec:** `specs/<module>/be/<id>-<slug>.md`
-- **Role(s):** <from docs/FEATURE_INVENTORY.md>
+- **Role(s):** <from docs/design-context/01-feature-inventory.md>
 - **Status:** draft | ready for dev | in review | done
 
 ## 1. Summary
 
 One paragraph: what screen/component this is and why, referencing the
-relevant `docs/FEATURE_INVENTORY.md` row.
+relevant `docs/design-context/01-feature-inventory.md` row.
 
 ## 2. Route / URL contract
 
@@ -30,7 +30,7 @@ relevant `docs/FEATURE_INVENTORY.md` row.
 
 ## 4. Components used
 
-List `packages/ui` components from `docs/design-system.md` this screen
+List `packages/ui` components from `docs/design-context/05-design-system.md` this screen
 uses; note any new component this spec requires adding there.
 
 ## 5. Data and API calls
@@ -71,7 +71,7 @@ screen.
 
 ## 9. Verification plan
 
-Follow the [verification policy](../../.github/instructions/testing.instructions.md);
+Follow the [verification policy](../../AGENTS.md#4-hard-limits-non-negotiable);
 adjust the relative link when copying this template. No automated test files.
 
 - Existing non-test commands and expected results: <list>
@@ -79,12 +79,12 @@ adjust the relative link when copying this template. No automated test files.
 - React Query cases: shared contract acceptance checks relevant to these
   operations (errors, key isolation, hydration, invalidation/rollback, retries).
 - Manual browser journey(s): <reference J-number from
-  `docs/project/06-user-journeys.md` if applicable>
+  `docs/design-context/03-user-flows.md` if applicable>
 - Screenshots required: 360px + desktop, light + dark, EN + HI.
 - Unverified scenarios and evidence limitations: <list>
 
 ## 10. Open questions
 
 Anything ambiguous — record here and in
-`docs/project/12-decisions-assumptions-open-questions.md` instead of
+`docs/design-context/11-open-issues-and-assumptions.md` instead of
 guessing.

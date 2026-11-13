@@ -2,7 +2,7 @@
 
 Features: F-HM-001, F-HM-002, F-HM-005, F-HM-006, F-HM-007, F-HM-008, F-HM-009, F-HM-010, F-HM-011, F-HM-012, F-HM-013, F-HM-014, F-EX-001, F-EX-002, F-EX-003, F-EX-004, F-EX-005, F-EX-006, F-EX-007, F-EX-008, F-EX-009, F-EX-010, F-EX-011, F-EX-012, F-SR-001, F-SR-002, F-SR-003, F-SR-004, F-SR-005, F-SR-006, F-SR-007, F-SR-008, F-SR-009, F-SR-010 | Rules: BR-15, BR-18 | State machines: none | Depends on / used by: catalog, businesses, products, services, offers, media-videos, geo, reviews (read ports only) / public discovery screens
 
-Frontend counterpart: [FE search](../fe/search.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Frontend counterpart: [FE search](../fe/search.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Responsibility
 
@@ -205,7 +205,7 @@ Other malformed query values use `COMMON_VALIDATION_FAILED`; an empty result is 
 
 Implementation build evidence (2026-11-12): `pnpm --filter @apnatown/api db:generate`, `pnpm --filter @apnatown/shared build`, `pnpm --filter @apnatown/api build`, `pnpm --filter @apnatown/api api:openapi`, `pnpm --filter @apnatown/api-client client:generate`, and `pnpm --filter @apnatown/api-client build`. No runtime/Docker services, migrations, seeds, API/DB checks or automated tests were run. SQL execution/EXPLAIN performance, source-data ingestion, negative authorization/expiry/location/media runtime scenarios and independent security-auditor review remain verification gates, not passing evidence. Parent owns FE/inventory documentation and final audit/integration.
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Rules: query normalization and mapped target resolution for `एसी`, `plumbr`, and `iPhone 15`; filter allowlists; OR semantics; stable sort tie-breaks.
 - Manual API/DB: facet counts equal the result predicate under combinations of filters; non-public listings/videos are excluded; keyset pagination has no duplicates.

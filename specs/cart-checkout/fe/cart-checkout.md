@@ -2,7 +2,7 @@
 
 Features: F-CK-001, F-CK-002, F-CK-003, F-CK-004, F-CK-005, F-CK-006, F-CK-007, F-CK-008, F-CK-009 | Screens: S-CUST-10, S-CUST-11, S-CUST-12, S-CUST-26 (address owner: Users) | Flows: J1, J12
 
-Backend contract: [BE cart-checkout](../be/cart-checkout.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Backend contract: [BE cart-checkout](../be/cart-checkout.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Routes and rendering
 
@@ -83,7 +83,7 @@ Use [frontend-shared.md](../../_foundation/frontend-shared.md) states; private r
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Manual UI: grouped cart, quantity boundaries, coupon policy-unavailable state, per-shop modes, address selection, failure/retry/cash fallback, pending-vs-success guard, long Hindi, dark mode and offline state.
 - Journey: J1 two-shop checkout through success/tracking; J12 login gate returning to checkout; payment failure followed by retry or enabled cash fallback.

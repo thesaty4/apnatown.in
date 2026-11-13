@@ -2,7 +2,7 @@
 
 Features: F-OR-001, F-OR-002, F-OR-003, F-OR-004, F-OR-005, F-OR-006, F-OR-007, F-OR-008, F-VD-008, F-PV-005, F-AD-007 | Rules: BR-01, BR-02, BR-03, BR-04, BR-05, BR-06, BR-12, BR-14, BR-20, BR-22 | State machines: ST-order-delivery, ST-order-pickup, ST-refund, ST-case | Depends on: users, businesses, products, payments, media-videos, verified Delivery contracts | Used by: cart-checkout, delivery, businesses, payments, notifications, audit
 
-Frontend counterpart: [FE orders](../fe/orders.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Frontend counterpart: [FE orders](../fe/orders.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Responsibility
 
@@ -215,7 +215,7 @@ Reuse `COMMON_UNAUTHENTICATED`, `COMMON_FORBIDDEN`, `COMMON_VALIDATION_FAILED`, 
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Rules and manual API/DB checks: map AC1–AC20 to business transitions, mode/failure exception, group/count, refund-window boundaries, immutable amount revisions and invoices; transactional stock allocation/operation + Payments adjustment checks prove rollback/replay.
 - Authorization negatives: non-owner customer, different business owner, unapproved vendor/provider, admin without `orders:view`/`orders:edit`, admin outside assigned city/area, rider accessing order instead of Delivery projection.

@@ -2,7 +2,7 @@
 
 Features: F-HM-003, F-HM-004, F-SV-008, F-VD-006, F-AD-005, F-AD-006, F-AD-015, F-SA-008 | Screens: S-CUST-01, S-CUST-04, S-CUST-05, S-VEND-05, S-VEND-13, S-ADMN-05, S-ADMN-06, S-ADMN-15 | Flows: J1, J2, J9
 
-Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Routes and rendering
 
@@ -150,6 +150,6 @@ Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../..
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Manual UI: category selection, exact/fuzzy duplicate states, queue decisions, target editor keyboard/RTL-independent Hindi wrapping. Manual journey: J1/J2 category navigation and J9 suggestion-to-decision; check denied scope, permission state, light/dark, mobile/desktop.

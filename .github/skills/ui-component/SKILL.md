@@ -6,11 +6,12 @@ description: Recipe for building one frontend screen/component with React Query 
 # UI component
 
 Use when implementing a FE spec (`frontend.instructions.md`,
-`i18n-a11y.instructions.md`, `docs/design-system.md`).
+`i18n-a11y.instructions.md`,
+`docs/design-context/05-design-system.md`).
 
 ## Steps
 
-1. Check `docs/design-system.md` for an existing `packages/ui`
+1. Check `docs/design-context/05-design-system.md` for an existing `packages/ui`
    component that fits; extend it rather than forking.
    For uploads, embeds or maps, use the shared components and selected
    [media/map contract](../../../specs/_foundation/media-and-maps.md);

@@ -5,7 +5,8 @@ applyTo: "**"
 # SOLID, DRY, KISS, YAGNI
 
 Concrete rules, with ApnaTown examples. Product context:
-`docs/PROJECT.md`; module map: `docs/architecture.md`.
+`../../docs/design-context/00-product-summary.md`; module map:
+`../../specs/_foundation/architecture.md`.
 
 ## Single Responsibility
 
@@ -78,7 +79,8 @@ Concrete rules, with ApnaTown examples. Product context:
   responsibility, not by line count alone.
 - Name by domain language from `docs/glossary.md` (e.g. `enquiry`, not
   `lead`; `pickupCode`, not `pin2`).
-- Module/folder names match `docs/architecture.md` exactly (21 modules).
+- Module/folder names match `../../specs/_foundation/architecture.md`
+  exactly (21 modules).
 
 ## Error handling
 

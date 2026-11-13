@@ -2,7 +2,7 @@
 
 Features: F-CK-001, F-CK-002, F-CK-003, F-CK-004, F-CK-005, F-CK-006, F-CK-007, F-CK-008, F-CK-009 | Rules: BR-01, BR-03, BR-04, BR-17, BR-19, BR-21 | State machines: ST-payment, ST-order-delivery, ST-order-pickup | Depends on: products, businesses, offers, geo, payments, orders, users, settings
 
-Frontend counterpart: [FE cart-checkout](../fe/cart-checkout.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Frontend counterpart: [FE cart-checkout](../fe/cart-checkout.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Responsibility
 
@@ -127,7 +127,7 @@ Reuse `COMMON_UNAUTHENTICATED`, `COMMON_FORBIDDEN`, `COMMON_VALIDATION_FAILED`, 
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Given an unpersisted cart, when concurrent first adds use version 0, then one owner cart is created and the losing version conflicts; given login rotates Auth state, when guest merge succeeds or its response is lost, then the independent guest proof is consumed once and same-key retry cannot double quantities.
 - Rules and manual API/DB checks map AC1–AC17 to grouping, null-variant identity, shared-stock aggregation, 1-paise/capped coupon allocation, fee precedence/unconfigured provider, revision validation, rollback, code-free projections and privacy receipts.

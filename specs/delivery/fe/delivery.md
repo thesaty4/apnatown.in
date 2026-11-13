@@ -104,7 +104,7 @@ Prefixes `rider.*`, `admin.live.*`. Analytics: `rider_online_toggled`, `rider_of
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 For `settlementKind='no_charge'`, show the shared “No payment due” badge and no cash-collected checkbox, while retaining all code, ownership and fulfilment checks. A forged collection or uncommitted zero settlement must fail server-side. Manually verify platform delivery, self-delivery and pickup without any zero-paise collection.
 

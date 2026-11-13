@@ -46,6 +46,6 @@ Prefix `admin.comms.*`. Events: `campaign_reviewed`, `campaign_scheduled`, `camp
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Manual UI/accessibility: stored scope allowlist, searchable combobox/chips with keyboard and focus restoration, EN/HI draft isolation, complete summary/expiry, no-channel/zero/policy-required states, topmost Esc, IST schedule, Hindi/dark. Manual journey J10: preview→token→confirm→report, zone-only versus city-enabled, same-count target/scope edits, expired/cross-admin token, withdrawal after enqueue/before retry, WhatsApp-only campaign, interrupted dispatch and duplicate delivered receipts. Malicious text/variable/link previews stay inert; no action bypasses BE authorization.

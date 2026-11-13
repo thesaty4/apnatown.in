@@ -2,7 +2,7 @@
 
 Features: F-CK-006, F-CK-007, F-OR-006, F-VD-017, F-PV-008; gated Account integration F-AC-001, S-CUST-24 | Rules: BR-01, BR-02, BR-03, BR-20 | State machines: ST-payment, ST-refund | Depends on / used by: cart-checkout, orders, delivery, businesses, settings; `offers` consumes paid-promotion events. Cross-module access is through typed contracts/events only.
 
-Frontend counterpart: [FE payments](../fe/payments.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Frontend counterpart: [FE payments](../fe/payments.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Responsibility
 
@@ -197,7 +197,7 @@ Reuse `COMMON_UNAUTHENTICATED`, `COMMON_FORBIDDEN`, `COMMON_VALIDATION_FAILED`, 
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Rules: exact ST-payment/ST-refund transitions, integer-paise caps, current plan lookup/cancellation state, event deduplication and immutable ledger insertion.
 - Manual API/DB: provider fake success/failure/timeout, signed webhook verification, checkout event replay, cash collection, refund retries, subscription expiry boundary/renewal, delayed-job replay and ledger queries with keyset pagination.

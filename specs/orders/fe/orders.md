@@ -2,7 +2,7 @@
 
 Features: F-OR-001, F-OR-002, F-OR-003, F-OR-004, F-OR-005, F-OR-006, F-OR-007, F-OR-008, F-VD-008, F-PV-005, F-AD-007 | Screens: S-CUST-13, S-CUST-14, S-CUST-15, S-CUST-16, S-VEND-03, S-VEND-04, S-PROV-04, S-PROV-05, S-ADMN-07, S-ADMN-08 | Flows: J1, J7, J8
 
-Backend contract: [BE orders](../be/orders.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Backend contract: [BE orders](../be/orders.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Routes and rendering
 
@@ -105,7 +105,7 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) states/components, p
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Manual UI: every role-specific list/detail, tabs/filters, timeline branches, cancel/refund guards, case note visibility, printable invoice, unavailable item and cash-collected state.
 - Journeys: J1 split checkout through order tracking; J7 vendor accepts through delivery; J8 cancel/refund/dispute; J13 EN/HI and dark mode.

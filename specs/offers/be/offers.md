@@ -2,7 +2,7 @@
 
 Features: F-OF-001, F-OF-002, F-OF-003, F-OF-004, F-OF-005, F-OF-006, F-PD-004, F-VD-007, F-AD-011; promotion activation for F-VD-017 | Rules: BR-01, BR-02, BR-06, BR-12, BR-17, BR-19 | State machines: ST-offer | Depends on: businesses, products, services, media-videos, settings; Payments purchase events | Used by: search, cart-checkout, payments, admin
 
-Frontend counterpart: [FE offers](../fe/offers.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Frontend counterpart: [FE offers](../fe/offers.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Responsibility
 
@@ -177,7 +177,7 @@ Use shared `COMMON_FORBIDDEN`, `COMMON_VALIDATION_FAILED` and `ADMIN_SCOPE_FORBI
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Rules: offer precedence, integer rounding, validity boundaries, coupon creator/scope/target constraints, finite limits/budget and immutable refund allocations.
 - Manual API/DB: approved-only public reads; active/expired/out-of-stock detail; own-business CRUD; keyset queue scope; cache/outbox writes in the same transaction.

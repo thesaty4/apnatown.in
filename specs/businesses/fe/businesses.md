@@ -2,7 +2,7 @@
 
 Features: F-PF-001, F-PF-002, F-PF-003, F-PF-004, F-PF-005, F-PF-006, F-PF-007, F-PF-011, F-PF-012, F-PF-013, F-VD-001, F-VD-002, F-VD-003, F-VD-011, F-VD-018, F-PV-001, F-PV-002, F-PV-006, F-PV-007, F-X-011 | Screens: S-CUST-06, S-CUST-07, S-VEND-01, S-VEND-02, S-VEND-10, S-VEND-12, S-VEND-18, S-PROV-01, S-PROV-02, S-PROV-09, S-PROV-13, S-PROV-14, S-PROV-16 | Flows: J7
 
-Backend contract: [BE businesses](../be/businesses.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Backend contract: [BE businesses](../be/businesses.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 Logo/cover Uploaders, media panels and location pins follow the shared
 [media/map contract](../../_foundation/media-and-maps.md). Public-purpose
@@ -210,7 +210,7 @@ Feature-only: `BusinessOnboardingWizard`, `BusinessProfileHeader`, `BusinessProf
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Add the shared Billing identity section to existing vendor/provider onboarding/profile editors, using `/businesses/me/billing-profile`, its independent version and registration-specific fiscal fields. Save submits review; show pending/rejected/approved and explain the block on new financial quotes/purchases without changing existing invoices. No self-verified checkbox. Admin approvals uses the linked owner contract and exact `approvals:view/edit` scope. Verify EN/HI validation, forbidden evidence reads and stale saves.
 Public profiles record views only after actual display, never SSR/GET/prefetch or owner preview. Label counts as session windows, not unique people.

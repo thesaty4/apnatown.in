@@ -64,7 +64,7 @@ None published. A future privileged `audit.retention` job requires an approved p
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Rules: AC4/8/9 scope matrix, recursive redaction and CSV/formula payloads. Manual API/DB: AC1/2 transactional rollback/replay, DB permission denial, scope before keyset/full-text, actor-filter export parity and IST bounds. Authorization negatives: same city/different area, city-only/global records, revoked grant on next page, forged entity-history purpose, admin on super routes. Retention check AC11 blocks destructive jobs.
 

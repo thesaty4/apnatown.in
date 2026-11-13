@@ -95,7 +95,7 @@ This does not mark the address, consent or privacy frontend journeys implemented
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Manual UI: profile validation, address empty/default/delete states, consent toggles, keyboard/map alternative, long Hindi.
 - Manual journey: J12 profile completion; J13 locale/theme preference; Your data/Copy data, owner-denied/expired export, blocked deletion, completion after session revocation and consent withdrawal. Destructive production deletion remains Q-32-gated.

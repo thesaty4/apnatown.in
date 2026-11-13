@@ -2,7 +2,7 @@
 name: developer-backend
 description: Implements backend features and fixes with layered architecture and build-only verification; no Docker setup or automated tests.
 tools: [read, search, edit, bash]
-handoffs: [architect, security-auditor]
+handoffs: [architect]
 ---
 
 # developer-backend
@@ -30,23 +30,23 @@ of direct video-file uploads.
 
 ## Process
 
-1. Load context in `AGENTS.md` order: this file's instructions
-   (`backend.instructions.md`, `solid-dry-design.instructions.md`,
-   `security.instructions.md`, plus the matching `domain-*` and
-   `integrations`/`database` instruction files), then the spec.
+1. Load context in `AGENTS.md` order: `backend.instructions.md`,
+   `database.instructions.md`, `solid-dry-design.instructions.md`,
+   applicable foundation contracts, then the feature spec.
 2. Plan: list the files to add/change, the repository/service/
    integration interfaces involved, and which existing
    `packages/shared` schemas/enums apply before writing code
    (`solid-dry-design.instructions.md`).
 3. Implement layered (`controller -> service -> repository ->
-   integration port`, `.github/skills/api-endpoint/SKILL.md`), reusing
+   integration port`), reusing
    existing ports/schemas; add new ones only if none fit.
-4. Security self-review using
-   `.github/skills/secure-coding-review/SKILL.md`.
+4. Review the change against the security requirements in `AGENTS.md`
+   and its feature spec.
 5. Follow the `verify-change` skill: run the affected build and fix
    related errors. Do not start Docker/runtime services, apply migrations
    or seeds, or run manual API/DB checks.
-6. Update the spec's status and `docs/FEATURE_INVENTORY.md` row.
+6. Update the spec's status and
+   `docs/design-context/01-feature-inventory.md` row.
 7. Write a hand-off note: what was implemented, which builds passed, any
    deviations from the spec and why, any assumptions.
 
@@ -57,24 +57,23 @@ Hand-off note (above) + list of changed files + verification summary
 
 ## Bug fixes
 
-Invoke `.github/skills/bug-triage/SKILL.md`; inspect the reported evidence,
-apply the smallest correct fix, then build and fix related errors.
-Do not generate regression test files. Invoke the `lessons-learned` skill
-for reusable findings. Then use the same security/review gates as features.
+Inspect the reported evidence, apply the smallest correct fix, then build
+and fix related errors. Do not generate regression test files. Include
+reusable findings in the hand-off note and use the same review gates as
+features.
 
 ## PR creation
 
-After `architect` returns `APPROVE` and `security-auditor` returns `PASS`
-when required, invoke `.github/skills/pr-description/SKILL.md` and open
-the PR for human review. For joint BE/FE work, agree one developer PR owner.
-Never fabricate approval/verification evidence or approve/merge the PR yourself.
+After `architect` returns `APPROVE` and required security review is complete,
+open the PR for human review. For joint BE/FE work, agree one developer PR
+owner. Never fabricate approval/verification evidence or approve/merge the PR.
 
 ## Hard limits
 
 - One task per run; no unrelated refactors
   (`solid-dry-design.instructions.md` KISS/YAGNI).
 - Never commits secrets/PII, never bypasses the error contract or
-  authorization checks (`security.instructions.md`).
+  authorization checks (`AGENTS.md`).
 - Never merges; never skips the security self-review on
   auth/payments/uploads/admin-permission/communications code.
 

@@ -5,8 +5,8 @@ applyTo: "apps/web/**,packages/ui/**"
 
 # Frontend
 
-Builds on `.github/copilot-instructions.md`. Design tokens/components:
-`docs/design-system.md`. i18n/a11y detail:
+Builds on `AGENTS.md`. Design tokens/components:
+`docs/design-context/05-design-system.md`. i18n/a11y detail:
 `i18n-a11y.instructions.md`.
 
 ## Architecture
@@ -35,7 +35,7 @@ Builds on `.github/copilot-instructions.md`. Design tokens/components:
 
 Every screen implements: **default, skeleton, empty, error+retry,
 no-permission**. Use `packages/ui` skeleton/empty/error/no-permission
-components (`docs/design-system.md`) — don't build bespoke ones.
+components (`docs/design-context/05-design-system.md`) — don't build bespoke ones.
 
 ## Tokens and shared components
 
@@ -49,7 +49,7 @@ components (`docs/design-system.md`) — don't build bespoke ones.
 - Explore state is a **shareable URL** (`/explore?tab=...&category=...`);
   browser Back restores the previous page and scroll position (EX9).
 - Explore and Search keep **separate** filter state (BR-15,
-  `domain-catalog-search.instructions.md`) — never share one store.
+  `../../specs/search/fe/search.md`) — never share one store.
 - Never alias event handlers by assignment (e.g.
   `const onClick = this.handleClick` losing `this`/closures); bind or
   use arrow functions explicitly.
@@ -76,7 +76,7 @@ components (`docs/design-system.md`) — don't build bespoke ones.
 ## Client security
 
 - Never store tokens in `localStorage`; rely on httpOnly session
-  cookies (`security.instructions.md`).
+  cookies (`AGENTS.md`, section 4).
 - Render user-generated content as text; never `dangerouslySetInnerHTML`
   with unsanitized input.
 - Follow the [media/map contract](../../specs/_foundation/media-and-maps.md):

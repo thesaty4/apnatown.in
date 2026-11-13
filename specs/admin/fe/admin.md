@@ -112,6 +112,6 @@ Prefixes `admin.*`, `superAdmin.*`. Events: `approval_decided`, `listing_updated
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Manual UI: all screen ACs, typed listing/rider hydration, required phone/name, inert report/support text, versions, role matrix normalization, area/zone chips and actor shortcut. Keyboard/accessibility: Add/Edit/Remove and report sheets, documents, tabs, permission matrix, chart table/tooltip, topmost Esc, Hindi/dark layouts. Manual journey J7/J10: approval, role reassign/deactivate, report intake → existing alert → detail, rider edit/remove, export filter parity and stale writes. Negatives: same-city unassigned area, destination-only grants, scope revoked while a sheet is open, catalog-only video moderator, forbidden metrics. ADM-Q1/Q2/Q3 remain visible gates, not passing happy-path synthetic scenarios; ADM-Q4 is resolved by reporting-v1.

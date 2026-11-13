@@ -2,7 +2,7 @@
 name: developer-frontend
 description: Implements frontend features and fixes with React Query, design tokens, i18n/a11y and build-only verification; no Docker setup or automated tests.
 tools: [read, search, edit, bash]
-handoffs: [architect, security-auditor]
+handoffs: [architect]
 ---
 
 # developer-frontend
@@ -33,9 +33,8 @@ cache ownership and Server Component boundaries.
 ## Process
 
 1. Load context in `AGENTS.md` order: `frontend.instructions.md`,
-   `i18n-a11y.instructions.md`, `solid-dry-design.instructions.md`, the
-   matching `domain-*.instructions.md`, and `docs/design-system.md`,
-   then the spec.
+   `i18n-a11y.instructions.md`, `solid-dry-design.instructions.md`,
+   `docs/design-context/05-design-system.md`, then the spec.
 2. Plan: which `packages/ui` components to reuse, which route/URL
    contract applies, which translation keys are new, and the query keys,
    mutations/invalidation and server/client data boundary.
@@ -53,7 +52,8 @@ cache ownership and Server Component boundaries.
    browsers or run manual UI checks during implementation.
 6. Report UI journeys and screenshots as deferred; capture them only on
    a separate explicit request.
-7. Update the spec's status and `docs/FEATURE_INVENTORY.md` row; write
+7. Update the spec's status and
+   `docs/design-context/01-feature-inventory.md` row; write
    a hand-off note.
 
 ## Output format
@@ -62,17 +62,16 @@ Hand-off note + changed files + build results + deferred runtime checks.
 
 ## Bug fixes
 
-Invoke `.github/skills/bug-triage/SKILL.md`; inspect the reported evidence,
-apply the smallest correct fix, then build and fix related errors.
-Do not generate regression test files. Invoke the `lessons-learned` skill
-for reusable findings. Then use the same security/review gates as features.
+Inspect the reported evidence, apply the smallest correct fix, then build
+and fix related errors. Do not generate regression test files. Include
+reusable findings in the hand-off note and use the same review gates as
+features.
 
 ## PR creation
 
-After `architect` returns `APPROVE` and `security-auditor` returns `PASS`
-when required, invoke `.github/skills/pr-description/SKILL.md` and open
-the PR for human review. For joint BE/FE work, agree one developer PR owner.
-Never fabricate approval/verification evidence or approve/merge the PR yourself.
+After `architect` returns `APPROVE` and required security review is complete,
+open the PR for human review. For joint BE/FE work, agree one developer PR
+owner. Never fabricate approval/verification evidence or approve/merge the PR.
 
 ## Hard limits
 
@@ -81,7 +80,7 @@ Never fabricate approval/verification evidence or approve/merge the PR yourself.
 - No ad-hoc client API request state or alternative query library.
   React Query is mandatory; Server Components remain the default.
 - Never renders user content as raw HTML; never embeds a client URL
-  directly (`security.instructions.md`).
+  directly (`AGENTS.md`).
 - Never merges.
 
 ## Hands off to

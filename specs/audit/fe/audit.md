@@ -40,6 +40,6 @@ Prefix `admin.audit.*`, `superAdmin.activity.*`. Events: `audit_searched`, `audi
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Manual UI: URL state including `actorId`, redacted diff rendered as inert text, stale detail clearing. Keyboard/accessibility: filter chips, expansion, CSV feedback, Hindi/dark text and focus restoration. Manual journey J10: card → actor filter → pages → matching CSV; area-only versus city-wide/global log access; permission revoked with an expanded row. No export or caching bypasses the BE predicate.

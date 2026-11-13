@@ -31,7 +31,7 @@ Use the existing [Media BE/FE](../media-videos/be/media-videos.md) and
 Businesses, Products, Services, Catalog, Offers, Reviews, Search, Delivery
 and Admin; no new domain module or duplicate asset/map implementation.
 The [React Query contract](./frontend-shared.md#api-integration-with-react-query)
-and [verification policy](../../.github/instructions/testing.instructions.md)
+and [verification policy](../../AGENTS.md#4-hard-limits-non-negotiable)
 remain mandatory.
 
 ## Cloudinary public images

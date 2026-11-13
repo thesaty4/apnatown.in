@@ -10,7 +10,7 @@
 
 Features: F-SV-001, F-SV-002, F-SV-003, F-SV-004, F-SV-005, F-SV-006, F-SV-007, F-VD-014, F-VD-016, F-PV-003, F-PV-004 | Screens: S-CUST-09, S-VEND-13/14, S-PROV-03/08 | Flows: J2, J14
 
-Backend contract: [BE services](../be/services.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Backend contract: [BE services](../be/services.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 Previous-work images, video panels and any location map reuse the
 [media/map contract](../../_foundation/media-and-maps.md): Cloudinary through
@@ -92,7 +92,7 @@ Service card is reusable by Search, Explore, business profiles and category page
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Use [Media's public-image policy](../../media-videos/be/media-videos.md#public-image-policy) for the five-image service editor: display format/size/dimension limits, consume ready responsive variants, preserve existing images on failure. This adds neither service tax checkout nor bookings/payments. Manually verify oversize/wrong-purpose inputs and EN/HI errors.
 

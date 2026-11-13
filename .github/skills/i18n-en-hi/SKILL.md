@@ -5,18 +5,19 @@ description: Recipe for adding translation keys for a new screen/component and c
 
 # i18n EN/HI
 
-Covers X1, `i18n-a11y.instructions.md`. Terms/tone: `docs/glossary.md`.
+Covers X1, `i18n-a11y.instructions.md`. Terms/tone:
+`docs/design-context/09-content-and-i18n.md`.
 
 ## Steps
 
 1. Name keys `<feature>.<screen>.<element>` and check
-   `docs/glossary.md`/existing catalogs for a reusable key before adding
+   `docs/design-context/09-content-and-i18n.md`/existing catalogs for a reusable key before adding
    a new one.
 2. Add the English string to `en.json` first; never hard-code it in a
    component.
 3. Add the Hindi string to `hi.json` — reviewed translation, not raw
    machine translation, for anything shipping to production; use
-   `docs/glossary.md` terms for consistency (e.g. always "ऑर्डर" for
+   the approved content terms for consistency (e.g. always "ऑर्डर" for
    Order).
 4. Run all money/date/distance/phone values through `packages/shared`
    formatters inside the translated string (interpolation), never

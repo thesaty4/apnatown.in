@@ -102,7 +102,7 @@ Persisted `NormalizedCampaign` adds server-derived `{effectiveScope:{platformWid
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Rules: AC1/2/7/11 allowlist × permission × area/city/global scope, full normalization/token binding and expiry, ST-campaign, counter contributions. Manual API/DB: preview→confirm→IST schedule→resumable dispatch→Notification fake→duplicate/out-of-order receipt; withdrawal after enqueue/before retry; two workers/partial-batch crash/cancel race. Negatives: token actor swap, changed same-count audience, malicious text/variables/links, unsupported template, outside-area recipient and unknown membership. No synthetic scenario may assume COMMS-Q1's business-customer union.
 

@@ -396,7 +396,7 @@ export class CatalogModule implements OnModuleInit {
 
 No sample method imports Prisma into application/domain or publishes an event directly. Repository uniqueness errors are translated to the existing Catalog duplicate/conflict codes; they do not choose “merge” or “approve”. The approval target insert, versioned suggestion change, dotted outbox events, audit and idempotent DTO commit together.
 
-Follow the [verification policy](../../.github/instructions/testing.instructions.md); do not generate automated test files or fixtures. Manual Catalog acceptance:
+Follow the [verification policy](../../AGENTS.md#4-hard-limits-non-negotiable); do not generate automated test files or fixtures. Manual Catalog acceptance:
 
 - Given a pending version-3 suggestion, when version 3 versus version 2 is submitted, then only the current version succeeds; a terminal suggestion rejects another decision.
 - Given an outside-area admin, catalog viewer or customer, when deciding by HTTP, then return 403 without domain/outbox/audit writes.

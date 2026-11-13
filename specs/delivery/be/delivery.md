@@ -165,7 +165,7 @@ Jobs: `delivery.offer_expire`, code expiry cleanup and bounded outbox retry/reco
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Map AC1–AC20 to domain/PostgreSQL/outbox checks with deterministic Clock/Maps/Media/Payments/Users/Reviews/Support fakes. Race checks use separate real DB transactions, including unique active-rider constraint, accept-vs-expiry/offline/suspension and cancellation-vs-cash/code.
 - Security: encrypt/decrypt + HMAC/key rotation synthetic scenarios, exact-boundary expiry, failed-attempt persistence, reissue/verify/replay races, rollback and lost-response retry; inspect ordinary DTOs, idempotency records, SSE and logs for code/KYC/phone leakage.

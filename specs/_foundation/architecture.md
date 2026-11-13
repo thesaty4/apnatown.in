@@ -71,7 +71,7 @@ Cross-cutting Auth/live-principal, Admin authorization, Audit append and Setting
 | ORM/query layer | Prisma Client; parameterized SQL through repository adapters for PostGIS-only queries | Typed repository implementation without leaking the DB client into use-cases | PostGIS/query complexity makes a SQL-first typed layer materially simpler |
 | Migrations | Prisma Migrate; reviewed SQL migrations for PostgreSQL extensions | One versioned migration path with explicit extension setup | A required extension or online migration cannot be safely represented |
 | Database | PostgreSQL + PostGIS, `pg_trgm`, `unaccent`, full-text search | Explicit target in this prompt; supports geo and local search without another service | Human-approved stack ADR changes |
-| Queue | `pg-boss` + transactional outbox; no Redis at launch | Explicit LEAN SPECS default; supersedes P01's Redis/BullMQ proposal ([Q-29](../../docs/design-context/11-open-issues-and-assumptions.md)) | Measured throughput or availability needs justify a separately operated broker |
+| Queue | `pg-boss` + transactional outbox; no Redis at launch | Current foundation choice; supersedes the earlier Redis/BullMQ proposal ([Q-29](../../docs/design-context/11-open-issues-and-assumptions.md)) | Measured throughput or availability needs justify a separately operated broker |
 | Cache | PostgreSQL remains authoritative; public read fragments use existing Next.js ISR/tag boundaries; no Redis use is selected for launch | Existing query-plan, indexing and public-cache contracts cover the specified workloads; no workload measurements justify another service | Consider Redis only after production-like measurements show a named hot-read workload misses existing p95 budgets after query/index/cache-boundary review, and a reviewed ADR defines owner, key/scope, TTL, invalidation, memory bounds, stampede protection, observability and outage behavior |
 | Search | PostgreSQL keyword mappings, `pg_trgm`, `unaccent`, full-text indexes | Matches SR2/SR3 and avoids an external search engine | Product requirements exceed PostgreSQL's measured capability |
 | Realtime | SSE for order tracking, rider requests and live map | One-way updates fit the required live views | A feature requires bidirectional realtime |
@@ -84,7 +84,7 @@ Cross-cutting Auth/live-principal, Admin authorization, Audit append and Setting
 | Maps | Leaflet shared React client island + Geoman Free; policy-compliant OSM tiles; [contract](./media-and-maps.md#leaflet-and-openstreetmap) | Free permissive map/editing libraries; Geo/PostGIS and manual address fallback remain authoritative | Approved tiles/self-hosting for capacity/SLA needs; MapLibre only for justified vector requirements |
 | Hosting region | Recommend India region; deployment vendor/region open (Q-13, Q-25) | Fits India launch while data residency and backup policy are unresolved | Human approves region and recovery policy |
 | Observability | Pino structured logs + OpenTelemetry traces/metrics; no vendor lock-in | Correlation IDs and request/job tracing cover the monolith | An operations platform requires a specific exporter |
-| CI | GitHub Actions | Existing stack ADR and repository workflow | Repository hosting or org policy changes |
+| CI | GitHub Actions | Pinned toolchain and repository build contract | Repository hosting or org policy changes |
 
 The decisions above are implementation targets, not permission to provision
 production infrastructure. Only explicitly named providers are selected;
@@ -127,7 +127,6 @@ Pin exact direct dependency/devDependency versions, Node in `.node-version` and 
 | `pnpm dev` | Watch shared/generated inputs, start API + Web + one worker with validated local config; fail the process group if a required child fails. Development must not silently use stale package output. |
 | `pnpm start` | Launch built API, Web and worker locally/for CI; forward signals and aggregate failures. Separate `start:api`, `start:web`, `start:worker` entry scripts support independently managed processes without selecting hosting. |
 | `pnpm lint`, `pnpm typecheck`, `pnpm check:generated` | Check workspace boundaries, all TS projects, bilingual/token completeness, OpenAPI/client drift and generated reproducibility (regenerate into a temporary directory, compare; do not rewrite reviewed output in CI). |
-| `node scripts/check-spec-coverage.mjs`, `node scripts/validate-ai-setup.mjs`, `node scripts/validate-project-docs.mjs` | Existing structural documentation/customization validators; not behavioral or security coverage. |
 
 **Environment ownership:** root launchers inject only each process's allow-list; Web must never receive API DB/PII/provider secrets. `.env.example` documents names, owner, required/optional status and safe placeholders, never usable credentials. CI injects ephemeral values; production uses approved secret injection, not checked-in env files.
 
@@ -157,7 +156,7 @@ solve missing configuration by forwarding all inherited environment variables.
 | `worker.ts` / `WorkerModule` | Separate Nest application context in the same codebase, same validated config/persistence/adapter bindings; only outbox relay, pg-boss consumers and module jobs, no public controllers. No in-process second worker accidentally started by API imports. |
 | Probes | `GET /api/health/live`: process/event loop alive; `GET /api/health/ready`: 200 only after valid config, DB connection, expected migration/extension versions and pg-boss schema checks; otherwise 503. Return minimal status, no credentials/schema dumps. Worker exposes equivalent internal-only probes for its DB/queue connection and consumer registration. |
 | Failures/shutdown | Invalid config fails startup nonzero before listen. Dependency loss makes readiness fail, not liveness; transient external-provider outages are observable but do not kill the process. SIGTERM marks unready, stops intake/leases, drains in-flight HTTP/jobs to a bounded deadline, releases/lets leases expire, closes SSE/queue/DB/loggers and exits; uncommitted transactions roll back. |
-| Fakes | Replace only integration ports (and unit-test clocks/IDs), never session verification, guards, CSRF, ownership, permissions or production randomness. Local/CI OTP goes to a private fake delivery sink read by the test harness, never an HTTP “get OTP”/login-as route, fixed accepted code, header or bypass flag. Runtime modules cannot import test fixtures. Sole exception: [ADR 0002](../../docs/adr/0002-local-demo-persona-sign-in.md) local/test `DEMO_LOGIN_ENABLED` persona sign-in for seeded users that already hold the role; refused in production, guards/CSRF unchanged. |
+| Fakes | Replace only integration ports (and unit-test clocks/IDs), never session verification, guards, CSRF, ownership, permissions or production randomness. Local/CI OTP goes to a private fake delivery sink read by the test harness, never an HTTP “get OTP”/login-as route, fixed accepted code, header or bypass flag. Runtime modules cannot import test fixtures. Sole exception: the local/test `DEMO_LOGIN_ENABLED` persona sign-in defined in the [Auth BE spec](../auth/be/auth.md); it is refused in production and does not change guards or CSRF. |
 
 Manual Nest HTTP verification uses this same bootstrap/guard/filter/pipe composition; compilation alone is not evidence that HTTP authorization works. Shared interfaces and Catalog bindings are specified in [backend-shared](./backend-shared.md). Known feature modules register their public ownership/scope policy callbacks in the shared registry before listen; missing/duplicate resolvers fail startup. Runtime depends on those contracts, not feature repositories or circular `forwardRef` imports; opposite-direction asset/read ports do not authorize cross-module table access.
 
@@ -178,7 +177,7 @@ Manual Nest HTTP verification uses this same bootstrap/guard/filter/pipe composi
 
 ## Verification and clean-checkout CI
 
-Follow the [verification policy](../../.github/instructions/testing.instructions.md).
+Follow the [verification policy](../../AGENTS.md#4-hard-limits-non-negotiable).
 No FE/BE/DB automated test files, test-only fixtures, test runners or renamed
 application verification suites are deliverables.
 
@@ -190,13 +189,13 @@ application verification suites are deliverables.
 | Manual browser journeys | Built Web + API + worker with isolated data and approved local external-provider adapters. Use the generated client/rewrite/cookies, not intercepted success bodies; reference critical journeys J1-J15 and record observations. |
 
 Clean-checkout verification order (**required procedure, not claimed executions**):
-The relevant owner slices must exist: migrations/shared runtime before manual DB/HTTP checks, Auth/Users and Business ownership before protected Catalog checks, and Web transport before browser login. C00 proves workspace/probes, not later journeys; never substitute fake guards for missing dependencies.
+The relevant owner slices must exist: migrations/shared runtime before manual DB/HTTP checks, Auth/Users and Business ownership before protected Catalog checks, and Web transport before browser login. Initial workspace and probe checks do not prove later journeys; never substitute fake guards for missing dependencies.
 1. Install the pinned Node/pnpm tooling and `pnpm install --frozen-lockfile` on a clean checkout.
 2. Run `pnpm generate`, `pnpm check:generated`, `pnpm lint`, `pnpm typecheck`, `pnpm build` as applicable. These non-test commands may run in CI without provisioning behavioral test suites.
 3. For manual runtime verification, explicitly select an isolated disposable local DB, then use `pnpm env:local`, `pnpm db:up`, `pnpm db:migrate` and `pnpm db:seed` as appropriate. Inspect the target before mutation; repeat seed only on that isolated target to check stable identities/counts.
 4. Start built API/Web/worker using the existing supervised launcher; verify readiness with a bounded wait and stop on early exit or timeout.
 5. Manually open a public category through Web -> `/api/catalog/categories`; obtain anonymous CSRF, complete real OTP verification using approved local delivery, read live session and check protected-call missing-CSRF/role/scope denial. Inspect flat errors and cookie flags, not merely Home's HTTP 200.
-6. Manually exercise affected journeys. Run `node scripts/check-spec-coverage.mjs` and relevant documentation validators; `git diff --check`. Stop only owned processes, clean only explicitly allocated disposable resources, and retain redacted evidence plus unverified gaps. Never reset a shared DB.
+6. Manually exercise affected journeys and run `git diff --check`. Stop only owned processes, clean only explicitly allocated disposable resources, and retain redacted evidence plus unverified gaps. Never reset a shared DB.
 
 Acceptance:
 - Given a clean checkout and the approved pins, when this pipeline runs, then generated exports resolve and a real browser reaches Nest with cookies/CSRF; no app-specific global tools, hand-created tables or provider credentials are needed.
@@ -207,7 +206,7 @@ Acceptance:
 
 ## Implementation alignment gates
 
-- **Current implementation baseline:** LEAN-SPECS fixes Nest/Next TS/Tailwind, PostgreSQL/Prisma, pg-boss/no Redis and flat `{code,message_key,status,details,correlationId}`. The [backend guidance](../../.github/instructions/backend.instructions.md), [database guidance](../../.github/instructions/database.instructions.md), [migration recipe](../../.github/skills/db-migration/SKILL.md) and C00-C03 prompts follow these foundations. Earlier P01 Redis/BullMQ and database-undecided proposals are historical, not alternatives to implement (Q-20/Q-26/Q-29; [ADR 0001](../../docs/adr/0001-tech-stack.md)).
+- **Current implementation baseline:** The foundation specs define Nest/Next TS/Tailwind, PostgreSQL/Prisma, pg-boss/no Redis and flat `{code,message_key,status,details,correlationId}`. Follow the [backend guidance](../../.github/instructions/backend.instructions.md) and [database guidance](../../.github/instructions/database.instructions.md). Earlier Redis/BullMQ and database-undecided proposals are historical, not alternatives to implement (Q-20/Q-26/Q-29).
 - Toolchain pins are a scaffold implementation/CI deliverable above. Hosting/
   region/backups (Q-25), unselected external providers and payment topology
   (Q-21) remain human decisions. Cloudinary/link embeds/Leaflet choices follow
@@ -252,4 +251,4 @@ Acceptance:
 ## Product references
 
 - Product IDs, screens and states: [Design Context feature inventory](../../docs/design-context/01-feature-inventory.md), [screen inventory](../../docs/design-context/02-screen-inventory.md), [state machines and rules](../../docs/design-context/07-state-machines-and-business-rules.md).
-- Architecture/layering source: [repository module map](../../docs/architecture.md); visual and behavioural source: `docs/design-context/reference/` and `docs/design-context/screenshots/`.
+- Architecture/layering source: [repository module map](../../specs/_foundation/architecture.md); visual and behavioural source: `docs/design-context/reference/` and `docs/design-context/screenshots/`.

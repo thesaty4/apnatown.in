@@ -55,6 +55,6 @@ Prefixes `notifications.*`; template copy is rendered server-side. Events: `noti
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Manual UI/accessibility: five exact toggle bindings, pending/conflict rollback, no mandatory in-app, purpose copy, role-isolated badges, keyboard focus/labels, EN/HI/dark and unsubscribe confirmation. Manual journey: order.created → correct role feed; BR-20 admin/vendor notices scoped by area; reply/moderation/support links reach existing authorized destinations; marketing opt-out preserves transactional WhatsApp choices; verified STOP refetch; external-only/suppressed campaign produces no feed row. Retry/receipt mechanics and account export/erase are BE/Users contracts, not invented frontend controls.

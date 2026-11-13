@@ -148,7 +148,7 @@ Blocked responses use the shared envelope + configured `Retry-After`, no stack/P
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Rules: all group memberships/version failures, money/contacts/markup validation, maintenance admission matrix and future-flag denial. Manual API/DB: AC3 atomic concurrency/replay; settings/group/flag/legal cache events; guest support→outbox→scoped existing alert/detail; health/auth recovery; signed callback and in-flight financial correctness under maintenance. Negatives: same-city foreign support area, non-super settings/group writes, forged callback or body-selected bypass, stale flags before send, secrets/sample contacts in DTOs. Existing order snapshots and Q-32 retention gates are asserted.
 

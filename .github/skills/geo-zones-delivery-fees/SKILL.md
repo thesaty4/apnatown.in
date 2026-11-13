@@ -5,8 +5,8 @@ description: "Recipe for shared Leaflet/OSM maps, Geoman Free zone editing, deli
 
 # Geo zones and delivery fees
 
-Covers SA4, CK3/CK5, RD6 (`domain-accounts-admin.instructions.md`,
-`domain-delivery-riders.instructions.md`).
+Covers SA4, CK3/CK5 and RD6. Follow the applicable Geo, Checkout and
+Delivery feature specifications.
 Map library, tile configuration and usage limits are fixed by the
 [Leaflet/OSM contract](../../../specs/_foundation/media-and-maps.md#leaflet-and-openstreetmap).
 
@@ -22,7 +22,7 @@ Map library, tile configuration and usage limits are fixed by the
 3. `delivery`/`settings` compute rider earning (per-ride base + per-km)
    from the current global settings at job-completion time, and persist
    the computed value so later settings changes don't retroactively
-   change historical earnings (`domain-delivery-riders.instructions.md`).
+   change historical earnings.
 4. Super admin city/zone screens (SA4): enable/disable a city requires
    a confirmation naming the impact (active orders/riders); the polygon
    editor uses shared client-only Leaflet with Geoman Free. Convert to

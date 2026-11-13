@@ -177,7 +177,7 @@ Open question: Q-32 must also approve a verified request channel for suspended u
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Rules: profile/address allow-lists; default-address transaction; consent append-only behavior; request idempotency.
 - Manual API/DB: owner CRUD; consent revocation visible to sender query; paginated export completeness, artifact expiry, policy-blocked deletion, interrupted/retried owner erasure and session-revocation completion race.

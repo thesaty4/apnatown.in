@@ -10,7 +10,7 @@
 
 Features: F-PD-001, F-PD-002, F-PD-003, F-PD-006, F-PD-008, F-PD-009, F-VD-004, F-VD-005, F-VD-009, F-PV-005 (product list/editor only) | Screens: S-CUST-08, S-VEND-05, S-VEND-06, S-VEND-08, S-PROV-06, S-PROV-07 | Flows: J1, J4, J7
 
-Backend counterpart: [BE products](../be/products.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Backend counterpart: [BE products](../be/products.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 Image Uploaders and linked-video panels follow the shared
 [Cloudinary/embed contract](../../_foundation/media-and-maps.md): API multipart
@@ -122,7 +122,7 @@ Shared UX states come from `frontend-shared.md`; use the screen-specific states 
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Editor adds optional configured `taxCode` selection and displays orderability/setup-required status; never accepts raw rates/tax amounts. Missing tax configuration does not hide a public product but prevents purchasing. Use [Media's public-image policy](../../media-videos/be/media-videos.md#public-image-policy), maximum five ready assets, responsive variants and prior-image retention on failure. Manually verify wrong-purpose assets, invalid classifications, Hindi messages and truthful out-of-stock metadata under the shared public URL policy.
 

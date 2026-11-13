@@ -2,7 +2,7 @@
 
 Features: F-HM-001, F-HM-002, F-HM-005, F-HM-006, F-HM-007, F-HM-008, F-HM-009, F-HM-010, F-HM-011, F-HM-012, F-HM-013, F-HM-014, F-EX-001, F-EX-002, F-EX-003, F-EX-004, F-EX-005, F-EX-006, F-EX-007, F-EX-008, F-EX-009, F-EX-010, F-EX-011, F-EX-012, F-SR-001, F-SR-002, F-SR-003, F-SR-004, F-SR-005, F-SR-006, F-SR-007, F-SR-008, F-SR-009, F-SR-010 | Screens: S-CUST-01, S-CUST-02, S-CUST-03 | Flows: J1, J2
 
-Backend contract: [BE search](../be/search.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Backend contract: [BE search](../be/search.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 Explore maps and media cards reuse the
 [media/map contract](../../_foundation/media-and-maps.md); no second map
@@ -188,7 +188,7 @@ requirements below remain pending; this is not full SR1–SR10 delivery.
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Manual UI: Home section skeleton/empty/error behavior, carousel keyboard/reduced motion, grouped autocomplete announcements, filter count updates, long Hindi, dark theme and no-result actions.
 - Journey: J1 category → Explore → product; J2 services category → Explore Services → filters; direct URL + browser Back/scroll restore; Search ↔ Explore state isolation; keyboard search and filter flow.

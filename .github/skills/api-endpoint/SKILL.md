@@ -27,7 +27,7 @@ Use when implementing a BE spec's endpoint(s)
    Do not start Docker/runtime services, apply databases, or run API
    smoke checks during implementation.
 8. Link the implementation back to its BE spec; update
-   `docs/FEATURE_INVENTORY.md` status.
+   `docs/design-context/01-feature-inventory.md` status.
 
 ## Skeleton
 

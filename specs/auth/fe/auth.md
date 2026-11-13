@@ -74,7 +74,7 @@ remain unverified.
 
 ## Demo controls (local/test only)
 
-- Source: prototype `js3.js` `A.demo`/`pickRole` and the `js7.js` Account "Switch role" card; decision in [ADR 0002](../../../docs/adr/0002-local-demo-persona-sign-in.md).
+- Source: prototype `js3.js` `A.demo`/`pickRole` and the `js7.js` Account "Switch role" card; local/test behavior follows the [BE auth spec](../be/auth.md).
 - Rendered only when the server-read `DEMO_LOGIN_ENABLED` is true (the web environment refuses it in production): a header `users` icon button ("Switch demo role") and, for signed-in users, an Account "Switch role" card with "Open demo controls".
 - Both open one `Sheet` ("Demo controls", "View as") with the prototype role grid: Customer 🛍️, Vendor 🏪, Service provider 🔧, Rider 🛵 (disabled, "Coming soon"), Admin 🛡️, Super Admin 👑. The current role (highest live session role) uses the primary variant, a check icon and `aria-pressed`.
 - Selecting a role calls `POST /auth/demo/sessions {persona}` through `usePrivateMutation` (no retry, no variables in cache). Success fences the session lifecycle, broadcasts to other tabs and replaces the location with the role home: `/`, `/vendor/media`, `/provider/media`, `/admin`, `/super-admin`. Errors render the shared `Failure` with Retry; `DEMO_PERSONA_UNAVAILABLE` says to run the demo seed.
@@ -92,7 +92,7 @@ remain unverified.
 
 ## Verification
 
-Follow the [verification policy](../../../.github/instructions/testing.instructions.md): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Manual UI: phone validation, OTP paste/auto-advance, cooldown, locked/error state, keyboard and screen-reader labels.
 - Manual journey: J12 login then return to origin; J4 guest Reels action returns to same video.
