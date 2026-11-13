@@ -28,3 +28,4 @@ Thumbs.db
 *.tsbuildinfo
 .turbo/
 apps/api/src/shared/persistence/generated/
+*:Zone.Identifier
