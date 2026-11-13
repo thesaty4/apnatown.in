@@ -18,6 +18,7 @@ import {
   type Issues,
 } from './form';
 import { UploadPoliciesCard } from './UploadPoliciesCard';
+import { ProductImportCard } from './ProductImportCard';
 
 type Form = {
   refundWindowHours: string;
@@ -179,6 +180,7 @@ export function PolicySettings({ data }: { data: SuperAdminSettings }) {
     <div className="grid gap-4">
       <PolicySettingsForm data={data} />
       <UploadPoliciesCard data={data} />
+      <ProductImportCard data={data} />
     </div>
   );
 }

@@ -25,6 +25,8 @@ import { hydrateResource } from '../shared/api/hydration';
 import { queryKeys } from '../shared/api/query-keys';
 import { SiteFooter } from '../features/support/SiteFooter';
 import { DemoSwitcher } from '../features/auth/demo/DemoControls';
+import { CartCount } from '../features/cart';
+import { CustomerBell } from '../features/notifications/Bells';
 import './globals.css';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -62,8 +64,16 @@ export default async function RootLayout({
     reels: catalogue.reels,
     engagement: catalogue.engagement,
     explore: catalogue.explore,
+    business: catalogue.business,
+    service: catalogue.service,
+    products: catalogue.products,
+    media: catalogue.media,
+    gallery: catalogue.gallery,
+    search: catalogue.search,
     help: catalogue.help,
     system: catalogue.system,
+    notifications: catalogue.notifications,
+    cart: catalogue.cart,
   };
   return (
     <html lang={locale} data-theme={theme} className={fontVariables}>
@@ -90,7 +100,8 @@ export default async function RootLayout({
               <span className="min-w-0 flex-1" />
               <LanguageSwitch short />
               {getWebEnvironment().DEMO_LOGIN_ENABLED && <DemoSwitcher />}
-              <AccountNavigation />
+              <AccountNavigation cartCount={<CartCount />} />
+              <CustomerBell />
               <Preferences initialTheme={theme} />
             </div>
           </header>
@@ -104,7 +115,7 @@ export default async function RootLayout({
             </main>
           </div>
           <SiteFooter />
-          <CustomerTabBar />
+          <CustomerTabBar cartCount={<CartCount tab />} />
         </Providers>
       </body>
     </html>

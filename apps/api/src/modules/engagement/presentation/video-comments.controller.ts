@@ -125,7 +125,7 @@ export class PublicVideoCommentsController {
   @ApiOkResponse({ type: VideoCommentPublicPageDto })
   async list(
     @Req() request: AuthRequest,
-    @Param(new InputPipe(IdSchema)) videoId: string,
+    @Param('videoId', new InputPipe(IdSchema)) videoId: string,
     @Query(new InputPipe(VideoCommentPublicQuerySchema))
     query: { cursor?: string; limit: number },
   ) {
@@ -175,7 +175,7 @@ export class VideoCommentsController {
   })
   async create(
     @Req() request: AuthRequest,
-    @Param(new InputPipe(IdSchema)) videoId: string,
+    @Param('videoId', new InputPipe(IdSchema)) videoId: string,
     @Query(new InputPipe(EmptyRequestSchema)) _query: Record<string, never>,
     @Body(new InputPipe(VideoCommentCreateSchema)) body: VideoCommentCreate,
   ) {
@@ -270,7 +270,7 @@ export class AdminVideoCommentsController {
   })
   async decide(
     @Req() request: AuthRequest,
-    @Param(new InputPipe(IdSchema)) id: string,
+    @Param('id', new InputPipe(IdSchema)) id: string,
     @Query(new InputPipe(EmptyRequestSchema)) _query: Record<string, never>,
     @Body(new InputPipe(VideoCommentDecisionSchema))
     body: VideoCommentDecision,

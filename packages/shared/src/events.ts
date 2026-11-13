@@ -15,6 +15,7 @@ import {
 import { CityStatusSchema, ZoneStatusSchema } from './geo.js';
 import { SuggestionStatusSchema } from './catalog.js';
 import { BusinessStatusSchema } from './businesses.js';
+import { EnquiryStatusSchema } from './services.js';
 
 export const EventEnvelopeSchema = z.strictObject({
   id: IdSchema,
@@ -198,4 +199,86 @@ export const BusinessProfileChangedPayloadSchema =
   });
 export type BusinessProfileChangedPayload = z.infer<
   typeof BusinessProfileChangedPayloadSchema
+>;
+
+// Services provider expertise (F-PV-002). Public profile/search cache
+// invalidation only; service facet membership is unaffected.
+export const SERVICES_EVENT_TYPES = Object.freeze({
+  providerExpertiseChanged: 'provider.expertise.changed',
+  enquiryCreated: 'service.enquiry.created',
+  enquiryStatusChanged: 'service.enquiry.status_changed',
+  enquiryConverted: 'service.enquiry.converted',
+  serviceChanged: 'service.changed',
+} as const);
+
+/**
+ * Owner service write (create/update/pause/delete) for search/detail cache
+ * invalidation. Ids only: the affected (before ∪ after) taxonomy ids.
+ */
+export const ServiceChangedPayloadSchema = z.strictObject({
+  serviceId: IdSchema,
+  businessId: IdSchema,
+  categoryIds: z.array(IdSchema).min(1).max(2),
+  subcategoryIds: z.array(IdSchema).min(1).max(2),
+  version: VersionSchema,
+  deleted: z.boolean(),
+});
+export type ServiceChangedPayload = z.infer<typeof ServiceChangedPayloadSchema>;
+
+/**
+ * Enquiry events carry identifiers only: never the enquirer's name, phone or
+ * message (BR-14). `customerUserId` is present only for signed-in enquirers.
+ */
+export const ServiceEnquiryCreatedPayloadSchema = z.strictObject({
+  enquiryId: IdSchema,
+  businessId: IdSchema,
+  serviceId: IdSchema,
+  customerUserId: IdSchema.optional(),
+});
+export type ServiceEnquiryCreatedPayload = z.infer<
+  typeof ServiceEnquiryCreatedPayloadSchema
+>;
+/** Shared by `status_changed` (every transition) and `converted` (conversion only). */
+export const ServiceEnquiryStatusChangedPayloadSchema = z.strictObject({
+  enquiryId: IdSchema,
+  businessId: IdSchema,
+  serviceId: IdSchema,
+  customerUserId: IdSchema.optional(),
+  status: EnquiryStatusSchema,
+  previousStatus: EnquiryStatusSchema,
+  version: VersionSchema,
+});
+export type ServiceEnquiryStatusChangedPayload = z.infer<
+  typeof ServiceEnquiryStatusChangedPayloadSchema
+>;
+export const ProviderExpertiseChangedPayloadSchema = z.strictObject({
+  businessId: IdSchema,
+  expertiseVersion: VersionSchema,
+});
+export type ProviderExpertiseChangedPayload = z.infer<
+  typeof ProviderExpertiseChangedPayloadSchema
+>;
+
+// Products (F-VD-004/005/009, F-PV-005). Identifiers and versions only; Search
+// and public-page caches invalidate product/business/featured tags on receipt.
+export const PRODUCTS_EVENT_TYPES = Object.freeze({
+  productCreated: 'product.created',
+  productUpdated: 'product.updated',
+  productDeleted: 'product.deleted',
+  productPublished: 'product.published',
+  pillsUpdated: 'product.pills.updated',
+  inventoryChanged: 'inventory.changed',
+} as const);
+/** `version` is the product version, or the inventory version for inventory.changed. */
+export const ProductEventPayloadSchema = z.strictObject({
+  productId: IdSchema,
+  businessId: IdSchema,
+  version: VersionSchema,
+});
+export type ProductEventPayload = z.infer<typeof ProductEventPayloadSchema>;
+export const ProductPillsUpdatedPayloadSchema = z.strictObject({
+  businessId: IdSchema,
+});
+export type ProductPillsUpdatedPayload = z.infer<
+  typeof ProductPillsUpdatedPayloadSchema
 >;

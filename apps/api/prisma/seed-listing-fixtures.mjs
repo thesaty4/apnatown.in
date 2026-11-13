@@ -157,7 +157,8 @@ function serviceFor(entry, business, sample, helpers) {
 
 /**
  * Source rows, not Explore cards. No emoji "images", manufactured reviews,
- * subscriptions, verified experience, provider expertise or checkout data.
+ * subscriptions, verified experience or checkout data. Provider expertise and
+ * enquiries are seeded separately (seed-provider-data.mjs).
  */
 export function buildListingFixtures(sample, helpers) {
   const businesses = [...sample.biz, ...sample.svc];

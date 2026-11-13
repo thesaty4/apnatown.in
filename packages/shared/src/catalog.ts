@@ -604,6 +604,7 @@ export const KeywordResolutionSchema = z.strictObject({
     z.strictObject({
       mappingId: IdSchema,
       matchedTerm: z.string(),
+      canonicalTerm: z.string(),
       matchKind: z.enum(['exact', 'fuzzy']),
       targets: z.array(KeywordTargetSchema),
     }),

@@ -8,6 +8,7 @@ import {
   VersionSchema,
 } from './wire.js';
 import { PhoneInputSchema } from './users.js';
+import { BusinessAdminDetailSchema } from './businesses.js';
 
 /** Admin permission matrix keys (admin spec `role_permissions`/`admin_permissions`). */
 export const ADMIN_MODULES = Object.freeze([
@@ -419,3 +420,65 @@ export const AuditPageSchema = z.strictObject({
   nextCursor: CursorSchema.nullable(),
 });
 export type AuditPage = z.infer<typeof AuditPageSchema>;
+
+// ---------------------------------------------------------------------------
+// Approvals queue (S-ADMN-02): composed from owning modules' read ports;
+// decisions go to the owning module's endpoint.
+// ---------------------------------------------------------------------------
+
+export const ADMIN_APPROVAL_TYPES = Object.freeze([
+  'business',
+  'provider',
+  'rider',
+] as const);
+export const AdminApprovalTypeSchema = z.enum(ADMIN_APPROVAL_TYPES);
+export type AdminApprovalType = z.infer<typeof AdminApprovalTypeSchema>;
+/** Types backed by a shipped owning module (Businesses: shop/provider). */
+export const AdminBusinessApprovalTypeSchema = z.enum(['business', 'provider']);
+export type AdminBusinessApprovalType = z.infer<
+  typeof AdminBusinessApprovalTypeSchema
+>;
+export const AdminApprovalStatusSchema = z.enum([
+  'pending',
+  'changes_requested',
+  'approved',
+  'rejected',
+]);
+export const AdminApprovalQuerySchema = PageQuerySchema.extend({
+  type: AdminApprovalTypeSchema.default('business'),
+  status: AdminApprovalStatusSchema.default('pending'),
+});
+export type AdminApprovalQuery = z.infer<typeof AdminApprovalQuerySchema>;
+export const AdminApprovalItemSchema = z.strictObject({
+  type: AdminApprovalTypeSchema,
+  id: IdSchema,
+  nameEn: z.string().nullable(),
+  nameHi: z.string().nullable(),
+  categoryId: IdSchema.nullable(),
+  cityId: IdSchema.nullable(),
+  areaId: IdSchema.nullable(),
+  submittedAt: TimestampSchema.nullable(),
+  status: AdminApprovalStatusSchema,
+  version: VersionSchema,
+});
+export type AdminApprovalItem = z.infer<typeof AdminApprovalItemSchema>;
+export const AdminApprovalPageSchema = z.strictObject({
+  items: z.array(AdminApprovalItemSchema).max(50),
+  nextCursor: CursorSchema.nullable(),
+  /** Requested types whose owning module has not shipped (never zeros). */
+  unavailable: z.array(AdminApprovalTypeSchema),
+});
+export type AdminApprovalPage = z.infer<typeof AdminApprovalPageSchema>;
+export const AdminApprovalParamsSchema = z.strictObject({
+  type: AdminBusinessApprovalTypeSchema,
+  id: IdSchema,
+});
+export type AdminApprovalParams = z.infer<typeof AdminApprovalParamsSchema>;
+export const AdminApprovalDetailSchema = z.strictObject({
+  type: AdminBusinessApprovalTypeSchema,
+  application: BusinessAdminDetailSchema,
+  /** Narrow approval history of this entity, newest first. */
+  history: AuditPageSchema,
+});
+export type AdminApprovalDetail = z.infer<typeof AdminApprovalDetailSchema>;
+export * from './admin-listings.js';

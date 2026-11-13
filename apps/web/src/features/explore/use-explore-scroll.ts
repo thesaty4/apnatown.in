@@ -3,15 +3,23 @@
 import { useEffect } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
-// Ephemeral, Explore-only positions; filters and API results remain in URL/Query.
-const positions = new Map<string, number>();
+// Separate, ephemeral histories. Sharing restoration mechanics never shares
+// filters or API results between Explore and Search.
+const histories = {
+  explore: new Map<string, number>(),
+  search: new Map<string, number>(),
+};
 
-export function useExploreScroll(ready: boolean) {
+export function useExploreScroll(
+  ready: boolean,
+  scope: keyof typeof histories = 'explore',
+) {
   const pathname = usePathname();
   const params = useSearchParams();
   const url = `${pathname}?${params}`;
   useEffect(() => {
     if (!ready) return;
+    const positions = histories[scope];
     const position = positions.get(url);
     if (position !== undefined)
       window.scrollTo({ top: position, behavior: 'instant' });
@@ -26,5 +34,5 @@ export function useExploreScroll(ready: boolean) {
     remember();
     window.addEventListener('scroll', remember, { passive: true });
     return () => window.removeEventListener('scroll', remember);
-  }, [url, ready]);
+  }, [url, ready, scope]);
 }

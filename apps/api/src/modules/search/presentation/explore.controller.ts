@@ -3,7 +3,6 @@ import { ApiHeader, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs
 import {
   ExploreQuerySchema,
   ExploreResponseSchema,
-  DiscoveryLocationSchema,
   type ExploreQuery,
 } from '@apnatown/shared/search';
 import { PublicRoute, type AuthRequest } from '../../../shared/auth';
@@ -12,7 +11,7 @@ import { ErrorDto } from '../../../shared/health/health.controller';
 import { RateLimit } from '../../../shared/rate-limit/rate-limit';
 import { ExploreService } from '../application/explore.service';
 import { ExploreQueryDto, ExploreResponseDto } from './search.dto';
-import { DomainError } from '../../../shared/errors/errors';
+import { discoveryLocation } from './discovery-location';
 
 const readLimit = {
   key: 'search.explore-read',
@@ -65,14 +64,6 @@ export class ExploreController {
     @Query(new InputPipe(ExploreQuerySchema)) query: ExploreQuery,
     @Req() request: AuthRequest,
   ) {
-    const latitude = request.headers['x-discovery-latitude'];
-    const longitude = request.headers['x-discovery-longitude'];
-    let location = null;
-    if (latitude !== undefined || longitude !== undefined) {
-      const parsed = DiscoveryLocationSchema.safeParse({ latitude, longitude });
-      if (!parsed.success) throw new DomainError('COMMON_VALIDATION_FAILED');
-      location = parsed.data;
-    }
-    return ExploreResponseSchema.parse(await this.explore.explore(query, location));
+    return ExploreResponseSchema.parse(await this.explore.explore(query, discoveryLocation(request)));
   }
 }

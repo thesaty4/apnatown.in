@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import type { JsonValue } from '@apnatown/shared';
+import { BUSINESS_RESERVED_SLUGS } from '@apnatown/shared/businesses';
 import type {
   BillingDraft,
   BusinessDocumentKind,
@@ -192,6 +193,17 @@ export class PrismaBusinessRepository implements BusinessRepository {
     return { business, categories, hours, settings: stored };
   }
 
+  async galleryMediaDefault(
+    tx: TxContext,
+    businessId: string,
+  ): Promise<boolean | null> {
+    const rows = await this.database.client(tx).$queryRaw<{ value: boolean }[]>(
+      Prisma.sql`SELECT gallery_media_default AS value FROM business_settings
+        WHERE business_id = ${businessId}::uuid`,
+    );
+    return rows[0]?.value ?? null;
+  }
+
   async insertDraft(
     tx: TxContext,
     row: {
@@ -380,7 +392,10 @@ export class PrismaBusinessRepository implements BusinessRepository {
     const rows = await client.$queryRaw<{ slug: string }[]>`
       SELECT slug FROM businesses
       WHERE slug = ${base} OR slug LIKE ${`${base}-%`}`;
-    const taken = new Set(rows.map((row) => row.slug));
+    const taken = new Set<string>([
+      ...BUSINESS_RESERVED_SLUGS,
+      ...rows.map((row) => row.slug),
+    ]);
     if (!taken.has(base)) return base;
     for (let suffix = 2; ; suffix += 1) {
       const candidate = `${base}-${suffix}`;

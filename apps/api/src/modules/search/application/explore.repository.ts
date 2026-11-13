@@ -19,6 +19,8 @@ export interface ExploreSelection {
   emptyServices: boolean;
   location: DiscoveryLocation | null;
   keywords: KeywordResolution | null;
+  /** Search includes shops owning query-matching products (prototype js23). */
+  search?: boolean;
 }
 export interface ExploreRow {
   card: ExploreCard;

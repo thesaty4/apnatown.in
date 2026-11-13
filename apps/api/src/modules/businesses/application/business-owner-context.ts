@@ -9,6 +9,8 @@ import {
 import {
   BUSINESS_REPOSITORY,
   ROLE_FOR_KIND,
+  DEFAULT_SETTINGS,
+  capabilities,
   type BusinessRepository,
   type StoredBusiness,
 } from '../domain/business';
@@ -52,6 +54,51 @@ export class BusinessOwnerContext {
     if (rows.length > 1) throw new DomainError('BUSINESS_CONTEXT_REQUIRED');
     if (!rows[0]) throw new DomainError('BUSINESS_NOT_FOUND');
     return rows[0];
+  }
+
+  /**
+   * The caller's own live business with this exact ID, or null. A client
+   * business ID only selects; null never discloses whether it exists.
+   */
+  async ownedById(
+    tx: TxContext,
+    input: { userId: string; businessId: string; lock?: boolean },
+  ): Promise<StoredBusiness | null> {
+    const business = await this.businesses.find(
+      tx,
+      input.businessId,
+      input.lock ?? false,
+    );
+    return business &&
+      business.deletedAt === null &&
+      business.ownerUserId === input.userId
+      ? business
+      : null;
+  }
+
+  /** True when the user owns a live business that may upload profile media. */
+  async ownsMediaCapable(tx: TxContext, userId: string): Promise<boolean> {
+    const rows = await this.businesses.ownedBy(tx, { ownerUserId: userId });
+    return rows.some(
+      (business) =>
+        business.deletedAt === null &&
+        capabilities(business, false).uploadMedia,
+    );
+  }
+
+  /**
+   * The business's Gallery default for new listing media (BusinessMediaReadPort
+   * `galleryMediaDefault`), read in the caller's transaction; the platform
+   * default applies when no settings row exists.
+   */
+  async galleryMediaDefault(
+    tx: TxContext,
+    businessId: string,
+  ): Promise<boolean> {
+    return (
+      (await this.businesses.galleryMediaDefault(tx, businessId)) ??
+      DEFAULT_SETTINGS.galleryMediaDefault
+    );
   }
 
   /** Live matching vendor/provider role (never replaces approval checks). */

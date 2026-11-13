@@ -41,7 +41,7 @@ import {
 import { CLOCK, type Clock } from '../../../shared/runtime/providers';
 import { AUDIT_WRITER } from '../../audit/application/audit-writer.port';
 import type { AuditWriter } from '../../audit/application/audit-writer.port';
-import { parseVideoSource, videoPlayback } from '../domain/video-source';
+import { videoPlayback } from '../domain/video-source';
 import {
   VIDEO_REPOSITORY,
   type StoredModerationVideo,
@@ -364,6 +364,7 @@ export class VideoModerationService {
             reportVersion: result.reportVersion,
             targetStatus: result.targetStatus,
             targetVersion: result.targetVersion,
+            targetKind: 'video',
           }) as MediaReportDecisionResult & JsonValue;
         },
         policy,
@@ -464,7 +465,8 @@ export class VideoModerationService {
     });
   }
 
-  private reportDto(row: StoredVideoReport) {
+  /** Also used by the typed admin media-report queue. */
+  reportDto(row: StoredVideoReport) {
     return VideoReportQueueItemSchema.parse({
       queueItemType: 'report',
       reportId: row.reportId,

@@ -8,6 +8,7 @@ import { reconcilePrivate } from '../../shared/api/private-query';
 import { usePrivateMutation } from '../../shared/api/use-private-mutation';
 import { ApiFailure, failureCode } from '../../shared/api/result';
 import { saveConsent, type ConsentChange } from './consent-api';
+import { notificationKeys } from '../notifications/keys';
 
 /** Only the server-confirmed record enters the cache; nothing is optimistic. */
 export function useSaveConsent() {
@@ -37,6 +38,11 @@ export function useSaveConsent() {
             assertCurrent,
           );
         else await client.invalidateQueries({ queryKey: key, exact: true });
+        void client.invalidateQueries({
+          queryKey: notificationKeys.preferences(
+            accountScope(state.data, epoch),
+          ),
+        });
         return record;
       } catch (error) {
         // The notice moved on: reload the current version for the user to review.

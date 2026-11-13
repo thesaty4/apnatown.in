@@ -1,4 +1,11 @@
-import { createHmac, timingSafeEqual } from 'node:crypto';
+import {
+  createCipheriv,
+  createDecipheriv,
+  createHmac,
+  hkdfSync,
+  randomBytes,
+  timingSafeEqual,
+} from 'node:crypto';
 import { canonicalJson, type JsonValue } from '@apnatown/shared';
 import { CursorSchema, IdSchema } from '@apnatown/shared/wire';
 import { z } from 'zod';
@@ -27,10 +34,23 @@ const payloadSchema = z.strictObject({
 
 export type CursorKeys = z.infer<typeof tupleSchema>;
 
+const IV_BYTES = 12;
+const TAG_BYTES = 16;
+
+/**
+ * Keys may hold ordered values derived from a caller's location (distance), so
+ * the payload is sealed with AES-256-GCM as well as signed: signing alone would
+ * leave it readable wherever the URL is logged.
+ */
 export class CursorCodec {
+  private readonly sealingKey: Buffer;
+
   constructor(private readonly signingKey: string) {
     if (!/^[A-Za-z0-9_-]{43,128}$/.test(signingKey))
       throw new Error('INVALID_CURSOR_SIGNING_KEY');
+    this.sealingKey = Buffer.from(
+      hkdfSync('sha256', signingKey, '', 'apnatown.cursor.seal.v1', 32),
+    );
   }
 
   encode(binding: CursorBinding, keys: CursorKeys): string {
@@ -39,7 +59,9 @@ export class CursorCodec {
       binding: this.fingerprint(binding),
       keys,
     });
-    const data = Buffer.from(canonicalJson(payload)).toString('base64url');
+    const data = this.seal(Buffer.from(canonicalJson(payload))).toString(
+      'base64url',
+    );
     const signature = this.mac('cursor', data);
     const cursor = Buffer.from(`${data}.${signature}`).toString('base64url');
     if (!CursorSchema.safeParse(cursor).success)
@@ -70,9 +92,11 @@ export class CursorCodec {
       return this.invalid();
     const bytes = Buffer.from(data, 'base64url');
     if (bytes.toString('base64url') !== data) return this.invalid();
+    const plain = this.open(bytes);
+    if (!plain) return this.invalid();
     let decoded: unknown;
     try {
-      decoded = JSON.parse(bytes.toString('utf8'));
+      decoded = JSON.parse(plain.toString('utf8'));
     } catch (error) {
       if (error instanceof SyntaxError) return this.invalid();
       throw error;
@@ -81,6 +105,31 @@ export class CursorCodec {
     if (!payload.success || payload.data.binding !== this.fingerprint(binding))
       return this.invalid();
     return payload.data.keys;
+  }
+
+  private seal(plain: Buffer): Buffer {
+    const iv = randomBytes(IV_BYTES);
+    const cipher = createCipheriv('aes-256-gcm', this.sealingKey, iv);
+    const sealed = Buffer.concat([cipher.update(plain), cipher.final()]);
+    return Buffer.concat([iv, sealed, cipher.getAuthTag()]);
+  }
+
+  private open(bytes: Buffer): Buffer | null {
+    if (bytes.length <= IV_BYTES + TAG_BYTES) return null;
+    const decipher = createDecipheriv(
+      'aes-256-gcm',
+      this.sealingKey,
+      bytes.subarray(0, IV_BYTES),
+    );
+    decipher.setAuthTag(bytes.subarray(bytes.length - TAG_BYTES));
+    try {
+      return Buffer.concat([
+        decipher.update(bytes.subarray(IV_BYTES, bytes.length - TAG_BYTES)),
+        decipher.final(),
+      ]);
+    } catch {
+      return null;
+    }
   }
 
   private fingerprint(binding: CursorBinding): string {

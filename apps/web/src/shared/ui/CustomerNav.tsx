@@ -1,18 +1,17 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { publicHref } from '../i18n/preferences';
+import { isDashboardPath, publicHref } from '../i18n/preferences';
 import { useSession } from '../auth/SessionProvider';
 import { loginHref } from '../auth/return-to';
 import { NavIcon, type NavIconName } from './NavIcon';
 
-const dashboard = /^\/(?:admin|super-admin|vendor|provider|rider)(?:\/|$)/;
-
 function useCustomerPath() {
   const path = usePathname().replace(/^\/(?:hi|en)(?=\/|$)/, '') || '/';
-  return { path, customer: !dashboard.test(path) };
+  return { path, customer: !isDashboardPath(path) };
 }
 
 /** Desktop customer menu (prototype `.deskmenu`); only live routes. */
@@ -43,15 +42,23 @@ export function CustomerMenu() {
   );
 }
 
+type Tab = [NavIconName, string, string, boolean, ReactNode?];
+
 /** Mobile bottom tabs (prototype `.bottom.cust`), hidden from 900px and on
  * dashboards. The spacer keeps page content clear of the fixed bar. */
-export function CustomerTabBar() {
+export function CustomerTabBar({
+  cartCount,
+}: {
+  /** Feature-owned cart count/badge slot; adds the prototype Cart tab. */
+  cartCount?: ReactNode;
+}) {
   const t = useTranslations('common.navigation');
+  const cart = useTranslations('cart.nav');
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
   const { state } = useSession();
   const { path, customer } = useCustomerPath();
   if (!customer) return null;
-  const items: readonly [NavIconName, string, string, boolean][] = [
+  const items: readonly Tab[] = [
     ['home', t('home'), publicHref('/', locale), path === '/'],
     [
       'map',
@@ -65,6 +72,17 @@ export function CustomerTabBar() {
       publicHref('/videos', locale),
       path.startsWith('/videos'),
     ],
+    ...(cartCount === undefined
+      ? []
+      : [
+          [
+            'cart',
+            cart('label'),
+            '/cart',
+            path === '/cart',
+            cartCount,
+          ] satisfies Tab,
+        ]),
     [
       'user',
       t('account'),
@@ -82,7 +100,7 @@ export function CustomerTabBar() {
         aria-label={t('main')}
         className="fixed inset-x-0 bottom-0 z-60 flex border-t border-border bg-surface pb-sab shadow-2 desktop:hidden"
       >
-        {items.map(([icon, label, href, on]) => (
+        {items.map(([icon, label, href, on, badge]) => (
           <Link
             key={icon}
             href={href}
@@ -91,6 +109,7 @@ export function CustomerTabBar() {
           >
             <NavIcon name={icon} />
             {label}
+            {badge}
           </Link>
         ))}
       </nav>

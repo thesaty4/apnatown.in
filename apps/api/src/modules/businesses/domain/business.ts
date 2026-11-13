@@ -145,6 +145,11 @@ export interface BusinessRepository {
     tx: TxContext,
     business: StoredBusiness,
   ): Promise<BusinessAggregate>;
+  /** `business_settings.gallery_media_default`; null when no settings row. */
+  galleryMediaDefault(
+    tx: TxContext,
+    businessId: string,
+  ): Promise<boolean | null>;
   /** Inserts a draft + default settings; false on UNIQUE(owner,kind). */
   insertDraft(
     tx: TxContext,

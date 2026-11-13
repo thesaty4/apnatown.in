@@ -55,13 +55,16 @@ export class CatalogReadService implements CatalogReadPort {
     private readonly business: CatalogBusinessContextPort,
   ) {}
 
-  taxonomy(input: {
-    categoryIds?: readonly string[];
-    subcategoryIds?: readonly string[];
-    kind?: CategoryKind;
-    activeOnly: boolean;
-  }): Promise<TaxonomyRead> {
-    return this.uow.run(async (tx) => {
+  taxonomy(
+    input: {
+      categoryIds?: readonly string[];
+      subcategoryIds?: readonly string[];
+      kind?: CategoryKind;
+      activeOnly: boolean;
+    },
+    transaction?: TxContext,
+  ): Promise<TaxonomyRead> {
+    const work = async (tx: TxContext) => {
       const subcategories = await this.taxonomyRepository.listSubcategories(
         tx,
         {
@@ -100,13 +103,14 @@ export class CatalogReadService implements CatalogReadPort {
         subcategories: children.map((row) => subcategoryDto(row, images)),
         revision,
       });
-    });
+    };
+    return transaction ? work(transaction) : this.uow.run(work);
   }
 
   resolveKeywords(input: {
     normalizedQuery: string;
   }, transaction?: TxContext): Promise<KeywordResolution> {
-    const query = normalizeCatalogText(input.normalizedQuery).slice(0, 120);
+    const query = normalizeCatalogText(input.normalizedQuery).slice(0, 200);
     const work = async (tx: TxContext) => {
       const revision = await this.mappings.revision(tx);
       if (!query)
@@ -128,6 +132,7 @@ export class CatalogReadService implements CatalogReadPort {
                 {
                   mappingId: match.mappingId,
                   matchedTerm: match.matchedTerm,
+                  canonicalTerm: mapping.canonicalTerm,
                   matchKind: match.exact ? 'exact' : 'fuzzy',
                   targets: mapping.targets,
                 },

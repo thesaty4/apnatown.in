@@ -35,10 +35,7 @@ import { CLOCK, type Clock } from '../../../shared/runtime/providers';
 import { AUDIT_WRITER } from '../../audit/application/audit-writer.port';
 import type { AuditWriter } from '../../audit/application/audit-writer.port';
 import { MEDIA_COMMENT_TARGET } from '../../media-videos/application/video-comment-target.port';
-import type {
-  MediaCommentTarget,
-  MediaCommentTargetPort,
-} from '../../media-videos/application/video-comment-target.port';
+import type { MediaCommentTargetPort } from '../../media-videos/application/video-comment-target.port';
 import {
   VIDEO_COMMENT_REPOSITORY,
   type CommentPosition,
@@ -146,8 +143,9 @@ export class VideoCommentModerationService {
         const row = await this.comments.find(tx, id);
         if (!row) throw new DomainError('ENGAGEMENT_TARGET_NOT_FOUND');
         await this.authorizeComment(request, row, 'edit', tx);
-        return VideoCommentDecisionResultSchema.parse(stored) as VideoCommentDecisionResult &
-          JsonValue;
+        return VideoCommentDecisionResultSchema.parse(
+          stored,
+        ) as VideoCommentDecisionResult & JsonValue;
       },
     };
     return this.commands
@@ -186,7 +184,10 @@ export class VideoCommentModerationService {
       at: this.clock.now(),
     });
     if (!after) throw new DomainError('COMMENT_VERSION_CONFLICT');
-    const publishedCount = await this.comments.publishedCount(tx, after.videoId);
+    const publishedCount = await this.comments.publishedCount(
+      tx,
+      after.videoId,
+    );
     const delta = ((status === 'published' ? 1 : 0) -
       (before.status === 'published' ? 1 : 0)) as -1 | 0 | 1;
     await this.events.transition(
@@ -260,7 +261,10 @@ export class VideoCommentModerationService {
       throw new DomainError('COMMON_FORBIDDEN');
   }
 
-  private assertDecision(row: StoredComment, input: VideoCommentDecision): void {
+  private assertDecision(
+    row: StoredComment,
+    input: VideoCommentDecision,
+  ): void {
     if (row.version !== input.expectedVersion)
       throw new DomainError('COMMENT_VERSION_CONFLICT');
     if (
@@ -306,7 +310,9 @@ export class VideoCommentModerationService {
     binding: CursorBinding,
   ): CommentPosition | null {
     if (!cursor) return null;
-    const parsed = positionSchema.safeParse(this.cursors.decode(cursor, binding));
+    const parsed = positionSchema.safeParse(
+      this.cursors.decode(cursor, binding),
+    );
     if (!parsed.success) throw new DomainError('VALIDATION_ERROR');
     return { createdAt: parsed.data[0], id: parsed.data[1] };
   }

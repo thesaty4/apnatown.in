@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import type { ScopeRef } from '@apnatown/shared/admin';
 import type {
   BusinessApplicationCard,
-  BusinessDecisionAction,
   BusinessDocumentKind,
   BusinessHoursEntry,
   BusinessKind,
@@ -121,44 +120,14 @@ export interface BusinessAdminReadPort {
   }>;
 }
 
-export const BUSINESS_ADMIN_LISTINGS = Symbol('BUSINESS_ADMIN_LISTINGS');
-export interface BusinessAdminListingCommand {
-  ctx: AdminReadContext;
-  correlationId: string;
-  note?: string;
-}
-export interface BusinessAdminListingsPort {
-  /** Blocked until ADM-Q1: always ADMIN_CREATION_POLICY_REQUIRED, no row. */
-  adminCreate(
-    command: BusinessAdminListingCommand,
-    input: {
-      kind: BusinessKind;
-      nameEn: string;
-      nameHi?: string;
-      phoneE164: string;
-      areaId: string;
-    },
-  ): Promise<never>;
-  /** `catalog:edit` over source and destination; status needs approvals:edit. */
-  adminUpdate(
-    command: BusinessAdminListingCommand,
-    input: {
-      businessId: string;
-      expectedVersion: number;
-      nameEn?: string;
-      nameHi?: string | null;
-      phoneE164?: string;
-      areaId?: string;
-      categoryId?: string;
-      statusAction?: BusinessDecisionAction;
-    },
-  ): Promise<{ businessId: string; status: BusinessStatus; version: number }>;
-  /** Versioned soft delete with audit; hides the listing, stops new selling. */
-  adminRemove(
-    command: BusinessAdminListingCommand,
-    input: { businessId: string; expectedVersion: number },
-  ): Promise<{ businessId: string; version: number }>;
-}
+/** The shipped part of BUSINESS_ADMIN_READ: the approval applications view. */
+export type BusinessApplicationsReadPort = Pick<
+  BusinessAdminReadPort,
+  'list' | 'detail'
+>;
+
+// Admin Listings ports (F-AD-003) live in their own file.
+export * from './business-admin-listing-ports';
 
 export const BUSINESS_NOTIFICATION_READ = Symbol('BUSINESS_NOTIFICATION_READ');
 export interface BusinessNotificationReadPort {

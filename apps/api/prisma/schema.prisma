@@ -40,6 +40,8 @@ model Product {
   subcategory Subcategory @relation(fields:[subcategoryId],references:[id],onDelete:NoAction,onUpdate:NoAction)
   inventory Inventory?
   offerTargets OfferTarget[]
+  variants ProductVariant[]
+  cartLines CartLine[]
   @@unique([businessId,sku],where:raw("sku IS NOT NULL"),map:"products_business_sku_key")
   @@index([businessId,createdAt(sort:Desc),id(sort:Desc)],map:"products_business_page_idx")
   @@index([categoryId,subcategoryId,pricePaise,id],where:raw("published AND deleted_at IS NULL"),map:"products_taxonomy_price_idx")
@@ -59,6 +61,38 @@ model Inventory {
   product Product @relation(fields:[productId],references:[id],onDelete:NoAction,onUpdate:NoAction)
   @@index([availableForSale,onHand,productId],map:"inventory_available_idx")
   @@map("inventory")
+}
+/// Selectable product variant labels (Q-44); deactivated, never hard-deleted.
+model ProductVariant {
+  id        String  @id @db.Uuid
+  productId String  @map("product_id") @db.Uuid
+  label     String
+  position  Int
+  active    Boolean @default(true)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "product_variants_product_id_fkey")
+  cartLines CartLine[]
+
+  @@unique([productId, label], where: raw("active"), map: "product_variants_active_label_key")
+  @@unique([productId, position], where: raw("active"), map: "product_variants_active_position_key")
+  @@index([productId, active, position], map: "product_variants_product_order_idx")
+  @@map("product_variants")
+}
+
+/// Owner customer-facing product pill preferences; taxonomy is never written.
+model ProductCategoryPill {
+  businessId    String      @map("business_id") @db.Uuid
+  subcategoryId String      @map("subcategory_id") @db.Uuid
+  position      Int
+  labelEn       String?     @map("label_en")
+  labelHi       String?     @map("label_hi")
+  hidden        Boolean     @default(false)
+  business      Business    @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "product_category_pills_business_id_fkey")
+  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "product_category_pills_subcategory_id_fkey")
+
+  @@id([businessId, subcategoryId], map: "product_category_pills_pkey")
+  @@unique([businessId, position], map: "product_category_pills_business_position_key")
+  @@index([subcategoryId], map: "product_category_pills_subcategory_idx")
+  @@map("product_category_pills")
 }
 model Service {
   id String @id @db.Uuid
@@ -90,7 +124,9 @@ model Service {
   category Category @relation(fields:[categoryId],references:[id],onDelete:NoAction,onUpdate:NoAction)
   subcategory Subcategory @relation(fields:[subcategoryId],references:[id],onDelete:NoAction,onUpdate:NoAction)
   offerTargets OfferTarget[]
+  enquiries Enquiry[]
   @@index([businessId,status,createdAt(sort:Desc),id(sort:Desc)],map:"services_business_page_idx")
+  @@index([businessId,createdAt(sort:Desc),id(sort:Desc)],where:raw("deleted_at IS NULL"),map:"services_owner_page_idx")
   @@index([categoryId,subcategoryId,priceFromPaise,id],where:raw("status='active' AND deleted_at IS NULL"),map:"services_taxonomy_price_idx")
   @@index([subcategoryId,businessId],map:"services_subcategory_idx")
   @@index([categoryId,featuredSelected(sort:Desc),createdAt(sort:Desc),id(sort:Desc)],where:raw("status='active' AND deleted_at IS NULL"),map:"services_featured_page_idx")
@@ -376,6 +412,10 @@ model User {
   likes                Like[]
   hearts               Heart[]
   follows              Follow[]
+  enquiries            Enquiry[]
+  carts                Cart[]
+  notifications        Notification[]
+  notificationPreference NotificationPreference?
 
   @@index([deletedAt], where: raw("\"deleted_at\" IS NULL"), map: "users_active_deleted_at_idx")
   @@map("users")
@@ -826,6 +866,8 @@ model Subcategory {
   approvedFrom   SubcategorySuggestion[] @relation("SuggestionApproved")
   mergedFrom     SubcategorySuggestion[] @relation("SuggestionMerged")
   keywordTargets KeywordMappingTarget[]
+  providerExpertise ProviderExpertise[]
+  productCategoryPills ProductCategoryPill[]
 
   @@unique([categoryId, slug], map: "subcategories_category_slug_key")
   @@unique([categoryId, normalizedName], map: "subcategories_category_normalized_name_key")
@@ -840,7 +882,11 @@ model MediaAsset {
   placementBanners PromotionPlacement[]
   id              String    @id @db.Uuid
   ownerUserId     String    @map("owner_user_id") @db.Uuid
+  /// FK businesses(id) in SQL (20261112235500); set for product/service/business_profile.
+  businessId      String?   @map("business_id") @db.Uuid
   purpose         String
+  /// 'logo' | 'cover' for business_profile only.
+  subjectType     String?   @map("subject_type")
   visibility      String    @default("public")
   moderationState String    @default("allowed") @map("moderation_state")
   storageProvider String    @default("cloudinary") @map("storage_provider")
@@ -859,6 +905,7 @@ model MediaAsset {
   reports         MediaReport[]
 
   @@index([ownerUserId, createdAt, id])
+  @@index([businessId, purpose, createdAt(sort: Desc), id(sort: Desc)])
   @@map("media_assets")
 }
 
@@ -1063,6 +1110,10 @@ model Business {
   videos         Video[]
   mediaReports   MediaReport[]
   follows        Follow[]
+  providerExpertise        ProviderExpertise[]
+  productCategoryPills     ProductCategoryPill[]
+  providerExpertiseVersion ProviderExpertiseVersion?
+  enquiries                Enquiry[]
 
   @@unique([ownerUserId, kind], map: "businesses_owner_kind_key")
   @@index([ownerUserId, status], map: "businesses_owner_status_idx")
@@ -1097,17 +1148,34 @@ model Video {
   version            Int       @default(1)
   createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt          DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  /// FK media_assets(id) in SQL (20261112253000); own `video_thumbnail` asset.
+  thumbnailAssetId   String?   @map("thumbnail_asset_id") @db.Uuid
   business           Business  @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "videos_business_id_fkey")
   reports            MediaReport[]
   comments           VideoComment[]
   likes              Like[]
   engagementCounts   VideoEngagementCounts?
+  links              VideoLink[]
 
   @@index([status, showInReels, id], map: "videos_public_candidates_idx")
   @@index([status, createdAt(sort: Desc), id(sort: Desc)], map: "videos_moderation_page_idx")
   @@index([businessId, createdAt(sort: Desc), id(sort: Desc)], map: "videos_business_page_idx")
   @@index([businessId, sortOrder, id], map: "videos_business_order_idx")
+  @@index([thumbnailAssetId], where: raw("thumbnail_asset_id IS NOT NULL"), map: "videos_thumbnail_asset_idx")
   @@map("videos")
+}
+
+model VideoLink {
+  videoId    String @map("video_id") @db.Uuid
+  targetType String @map("target_type")
+  targetId   String @map("target_id") @db.Uuid
+  sortOrder  Int    @default(0) @map("sort_order")
+  video      Video  @relation(fields: [videoId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@id([videoId, targetType, targetId])
+  @@index([targetType, targetId], map: "video_links_target_idx")
+  @@index([videoId, sortOrder, targetId], map: "video_links_order_idx")
+  @@map("video_links")
 }
 
 model Like {
@@ -1237,6 +1305,57 @@ model BusinessCategory {
   @@map("business_categories")
 }
 
+/// Services-owned provider expertise (F-PV-002); separate from a service's single subcategory (BR-08).
+model ProviderExpertise {
+  businessId    String      @map("business_id") @db.Uuid
+  subcategoryId String      @map("subcategory_id") @db.Uuid
+  createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  business      Business    @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "provider_expertise_business_id_fkey")
+  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "provider_expertise_subcategory_id_fkey")
+
+  @@id([businessId, subcategoryId], map: "provider_expertise_pkey")
+  @@index([subcategoryId, businessId], map: "provider_expertise_subcategory_idx")
+  @@map("provider_expertise")
+}
+
+/// Expertise aggregate version; locked for atomic replace-all saves.
+model ProviderExpertiseVersion {
+  businessId String   @id(map: "provider_expertise_versions_pkey") @map("business_id") @db.Uuid
+  version    Int      @default(1)
+  updatedAt  DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "provider_expertise_versions_business_id_fkey")
+
+  @@map("provider_expertise_versions")
+}
+
+/// Services-owned customer enquiries (F-SV-005/F-VD-016/F-PV-004; ST-enquiry).
+/// The phone is AEAD ciphertext only; guest enquiries have no customer link.
+model Enquiry {
+  id              String    @id(map: "enquiries_pkey") @db.Uuid
+  serviceId       String    @map("service_id") @db.Uuid
+  businessId      String    @map("business_id") @db.Uuid
+  customerUserId  String?   @map("customer_user_id") @db.Uuid
+  name            String
+  phoneCiphertext String    @map("phone_ciphertext")
+  message         String
+  preferredDate   DateTime? @map("preferred_date") @db.Date
+  status          String    @default("new")
+  version         Int       @default(1)
+  convertedAt     DateTime? @map("converted_at") @db.Timestamptz(6)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  service         Service   @relation(fields: [serviceId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "enquiries_service_id_fkey")
+  business        Business  @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "enquiries_business_id_fkey")
+  customer        User?     @relation(fields: [customerUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "enquiries_customer_user_id_fkey")
+
+  @@index([businessId, status, createdAt(sort: Desc), id(sort: Desc)], map: "enquiries_inbox_idx")
+  @@index([customerUserId, businessId, createdAt(sort: Desc)], map: "enquiries_customer_idx")
+  @@index([businessId, createdAt, id], map: "enquiries_cohort_idx")
+  @@index([businessId, convertedAt, id], map: "enquiries_conversion_idx")
+  @@index([serviceId], map: "enquiries_service_idx")
+  @@map("enquiries")
+}
+
 model BusinessHours {
   businessId String    @map("business_id") @db.Uuid
   dayOfWeek  Int       @map("day_of_week") @db.SmallInt
@@ -1332,4 +1451,198 @@ model BusinessReportingCoverage {
   startedAt DateTime @map("started_at") @db.Timestamptz(6)
 
   @@map("business_reporting_coverage")
+}
+
+model Cart {
+  id                 String     @id(map: "carts_pkey") @db.Uuid
+  userId             String?    @map("user_id") @db.Uuid
+  guestCartTokenHash Bytes?     @map("guest_cart_token_hash")
+  version            Int        @default(1)
+  createdAt          DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime   @default(now()) @map("updated_at") @db.Timestamptz(6)
+  user               User?      @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "carts_user_id_fkey")
+  lines              CartLine[]
+
+  @@unique([userId], where: raw("\"user_id\" IS NOT NULL"), map: "carts_user_key")
+  @@unique([guestCartTokenHash], map: "carts_guest_cart_token_hash_key")
+  @@index([updatedAt, id], where: raw("\"user_id\" IS NULL"), map: "carts_guest_expiry_idx")
+  @@map("carts")
+}
+
+model CartLine {
+  id               String          @id(map: "cart_lines_pkey") @db.Uuid
+  cartId           String          @map("cart_id") @db.Uuid
+  productId        String          @map("product_id") @db.Uuid
+  productVariantId String?         @map("product_variant_id") @db.Uuid
+  quantity         Int             @db.SmallInt
+  savedForLater    Boolean         @default(false) @map("saved_for_later")
+  version          Int             @default(1)
+  createdAt        DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime        @default(now()) @map("updated_at") @db.Timestamptz(6)
+  cart             Cart            @relation(fields: [cartId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "cart_lines_cart_id_fkey")
+  product          Product         @relation(fields: [productId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "cart_lines_product_id_fkey")
+  variant          ProductVariant? @relation(fields: [productVariantId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "cart_lines_product_variant_id_fkey")
+
+  @@unique([cartId, productId], where: raw("\"product_variant_id\" IS NULL"), map: "cart_lines_product_key")
+  @@unique([cartId, productId, productVariantId], where: raw("\"product_variant_id\" IS NOT NULL"), map: "cart_lines_variant_key")
+  @@index([cartId, savedForLater, createdAt, id], map: "cart_lines_cart_order_idx")
+  @@index([productId], map: "cart_lines_product_idx")
+  @@index([productVariantId], where: raw("\"product_variant_id\" IS NOT NULL"), map: "cart_lines_variant_idx")
+  @@map("cart_lines")
+}
+
+/// Notifications-owned role-bound logical messages (F-NT-001, F-X-012). Feed
+/// shows published in-app items only; params never carry codes/phones/PII.
+model Notification {
+  id               String                 @id(map: "notifications_pkey") @db.Uuid
+  userId           String                 @map("user_id") @db.Uuid
+  audienceRole     String                 @map("audience_role")
+  category         String
+  topic            String
+  intent           String
+  templateKey      String                 @map("template_key")
+  templateVersion  Int                    @map("template_version")
+  contentVersion   String                 @map("content_version")
+  params           Json                   @default("{}")
+  contentRef       Json?                  @map("content_ref")
+  followerRef      Json?                  @map("follower_ref")
+  linkPath         String?                @map("link_path")
+  resourceScope    Json?                  @map("resource_scope")
+  inAppPublishedAt DateTime?              @map("in_app_published_at") @db.Timestamptz(6)
+  readAt           DateTime?              @map("read_at") @db.Timestamptz(6)
+  sourceEventId    String                 @map("source_event_id") @db.Uuid
+  sourceType       String                 @map("source_type")
+  sourceVersion    BigInt                 @map("source_version")
+  createdAt        DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  user             User                   @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "notifications_user_id_fkey")
+  deliveries       NotificationDelivery[]
+
+  @@unique([userId, audienceRole, sourceEventId, templateKey, contentVersion], map: "notifications_logical_message_key")
+  @@index([userId, audienceRole, inAppPublishedAt(sort: Desc), id(sort: Desc)], where: raw("\"in_app_published_at\" IS NOT NULL"), map: "notifications_feed_idx")
+  @@index([userId, audienceRole], where: raw("\"in_app_published_at\" IS NOT NULL AND \"read_at\" IS NULL"), map: "notifications_unread_idx")
+  @@map("notifications")
+}
+
+/// The five persisted preference keys; display defaults are not consent.
+model NotificationPreference {
+  userId    String   @id(map: "notification_preferences_pkey") @map("user_id") @db.Uuid
+  inapp     Boolean
+  email     Boolean
+  waOrders  Boolean  @map("wa_orders")
+  waOffers  Boolean  @map("wa_offers")
+  waEnq     Boolean  @map("wa_enq")
+  version   Int      @default(1)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "notification_preferences_user_id_fkey")
+
+  @@map("notification_preferences")
+}
+
+/// Migration-seeded, immutable-per-version EN/HI templates.
+model NotificationTemplate {
+  key                String
+  channel            String
+  locale             String
+  title              String?
+  body               String
+  providerTemplateId String? @map("provider_template_id")
+  version            Int
+  active             Boolean
+
+  @@id([key, channel, locale, version], map: "notification_templates_pkey")
+  @@unique([key, channel, locale], where: raw("active"), map: "notification_templates_active_idx")
+  @@map("notification_templates")
+}
+
+/// Per-channel delivery outcome; external channels stay suppressed until a
+/// provider is configured (NT-Q1).
+model NotificationDelivery {
+  id                String       @id(map: "notification_deliveries_pkey") @db.Uuid
+  notificationId    String       @map("notification_id") @db.Uuid
+  channel           String
+  status            String
+  suppressionReason String?      @map("suppression_reason")
+  campaignId        String?      @map("campaign_id") @db.Uuid
+  recipientKey      String?      @map("recipient_key")
+  attempts          Int          @default(0)
+  providerMessageId String?      @map("provider_message_id")
+  lastErrorCode     String?      @map("last_error_code")
+  leaseUntil        DateTime?    @map("lease_until") @db.Timestamptz(6)
+  nextAttemptAt     DateTime?    @map("next_attempt_at") @db.Timestamptz(6)
+  sentAt            DateTime?    @map("sent_at") @db.Timestamptz(6)
+  deliveredAt       DateTime?    @map("delivered_at") @db.Timestamptz(6)
+  failedAt          DateTime?    @map("failed_at") @db.Timestamptz(6)
+  version           Int          @default(1)
+  createdAt         DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime     @default(now()) @map("updated_at") @db.Timestamptz(6)
+  notification      Notification @relation(fields: [notificationId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "notification_deliveries_notification_id_fkey")
+
+  @@unique([notificationId, channel], map: "notification_deliveries_message_channel_key")
+  @@unique([campaignId, recipientKey], where: raw("\"campaign_id\" IS NOT NULL"), map: "notification_deliveries_campaign_recipient_idx")
+  @@unique([channel, providerMessageId], where: raw("\"provider_message_id\" IS NOT NULL"), map: "notification_deliveries_provider_message_idx")
+  @@index([status, nextAttemptAt, leaseUntil], map: "notification_deliveries_work_idx")
+  @@map("notification_deliveries")
+}
+
+/// Admin-owned listing reports (F-PF-007, S-ADMN-03). Accessed through raw
+/// tagged SQL only; foreign keys (businesses, users, cities, areas(id,city_id))
+/// and CHECKs are enforced by migration 20261112252000_admin_listings.
+model ListingReport {
+  id                  String    @id(map: "listing_reports_pkey") @db.Uuid
+  targetType          String    @map("target_type")
+  targetId            String    @map("target_id") @db.Uuid
+  reporterUserId      String?   @map("reporter_user_id") @db.Uuid
+  reporterSubjectHash Bytes     @map("reporter_subject_hash")
+  reason              String
+  details             String?
+  cityId              String    @map("city_id") @db.Uuid
+  areaId              String    @map("area_id") @db.Uuid
+  status              String    @default("open")
+  resolution          String?
+  resolutionNote      String?   @map("resolution_note")
+  resolvedBy          String?   @map("resolved_by") @db.Uuid
+  resolvedAt          DateTime? @map("resolved_at") @db.Timestamptz(6)
+  version             Int       @default(1)
+  createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([targetId, reporterSubjectHash], where: raw("\"status\" = 'open'"), map: "listing_reports_open_subject_key")
+  @@index([areaId, status, createdAt(sort: Desc), id(sort: Desc)], map: "listing_reports_area_queue_idx")
+  @@index([cityId, status, createdAt(sort: Desc), id(sort: Desc)], map: "listing_reports_city_queue_idx")
+  @@index([targetId, status, createdAt(sort: Desc), id(sort: Desc)], map: "listing_reports_target_idx")
+  @@index([reporterUserId], map: "listing_reports_reporter_idx")
+  @@index([resolvedBy], map: "listing_reports_resolved_by_idx")
+  @@map("listing_reports")
+}
+
+/// Gallery-only owner photos (20261112253000). FKs to businesses/media_assets
+/// are SQL-only; soft-deleted so report placements stay resolvable.
+model GalleryPhoto {
+  id               String    @id @db.Uuid
+  businessId       String    @map("business_id") @db.Uuid
+  mediaAssetId     String    @map("media_asset_id") @db.Uuid
+  caption          String?
+  linkedTargetType String?   @map("linked_target_type")
+  linkedTargetId   String?   @map("linked_target_id") @db.Uuid
+  sortOrder        Int       @default(0) @map("sort_order")
+  version          Int       @default(1)
+  deletedAt        DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([mediaAssetId], where: raw("deleted_at IS NULL"), map: "gallery_photos_live_asset_key")
+  @@index([businessId, sortOrder, id], where: raw("deleted_at IS NULL"), map: "gallery_photos_business_order_idx")
+  @@index([linkedTargetType, linkedTargetId], where: raw("linked_target_id IS NOT NULL"), map: "gallery_photos_linked_target_idx")
+  @@map("gallery_photos")
+}
+
+/// Optimistic order version per owner manager list (20261112253000).
+model MediaManagerOrder {
+  businessId String   @map("business_id") @db.Uuid
+  listKind   String   @map("list_kind")
+  version    Int      @default(1)
+  updatedAt  DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@id([businessId, listKind])
+  @@map("media_manager_orders")
 }

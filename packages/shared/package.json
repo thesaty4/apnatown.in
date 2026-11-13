@@ -54,6 +54,16 @@
         "default": "./dist/cjs/businesses.js"
       }
     },
+    "./cart": {
+      "import": {
+        "types": "./dist/esm/cart.d.ts",
+        "default": "./dist/esm/cart.js"
+      },
+      "require": {
+        "types": "./dist/cjs/cart.d.ts",
+        "default": "./dist/cjs/cart.js"
+      }
+    },
     "./catalog": {
       "import": {
         "types": "./dist/esm/catalog.d.ts",
@@ -84,6 +94,16 @@
         "default": "./dist/cjs/auth.js"
       }
     },
+    "./products": {
+      "import": {
+        "types": "./dist/esm/products.d.ts",
+        "default": "./dist/esm/products.js"
+      },
+      "require": {
+        "types": "./dist/cjs/products.d.ts",
+        "default": "./dist/cjs/products.js"
+      }
+    },
     "./search": {
       "import": {
         "types": "./dist/esm/search.d.ts",
@@ -92,6 +112,16 @@
       "require": {
         "types": "./dist/cjs/search.d.ts",
         "default": "./dist/cjs/search.js"
+      }
+    },
+    "./services": {
+      "import": {
+        "types": "./dist/esm/services.d.ts",
+        "default": "./dist/esm/services.js"
+      },
+      "require": {
+        "types": "./dist/cjs/services.d.ts",
+        "default": "./dist/cjs/services.js"
       }
     },
     "./settings": {
@@ -122,6 +152,16 @@
       "require": {
         "types": "./dist/cjs/wire.d.ts",
         "default": "./dist/cjs/wire.js"
+      }
+    },
+    "./notifications": {
+      "import": {
+        "types": "./dist/esm/notifications.d.ts",
+        "default": "./dist/esm/notifications.js"
+      },
+      "require": {
+        "types": "./dist/cjs/notifications.d.ts",
+        "default": "./dist/cjs/notifications.js"
       }
     }
   },

@@ -4,8 +4,9 @@ import { PrismaBusinessDiscoveryDetailRepository } from './infrastructure/busine
 import { BusinessDiscoveryDetailController } from './presentation/business-discovery-detail.controller';
 @Module({})
 export class BusinessPublicModule {
-  static forRoot(runtime: DynamicModule): DynamicModule {
-    return { module: BusinessPublicModule, imports: [runtime], controllers: [BusinessDiscoveryDetailController],
+  /** `media` exports BUSINESS_PROFILE_IMAGES (public logo/cover descriptors). */
+  static forRoot(runtime: DynamicModule, media: DynamicModule): DynamicModule {
+    return { module: BusinessPublicModule, imports: [runtime, media], controllers: [BusinessDiscoveryDetailController],
       providers: [BusinessDiscoveryDetailService,{ provide: BUSINESS_DISCOVERY_DETAIL, useClass: PrismaBusinessDiscoveryDetailRepository }] };
   }
 }

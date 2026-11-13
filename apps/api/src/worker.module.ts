@@ -21,14 +21,20 @@ import { OutboxConsumer } from './shared/jobs/outbox-consumer';
 import { DataRequestProcessor } from './modules/users/application/data-request-processor';
 import { UsersDataWorkerModule } from './modules/users/users-data-worker.module';
 import { MediaStorageModule } from './modules/media-videos/media.module';
+import {
+  NOTIFICATION_OUTBOX_HANDLERS,
+  NotificationsWorkerModule,
+} from './modules/notifications/notifications-worker.module';
+import { CartWorkerModule } from './modules/cart-checkout/cart-worker.module';
 
 @Module({})
 export class WorkerModule {
   static forRoot(config: RuntimeConfig): DynamicModule {
     const runtime = RuntimeModule.forRoot(config);
+    const mediaStorage = MediaStorageModule.forRoot(runtime, true);
     return {
       module: WorkerModule,
-      imports: [runtime, UsersDataWorkerModule.forRoot(runtime, config), MediaStorageModule.forRoot(runtime, true)],
+      imports: [runtime, UsersDataWorkerModule.forRoot(runtime, config), mediaStorage, NotificationsWorkerModule.forRoot(runtime, mediaStorage), CartWorkerModule.forRoot(runtime)],
       providers: [
         {
           provide: PG_BOSS_FACTORY,
@@ -61,9 +67,11 @@ export class WorkerModule {
         { provide: EVENT_CONSUMER, useClass: TransactionalEventConsumer },
         {
           provide: OUTBOX_HANDLERS,
-          useFactory: (dataRequests: DataRequestProcessor) =>
-            Object.freeze<OutboxHandler[]>([dataRequests]),
-          inject: [DataRequestProcessor],
+          useFactory: (
+            dataRequests: DataRequestProcessor,
+            notifications: readonly OutboxHandler[],
+          ) => Object.freeze<OutboxHandler[]>([dataRequests, ...notifications]),
+          inject: [DataRequestProcessor, NOTIFICATION_OUTBOX_HANDLERS],
         },
         OutboxDispatcher,
       ],

@@ -6,19 +6,18 @@ import { CatalogSlugSchema } from '@apnatown/shared/catalog';
 import {
   ProductPublicSchema,
   ServicePublicSchema,
-  BusinessDiscoveryDetailSchema,
 } from '@apnatown/shared/public-listings';
-import {
-  formatLocalBusinessTime,
-  formatMoney,
-} from '@apnatown/shared/formatters';
+import { formatMoney } from '@apnatown/shared/formatters';
 import { Card } from '@apnatown/ui/cards/Card';
 import {
   ErrorState,
   NoPermissionState,
 } from '@apnatown/ui/feedback/StateViews';
 import { StatusBadge } from '@apnatown/ui/primitives/Badge';
-import { buttonClassName } from '@apnatown/ui/primitives/Button';
+import {
+  buttonClassName,
+  buttonVariantClassName,
+} from '@apnatown/ui/primitives/Button';
 import { createPublicServerApi } from '../../shared/api/server';
 import { resource, unwrap } from '../../shared/api/result';
 import { maintenanceHref } from '../../shared/api/maintenance';
@@ -30,8 +29,13 @@ import {
 } from '../support/metadata';
 import { RetryButton } from '../../shared/ui/RetryButton';
 import { ServiceBookmarkAction } from '../engagement';
+import { EnquiryForm } from '../services';
+import { AddToCart } from '../cart';
+import { LinkedVideosStrip } from '../gallery';
+import { NavIcon } from '../../shared/ui/NavIcon';
 
-type ListingKind = 'product' | 'service' | 'shop' | 'provider';
+/** S-CUST-08/09. Shop/provider profiles live in `features/businesses/public-profile`. */
+type ListingKind = 'product' | 'service';
 const readListing = cache(async (kind: ListingKind, slug: string) => {
   if (!CatalogSlugSchema.safeParse(slug).success) notFound();
   const api = createPublicServerApi();
@@ -41,16 +45,9 @@ const readListing = cache(async (kind: ListingKind, slug: string) => {
         await api.GET('/products/{slug}', { params: { path: { slug } } }),
         ProductPublicSchema,
       );
-    if (kind === 'service')
-      return unwrap(
-        await api.GET('/services/{slug}', { params: { path: { slug } } }),
-        ServicePublicSchema,
-      );
     return unwrap(
-      await api.GET('/businesses/public/{slug}', {
-        params: { path: { slug } },
-      }),
-      BusinessDiscoveryDetailSchema,
+      await api.GET('/services/{slug}', { params: { path: { slug } } }),
+      ServicePublicSchema,
     );
   });
 });
@@ -77,6 +74,7 @@ export async function PublicListingPage({
   const result = await readListing(kind, slug);
   const locale = await currentLocale();
   const t = await getTranslations('explore.screen');
+  const enquiry = await getTranslations('service.enquiry');
   if (result.kind === 'error') {
     if (result.code.endsWith('_NOT_FOUND')) notFound();
     if (result.code === 'MAINTENANCE')
@@ -116,17 +114,15 @@ export async function PublicListingPage({
       </Link>
       <header className="grid gap-2">
         <h1 className="text-h1">{name}</h1>
-        {item.kind !== 'shop' && (
-          <Link
-            className="text-primary underline"
-            href={publicHref(
-              `/${item.business.kind === 'shop' ? 'shop' : 'provider'}/${item.business.slug}`,
-              locale,
-            )}
-          >
-            {businessName}
-          </Link>
-        )}
+        <Link
+          className="text-primary underline"
+          href={publicHref(
+            `/${item.business.kind === 'shop' ? 'shop' : 'provider'}/${item.business.slug}`,
+            locale,
+          )}
+        >
+          {businessName}
+        </Link>
         <div className="flex flex-wrap gap-2">
           {item.verified && (
             <StatusBadge tone="ok" icon="✓" label={t('verified')} />
@@ -153,21 +149,47 @@ export async function PublicListingPage({
             })}
           </p>
         )}
-        {item.kind !== 'shop' && (
-          <p className="text-h2 font-semibold">
-            {item.pricePaise === null
-              ? t('priceOnEnquiry')
-              : item.priceType === 'range' && item.priceMaxPaise !== null
-                ? t('priceRange', {
-                    min: formatMoney(item.pricePaise, locale),
-                    max: formatMoney(item.priceMaxPaise, locale),
+        <p className="text-h2 font-semibold">
+          {item.pricePaise === null
+            ? t('priceOnEnquiry')
+            : item.priceType === 'range' && item.priceMaxPaise !== null
+              ? t('priceRange', {
+                  min: formatMoney(item.pricePaise, locale),
+                  max: formatMoney(item.priceMaxPaise, locale),
+                })
+              : item.priceType === 'from'
+                ? t('fromPrice', {
+                    price: formatMoney(item.pricePaise, locale),
                   })
-                : item.priceType === 'from'
-                  ? t('fromPrice', {
-                      price: formatMoney(item.pricePaise, locale),
-                    })
-                  : formatMoney(item.pricePaise, locale)}
-          </p>
+                : formatMoney(item.pricePaise, locale)}
+        </p>
+        {'inventory' in result.data && (
+          <AddToCart
+            productId={item.id}
+            name={name}
+            purchasable={item.pricePaise !== null}
+            variants={result.data.variants}
+            inventory={result.data.inventory}
+          />
+        )}
+        {item.kind === 'service' && (
+          <>
+            <a
+              href="#svenq"
+              className={`${buttonVariantClassName('primary')} tablet:justify-self-start`}
+            >
+              <NavIcon name="send" className="size-4.5" />
+              {enquiry('cta')}
+            </a>
+            <p className="m-0 flex min-w-0 items-start gap-3 rounded-md border border-info bg-info-soft px-3.5 py-3 text-small text-text">
+              <span aria-hidden="true" className="shrink-0">
+                ℹ️
+              </span>
+              <span className="min-w-0 [overflow-wrap:anywhere]">
+                {enquiry('notice')}
+              </span>
+            </p>
+          </>
         )}
       </header>
       {images.length > 0 && (
@@ -222,33 +244,12 @@ export async function PublicListingPage({
           )}
         </>
       )}
-      {'hours' in result.data && result.data.hours.length > 0 && (
-        <Card padded>
-          <h2 className="text-h3">{t('businessHours')}</h2>
-          <dl className="grid gap-2">
-            {result.data.hours.map((day) => (
-              <div
-                key={day.dayOfWeek}
-                className="flex flex-wrap justify-between gap-2"
-              >
-                <dt>{t(`day.d${day.dayOfWeek}`)}</dt>
-                <dd>
-                  {day.isClosed
-                    ? t('closed')
-                    : day.opensAt && day.closesAt
-                      ? t('hoursRange', {
-                          opens: formatLocalBusinessTime(day.opensAt, locale),
-                          closes: formatLocalBusinessTime(day.closesAt, locale),
-                        })
-                      : t('hoursUnavailable')}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </Card>
-      )}
       {'orderability' in result.data && !result.data.orderability.orderable && (
         <p role="status">{t('orderingUnavailable')}</p>
+      )}
+      <LinkedVideosStrip targetType={item.kind} targetId={item.id} />
+      {item.kind === 'service' && (
+        <EnquiryForm serviceId={item.id} serviceName={name} />
       )}
       {item.phone && (
         <a

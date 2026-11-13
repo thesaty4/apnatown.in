@@ -17,10 +17,51 @@ const implemented = new Set([
   '/services',
   '/hi/services',
   '/saved',
+  '/cart',
+  '/notifications',
+  '/vendor/enquiries',
+  '/vendor/inventory',
+  '/vendor/media',
+  '/vendor/notifications',
+  '/vendor/onboarding',
+  '/vendor/overview',
+  '/vendor/products',
+  '/vendor/profile',
+  '/vendor/qr',
+  '/vendor/services',
+  '/provider/enquiries',
+  '/provider/media',
+  '/provider/notifications',
+  '/provider/onboarding',
+  '/provider/overview',
+  '/provider/products',
+  '/provider/profile',
+  '/provider/qr',
+  '/provider/services',
+  '/admin',
+  '/admin/approvals',
+  '/admin/audit',
+  '/admin/categories',
+  '/admin/keywords',
+  '/admin/listings',
   '/admin/profile',
+  '/admin/subcategory-suggestions',
+  '/admin/videos',
+  '/super-admin',
+  '/super-admin/activity',
   '/super-admin/admins',
+  '/super-admin/cities',
   '/super-admin/roles',
+  '/super-admin/settings',
 ]);
+const implementedCityPath =
+  /^\/super-admin\/cities\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
+const implementedApprovalPath =
+  /^\/admin\/approvals\/(?:business|provider)\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
+const implementedEnquiryPath =
+  /^\/(?:vendor|provider)\/enquiries\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
+const implementedProductEditorPath =
+  /^\/(?:vendor|provider)\/products\/(?:new|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/iu;
 const implementedVideoPath =
   /^\/(?:hi\/)?videos\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
 const implementedListingPath =
@@ -46,6 +87,10 @@ export function safeReturnTo(input: unknown): string | undefined {
     url.origin !== 'https://return.invalid' ||
     (!implemented.has(url.pathname) &&
       !implementedVideoPath.test(url.pathname) &&
+      !implementedCityPath.test(url.pathname) &&
+      !implementedApprovalPath.test(url.pathname) &&
+      !implementedEnquiryPath.test(url.pathname) &&
+      !implementedProductEditorPath.test(url.pathname) &&
       !implementedListingPath.test(url.pathname) &&
       !implementedCategoryPath.test(url.pathname)) ||
     input.split(/[?#]/)[0] !== url.pathname

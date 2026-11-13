@@ -6,14 +6,15 @@ import type { ImagePolicy } from '@apnatown/shared/settings';
 import type { ImageProcessor, ProcessedImage } from '../../modules/media-videos/domain/images';
 import { DomainError } from '../../shared/errors/errors';
 
-const outputSchema = z.object({
+/** Output bounds follow the policy the worker was given (counts and byte budgets). */
+const outputSchema = (policy: ImagePolicy) => z.object({
   result: z.object({
     width: z.number().int().positive(),
     height: z.number().int().positive(),
     variants: z.array(z.object({
       width: z.number().int().positive(), height: z.number().int().positive(),
-      body: z.string().max(164_000),
-    })).min(1).max(3),
+      body: z.string().max(Math.ceil(Math.max(...policy.variants.map((v) => v.maxBytes)) / 3) * 4),
+    })).min(1).max(policy.variants.length),
   }),
 });
 
@@ -58,7 +59,7 @@ export class SharpImageProcessor implements ImageProcessor {
           else reject(new DomainError('MEDIA_IMAGE_PROCESSING_FAILED'));
         });
         child.once('message', (value: unknown) => {
-          const result = outputSchema.safeParse(value);
+          const result = outputSchema(policy).safeParse(value);
           if (!result.success) return finish();
           finish({
             ...result.data.result,

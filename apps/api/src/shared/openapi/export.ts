@@ -88,14 +88,87 @@ import { SearchHomeController } from '../../modules/search/presentation/search-h
 import { SearchHomeService } from '../../modules/search/application/search-home.service';
 import { ExploreController } from '../../modules/search/presentation/explore.controller';
 import { ExploreService } from '../../modules/search/application/explore.service';
+import { SearchController } from '../../modules/search/presentation/search.controller';
+import { SearchService } from '../../modules/search/application/search.service';
 import { ServiceBookmarksController } from '../../modules/engagement/presentation/service-bookmarks.controller';
 import { ServiceBookmarksService } from '../../modules/engagement/application/service-bookmarks.service';
 import { ProductPublicController } from '../../modules/products/presentation/product-public.controller';
 import { ProductReadService } from '../../modules/products/application/product-read.service';
+import { ProductBusinessPublicController } from '../../modules/products/presentation/product-business-public.controller';
+import { ProductBusinessPublicService } from '../../modules/products/application/product-business-public.service';
+import { ServiceBusinessPublicController } from '../../modules/services/presentation/service-business-public.controller';
+import { ServiceBusinessPublicService } from '../../modules/services/application/service-business-public.service';
+import {
+  ProductBulkController,
+  ProductOwnerController,
+} from '../../modules/products/presentation/product-owner.controller';
+import { InventoryController } from '../../modules/products/presentation/inventory.controller';
+import { ProductPillsController } from '../../modules/products/presentation/product-pills.controller';
+import { ProductImportController } from '../../modules/products/presentation/product-import.controller';
+import { ProductImportService } from '../../modules/products/application/product-import.service';
+import { ProductOwnerService } from '../../modules/products/application/product-owner.service';
+import { ProductWriteService } from '../../modules/products/application/product-write.service';
+import { ProductBulkService } from '../../modules/products/application/product-bulk.service';
+import { InventoryService } from '../../modules/products/application/inventory.service';
+import { ProductPillsService } from '../../modules/products/application/product-pills.service';
 import { ServicePublicController } from '../../modules/services/presentation/service-public.controller';
 import { ServiceReadService } from '../../modules/services/application/service-read.service';
+import {
+  ProviderExpertiseOwnerController,
+  ProviderExpertisePublicController,
+} from '../../modules/services/presentation/provider-expertise.controller';
+import { ProviderExpertiseService } from '../../modules/services/application/provider-expertise.service';
+import {
+  EnquiryOwnerController,
+  EnquiryPublicController,
+} from '../../modules/services/presentation/enquiry.controller';
+import { EnquiryCreateService } from '../../modules/services/application/enquiry-create.service';
+import { EnquiryInboxService } from '../../modules/services/application/enquiry-inbox.service';
+import { ServiceOwnerController } from '../../modules/services/presentation/service-owner.controller';
+import { ServiceOwnerService } from '../../modules/services/application/service-owner.service';
+import { ServiceOwnerWriteService } from '../../modules/services/application/service-owner-write.service';
 import { BusinessDiscoveryDetailController } from '../../modules/businesses/presentation/business-discovery-detail.controller';
 import { BusinessDiscoveryDetailService } from '../../modules/businesses/application/business-discovery-detail.service';
+import { BusinessOwnerController } from '../../modules/businesses/presentation/business-owner.controller';
+import { BusinessAdminController } from '../../modules/businesses/presentation/business-admin.controller';
+import { BusinessOwnerService } from '../../modules/businesses/application/business-owner.service';
+import { BusinessAdminReadService } from '../../modules/businesses/application/business-admin-read.service';
+import { BusinessDecisionService } from '../../modules/businesses/application/business-decision.service';
+import { AdminApprovalsController } from '../../modules/admin/presentation/admin-approvals.controller';
+import { AdminApprovalsService } from '../../modules/admin/application/admin-approvals.service';
+import { CartController } from '../../modules/cart-checkout/presentation/cart.controller';
+import { CartLinesController } from '../../modules/cart-checkout/presentation/cart-lines.controller';
+import { CartReadService } from '../../modules/cart-checkout/application/cart-read.service';
+import { CartMergeService } from '../../modules/cart-checkout/application/cart-merge.service';
+import { CartLinesService } from '../../modules/cart-checkout/application/cart-lines.service';
+import { GuestCartCapability } from '../../modules/cart-checkout/application/guest-cart-capability';
+import { GuestCartCookie } from '../../modules/cart-checkout/presentation/guest-cart.cookie';
+import { NotificationsController } from '../../modules/notifications/presentation/notifications.controller';
+import { NotificationFeedService } from '../../modules/notifications/application/notification-feed.service';
+import { NotificationPreferencesService } from '../../modules/notifications/application/notification-preferences.service';
+import { AdminListingProductsController } from '../../modules/admin/presentation/admin-listing-products.controller';
+import { AdminListingsController } from '../../modules/admin/presentation/admin-listings.controller';
+import {
+  AdminListingReportsController,
+  ListingReportsController,
+} from '../../modules/admin/presentation/admin-listing-reports.controller';
+import { AdminListingsService } from '../../modules/admin/application/admin-listings.service';
+import { AdminListingReportsService } from '../../modules/admin/application/admin-listing-reports.service';
+import { ListingReportIntakeService } from '../../modules/admin/application/listing-report-intake.service';
+import { PRODUCT_ADMIN } from '../../modules/products/application/product-admin.port';
+import { OwnerVideoManageController } from '../../modules/media-videos/presentation/owner-video-manage.controller';
+import { OwnerGalleryController } from '../../modules/media-videos/presentation/owner-gallery.controller';
+import {
+  LinkedVideoController,
+  PhotoReportController,
+  PublicBusinessMediaController,
+} from '../../modules/media-videos/presentation/public-media.controller';
+import { OwnerVideoService } from '../../modules/media-videos/application/owner-video.service';
+import { OwnerGalleryService } from '../../modules/media-videos/application/owner-gallery.service';
+import { MediaOrderService } from '../../modules/media-videos/application/media-order.service';
+import { PublicMediaService } from '../../modules/media-videos/application/public-media.service';
+import { PhotoReportService } from '../../modules/media-videos/application/photo-report.service';
+import { MediaReportModerationService } from '../../modules/media-videos/application/media-report-moderation.service';
 
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
@@ -140,10 +213,38 @@ import { BusinessDiscoveryDetailService } from '../../modules/businesses/applica
     VideoCommentsController,
     AdminVideoCommentsController,
     SearchHomeController,
+    SearchController,
     ExploreController,
     ProductPublicController,
+    ProductBusinessPublicController,
+    ProductBulkController,
+    ProductImportController,
+    ProductOwnerController,
+    InventoryController,
+    ProductPillsController,
     ServicePublicController,
+    ServiceBusinessPublicController,
+    EnquiryPublicController,
+    ProviderExpertiseOwnerController,
+    EnquiryOwnerController,
+    ServiceOwnerController,
+    ProviderExpertisePublicController,
     BusinessDiscoveryDetailController,
+    BusinessOwnerController,
+    BusinessAdminController,
+    AdminApprovalsController,
+    CartController,
+    CartLinesController,
+    NotificationsController,
+    AdminListingProductsController,
+    AdminListingsController,
+    AdminListingReportsController,
+    ListingReportsController,
+    OwnerVideoManageController,
+    OwnerGalleryController,
+    PublicBusinessMediaController,
+    LinkedVideoController,
+    PhotoReportController,
   ],
   providers: [
     SavedService,
@@ -182,9 +283,44 @@ import { BusinessDiscoveryDetailService } from '../../modules/businesses/applica
     VideoCommentEvents,
     SearchHomeService,
     ExploreService,
+    SearchService,
     ProductReadService,
+    ProductBusinessPublicService,
+    ProductOwnerService,
+    ProductWriteService,
+    ProductBulkService,
+    ProductImportService,
+    InventoryService,
+    ProductPillsService,
     ServiceReadService,
+    ServiceBusinessPublicService,
+    ProviderExpertiseService,
+    EnquiryCreateService,
+    EnquiryInboxService,
+    ServiceOwnerService,
+    ServiceOwnerWriteService,
     BusinessDiscoveryDetailService,
+    BusinessOwnerService,
+    BusinessAdminReadService,
+    BusinessDecisionService,
+    AdminApprovalsService,
+    CartReadService,
+    CartMergeService,
+    CartLinesService,
+    GuestCartCapability,
+    GuestCartCookie,
+    NotificationFeedService,
+    NotificationPreferencesService,
+    AdminListingsService,
+    AdminListingReportsService,
+    ListingReportIntakeService,
+    PRODUCT_ADMIN,
+    OwnerVideoService,
+    OwnerGalleryService,
+    MediaOrderService,
+    PublicMediaService,
+    PhotoReportService,
+    MediaReportModerationService,
   ].map((provide) => ({ provide, useValue: Object.freeze({}) })),
 })
 class OpenApiModule {}

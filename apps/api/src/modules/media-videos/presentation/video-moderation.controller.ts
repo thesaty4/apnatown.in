@@ -17,6 +17,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import {
+  AdminMediaReportPageSchema,
+  AdminMediaReportsQuerySchema,
+  type AdminMediaReportsQuery,
   MediaReportDecisionResultSchema,
   MediaReportDecisionSchema,
   VideoModerationDecisionSchema,
@@ -42,6 +45,7 @@ import { currentCorrelationId } from '../../../shared/logger/context';
 import { RateLimit } from '../../../shared/rate-limit/rate-limit';
 import { AdminErrors } from '../../admin/presentation/admin.dto';
 import { VideoModerationService } from '../application/video-moderation.service';
+import { MediaReportModerationService } from '../application/media-report-moderation.service';
 import type { VideoModerationRequest } from '../domain/videos';
 
 class VideoModerationQueryDto extends createZodDto(VideoModerationQuerySchema) {}
@@ -56,6 +60,8 @@ class MediaReportDecisionDto extends createZodDto(
 class MediaReportDecisionResultDto extends createZodDto(
   MediaReportDecisionResultSchema,
 ) {}
+class AdminMediaReportsQueryDto extends createZodDto(AdminMediaReportsQuerySchema) {}
+class AdminMediaReportPageDto extends createZodDto(AdminMediaReportPageSchema) {}
 
 const READ_LIMIT = {
   key: 'media.videos.admin.read',
@@ -146,7 +152,7 @@ export class VideoModerationController {
   @RateLimit(WRITE_LIMIT)
   async decide(
     @Req() request: AuthRequest,
-    @Param(new InputPipe(IdSchema)) id: string,
+    @Param('id', new InputPipe(IdSchema)) id: string,
     @Query(new InputPipe(EmptyRequestSchema)) _query: Record<string, never>,
     @Body(new InputPipe(VideoModerationDecisionSchema))
     body: VideoModerationDecision,
@@ -162,7 +168,35 @@ export class VideoModerationController {
 @Roles('admin', 'super_admin')
 @Controller('admin/media-reports')
 export class AdminMediaReportController {
-  constructor(private readonly moderation: VideoModerationService) {}
+  constructor(
+    private readonly moderation: VideoModerationService,
+    private readonly reports: MediaReportModerationService,
+  ) {}
+
+  @Get()
+  @Permission('reviews', 'view')
+  @ApiQuery({ type: AdminMediaReportsQueryDto })
+  @ApiOperation({
+    operationId: 'mediaAdminReportList',
+    summary: 'List open video and photo reports within the admin’s review scope',
+    description:
+      'One keyset queue (newest first) discriminated by targetKind (video|photo), filtered by current assigned city/area scope of the reported business. Photo items carry placementType/placementId/assetId and a placement-bound same-origin gateway preview while the placement is public (null otherwise); never a provider URL.',
+  })
+  @ApiOkResponse({ type: AdminMediaReportPageDto })
+  @AdminErrors({
+    400: 'VALIDATION_ERROR for invalid query or a malformed/foreign cursor.',
+    403: 'ADMIN_SCOPE_FORBIDDEN when the admin lacks reviews:view or assigned scope.',
+    429: 'COMMON_RATE_LIMITED with Retry-After.',
+  })
+  @RateLimit(READ_LIMIT)
+  async list(
+    @Req() request: AuthRequest,
+    @Query(new InputPipe(AdminMediaReportsQuerySchema)) query: AdminMediaReportsQuery,
+  ) {
+    return AdminMediaReportPageSchema.parse(
+      await this.reports.queue(moderationRequest(request), query),
+    );
+  }
 
   @Post(':id/decision')
   @Permission('reviews', 'edit')
@@ -182,9 +216,9 @@ export class AdminMediaReportController {
   @ApiBody({ type: MediaReportDecisionDto })
   @ApiOperation({
     operationId: 'mediaAdminReportDecision',
-    summary: 'Dismiss a report or remove its video target',
+    summary: 'Dismiss a report or remove its video or photo target',
     description:
-      'Rechecks reviews:edit and the stored video business scope in the command transaction. Resolving a report never approves its target.',
+      'Rechecks reviews:edit and the stored business scope in the command transaction (also on idempotent replay) and audits atomically. Resolving a report never approves its target. Photo reports: targetVersion is the media asset version; remove marks the asset removed so no public placement or gateway serves it; result targetKind=photo with photoModerationState.',
   })
   @ApiOkResponse({ type: MediaReportDecisionResultDto })
   @AdminErrors({
@@ -197,17 +231,16 @@ export class AdminMediaReportController {
   @RateLimit(WRITE_LIMIT)
   async decide(
     @Req() request: AuthRequest,
-    @Param(new InputPipe(IdSchema)) id: string,
+    @Param('id', new InputPipe(IdSchema)) id: string,
     @Query(new InputPipe(EmptyRequestSchema)) _query: Record<string, never>,
     @Body(new InputPipe(MediaReportDecisionSchema))
     body: MediaReportDecision,
   ) {
+    const actor = moderationRequest(request);
     return MediaReportDecisionResultSchema.parse(
-      await this.moderation.resolveReport(
-        moderationRequest(request),
-        id,
-        body,
-      ),
+      (await this.reports.isPhotoReport(id))
+        ? await this.reports.resolvePhoto(actor, id, body)
+        : await this.moderation.resolveReport(actor, id, body),
     );
   }
 }

@@ -18,6 +18,7 @@ import { preferencesOptions } from '../../shared/i18n/preferences-api';
 import { useSavePreferences } from '../../shared/i18n/preferences-query';
 import { OwnBoundary, ResourceBody } from './OwnResource';
 import { Consents } from './Consents';
+import { ChannelPreferences } from '../notifications/ChannelPreferences';
 
 export function Preferences({
   initial,
@@ -46,6 +47,7 @@ export function Preferences({
             >
               {(preferences) => <PreferencesForm preferences={preferences} />}
             </ResourceBody>
+            <ChannelPreferences {...context} />
             <Consents {...context} />
           </>
         )}

@@ -2,7 +2,10 @@
 
 import { useTranslations } from 'next-intl';
 import { LatitudeSchema, LongitudeSchema } from '@apnatown/shared/geo';
-import { buttonClassName } from '@apnatown/ui/primitives/Button';
+import {
+  buttonVariantClassName,
+  type ButtonVariant,
+} from '@apnatown/ui/primitives/Button';
 
 export type DirectionsDestination = { lat: number; lng: number };
 
@@ -45,18 +48,20 @@ export function DirectionsAction({
   destination,
   placeName,
   className = '',
+  variant = 'primary',
 }: {
   destination: Partial<DirectionsDestination> | null | undefined;
   /** Localized listing name, used in the accessible label. */
   placeName: string;
   className?: string;
+  variant?: ButtonVariant;
 }) {
   const t = useTranslations('geo.directions');
   const point = validDestination(destination);
   if (!point) return null;
   return (
     <a
-      className={`${buttonClassName} ${className}`}
+      className={`${buttonVariantClassName(variant)} ${className}`}
       href={directionsHref(point, false)}
       aria-label={t('named', { place: placeName })}
       onClick={(event) => {

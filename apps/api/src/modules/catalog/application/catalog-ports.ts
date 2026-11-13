@@ -20,13 +20,16 @@ import type { ImagePlacement } from '../../media-videos/domain/images';
 
 export const CATALOG_READ = Symbol('CATALOG_READ');
 export interface CatalogReadPort {
-  /** Taxonomy projection + revision (validation for products/services/businesses). */
+  /**
+   * Taxonomy projection + revision (validation for products/services/businesses).
+   * With `tx`, reads inside the caller's transaction (write-time recheck).
+   */
   taxonomy(input: {
     categoryIds?: readonly string[];
     subcategoryIds?: readonly string[];
     kind?: CategoryKind;
     activeOnly: boolean;
-  }): Promise<TaxonomyRead>;
+  }, tx?: TxContext): Promise<TaxonomyRead>;
   /** Enabled mappings only; the query is normalized again server-side. */
   resolveKeywords(input: {
     normalizedQuery: string;

@@ -2,10 +2,13 @@ import type { ExploreSelection } from '../application/explore.repository';
 import { Prisma } from '../../../shared/persistence/generated/client';
 import { DomainError } from '../../../shared/errors/errors';
 
-type Term = { column: Prisma.Sql; descending: boolean; cast: 'float8' | 'bigint' | 'timestamptz' | 'uuid' };
+export type Term = { column: Prisma.Sql; descending: boolean; cast: 'float8' | 'bigint' | 'timestamptz' | 'uuid' };
 export function exploreOrder(selection: ExploreSelection, after?: string[]) {
   const terms = sortTerms(selection);
   terms.push({ column: Prisma.sql`x.id`, descending: selection.filters.sort === 'newest', cast: 'uuid' });
+  return keysetOrder(terms, after);
+}
+export function keysetOrder(terms: Term[], after?: string[]) {
   if (after && (after.length !== terms.length || after.some((value, i) =>
     value !== '~' && !validValue(value, terms[i]!.cast)))) throw new DomainError('COMMON_VALIDATION_FAILED');
   const order = Prisma.join(terms.map((t) => Prisma.sql`${t.column}

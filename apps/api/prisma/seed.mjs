@@ -5,6 +5,8 @@ import { buildFixtures, FIXTURE_CLOCK } from './seed-fixtures.mjs';
 import { buildListingFixtures } from './seed-listing-fixtures.mjs';
 import { seedBusinessListings, seedListingTaxonomy } from './seed-listings.mjs';
 import { buildPersonaFixtures, seedPersonas } from './seed-personas.mjs';
+import { buildProviderFixtures, seedProviderData } from './seed-provider-data.mjs';
+import { seedLocalSettings } from './seed-settings.mjs';
 import { localTargets } from './targets.mjs';
 
 const require = createRequire(import.meta.url);
@@ -231,7 +233,7 @@ async function seedBusiness(client, business, ownerId, cityId, areaId) {
   return videos;
 }
 
-async function apply(client, fixtures, listings, personas, helpers) {
+async function apply(client, fixtures, listings, personas, providers, helpers) {
   const { crypto } = helpers;
   const counts = {
     businesses: 0,
@@ -246,6 +248,9 @@ async function apply(client, fixtures, listings, personas, helpers) {
     personas: 0,
     adminAccounts: 0,
     personaConflicts: 0,
+    expertise: 0,
+    enquiries: 0,
+    settings: 0,
   };
   const taxonomyIds = await seedListingTaxonomy(
     client,
@@ -287,6 +292,8 @@ async function apply(client, fixtures, listings, personas, helpers) {
     );
   }
   await seedPersonas(client, helpers, personas, { cityId, areaIds }, counts);
+  await seedProviderData(client, helpers, providers, FIXTURE_CLOCK, counts);
+  await seedLocalSettings(client, FIXTURE_CLOCK, counts);
   return counts;
 }
 
@@ -320,9 +327,10 @@ export async function seed(env) {
   const fixtures = buildFixtures(sample, helpers);
   const listings = buildListingFixtures(sample, helpers);
   const personas = buildPersonaFixtures(sample, helpers, fixtures);
+  const providers = buildProviderFixtures(sample, helpers);
   const counts = await withDatabase(targets.migration, (client) =>
     inTransaction(client, (tx) =>
-      apply(tx, fixtures, listings, personas, helpers),
+      apply(tx, fixtures, listings, personas, providers, helpers),
     ),
   );
   process.stdout.write(
@@ -332,6 +340,8 @@ export async function seed(env) {
       `${counts.inventory} inventory rows and ${counts.services} services added; ` +
       `${counts.listingsSkipped} listings skipped (existing, conflicting or missing settings); ` +
       `${counts.personas} demo persona users and ${counts.adminAccounts} admin accounts added; ` +
-      `${counts.personaConflicts} persona role conflicts\n`,
+      `${counts.personaConflicts} persona role conflicts; ` +
+      `${counts.expertise} provider expertise rows and ${counts.enquiries} enquiries added; ` +
+      `${counts.settings} local settings added\n`,
   );
 }

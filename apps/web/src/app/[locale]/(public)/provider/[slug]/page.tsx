@@ -1,11 +1,10 @@
-import {
-  PublicListingPage,
-  listingMetadata,
-} from '../../../../../features/explore/PublicListingPage';
+import { BusinessProfilePage } from '../../../../../features/businesses/public-profile/BusinessProfilePage';
+import { businessProfileMetadata } from '../../../../../features/businesses/public-profile/read';
+
 type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props) {
-  return listingMetadata('provider', (await params).slug);
+  return businessProfileMetadata('provider', (await params).slug);
 }
 export default async function ProviderPage({ params }: Props) {
-  return <PublicListingPage kind="provider" slug={(await params).slug} />;
+  return <BusinessProfilePage kind="provider" slug={(await params).slug} />;
 }

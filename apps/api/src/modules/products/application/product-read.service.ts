@@ -9,7 +9,7 @@ export class ProductReadService {
   constructor(@Inject(PRODUCT_READ) private readonly products: ProductReadPort) {}
   async read(slug: string): Promise<ProductPublic> {
     const result = await this.products.bySlug(slug);
-    if (!result) throw new DomainError('COMMON_NOT_FOUND');
+    if (!result) throw new DomainError('PRODUCT_NOT_FOUND');
     return ProductPublicSchema.parse(result);
   }
 }

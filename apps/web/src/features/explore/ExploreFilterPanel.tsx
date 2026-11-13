@@ -26,11 +26,14 @@ export function ExploreFilterPanel({
   facets = noFacets,
   onChange,
   onReset,
+  showSort = true,
 }: {
   filters: ExploreFilters;
   facets?: ExploreResponse['facets'] | undefined;
   onChange: (patch: FilterPatch) => void;
   onReset: () => void;
+  /** Search renders its tab-specific sort beside the filter-sheet trigger. */
+  showSort?: boolean;
 }) {
   const t = useTranslations('explore.screen');
   const locale = useLocale();
@@ -212,7 +215,7 @@ export function ExploreFilterPanel({
           {distance}
         </div>
       )}
-      <div className={groupClass}>
+      {showSort && <div className={groupClass}>
         <Select
           label={t('sortBy')}
           value={filters.sort}
@@ -222,7 +225,7 @@ export function ExploreFilterPanel({
           }))}
           onChange={(event) => onChange({ sort: event.target.value })}
         />
-      </div>
+      </div>}
     </div>
   );
 }

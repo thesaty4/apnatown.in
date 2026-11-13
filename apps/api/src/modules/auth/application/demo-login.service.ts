@@ -31,15 +31,16 @@ export class DemoLoginService {
     persona: DemoPersona,
   ): Promise<{ issued: IssuedSession; principal: Principal }> {
     const identity = DEMO_PERSONAS[persona];
-    return this.uow.run(async (tx) => {
-      const userId = await this.users.findByPhone(tx, identity.phone);
-      const principal = userId
-        ? await this.users.readPrincipal(tx, userId)
-        : null;
-      if (!principal?.roles.includes(identity.role))
-        throw new DomainError('DEMO_PERSONA_UNAVAILABLE');
-      const issued = await this.sessions.replace(tx, binding, principal.userId);
-      return { issued, principal };
-    });
+    return this.uow.run((tx) =>
+      this.sessions.replace(tx, binding, async (locked) => {
+        const userId = await this.users.findByPhone(locked, identity.phone);
+        const principal = userId
+          ? await this.users.readPrincipal(locked, userId)
+          : null;
+        if (!principal?.roles.includes(identity.role))
+          throw new DomainError('DEMO_PERSONA_UNAVAILABLE');
+        return principal;
+      }),
+    );
   }
 }

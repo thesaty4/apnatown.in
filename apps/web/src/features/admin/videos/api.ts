@@ -1,7 +1,4 @@
 import {
-  MediaReportDecisionResultSchema,
-  MediaReportDecisionSchema,
-  type MediaReportDecision,
   VideoModerationDecisionSchema,
   VideoModerationItemSchema,
   VideoModerationPageSchema,
@@ -63,32 +60,5 @@ export async function decideVideoModeration(
       body,
     }),
     VideoModerationItemSchema,
-  );
-}
-
-export async function decideVideoReport(
-  api: BrowserApi,
-  id: string,
-  decision: MediaReportDecision,
-  { key, assertCurrent }: Command,
-) {
-  const parsed = MediaReportDecisionSchema.parse(decision);
-  const body = {
-    action: parsed.action,
-    expectedVersion: parsed.expectedVersion,
-    targetVersion: parsed.targetVersion,
-    ...(parsed.reason === undefined ? {} : { reason: parsed.reason }),
-  };
-  const headers = await api.mutationHeaders();
-  assertCurrent();
-  return unwrap(
-    await api.POST('/admin/media-reports/{id}/decision', {
-      params: {
-        path: { id },
-        header: { ...headers, 'Idempotency-Key': key },
-      },
-      body,
-    }),
-    MediaReportDecisionResultSchema,
   );
 }

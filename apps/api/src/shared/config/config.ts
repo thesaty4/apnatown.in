@@ -75,6 +75,12 @@ const schema = z.object({
     blank,
     z.coerce.number().int().min(60).max(2592000).optional(),
   ),
+  // Q-70 guest-cart idle lifetime. Unset keeps guest carts unavailable
+  // (anonymous GET /cart stays the transient empty state; no cookie issued).
+  GUEST_CART_TTL_SECONDS: z.preprocess(
+    blank,
+    z.coerce.number().int().min(3600).max(7776000).optional(),
+  ),
 });
 
 export type RuntimeConfig = z.infer<typeof schema>;

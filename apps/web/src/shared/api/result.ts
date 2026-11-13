@@ -56,6 +56,22 @@ export function normalizeFailure(error: unknown): ApiFailure {
   return error instanceof ApiFailure ? error : new ApiFailure('REQUEST_FAILED');
 }
 
+/**
+ * Bounded retry for safe reads: at most two retries, only for network
+ * failures and 5xx. Never retries 4xx (validation/auth/permission/conflict/
+ * rate limit), maintenance or a changed session.
+ */
+export function retryTransientRead(failureCount: number, error: unknown) {
+  if (failureCount >= 2) return false;
+  if (!(error instanceof ApiFailure)) return error instanceof TypeError;
+  if (error.code === 'MAINTENANCE' || error.code === 'SESSION_CHANGED')
+    return false;
+  return (
+    error.status >= 500 ||
+    (error.status === 0 && error.code === 'REQUEST_FAILED')
+  );
+}
+
 export async function resource<T>(
   load: () => Promise<T>,
 ): Promise<Resource<T>> {

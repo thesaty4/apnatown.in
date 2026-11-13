@@ -28,6 +28,42 @@ export const BusinessKindSchema = z.enum(BUSINESS_KINDS);
 export type BusinessKind = z.infer<typeof BusinessKindSchema>;
 /** Owner-route header selecting which owned application is intended. */
 export const BUSINESS_KIND_HEADER = 'x-business-kind';
+/**
+ * Private provider dashboard segments sharing the public `/provider/[slug]`
+ * prefix; slugs never take these values so the two route trees cannot collide.
+ */
+export const PROVIDER_DASHBOARD_SEGMENTS = [
+  'account',
+  'analytics',
+  'billing',
+  'enquiries',
+  'followers',
+  'inventory',
+  'media',
+  'notifications',
+  'offers',
+  'onboarding',
+  'orders',
+  'overview',
+  'products',
+  'profile',
+  'qr',
+  'reviews',
+  'services',
+] as const;
+/**
+ * Values never allocated as business slugs: provider dashboard segments plus
+ * static `/businesses/*` API segments that share the `/businesses/{slug}/…`
+ * route space (`me`, `public`, `admin`, `applications`, `expertise`).
+ */
+export const BUSINESS_RESERVED_SLUGS: ReadonlySet<string> = new Set([
+  ...PROVIDER_DASHBOARD_SEGMENTS,
+  'admin',
+  'applications',
+  'expertise',
+  'me',
+  'public',
+]);
 
 export const BUSINESS_STATUSES = [
   'draft',
@@ -518,6 +554,27 @@ export const BusinessDocumentListSchema = z.strictObject({
   ),
 });
 export type BusinessDocumentList = z.infer<typeof BusinessDocumentListSchema>;
+
+/**
+ * Approval-viewer detail of one submitted application: review fields,
+ * version and private document references only (asset IDs, never storage
+ * keys, URLs or document contents).
+ */
+export const BusinessAdminDetailSchema = BusinessApplicationCardSchema.extend({
+  ownerUserId: IdSchema,
+  phoneE164: E164Schema,
+  addressText: z.string().nullable(),
+  logoAssetId: IdSchema.nullable(),
+  coverAssetId: IdSchema.nullable(),
+  documents: z.array(
+    z.strictObject({
+      documentId: IdSchema,
+      kind: BusinessDocumentKindSchema,
+      assetId: IdSchema,
+    }),
+  ),
+});
+export type BusinessAdminDetail = z.infer<typeof BusinessAdminDetailSchema>;
 
 export const BusinessDecisionSchema = z
   .strictObject({

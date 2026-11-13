@@ -87,7 +87,7 @@ const WRITE_LIMIT = {
   subject: 'principal',
 } as const;
 
-function ownerRequest(request: AuthRequest): VideoOwnerRequest {
+export function ownerRequest(request: AuthRequest): VideoOwnerRequest {
   if (!request.principal) throw new DomainError('SESSION_EXPIRED');
   const correlationId = currentCorrelationId();
   if (!correlationId) throw new Error('MISSING_CORRELATION_CONTEXT');
@@ -108,7 +108,7 @@ function ownerRequest(request: AuthRequest): VideoOwnerRequest {
   };
 }
 
-function reportRequest(request: AuthRequest): VideoReportRequest {
+export function reportRequest(request: AuthRequest): VideoReportRequest {
   const correlationId = currentCorrelationId();
   if (!correlationId) throw new Error('MISSING_CORRELATION_CONTEXT');
   return {
@@ -252,7 +252,7 @@ export class PublicVideoController {
     409: 'MEDIA_VIDEO_NOT_PUBLISHED when the video is pending, removed, or not Reels-consented.',
   })
   async get(
-    @Param(new InputPipe(IdSchema)) id: string,
+    @Param('id', new InputPipe(IdSchema)) id: string,
     @Query(new InputPipe(EmptyRequestSchema)) _query: Record<string, never>,
   ) {
     return this.videos.publicVideo(id);
@@ -305,7 +305,7 @@ export class PublicVideoController {
   )
   async report(
     @Req() request: AuthRequest,
-    @Param(new InputPipe(IdSchema)) id: string,
+    @Param('id', new InputPipe(IdSchema)) id: string,
     @Query(new InputPipe(EmptyRequestSchema)) _query: Record<string, never>,
     @Body(new InputPipe(CreateVideoReportSchema)) input: CreateVideoReport,
   ) {

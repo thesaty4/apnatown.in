@@ -37,9 +37,29 @@ const fieldPath = z
   .string()
   .max(100)
   .regex(/^[A-Za-z][A-Za-z0-9_.]*$/);
+const machineCode = z.string().regex(/^[a-z][a-z0-9_]{0,39}$/);
+/**
+ * Allow-listed, value-free details. `rows`/`totalErrors` carry row-numbered
+ * validation codes (1-based data rows; never cell values); `expected`/
+ * `unknown` carry template header names, `unknown` only for submitted names
+ * that are safe field-path tokens.
+ */
 export const ErrorDetailsSchema = z.strictObject({
   field: fieldPath.optional(),
   fields: z.array(fieldPath).max(50).optional(),
+  rows: z
+    .array(
+      z.strictObject({
+        row: z.number().int().min(1).max(1_048_576),
+        field: fieldPath.nullable(),
+        code: machineCode,
+      }),
+    )
+    .max(100)
+    .optional(),
+  totalErrors: z.number().int().min(0).max(1_000_000).optional(),
+  expected: z.array(fieldPath).max(50).optional(),
+  unknown: z.array(fieldPath).max(50).optional(),
 });
 export type ErrorDetails = z.infer<typeof ErrorDetailsSchema>;
 export const ErrorResponseSchema = z.strictObject({

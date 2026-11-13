@@ -4,11 +4,9 @@ import type { JsonValue } from '@apnatown/shared';
 import {
   CreateVideoReportSchema,
   CreateVideoSchema,
-  SafeVideoPlaybackSchema,
   VideoReportAcceptedSchema,
   VideoPageSchema,
   VideoSchema,
-  VideoSourceSchema,
   VideoFeedItemSchema,
   VideoFeedPageSchema,
   VideoFeedQuerySchema,
@@ -45,7 +43,8 @@ import { RUNTIME_CONFIG, type RuntimeConfig } from '../../../shared/config/confi
 import { rateLimitSubjectHash } from '../../../shared/rate-limit/rate-limit';
 import { CLOCK, ID_PROVIDER, type Clock, type IdProvider } from '../../../shared/runtime/providers';
 import { BusinessOwnerContext } from '../../businesses/application/business-owner-context';
-import { parseVideoSource, videoPlayback } from '../domain/video-source';
+import { parseVideoSource } from '../domain/video-source';
+import { toVideoDto } from './media-dto';
 import {
   VIDEO_REPOSITORY,
   type StoredVideo,
@@ -487,26 +486,6 @@ export class VideoService {
   }
 
   private dto(row: StoredVideo): Video {
-    return VideoSchema.parse({
-      id: row.id,
-      businessId: row.businessId,
-      provider: row.provider,
-      kind: row.kind,
-      providerId: row.providerId,
-      status: row.status,
-      caption: row.caption,
-      hashtags: row.hashtags,
-      showInGallery: row.showInGallery,
-      showInReels: row.showInReels,
-      version: row.version,
-      createdAt: row.createdAt,
-      playback: SafeVideoPlaybackSchema.parse(
-        videoPlayback(VideoSourceSchema.parse({
-          provider: row.provider,
-          kind: row.kind,
-          providerId: row.providerId,
-        })),
-      ),
-    });
+    return toVideoDto(row);
   }
 }

@@ -42,7 +42,7 @@ const moderationColumns = Prisma.sql`
   b.name_en AS "businessNameEn", b.name_hi AS "businessNameHi",
   b.city_id AS "cityId", b.area_id AS "areaId"`;
 
-function scopePredicate(scope: VideoModerationScope, businessAlias = 'b') {
+export function scopePredicate(scope: VideoModerationScope, businessAlias = 'b') {
   const business = Prisma.raw(businessAlias);
   if (scope.platformWide) return Prisma.sql`TRUE`;
   const cities = scope.cityWideIds.length

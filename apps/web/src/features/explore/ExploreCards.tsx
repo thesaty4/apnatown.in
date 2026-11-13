@@ -107,10 +107,12 @@ function ProductResultCard({
   item,
   locale,
   category,
+  Heading,
 }: {
   item: ExploreCard;
   locale: Locale;
   category: Category | undefined;
+  Heading: 'h2' | 'h3';
 }) {
   const t = useTranslations('explore.screen');
   return (
@@ -132,9 +134,9 @@ function ProductResultCard({
           )}
         </div>
         <div className="grid gap-1 px-3 pt-2.5 pb-3">
-          <h2 className="min-h-product-title-min font-body text-product-title font-medium leading-listing-title [overflow-wrap:anywhere]">
+          <Heading className="min-h-product-title-min font-body text-product-title font-medium leading-listing-title [overflow-wrap:anywhere]">
             {localized(item, locale)}
-          </h2>
+          </Heading>
           <p className="text-small-min text-muted">
             {localized(item.business, locale)}
             {item.unit && ` · ${item.unit}`}
@@ -162,11 +164,17 @@ export function ExploreCards({
   items,
   locale,
   categories,
+  listClassName,
+  headingLevel: Heading = 'h2',
 }: {
   tab: ExploreTab;
   items: ExploreCard[];
   locale: Locale;
   categories: Category[];
+  /** Replaces the per-tab column layout (e.g. Home's horizontal rails). */
+  listClassName?: string | undefined;
+  /** `h3` when the cards sit under a section `h2` (Home). */
+  headingLevel?: 'h2' | 'h3' | undefined;
 }) {
   const t = useTranslations('explore.screen');
   const format = useFormatter();
@@ -177,7 +185,7 @@ export function ExploreCards({
   );
   return (
     <ul
-      className={`grid gap-stack-gap ${tab === 'products' ? 'grid-cols-[repeat(auto-fill,minmax(min(100%,var(--at-product-card-min)),1fr))]' : tab === 'shops' ? 'shop-grid:grid-cols-2 desktop:grid-cols-3 wide:grid-cols-4' : 'grid-cols-[repeat(auto-fill,minmax(min(100%,var(--at-service-card-min)),1fr))]'}`}
+      className={`grid gap-stack-gap ${listClassName ?? (tab === 'products' ? 'grid-cols-[repeat(auto-fill,minmax(min(100%,var(--at-product-card-min)),1fr))]' : tab === 'shops' ? 'shop-grid:grid-cols-2 desktop:grid-cols-3 wide:grid-cols-4' : 'grid-cols-[repeat(auto-fill,minmax(min(100%,var(--at-service-card-min)),1fr))]')}`}
     >
       {items.map((item) => {
         const href = publicHref(item.path, locale);
@@ -193,6 +201,7 @@ export function ExploreCards({
                 item={item}
                 locale={locale}
                 category={category}
+                Heading={Heading}
               />
             ) : (
               <Card className="flex h-full flex-col overflow-hidden">
@@ -233,9 +242,9 @@ export function ExploreCards({
                       )}
                     </div>
                   )}
-                  <h2 className="font-body text-body font-semibold leading-listing-title [overflow-wrap:anywhere]">
+                  <Heading className="font-body text-body font-semibold leading-listing-title [overflow-wrap:anywhere]">
                     <Link href={href}>{name}</Link>
-                  </h2>
+                  </Heading>
                   {item.kind === 'service' ? (
                     <Link
                       className="flex items-center gap-2 text-small text-text-2"

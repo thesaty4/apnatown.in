@@ -7,6 +7,9 @@ import { HealthController } from './shared/health/health.controller';
 import { AuthGuard } from './shared/auth/auth.guard';
 import { AdminAccessGuard } from './shared/auth/admin-access.guard';
 import { AdminModule } from './modules/admin/admin.module';
+import { AdminApprovalsModule } from './modules/admin/admin-approvals.module';
+import { AdminListingsModule } from './modules/admin/admin-listings.module';
+import { ProductAdminModule } from './modules/products/product-admin.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
@@ -25,6 +28,9 @@ import { SearchModule } from './modules/search/search.module';
 import { ProductsModule } from './modules/products/products.module';
 import { ServicesModule } from './modules/services/services.module';
 import { BusinessPublicModule } from './modules/businesses/business-public.module';
+import { BusinessesModule } from './modules/businesses/businesses.module';
+import { CartCheckoutModule } from './modules/cart-checkout/cart-checkout.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 import { RuntimeModule } from './shared/health/runtime.module';
 import { RateLimitGuard } from './shared/rate-limit/rate-limit';
 
@@ -58,7 +64,17 @@ export class AppModule {
       catalog,
       businessContext,
     ]);
-    const services = ServicesModule.forRoot(runtime);
+    const businesses = BusinessesModule.forRoot([
+      runtime,
+      geo,
+      users,
+      audit,
+      admin,
+      catalog,
+      businessContext,
+      media,
+    ]);
+    const services = ServicesModule.forRoot(runtime, catalog, businessContext, media);
     const engagement = EngagementModule.forRoot(
       runtime,
       admin,
@@ -82,9 +98,20 @@ export class AppModule {
         media,
         engagement,
         SearchModule.forRoot(runtime, catalog, businessContext),
-        ProductsModule.forRoot(runtime),
+        ProductsModule.forRoot(runtime, catalog, businessContext, media, settings),
         services,
-        BusinessPublicModule.forRoot(runtime),
+        BusinessPublicModule.forRoot(runtime, media),
+        businesses,
+        AdminApprovalsModule.forRoot(runtime, businesses, audit),
+        AdminListingsModule.forRoot(
+          runtime,
+          admin,
+          businesses,
+          ProductAdminModule.forRoot(runtime, admin, businesses, audit),
+          audit,
+        ),
+        CartCheckoutModule.forRoot(runtime),
+        NotificationsModule.forRoot(runtime, users, admin, businessContext),
       ],
       controllers: [HealthController],
       providers: [

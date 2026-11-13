@@ -2,7 +2,6 @@
 
 import { useQueryClient } from '@tanstack/react-query';
 import type {
-  MediaReportDecision,
   VideoModerationDecision,
   VideoModerationTab,
 } from '@apnatown/shared';
@@ -13,7 +12,6 @@ import { queryKeys } from '../../../shared/api/query-keys';
 import type { AdminContext } from '../AdminShell';
 import {
   decideVideoModeration,
-  decideVideoReport,
   listVideoModeration,
 } from './api';
 
@@ -64,49 +62,6 @@ export function useVideoModerationDecision({
     submit(
       id: string,
       decision: VideoModerationDecision,
-      onSuccess: () => void,
-    ) {
-      const key = keys.for(JSON.stringify({ id, decision }));
-      void mutation.run({ id, decision, key }, async () => {
-        keys.clear();
-        await client.invalidateQueries({
-          queryKey: queryKeys.adminVideoModerationRoot(scope),
-        });
-        onSuccess();
-      });
-    },
-  };
-}
-
-export function useMediaReportDecision({
-  api,
-  scope,
-  lifecycle,
-}: Context) {
-  const client = useQueryClient();
-  const keys = useIdempotencyKey();
-  const mutation = usePrivateMutation(
-    lifecycle,
-    async (
-      input: { id: string; decision: MediaReportDecision; key: string },
-      assertCurrent,
-    ) => {
-      const result = await decideVideoReport(
-        api,
-        input.id,
-        input.decision,
-        { key: input.key, assertCurrent },
-      );
-      assertCurrent();
-      return result;
-    },
-  );
-
-  return {
-    mutation,
-    submit(
-      id: string,
-      decision: MediaReportDecision,
       onSuccess: () => void,
     ) {
       const key = keys.for(JSON.stringify({ id, decision }));

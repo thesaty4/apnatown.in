@@ -1,7 +1,10 @@
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 
 export const OPAQUE_TOKENS = Symbol('OPAQUE_TOKENS');
-export type OpaqueTokenPurpose = 'session' | 'data-request-completion';
+export type OpaqueTokenPurpose =
+  | 'session'
+  | 'data-request-completion'
+  | 'guest-cart';
 
 export interface IssuedOpaqueToken {
   readonly token: string;
@@ -32,7 +35,7 @@ export class SystemOpaqueTokens implements OpaqueTokens {
   }
 
   hash(purpose: OpaqueTokenPurpose, token: string): Uint8Array {
-    if (!['session', 'data-request-completion'].includes(purpose))
+    if (!['session', 'data-request-completion', 'guest-cart'].includes(purpose))
       throw new Error('INVALID_OPAQUE_TOKEN_PURPOSE');
     if (typeof token !== 'string' || !/^[A-Za-z0-9_-]{43}$/.test(token))
       throw new InvalidOpaqueTokenError();

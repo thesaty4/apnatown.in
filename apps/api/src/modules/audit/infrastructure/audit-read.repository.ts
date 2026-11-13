@@ -55,6 +55,8 @@ function filterClauses(filters: AuditFilters): Prisma.Sql[] {
   if (filters.action) clauses.push(Prisma.sql`l.action = ${filters.action}`);
   if (filters.entityType)
     clauses.push(Prisma.sql`l.entity_type = ${filters.entityType}`);
+  if (filters.entityId)
+    clauses.push(Prisma.sql`l.entity_id = ${filters.entityId}::uuid`);
   if (filters.actorId)
     clauses.push(Prisma.sql`l.actor_user_id = ${filters.actorId}::uuid`);
   if (filters.actorRole)

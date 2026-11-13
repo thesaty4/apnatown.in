@@ -28,6 +28,7 @@ import { useSession } from '../../shared/auth/SessionProvider';
 import { AccessState } from '../../shared/auth/AccessState';
 import { failureCode } from '../../shared/api/result';
 import type { BrowserApi } from '../../shared/api/browser';
+import { SheetBell } from '../notifications/Bells';
 import {
   accountScope,
   queryKeys,
@@ -195,7 +196,9 @@ function Shell({ me, children }: { me: AdminMe; children: ReactNode }) {
   // Only implemented screens appear; entries never grant access.
   const canAudit = me.isSuper || me.permissions.reports.includes('view');
   const canCatalog = me.isSuper || me.permissions.catalog.includes('view');
-  const canModerateVideos = me.isSuper || me.permissions.reviews.includes('view');
+  const canModerateVideos =
+    me.isSuper || me.permissions.reviews.includes('view');
+  const canApprove = me.isSuper || me.permissions.approvals.includes('view');
   const groups = [
     ...(me.isSuper
       ? [
@@ -213,6 +216,15 @@ function Shell({ me, children }: { me: AdminMe; children: ReactNode }) {
               item('/super-admin/roles', t('roles'), '🔑'),
               item('/super-admin/settings', t('settings'), '🎚️'),
             ],
+          },
+        ]
+      : []),
+    // Prototype order: "Manage" (Approvals first) after the super groups.
+    ...(canApprove
+      ? [
+          {
+            label: t('manage'),
+            items: [item('/admin/approvals', t('approvals'), '🛡️')],
           },
         ]
       : []),
@@ -236,6 +248,7 @@ function Shell({ me, children }: { me: AdminMe; children: ReactNode }) {
                 '💡',
               ),
               item('/admin/keywords', t('keywords'), '🔤'),
+              item('/admin/listings', t('listings'), '🏪'),
             ],
           },
         ]
@@ -255,6 +268,9 @@ function Shell({ me, children }: { me: AdminMe; children: ReactNode }) {
       groups={groups}
       linkAs={Link}
     >
+      <div className="mb-2 flex justify-end">
+        <SheetBell role={me.isSuper ? 'super_admin' : 'admin'} />
+      </div>
       {children}
     </DashboardShell>
   );

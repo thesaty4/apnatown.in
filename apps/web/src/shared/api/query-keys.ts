@@ -48,6 +48,32 @@ export const queryKeys = {
     locationRevision = 0,
     screen = 'explore',
   ) => ['public', screen, filters, locationRevision] as const,
+  // S-CUST-06/07 public profile tabs: locale-independent (EN+HI labels inside),
+  // keyed by the validated URL pill selection; never personalized.
+  publicBusinessProducts: (slug: string, subcategory: string | null) =>
+    ['public', 'business-profile', slug, 'products', subcategory] as const,
+  publicBusinessServices: (
+    slug: string,
+    category: string | null,
+    subcategory: string | null,
+  ) =>
+    [
+      'public',
+      'business-profile',
+      slug,
+      'services',
+      category,
+      subcategory,
+    ] as const,
+  // S-CUST-06/07 Gallery/Videos tabs and PD5/SV4 strip (Media-owned public
+  // reads). Locale-independent and never personalized; the URL filter keys
+  // the Gallery so a filter change resets its cursor pages.
+  publicBusinessGallery: (slug: string, filter: string) =>
+    ['public', 'business-profile', slug, 'gallery', filter] as const,
+  publicBusinessVideos: (slug: string) =>
+    ['public', 'business-profile', slug, 'videos'] as const,
+  publicLinkedVideos: (targetType: 'product' | 'service', targetId: string) =>
+    ['public', 'media', 'linked-videos', targetType, targetId] as const,
   catalogDuplicateCheck: (
     scope: AccountScope,
     check: Readonly<Record<string, string | undefined>>,
@@ -74,6 +100,19 @@ export const queryKeys = {
     ] as const,
   mediaVideos: (scope: AccountScope, kind: 'shop' | 'provider') =>
     ['private', scope, 'media', 'videos', kind] as const,
+  // S-VEND-11 / S-PROV-12 manager: every owner video in manager order plus the
+  // order version (one read); detail hydrates the editor. Both sit under
+  // `mediaVideos`, so invalidating that root refreshes list, order and detail.
+  mediaVideoManager: (scope: AccountScope, kind: 'shop' | 'provider') =>
+    [...queryKeys.mediaVideos(scope, kind), 'manager'] as const,
+  mediaVideoDetail: (
+    scope: AccountScope,
+    kind: 'shop' | 'provider',
+    id: string,
+  ) => [...queryKeys.mediaVideos(scope, kind), 'detail', id] as const,
+  // Owner gallery-only photos in manager order with the order version.
+  mediaGallery: (scope: AccountScope, kind: 'shop' | 'provider') =>
+    ['private', scope, 'media', 'gallery', kind] as const,
   mediaVideo: (id: string) => ['public', 'media', 'video', id] as const,
   videoCommentsPublic: (id: string) =>
     ['public', 'media', 'video-comments', id] as const,
@@ -96,6 +135,9 @@ export const queryKeys = {
       videoIds,
       businessIds,
     ] as const,
+  /** Guest-or-customer cart (S-CUST-10). Guests share the epoch-scoped key. */
+  cart: (scope: AccountScope | null, epoch: number) =>
+    ['private', scope ?? { epoch }, 'cart'] as const,
   // Admin taxonomy reads. Suggestion pages are keyed by the URL status tab.
   adminCatalog: (scope: AccountScope) =>
     ['private', scope, 'admin', 'catalog'] as const,
@@ -127,11 +169,68 @@ export const queryKeys = {
     tab: string,
   ) =>
     [...queryKeys.adminVideoModerationRoot(scope), scopeRevision, tab] as const,
+  // S-ADMN-11 combined video + photo report queue and its counts.
+  adminMediaReportsRoot: (scope: AccountScope) =>
+    ['private', scope, 'admin', 'media-reports'] as const,
+  adminMediaReports: (
+    scope: AccountScope,
+    scopeRevision: string,
+    targetKind: string,
+  ) =>
+    [
+      ...queryKeys.adminMediaReportsRoot(scope),
+      scopeRevision,
+      'list',
+      targetKind,
+    ] as const,
+  adminMediaReportCounts: (scope: AccountScope, scopeRevision: string) =>
+    [...queryKeys.adminMediaReportsRoot(scope), scopeRevision, 'counts'] as const,
   // Admin reads are scoped by account/roles/epoch like every private key. The
   // free-text search never enters a key (it may hold a phone or email); the
   // caller keys it by an in-memory revision instead.
   admin: (scope: AccountScope) => ['private', scope, 'admin'] as const,
   adminMe: (scope: AccountScope) => ['private', scope, 'admin', 'me'] as const,
+  // S-ADMN-02 approvals: queue pages, detail (+history pages) and document
+  // metadata, separated by the admin scope revision that read them.
+  adminApprovalsRoot: (scope: AccountScope) =>
+    ['private', scope, 'admin', 'approvals'] as const,
+  adminApprovalQueue: (
+    scope: AccountScope,
+    scopeRevision: string,
+    type: string,
+    status: string,
+  ) =>
+    [
+      ...queryKeys.adminApprovalsRoot(scope),
+      'queue',
+      scopeRevision,
+      type,
+      status,
+    ] as const,
+  adminApprovalDetail: (
+    scope: AccountScope,
+    scopeRevision: string,
+    type: string,
+    id: string,
+  ) =>
+    [
+      ...queryKeys.adminApprovalsRoot(scope),
+      'detail',
+      scopeRevision,
+      type,
+      id,
+    ] as const,
+  adminApprovalDocuments: (
+    scope: AccountScope,
+    scopeRevision: string,
+    id: string,
+  ) =>
+    [
+      ...queryKeys.adminApprovalsRoot(scope),
+      'documents',
+      scopeRevision,
+      id,
+    ] as const,
   adminList: (scope: AccountScope) =>
     ['private', scope, 'admin', 'admins'] as const,
   admins: (
@@ -187,4 +286,72 @@ export const queryKeys = {
     id: string,
   ) =>
     ['private', scope, 'admin', section, 'entry', scopeRevision, id] as const,
+  // S-VEND-14 / S-PROV-03 owner enquiries, under the owner's kind-scoped
+  // business root (vendor and provider contexts never share pages). The inbox
+  // search only matches customer name/message text and is already visible URL
+  // state, so the validated filters key the pages; phones never enter a key.
+  enquiriesRoot: (scope: AccountScope, kind: 'shop' | 'provider') =>
+    ['private', scope, 'business', kind, 'enquiries'] as const,
+  enquiryInbox: (
+    scope: AccountScope,
+    kind: 'shop' | 'provider',
+    status: string,
+    query: string,
+  ) =>
+    [
+      ...queryKeys.enquiriesRoot(scope, kind),
+      'inbox',
+      status,
+      query,
+    ] as const,
+  enquiry: (scope: AccountScope, kind: 'shop' | 'provider', id: string) =>
+    [...queryKeys.enquiriesRoot(scope, kind), 'detail', id] as const,
+  // S-VEND-05/06/08, S-PROV-06/07 owner catalogue, kind-scoped like enquiries.
+  // The search is visible URL state (name/SKU only), so it may key the pages.
+  productsRoot: (scope: AccountScope, kind: 'shop' | 'provider') =>
+    ['private', scope, 'business', kind, 'products'] as const,
+  productList: (
+    scope: AccountScope,
+    kind: 'shop' | 'provider',
+    stock: string,
+    query: string,
+  ) => [...queryKeys.productsRoot(scope, kind), 'list', stock, query] as const,
+  product: (scope: AccountScope, kind: 'shop' | 'provider', id: string) =>
+    [...queryKeys.productsRoot(scope, kind), 'detail', id] as const,
+  productPills: (scope: AccountScope, kind: 'shop' | 'provider') =>
+    [...queryKeys.productsRoot(scope, kind), 'pills'] as const,
+  productImportPolicy: (scope: AccountScope, kind: 'shop' | 'provider') =>
+    [...queryKeys.productsRoot(scope, kind), 'import-policy'] as const,
+  inventory: (scope: AccountScope, kind: 'shop' | 'provider') =>
+    ['private', scope, 'business', kind, 'inventory'] as const,
+  // Owner image upload limits per purpose and target business (never a file
+  // name, bytes or preview path).
+  ownerImagePolicy: (scope: AccountScope, purpose: string, businessId: string) =>
+    ['private', scope, 'media', 'owner-image-policy', purpose, businessId] as const,
+  // S-VEND-13 / S-PROV-08 owner services, kind-scoped like products/enquiries.
+  servicesRoot: (scope: AccountScope, kind: 'shop' | 'provider') =>
+    ['private', scope, 'business', kind, 'services'] as const,
+  serviceList: (
+    scope: AccountScope,
+    kind: 'shop' | 'provider',
+    status: string,
+  ) => [...queryKeys.servicesRoot(scope, kind), 'list', status] as const,
+  ownerService: (scope: AccountScope, kind: 'shop' | 'provider', id: string) =>
+    [...queryKeys.servicesRoot(scope, kind), 'detail', id] as const,
+  // S-CUST-01 located Home read (nearby shops). Not account data; keyed by the
+  // public city/area and the in-memory location revision, never coordinates.
+  searchHomeLocated: (
+    locale: string,
+    cityId: string | null,
+    areaId: string | null,
+    locationRevision: number,
+  ) =>
+    [
+      'public',
+      'search-home',
+      locale,
+      cityId,
+      areaId,
+      locationRevision,
+    ] as const,
 };

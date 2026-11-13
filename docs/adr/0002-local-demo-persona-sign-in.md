@@ -35,7 +35,7 @@ Contract:
 | Activation | `DEMO_LOGIN_ENABLED` defaults to `false`. API `parseConfig` and the web environment schema refuse `true` in production; `AuthModule` registers the controller/service only when enabled, so deployed APIs return 404. The name avoids the forbidden `FAKE/MOCK/BYPASS` key pattern. |
 | Identity | `persona` is an allow-listed enum (`customer`, `vendor`, `provider`, `admin`, `super_admin`) mapped server-side to fixed synthetic sample phones in `auth/domain/demo-personas.ts`. No user ID, phone or role is accepted from the client. Rider has no module yet and is shown as "Coming soon". |
 | Authorization | The service reads the live principal (status, roles, approvals) and refuses with `DEMO_PERSONA_UNAVAILABLE` (404) unless the persona user exists, is active and already holds the role. It never creates users or grants roles. All dashboards keep their normal role/ownership/scope/permission checks. |
-| Session | Same rotation as OTP verify: Origin + CSRF required, the old anonymous/authenticated session is revoked and a new one issued with new CSRF state, httpOnly/Secure/SameSite cookie, private no-store response, IP rate limit (30/min). Blocked during maintenance. |
+| Session | Same rotation as OTP verify: Origin + CSRF required; `SessionService.replace` is inert unless the flag is on outside production, locks the current session before reading the persona identity, revokes it and issues a new one with new CSRF state; same httpOnly/SameSite cookie as OTP login (Secure on an `https:` web origin), private no-store response, IP rate limit (30/min). Blocked during maintenance. |
 | Seed | `pnpm db:seed` (local/test only) adds `seed-personas.mjs`: customer `u1`, admin `ad1` (customer + admin, "Area Admin" system role, permissions, Padrauna area scopes, encrypted email) and a synthetic Super Admin. Vendor/provider personas are the existing sample owners of `b1`/`s1`. No OTP, password, session token or real recipient is seeded. |
 | UI | Web renders the header switcher and Account card only when the flag is on (read server-side); after success it fences the session lifecycle, broadcasts to other tabs and opens the role home (`/`, `/vendor/media`, `/provider/media`, `/admin`, `/super-admin`). |
 
@@ -49,7 +49,8 @@ Contract:
   allow-listed seeded personas and the required security review. Anyone
   with access to a local/test API with the flag on can sign in as those
   synthetic personas; never enable it on a shared or internet-reachable
-  environment.
+  environment. Start the web app through `pnpm dev`/`pnpm start` (which bind
+  `localhost`), not the raw `apps/web` Next scripts, while the flag is on.
 - After seeding, `admin:bootstrap` reports `SUPER_ADMIN_EXISTS` because the
   demo Super Admin is active; use a fresh database to exercise bootstrap.
 - The sheet description replaces the prototype's "runs in your browser"

@@ -7,6 +7,7 @@ import { Avatar } from '@apnatown/ui/data/Avatar';
 import { buttonClassName } from '@apnatown/ui/primitives/Button';
 import { EmptyState } from '@apnatown/ui/feedback/StateViews';
 import { getWebEnvironment } from '../../shared/config/server';
+import { JsonLd } from '../../shared/ui/JsonLd';
 import { publicHref, type Locale } from '../../shared/i18n/preferences';
 import {
   CatalogSection,
@@ -20,23 +21,6 @@ import {
 
 const chipClassName =
   'inline-flex min-h-touch max-w-full items-center gap-field-gap rounded-pill border-(length:--at-chip-border) px-field-inline py-1 text-chip font-medium no-underline [overflow-wrap:anywhere] focus-visible:ring-focus';
-
-/** JSON-LD is data, not script: escape every HTML-significant character. */
-function JsonLd({ data, nonce }: { data: unknown; nonce: string | undefined }) {
-  const json = JSON.stringify(data)
-    .replace(/</g, '\\u003c')
-    .replace(/>/g, '\\u003e')
-    .replace(/&/g, '\\u0026')
-    .replace(/\u2028/g, '\\u2028')
-    .replace(/\u2029/g, '\\u2029');
-  return (
-    <script
-      type="application/ld+json"
-      nonce={nonce}
-      dangerouslySetInnerHTML={{ __html: json }}
-    />
-  );
-}
 
 /**
  * S-CUST-05 category landing (also the subcategory route). Taxonomy only:

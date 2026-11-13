@@ -11,6 +11,7 @@ import { accountScope, queryKeys } from '../../shared/api/query-keys';
 import { usePrivateMutation } from '../../shared/api/use-private-mutation';
 import { applyPreferences } from '../../shared/i18n/browser-preferences';
 import { preferencesOptions } from '../../shared/i18n/preferences-api';
+import { useGuestCartMerge } from '../cart';
 import { requestChallenge, verifyChallenge } from './api';
 
 export function useLogin(returnTo?: string) {
@@ -22,6 +23,9 @@ export function useLogin(returnTo?: string) {
   const [verifiedEpoch, setVerifiedEpoch] = useState<number>();
   const [verified, setVerified] = useState(false);
   const currentVerification = verified && verifiedEpoch === epoch;
+  const cartMerge = useGuestCartMerge();
+  // Navigation waits for the one post-login guest-cart merge to settle.
+  const [merging, setMerging] = useState(false);
   const challengeMutation = usePrivateMutation(
     lifecycle,
     (phone: string, guard) => requestChallenge(api, phone, guard),
@@ -53,6 +57,7 @@ export function useLogin(returnTo?: string) {
   useEffect(() => {
     if (
       !currentVerification ||
+      merging ||
       state.kind !== 'ready' ||
       !preferences.isSuccess
     )
@@ -70,6 +75,7 @@ export function useLogin(returnTo?: string) {
     );
   }, [
     currentVerification,
+    merging,
     state,
     preferences.isSuccess,
     preferences.data,
@@ -128,8 +134,15 @@ export function useLogin(returnTo?: string) {
         verifyMutation.reset();
         challengeMutation.reset();
         setPhone('');
+        // Read the guest cart cache before signedIn clears private queries.
+        const merge = cartMerge.needed();
+        setMerging(merge);
         // signedIn fences the previous context synchronously, then revalidates via Query.
-        void signedIn();
+        // The guest cart (independent HttpOnly cookie) is merged exactly once per
+        // login with one stored idempotency key; failures stay retryable on /cart.
+        void signedIn()
+          .then(() => (merge ? cartMerge.merge() : undefined))
+          .finally(() => setMerging(false));
         setVerified(true);
         setVerifiedEpoch(lifecycle.snapshot());
       },

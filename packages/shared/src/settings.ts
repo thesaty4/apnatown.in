@@ -6,6 +6,7 @@ import {
   VersionSchema,
 } from './wire.js';
 import { LocaleSchema } from './users.js';
+import { ProductImportPolicySchema } from './product-import.js';
 
 // Settings, feature flags, legal pages and support intake
 // (settings spec: F-SA-005, F-AC-005, F-AC-006, F-X-009).
@@ -24,6 +25,7 @@ export const SETTING_KEYS = Object.freeze([
   'integrations',
   'seo',
   'tax',
+  'product_import',
 ] as const);
 export const SettingKeySchema = z.enum(SETTING_KEYS);
 export type SettingKey = z.infer<typeof SettingKeySchema>;
@@ -409,6 +411,8 @@ export const SETTING_VALUE_SCHEMAS = Object.freeze({
   integrations: IntegrationsSchema,
   seo: SeoSchema,
   tax: TaxSettingsSchema,
+  /** Owner product import caps (Q-47); absent = import disabled. */
+  product_import: ProductImportPolicySchema,
 } as const);
 export type SettingValue<K extends SettingKey> = z.infer<
   (typeof SETTING_VALUE_SCHEMAS)[K]

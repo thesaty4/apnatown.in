@@ -12,6 +12,8 @@ import {
   BUSINESS_DISCOVERY,
   BusinessDiscoveryService,
 } from './application/business-discovery';
+import { NOTIFICATION_BUSINESS_CONTEXT } from '../notifications/application/notification-ports';
+import { NotificationBusinessContextAdapter } from './application/notification-business-context.adapter';
 
 @Module({})
 export class BusinessContextModule {
@@ -28,12 +30,17 @@ export class BusinessContextModule {
           provide: CATALOG_BUSINESS_CONTEXT,
           useClass: CatalogBusinessContextAdapter,
         },
+        {
+          provide: NOTIFICATION_BUSINESS_CONTEXT,
+          useClass: NotificationBusinessContextAdapter,
+        },
       ],
       exports: [
         CATALOG_BUSINESS_CONTEXT,
         BusinessOwnerContext,
         BUSINESS_SAVED_CARDS,
         BUSINESS_DISCOVERY,
+        NOTIFICATION_BUSINESS_CONTEXT,
       ],
     };
   }

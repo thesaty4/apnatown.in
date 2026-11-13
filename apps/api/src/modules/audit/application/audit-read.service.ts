@@ -36,6 +36,7 @@ import {
   type AuditReadRepository,
   type AuditReadScope,
 } from '../domain/audit-read';
+import { auditReadScope } from './audit-read-scope';
 import { AUDIT_WRITER, type AuditWriter } from './audit-writer.port';
 
 /** `admin.audit` is the scoped admin view; `super-admin.activity` is global. */
@@ -78,16 +79,6 @@ function toFilters(query: ActivityExportQuery): AuditFilters {
 function istTime(occurredAt: string): string {
   const shifted = new Date(Date.parse(occurredAt) + IST_OFFSET_MS);
   return `${shifted.toISOString().slice(0, 19).replace('T', ' ')} IST`;
-}
-
-function readScope(ctx: AdminReadContext): AuditReadScope {
-  return ctx.isSuper
-    ? { platformWide: true, cityWideIds: [], areaIds: [] }
-    : {
-        platformWide: false,
-        cityWideIds: ctx.scope.cityWideIds,
-        areaIds: ctx.scope.areaIds,
-      };
 }
 
 @Injectable()
@@ -137,7 +128,7 @@ export class AuditReadService {
     return this.uow.run(async (tx) => {
       const rows = await this.repository.page(
         tx,
-        readScope(ctx),
+        auditReadScope(ctx),
         toFilters(query),
         query.limit + 1,
         after,
@@ -161,7 +152,7 @@ export class AuditReadService {
   ): Promise<AuditEntryDetail> {
     this.assertFeed(ctx, feed);
     return this.uow.run(async (tx) => {
-      const row = await this.repository.find(tx, readScope(ctx), id);
+      const row = await this.repository.find(tx, auditReadScope(ctx), id);
       // Missing and out-of-scope are indistinguishable.
       if (!row) throw new DomainError('AUDIT_NOT_FOUND');
       return row;
@@ -185,7 +176,7 @@ export class AuditReadService {
       ...requested,
       to: requested.to && requested.to < startedAt ? requested.to : startedAt,
     };
-    const scope = readScope(ctx);
+    const scope = auditReadScope(ctx);
     await this.uow.run(async (tx) => {
       if (
         !(await this.roles.hasActiveRole(

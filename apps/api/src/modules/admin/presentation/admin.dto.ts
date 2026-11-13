@@ -2,6 +2,9 @@ import { applyDecorators } from '@nestjs/common';
 import { ApiHeader, ApiResponse } from '@nestjs/swagger';
 import { createZodDto } from 'nestjs-zod';
 import {
+  AdminApprovalDetailSchema,
+  AdminApprovalPageSchema,
+  AdminApprovalQuerySchema,
   AdminCardSchema,
   AdminImpactSchema,
   AdminListQuerySchema,
@@ -21,7 +24,7 @@ import {
   SetAdminStatusSchema,
   UpdateRoleSchema,
 } from '@apnatown/shared/admin';
-import { EmptyRequestSchema } from '@apnatown/shared/wire';
+import { EmptyRequestSchema, PageQuerySchema } from '@apnatown/shared/wire';
 import { AuthErrorDto } from '../../../shared/auth/openapi';
 import { DomainError } from '../../../shared/errors/errors';
 import { currentCorrelationId } from '../../../shared/logger/context';
@@ -49,6 +52,16 @@ export class RoleUpdateResultDto extends createZodDto(RoleUpdateResultSchema) {}
 export class DeleteRoleQueryDto extends createZodDto(DeleteRoleQuerySchema) {}
 export class RoleDeletedDto extends createZodDto(RoleDeletedSchema) {}
 export class EmptyBodyDto extends createZodDto(EmptyRequestSchema) {}
+export class AdminApprovalQueryDto extends createZodDto(
+  AdminApprovalQuerySchema,
+) {}
+export class AdminApprovalPageDto extends createZodDto(
+  AdminApprovalPageSchema,
+) {}
+export class AdminApprovalDetailDto extends createZodDto(
+  AdminApprovalDetailSchema,
+) {}
+export class ApprovalHistoryQueryDto extends createZodDto(PageQuerySchema) {}
 
 /** Documents the flat error envelope for statuses PrivateApi does not list. */
 export function AdminErrors(responses: Readonly<Record<number, string>>) {

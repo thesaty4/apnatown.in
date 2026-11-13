@@ -5,10 +5,7 @@ import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import {
-  VideoCommentStatusSchema,
-  type VideoCommentStatus,
-} from '@apnatown/shared';
+import { VideoCommentStatusSchema } from '@apnatown/shared';
 import {
   EmptyState,
   ErrorState,

@@ -3,7 +3,13 @@ import { ImagePolicySchema, type ImagePolicy } from '@apnatown/shared/settings';
 import { PrismaDatabase } from '../../../shared/persistence/prisma-database';
 import type { CommandContext, TxContext } from '../../../shared/persistence/ports';
 import { DomainError } from '../../../shared/errors/errors';
-import { StoredVariantSchema, type ImageRepository, type StoredImage } from '../domain/images';
+import type { MediaUploadPurpose } from '@apnatown/shared';
+import { IdSchema } from '@apnatown/shared/wire';
+import type { MediaAsset } from '../../../shared/persistence/generated/client';
+import {
+  StoredVariantSchema, storedPurpose, uploadPurpose,
+  type ImageRepository, type StoredImage, type StoredImagePurpose,
+} from '../domain/images';
 
 @Injectable()
 export class PrismaImageRepository implements ImageRepository {
@@ -49,23 +55,55 @@ export class PrismaImageRepository implements ImageRepository {
       data: { state: 'ready', leaseId: null, leaseUntil: null },
     });
     if (updated.count !== 1) throw new DomainError('COMMON_CONFLICT');
+    const stored = storedPurpose(image.purpose);
     await client.mediaAsset.create({
       data: {
-        id, ownerUserId: image.ownerUserId, purpose: 'catalog_taxonomy',
+        id, ownerUserId: image.ownerUserId, businessId: image.businessId,
+        purpose: stored.purpose, subjectType: stored.subjectType,
         storageKey: id, mimeType: 'image/webp', bytes: image.bytes,
         width: image.width, height: image.height, variants: image.variants,
       },
     });
   }
 
-  async find(tx: TxContext, id: string, purpose: 'catalog_taxonomy' | 'product' | 'service' | 'business_profile' = 'catalog_taxonomy'): Promise<StoredImage | null> {
+  async find(tx: TxContext, id: string, purpose: StoredImagePurpose = 'catalog_taxonomy'): Promise<StoredImage | null> {
     const row = await this.db.client(tx).mediaAsset.findFirst({
       where: { id, purpose, visibility: 'public', moderationState: 'allowed', deletedAt: null },
     });
-    if (!row) return null;
+    return row ? this.image(row) : null;
+  }
+
+  async findUpload(tx: TxContext, id: string): Promise<StoredImage | null> {
+    const row = await this.db.client(tx).mediaAsset.findFirst({
+      where: { id, visibility: 'public', moderationState: 'allowed', deletedAt: null },
+    });
+    return row ? this.image(row) : null;
+  }
+
+  async lockOwned(tx: TxContext, input: {
+    assetIds: readonly string[]; ownerUserId: string; businessId: string; purpose: MediaUploadPurpose;
+  }) {
+    // Malformed IDs can never match; never hand them to a uuid cast.
+    const ids = [...new Set(input.assetIds)].filter((id) => IdSchema.safeParse(id).success);
+    if (!ids.length) return [];
+    const stored = storedPurpose(input.purpose);
+    return this.db.client(tx).$queryRaw<{ id: string; version: number; width: number; height: number }[]>`
+      SELECT id::text AS id, version, width, height FROM media_assets
+      WHERE id = ANY(${ids}::uuid[]) AND owner_user_id = ${input.ownerUserId}::uuid
+        AND business_id = ${input.businessId}::uuid AND purpose = ${stored.purpose}
+        AND subject_type IS NOT DISTINCT FROM ${stored.subjectType}::text
+        AND visibility = 'public' AND moderation_state = 'allowed'
+        AND deleted_at IS NULL AND mime_type = 'image/webp'
+      ORDER BY id
+      FOR SHARE`;
+  }
+
+  private image(row: MediaAsset): StoredImage | null {
+    const purpose = uploadPurpose(row.purpose, row.subjectType);
+    if (!purpose) return null;
     return {
-      id: row.id, ownerUserId: row.ownerUserId, width: row.width, height: row.height,
-      bytes: Number(row.bytes), version: row.version,
+      id: row.id, ownerUserId: row.ownerUserId, purpose, businessId: row.businessId,
+      width: row.width, height: row.height, bytes: Number(row.bytes), version: row.version,
       variants: StoredVariantSchema.array().min(1).max(purpose === 'catalog_taxonomy' ? 3 : 4).parse(row.variants),
     };
   }

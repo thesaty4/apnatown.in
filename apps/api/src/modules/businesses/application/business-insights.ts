@@ -37,13 +37,12 @@ export class BusinessInsights {
     @Inject(CLOCK) private readonly clock: Clock,
   ) {}
 
-  async overview(
-    tx: TxContext,
+  overview(
+    _tx: TxContext,
     business: StoredBusiness,
     sellerRole: boolean,
   ): Promise<BusinessOverview> {
-    const views = await this.views(tx, business.id);
-    return BusinessOverviewSchema.parse({
+    return Promise.resolve(BusinessOverviewSchema.parse({
       business: summaryDto(business),
       status: business.status,
       capabilities: capabilities(business, sellerRole),
@@ -57,19 +56,10 @@ export class BusinessInsights {
           : SOURCE_UNAVAILABLE,
       rating: SOURCE_UNAVAILABLE,
       followers: SOURCE_UNAVAILABLE,
-      analytics:
-        views.total === null
-          ? SOURCE_UNAVAILABLE
-          : {
-              state: 'ready',
-              data: {
-                period: '30d',
-                views: views.total,
-                asOf: views.asOf,
-                coverageStartedAt: views.coverageStartedAt,
-              },
-            },
-    });
+      // Profile-view collection is not mounted yet, so a "ready" 30d count
+      // would be an invented zero; stay explicitly unavailable until it is.
+      analytics: SOURCE_UNAVAILABLE,
+    }));
   }
 
   /**

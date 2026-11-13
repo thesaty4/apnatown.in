@@ -7,6 +7,13 @@ export type { SavedQuery, SavedItem, SavedPage } from './saved.js';
 export {
   MediaGatewayPathSchema,
   TaxonomyUploadBodySchema,
+  OWNER_IMAGE_UPLOAD_PURPOSES,
+  OwnerImageUploadPurposeSchema,
+  MediaUploadPurposeSchema,
+  OwnerImageUploadBodySchema,
+  MediaUploadBodySchema,
+  OwnerImagePolicyParamsSchema,
+  OwnerImagePolicyQuerySchema,
   PublicImageVariantSchema,
   MediaUploadResultSchema,
   MediaPolicyResultSchema,
@@ -39,6 +46,10 @@ export {
 } from './media.js';
 export type {
   MediaUploadResult,
+  OwnerImageUploadPurpose,
+  MediaUploadPurpose,
+  MediaUploadBody,
+  OwnerImagePolicyQuery,
   MediaPublicQuery,
   VideoSource,
   VideoPlayback,
@@ -133,6 +144,14 @@ export {
   GEO_EVENT_TYPES,
   GeoCityStatusChangedPayloadSchema,
   GeoZoneChangedPayloadSchema,
+  ProviderExpertiseChangedPayloadSchema,
+  PRODUCTS_EVENT_TYPES,
+  ProductEventPayloadSchema,
+  ProductPillsUpdatedPayloadSchema,
+  SERVICES_EVENT_TYPES,
+  ServiceChangedPayloadSchema,
+  ServiceEnquiryCreatedPayloadSchema,
+  ServiceEnquiryStatusChangedPayloadSchema,
   USER_ACCOUNT_EVENT_TYPES,
   UserAccountEventPayloadSchema,
 } from './events.js';
@@ -150,6 +169,15 @@ export type {
   EventEnvelope,
   GeoCityStatusChangedPayload,
   GeoZoneChangedPayload,
+  ProviderExpertiseChangedPayload,
+  ProductEventPayload,
+  ProductPillsUpdatedPayload,
+  ServiceChangedPayload,
+  ServiceEnquiryCreatedPayload,
+  ServiceEnquiryStatusChangedPayload,
   UserAccountEventPayload,
 } from './events.js';
 export * from './public-listings.js';
+export * from './business-public-tabs.js';
+export * from './media-gallery.js';
+export * from './media-reports.js';

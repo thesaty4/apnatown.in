@@ -1,12 +1,26 @@
+import { PROVIDER_DASHBOARD_SEGMENTS } from '@apnatown/shared/businesses';
+
 export const locales = ['en', 'hi'] as const;
 export type Locale = (typeof locales)[number];
 export type Theme = 'light' | 'dark' | 'auto';
 export const themeCookie = 'apnatown-theme';
 export const localeCookie = 'apnatown-locale';
 
+const dashboardPath = new RegExp(
+  `^/(?:vendor|provider/(?:${PROVIDER_DASHBOARD_SEGMENTS.join('|')})|rider|admin|super-admin)(?:/|$)`,
+);
+
+export function isDashboardPath(path: string) {
+  return dashboardPath.test(path);
+}
+
 export function isPrivatePath(path: string) {
-  return /^\/(?:account|orders|saved|my-reviews|checkout|bill|vendor|provider\/media|rider|admin|super-admin)(?:\/|$)/.test(
-    path,
+  return (
+    /^\/(?:account|cart|orders|saved|my-reviews|checkout|bill)(?:\/|$)/.test(path) ||
+    // Exact match only: the future public signed `/notifications/unsubscribe`
+    // stays outside the private, cookie-locale tree.
+    /^\/notifications\/?$/.test(path) ||
+    isDashboardPath(path)
   );
 }
 

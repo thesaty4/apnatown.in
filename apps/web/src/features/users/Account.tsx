@@ -10,6 +10,7 @@ import { useSession } from '../../shared/auth/SessionProvider';
 import { AccessState } from '../../shared/auth/AccessState';
 import { Logout } from '../../shared/auth/Logout';
 import { DemoRoleCard } from '../auth/demo/DemoControls';
+import { AccountBusinessEntry } from '../businesses/AccountBusinessEntry';
 import { accountScope } from '../../shared/api/query-keys';
 import { profileOptions } from './api';
 import { OwnResource } from './OwnResource';
@@ -102,6 +103,7 @@ export function Account({
               </Link>
             </nav>
           </Card>
+          <AccountBusinessEntry />
           <PrivacyActions
             key={`${state.data.userId}:${epoch}`}
             scope={accountScope(state.data, epoch)}

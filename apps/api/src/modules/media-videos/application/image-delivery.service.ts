@@ -3,7 +3,13 @@ import type { MediaPublicQuery } from '@apnatown/shared';
 import { DomainError } from '../../../shared/errors/errors';
 import { UNIT_OF_WORK, type UnitOfWork } from '../../../shared/persistence/ports';
 import { IMAGE_PUBLICATION, LISTING_IMAGE_PUBLICATION, IMAGE_STORAGE, MEDIA_IMAGES, type ImagePublication, type ImageByteRange,
-  type ImageRepository, type ImageStorage } from '../domain/images';
+  type ImageRepository, type ImageStorage, type StoredImagePurpose } from '../domain/images';
+
+/** Stored asset purpose each public placement type may serve. */
+const PLACEMENT_PURPOSES: Readonly<Record<MediaPublicQuery['placementType'], StoredImagePurpose>> = Object.freeze({
+  catalog_category: 'catalog_taxonomy', catalog_subcategory: 'catalog_taxonomy', product: 'product',
+  service: 'service', business: 'business_profile', gallery_photo: 'gallery', video: 'video_thumbnail',
+});
 
 @Injectable()
 export class ImageDeliveryService {
@@ -29,9 +35,7 @@ export class ImageDeliveryService {
     return this.uow.run(async (tx) => {
       const taxonomy = query.placementType === 'catalog_category' || query.placementType === 'catalog_subcategory';
       await (taxonomy ? this.publication : this.listings).requirePublic(tx, { assetId, ...query });
-      const purpose = taxonomy ? 'catalog_taxonomy' : query.placementType === 'business'
-        ? 'business_profile' : query.placementType as 'product' | 'service';
-      const asset = await this.images.find(tx, assetId, purpose);
+      const asset = await this.images.find(tx, assetId, PLACEMENT_PURPOSES[query.placementType]);
       const variant = asset?.variants.find((item) => item.width === query.variantWidth);
       if (!asset || asset.version !== query.assetVersion || !variant)
         throw new DomainError('MEDIA_NOT_FOUND');

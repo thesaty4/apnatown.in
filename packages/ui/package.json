@@ -59,6 +59,10 @@
       "types": "./dist/overlay/ConfirmDialog.d.ts",
       "import": "./dist/overlay/ConfirmDialog.js"
     },
+    "./overlay/FullScreenViewer": {
+      "types": "./dist/overlay/FullScreenViewer.d.ts",
+      "import": "./dist/overlay/FullScreenViewer.js"
+    },
     "./feedback/Skeleton": {
       "types": "./dist/feedback/Skeleton.d.ts",
       "import": "./dist/feedback/Skeleton.js"
@@ -66,6 +70,14 @@
     "./feedback/StateViews": {
       "types": "./dist/feedback/StateViews.d.ts",
       "import": "./dist/feedback/StateViews.js"
+    },
+    "./feedback/Toast": {
+      "types": "./dist/feedback/Toast.d.ts",
+      "import": "./dist/feedback/Toast.js"
+    },
+    "./commerce/QuantityStepper": {
+      "types": "./dist/commerce/QuantityStepper.d.ts",
+      "import": "./dist/commerce/QuantityStepper.js"
     },
     "./navigation/SkipLink": {
       "types": "./dist/navigation/SkipLink.d.ts",

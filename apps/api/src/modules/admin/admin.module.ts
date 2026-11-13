@@ -7,6 +7,7 @@ import { AdminEvents } from './application/admin-events';
 import { AdminProjection } from './application/admin-projection';
 import { ADMIN_RECIPIENTS } from './application/admin-recipients.port';
 import { AdminScopeService } from './application/admin-scope.service';
+import { AdminScopedActor } from './application/admin-scoped-actor';
 import { RolesService } from './application/roles.service';
 import { PrismaAdminRepository } from './infrastructure/prisma-admin.repository';
 import { PrismaRoleRepository } from './infrastructure/prisma-role.repository';
@@ -41,13 +42,15 @@ export class AdminModule {
         { provide: ADMIN_SCOPE, useExisting: AdminScopeService },
         { provide: ADMIN_RECIPIENTS, useExisting: AdminScopeService },
         AdminCommands,
+        AdminScopedActor,
         AdminEvents,
         AdminProjection,
         AdminAccountsService,
         RolesService,
       ],
-      // AdminCommands is the shared super-admin command boundary (Settings).
-      exports: [ADMIN_SCOPE, ADMIN_RECIPIENTS, AdminCommands],
+      // AdminCommands is the shared super-admin command boundary (Settings);
+      // AdminScopedActor the scoped-admin command actor (Listings, Products).
+      exports: [ADMIN_SCOPE, ADMIN_RECIPIENTS, AdminCommands, AdminScopedActor],
     };
   }
 }

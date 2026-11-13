@@ -125,15 +125,22 @@ export class SessionService implements SessionAccess, AuthSessionPort {
     await this.sessions.revoke(tx, old.id, this.clock.now());
     return this.issue(tx, principal.userId);
   }
-  /** Demo persona switch (docs/adr/0002): replaces a live session of any kind. */
+  /**
+   * Demo persona switch (docs/adr/0002): replaces a live session of any kind.
+   * Inert unless the demo flag is on outside production. Locks the session
+   * before `select` reads identity, matching resolve/requirePrincipal order.
+   */
   async replace(
     tx: TxContext,
     old: SessionBinding,
-    userId: string,
-  ): Promise<IssuedSession> {
+    select: (tx: TxContext) => Promise<Principal>,
+  ): Promise<{ issued: IssuedSession; principal: Principal }> {
+    if (this.config.APP_ENV === 'production' || !this.config.DEMO_LOGIN_ENABLED)
+      throw new DomainError('COMMON_NOT_FOUND');
     await this.lockBinding(tx, old);
+    const principal = await select(tx);
     await this.sessions.revoke(tx, old.id, this.clock.now());
-    return this.issue(tx, userId);
+    return { issued: await this.issue(tx, principal.userId), principal };
   }
   private async issue(
     tx: TxContext,

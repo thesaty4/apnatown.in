@@ -15,6 +15,7 @@ export interface AuditFilters {
   readonly q?: string | undefined;
   readonly action?: string | undefined;
   readonly entityType?: string | undefined;
+  readonly entityId?: string | undefined;
   readonly actorId?: string | undefined;
   readonly actorRole?: AuditActorRole | undefined;
   readonly cityId?: string | undefined;

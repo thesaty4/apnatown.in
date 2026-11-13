@@ -2,6 +2,10 @@ import { Module, type DynamicModule, type Provider } from '@nestjs/common';
 import { AUDIT_WRITER } from './application/audit-writer.port';
 import { AuditWriterService } from './application/audit-writer.service';
 import { AuditReadService } from './application/audit-read.service';
+import {
+  AUDIT_ENTITY_HISTORY,
+  AuditEntityHistoryService,
+} from './application/audit-entity-history';
 import { AUDIT_LOG_REPOSITORY } from './domain/audit-log';
 import { AUDIT_READ_REPOSITORY } from './domain/audit-read';
 import { PrismaAuditLogRepository } from './infrastructure/audit-log.repository';
@@ -38,8 +42,9 @@ export class AuditModule {
         ...writerProviders,
         { provide: AUDIT_READ_REPOSITORY, useClass: PrismaAuditReadRepository },
         AuditReadService,
+        { provide: AUDIT_ENTITY_HISTORY, useClass: AuditEntityHistoryService },
       ],
-      exports: [AUDIT_WRITER],
+      exports: [AUDIT_WRITER, AUDIT_ENTITY_HISTORY],
     };
   }
 }

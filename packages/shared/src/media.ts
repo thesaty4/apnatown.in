@@ -27,6 +27,41 @@ export const MediaGatewayPathSchema = z
 export const TaxonomyUploadBodySchema = z.strictObject({
   purpose: z.literal('catalog_taxonomy'),
 });
+/**
+ * Owner public-purpose image uploads. Values are the Settings image-policy
+ * purposes; Media stores logo/cover as `business_profile` + subject.
+ */
+export const OWNER_IMAGE_UPLOAD_PURPOSES = Object.freeze([
+  'product',
+  'service',
+  'business_profile_logo',
+  'business_profile_cover',
+  'gallery',
+  'video_thumbnail',
+] as const);
+export const OwnerImageUploadPurposeSchema = z.enum(OWNER_IMAGE_UPLOAD_PURPOSES);
+export type OwnerImageUploadPurpose = z.infer<typeof OwnerImageUploadPurposeSchema>;
+export const MediaUploadPurposeSchema = z.enum([
+  'catalog_taxonomy',
+  ...OWNER_IMAGE_UPLOAD_PURPOSES,
+]);
+export type MediaUploadPurpose = z.infer<typeof MediaUploadPurposeSchema>;
+export const OwnerImageUploadBodySchema = z.strictObject({
+  purpose: OwnerImageUploadPurposeSchema,
+  /** Target business; ownership/capability is resolved server-side. */
+  businessId: IdSchema,
+});
+/** Multipart text fields of `POST /media/uploads` (the file part is separate). */
+export const MediaUploadBodySchema = z.discriminatedUnion('purpose', [
+  TaxonomyUploadBodySchema,
+  OwnerImageUploadBodySchema,
+]);
+export type MediaUploadBody = z.infer<typeof MediaUploadBodySchema>;
+export const OwnerImagePolicyParamsSchema = z.strictObject({
+  purpose: OwnerImageUploadPurposeSchema,
+});
+export const OwnerImagePolicyQuerySchema = z.strictObject({ businessId: IdSchema });
+export type OwnerImagePolicyQuery = z.infer<typeof OwnerImagePolicyQuerySchema>;
 export const PublicImageVariantSchema = z.strictObject({
   width: z.number().int().positive(),
   height: z.number().int().positive(),
@@ -37,7 +72,7 @@ export const PublicImageVariantSchema = z.strictObject({
 export const MediaUploadResultSchema = z.strictObject({
   assetId: IdSchema,
   status: z.literal('ready'),
-  purpose: z.literal('catalog_taxonomy'),
+  purpose: MediaUploadPurposeSchema,
   visibility: z.literal('public'),
   mimeType: z.literal('image/webp'),
   bytes: z.number().int().positive(),
@@ -47,14 +82,17 @@ export const MediaUploadResultSchema = z.strictObject({
 });
 export type MediaUploadResult = z.infer<typeof MediaUploadResultSchema>;
 export const MediaPolicyResultSchema = z.strictObject({
-  purpose: z.literal('catalog_taxonomy'),
+  purpose: MediaUploadPurposeSchema,
   policy: ImagePolicySchema,
 });
 export const MediaAssetParamsSchema = z.strictObject({ assetId: IdSchema });
 export const MediaPublicQuerySchema = z.strictObject({
-  placementType: z.enum(['catalog_category', 'catalog_subcategory', 'product', 'service', 'business']),
+  placementType: z.enum([
+    'catalog_category', 'catalog_subcategory', 'product', 'service', 'business',
+    'gallery_photo', 'video',
+  ]),
   placementId: IdSchema,
-  surface: z.enum(['card', 'detail', 'home']),
+  surface: z.enum(['card', 'detail', 'home', 'gallery', 'reels']),
   variantWidth: z.coerce.number().int().min(1).max(1920),
   assetVersion: z.coerce.number().int().positive(),
 });
@@ -358,8 +396,14 @@ export const MediaReportDecisionResultSchema = z.strictObject({
   status: z.literal('resolved'),
   resolution: z.enum(['dismissed', 'removed']),
   reportVersion: z.number().int().positive(),
+  /** Photo reports: `removed` once the asset is removed, else `approved` (kept). */
   targetStatus: VideoStatusSchema,
+  /** Video version, or the media asset version for photo reports. */
   targetVersion: z.number().int().positive(),
+  /** Always sent by the API; optional only for backward compatibility. */
+  targetKind: z.enum(['video', 'photo']).optional(),
+  /** Photo reports only: resulting asset moderation state. */
+  photoModerationState: z.enum(['allowed', 'removed']).optional(),
 });
 export type MediaReportDecisionResult = z.infer<
   typeof MediaReportDecisionResultSchema
