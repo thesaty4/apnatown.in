@@ -17,7 +17,17 @@ full product context.
 
 ## Local development
 
-Use Node from [.node-version](.node-version) and pinned pnpm:
+Use Node from [.node-version](.node-version) and pinned pnpm. With Docker
+running, one command performs every step below (install, `.env.local`,
+generate, database start, migrations and demo seed) and is safe to re-run:
+
+```sh
+node scripts/setup.mjs           # or: pnpm bootstrap (after pnpm is available)
+node scripts/setup.mjs --dev     # ...then start web, API and worker
+node scripts/setup.mjs --help    # --skip-install, --skip-db, --no-seed
+```
+
+Equivalent manual steps:
 
 ```sh
 npx --yes pnpm@10.34.9 install --frozen-lockfile
