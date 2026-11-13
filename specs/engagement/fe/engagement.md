@@ -34,6 +34,10 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) for standard states,
 - Acceptance: Given empty text, when Send is pressed, then show required-field validation. Given a valid announcement of any of the four kinds with or without a target, when accepted, then acknowledgement uses the server count/status, the target/path is correct and history refreshes. Given final followers data, when rendered in Hindi/dark mode, then all three KPIs/eight-week chart/table remain readable.
 - Acceptance: Given disabled bell or withdrawn consent, when a queued announcement is dispatched, then the recipient is suppressed; the UI does not promise unconditional in-app delivery.
 
+### Implemented slice: followers screen (2026-11-13)
+
+- `/vendor/followers`, `/provider/followers` → `features/engagement/followers/FollowersScreen`: Followers / Gained this week / Videos `KpiCard`s, eight-week "new followers" `BarChart` with table fallback (past weekly totals unavailable), announce form (four kinds, required EN message ≤200, optional HI), server queued/eligible count acknowledgement, latest three announcements. Keys `engagement.followers.*` (EN+HI).
+
 ## Feature components (used across modules)
 
 ### EG1 Saved implementation slice

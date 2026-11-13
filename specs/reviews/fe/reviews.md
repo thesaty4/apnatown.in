@@ -57,6 +57,10 @@ Public review sections (product F-PD-007, shop/provider/service) use `ReviewsSec
 - Delivery owns the route/shell; `GET /reviews/riders/me` supplies the rider's own aggregate and comments. Public rider review discovery remains RV-Q3-gated.
 - Acceptance: Given a rider, when feedback loads, then only their target's reviews appear; a modified rider ID never selects another rider's private feedback.
 
+### Implemented slice: owner reviews (2026-11-13)
+
+- `/vendor/reviews`, `/provider/reviews` → `features/reviews/owner/OwnerReviewsScreen` (shared by kind): `RatingSummary`, URL `?filter=all|needs_reply|reported&rating=1..5` chips/select with server counts, `ReviewItem` (new `context`/`children` slots) + `OwnerReplyEditor` (reply/edit/remove) + `ReportReviewAction` sheet (abusive/spam/fake/other), Load more, per-filter empty, shared owner read states. Keys `reviews.owner.*` (EN+HI). Not optimistic: success re-reads all filter pages/counts.
+
 ## Feature components
 
 `ReviewsSection` (summary/list/Write/Helpful/Report), `ReviewForm`, `ReviewCard`, `OwnerReplyEditor`, `ReportReviewSheet` in `src/features/reviews`. Shared: `Rating`, `Chip`, `Sheet`, `ModerationQueueItem`, `DataTable`, `Toast`; no duplicated rating or proof logic in UI.

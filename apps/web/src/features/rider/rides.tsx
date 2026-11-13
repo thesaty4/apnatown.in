@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import type { RiderHistory } from '@apnatown/shared/delivery';
 import { StatusBadge, type BadgeTone } from '@apnatown/ui/primitives/Badge';
 import { Chip } from '@apnatown/ui/primitives/Chip';
+import { failReasonKey } from './fail-reasons';
 import { useIstTime, useMoney, useSignedMoney } from './parts';
 
 const statusPresentation: Record<
@@ -24,6 +25,7 @@ export function RideRow({
   breakdown?: boolean;
 }) {
   const t = useTranslations('rider.history');
+  const reasons = useTranslations('rider.failReasons');
   const money = useMoney();
   const signed = useSignedMoney();
   const time = useIstTime();
@@ -41,8 +43,18 @@ export function RideRow({
             {ride.shopName}
           </p>
           <p className="m-0 text-small text-text-2 [overflow-wrap:anywhere]">
-            {t('rowMeta', { order: ride.orderNumber, area: ride.dropArea })}
+            {t('rowMeta', {
+              order: ride.orderNumber,
+              area: ride.dropArea || '—',
+            })}
           </p>
+          {ride.reasonKey && (
+            <p className="m-0 text-small text-text-2 [overflow-wrap:anywhere]">
+              {t('failReason', {
+                reason: reasons(failReasonKey[ride.reasonKey]),
+              })}
+            </p>
+          )}
           {at && <p className="m-0 text-caption text-muted">{time(at)}</p>}
         </div>
         <div className="grid justify-items-end gap-1">

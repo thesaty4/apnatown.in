@@ -78,6 +78,10 @@ export const NotificationTemplateKeySchema = z.enum([
   'order.new',
   'order.status',
   'order.cancelled',
+  'delivery.offer',
+  'delivery.assigned',
+  'delivery.unassigned',
+  'follower.announcement',
 ]);
 export type NotificationTemplateKey = z.infer<
   typeof NotificationTemplateKeySchema

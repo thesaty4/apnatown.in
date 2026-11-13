@@ -16,6 +16,7 @@ import { Skeleton } from '@apnatown/ui/feedback/Skeleton';
 import { ErrorState, OfflineState } from '@apnatown/ui/feedback/StateViews';
 import { failureCode } from '../../shared/api/result';
 import { useOnline } from '../../shared/hooks/use-online';
+import { KpiCard } from '../../shared/ui/KpiCard';
 import { OwnerGate } from './BusinessDashboard';
 import {
   Alert,
@@ -204,36 +205,12 @@ function Kpis({ kind }: { kind: BusinessKind }) {
               : null;
           return (
             <li key={name}>
-              <Card padded className="grid h-full min-w-0 content-start gap-1">
-                <p className="m-0 text-small text-muted [overflow-wrap:anywhere]">
-                  {t(`kpi.${name}`)}
-                </p>
-                {ready ? (
-                  <>
-                    <p className="m-0 text-kpi-value">
-                      {formatCompactCount(ready.views, locale)}
-                    </p>
-                    <p className="m-0 text-caption text-muted">
-                      {ta('period30d')}
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <p
-                      className="m-0 text-kpi-value text-muted"
-                      aria-hidden="true"
-                    >
-                      —
-                    </p>
-                    <StatusBadge
-                      tone="neutral"
-                      icon="⌛"
-                      label={ta('unavailable')}
-                      className="justify-self-start"
-                    />
-                  </>
-                )}
-              </Card>
+              <KpiCard
+                label={t(`kpi.${name}`)}
+                value={ready ? formatCompactCount(ready.views, locale) : null}
+                hint={ta('period30d')}
+                unavailableLabel={ta('unavailable')}
+              />
             </li>
           );
         })}

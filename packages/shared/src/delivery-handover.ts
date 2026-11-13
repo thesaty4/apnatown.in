@@ -84,6 +84,9 @@ export const HandoverResultSchema = z.strictObject({
   orderStatus: z.enum(['delivered', 'picked_up']),
   orderVersion: VersionSchema,
   financialVersion: VersionSchema,
+  /** Platform-rider completion only. */
+  jobId: IdSchema.optional(),
+  jobVersion: VersionSchema.optional(),
   payment: HandoverPaymentSchema,
   completedAt: TimestampSchema,
 });

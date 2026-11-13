@@ -6,13 +6,17 @@ import type {
   PublicReviewPageInput,
   PublicReviewPageRows,
   PublicReviewRow,
-  PublicReviewSummaryRow,
   ReviewPosition,
   ReviewPublicReadRepository,
 } from '../domain/reviews';
-
-const iso = (column: Prisma.Sql) =>
-  Prisma.sql`to_char(${column} AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"')`;
+import {
+  CARD_COLUMNS,
+  SUMMARY_COLUMNS,
+  VISIBLE_JOIN,
+  VISIBLE_STATUS,
+  toSummary,
+  type SummaryRow,
+} from './review-sql';
 
 // Allow-listed owner public projections; never built from client input.
 function targetVisible(type: ReviewPublicTargetType, id: string): Prisma.Sql {
@@ -30,11 +34,9 @@ function targetVisible(type: ReviewPublicTargetType, id: string): Prisma.Sql {
 // published/reported, not deleted, by a live active author.
 function visible(input: PublicReviewPageInput): Prisma.Sql {
   return Prisma.sql`
-    FROM reviews r
-    JOIN users u ON u.id = r.author_user_id
-      AND u.account_status = 'active' AND u.deleted_at IS NULL
+    FROM reviews r ${VISIBLE_JOIN}
     WHERE r.target_type = ${input.targetType} AND r.target_id = ${input.targetId}::uuid
-      AND r.status IN ('published', 'reported') AND r.deleted_at IS NULL`;
+      AND ${VISIBLE_STATUS}`;
 }
 
 function after(position: ReviewPosition | null): Prisma.Sql {
@@ -51,16 +53,6 @@ const ORDER = {
   helpful: Prisma.sql`ORDER BY r.helpful_count DESC, r.created_at DESC, r.id DESC`,
 } as const;
 
-type SummaryRow = {
-  count: number;
-  average: number | null;
-  r1: number;
-  r2: number;
-  r3: number;
-  r4: number;
-  r5: number;
-};
-
 @Injectable()
 export class PrismaReviewPublicReadRepository implements ReviewPublicReadRepository {
   constructor(private readonly db: PrismaDatabase) {}
@@ -75,35 +67,13 @@ export class PrismaReviewPublicReadRepository implements ReviewPublicReadReposit
       );
       if (!target?.visible) return null;
       const [summary] = await client.$queryRaw<SummaryRow[]>(Prisma.sql`
-        SELECT count(*)::integer AS count,
-          round(avg(r.rating)::numeric, 1)::float8 AS average,
-          count(*) FILTER (WHERE r.rating = 1)::integer AS r1,
-          count(*) FILTER (WHERE r.rating = 2)::integer AS r2,
-          count(*) FILTER (WHERE r.rating = 3)::integer AS r3,
-          count(*) FILTER (WHERE r.rating = 4)::integer AS r4,
-          count(*) FILTER (WHERE r.rating = 5)::integer AS r5
-        ${visible(input)}`);
+        SELECT ${SUMMARY_COLUMNS} ${visible(input)}`);
       const rows = await client.$queryRaw<PublicReviewRow[]>(Prisma.sql`
-        SELECT r.id::text AS id, u.display_name AS "authorDisplayName",
-          r.rating::integer AS rating, r.text, r.tags,
-          r.helpful_count AS "helpfulCount",
-          NULLIF(btrim(r.owner_reply), '') AS "ownerReply",
-          ${iso(Prisma.sql`r.owner_replied_at`)} AS "ownerRepliedAt",
-          ${iso(Prisma.sql`r.created_at`)} AS "createdAt", r.status
+        SELECT ${CARD_COLUMNS}
         ${visible(input)} ${after(input.after)}
         ${ORDER[input.sort]}
         LIMIT ${input.take}`);
       return { summary: toSummary(summary), rows };
     });
   }
-}
-
-function toSummary(row: SummaryRow | undefined): PublicReviewSummaryRow {
-  if (!row || row.count === 0)
-    return { count: 0, average: null, breakdown: [0, 0, 0, 0, 0] };
-  return {
-    count: row.count,
-    average: row.average,
-    breakdown: [row.r1, row.r2, row.r3, row.r4, row.r5],
-  };
 }

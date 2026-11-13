@@ -24,6 +24,7 @@ import { isForbidden, isMissing } from './errors';
 import { HandoverCodeCard } from './HandoverCodeCard';
 import { OrderActionsCard } from './OrderActionsCard';
 import { OrderFulfilmentCard } from './OrderFulfilmentCard';
+import { OrderRiderCard } from './OrderRiderCard';
 import { OrderModeBadge, OrderStatusBadge } from './OrderStatusBadge';
 import { OrderSummaryCard } from './OrderSummaryCard';
 import { OrderTimeline } from './OrderTimeline';
@@ -149,6 +150,7 @@ function OrderDetailView({ orderId }: { orderId: string }) {
           <Card padded>
             <OrderTimeline order={order} />
           </Card>
+          <OrderRiderCard order={order} />
           <HandoverCodeCard order={order} />
           <OrderFulfilmentCard order={order} />
         </div>

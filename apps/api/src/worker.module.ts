@@ -26,6 +26,7 @@ import {
   NotificationsWorkerModule,
 } from './modules/notifications/notifications-worker.module';
 import { CartWorkerModule } from './modules/cart-checkout/cart-worker.module';
+import { DeliveryWorkerModule } from './modules/delivery/delivery-dispatch.module';
 
 @Module({})
 export class WorkerModule {
@@ -34,7 +35,7 @@ export class WorkerModule {
     const mediaStorage = MediaStorageModule.forRoot(runtime, true);
     return {
       module: WorkerModule,
-      imports: [runtime, UsersDataWorkerModule.forRoot(runtime, config), mediaStorage, NotificationsWorkerModule.forRoot(runtime, mediaStorage), CartWorkerModule.forRoot(runtime)],
+      imports: [runtime, UsersDataWorkerModule.forRoot(runtime, config), mediaStorage, NotificationsWorkerModule.forRoot(runtime, mediaStorage), CartWorkerModule.forRoot(runtime), DeliveryWorkerModule.forRoot(runtime)],
       providers: [
         {
           provide: PG_BOSS_FACTORY,

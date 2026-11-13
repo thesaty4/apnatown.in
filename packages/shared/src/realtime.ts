@@ -7,7 +7,8 @@ import { IdSchema } from './wire.js';
 // rendered text. Clients refetch the owning REST resource on receipt.
 // ---------------------------------------------------------------------------
 
-export const REALTIME_SIGNAL_KINDS = ['order', 'notification'] as const;
+/** `delivery` = the rider's offer/assigned job changed (rider recipients only). */
+export const REALTIME_SIGNAL_KINDS = ['order', 'notification', 'delivery'] as const;
 export const RealtimeSignalKindSchema = z.enum(REALTIME_SIGNAL_KINDS);
 export type RealtimeSignalKind = z.infer<typeof RealtimeSignalKindSchema>;
 
@@ -23,12 +24,13 @@ export const RealtimeSignalPayloadSchema = z.strictObject({
   kind: RealtimeSignalKindSchema,
   userIds: z.array(IdSchema).min(1).max(REALTIME_MAX_RECIPIENTS),
   orderId: IdSchema.optional(),
+  jobId: IdSchema.optional(),
 });
 export type RealtimeSignalPayload = z.infer<typeof RealtimeSignalPayloadSchema>;
 
 // Browser SSE contract: GET /api/realtime/stream (text/event-stream). -------
 
-export const REALTIME_STREAM_EVENTS = ['ready', 'order', 'notification', 'session'] as const;
+export const REALTIME_STREAM_EVENTS = ['ready', 'order', 'notification', 'delivery', 'session'] as const;
 export const RealtimeStreamEventNameSchema = z.enum(REALTIME_STREAM_EVENTS);
 export type RealtimeStreamEventName = z.infer<typeof RealtimeStreamEventNameSchema>;
 
@@ -37,6 +39,13 @@ export const RealtimeReadyDataSchema = z.strictObject({});
 /** `event: order` — this order changed; refetch its detail/lists/counts. */
 export const RealtimeOrderDataSchema = z.strictObject({ orderId: IdSchema });
 export type RealtimeOrderData = z.infer<typeof RealtimeOrderDataSchema>;
+/**
+ * `event: delivery` — the rider's current offer or assigned job changed
+ * (offer created/expired/revoked, job progressed); refetch
+ * `/delivery/riders/me/offers/current` and `/delivery/riders/me/active`.
+ */
+export const RealtimeDeliveryDataSchema = z.strictObject({ jobId: IdSchema.optional() });
+export type RealtimeDeliveryData = z.infer<typeof RealtimeDeliveryDataSchema>;
 /** `event: notification` — new in-app item(s); refetch feed/unread count. */
 export const RealtimeNotificationDataSchema = z.strictObject({});
 /** `event: session` — session no longer valid or stream replaced; stream closes next. */
@@ -50,6 +59,7 @@ export const RealtimeEventSchema = z.discriminatedUnion('event', [
   z.strictObject({ event: z.literal('ready'), data: RealtimeReadyDataSchema }),
   z.strictObject({ event: z.literal('order'), data: RealtimeOrderDataSchema }),
   z.strictObject({ event: z.literal('notification'), data: RealtimeNotificationDataSchema }),
+  z.strictObject({ event: z.literal('delivery'), data: RealtimeDeliveryDataSchema }),
   z.strictObject({ event: z.literal('session'), data: RealtimeSessionDataSchema }),
 ]);
 export type RealtimeEvent = z.infer<typeof RealtimeEventSchema>;

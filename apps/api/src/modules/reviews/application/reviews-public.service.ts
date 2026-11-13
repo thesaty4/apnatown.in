@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
   ReviewPageSchema,
-  reviewAuthorLabel,
   type ReviewListQuery,
   type ReviewPage,
 } from '@apnatown/shared/reviews';
@@ -18,6 +17,7 @@ import {
   type PublicReviewRow,
   type ReviewPosition,
   type ReviewPublicReadRepository,
+  toReviewCard,
 } from '../domain/reviews';
 
 const recentPosition = z.tuple([TimestampSchema, IdSchema]);
@@ -51,7 +51,7 @@ export class ReviewsPublicService {
     const last = rows.at(-1);
     return ReviewPageSchema.parse({
       summary: result.summary,
-      items: rows.map(card),
+      items: rows.map(toReviewCard),
       nextCursor:
         result.rows.length > query.limit && last
           ? this.cursors.encode(binding, keys(query.sort, last))
@@ -86,20 +86,4 @@ function keys(sort: ReviewListQuery['sort'], row: PublicReviewRow) {
   return sort === 'recent'
     ? [row.createdAt, row.id]
     : [row.helpfulCount, row.createdAt, row.id];
-}
-
-// Public DTO: author reduced to first name + last initial (spec rule 8).
-function card(row: PublicReviewRow) {
-  return {
-    id: row.id,
-    authorLabel: reviewAuthorLabel(row.authorDisplayName),
-    rating: row.rating,
-    text: row.text,
-    tags: row.tags,
-    helpfulCount: row.helpfulCount,
-    ownerReply: row.ownerReply,
-    ownerRepliedAt: row.ownerReply ? row.ownerRepliedAt : null,
-    createdAt: row.createdAt,
-    status: row.status,
-  };
 }

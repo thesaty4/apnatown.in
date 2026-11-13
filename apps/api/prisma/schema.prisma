@@ -157,12 +157,43 @@ model Review {
   updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
   business Business? @relation(fields:[businessId],references:[id],onDelete:NoAction,onUpdate:NoAction)
   author User @relation(fields:[authorUserId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  reports ReviewReport[]
   @@index([targetType,targetId,rating,id],where:raw("status='published' AND deleted_at IS NULL"),map:"reviews_public_rating_idx")
   @@index([businessId,status,createdAt(sort:Desc),id(sort:Desc)],map:"reviews_business_idx")
   @@index([authorUserId,createdAt(sort:Desc),id(sort:Desc)],map:"reviews_author_idx")
   @@index([targetType,targetId,createdAt(sort:Desc),id(sort:Desc)],where:raw("status IN ('published','reported') AND deleted_at IS NULL"),map:"reviews_public_recent_idx")
   @@index([targetType,targetId,helpfulCount(sort:Desc),createdAt(sort:Desc),id(sort:Desc)],where:raw("status IN ('published','reported') AND deleted_at IS NULL"),map:"reviews_public_helpful_idx")
   @@map("reviews")
+}
+model ReviewReport {
+  id String @id @db.Uuid
+  reviewId String @map("review_id") @db.Uuid
+  reporterUserId String? @map("reporter_user_id") @db.Uuid
+  reporterSubjectHash Bytes @map("reporter_subject_hash")
+  reason String
+  details String?
+  status String @default("open")
+  resolvedAt DateTime? @map("resolved_at") @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  review Review @relation(fields:[reviewId],references:[id],onDelete:Restrict,onUpdate:NoAction)
+  reporter User? @relation(fields:[reporterUserId],references:[id],onDelete:Restrict,onUpdate:NoAction)
+  @@unique([reviewId,reporterSubjectHash],map:"review_reports_subject_key")
+  @@index([reviewId,status],map:"review_reports_review_status_idx")
+  @@map("review_reports")
+}
+model FollowerAnnouncement {
+  id String @id @db.Uuid
+  businessId String @map("business_id") @db.Uuid
+  kind String
+  targetId String? @map("target_id") @db.Uuid
+  source String
+  sourceEventId String? @unique @map("source_event_id") @db.Uuid
+  messageEn String? @map("message_en")
+  messageHi String? @map("message_hi")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  business Business @relation(fields:[businessId],references:[id],onDelete:Restrict,onUpdate:NoAction)
+  @@index([businessId,createdAt(sort:Desc),id(sort:Desc)],map:"follower_announcements_recent_idx")
+  @@map("follower_announcements")
 }
 model BillingPurchase {
   id String @id @db.Uuid
@@ -371,6 +402,7 @@ model RateLimitBucket {
 model User {
   bookmarks Bookmark[]
   authoredReviews Review[]
+  reviewReports ReviewReport[]
   billingPurchases BillingPurchase[]
   reviewedOffers Offer[]
   createdPlacements PromotionPlacement[] @relation("PlacementCreator")
@@ -1065,6 +1097,7 @@ model KeywordMappingTarget {
 // `business_documents.asset_id` gain their media_assets FKs in the Media
 // migration; there is no Prisma relation until then.
 model Business {
+  followerAnnouncements FollowerAnnouncement[]
   products Product[]
   services Service[]
   reviews Review[]
@@ -1938,4 +1971,70 @@ model DeliveryCode {
   @@unique([orderId, kind, generation], map: "delivery_codes_generation_key")
   @@index([expiresAt], map: "delivery_codes_expires_at_idx")
   @@map("delivery_codes")
+}
+
+/// Delivery-owned platform rider job (20261113100000): one per platform
+/// order; estimate at creation, immutable earned snapshot at completion.
+/// Accessed through parameterized SQL in the Delivery job repository.
+model DeliveryJob {
+  id                      String                                @id @db.Uuid
+  orderId                 String                                @unique(map: "delivery_jobs_order_key") @map("order_id") @db.Uuid
+  cityId                  String                                @map("city_id") @db.Uuid
+  areaId                  String                                @map("area_id") @db.Uuid
+  riderUserId             String?                               @map("rider_user_id") @db.Uuid
+  status                  String                                @default("requested")
+  assignmentState         String                                @default("queued") @map("assignment_state")
+  failReason              String?                               @map("fail_reason")
+  cancellationReason      String?                               @map("cancellation_reason")
+  pickupPoint             Unsupported("geography(Point,4326)")? @map("pickup_point")
+  dropPoint               Unsupported("geography(Point,4326)")? @map("drop_point")
+  distanceM               Int                                   @map("distance_m")
+  estimateBasePaise       BigInt                                @map("estimate_base_paise")
+  estimatePerKmPaise      BigInt                                @map("estimate_per_km_paise")
+  estimateTotalPaise      BigInt                                @map("estimate_total_paise")
+  estimateSettingsVersion String                                @map("estimate_settings_version")
+  estimatedAt             DateTime                              @map("estimated_at") @db.Timestamptz(6)
+  earnedBasePaise         BigInt?                               @map("earned_base_paise")
+  earnedPerKmPaise        BigInt?                               @map("earned_per_km_paise")
+  earnedDistanceM         Int?                                  @map("earned_distance_m")
+  earnedDistancePayPaise  BigInt?                               @map("earned_distance_pay_paise")
+  earnedRoundingPaise     BigInt?                               @map("earned_rounding_paise")
+  earnedTotalPaise        BigInt?                               @map("earned_total_paise")
+  earnedSettingsVersion   String?                               @map("earned_settings_version")
+  earnedAt                DateTime?                             @map("earned_at") @db.Timestamptz(6)
+  payableFinancialVersion Int                                   @map("payable_financial_version")
+  checkedItemIds          String[]                              @default([]) @map("checked_item_ids") @db.Uuid
+  checkedFinancialVersion Int?                                  @map("checked_financial_version")
+  version                 Int                                   @default(1)
+  acceptedAt              DateTime?                             @map("accepted_at") @db.Timestamptz(6)
+  reachedShopAt           DateTime?                             @map("reached_shop_at") @db.Timestamptz(6)
+  pickedUpAt              DateTime?                             @map("picked_up_at") @db.Timestamptz(6)
+  reachedDropAt           DateTime?                             @map("reached_drop_at") @db.Timestamptz(6)
+  deliveredAt             DateTime?                             @map("delivered_at") @db.Timestamptz(6)
+  failedAt                DateTime?                             @map("failed_at") @db.Timestamptz(6)
+  cancelledAt             DateTime?                             @map("cancelled_at") @db.Timestamptz(6)
+  createdAt               DateTime                              @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime                              @map("updated_at") @db.Timestamptz(6)
+
+  @@index([riderUserId, createdAt(sort: Desc), id(sort: Desc)], map: "delivery_jobs_rider_history_idx")
+  @@index([cityId, areaId, status], map: "delivery_jobs_scope_status_idx")
+  @@index([areaId, cityId], map: "delivery_jobs_area_city_idx")
+  @@map("delivery_jobs")
+}
+
+/// Delivery-owned 60 s rider offer (20261113100000); one live offer per job.
+model DeliveryOffer {
+  id          String    @id @db.Uuid
+  jobId       String    @map("job_id") @db.Uuid
+  riderUserId String    @map("rider_user_id") @db.Uuid
+  status      String    @default("offered")
+  expiresAt   DateTime  @map("expires_at") @db.Timestamptz(6)
+  respondedAt DateTime? @map("responded_at") @db.Timestamptz(6)
+  version     Int       @default(1)
+  createdAt   DateTime  @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([jobId, riderUserId], map: "delivery_offers_job_rider_key")
+  @@index([riderUserId, status, expiresAt], map: "delivery_offers_rider_status_idx")
+  @@map("delivery_offers")
 }

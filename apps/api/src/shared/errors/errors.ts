@@ -68,6 +68,10 @@ const catalogue = {
   CATALOG_CATEGORY_FORBIDDEN: [403, 'errors.catalog.categoryForbidden'],
   SERVICES_SUBCATEGORY_REQUIRED: [422, 'errors.services.subcategoryRequired'],
   REVIEWS_NOT_ELIGIBLE: [403, 'errors.reviews.notEligible'],
+  REVIEW_NOT_FOUND: [404, 'errors.reviews.notFound'],
+  OFFER_NOT_FOUND: [404, 'errors.offers.notFound'],
+  OFFER_STATE_INVALID: [409, 'errors.offers.stateInvalid'],
+  OFFER_VERSION_CONFLICT: [409, 'errors.offers.versionConflict'],
   MEDIA_VIDEO_NOT_PUBLISHED: [409, 'errors.media.videoNotPublished'],
   ENGAGEMENT_TARGET_NOT_FOUND: [404, 'errors.engagement.targetNotFound'],
   COMMENT_INVALID_TRANSITION: [409, 'errors.engagement.commentInvalidTransition'],
@@ -196,6 +200,12 @@ const catalogue = {
   DELIVERY_CODE_CONSUMED: [409, 'errors.delivery.codeConsumed'],
   DELIVERY_CODE_COOLDOWN: [429, 'errors.delivery.codeCooldown'],
   DELIVERY_COD_NOT_CONFIRMED: [422, 'errors.delivery.codNotConfirmed'],
+  DELIVERY_OFFER_EXPIRED: [409, 'errors.delivery.offerExpired'],
+  DELIVERY_OFFER_TAKEN: [409, 'errors.delivery.offerTaken'],
+  DELIVERY_ITEMS_CHANGED: [409, 'errors.delivery.itemsChanged'],
+  DELIVERY_EARNING_POLICY_UNAVAILABLE: [503, 'errors.delivery.earningPolicyUnavailable'],
+  DELIVERY_DISTANCE_UNAVAILABLE: [409, 'errors.delivery.distanceUnavailable'],
+  RIDER_UNAVAILABLE: [409, 'errors.delivery.riderUnavailable'],
 } as const;
 
 export type ErrorCode = keyof typeof catalogue;

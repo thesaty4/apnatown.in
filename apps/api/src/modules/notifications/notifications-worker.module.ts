@@ -5,6 +5,8 @@ import { AdminRecipientsWorkerModule } from '../admin/admin-recipients-worker.mo
 import { BusinessContextModule } from '../businesses/business-context.module';
 import { CatalogReadWorkerModule } from '../catalog/catalog-read-worker.module';
 import { OrdersNotificationReadModule } from '../orders/orders-notification-read.module';
+import { EngagementNotificationReadModule } from '../engagement/engagement-notification-read.module';
+import { FollowerAnnouncementRule } from './application/handlers/follower.rules';
 import { UsersReadWorkerModule } from '../users/users-read-worker.module';
 import { EmailChannel, InAppChannel, WhatsAppChannel } from './application/channels';
 import {
@@ -21,6 +23,7 @@ import {
   CommentPendingRule,
   SupportMessageRule,
 } from './application/handlers/engagement-support.rules';
+import { DeliveryAssignmentRule, DeliveryOfferRule } from './application/handlers/delivery.rules';
 import {
   OrderCancelledRule,
   OrderNotificationSupport,
@@ -62,6 +65,9 @@ const RULES = [
   OrderPlacedRule,
   OrderProgressRule,
   OrderCancelledRule,
+  DeliveryOfferRule,
+  DeliveryAssignmentRule,
+  FollowerAnnouncementRule,
 ] as const;
 
 /**
@@ -87,6 +93,7 @@ export class NotificationsWorkerModule {
         AdminRecipientsWorkerModule.forRoot(runtime, users),
         CatalogReadWorkerModule.forRoot(runtime, businessContext, mediaStorage),
         OrdersNotificationReadModule.forRoot(runtime),
+        EngagementNotificationReadModule.forRoot(runtime),
       ],
       providers: [
         {

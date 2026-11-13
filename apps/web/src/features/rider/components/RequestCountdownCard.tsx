@@ -4,12 +4,20 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import type { RiderOffer } from '@apnatown/shared/delivery';
 import { Card } from '@apnatown/ui/cards/Card';
+import { Button } from '@apnatown/ui/primitives/Button';
+import type { OfferDecision } from '../job-queries';
 import { Notice, useIstTime, useKm, useMoney } from '../parts';
 
 /** Seconds left from the server's expiry, corrected by its clock skew. */
 function useRemaining(offer: RiderOffer) {
   const [now, setNow] = useState(() => Date.now());
-  const [skew] = useState(() => Date.parse(offer.serverTime) - Date.now());
+  const [skew, setSkew] = useState(
+    () => Date.parse(offer.serverTime) - Date.now(),
+  );
+  // Each re-read (focus, reconnect, realtime hint) re-anchors the clock.
+  useEffect(() => {
+    setSkew(Date.parse(offer.serverTime) - Date.now());
+  }, [offer.serverTime]);
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(timer);
@@ -23,10 +31,25 @@ function useRemaining(offer: RiderOffer) {
 /**
  * Current offer card (S-RIDE-03): pickup/drop areas, distance, immutable
  * estimate and a server-anchored countdown. Screen readers hear 30 s / 10 s /
- * expired milestones only, never each tick. Accept/Reject are not shipped by
- * the API yet, so the card states that instead of offering dead buttons.
+ * expired milestones only, never each tick. Accept/Reject send the offer
+ * version; both disable once the server expiry passes or while sending.
  */
-export function RequestCountdownCard({ offer }: { offer: RiderOffer }) {
+export function RequestCountdownCard({
+  offer,
+  busy,
+  pending,
+  canAccept,
+  onRespond,
+}: {
+  offer: RiderOffer;
+  /** Any response is in flight (both buttons disabled). */
+  busy: boolean;
+  /** The response being sent (its button shows progress). */
+  pending: OfferDecision | null;
+  /** False while offline or not online for deliveries. */
+  canAccept: boolean;
+  onRespond: (decision: OfferDecision) => void;
+}) {
   const t = useTranslations('rider.requests');
   const money = useMoney();
   const km = useKm();
@@ -92,7 +115,23 @@ export function RequestCountdownCard({ offer }: { offer: RiderOffer }) {
       {expired ? (
         <Notice tone="warn" icon="⌛" role="status" title={t('expired')} />
       ) : (
-        <Notice tone="info" title={t('respondUnavailable')} />
+        <div className="grid grid-cols-2 gap-2">
+          <Button
+            variant="outline"
+            disabled={busy}
+            loading={pending === 'reject'}
+            onClick={() => onRespond('reject')}
+          >
+            {t('reject')}
+          </Button>
+          <Button
+            disabled={busy || !canAccept}
+            loading={pending === 'accept'}
+            onClick={() => onRespond('accept')}
+          >
+            {t('accept')}
+          </Button>
+        </div>
       )}
     </Card>
   );

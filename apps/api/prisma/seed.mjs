@@ -17,6 +17,8 @@ import { seedNotificationData } from './seed-notification-data.mjs';
 import { seedReviewData } from './seed-review-data.mjs';
 import { seedOrderData } from './seed-order-data.mjs';
 import { seedOrderNotifications } from './seed-order-notifications.mjs';
+import { seedOwnerInsights } from './seed-owner-insights.mjs';
+import { seedEarningsSettings } from './seed-earnings-settings.mjs';
 
 const require = createRequire(import.meta.url);
 const SAMPLE_DATA = new URL(
@@ -49,6 +51,8 @@ function loadHelpers(env) {
       wire: require('@apnatown/shared/wire'),
       search: require('@apnatown/shared/search'),
       notification: require('../dist/modules/notifications/application/notification-policy.js'),
+      reviewsOwner: require('../dist/modules/reviews/domain/owner-reviews.js'),
+      settings: require('@apnatown/shared/settings'),
       listingReports: require('../dist/modules/admin/domain/listing-report.js'),
     };
   } catch (error) {
@@ -80,6 +84,9 @@ function loadHelpers(env) {
     communicationScopeSchema: modules.admin.CommunicationScopeSchema,
     notificationPolicy: modules.notification.TEMPLATE_POLICY,
     notificationContentVersion: modules.notification.TEMPLATE_CONTENT_VERSION,
+    // Same reporter subject hash as ReviewsOwnerService (one report per subject).
+    reviewReporterSubject: modules.reviewsOwner.reporterSubject,
+    settingSchemas: modules.settings.SETTING_VALUE_SCHEMAS,
     // Same keyed subject hash as ListingReportIntakeService (live dedupe).
     listingReportSubjectHash: (userId) =>
       modules.listingReports.listingReportSubjectHash(subjectKey, `user:${userId}`),
@@ -335,6 +342,12 @@ async function apply(client, fixtures, listings, personas, providers, helpers, s
   counts.extended.order_notifications = orderNotices.notifications;
   counts.extended.order_notification_deliveries = orderNotices.notification_deliveries;
   counts.extended.notification_preferences += orderNotices.notification_preferences;
+  const insights = await seedOwnerInsights(client, context);
+  counts.extended.review_reports = insights.review_reports;
+  counts.extended.follower_announcements = insights.follower_announcements;
+  counts.extended.announcement_notifications = insights.notifications;
+  counts.extended.notification_preferences += insights.notification_preferences;
+  Object.assign(counts.extended, await seedEarningsSettings(client, context));
   return counts;
 }
 

@@ -1,4 +1,5 @@
 import {
+  BusinessAnalyticsSchema,
   BusinessOverviewSchema,
   BusinessOwnerSchema,
   BusinessProfilePatchSchema,
@@ -61,6 +62,21 @@ export async function getBusinessOverview(
       ...withSignal(signal),
     }),
     BusinessOverviewSchema,
+  );
+}
+
+/** S-PROV-14 reporting-v1 provider analytics (30 IST days). */
+export async function getBusinessAnalytics(
+  api: Reader,
+  kind: BusinessKind,
+  signal?: AbortSignal,
+) {
+  return unwrap(
+    await api.GET('/businesses/me/analytics', {
+      params: { header: kindHeader(kind), query: { period: '30d' } },
+      ...withSignal(signal),
+    }),
+    BusinessAnalyticsSchema,
   );
 }
 

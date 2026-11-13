@@ -11,10 +11,10 @@ import {
 } from './wire.js';
 
 /**
- * Delivery job-side wire contracts (F-RD-003..006). Jobs, offers and earning
- * snapshots need Orders/Payments, which have not shipped: the API returns
- * explicit "none" results (no offer, empty pages, unavailable payout) rather
- * than sample values. Money is safe-integer paise; timestamps ISO UTC.
+ * Delivery job-side wire contracts (F-RD-003..006): offers, the assigned
+ * job, terminal history and earnings read persisted `delivery_jobs` /
+ * `delivery_offers` rows. Payout stays explicitly unavailable. Money is
+ * safe-integer paise; timestamps ISO UTC.
  */
 
 /** Reporting display zone for rider periods (bounds stay UTC instants). */
@@ -43,6 +43,8 @@ export const DeliveryFailReasonSchema = z.enum(DELIVERY_FAIL_REASONS);
 
 const DistanceSchema = z.number().int().safe().nonnegative();
 const LabelSchema = z.string().min(1).max(120);
+/** Area/first-name labels may be empty when the snapshot has none (never invented). */
+const OptionalLabelSchema = z.string().max(120);
 
 export const DeliveryEstimateSchema = z.strictObject({
   basePaise: PaiseSchema,
@@ -67,8 +69,8 @@ export const RiderOfferSchema = z.strictObject({
   offerId: IdSchema,
   version: VersionSchema,
   jobId: IdSchema,
-  pickup: z.strictObject({ businessName: LabelSchema, area: LabelSchema }),
-  dropArea: LabelSchema,
+  pickup: z.strictObject({ businessName: LabelSchema, area: OptionalLabelSchema }),
+  dropArea: OptionalLabelSchema,
   distanceM: DistanceSchema,
   itemCount: CountSchema,
   estimate: DeliveryEstimateSchema,
@@ -99,9 +101,9 @@ export const RiderJobSchema = z.strictObject({
   allowedActions: z.array(
     z.enum(['reached_shop', 'picked_up', 'reached_drop', 'fail', 'complete']),
   ),
-  pickup: z.strictObject({ businessName: LabelSchema, area: LabelSchema }),
+  pickup: z.strictObject({ businessName: LabelSchema, area: OptionalLabelSchema }),
   drop: z.strictObject({
-    firstName: LabelSchema,
+    firstName: OptionalLabelSchema,
     address: z.string().min(1).max(500),
     location: PointSchema.nullable(),
   }),
@@ -145,7 +147,7 @@ export const RiderHistorySchema = z.strictObject({
   orderId: IdSchema,
   orderNumber: z.string().min(1).max(32),
   shopName: LabelSchema,
-  dropArea: LabelSchema,
+  dropArea: OptionalLabelSchema,
   status: z.enum(['delivered', 'failed', 'cancelled']),
   reasonKey: DeliveryFailReasonSchema.optional(),
   distanceM: DistanceSchema,

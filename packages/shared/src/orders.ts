@@ -10,6 +10,7 @@ import {
 } from './wire.js';
 import { DeliveryMethodSchema } from './businesses.js';
 import { HandoverMetaSchema } from './delivery-handover.js';
+import { OrderDeliveryBlockSchema } from './delivery-dispatch.js';
 
 /**
  * Orders wire contracts (specs/orders/be/orders.md; F-OR-001..006, F-VD-008,
@@ -74,6 +75,10 @@ export const ORDER_ALLOWED_ACTIONS = [
   'self_complete',
   'verify_pickup',
   'view_code',
+  /** Owner: (re)request a platform rider (auto-assign) for a ready order. */
+  'request_rider',
+  /** Owner: offer the ready order to a chosen rider from the candidate list. */
+  'assign_rider',
 ] as const;
 export const OrderAllowedActionSchema = z.enum(ORDER_ALLOWED_ACTIONS);
 export type OrderAllowedAction = z.infer<typeof OrderAllowedActionSchema>;
@@ -178,7 +183,7 @@ export type OrderItem = z.infer<typeof OrderItemSchema>;
 export const OrderTimelineEntrySchema = z.strictObject({
   status: OrderStatusSchema,
   at: TimestampSchema,
-  actorKind: z.enum(['customer', 'business', 'system']),
+  actorKind: z.enum(['customer', 'business', 'rider', 'system']),
   reasonKey: z.string().max(60).nullable(),
 });
 
@@ -218,7 +223,9 @@ export const OrderDetailSchema = z.strictObject({
   /** Cases are not implemented yet; always empty. */
   cases: z.array(z.never()),
   allowedActions: z.array(OrderAllowedActionSchema),
-  /** Platform-rider orders cannot progress past ready until rider jobs ship. */
+  /** Platform-rider job/assignment projection; null for self/pickup or before ready. */
+  delivery: OrderDeliveryBlockSchema.nullable(),
+  /** Legacy notice; rider dispatch ships, so the API now always sends null. */
   fulfilmentNotice: z.enum(['rider_dispatch_unavailable']).nullable(),
 });
 export type OrderDetail = z.infer<typeof OrderDetailSchema>;
@@ -349,6 +356,7 @@ export type OrderStatusChangedPayload = z.infer<typeof OrderStatusChangedPayload
 /** `order.cancelled` adds the cancellation source and custody disposition. */
 export const OrderCancelledPayloadSchema = OrderStatusChangedPayloadSchema.extend({
   cancellationSource: z.enum(['customer', 'business', 'delivery']),
-  custody: z.enum(['pre_pickup']),
+  /** post_pickup: rider failure after collection; stock stays held (no restock). */
+  custody: z.enum(['pre_pickup', 'post_pickup']),
 });
 export type OrderCancelledPayload = z.infer<typeof OrderCancelledPayloadSchema>;

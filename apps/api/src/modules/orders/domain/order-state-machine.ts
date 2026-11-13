@@ -16,7 +16,10 @@ export type OrderEvent =
   | 'reject'
   | 'delivery.self_dispatched'
   | 'delivery.self_delivered'
-  | 'delivery.pickup_completed';
+  | 'delivery.pickup_completed'
+  | 'delivery.picked_up'
+  | 'delivery.delivered'
+  | 'delivery.failed';
 
 /** Who may drive the event: customer, approved owner, or Delivery's verified command. */
 export type OrderActorKind = 'customer' | 'business' | 'delivery';
@@ -47,6 +50,24 @@ const rows: readonly TransitionHandler[] = [
   {
     mode: 'delivery', from: 'out_for_delivery', event: 'delivery.self_delivered',
     to: 'delivered', actor: 'delivery', method: 'self',
+  },
+  // Platform rider (ST-delivery-job outcomes; orders BE "delivery.*" map).
+  {
+    mode: 'delivery', from: 'ready', event: 'delivery.picked_up',
+    to: 'out_for_delivery', actor: 'delivery', method: 'apna_town_rider',
+  },
+  {
+    mode: 'delivery', from: 'out_for_delivery', event: 'delivery.delivered',
+    to: 'delivered', actor: 'delivery', method: 'apna_town_rider',
+  },
+  // Source-confirmed failure-only exception (final js10.js F.jfail).
+  {
+    mode: 'delivery', from: 'ready', event: 'delivery.failed',
+    to: 'cancelled', actor: 'delivery', method: 'apna_town_rider',
+  },
+  {
+    mode: 'delivery', from: 'out_for_delivery', event: 'delivery.failed',
+    to: 'cancelled', actor: 'delivery', method: 'apna_town_rider',
   },
   // Pickup mode: no preparing/out_for_delivery states.
   { mode: 'pickup', from: 'placed', event: 'accept', to: 'accepted', actor: 'business' },

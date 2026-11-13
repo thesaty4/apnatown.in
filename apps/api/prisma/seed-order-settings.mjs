@@ -44,9 +44,26 @@ async function enableCod(client, context) {
   return rowCount;
 }
 
+// cfg.riderBase / cfg.riderPerKm (rupees) -> `rider_earning` (paise), so local
+// platform-rider jobs can snapshot an estimate/earning (delivery BE rule 12).
+// Insert-only: a Super Admin value is never overwritten.
+// TODO(verify): production rider earning policy needs approval.
+async function seedRiderEarning(client, context) {
+  const { riderBase, riderPerKm } = context.sample.cfg ?? {};
+  if (!Number.isInteger(riderBase) || !Number.isInteger(riderPerKm)) return 0;
+  const { rowCount } = await client.query(
+    `INSERT INTO settings (key, value, version, updated_by, updated_at)
+     VALUES ('rider_earning', $1::jsonb, 1, NULL, $2::timestamptz)
+     ON CONFLICT (key) DO NOTHING`,
+    [JSON.stringify({ basePaise: riderBase * 100, perKmPaise: riderPerKm * 100 }), FIXTURE_CLOCK],
+  );
+  return rowCount;
+}
+
 export async function seedOrderSettings(client, context) {
   return {
     business_fulfilment_settings: await fillFulfilment(client, context),
     feature_flag_payments_cod: await enableCod(client, context),
+    settings_rider_earning: await seedRiderEarning(client, context),
   };
 }

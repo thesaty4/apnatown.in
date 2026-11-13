@@ -59,6 +59,31 @@ retention, hosting capacity and unrelated providers are not approved.
 The prototype remains visual reference, not permission to enable video uploads,
 simulate unsupported Instagram controls or bypass provider usage policies.
 
+## Confirmed dispatch decision D-RD-01 (2026-11-13)
+
+The user approved the platform-rider dispatch policy that the delivery BE spec
+gated (rule 2 "configured selection policy"):
+
+- Auto-assign offers a job to **one** eligible rider at a time: rider profile
+  `approved` + online + idle (no active job and no other unexpired live offer)
+  + same **city** as the job's pickup business (area not required). Live rider
+  role/account is rechecked under the rider lock at acceptance.
+- Order: nearest by straight-line PostGIS distance from the rider's latest
+  location to the shop when both are present; then the oldest
+  `last_location_at` (longest waiting); then user ID.
+- Each offer expires after **60 s**. Reject/expiry closes it and offers the
+  next candidate, excluding every rider who already had this job's offer
+  (`UNIQUE(job_id,rider_user_id)`); no candidate leaves the job `requested`
+  with `assignment_state='unassigned'` and notifies the owner, who can
+  re-request (new riders only) or pick a rider.
+- Owner manual assignment is a **directed offer** to a picked candidate (same
+  60 s accept flow), never a forced assignment; before pickup only.
+- Expiry runs in a 5 s worker sweep plus lazy rejection of late accepts; lock
+  order rider → order → job → offer/code.
+- Rider earning estimate/earned use the Settings `rider_earning` value
+  (local seed from sample `cfg.riderBase/riderPerKm` only when unset);
+  production values remain `TODO(verify)`.
+
 ## Open questions
 Q-01 payment gateway; Q-02 external geocoding/production tile capacity (Leaflet/OSM rendering selected); Q-03 future video hosting only (link-only launch resolved); Q-04 WhatsApp Business sender and template approval process; Q-05 KYC retention period; Q-06 commission and invoicing rules, GST handling; Q-07 refund SLA and moderation SLAs; Q-08 owner of Hindi translation review; Q-09 exact delivery slabs per city; Q-10 vendor staff roles; Q-11 analytics and event-tracking plan; Q-12 legal copy (terms, privacy, refund); Q-13 data residency, backups and retention; Q-14 SEO: indexable facets policy owner; Q-15 OTP/SMS provider and DLT registration.
 

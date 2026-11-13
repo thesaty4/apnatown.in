@@ -26,11 +26,14 @@ export function Profile({
   owner,
   onboarding,
   returnTo,
+  heading = 'h1',
 }: {
   initial: DehydratedState;
   owner?: string | undefined;
   onboarding: boolean;
   returnTo?: string | undefined;
+  /** `h2` when embedded under another screen's title (owner account). */
+  heading?: 'h1' | 'h2';
 }) {
   return (
     <OwnResource initial={initial} owner={owner} options={profileOptions}>
@@ -39,6 +42,7 @@ export function Profile({
           profile={profile}
           onboarding={onboarding}
           returnTo={returnTo}
+          heading={heading}
         />
       )}
     </OwnResource>
@@ -49,11 +53,14 @@ function ProfileForm({
   profile,
   onboarding,
   returnTo,
+  heading,
 }: {
   profile: ProfileData;
   onboarding: boolean;
   returnTo?: string | undefined;
+  heading: 'h1' | 'h2';
 }) {
+  const Heading = heading;
   const { state } = useSession();
   const mutation = useSaveProfile();
   const router = useRouter();
@@ -100,7 +107,9 @@ function ProfileForm({
   }, [fields, mutation.isError]);
   return (
     <div className="grid gap-4">
-      <h1 className="text-h1">{t(onboarding ? 'completeTitle' : 'title')}</h1>
+      <Heading className={heading === 'h1' ? 'text-h1' : 'text-h2'}>
+        {t(onboarding ? 'completeTitle' : 'title')}
+      </Heading>
       {!profile.displayName && (
         <EmptyState
           title={t('emptyTitle')}

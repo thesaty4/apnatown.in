@@ -28,6 +28,7 @@ export class PgRealtimeSignal implements RealtimeSignal {
         kind: input.kind,
         userIds: userIds.slice(start, start + REALTIME_MAX_RECIPIENTS),
         ...(input.orderId ? { orderId: input.orderId } : {}),
+        ...(input.jobId ? { jobId: input.jobId } : {}),
       });
       await this.database
         .client(tx)

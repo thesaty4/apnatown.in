@@ -1,5 +1,6 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import { useFormatter, useTranslations } from 'next-intl';
 import type { ReviewCard, ReviewSummary } from '@apnatown/shared/reviews';
 import { Card } from '@apnatown/ui/cards/Card';
@@ -85,8 +86,17 @@ export function RatingSummary({ summary }: { summary: ReviewSummary }) {
   );
 }
 
-/** Prototype `revCard`: author, stars, date, text, tags, helpful, reply. */
-export function ReviewItem({ review }: { review: ReviewCard }) {
+/** Prototype `revCard`: author, stars, date, text, tags, helpful, reply.
+ * Owner screens add the reviewed item (`context`) and actions (`children`). */
+export function ReviewItem({
+  review,
+  context,
+  children,
+}: {
+  review: ReviewCard;
+  context?: ReactNode;
+  children?: ReactNode;
+}) {
   const t = useTranslations('reviews.section');
   const format = useFormatter();
   return (
@@ -108,6 +118,7 @@ export function ReviewItem({ review }: { review: ReviewCard }) {
           })}
         </time>
       </div>
+      {context}
       <Stars
         rating={review.rating}
         label={t('starsLabel', { rating: review.rating })}
@@ -143,6 +154,7 @@ export function ReviewItem({ review }: { review: ReviewCard }) {
           </p>
         </div>
       )}
+      {children}
     </Card>
   );
 }

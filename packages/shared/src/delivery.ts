@@ -322,3 +322,4 @@ export type RiderApplicationDecidedPayload = z.infer<
 
 export * from './delivery-jobs.js';
 export * from './delivery-handover.js';
+export * from './delivery-dispatch.js';

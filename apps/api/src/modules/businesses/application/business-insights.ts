@@ -14,6 +14,10 @@ import {
   type BusinessRepository,
   type StoredBusiness,
 } from '../domain/business';
+import {
+  BUSINESS_ENQUIRY_STATS,
+  type BusinessEnquiryStatsPort,
+} from './business-enquiry-stats-port';
 import { istDate, summaryDto } from './business-mappers';
 
 const PERIOD_DAYS = 30;
@@ -35,6 +39,8 @@ export class BusinessInsights {
     @Inject(BUSINESS_REPOSITORY)
     private readonly businesses: BusinessRepository,
     @Inject(CLOCK) private readonly clock: Clock,
+    @Inject(BUSINESS_ENQUIRY_STATS)
+    private readonly enquiries: BusinessEnquiryStatsPort,
   ) {}
 
   overview(
@@ -63,26 +69,34 @@ export class BusinessInsights {
   }
 
   /**
-   * 30 IST days ending today. Days before the observation coverage start
-   * are null (unknown), not zero. The Services enquiry cohort is not yet
-   * available, so enquiries/converted/conversion stay null and are listed.
+   * 30 IST days ending today. View days before the observation coverage
+   * start are null (unknown), not zero. Enquiries are the Services cohort
+   * created in the same window; conversion is converted cohort members /
+   * cohort size (null for an empty cohort).
    */
   async analytics(
     tx: TxContext,
     business: StoredBusiness,
   ): Promise<BusinessAnalytics> {
     const views = await this.views(tx, business.id);
+    const cohort = await this.enquiries.cohort(tx, {
+      businessId: business.id,
+      fromIstDate: views.daily[0]!.date,
+      toIstDate: views.daily.at(-1)!.date,
+    });
     const unavailable: (typeof ANALYTICS_UNAVAILABLE_METRICS)[number][] = [];
     if (views.partial) unavailable.push('views_before_coverage');
-    unavailable.push('enquiries', 'converted', 'conversionRate', 'statusCounts');
     return BusinessAnalyticsSchema.parse({
       period: '30d',
       views: views.total,
-      enquiries: null,
-      converted: null,
-      conversionRate: null,
-      daily: views.daily.map((day) => ({ ...day, enquiries: null })),
-      statusCounts: null,
+      enquiries: cohort.total,
+      converted: cohort.converted,
+      conversionRate: cohort.total ? cohort.converted / cohort.total : null,
+      daily: views.daily.map((day) => ({
+        ...day,
+        enquiries: cohort.daily.get(day.date) ?? 0,
+      })),
+      statusCounts: cohort.statusCounts,
       asOf: views.asOf,
       coverageStartedAt: views.coverageStartedAt,
       unavailable,

@@ -42,14 +42,14 @@ const nav: Record<BusinessKind, { group: string; items: NavEntry[] }[]> = {
         { path: '/services', key: 'services', icon: '🔧' },
         { path: '/enquiries', key: 'enquiries', icon: '💬' },
         { path: '/inventory', key: 'inventory', icon: '🗃️' },
-        { path: null, key: 'offers', icon: '₹' },
+        { path: '/offers', key: 'offers', icon: '₹' },
       ],
     },
     {
       group: 'grow',
       items: [
-        { path: null, key: 'reviews', icon: '⭐' },
-        { path: null, key: 'followers', icon: '❤️' },
+        { path: '/reviews', key: 'reviews', icon: '⭐' },
+        { path: '/followers', key: 'followers', icon: '❤️' },
         { path: '/qr', key: 'qr', icon: '🔳' },
         { path: '/media', key: 'media', icon: '📷' },
         { path: '/profile', key: 'businessProfile', icon: '🏪' },
@@ -58,9 +58,9 @@ const nav: Record<BusinessKind, { group: string; items: NavEntry[] }[]> = {
     {
       group: 'account',
       items: [
-        { path: null, key: 'earnings', icon: '💳' },
+        { path: '/earnings', key: 'earnings', icon: '💳' },
         { path: '/notifications', key: 'notifications', icon: '🔔' },
-        { path: null, key: 'account', icon: '⚙️' },
+        { path: '/account', key: 'account', icon: '⚙️' },
       ],
     },
   ],
@@ -74,8 +74,8 @@ const nav: Record<BusinessKind, { group: string; items: NavEntry[] }[]> = {
         { path: '/products', key: 'products', icon: '🏷️' },
         { path: '/services', key: 'services', icon: '🔧' },
         { path: '/profile', key: 'profile', icon: '🪪' },
-        { path: null, key: 'reviews', icon: '⭐' },
-        { path: null, key: 'followers', icon: '❤️' },
+        { path: '/reviews', key: 'reviews', icon: '⭐' },
+        { path: '/followers', key: 'followers', icon: '❤️' },
       ],
     },
     {
@@ -83,14 +83,14 @@ const nav: Record<BusinessKind, { group: string; items: NavEntry[] }[]> = {
       items: [
         { path: '/media', key: 'media', icon: '📷' },
         { path: '/qr', key: 'qr', icon: '🔳' },
-        { path: null, key: 'analytics', icon: '📈' },
+        { path: '/analytics', key: 'analytics', icon: '📈' },
       ],
     },
     {
       group: 'account',
       items: [
         { path: '/notifications', key: 'notifications', icon: '🔔' },
-        { path: null, key: 'account', icon: '⚙️' },
+        { path: '/account', key: 'account', icon: '⚙️' },
       ],
     },
   ],

@@ -35,16 +35,8 @@ export class OrderLifecycle {
   async apply(tx: TxContext, input: TransitionInput): Promise<StoredOrder> {
     const { order } = input;
     const handler = findTransition(order.mode, order.status, input.event);
-    if (!handler || handler.actor !== input.actor.kind) {
-      // Platform-rider orders cannot leave `ready` until rider jobs ship.
-      if (order.deliveryMethod === 'apna_town_rider' && input.event.startsWith('delivery.'))
-        throw new DomainError('ORDERS_RIDER_DISPATCH_UNAVAILABLE');
-      throw new DomainError('ORDERS_INVALID_TRANSITION');
-    }
-    if (handler.method && order.deliveryMethod !== handler.method)
-      throw new DomainError(
-        order.deliveryMethod === 'apna_town_rider' ? 'ORDERS_RIDER_DISPATCH_UNAVAILABLE' : 'ORDERS_INVALID_TRANSITION',
-      );
+    if (!handler || handler.actor !== input.actor.kind) throw new DomainError('ORDERS_INVALID_TRANSITION');
+    if (handler.method && order.deliveryMethod !== handler.method) throw new DomainError('ORDERS_INVALID_TRANSITION');
     if (order.version !== input.expectedVersion) throw new DomainError('ORDER_VERSION_CONFLICT');
     const after = await this.writes.updateStatus(tx, {
       id: order.id,
@@ -62,7 +54,7 @@ export class OrderLifecycle {
       reasonKey: input.reasonKey,
       at: input.at,
     });
-    await this.effects.run(tx, after, input.at);
+    await this.effects.run(tx, { before: order, after, at: input.at, correlationId: input.correlationId });
     await this.events.changed(tx, {
       before: order,
       after,

@@ -34,6 +34,12 @@ export const TEMPLATE_POLICY: Readonly<
   'order.new': { category: 'order', topic: 'orders', intent: 'transactional', channels: ORDERS },
   'order.status': { category: 'order', topic: 'orders', intent: 'transactional', channels: ORDERS },
   'order.cancelled': { category: 'order', topic: 'orders', intent: 'transactional', channels: ORDERS },
+  // Rider requests are time-boxed (60 s): in-app only.
+  'delivery.offer': { category: 'job', topic: 'orders', intent: 'transactional', channels: ['in_app'] },
+  'delivery.assigned': { category: 'order', topic: 'orders', intent: 'transactional', channels: ORDERS },
+  'delivery.unassigned': { category: 'order', topic: 'orders', intent: 'transactional', channels: ORDERS },
+  // Owner announcement to followers who turned the bell on: in-app only.
+  'follower.announcement': { category: 'follow', topic: 'follower_updates', intent: 'marketing', channels: ['in_app'] },
 });
 
 /** Logical content identity for template notices (campaigns use their own). */
@@ -67,8 +73,8 @@ const VOCABULARY: Readonly<Record<string, Record<'en' | 'hi', string>>> = {
   'status.cancelled': { en: 'cancelled', hi: 'रद्द कर दिया गया है' },
 };
 
-/** Params that are free catalog names (suggestion name) rather than codes. */
-const NAME_PARAMS = new Set(['name']);
+/** Free-text params (catalog/business name, owner announcement) → max length. */
+const TEXT_PARAMS: Readonly<Record<string, number>> = { name: 80, message: 200 };
 /** Literal non-PII references rendered verbatim only when they match the shape. */
 const LITERAL_PARAMS: Readonly<Record<string, RegExp>> = {
   orderNumber: /^[A-Z0-9-]{1,24}$/,
@@ -85,9 +91,10 @@ export function renderTemplate(
     if (typeof value !== 'string') return '';
     const literal = LITERAL_PARAMS[name];
     if (literal) return literal.test(value) ? value : '';
-    if (NAME_PARAMS.has(name)) {
+    const max = TEXT_PARAMS[name];
+    if (max) {
       const localized = params[`${name}_${locale}`];
-      return (typeof localized === 'string' ? localized : value).slice(0, 80);
+      return (typeof localized === 'string' ? localized : value).slice(0, max);
     }
     return VOCABULARY[`${name}.${value}`]?.[locale] ?? '';
   });

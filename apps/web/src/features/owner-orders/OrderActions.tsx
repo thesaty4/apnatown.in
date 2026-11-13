@@ -17,6 +17,7 @@ import { STALE_CODES, orderErrorKey } from './errors';
 import { HandoverSheet, type HandoverAction } from './HandoverSheet';
 import { useOwnerOrderCommand } from './queries';
 import { RejectSheet } from './RejectSheet';
+import { showsRiderDispatch } from './RiderDispatchCard';
 
 type Direct = Extract<
   OrderAllowedAction,
@@ -98,6 +99,7 @@ export function OrderActions({
         : labelKey[action],
     );
   const shown = DIRECT.filter((action) => allowed.has(action));
+  // Rider dispatch actions live in the Rider dispatch card.
   const hasAny =
     shown.length > 0 ||
     allowed.has('reject') ||
@@ -115,11 +117,6 @@ export function OrderActions({
           </span>
         ) : null}
       </p>
-      {order.fulfilmentNotice === 'rider_dispatch_unavailable' && (
-        <Alert tone="info" role="note" icon="🛵">
-          <p className="m-0">{t('riderDispatchUnavailable')}</p>
-        </Alert>
-      )}
       {order.handover?.state === 'locked' && (
         <Alert tone="warn" role="note">
           <p className="m-0">{te('codeLocked')}</p>
@@ -154,7 +151,9 @@ export function OrderActions({
         )
       )}
       {!hasAny ? (
-        <p className="m-0 text-small text-text-2">{t('noActions')}</p>
+        <p className="m-0 text-small text-text-2">
+          {t(showsRiderDispatch(order) ? 'seeRiderDispatch' : 'noActions')}
+        </p>
       ) : (
         <div className="grid gap-2 tablet:grid-cols-2">
           {shown.map((action, index) => (

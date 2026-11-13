@@ -35,6 +35,8 @@ Backend contract: [BE payments](../be/payments.md) · [Checkout](../../cart-chec
   - Given a successful promotion charge has blocked activation, when displayed, then “paid” and placement availability are separate; the UI neither marks it live nor invents a refund.
   - Given a suspended business, disabled online flag, stale purchase version or unknown provider outcome, when Retry/Buy is attempted, then no optimistic financial/activation state appears and the server reason remains actionable.
 
+- Implemented (2026-11-13): `/vendor/earnings` → `features/earnings/EarningsScreen` — Sales / Commission (est.) / Your earnings / Next payout (unavailable) KPIs, six-month sales `BarChart` + table, plan cards (current badge, price, commission, Switch disabled), promotion rows (Buy disabled), invoices unavailable note. Keys `earnings.owner.*`.
+
 ### S-PROV-18 — Billing and Premium (`/provider/billing`)
 
 - No dedicated prototype screen exists; reuse the subscription status, plan option, purchase handoff, invoice and confirmation components from S-VEND-16 without adding earnings or promotion-purchase content.

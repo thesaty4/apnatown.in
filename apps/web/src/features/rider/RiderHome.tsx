@@ -4,9 +4,16 @@ import Link from 'next/link';
 import { useFormatter, useTranslations } from 'next-intl';
 import { buttonVariantClassName } from '@apnatown/ui/primitives/Button';
 import { RiderOnlineToggle } from './components/RiderOnlineToggle';
-import { Kpi, PeriodBounds, ReadState, riderBase, useMoney } from './parts';
+import {
+  Kpi,
+  Notice,
+  PeriodBounds,
+  ReadState,
+  riderBase,
+  useMoney,
+} from './parts';
 import { ScreenHeader } from './RiderShell';
-import { useRiderSummary } from './queries';
+import { useCurrentOffer, useRiderSummary } from './queries';
 
 /** S-RIDE-02: online toggle, rolling-24 h KPIs (server bounds), quick links. */
 export function RiderHome() {
@@ -15,6 +22,9 @@ export function RiderHome() {
   const format = useFormatter();
   const summary = useRiderSummary();
   const data = summary.data;
+  // Live offer hint (realtime `delivery` events refresh both reads).
+  const offer = useCurrentOffer(Boolean(data && !data.activeJobId));
+  const hasOffer = Boolean(data && !data.activeJobId && offer.data?.offer);
   return (
     <div className="grid min-w-0 gap-4">
       <ScreenHeader title={t('title')} />
@@ -23,6 +33,22 @@ export function RiderHome() {
       ) : (
         <>
           <RiderOnlineToggle summary={data} />
+          {hasOffer && (
+            <Notice
+              tone="info"
+              icon="🛵"
+              role="status"
+              title={t('newRequest')}
+              action={
+                <Link
+                  href={`${riderBase}/requests`}
+                  className={buttonVariantClassName('primary')}
+                >
+                  {t('viewRequest')}
+                </Link>
+              }
+            />
+          )}
           <section aria-labelledby="rider-today" className="grid gap-2">
             <h2 id="rider-today" className="m-0 text-h3">
               {t('today')}

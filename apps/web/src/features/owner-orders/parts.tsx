@@ -1,7 +1,8 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
-import { formatMoney } from '@apnatown/shared/formatters';
+import { formatDistanceKm, formatMoney } from '@apnatown/shared/formatters';
 import type {
   OrderMode,
   OrderStatus,
@@ -99,6 +100,23 @@ export function usePaymentLabel() {
 export function useMoney() {
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
   return (paise: number) => formatMoney(paise, locale);
+}
+
+/** Straight-line metres → localized km via the shared formatter. */
+export function useKm() {
+  const locale = useLocale() === 'hi' ? 'hi' : 'en';
+  return (metres: number) => formatDistanceKm(metres / 1000, locale);
+}
+
+/** Whole seconds until `iso` (display only; the server owns expiry). */
+export function useSecondsLeft(iso: string | null) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (!iso) return;
+    const timer = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, [iso]);
+  return iso ? Math.max(0, Math.ceil((Date.parse(iso) - now) / 1000)) : 0;
 }
 
 /** UTC instant → IST, 12-hour, in the active locale. */

@@ -71,3 +71,58 @@ export function reviewAuthorLabel(displayName: string | null | undefined): strin
   const initial = last ? Array.from(last)[0]?.toLocaleUpperCase('en-IN') : undefined;
   return (initial ? `${first} ${initial}.` : first).slice(0, 64);
 }
+
+// ---------------------------------------------------------------------------
+// Owner reviews (S-VEND-09 / S-PROV-10, F-VD-010, F-RV-007). The business is
+// resolved from the session; the client never names it.
+// ---------------------------------------------------------------------------
+
+export const OWNER_REVIEW_FILTERS = ['all', 'needs_reply', 'reported'] as const;
+export const OwnerReviewFilterSchema = z.enum(OWNER_REVIEW_FILTERS);
+export type OwnerReviewFilter = z.infer<typeof OwnerReviewFilterSchema>;
+
+export const OwnerReviewQuerySchema = z.strictObject({
+  filter: OwnerReviewFilterSchema.default('all'),
+  rating: z.coerce.number().int().min(1).max(5).optional(),
+  cursor: CursorSchema.optional(),
+  limit: z.coerce.number().int().min(1).max(20).default(20),
+});
+export type OwnerReviewQuery = z.infer<typeof OwnerReviewQuerySchema>;
+
+export const OwnerReviewCardSchema = ReviewCardSchema.extend({
+  targetType: ReviewPublicTargetTypeSchema,
+  /** Product/service name (EN/HI); null for the business/profile itself. */
+  targetNameEn: z.string().nullable(),
+  targetNameHi: z.string().nullable(),
+  /** The caller already reported this review (Reported reflects open reports). */
+  reportedByMe: z.boolean(),
+});
+export type OwnerReviewCard = z.infer<typeof OwnerReviewCardSchema>;
+
+export const OwnerReviewPageSchema = z.strictObject({
+  summary: ReviewSummarySchema,
+  counts: z.strictObject({
+    all: CountSchema,
+    needs_reply: CountSchema,
+    reported: CountSchema,
+  }),
+  items: z.array(OwnerReviewCardSchema),
+  nextCursor: CursorSchema.nullable(),
+});
+export type OwnerReviewPage = z.infer<typeof OwnerReviewPageSchema>;
+
+/** Plain text; editing a reply overwrites it (rule 5). */
+export const OwnerReviewReplySchema = z.strictObject({
+  text: z.string().trim().min(1).max(1000),
+});
+export type OwnerReviewReply = z.infer<typeof OwnerReviewReplySchema>;
+
+export const REVIEW_REPORT_REASONS = ['abusive', 'spam', 'fake', 'other'] as const;
+export const ReviewReportSchema = z.strictObject({
+  reason: z.enum(REVIEW_REPORT_REASONS),
+  details: z.string().trim().max(500).optional(),
+});
+export type ReviewReport = z.infer<typeof ReviewReportSchema>;
+export const ReviewReportResultSchema = z.strictObject({
+  reported: z.literal(true),
+});

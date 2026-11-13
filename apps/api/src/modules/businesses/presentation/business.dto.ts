@@ -1,5 +1,7 @@
 import {
   BUSINESS_KIND_HEADER,
+  BusinessAnalyticsQuerySchema,
+  BusinessAnalyticsSchema,
   BusinessApplicationPageSchema,
   BusinessApplicationQuerySchema,
   BusinessDecisionResultSchema,
@@ -32,6 +34,10 @@ export class BusinessVersionCommandDto extends createZodDto(
 ) {}
 export class BusinessOwnerDto extends createZodDto(BusinessOwnerSchema) {}
 export class BusinessOverviewDto extends createZodDto(BusinessOverviewSchema) {}
+export class BusinessAnalyticsQueryDto extends createZodDto(
+  BusinessAnalyticsQuerySchema,
+) {}
+export class BusinessAnalyticsDto extends createZodDto(BusinessAnalyticsSchema) {}
 
 // Admin
 export class BusinessApplicationQueryDto extends createZodDto(

@@ -49,6 +49,8 @@ Provider coupon management reuses the owner UI and `Offers` APIs; this does not 
   - Given a stale edit version or another business's offer is submitted, when the API rejects it, then the form retains user input and no foreign data is exposed.
   - Given the Coupons tab opens, when a coupon is created/edited, then draft/pending/active/paused/ended/rejected match the server; live owner edits await reapproval. Only active eligible product coupons can discount checkout.
 
+- Implemented (2026-11-13): `/vendor/offers` → `features/offers/owner` — URL `?status=` chips, offer cards (title, discount, IST validity, status badge incl. Expired/Rejected + reason, views/uses), create/edit sheet (EN/HI title, percent/flat/free delivery, IST date range; save re-queues approval), pause/resume and End with confirm, Load more. Keys `offers.owner.*`.
+
 ### S-PROV-17 — Provider coupon manager (`/provider/offers`)
 - Reuse the vendor manager's shared responsive form/table and expose the Coupons tab only. Provider identity/business scope is server-derived. Provider service coupons require a selected owned service target and remain enquiry-display only; product-checkout coupons can target eligible products.
 - States and validation match S-VEND-07. Pending owner coupons have no public discount. Active product coupons follow the finite-limit one-code checkout policy; approved service coupons remain informational and never alter price or create booking/payment.

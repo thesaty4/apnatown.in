@@ -174,6 +174,26 @@
         "default": "./dist/cjs/delivery.js"
       }
     },
+    "./offers": {
+      "import": {
+        "types": "./dist/esm/offers.d.ts",
+        "default": "./dist/esm/offers.js"
+      },
+      "require": {
+        "types": "./dist/cjs/offers.d.ts",
+        "default": "./dist/cjs/offers.js"
+      }
+    },
+    "./earnings": {
+      "import": {
+        "types": "./dist/esm/earnings.d.ts",
+        "default": "./dist/esm/earnings.js"
+      },
+      "require": {
+        "types": "./dist/cjs/earnings.d.ts",
+        "default": "./dist/cjs/earnings.js"
+      }
+    },
     "./reviews": {
       "import": {
         "types": "./dist/esm/reviews.d.ts",

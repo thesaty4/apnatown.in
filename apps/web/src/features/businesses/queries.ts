@@ -24,6 +24,7 @@ import {
   getBusinessMe,
   getExpertise,
   replaceExpertise,
+  getBusinessAnalytics,
   getBusinessOverview,
   getOwnerProfile,
   patchBusinessMe,
@@ -40,6 +41,8 @@ export const businessKeys = {
     ['private', scope, 'business', kind, 'me'] as const,
   overview: (scope: AccountScope, kind: BusinessKind) =>
     ['private', scope, 'business', kind, 'overview'] as const,
+  analytics: (scope: AccountScope, kind: BusinessKind) =>
+    ['private', scope, 'business', kind, 'analytics'] as const,
   /** Provider-only, versioned independently of the business profile. */
   expertise: (scope: AccountScope) =>
     ['private', scope, 'business', 'provider', 'expertise'] as const,
@@ -77,6 +80,20 @@ export function useBusinessOverview(kind: BusinessKind, enabled = true) {
       scope?.epoch ?? 0,
       lifecycle,
       (signal) => getBusinessOverview(api, kind, signal),
+    ),
+    enabled: enabled && scope !== null,
+    retry: retryTransientRead,
+  });
+}
+
+export function useBusinessAnalytics(kind: BusinessKind, enabled = true) {
+  const { api, lifecycle, scope } = useOwnerContext();
+  return useQuery({
+    ...privateQueryOptions(
+      scope ? businessKeys.analytics(scope, kind) : pending(kind, 'analytics'),
+      scope?.epoch ?? 0,
+      lifecycle,
+      (signal) => getBusinessAnalytics(api, kind, signal),
     ),
     enabled: enabled && scope !== null,
     retry: retryTransientRead,

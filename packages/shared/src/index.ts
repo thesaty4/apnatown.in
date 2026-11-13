@@ -101,6 +101,14 @@ export {
   VideoCommentDecisionSchema,
   VideoCommentDecisionResultSchema,
   VideoCommentEventPayloadSchema,
+  FOLLOWER_ANNOUNCEMENT_KINDS,
+  FollowerAnnouncementKindSchema,
+  FollowerAnnouncementSchema,
+  FollowerInsightsSchema,
+  FollowerAnnouncementCreateSchema,
+  FollowerAnnouncementResultSchema,
+  FOLLOWER_ANNOUNCEMENT_CREATED,
+  FollowerAnnouncementCreatedPayloadSchema,
 } from './engagement.js';
 export type {
   VideoLikeResult,
@@ -124,6 +132,12 @@ export type {
   VideoCommentDecision,
   VideoCommentDecisionResult,
   VideoCommentEventPayload,
+  FollowerAnnouncementKind,
+  FollowerAnnouncement,
+  FollowerInsights,
+  FollowerAnnouncementCreate,
+  FollowerAnnouncementResult,
+  FollowerAnnouncementCreatedPayload,
 } from './engagement.js';
 export { canonicalJson } from './json.js';
 export type { JsonValue } from './json.js';

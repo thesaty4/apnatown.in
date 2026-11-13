@@ -196,6 +196,12 @@ Owner API calls set `X-Business-Kind` from the vendor/provider route group; the 
 - Given OTP security information is shown, when no change-phone/recovery action is approved under Q-43, then it remains informational and invokes no nonexistent mutation.
 - Given Hindi or keyboard navigation is used, when account settings render, then labels, focus and errors remain accessible.
 
+### Implemented slices (2026-11-13)
+
+- S-PROV-14 `/provider/analytics` → `BusinessAnalytics`: KPI cards (views, enquiries, converted, conversion / Not applicable), views-vs-enquiries `BarChart` with table, enquiry status mix, explicit empty state, locked note before approval.
+- S-VEND-18 / S-PROV-16 `/vendor/account`, `/provider/account` → `BusinessAccount`: own Users profile form (name/email; login phone read-only pending Q-43), OTP security note, language switch, help link; vendor adds payout-unavailable and staff-unavailable notes (no mutation, Q-10).
+- Dashboard nav now links Reviews, Followers, Analytics and Account. Shared web pieces: `shared/ui/KpiCard`, `shared/ui/BarChart`, `features/businesses/OwnerQueryState`.
+
 ## Feature components and shared components
 
 Feature-only: `BusinessOnboardingWizard`, `BusinessProfileHeader`, `BusinessProfileEditor`, `BusinessQrPrintTemplate`, `BusinessAnalyticsPanel`. Reuse `DashboardShell`, `Stepper`, `PhoneInput`, `OtpInput`, `Input`, `Select`, `Uploader`, `MapView`, `Toggle`, `Tabs`, `ShopCard`, `ServiceCard`, `Rating`, `KpiCard`, `Charts`, `ShareSheet`, `FollowButton`, and shared state views; data fetching remains in feature route/server or hooks.

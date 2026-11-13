@@ -3,7 +3,6 @@
 import { useTranslations } from 'next-intl';
 import type { OrderDetail } from '@apnatown/shared/orders';
 import { Card } from '@apnatown/ui/cards/Card';
-import { Notice } from '../../shared/ui/Notice';
 
 /** Delivery address snapshot or pickup point (plain text, never HTML). */
 export function OrderFulfilmentCard({ order }: { order: OrderDetail }) {
@@ -51,9 +50,6 @@ export function OrderFulfilmentCard({ order }: { order: OrderDetail }) {
         </>
       ) : (
         <p className="m-0 text-small text-text-2">{t('addressUnknown')}</p>
-      )}
-      {order.fulfilmentNotice === 'rider_dispatch_unavailable' && (
-        <Notice tone="info">{t('riderUnavailable')}</Notice>
       )}
     </Card>
   );

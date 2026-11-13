@@ -77,6 +77,10 @@ Implement `OfferNotificationReadPort.context` from [Notifications](../../notific
 `PlacementWriteDTO={kind,surface,titleEn?,titleHi?,subtitleEn?,subtitleHi?,bannerAssetId?,destination:{kind,targetId?},businessId?,scope:{kind,cityId?,areaId?},position,startsAt?,endsAt?,expectedVersion?}`. `PlacementAdminDTO` contains these persisted fields plus `{id,version,status,source,purchaseId?,activationBlockedReason?,allowedActions}`; purchase/payment state is read-only. On PATCH, omitted `bannerAssetId` preserves the current background; explicit `null` removes it; a new Media asset replaces it. `DestinationDTO={kind,targetId?,href}` allows internal targets offers/business/product/service/category/offer; href is server-resolved, never client URL/HTML.
 Offer links are `/product/{slug}?offerId={id}`, `/service/{slug}?offerId={id}`, `/explore?tab=products&offerId={id}`, or the owning `/shop/{slug}` / `/provider/{slug}` with `offerId`. Search and target screens must retain/validate this context.
 
+### Implemented slice: owner offers (2026-11-13)
+
+- `GET/POST /businesses/me/offers`, `PATCH /businesses/me/offers/{id}`, `PATCH …/{id}/status` (`OffersModule`, `ApprovedSellerAccess`). Business-wide scope only; product targets, `bannerAssetId`, featured requests and coupons are not authored yet. Create (Idempotency-Key) and every edit enter `pending` with the review decision cleared; pause = active only; resume = approved paused offer within its window; end = active/paused (terminal); stale version → `OFFER_VERSION_CONFLICT`, disallowed transition → `OFFER_STATE_INVALID`, foreign → `OFFER_NOT_FOUND`. DTO adds `expired` and server `allowedActions`. Runtime write grants: migration `20261113120000_owner_offers_write`. Admin approval queue is not built yet, so new/edited offers stay pending locally.
+
 ## Rules and use-cases
 
 1. Require an approved owner business (BR-06). Derive `business_id` from the session; verify every product/service target belongs to that business and matches the offer scope.

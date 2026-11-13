@@ -27,8 +27,8 @@ import { OrdersController } from './presentation/orders.controller';
  * customer/owner/admin reads and the creation/fulfilment ports. Imports
  * must provide runtime, Users (USER_IDENTITY), Admin (ADMIN_SCOPE),
  * BusinessContext (ApprovedSellerAccess), Payments (PAYMENT_ORDER),
- * Products stock (PRODUCT_STOCK) and Delivery codes (DELIVERY_CODES).
- * Cases, refunds, adjustments, invoices and master summaries are deferred.
+ * Products stock (PRODUCT_STOCK), Delivery codes (DELIVERY_CODES) and
+ * Delivery dispatch (DELIVERY_DISPATCH: platform-rider job at ready). Cases, refunds, adjustments, invoices and master summaries are deferred.
  */
 @Module({})
 export class OrdersModule {

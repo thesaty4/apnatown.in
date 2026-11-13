@@ -25,6 +25,11 @@ import { VIDEO_COMMENT_REPOSITORY } from './domain/comments';
 import { VideoCommentsService } from './application/video-comments.service';
 import { VideoCommentEvents } from './application/video-comment-events';
 import { VideoCommentModerationService } from './application/video-comment-moderation.service';
+import { ApprovedSellerAccess } from '../businesses/application/approved-seller-access';
+import { FollowerInsightsService } from './application/follower-insights.service';
+import { FOLLOWER_INSIGHTS_REPOSITORY } from './domain/follower-insights';
+import { PrismaFollowerInsightsRepository } from './infrastructure/prisma-follower-insights.repository';
+import { FollowerInsightsController } from './presentation/follower-insights.controller';
 import {
   AdminVideoCommentsController,
   PublicVideoCommentsController,
@@ -54,6 +59,7 @@ export class EngagementModule {
         PublicVideoCommentsController,
         VideoCommentsController,
         AdminVideoCommentsController,
+        FollowerInsightsController,
       ],
       providers: [
         SavedService,
@@ -78,6 +84,9 @@ export class EngagementModule {
         },
         VideoCommentsService,
         VideoCommentEvents,
+        ApprovedSellerAccess,
+        FollowerInsightsService,
+        { provide: FOLLOWER_INSIGHTS_REPOSITORY, useClass: PrismaFollowerInsightsRepository },
         VideoCommentModerationService,
       ],
     };

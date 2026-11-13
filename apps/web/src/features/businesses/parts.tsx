@@ -228,8 +228,10 @@ export function LockedNote({
 export function errorKey(code: string) {
   switch (code) {
     case 'BUSINESS_VERSION_CONFLICT':
+    case 'OFFER_VERSION_CONFLICT':
       return 'versionConflict';
     case 'BUSINESS_STATE_CONFLICT':
+    case 'OFFER_STATE_INVALID':
       return 'stateConflict';
     case 'BUSINESS_ALREADY_EXISTS':
       return 'alreadyExists';

@@ -139,7 +139,7 @@ export class OrdersController {
     operationId: 'orderTransition',
     summary: 'Owner order progression',
     description:
-      "{event:accept|start_preparing|mark_ready,expectedVersion} by the CURRENTLY APPROVED owner of the order's business. Delivery: placed→accepted→preparing→ready; pickup: placed→accepted→ready (mark_ready issues the customer's pickup code). Self-delivery continues with POST /delivery/orders/{orderId}/self-dispatch; pickup completes with POST /delivery/pickup-codes/verify. apna_town_rider orders stop at ready (rider jobs not yet available). Returns the business OrderDetailDTO. private, no-store.",
+      "{event:accept|start_preparing|mark_ready,expectedVersion} by the CURRENTLY APPROVED owner of the order's business. Delivery: placed→accepted→preparing→ready; pickup: placed→accepted→ready (mark_ready issues the customer's pickup code). Self-delivery continues with POST /delivery/orders/{orderId}/self-dispatch; pickup completes with POST /delivery/pickup-codes/verify. apna_town_rider mark_ready creates the delivery job and offers it to the nearest eligible rider (DELIVERY_EARNING_POLICY_UNAVAILABLE 503 / DELIVERY_DISTANCE_UNAVAILABLE 409 block it); the rider's job events move the order on. Returns the business OrderDetailDTO. private, no-store.",
   })
   @ApiOkResponse({ type: OrderDetailDto })
   @AdminErrors({

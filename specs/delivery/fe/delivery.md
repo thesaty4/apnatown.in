@@ -96,11 +96,26 @@ screens require the rider role (no-permission state links to onboarding). The
 demo "Switch role" sheet signs in as the rider persona and opens `/rider/home`;
 login `landing()` sends rider-only sessions there.
 
+**Implemented 2026-11-13 (rider dispatch):** S-RIDE-03 offer card with
+server-anchored countdown (30/10 s announcements), Accept (navigates to
+`/rider/active` only after commit) / Reject, expired and "Request taken"
+states; S-RIDE-04 `DeliveryStepFlow` (reached shop → per-item checklist sending
+all current `orderItemIds` → reached drop → typed 4-digit code + explicit
+"Collected ₹X cash" only for COD with outstanding > 0 → delivered), versions on
+every command, checklist/cash reset on order/financial version change,
+`FailReasonSheet` with the four reasons, device-maps Directions when a drop pin
+exists (textual address otherwise); `event: delivery` hints invalidate the
+offer/active/summary/history/earnings reads from `RiderShell`; Home links to a
+live request. Shared order integrations: owner Rider dispatch card
+(`features/owner-orders/RiderDispatchCard.tsx` + `AssignRiderSheet.tsx`) and
+customer rider card (`features/orders/OrderRiderCard.tsx`).
+
 **In progress / gated:** KYC document upload (explicit unavailable state; submit
-surfaces `RIDER_REQUIREMENTS_UNAVAILABLE`), offer accept/reject, active-job
-step actions, SSE streams, history detail sheet, Reviews (S-RIDE-07 shows
-"Ratings not available yet") and payouts ("Payout details unavailable"). Runtime/
-browser checks and automated test files are intentionally not run.
+surfaces `RIDER_REQUIREMENTS_UNAVAILABLE`), masked call (stated as not
+available), customer tracking ETA/location, rider location posting, history
+detail sheet, Reviews (S-RIDE-07 shows "Ratings not available yet") and payouts
+("Payout details unavailable"). Runtime/browser checks and automated test files
+are intentionally not run.
 
 ## Shared order integrations
 

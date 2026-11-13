@@ -2,12 +2,10 @@ import type {
   RiderApplicationPage,
   RiderApplicationQuery,
   RiderDocumentKind,
-  RiderHistory,
-  RiderJob,
-  RiderOffer,
 } from '@apnatown/shared/delivery';
 import type { AdminReadContext } from '../../../shared/auth/ports';
 import type { TxContext } from '../../../shared/persistence/ports';
+import type { StoredJob } from '../domain/delivery-job';
 
 // ---------------------------------------------------------------------------
 // Ports Delivery depends on (adapters in ../infrastructure).
@@ -15,20 +13,19 @@ import type { TxContext } from '../../../shared/persistence/ports';
 
 export const DELIVERY_JOB_READ = Symbol('DELIVERY_JOB_READ');
 /**
- * Rider-owned job reads. Jobs/offers/earning snapshots are created from
- * Orders' ready events; until Orders/Payments ship the adapter has no jobs,
- * so every read is an explicit "none" (never sample data).
+ * Rider-owned job reads over persisted `delivery_jobs` rows. DTOs are
+ * composed by the application (Orders/Payments projections), never here.
  */
 export interface DeliveryJobReadPort {
   activeJobId(tx: TxContext, riderUserId: string): Promise<string | null>;
-  activeJob(tx: TxContext, riderUserId: string): Promise<RiderJob | null>;
-  currentOffer(tx: TxContext, riderUserId: string): Promise<RiderOffer | null>;
+  /** The rider's single active (accepted..reached_drop) job. */
+  activeJob(tx: TxContext, riderUserId: string): Promise<StoredJob | null>;
   /** Delivered jobs whose earned snapshot falls in [from, toExclusive). */
   completedTotals(
     tx: TxContext,
     input: { riderUserId: string; from: Date; toExclusive: Date },
   ): Promise<{ count: number; totalPaise: number }>;
-  /** Terminal own jobs, newest first; `from` null means all time. */
+  /** Terminal own jobs by terminal time, newest first; `from` null = all time. */
   history(
     tx: TxContext,
     input: {
@@ -37,13 +34,14 @@ export interface DeliveryJobReadPort {
       toExclusive: Date;
       after?: readonly (string | number)[];
       limit: number;
+      deliveredOnly?: boolean;
     },
-  ): Promise<RiderHistory[]>;
-  /** Own assigned/terminal job only; null for foreign or missing jobs. */
+  ): Promise<StoredJob[]>;
+  /** Own terminal job only; null for foreign, active or missing jobs. */
   historyDetail(
     tx: TxContext,
     input: { riderUserId: string; jobId: string },
-  ): Promise<RiderHistory | null>;
+  ): Promise<StoredJob | null>;
 }
 
 export const RIDER_REQUIREMENTS = Symbol('RIDER_REQUIREMENTS');

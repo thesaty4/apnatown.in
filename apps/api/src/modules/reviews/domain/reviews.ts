@@ -1,4 +1,8 @@
-import type { ReviewPublicTargetType, ReviewSort } from '@apnatown/shared/reviews';
+import {
+  reviewAuthorLabel,
+  type ReviewPublicTargetType,
+  type ReviewSort,
+} from '@apnatown/shared/reviews';
 
 /** Keyset position for the public list; tuple order matches each sort. */
 export type ReviewPosition =
@@ -42,4 +46,20 @@ export const REVIEW_PUBLIC_READ = Symbol('REVIEW_PUBLIC_READ');
 export interface ReviewPublicReadRepository {
   /** `null` when the target itself is not publicly visible. */
   page(input: PublicReviewPageInput): Promise<PublicReviewPageRows | null>;
+}
+
+/** Review card DTO fields; author reduced to first name + last initial (rule 8). */
+export function toReviewCard(row: PublicReviewRow) {
+  return {
+    id: row.id,
+    authorLabel: reviewAuthorLabel(row.authorDisplayName),
+    rating: row.rating,
+    text: row.text,
+    tags: row.tags,
+    helpfulCount: row.helpfulCount,
+    ownerReply: row.ownerReply,
+    ownerRepliedAt: row.ownerReply ? row.ownerRepliedAt : null,
+    createdAt: row.createdAt,
+    status: row.status,
+  };
 }

@@ -16,6 +16,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import {
+  BusinessAnalyticsQuerySchema,
+  BusinessAnalyticsSchema,
   BusinessOverviewSchema,
   BusinessOwnerSchema,
   BusinessProfilePatchSchema,
@@ -34,6 +36,8 @@ import { RateLimit } from '../../../shared/rate-limit/rate-limit';
 import { AdminErrors, adminCommand } from '../../admin/presentation/admin.dto';
 import { BusinessOwnerService } from '../application/business-owner.service';
 import {
+  BusinessAnalyticsDto,
+  BusinessAnalyticsQueryDto,
   BusinessOverviewDto,
   BusinessOwnerDto,
   BusinessProfilePatchDto,
@@ -262,6 +266,33 @@ export class BusinessOwnerController {
   ) {
     return BusinessOverviewSchema.parse(
       await this.owners.overview(owner(request)),
+    );
+  }
+
+  @Get('me/analytics')
+  @BusinessKindHeader()
+  @ApiOperation({
+    operationId: 'businessMeAnalytics',
+    summary: 'Provider analytics (S-PROV-14)',
+    description: `reporting-v1, 30 IST days: window-deduplicated profile views (null before coverage), Services enquiry-created cohort by day and current status, converted/cohort-size conversion (null for an empty cohort). Approved providers only. ${OWNER}`,
+  })
+  @ApiOkResponse({ type: BusinessAnalyticsDto })
+  @AdminErrors({
+    400: 'VALIDATION_ERROR for an invalid period or X-Business-Kind.',
+    403: NOT_OWNED,
+    404: 'BUSINESS_NOT_FOUND when the caller owns no business.',
+    409: 'BUSINESS_STATE_CONFLICT unless the business is an approved provider.',
+    422: CONTEXT_REQUIRED,
+    503: NOT_ADMITTED,
+  })
+  @RateLimit(READ_LIMIT)
+  async analytics(
+    @Req() request: AuthRequest,
+    @Query(new InputPipe(BusinessAnalyticsQuerySchema))
+    _query: BusinessAnalyticsQueryDto,
+  ) {
+    return BusinessAnalyticsSchema.parse(
+      await this.owners.analytics(owner(request)),
     );
   }
 }

@@ -11,6 +11,8 @@ export interface RealtimeSignalInput {
   readonly kind: RealtimeSignalKind;
   /** Reference only; never a code, amount, address or name. */
   readonly orderId?: string;
+  /** `delivery` kind only: the rider's offer/job reference. */
+  readonly jobId?: string;
 }
 
 /**

@@ -44,7 +44,7 @@ export class OrderNotificationSupport {
   async owner(
     tx: TxContext,
     order: OrderNotificationContext,
-    templateKey: 'order.new' | 'order.cancelled',
+    templateKey: 'order.new' | 'order.cancelled' | 'delivery.assigned' | 'delivery.unassigned',
   ): Promise<NotifyCommand | null> {
     const business = await this.recipients.business(tx, order.businessId);
     if (!business) return null;

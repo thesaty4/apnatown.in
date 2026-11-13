@@ -78,7 +78,7 @@ const LOCATION_LIMIT = {
   subject: 'principal',
 } as const;
 const RIDER = 'COMMON_FORBIDDEN without the live rider role; RIDER_NOT_APPROVED without a rider application row.';
-const NO_JOBS = 'Jobs need Orders/Payments, which have not shipped: no job can exist yet.';
+const NO_JOBS = 'Reads persisted delivery_jobs/delivery_offers rows (own only).';
 
 /** Approved-rider work surface (F-RD-002..006); roles/approval read live. */
 @ApiTags('delivery')
@@ -168,7 +168,7 @@ export class RiderWorkController {
   @ApiOperation({
     operationId: 'riderCurrentOffer',
     summary: 'Current delivery request',
-    description: `{offer} for an approved online rider; {offer:null} is the explicit no-offer state. ${NO_JOBS} The SSE stream is not implemented. private, no-store.`,
+    description: `{offer} (unexpired live offer, no customer address) for an approved online rider; {offer:null} is the explicit no-offer state. Real-time: "event: delivery" on GET /api/realtime/stream signals a change; refetch. ${NO_JOBS} private, no-store.`,
   })
   @ApiOkResponse({ type: RiderCurrentOfferDto })
   @AdminErrors({ 403: RIDER, 503: NOT_ADMITTED })

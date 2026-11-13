@@ -209,3 +209,75 @@ export const VideoCommentEventPayloadSchema = z.strictObject({
 export type VideoCommentEventPayload = z.infer<
   typeof VideoCommentEventPayloadSchema
 >;
+
+// ---------------------------------------------------------------------------
+// Owner followers + announcements (S-VEND-15 / S-PROV-11, F-VD-015, F-NT-003).
+// ---------------------------------------------------------------------------
+
+const IstDate = z.iso.date();
+
+export const FOLLOWER_ANNOUNCEMENT_KINDS = ['product', 'service', 'offer', 'video'] as const;
+export const FollowerAnnouncementKindSchema = z.enum(FOLLOWER_ANNOUNCEMENT_KINDS);
+export type FollowerAnnouncementKind = z.infer<typeof FollowerAnnouncementKindSchema>;
+
+export const FollowerAnnouncementSchema = z.strictObject({
+  id: IdSchema,
+  kind: FollowerAnnouncementKindSchema,
+  messageEn: z.string().nullable(),
+  messageHi: z.string().nullable(),
+  createdAt: TimestampSchema,
+});
+export type FollowerAnnouncement = z.infer<typeof FollowerAnnouncementSchema>;
+
+/**
+ * Eight Monday-based IST weeks (oldest first, current partial week last).
+ * `gained` = first-ever follows; `total` = closing active followers, known
+ * only for the current week until daily snapshots exist (never reconstructed).
+ */
+export const FollowerInsightsSchema = z.strictObject({
+  followers: CountSchema,
+  gainedThisWeek: CountSchema,
+  approvedVideos: CountSchema,
+  growth: z
+    .array(
+      z.strictObject({
+        start: IstDate,
+        end: IstDate,
+        total: CountSchema.nullable(),
+        gained: CountSchema,
+      }),
+    )
+    .length(8),
+  asOf: TimestampSchema,
+  definitionVersion: z.literal('reporting-v1'),
+  unavailable: z.array(z.enum(['weekly_totals_history'])),
+  recentAnnouncements: z.array(FollowerAnnouncementSchema).max(3),
+});
+export type FollowerInsights = z.infer<typeof FollowerInsightsSchema>;
+
+/** Target picking from a listing is not available yet, so no `targetId`. */
+export const FollowerAnnouncementCreateSchema = z.strictObject({
+  kind: FollowerAnnouncementKindSchema,
+  messageEn: z.string().trim().min(1).max(200),
+  messageHi: z.string().trim().min(1).max(200).optional(),
+});
+export type FollowerAnnouncementCreate = z.infer<typeof FollowerAnnouncementCreateSchema>;
+
+/** Queued for followers with the bell on; not a claim of delivery. */
+export const FollowerAnnouncementResultSchema = z.strictObject({
+  announcementId: IdSchema,
+  status: z.literal('queued'),
+  eligibleRecipients: CountSchema,
+});
+export type FollowerAnnouncementResult = z.infer<typeof FollowerAnnouncementResultSchema>;
+
+export const FOLLOWER_ANNOUNCEMENT_CREATED = 'engagement.announcement_created';
+export const FollowerAnnouncementCreatedPayloadSchema = z.strictObject({
+  announcementId: IdSchema,
+  businessId: IdSchema,
+  kind: FollowerAnnouncementKindSchema,
+  source: z.literal('owner_announcement'),
+});
+export type FollowerAnnouncementCreatedPayload = z.infer<
+  typeof FollowerAnnouncementCreatedPayloadSchema
+>;

@@ -68,7 +68,12 @@ export class OrderEvents {
         this.events.create(
           ORDER_EVENT_TYPES.cancelled,
           aggregate,
-          { ...base, cancellationSource: input.source, custody: 'pre_pickup' },
+          {
+            ...base,
+            cancellationSource: input.source,
+            // Rider failure after collection keeps the goods in custody (no restock).
+            custody: before.status === 'out_for_delivery' ? 'post_pickup' : 'pre_pickup',
+          },
           input.correlationId,
         ),
       );

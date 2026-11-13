@@ -43,8 +43,6 @@ const REJECTED_STATUS = { DELIVERY_CODE_INVALID: 422, DELIVERY_CODE_LOCKED: 423 
 /** Mode/method/status/version guard shared by the jobless handover commands. */
 export function guard(order: FulfilmentOrder, spec: { mode: OrderMode; from: OrderStatus; self: boolean }, expectedVersion: number) {
   if (order.mode !== spec.mode) throw new DomainError('DELIVERY_INVALID_TRANSITION');
-  if (spec.self && order.deliveryMethod === 'apna_town_rider')
-    throw new DomainError('ORDERS_RIDER_DISPATCH_UNAVAILABLE');
   if (spec.self && order.deliveryMethod !== 'self') throw new DomainError('DELIVERY_INVALID_TRANSITION');
   if (order.status !== spec.from) throw new DomainError('DELIVERY_INVALID_TRANSITION');
   if (order.version !== expectedVersion) throw new DomainError('DELIVERY_VERSION_CONFLICT');

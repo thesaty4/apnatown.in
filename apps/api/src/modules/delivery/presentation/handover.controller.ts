@@ -17,17 +17,15 @@ import {
   type SelfDispatch,
 } from '@apnatown/shared/delivery';
 import { EmptyRequestSchema } from '@apnatown/shared/wire';
-import { OwnAccount, sessionBinding, type AuthRequest } from '../../../shared/auth';
+import { OwnAccount, type AuthRequest } from '../../../shared/auth';
 import { BrowserMutation, PrivateApi } from '../../../shared/auth/openapi';
 import { InputPipe } from '../../../shared/auth/validation';
-import { DomainError } from '../../../shared/errors/errors';
-import { currentCorrelationId } from '../../../shared/logger/context';
 import { RateLimit } from '../../../shared/rate-limit/rate-limit';
 import { AdminErrors } from '../../admin/presentation/admin.dto';
-import { BusinessKindHeader, IdempotencyKey, businessKind } from '../../businesses/presentation/business.dto';
+import { BusinessKindHeader, IdempotencyKey } from '../../businesses/presentation/business.dto';
 import { CustomerCodeService } from '../application/customer-code.service';
-import type { HandoverCommand } from '../application/handover-support';
 import { HandoverService } from '../application/handover.service';
+import { deliveryCommand } from './delivery-command';
 
 class DeliveryCodeDto extends createZodDto(DeliveryCodeSchema) {}
 class DeliveryCodeReissueDto extends createZodDto(DeliveryCodeReissueSchema) {}
@@ -51,20 +49,7 @@ const COMMON = {
   503: 'MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable.',
 } as const;
 const CODE_409 =
-  'DELIVERY_INVALID_TRANSITION for the wrong mode/method/status; ORDERS_RIDER_DISPATCH_UNAVAILABLE for apna_town_rider orders; DELIVERY_VERSION_CONFLICT for a stale order/financial/code version; DELIVERY_CODE_NOT_READY / DELIVERY_CODE_EXPIRED / DELIVERY_CODE_CONSUMED; COMMON_CONFLICT for key reuse.';
-
-function command(request: AuthRequest): HandoverCommand {
-  const correlationId = currentCorrelationId();
-  if (!request.principal) throw new DomainError('SESSION_EXPIRED');
-  if (!correlationId) throw new Error('MISSING_CORRELATION_CONTEXT');
-  return {
-    session: sessionBinding(request),
-    actorId: request.principal.userId,
-    ...businessKind(request),
-    correlationId,
-    key: request.headers['idempotency-key'],
-  };
-}
+  'DELIVERY_INVALID_TRANSITION for the wrong mode/method/status (apna_town_rider orders use the rider job endpoints); DELIVERY_VERSION_CONFLICT for a stale order/financial/code version; DELIVERY_CODE_NOT_READY / DELIVERY_CODE_EXPIRED / DELIVERY_CODE_CONSUMED; COMMON_CONFLICT for key reuse.';
 
 /** Customer code channel + jobless self-delivery/pickup handover (BR-05). */
 @ApiTags('delivery')
@@ -99,7 +84,7 @@ export class HandoverController {
     @Query(new InputPipe(EmptyRequestSchema)) _query: Record<string, never>,
     @Param(new InputPipe(DeliveryOrderParamsSchema)) params: DeliveryOrderParams,
   ) {
-    return this.codes.read(command(request), params.orderId);
+    return this.codes.read(deliveryCommand(request), params.orderId);
   }
 
   @Post('orders/:orderId/code/reissue')
@@ -129,7 +114,7 @@ export class HandoverController {
     @Param(new InputPipe(DeliveryOrderParamsSchema)) params: DeliveryOrderParams,
     @Body(new InputPipe(DeliveryCodeReissueSchema)) input: DeliveryCodeReissue,
   ) {
-    return this.codes.reissue(command(request), params.orderId, input);
+    return this.codes.reissue(deliveryCommand(request), params.orderId, input);
   }
 
   @Post('orders/:orderId/self-dispatch')
@@ -157,7 +142,7 @@ export class HandoverController {
     @Param(new InputPipe(DeliveryOrderParamsSchema)) params: DeliveryOrderParams,
     @Body(new InputPipe(SelfDispatchSchema)) input: SelfDispatch,
   ) {
-    return this.handovers.selfDispatch(command(request), params.orderId, input);
+    return this.handovers.selfDispatch(deliveryCommand(request), params.orderId, input);
   }
 
   @Post('orders/:orderId/self-complete')
@@ -187,7 +172,7 @@ export class HandoverController {
     @Param(new InputPipe(DeliveryOrderParamsSchema)) params: DeliveryOrderParams,
     @Body(new InputPipe(SelfCompleteSchema)) input: SelfComplete,
   ) {
-    return this.handovers.selfComplete(command(request), params.orderId, input);
+    return this.handovers.selfComplete(deliveryCommand(request), params.orderId, input);
   }
 
   @Post('pickup-codes/verify')
@@ -215,6 +200,6 @@ export class HandoverController {
     @Query(new InputPipe(EmptyRequestSchema)) _query: Record<string, never>,
     @Body(new InputPipe(PickupVerifySchema)) input: PickupVerify,
   ) {
-    return this.handovers.pickupVerify(command(request), input);
+    return this.handovers.pickupVerify(deliveryCommand(request), input);
   }
 }

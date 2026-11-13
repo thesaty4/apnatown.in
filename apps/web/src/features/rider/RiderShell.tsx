@@ -10,6 +10,7 @@ import { buttonClassName } from '@apnatown/ui/primitives/Button';
 import { AccessState } from '../../shared/auth/AccessState';
 import { useSession } from '../../shared/auth/SessionProvider';
 import { SheetBell } from '../notifications/Bells';
+import { useRiderLive } from './job-queries';
 import { riderBase } from './parts';
 
 type NavEntry = { path: string; key: string; icon: string };
@@ -58,12 +59,32 @@ export function RiderShell({
   requireRider?: boolean;
   children: ReactNode;
 }) {
-  const t = useTranslations('rider.nav');
-  const common = useTranslations('rider.common');
   const path = usePathname();
   const { state } = useSession();
   if (state.kind !== 'ready') return <AccessState />;
   const rider = state.data.roles.includes('rider');
+  return (
+    <RiderFrame rider={rider} requireRider={requireRider} path={path}>
+      {children}
+    </RiderFrame>
+  );
+}
+
+function RiderFrame({
+  rider,
+  requireRider,
+  path,
+  children,
+}: {
+  rider: boolean;
+  requireRider: boolean;
+  path: string;
+  children: ReactNode;
+}) {
+  const t = useTranslations('rider.nav');
+  const common = useTranslations('rider.common');
+  // Offer/job realtime hints refresh every rider screen (riders only).
+  useRiderLive(rider);
   const groups = (rider ? nav : applicantNav).map(({ group, items }) => ({
     label: t(group),
     items: items.map(({ path: target, key, icon }) => {

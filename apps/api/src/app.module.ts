@@ -32,11 +32,19 @@ import { BusinessesModule } from './modules/businesses/businesses.module';
 import { CartCheckoutModule } from './modules/cart-checkout/cart-checkout.module';
 import { DeliveryModule } from './modules/delivery/delivery.module';
 import { DeliveryCodesModule } from './modules/delivery/delivery-codes.module';
+import {
+  DeliveryAssignmentModule,
+  DeliveryDispatchModule,
+} from './modules/delivery/delivery-dispatch.module';
+import { OrdersNotificationReadModule } from './modules/orders/orders-notification-read.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { PaymentsOrderModule } from './modules/payments/payments-order.module';
 import { ProductsStockModule } from './modules/products/products-stock.module';
+import { ServicesEnquiryStatsModule } from './modules/services/services-enquiry-stats.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
+import { OffersModule } from './modules/offers/offers.module';
+import { PaymentsOwnerModule } from './modules/payments/payments-owner.module';
 import { RuntimeModule } from './shared/health/runtime.module';
 import { RealtimeModule } from './shared/realtime/realtime.module';
 import { RateLimitGuard } from './shared/rate-limit/rate-limit';
@@ -80,9 +88,16 @@ export class AppModule {
       catalog,
       businessContext,
       media,
+      ServicesEnquiryStatsModule.forRoot(runtime),
     ]);
     const payments = PaymentsOrderModule.forRoot(runtime);
     const deliveryCodes = DeliveryCodesModule.forRoot(runtime);
+    const deliveryAssignment = DeliveryAssignmentModule.forRoot(
+      runtime,
+      businessContext,
+      OrdersNotificationReadModule.forRoot(runtime),
+    );
+    const deliveryDispatch = DeliveryDispatchModule.forRoot(runtime, settings, deliveryAssignment);
     const orders = OrdersModule.forRoot([
       runtime,
       users,
@@ -91,6 +106,7 @@ export class AppModule {
       payments,
       ProductsStockModule.forRoot(runtime),
       deliveryCodes,
+      deliveryDispatch,
     ]);
     const delivery = DeliveryModule.forRoot([
       runtime,
@@ -103,6 +119,8 @@ export class AppModule {
       orders,
       payments,
       deliveryCodes,
+      deliveryAssignment,
+      deliveryDispatch,
     ]);
     const services = ServicesModule.forRoot(runtime, catalog, businessContext, media);
     const engagement = EngagementModule.forRoot(
@@ -143,7 +161,9 @@ export class AppModule {
         ),
         orders,
         CartCheckoutModule.forRoot(runtime, [users, geoAdmin, settings, payments, orders]),
-        ReviewsModule.forRoot(runtime),
+        ReviewsModule.forRoot([runtime, businessContext]),
+        OffersModule.forRoot([runtime, businessContext]),
+        PaymentsOwnerModule.forRoot([runtime, businessContext, settings]),
         NotificationsModule.forRoot(runtime, users, admin, businessContext),
         RealtimeModule.forRoot(runtime),
       ],

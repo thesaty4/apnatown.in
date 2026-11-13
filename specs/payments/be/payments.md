@@ -67,6 +67,12 @@ Checkout's customer routes, retries and payment selection remain in the [Cart/Ch
 `billing_purchases.status`/`PurchaseDTO.status` additionally allow `compensating|compensated`; add optional `recovery:{status,amountPaise,reasonCode}` from the linked compensation. A compensated purchase stays activation-blocked, cannot retry into a free entitlement, and is not ordinary successful billing. Billing compensation events use `{purpose:'billing',purchaseId,paymentAttemptId,compensationId,status,amountPaise}`; existing checkout events retain their required checkout/round fields and are never synthesized for billing.
 All same-key replays reauthorize current role/ownership before returning their stored result, then bypass stale-version checks only for the identical authorized operation. Financial return reservation is shared across refunds/compensations on the underlying charge.
 
+
+### Implemented slice: vendor Earnings & plan reads (2026-11-13)
+
+- `GET /payments/me/earnings` (`paymentsMeEarnings`): current IST month sales = fulfilled (delivered/picked up) orders with a paid/collected payment attempt at fulfilled items − discount; six-month series; commission is an **estimate** at the current plan rate (active subscription, else the free plan) or `commission.defaultBps`, null when unconfigured; `unavailable` lists payout schedule and invoices (no ledger/settlement yet).
+- `GET /payments/me/subscription` (`paymentsMeSubscription`): enabled Settings `plans` with `current`, paid-through, enabled `promotion_fees`; `purchaseAvailable: false`. Purchases, cancellation, retry, invoices and payouts remain unimplemented. Local seed maps sample `cfg.plans`/`cfg.promos` into Settings (insert-only, `TODO(verify)` prices).
+
 ## Rules and use-cases
 
 `PaymentAdminReadPort.metrics` implements the scope-first [Admin reporting definitions](../../admin/be/admin.md#reporting-definitions). Use the same immutable financial facts/policy versions as owner earnings; incomplete legacy data is marked unavailable, never a fabricated total or private-ledger export.

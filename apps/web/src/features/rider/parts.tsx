@@ -162,6 +162,20 @@ const errorKeys: Record<string, string> = {
   RIDER_REQUIREMENTS_UNAVAILABLE: 'requirementsUnavailable',
   DELIVERY_JOB_NOT_FOUND: 'jobNotFound',
   DELIVERY_VERSION_CONFLICT: 'versionConflict',
+  DELIVERY_OFFER_EXPIRED: 'offerExpired',
+  DELIVERY_OFFER_TAKEN: 'offerTaken',
+  DELIVERY_ITEMS_CHANGED: 'itemsChanged',
+  DELIVERY_EARNING_POLICY_UNAVAILABLE: 'earningPolicyUnavailable',
+  DELIVERY_DISTANCE_UNAVAILABLE: 'distanceUnavailable',
+  RIDER_UNAVAILABLE: 'riderUnavailable',
+  DELIVERY_INVALID_TRANSITION: 'invalidTransition',
+  DELIVERY_CODE_INVALID: 'codeInvalid',
+  DELIVERY_CODE_LOCKED: 'codeLocked',
+  DELIVERY_CODE_EXPIRED: 'codeExpired',
+  DELIVERY_CODE_NOT_READY: 'codeNotReady',
+  DELIVERY_CODE_CONSUMED: 'codeConsumed',
+  DELIVERY_COD_NOT_CONFIRMED: 'codNotConfirmed',
+  ORDER_VERSION_CONFLICT: 'jobChanged',
   COMMON_VALIDATION_FAILED: 'validation',
   VALIDATION_ERROR: 'validation',
   AREA_NOT_FOUND: 'areaInvalid',
@@ -170,16 +184,38 @@ const errorKeys: Record<string, string> = {
   COMMON_FORBIDDEN: 'forbidden',
 };
 
+/** Work screens: a version conflict means the job (not the application) changed. */
+const jobOverrides: Record<string, string> = {
+  DELIVERY_VERSION_CONFLICT: 'jobChanged',
+};
+
 /** `errors.delivery` / `rider.errors` key for a normalized code; never server text. */
-export function useRiderError() {
+export function useRiderError(context: 'account' | 'job' = 'account') {
   const delivery = useTranslations('errors.delivery');
   const local = useTranslations('rider.errors');
   return (error: unknown) => {
-    const key = errorKeys[failureCode(error)] ?? 'requestFailed';
+    const code = failureCode(error);
+    const key =
+      (context === 'job' ? jobOverrides[code] : undefined) ??
+      errorKeys[code] ??
+      'requestFailed';
     return key in deliveryKeys ? delivery(key) : local(key);
   };
 }
 const deliveryKeys = {
+  offerExpired: true,
+  offerTaken: true,
+  itemsChanged: true,
+  earningPolicyUnavailable: true,
+  distanceUnavailable: true,
+  riderUnavailable: true,
+  invalidTransition: true,
+  codeInvalid: true,
+  codeLocked: true,
+  codeExpired: true,
+  codeNotReady: true,
+  codeConsumed: true,
+  codNotConfirmed: true,
   riderNotApproved: true,
   riderNotOnline: true,
   riderHasActiveJob: true,

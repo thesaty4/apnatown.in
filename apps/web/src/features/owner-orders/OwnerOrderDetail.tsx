@@ -23,6 +23,7 @@ import { OrderActions } from './OrderActions';
 import { ordersHref } from './OrderCard';
 import { OrderItemsCard, OrderTimeline } from './OrderSummary';
 import { readTab } from './OrderTabs';
+import { RiderDispatchCard, showsRiderDispatch } from './RiderDispatchCard';
 import { ModeBadge, OrderStatusBadge, useIstDateTime } from './parts';
 import { useOwnerOrder } from './queries';
 
@@ -181,6 +182,9 @@ function Loaded({
             reload={reload}
             reloading={reloading}
           />
+          {showsRiderDispatch(order) && (
+            <RiderDispatchCard kind={kind} order={order} />
+          )}
           <OrderTimeline order={order} />
         </div>
       </div>

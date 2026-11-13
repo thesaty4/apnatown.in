@@ -80,6 +80,8 @@ export default async function RootLayout({
     ownerOrders: catalogue.ownerOrders,
     checkout: catalogue.checkout,
     orders: catalogue.orders,
+    offers: catalogue.offers,
+    earnings: catalogue.earnings,
     errors: {
       delivery: catalogue.errors.delivery,
       checkout: catalogue.errors.checkout,

@@ -70,6 +70,10 @@ The public projection also supplies owner-maintained read-only SQL expressions f
 
 Open question: provider product ordering is required by F-PV-005, but the provider profile prototype has no product-delivery settings editor. Reuse the fulfilment contract, but do not invent a default fee/rider/pickup mode or a new visible editor before its configuration UX is approved. A business without configured delivery and without pickup has no available checkout mode; display that explicitly. Enabling delivery requires non-null method/radius/minimum and an explicit flat fee for self-delivery; null is not zero.
 
+### Implemented slice: provider analytics (2026-11-13)
+
+- `GET /businesses/me/analytics` (`businessMeAnalytics`) is routed. Enquiries come from Services through `BUSINESS_ENQUIRY_STATS` (`ServicesEnquiryStatsModule`): the enquiry-created cohort over the same 30 IST days by day and current status; `converted` = cohort members now `converted`; `conversionRate` null for an empty cohort. Views keep the coverage rule (null before coverage).
+
 ## Rules and use-cases
 
 1. OTP verification/session creation is owned by `auth`. Create an application only for the authenticated user; `users` manages role assignment, and business ownership is always checked server-side.

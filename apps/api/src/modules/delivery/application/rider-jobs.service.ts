@@ -32,34 +32,41 @@ import {
   type DeliveryJobReadPort,
 } from './delivery-ports';
 import { RiderAccess, type RiderRequest } from './rider-access';
+import { RiderJobView } from './rider-job-view';
 import { rollingPeriod } from './rider-periods';
+import { DELIVERY_OFFER_REPOSITORY, type DeliveryOfferRepository } from '../domain/delivery-job';
 
 // [pinned asOf, terminal timestamp, jobId]: pages share one period.
 const positionSchema = z.tuple([TimestampSchema, TimestampSchema, IdSchema]);
 
 /**
  * Rider job reads (F-RD-003..006): own offers/jobs/history/earnings only.
- * Earnings read persisted snapshots, never today's settings; payout stays
- * unavailable until a settlement owner/evidence is approved.
+ * Offers/jobs/history compose persisted `delivery_jobs`/`delivery_offers`
+ * rows with Orders/Payments projections (RiderJobView). Earnings read
+ * persisted snapshots, never today's settings; payout stays unavailable
+ * until a settlement owner/evidence is approved.
  */
 @Injectable()
 export class RiderJobsService {
   constructor(
     @Inject(UNIT_OF_WORK) private readonly uow: UnitOfWork,
     @Inject(DELIVERY_JOB_READ) private readonly jobs: DeliveryJobReadPort,
+    @Inject(DELIVERY_OFFER_REPOSITORY) private readonly offers: DeliveryOfferRepository,
     @Inject(CURSOR_CODEC) private readonly cursors: CursorCodec,
     @Inject(CLOCK) private readonly clock: Clock,
     private readonly access: RiderAccess,
+    private readonly view: RiderJobView,
   ) {}
 
   /** Offers exist only for an approved, online rider; otherwise none. */
   currentOffer(request: RiderRequest): Promise<RiderCurrentOffer> {
     return this.uow.run(async (tx) => {
       const rider = await this.access.rider(tx, request);
-      const offer =
+      const current =
         rider.status === 'approved' && rider.isOnline
-          ? await this.jobs.currentOffer(tx, rider.userId)
+          ? await this.offers.currentFor(tx, rider.userId, this.clock.now())
           : null;
+      const offer = current ? await this.view.offer(tx, current) : null;
       return RiderCurrentOfferSchema.parse({ offer });
     });
   }
@@ -69,7 +76,7 @@ export class RiderJobsService {
       const rider = await this.access.approved(tx, request);
       const job = await this.jobs.activeJob(tx, rider.userId);
       if (!job) throw new DomainError('DELIVERY_JOB_NOT_FOUND');
-      return RiderJobSchema.parse(job);
+      return RiderJobSchema.parse(await this.view.job(tx, job));
     });
   }
 
@@ -98,7 +105,7 @@ export class RiderJobsService {
         ...(position ? { after: position.slice(1) } : {}),
         limit: query.limit + 1,
       });
-      const items = rows.slice(0, query.limit);
+      const items = await this.view.history(tx, rows.slice(0, query.limit));
       const last = items.at(-1);
       return RiderHistoryPageSchema.parse({
         items,
@@ -124,8 +131,9 @@ export class RiderJobsService {
         riderUserId: rider.userId,
         jobId,
       });
-      if (!job) throw new DomainError('DELIVERY_JOB_NOT_FOUND');
-      return RiderHistorySchema.parse(job);
+      const [row] = job ? await this.view.history(tx, [job]) : [];
+      if (!row) throw new DomainError('DELIVERY_JOB_NOT_FOUND');
+      return RiderHistorySchema.parse(row);
     });
   }
 
@@ -142,11 +150,10 @@ export class RiderJobsService {
         ...range,
       });
       // First page only; full pagination goes through /history.
-      const rides = await this.jobs.history(tx, {
-        riderUserId: rider.userId,
-        ...range,
-        limit: 50,
-      });
+      const rides = await this.view.history(
+        tx,
+        await this.jobs.history(tx, { riderUserId: rider.userId, ...range, limit: 50, deliveredOnly: true }),
+      );
       return RiderEarningsSchema.parse({
         asOf: period.end.toISOString(),
         periodStart: period.start.toISOString(),
@@ -154,7 +161,7 @@ export class RiderJobsService {
         timeZone: RIDER_TIME_ZONE,
         completedCount: totals.count,
         totalPaise: totals.totalPaise,
-        rides: rides.filter((ride) => ride.status === 'delivered'),
+        rides,
         nextCursor: null,
         payout: { availability: 'unavailable', pendingPaise: null, items: [] },
       });

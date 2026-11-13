@@ -23,6 +23,16 @@ export const REFRESH_CODES: ReadonlySet<string> = new Set([
   ...CODE_CODES,
 ]);
 
+/** Rider dispatch rejections that re-read the order and the picker rows. */
+export const DISPATCH_REFRESH_CODES: ReadonlySet<string> = new Set([
+  ...STALE_CODES,
+  'RIDER_UNAVAILABLE',
+  'RIDER_NOT_ONLINE',
+  'RIDER_HAS_ACTIVE_JOB',
+  'DELIVERY_OFFER_TAKEN',
+  'DELIVERY_JOB_NOT_FOUND',
+]);
+
 /** Owner-route denials (not approved / not this business's order). */
 export const ORDER_DENIED_CODES: ReadonlySet<string> = new Set([
   'COMMON_FORBIDDEN',
@@ -38,6 +48,13 @@ const keys: Record<string, string> = {
   ORDERS_INVALID_TRANSITION: 'invalidTransition',
   DELIVERY_INVALID_TRANSITION: 'invalidTransition',
   ORDERS_RIDER_DISPATCH_UNAVAILABLE: 'riderDispatchUnavailable',
+  RIDER_UNAVAILABLE: 'riderUnavailable',
+  RIDER_NOT_ONLINE: 'riderUnavailable',
+  RIDER_HAS_ACTIVE_JOB: 'riderUnavailable',
+  DELIVERY_OFFER_TAKEN: 'offerTaken',
+  DELIVERY_JOB_NOT_FOUND: 'invalidTransition',
+  DELIVERY_DISTANCE_UNAVAILABLE: 'distanceUnavailable',
+  DELIVERY_EARNING_POLICY_UNAVAILABLE: 'earningPolicyUnavailable',
   DELIVERY_CODE_INVALID: 'codeInvalid',
   DELIVERY_CODE_LOCKED: 'codeLocked',
   DELIVERY_CODE_EXPIRED: 'codeExpired',

@@ -181,7 +181,15 @@ import { PublicMediaService } from '../../modules/media-videos/application/publi
 import { PhotoReportService } from '../../modules/media-videos/application/photo-report.service';
 import { MediaReportModerationService } from '../../modules/media-videos/application/media-report-moderation.service';
 import { ReviewsPublicController } from '../../modules/reviews/presentation/reviews-public.controller';
+import { ReviewsOwnerController } from '../../modules/reviews/presentation/reviews-owner.controller';
+import { FollowerInsightsController } from '../../modules/engagement/presentation/follower-insights.controller';
 import { ReviewsPublicService } from '../../modules/reviews/application/reviews-public.service';
+import { ReviewsOwnerService } from '../../modules/reviews/application/reviews-owner.service';
+import { OwnerOffersService } from '../../modules/offers/application/owner-offers.service';
+import { OwnerOffersController } from '../../modules/offers/presentation/owner-offers.controller';
+import { OwnerEarningsService } from '../../modules/payments/application/owner-earnings.service';
+import { OwnerEarningsController } from '../../modules/payments/presentation/owner-earnings.controller';
+import { FollowerInsightsService } from '../../modules/engagement/application/follower-insights.service';
 import {
   CartQuoteController,
   CheckoutAttemptsController,
@@ -197,6 +205,12 @@ import { OrderAdminReadService } from '../../modules/orders/application/order-ad
 import { HandoverController } from '../../modules/delivery/presentation/handover.controller';
 import { HandoverService } from '../../modules/delivery/application/handover.service';
 import { CustomerCodeService } from '../../modules/delivery/application/customer-code.service';
+import { DispatchController } from '../../modules/delivery/presentation/dispatch.controller';
+import { RiderJobController } from '../../modules/delivery/presentation/rider-job.controller';
+import { OwnerDispatchService } from '../../modules/delivery/application/owner-dispatch.service';
+import { RiderOfferService } from '../../modules/delivery/application/rider-offer.service';
+import { RiderJobProgressService } from '../../modules/delivery/application/rider-job-progress.service';
+import { RiderJobCompleteService } from '../../modules/delivery/application/rider-job-complete.service';
 
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
@@ -277,12 +291,18 @@ import { CustomerCodeService } from '../../modules/delivery/application/customer
     LinkedVideoController,
     PhotoReportController,
     ReviewsPublicController,
+    ReviewsOwnerController,
+    OwnerOffersController,
+    OwnerEarningsController,
+    FollowerInsightsController,
     CartQuoteController,
     CheckoutAttemptsController,
     OrdersController,
     BusinessOrdersController,
     AdminOrdersController,
     HandoverController,
+    DispatchController,
+    RiderJobController,
     RealtimeController,
   ],
   providers: [
@@ -367,6 +387,10 @@ import { CustomerCodeService } from '../../modules/delivery/application/customer
     PhotoReportService,
     MediaReportModerationService,
     ReviewsPublicService,
+    ReviewsOwnerService,
+    OwnerOffersService,
+    OwnerEarningsService,
+    FollowerInsightsService,
     CheckoutQuoteService,
     CheckoutAttemptService,
     OrderReadService,
@@ -374,6 +398,10 @@ import { CustomerCodeService } from '../../modules/delivery/application/customer
     OrderAdminReadService,
     HandoverService,
     CustomerCodeService,
+    OwnerDispatchService,
+    RiderOfferService,
+    RiderJobProgressService,
+    RiderJobCompleteService,
     RealtimeStreamService,
   ].map((provide) => ({ provide, useValue: Object.freeze({}) })),
 })

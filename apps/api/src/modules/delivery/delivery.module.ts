@@ -21,25 +21,33 @@ import { RiderProfileView } from './application/rider-profile-view';
 import { RiderWorkService } from './application/rider-work.service';
 import { RIDER_REPOSITORY } from './domain/rider';
 import { PrismaRiderRepository } from './infrastructure/prisma-rider.repository';
-import {
-  NoDeliveryJobs,
-  UnconfiguredRiderRequirements,
-} from './infrastructure/unshipped-delivery-sources';
+import { UnconfiguredRiderRequirements } from './infrastructure/unshipped-delivery-sources';
+import { PrismaDeliveryJobReadRepository } from './infrastructure/prisma-delivery-job-read.repository';
+import { OwnerDispatchService } from './application/owner-dispatch.service';
+import { RiderJobCommands } from './application/rider-job-commands';
+import { RiderJobCompleteService } from './application/rider-job-complete.service';
+import { RiderJobProgressService } from './application/rider-job-progress.service';
+import { RiderJobView } from './application/rider-job-view';
+import { RiderOfferService } from './application/rider-offer.service';
+import { DispatchController } from './presentation/dispatch.controller';
+import { RiderJobController } from './presentation/rider-job.controller';
 import { HandoverController } from './presentation/handover.controller';
 import { RiderAdminController } from './presentation/rider-admin.controller';
 import { RiderMeController } from './presentation/rider-me.controller';
 import { RiderWorkController } from './presentation/rider-work.controller';
 
 /**
- * Delivery rider side (specs/delivery/be/delivery.md): application/approval,
- * availability, latest location, summary/history/earnings reads and jobless
- * support disputes, plus customer handover codes and jobless self-delivery /
- * pickup handover (Orders fulfilment port + Payments cash collection).
- * Platform rider jobs, offers, tracking and admin live views are not wired;
- * DELIVERY_JOB_READ is the empty adapter until then. Imports must provide
- * runtime, Geo, Users, Audit, Admin (ADMIN_SCOPE, AdminScopedActor),
- * Settings (SUPPORT_INTAKE), BusinessContext (ApprovedSellerAccess), Orders
- * (ORDERS_FULFILMENT), Payments (PAYMENT_ORDER) and DeliveryCodesModule.
+ * Delivery API (specs/delivery/be/delivery.md): rider application/approval,
+ * availability/location, platform rider dispatch (owner request/candidates/
+ * directed offer, rider accept/reject, job events, OTP completion with the
+ * earned snapshot), summary/history/earnings over persisted jobs, jobless
+ * support disputes, customer handover codes and jobless self-delivery /
+ * pickup handover. Customer live tracking, masked calls and admin live
+ * views are not wired. Imports must provide runtime, Geo, Users, Audit,
+ * Admin (ADMIN_SCOPE, AdminScopedActor), Settings (SUPPORT_INTAKE),
+ * BusinessContext (ApprovedSellerAccess), Orders (ORDERS_FULFILMENT),
+ * Payments (PAYMENT_ORDER), DeliveryCodesModule, DeliveryAssignmentModule
+ * and DeliveryDispatchModule.
  */
 @Module({})
 export class DeliveryModule {
@@ -52,12 +60,14 @@ export class DeliveryModule {
         RiderWorkController,
         RiderAdminController,
         HandoverController,
+        DispatchController,
+        RiderJobController,
       ],
       providers: [
         // API-only: needs SESSION_ACCESS, which the worker does not provide.
         ApprovedSellerAccess,
         { provide: RIDER_REPOSITORY, useClass: PrismaRiderRepository },
-        { provide: DELIVERY_JOB_READ, useClass: NoDeliveryJobs },
+        { provide: DELIVERY_JOB_READ, useClass: PrismaDeliveryJobReadRepository },
         {
           provide: RIDER_REQUIREMENTS,
           useClass: UnconfiguredRiderRequirements,
@@ -80,6 +90,12 @@ export class DeliveryModule {
         HandoverVerifier,
         HandoverService,
         CustomerCodeService,
+        RiderJobView,
+        RiderJobCommands,
+        OwnerDispatchService,
+        RiderOfferService,
+        RiderJobProgressService,
+        RiderJobCompleteService,
       ],
       exports: [RIDER_APPLICATIONS_READ],
     };

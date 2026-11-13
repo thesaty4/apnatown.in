@@ -92,6 +92,8 @@ export class RealtimeStreamService {
     if (signal.kind === 'order' && signal.orderId)
       frame('order', { orderId: signal.orderId });
     else if (signal.kind === 'notification') frame('notification', {});
+    else if (signal.kind === 'delivery')
+      frame('delivery', signal.jobId ? { jobId: signal.jobId } : {});
   }
 
   /** Locks + revalidates the session and live identity (revocation, expiry, account status). */
