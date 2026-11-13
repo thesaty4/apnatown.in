@@ -2,7 +2,7 @@
 
 Features: F-OF-001, F-OF-002, F-OF-003, F-OF-004, F-OF-005, F-OF-006, F-PD-004, F-VD-007, F-AD-011; promotion activation for F-VD-017 | Rules: BR-01, BR-02, BR-06, BR-12, BR-17, BR-19 | State machines: ST-offer | Depends on: businesses, products, services, media-videos, settings; Payments purchase events | Used by: search, cart-checkout, payments, admin
 
-Frontend counterpart: [FE offers](../fe/offers.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Frontend counterpart: [FE offers](../fe/offers.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Responsibility
 
@@ -76,6 +76,10 @@ Implement `OfferNotificationReadPort.context` from [Notifications](../../notific
 
 `PlacementWriteDTO={kind,surface,titleEn?,titleHi?,subtitleEn?,subtitleHi?,bannerAssetId?,destination:{kind,targetId?},businessId?,scope:{kind,cityId?,areaId?},position,startsAt?,endsAt?,expectedVersion?}`. `PlacementAdminDTO` contains these persisted fields plus `{id,version,status,source,purchaseId?,activationBlockedReason?,allowedActions}`; purchase/payment state is read-only. On PATCH, omitted `bannerAssetId` preserves the current background; explicit `null` removes it; a new Media asset replaces it. `DestinationDTO={kind,targetId?,href}` allows internal targets offers/business/product/service/category/offer; href is server-resolved, never client URL/HTML.
 Offer links are `/product/{slug}?offerId={id}`, `/service/{slug}?offerId={id}`, `/explore?tab=products&offerId={id}`, or the owning `/shop/{slug}` / `/provider/{slug}` with `offerId`. Search and target screens must retain/validate this context.
+
+### Implemented slice: owner offers (2026-11-13)
+
+- `GET/POST /businesses/me/offers`, `PATCH /businesses/me/offers/{id}`, `PATCH …/{id}/status` (`OffersModule`, `ApprovedSellerAccess`). Business-wide scope only; product targets, `bannerAssetId`, featured requests and coupons are not authored yet. Create (Idempotency-Key) and every edit enter `pending` with the review decision cleared; pause = active only; resume = approved paused offer within its window; end = active/paused (terminal); stale version → `OFFER_VERSION_CONFLICT`, disallowed transition → `OFFER_STATE_INVALID`, foreign → `OFFER_NOT_FOUND`. DTO adds `expired` and server `allowedActions`. Runtime write grants: migration `20261113120000_owner_offers_write`. Admin approval queue is not built yet, so new/edited offers stay pending locally.
 
 ## Rules and use-cases
 
@@ -175,12 +179,14 @@ Use shared `COMMON_FORBIDDEN`, `COMMON_VALIDATION_FAILED` and `ADMIN_SCOPE_FORBI
 - Given activation policy/content is missing, payments are disabled, or the business is suspended, when a purchase is prepared, then purchasing is unavailable and no charge is initiated.
 - Given an asset belongs to another business, is private KYC, or a destination contains a script/external URL, when submitted, then validation rejects it without publishing.
 
-## Tests
+## Verification
 
-- Unit: offer precedence, integer rounding, validity boundaries, coupon creator/scope/target constraints, finite limits/budget and immutable refund allocations.
-- Integration: approved-only public reads; active/expired/out-of-stock detail; own-business CRUD; keyset queue scope; cache/outbox writes in the same transaction.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Rules: offer precedence, integer rounding, validity boundaries, coupon creator/scope/target constraints, finite limits/budget and immutable refund allocations.
+- Manual API/DB: approved-only public reads; active/expired/out-of-stock detail; own-business CRUD; keyset queue scope; cache/outbox writes in the same transaction.
 - Authorization negatives: missing `promos:view/edit`, admin outside assigned city/area, vendor modifying another business's offer, and provider target mismatch.
-- Map each acceptance bullet to a scenario; add same-city/wrong-area placement reads/writes, platform-scope escalation, 1-paise/zero/oversized coupon inputs, unsafe JSON money, stale activation vs expiry, and target approval changes during purchase. Contract-test deep-link/target DTOs with Search and Media asset purpose with fakes.
+- Map each acceptance bullet to a scenario; add same-city/wrong-area placement reads/writes, platform-scope escalation, 1-paise/zero/oversized coupon inputs, unsafe JSON money, stale activation vs expiry, and target approval changes during purchase. Manually check deep-link/target DTOs with Search and Media asset purpose with fakes.
 
 ## Open questions and handoff
 

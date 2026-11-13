@@ -2,7 +2,7 @@
 
 Features: F-PF-001, F-PF-002, F-PF-003, F-PF-004, F-PF-005, F-PF-006, F-PF-007, F-PF-011, F-PF-012, F-PF-013, F-VD-001, F-VD-002, F-VD-003, F-VD-011, F-VD-018, F-PV-001, F-PV-002, F-PV-006, F-PV-007, F-X-011 | Rules: BR-01, BR-02, BR-06, BR-08, BR-12, BR-14, BR-16 | State machines: ST-approval | Depends on: users, geo, catalog | Used by: products, services, search, offers, cart-checkout, orders, reviews, engagement, media-videos, admin
 
-Frontend counterpart: [FE businesses](../fe/businesses.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Frontend counterpart: [FE businesses](../fe/businesses.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Responsibility
 
@@ -57,7 +57,7 @@ Businesses also owns the narrow `business.taxonomy-suggest` capability in [Catal
 - `BusinessProfilePatch`: `{expectedVersion,kind?,nameEn?,nameHi?,categoryIds?:uuid[],primaryCategoryId?,description?,areaId?,addressText?,location?:{lat,lng}|null,businessPhoneE164?,whatsappE164?,email?,instagramUrl?,youtubeUrl?,facebookUrl?,logoAssetId?,coverAssetId?,hours?:[{dayOfWeek,opensAt,closesAt,isClosed}],settings?:{temporarilyClosed?,deliveryMethod?,deliveryRadiusKm?,deliveryFeePaise?,minimumOrderPaise?,pickupEnabled?,pickupInstructions?,serviceRadiusKm?,serviceArea?,galleryMediaDefault?}}`. Category IDs are distinct active product categories and the primary ID must be in the set; a submitted profile has exactly one primary. Unknown/nested unknown fields fail validation. Profile/settings/hours/categories share the business version and one transaction; each supplied hours array replaces seven unique days. Kind is draft-only; provider service-area fields are rejected for a shop.
 - Validate contacts and HTTPS social URLs without server-side fetching; clear optional values explicitly with null. Hours use IST wall time; missing draft fields are not silently filled. Holidays have no editor in the final source (`js9.js`); no holiday calendar or fake holiday data is added.
 - An approved profile PATCH must preserve submission-required values despite nullable draft columns; it cannot clear identity/area and remain publicly approved. Public contacts are not login credentials.
-- `BusinessPublicDto`: `{id,kind,slug,nameEn,nameHi,categories:[{id,slug,nameEn,nameHi}],primaryCategory,description,logo,cover,contacts,socialLinks,address,cityId,areaId,area,location?,weeklyHours,today,temporarilyClosed,delivery,pickup,serviceArea,serviceRadiusKm?,verified}`. `categories` contains product categories only; provider expertise remains Services-owned. `verified` is independent of approval. Resolved public assets never reveal raw keys. Personalized `distanceKm`/deliverability is a no-store read context, not a location-specific ISR cache entry.
+- `BusinessPublicDto`: `{id,kind,slug,nameEn,nameHi,categories:[{id,slug,nameEn,nameHi}],primaryCategory,description,logo,cover,contacts,socialLinks,address,cityId,areaId,area,location?,weeklyHours,today,temporarilyClosed,delivery,pickup,serviceArea,serviceRadiusKm?,verified}`. Public image descriptors contain a root-relative same-origin Media gateway `path`, never an absolute provider URL or raw storage key. `categories` contains product categories only; provider expertise remains Services-owned. `verified` is independent of approval. Personalized `distanceKm`/deliverability is a no-store read context, not a location-specific ISR cache entry.
 - `BusinessReadPort.publicProjection({businessIds?,kind?,categoryIds?,context?,cursor?,limit?})` supplies that DTO to Search, Products/Services and public profiles, with current approved/non-deleted visibility. Unknown distance is null, never zero or a fabricated pin. `BusinessReadPort.forCheckout({businessIds})` returns `{businessId,status,cityId,areaId,location,hours,temporarilyClosed,deliveryMethod,deliveryRadiusKm,deliveryFeePaise,minimumOrderPaise,pickupEnabled,pickupInstructions,version}` only to checkout/delivery use-cases; server resolves destination eligibility.
 - `BusinessReadPort.ownerSummary({businessId,actor})` validates ownership and composes `/businesses/me/overview`: `{business,status,capabilities,products?,orders?,earnings?,enquiries?,rating?,followers?,analytics?}`. Products supplies totals/low stock; `OrdersOwnerReadPort.summary` supplies order/open/waiting-for-rider counts, not revenue; `PaymentsOwnerReadPort.earningsSummary` supplies sales/earnings and explicit financial-policy availability. Pass identical UTC period bounds to both and display IST. Services supplies new/latest enquiries and real 7/30-day counts; Reviews/Engagement supply their own aggregates. Each section is `{state:"ready",data}` or `{state:"unavailable",code}`; unavailable money is null, never invented zero.
 - Provider analytics follows reporting-v1 above; real views, enquiry cohort and conversion are available for covered dates. Incomplete historical measurements are unavailable without hiding known enquiry totals.
@@ -69,6 +69,10 @@ Businesses also owns the narrow `business.taxonomy-suggest` capability in [Catal
 The public projection also supplies owner-maintained read-only SQL expressions for [Search composition](../../search/be/search.md#rules-and-use-cases); Search applies predicates before pagination rather than filtering a first owner page in memory. Private scope/ownership/checkout reads are separate ports, never public SQL exports.
 
 Open question: provider product ordering is required by F-PV-005, but the provider profile prototype has no product-delivery settings editor. Reuse the fulfilment contract, but do not invent a default fee/rider/pickup mode or a new visible editor before its configuration UX is approved. A business without configured delivery and without pickup has no available checkout mode; display that explicitly. Enabling delivery requires non-null method/radius/minimum and an explicit flat fee for self-delivery; null is not zero.
+
+### Implemented slice: provider analytics (2026-11-13)
+
+- `GET /businesses/me/analytics` (`businessMeAnalytics`) is routed. Enquiries come from Services through `BUSINESS_ENQUIRY_STATS` (`ServicesEnquiryStatsModule`): the enquiry-created cohort over the same 30 IST days by day and current status; `converted` = cohort members now `converted`; `conversionRate` null for an empty cohort. Views keep the coverage rule (null before coverage).
 
 ## Rules and use-cases
 
@@ -120,6 +124,8 @@ Open question: provider product ordering is required by F-PV-005, but the provid
 - Given one user owns a shop and a provider profile, when an owner API omits its business-kind context, then it returns an explicit context error rather than reading or editing the wrong business.
 - Given a provider sells products but has no fulfilment configuration, when checkout asks for eligibility, then no fee or mode is invented and ordering is explicitly unavailable until configured.
 
-## Tests
+## Verification
 
-Unit: state transition guards, DTO allow-list, paise/settings validation, and public-field projection. Integration: PostGIS optional point, owner/document isolation, outbox commit/retry, and version conflicts. Authorization negatives: cross-owner access, missing `approvals:view/edit`, and out-of-area admin; never use real PII or document files.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Rules: state transition guards, DTO allow-list, paise/settings validation, and public-field projection. Manual API/DB: PostGIS optional point, owner/document isolation, outbox commit/retry, and version conflicts. Authorization negatives: cross-owner access, missing `approvals:view/edit`, and out-of-area admin; never use real PII or document files.

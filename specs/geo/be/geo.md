@@ -8,6 +8,13 @@ Frontend counterpart: [FE geo](../fe/geo.md).
 
 Own cities, customer-facing areas, service zones, delivery-fee slabs and service-area waitlist requests. Resolve optional location input and provide authoritative city/zone serviceability. Business distance and delivery-radius rules remain with `businesses`/`search`; geo does not own shop or provider pins.
 
+Leaflet/OSM is the selected frontend map stack, not a backend geocoder or fee
+calculator. Follow the [map contract](../../_foundation/media-and-maps.md#leaflet-and-openstreetmap):
+city/area/PIN resolution and polygon/distance validation remain PostgreSQL/
+PostGIS-owned. Do not introduce public Nominatim autocomplete, a routing
+provider or an arbitrary tile proxy. GeoJSON stays `[longitude,latitude]`,
+SRID 4326; Leaflet conversions never replace server validation.
+
 ## Tables
 
 | Table | Columns, constraints and defaults | Indexes |
@@ -19,6 +26,19 @@ Own cities, customer-facing areas, service zones, delivery-fee slabs and service
 | `service_area_waitlist` | `id uuid PK`; `city_id uuid NULL FK cities` (NULL when GPS did not resolve a city; Q-35); `phone_ciphertext text NOT NULL`; `phone_lookup_hash bytea NOT NULL`; `requested_at timestamptz NOT NULL DEFAULT now()` | `(city_id,requested_at DESC)` for city-card waitlist count |
 
 City states map to the prototype's `active`/`planned`/`soon` labels as enabled/disabled/coming_soon. Preserve the observed toggle edges and keep Q-17/G-11 visible. Hindi city names are required; see Q-36/G-12. Active-zone overlap is rejected until Q-37 is resolved.
+
+The additive Geo migrations and public city/area reads are implemented. Their
+keyset indexes append `id` to the listed name sorts; area-name filtering uses
+a shared EN/HI `gin_trgm_ops` index. Cities sort by `(status,name_en,id)`, areas
+by `(name_en,id)`, ascending. Area query text is a literal case-insensitive
+substring, not a SQL wildcard. Cursors are signed and bound to endpoint,
+city and normalized filters. Both reads share a 60-per-minute/IP limit and
+page default 20/hard cap 50. No locations or fees are seeded; migrations,
+query plans and HTTP behavior remain unverified against a live database.
+The `GeoScopePort.assertAreasInCity` read-validation capability is implemented
+for Users saved addresses, including city-only selection and transaction-bound
+reference locks. Location/zone resolution, other internal owner capabilities,
+waitlist writes and admin mutations remain separate implementation slices.
 
 ## Endpoints
 
@@ -102,8 +122,10 @@ The fee port is for `apna_town_rider` delivery only. Self-delivery uses the busi
 12. Given self-delivery or pickup is selected, when checkout computes the fee, then it uses the business flat fee or zero respectively, not platform-rider slabs.
 13. Given unknown zone-area relationships, when an area-only admin requests broader zone authority, then no same-city/centroid inference grants it; scoped options paginate without broadening access.
 
-## Tests
+## Verification
 
-- Unit: PIN/coordinate/phone validation, city-status mapping/edges, point-to-zone lookup, zone/default fee boundaries and beyond-last-band behavior.
-- Integration: public location resolution, city/zone CRUD and default-fee fallback, PostGIS overlap validation, outbox cache invalidation, waitlist encryption/count.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Rules: PIN/coordinate/phone validation, city-status mapping/edges, point-to-zone lookup, zone/default fee boundaries and beyond-last-band behavior.
+- Manual API/DB: public location resolution, city/zone CRUD and default-fee fallback, PostGIS overlap validation, outbox cache invalidation, waitlist encryption/count.
 - Authorization negatives: customer and area-scoped admin attempting every geo admin mutation; cross-city area IDs; stale version; duplicate idempotency key.

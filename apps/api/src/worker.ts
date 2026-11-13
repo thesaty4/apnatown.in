@@ -5,7 +5,12 @@ import { WorkerModule } from './worker.module';
 import { parseConfig } from './shared/config/config';
 import { DomainError, errorResponse } from './shared/errors/errors';
 import { ReadinessService } from './shared/health/readiness';
+import { OutboxRelay } from './shared/jobs/outbox-relay';
+import { OutboxQueue } from './shared/jobs/outbox-queue';
+import { OutboxConsumer } from './shared/jobs/outbox-consumer';
+import { RuntimeCleanup } from './shared/jobs/runtime-cleanup';
 import { handleSignals, shutdownHandler } from './shared/lifecycle';
+import { withCorrelation } from './shared/logger/context';
 import {
   correlationId,
   createLogger,
@@ -22,9 +27,11 @@ async function main(): Promise<void> {
       abortOnError: false,
     },
   );
+  const relay = app.get(OutboxRelay);
+  const queue = app.get(OutboxQueue);
+  const consumer = app.get(OutboxConsumer);
+  const cleanup = app.get(RuntimeCleanup);
   const health = app.get(ReadinessService);
-  // No queue startup, schema DDL or pretend consumers. C01 owns the relay and
-  // registrations; their absence keeps the real readiness repository false.
   const server = createServer({ maxHeaderSize: 8192 }, (request, response) => {
     const id = correlationId(request.headers['x-correlation-id']);
     response.setHeader('X-Correlation-ID', id);
@@ -38,13 +45,19 @@ async function main(): Promise<void> {
       if (request.url === '/api/health/ready') return health.ready();
       throw new DomainError('COMMON_NOT_FOUND');
     };
-    void probe()
+    void withCorrelation(id, probe)
       .then((body) => response.end(JSON.stringify(body)))
       .catch((error: unknown) => {
         const body = errorResponse(
           error instanceof DomainError ? error.code : 'COMMON_INTERNAL_ERROR',
           id,
         );
+        logger[body.status >= 500 ? 'error' : 'warn']({
+          event: 'worker.probe_failed',
+          correlationId: id,
+          code: body.code,
+          status: body.status,
+        });
         response.statusCode = body.status;
         response.end(JSON.stringify(body));
       });
@@ -55,11 +68,31 @@ async function main(): Promise<void> {
     server.once('error', reject);
     server.listen(config.WORKER_PROBE_PORT, '127.0.0.1', resolve);
   });
+  relay.start();
+  consumer.start();
+  cleanup.start();
   handleSignals(
-    shutdownHandler(app, server, config.SHUTDOWN_TIMEOUT_MS, logger),
+    shutdownHandler(
+      app,
+      server,
+      config.SHUTDOWN_TIMEOUT_MS,
+      logger,
+      async () => {
+        try {
+          await Promise.all([cleanup.stop(), relay.stop(), consumer.stop()]);
+        } finally {
+          await queue.stop();
+        }
+      },
+    ),
     logger,
   );
-  logger.info({ event: 'worker.listening', consumersRegistered: false });
+  logger.info({
+    event: 'worker.listening',
+    outboxRelayRegistered: true,
+    runtimeCleanupRegistered: true,
+    consumersRegistered: consumer.registered,
+  });
 }
 
 void main().catch(() => {

@@ -4,6 +4,11 @@ Features: F-RD-001, F-RD-002, F-RD-003, F-RD-004, F-RD-005, F-RD-006, F-RD-007, 
 
 Backend contract: [BE delivery](../be/delivery.md)
 
+Live-map UI uses the shared [Leaflet/OSM contract](../../_foundation/media-and-maps.md#leaflet-and-openstreetmap).
+Keep scoped SSE/list data separate from basemap tiles; Rider PWA does not
+download/cache tiles offline. KYC and case-evidence uploads stay on the
+private Media path, never Cloudinary's public-purpose image adapter.
+
 ## Routes and rendering
 
 | Route (production) | Screen ID | Rendering + reason | Auth / role | Index policy |
@@ -80,6 +85,38 @@ Approved rider routes use `DashboardShell`/rider nav per permission matrix; pend
 - Special states: empty authorized city; stale/unavailable location/ETA, disconnected stream, permission/scope revoked, map unavailable with usable list. All cities means union of allowed areas, not all jobs in those cities.
 - Acceptance: Given an admin assigned one area within a city, when selecting All or subscribing, then other areas' pins/counts/rows never appear. Given delivered/cancelled job, when SSE updates, then pin/list entry leaves without reload. Given permission removed/reconnect, when data refreshes, then stale private pins clear and no client-only filter protects the response. Given keyboard/screen reader use, when map unavailable, then list/combobox provides the same actionable information.
 
+### Implemented slice: Rider dashboard (S-RIDE-01..08)
+
+`/rider/{onboarding,home,requests,active,history,earnings,feedback,profile}`
+(`app/rider`, force-dynamic + noindex; `/rider` → `/rider/home`) use the shared
+`DashboardShell` with React Query over the typed client
+(`features/rider/{api,queries}.ts`, account-scoped private keys). Guests go to
+login with `returnTo`; onboarding/profile accept any authenticated user, other
+screens require the rider role (no-permission state links to onboarding). The
+demo "Switch role" sheet signs in as the rider persona and opens `/rider/home`;
+login `landing()` sends rider-only sessions there.
+
+**Implemented 2026-11-13 (rider dispatch):** S-RIDE-03 offer card with
+server-anchored countdown (30/10 s announcements), Accept (navigates to
+`/rider/active` only after commit) / Reject, expired and "Request taken"
+states; S-RIDE-04 `DeliveryStepFlow` (reached shop → per-item checklist sending
+all current `orderItemIds` → reached drop → typed 4-digit code + explicit
+"Collected ₹X cash" only for COD with outstanding > 0 → delivered), versions on
+every command, checklist/cash reset on order/financial version change,
+`FailReasonSheet` with the four reasons, device-maps Directions when a drop pin
+exists (textual address otherwise); `event: delivery` hints invalidate the
+offer/active/summary/history/earnings reads from `RiderShell`; Home links to a
+live request. Shared order integrations: owner Rider dispatch card
+(`features/owner-orders/RiderDispatchCard.tsx` + `AssignRiderSheet.tsx`) and
+customer rider card (`features/orders/OrderRiderCard.tsx`).
+
+**In progress / gated:** KYC document upload (explicit unavailable state; submit
+surfaces `RIDER_REQUIREMENTS_UNAVAILABLE`), masked call (stated as not
+available), customer tracking ETA/location, rider location posting, history
+detail sheet, Reviews (S-RIDE-07 shows "Ratings not available yet") and payouts
+("Payout details unavailable"). Runtime/browser checks and automated test files
+are intentionally not run.
+
 ## Shared order integrations
 
 F-OR-002, F-OR-003, F-OR-004, F-VD-008, F-PV-005, F-AD-002, F-AD-007; S-CUST-14, S-VEND-04, S-PROV-05, S-ADMN-02, S-ADMN-08. [Orders FE](../../orders/fe/orders.md) owns these pages; Delivery owns their typed actions/projections.
@@ -97,13 +134,15 @@ F-OR-002, F-OR-003, F-OR-004, F-VD-008, F-PV-005, F-AD-002, F-AD-007; S-CUST-14,
 
 Prefixes `rider.*`, `admin.live.*`. Analytics: `rider_online_toggled`, `rider_offer_accepted`, `rider_offer_rejected`, `rider_offer_expired`, `rider_delivery_completed`, `rider_delivery_failed`; never attach code, coordinates, phone, KYC, payout instrument or free-text dispute.
 
-## Tests
+## Verification
 
-For `settlementKind='no_charge'`, show the shared “No payment due” badge and no cash-collected checkbox, while retaining all code, ownership and fulfilment checks. A forged collection or uncommitted zero settlement must fail server-side. Test platform delivery, self-delivery and pickup without any zero-paise collection.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
-Component/E2E: map every screen criterion to tests; draft→typed KYC→approval/Auth refresh, two-tab accept/expiry/reconnect, item/financial version reset, pickup/self/platform explicit cash, code expiry/reissue/consume/lost response, failed-order case, history/estimate-vs-earned/IST bounds, jobless support receipt and same-city/wrong-area live SSE.
+For `settlementKind='no_charge'`, show the shared “No payment due” badge and no cash-collected checkbox, while retaining all code, ownership and fulfilment checks. A forged collection or uncommitted zero settlement must fail server-side. Manually verify platform delivery, self-delivery and pickup without any zero-paise collection.
 
-All screens: auth/ownership negatives, malformed/XSS form/asset/ID input, offline retry without duplicate money/mutation, EN/long Hindi, 360 px + desktop, light/dark/reduced motion, Axe/keyboard/focus return, topmost Esc, ≥44 px controls, status text/icons not color alone. No private/code data in analytics or browser caches.
+Manual UI/journeys: map every screen criterion to checks; draft→typed KYC→approval/Auth refresh, two-tab accept/expiry/reconnect, item/financial version reset, pickup/self/platform explicit cash, code expiry/reissue/consume/lost response, failed-order case, history/estimate-vs-earned/IST bounds, jobless support receipt and same-city/wrong-area live SSE.
+
+All screens: auth/ownership negatives, malformed/XSS form/asset/ID input, offline retry without duplicate money/mutation, EN/long Hindi, 360 px + desktop, light/dark/reduced motion, Accessibility/keyboard/focus return, topmost Esc, ≥44 px controls, status text/icons not color alone. No private/code data in analytics or browser caches.
 
 ## Open questions
 

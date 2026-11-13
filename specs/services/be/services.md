@@ -9,11 +9,11 @@
 - [Events and jobs](#events-and-jobs)
 - [Errors](#errors)
 - [Acceptance criteria](#acceptance-criteria)
-- [Tests](#tests)
+- [Verification](#verification)
 
 Features: F-SV-001, F-SV-002, F-SV-003, F-SV-004, F-SV-005, F-SV-006, F-SV-007, F-VD-014, F-VD-016, F-PV-003, F-PV-004 | Rules: BR-02, BR-06, BR-08, BR-09, BR-10, BR-14, BR-16, BR-18 | State machines: ST-enquiry | Depends on: businesses, catalog, geo | Used by: search, businesses, offers, reviews, engagement, media-videos, notifications
 
-Frontend counterpart: [FE services](../fe/services.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Frontend counterpart: [FE services](../fe/services.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Responsibility
 
@@ -23,7 +23,7 @@ Own service listings, provider expertise mappings and service enquiries. Reuse b
 
 | Table | Columns, constraints and defaults | Indexes |
 |---|---|---|
-| `services` | `id uuid PK`; `business_id uuid NOT NULL FK businesses`; `category_id uuid NOT NULL FK categories`; `subcategory_id uuid NOT NULL FK subcategories`; `slug text NOT NULL UNIQUE`; `name_en text NOT NULL`; `name_hi text NULL`; `description text NULL`; `price_type text NOT NULL CHECK ('from','fixed','range','enquiry')`; `price_from_paise bigint NULL CHECK >= 0`; `price_to_paise bigint NULL CHECK >= price_from_paise`; `unit text NULL CHECK ('hour','day','event','sq_ft','unit','visit','plate')`; `included/excluded text[] NOT NULL DEFAULT '{}'`; `service_area text NULL`; `experience_years int NULL CHECK >=0` (verified value only; no generated default); `media jsonb NOT NULL DEFAULT '[]'` (ordered server-issued image asset references); `gallery_visible boolean NOT NULL` (set from `business_settings.gallery_media_default`; Q-50); `faqs jsonb NOT NULL DEFAULT '[]'` (read-only in the manager; Q-52); `featured_selected boolean NOT NULL DEFAULT false`; `status text NOT NULL DEFAULT 'active' CHECK ('active','paused')`; `version int NOT NULL DEFAULT 1`; `deleted_at timestamptz NULL`; timestamps. The write use-case verifies that the subcategory belongs to the selected category. Enquiry pricing has no amount; fixed/from require `price_from_paise`; range requires both bounds. | Unique `slug` serves detail route; `(business_id,status,created_at DESC,id DESC)` serves manager; `(category_id,subcategory_id,business_id)` serves service filter joins; partial `(category_id,featured_selected DESC,created_at DESC,id DESC) WHERE status='active' AND deleted_at IS NULL` supports default featured-first Explore. |
+| `services` | `id uuid PK`; `business_id uuid NOT NULL FK businesses`; `category_id uuid NOT NULL FK categories`; `subcategory_id uuid NOT NULL FK subcategories`; `slug text NOT NULL UNIQUE`; `name_en text NOT NULL`; `name_hi text NULL`; `description text NULL`; `price_type text NOT NULL CHECK ('from','fixed','range','enquiry')`; `price_from_paise bigint NULL CHECK >= 0`; `price_to_paise bigint NULL CHECK >= price_from_paise`; `unit text NULL CHECK ('hour','day','event','sq_ft','unit','visit','plate','month')`; `included/excluded text[] NOT NULL DEFAULT '{}'`; `service_area text NULL`; `experience_years int NULL CHECK >=0` (verified value only; no generated default); `media jsonb NOT NULL DEFAULT '[]'` (ordered server-issued image asset references); `gallery_visible boolean NOT NULL` (set from `business_settings.gallery_media_default`; Q-50); `faqs jsonb NOT NULL DEFAULT '[]'` (read-only in the manager; Q-52); `featured_selected boolean NOT NULL DEFAULT false`; `status text NOT NULL DEFAULT 'active' CHECK ('active','paused')`; `version int NOT NULL DEFAULT 1`; `deleted_at timestamptz NULL`; timestamps. The write use-case verifies that the subcategory belongs to the selected category. Enquiry pricing has no amount; fixed/from require `price_from_paise`; range requires both bounds. | Unique `slug` serves detail route; `(business_id,status,created_at DESC,id DESC)` serves manager; `(category_id,subcategory_id,business_id)` serves service filter joins; partial `(category_id,featured_selected DESC,created_at DESC,id DESC) WHERE status='active' AND deleted_at IS NULL` supports default featured-first Explore. |
 | `provider_expertise` | `business_id uuid NOT NULL FK businesses`; `subcategory_id uuid NOT NULL FK subcategories`; `created_at timestamptz NOT NULL`; PK `(business_id,subcategory_id)`. Provider only; multiple subcategories allowed, separate from a service's single subcategory (BR-08). | PK serves profile and expertise lookup; `(subcategory_id,business_id)` serves provider discovery. |
 | `provider_expertise_versions` | `business_id uuid PK FK businesses`; `version int NOT NULL DEFAULT 1`; `updated_at timestamptz NOT NULL`. Services owns this aggregate version independently of the business profile. | PK is locked for atomic replace-all expertise saves. |
 | `enquiries` | `id uuid PK`; `service_id uuid NOT NULL FK services`; `business_id uuid NOT NULL FK businesses`; `customer_user_id uuid NULL FK users`; `name text NOT NULL`; `phone_ciphertext text NOT NULL`; `message text NOT NULL`; `preferred_date date NULL`; `status text NOT NULL DEFAULT 'new' CHECK ('new','contacted','converted','closed')`; `version int NOT NULL DEFAULT 1`; `converted_at timestamptz NULL`; timestamps. Guest submissions have no user link. | `(business_id,status,created_at DESC,id DESC)` serves inbox; `(customer_user_id,business_id,created_at DESC)` supports user data requests and enquirer review eligibility. |
@@ -64,7 +64,7 @@ No endpoint creates a booking or payment; those controls remain disabled under t
 - Export the public service eligibility/price/category columns as owner-maintained read-only SQL projections for Search composition before pagination. Nullable enquiry pricing and active/published-business rules remain Services-owned.
 - Implement `ServiceMediaReadPort.resolve` using [Media's bounded projection](../../media-videos/be/media-videos.md#required-discoverycommerce-read-ports), including actual asset attachment and effective `galleryAllowed`. Until Q-50 resolves ambiguous consent inheritance, deny that Gallery placement rather than treating a default as consent; no recursive URL resolution.
 - Implement Users' `UserDataPort` for authenticated enquiry export and policy-approved erasure. Guest identity verification, retention and deletion remain Q-51; return a blocked receipt for unresolved retained data, not a successful no-op.
-- Public service/detail media is `{assetId,publicUrl,altText}` resolved through Media; write media items are `{assetId,showInGallery?}`. Q-50 must reconcile the service-level default with per-item consent; a video never inherits consent silently. Experience years visible in the prototype are nullable owner-verified data, not the sample generator's random value; authoring source remains an open question and unknown experience is omitted.
+- Public service/detail media is `{assetId,path,altText}` using a root-relative same-origin Media gateway path; write media items are `{assetId,showInGallery?}`. Q-50 must reconcile the service-level default with per-item consent; a video never inherits consent silently. Experience years visible in the prototype are nullable owner-verified data, not the sample generator's random value; authoring source remains an open question and unknown experience is omitted.
 
 ## Rules and use-cases
 
@@ -74,7 +74,7 @@ No endpoint creates a booking or payment; those controls remain disabled under t
 4. Public enquiry creation is rate-limited and stores only submitted fields plus an optional session-derived user ID. Owner inbox reads are scoped to that owner's business. Do not expose enquiries through public APIs or log PII (BR-14).
 5. Enquiry transitions remain `new -> contacted`, then `contacted -> converted|closed` (ST-enquiry); reject other edges/stale versions until the source conflict below is resolved. Reviews, not Services, decides whether the authenticated proof is eligible (BR-09).
 6. Submit video links through the media-videos contract, linked to the service after ownership validation; never accept arbitrary embed URLs. Only approved videos appear on service details (BR-10). Offers, reviews, related services, similar providers, follow/bookmark actions and service-card discovery use their owning modules; no duplicated state.
-7. Service-level gallery visibility and current FAQ defaults follow the prototype until Q-50/Q-52 are resolved; do not infer consent for separately uploaded videos.
+7. Service-level gallery visibility and current FAQ defaults follow the prototype until Q-50/Q-52 are resolved; do not infer consent for separately submitted video links.
 8. Replacing expertise locks/upserts its version row and updates mappings/version in one transaction. Draft/pending/rejected/changes-requested applicants may edit this profile field; suspended/inactive owners cannot use it to bypass the business capability policy. Listing creation/publication remains approved-only.
 9. Effective featured status is derived from `featured_selected`, active listing/business visibility and Payments' current Premium entitlement at `at`. Expiry, suspension, pausing or deletion makes it false at read time; expiry retains the owner selection. A verified Premium renewal restores effective featuring for still-selected, otherwise-eligible services without a service write; Search does not infer plans or activate paid features.
 
@@ -119,9 +119,11 @@ Common authentication, authorization, validation and rate-limit failures use the
 - Given a paused service or suspended owner, when related/profile lists and facets are read, then it is absent; directly opened paused details retain the documented unavailable-enquiry state.
 - Given an owner selects a service for featuring without active Premium entitlement, when saved, then the write is rejected and no featured status is exposed; after expiry, the effective public status is false while the selection remains stored; after verified renewal, a still-eligible selected service is featured again without altering enquiry-only pricing or requiring a service write.
 
-## Tests
+## Verification
 
-- Unit: price-type constraints, category/subcategory match, enquiry transition graph and version conflict.
-- Integration: public active/paused/unapproved visibility, enquiry persistence/outbox, provider expertise save, and service search invalidation.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Rules: price-type constraints, category/subcategory match, enquiry transition graph and version conflict.
+- Manual API/DB: public active/paused/unapproved visibility, enquiry persistence/outbox, provider expertise save, and service search invalidation.
 - Authorization negatives: cross-business service/enquiry IDs, vendor attempting provider expertise, and guest attempting inbox access.
 - Privacy: encrypted phone at rest; no phone/message in logs, events, or public DTOs.

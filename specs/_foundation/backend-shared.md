@@ -4,6 +4,7 @@
 
 - [Application structure and dependency rules](#application-structure-and-dependency-rules)
 - [Shared layer](#shared-layer)
+- [Opaque-token helper](#opaque-token-helper)
 - [Error contract](#error-contract)
 - [Catalog reference slice](#catalog-reference-slice)
 
@@ -34,6 +35,89 @@ Use the module dependency list, main/AppModule/worker composition, public exempt
 
 ## Shared layer
 
+Implementation is incremental: the runtime now binds `CLOCK`/`ID_PROVIDER`
+through `RuntimePrimitivesModule`; `@apnatown/shared` exports checked `Money`.
+The runtime also binds `CURSOR_CODEC`: HMAC-authenticated keysets bind the
+operation, sort, filter and authorized scope fingerprint; scope/filter values
+are not embedded in plaintext. Endpoint owners supply only non-PII sort keys,
+retain database timestamp precision, and validate their tuple shape before
+building the parameterized keyset predicate. `PageQuerySchema` owns the shared
+20-default/50-cap parsing. `canonicalJson` rejects non-JSON values, cycles and
+unsafe integers, with depth 16, 10,000 nodes and 65,536-character bounds.
+The flat-error filter registers the starter invariant catalogue and legacy
+aliases, exposes only allow-listed field paths, and logs technical codes/status
+with correlation IDs rather than exception messages or submitted values.
+`withCorrelation` isolates the validated ID across asynchronous HTTP work;
+the shared Pino logger includes that context automatically. Job/relay owners
+must enter it using the persisted event ID context, not a process-global value.
+`EVENT_FACTORY` constructs validated version-1 envelopes with UUIDv7,
+aggregate version, UTC time and bounded JSON. `UNIT_OF_WORK` and
+`OUTBOX_WRITER` now join real Prisma transactions through opaque handles;
+repository adapters can inject the exported `PrismaDatabase`. Connections
+open on first unit-of-work use and close on module shutdown, keeping process
+probes reachable when the database is unavailable. Foreign, expired and
+timed-out handles never fall back to a root client. Appending does not enqueue:
+the separate worker's `OutboxRelay` leases at most 20 rows per batch with
+`FOR UPDATE SKIP LOCKED`, commits the lease, and enqueues by stable event ID
+outside the transaction. The migration launcher provisions the generic
+`apnatown.outbox` pg-boss queue; worker startup uses the runtime role with
+schema migration and creation disabled. Validated bounds are batch size 1-20
+(default 10), polling interval 100-60,000 ms (default 1,000), lease 10-300
+seconds (default 30), retry limit 0-10 (default 3), and base delay 100-60,000
+ms (default 1,000). Relay retry delay grows linearly by attempt and is capped
+at base delay times retry limit plus one; pg-boss retries use exponential
+backoff with the base rounded up to seconds and capped at that rounded delay
+times retry limit plus one. Exhausted or malformed events become `dead` with a
+safe error code, never exception text or event payload in logs. Domain consumers and
+readiness-manifest registration remain deferred, so this relay does not imply
+any domain handler is active or make worker readiness true.
+`WorkerModule` now exports the `EVENT_CONSUMER` transactional execution port.
+It validates the expected event type/version and deduplicates each named
+consumer/handler/event through `COMMAND_UNIT_OF_WORK`, committing local effects
+and a non-secret receipt together. Its exact boundaries are in the
+[data-model contract](./data-model.md#shared-runtime-persistence).
+`OutboxDispatcher` now loads the persisted envelope by job event ID, selects
+explicitly registered type/version handlers, and invokes that port for each.
+The worker's `OUTBOX_HANDLERS` list is deliberately empty until real module
+handlers are implemented. `OutboxConsumer` registers the pg-boss callback only
+when that list is nonempty, and shares one lazy `OutboxQueue` connection with
+the relay. It dispatches one job at a time; unknown events or partial handler
+failure reject the job with a fixed safe error, not an acknowledged no-op.
+The [data-model contract](./data-model.md#shared-runtime-persistence) owns
+transport retry/recovery and shutdown details. No external send or real domain
+handler is implemented, and empty registration never makes worker readiness true.
+Structured failure logs and persisted dead-state exist; a metrics exporter and
+operator replay control are still deferred and remain deployment/operations
+gates. Do not invent an admin queue screen to close those gaps.
+The separate worker also runs bounded shared-runtime expiry cleanup; the
+[data-model contract](./data-model.md#shared-runtime-persistence) owns its
+configuration and strict deletion boundaries. The API starts no cleanup loop,
+and in-progress claims, outbox records and domain records are retained.
+The shared `RateLimit` metadata/guard uses one atomic PostgreSQL upsert per
+declared window, DB time, a purpose-separated HMAC of either the trusted
+request IP or the authenticated principal ID, and fails closed with 503 on
+storage failure. It is registered after session/probe enforcement and has no
+invented route limits; Auth/feature owners must declare their reviewed policies.
+Policies are strict: stable key, 1..100000 hits, 1..86400 seconds, and an
+explicit `ip` or server-populated `principal` subject. Fixed epoch-aligned
+windows saturate at limit+1 and return 429 with rounded-up `Retry-After`;
+only the socket IP is trusted until a proxy policy is explicitly configured.
+Signed adjustments still require their owning DTO's explicit permission.
+The shared `CommandUnitOfWork` claim/store core and `COMMAND_CONTEXT_FACTORY`
+trusted HTTP context/hash builder are implemented, but no HTTP operation is
+registered to use them yet. The factory binds canonical requests to their
+method, resource, actor and resolved business using a dedicated server key;
+its contract is in [data-model](./data-model.md#shared-runtime-persistence).
+The transaction wrapper also supports explicit policy-selected `4xx` rejected
+outcomes and verifies replay status against the stored receipt; the same
+data-model contract defines commit-before-error and rollback boundaries.
+Live authorization, HTTP interceptor wiring and module replay policies remain
+required before an endpoint can claim idempotency support. These primitives do
+not imply live authorization or the Catalog reference below is implemented.
+Automated test tooling remains
+removed at the user's request; build/static checks are not acceptance evidence
+for those deferred runtime contracts.
+
 | Item | Purpose and usage rule |
 |---|---|
 | Config | Typed env parsing at startup; reject missing/invalid required configuration and never log secrets. |
@@ -42,20 +126,50 @@ Use the module dependency list, main/AppModule/worker composition, public exempt
 | Validation pipe | Zod DTO allow-lists; reject unknown keys, transform only declared fields, and reuse the same schemas for OpenAPI. |
 | CSV/slug/UUID pipes | CSV size/row/type validation and formula-safe export; normalize/validate slugs; reject malformed UUIDs before use-cases. |
 | `Money` | Exact integer-paise arithmetic; checked JSON-number serialization per [wire primitives](./data-model.md#json-and-concurrency-representations), never raw BigInt/string coercion. |
-| Clock + ID providers | Inject `Clock.now(): Date` and `IdProvider.uuidv7(): string` (`CLOCK`/`ID_PROVIDER`); tests use deterministic fakes, production uses real time/entropy. |
-| Opaque-token helper | Auth/Users reuse a reviewed CSPRNG token/hash/constant-time verification helper, not custom cryptography. Plaintext is returned only to the authorized flow; owning tables hold scoped hash/expiry. No tokens in logs or idempotency JSON. |
+| Clock + ID providers | Inject `Clock.now(): Date` and `IdProvider.uuidv7(): string` (`CLOCK`/`ID_PROVIDER`); approved local verification may use deterministic adapters, production uses real time/entropy. |
+| Opaque-token helper | `OPAQUE_TOKENS` is exported by `RuntimePrimitivesModule` for Auth/Users. Standard Node cryptography generates, hashes and compares high-entropy credentials; the owning flows enforce authorization/expiry. No tokens in logs or idempotency JSON. |
 | Pagination | Opaque keyset cursor with stable tie-breaker; default limit and hard cap 50; no offset for feeds/queues. |
 | Base repository + unit of work | Shared transaction/pagination primitives only; [opaque transaction contracts](./data-model.md#shared-runtime-persistence) keep Prisma in infrastructure, not use-cases. |
 | `@Roles`, `@Capability`, `@Permission(module, action)`, `@Scoped` | Metadata only; protected handlers declare roles or a named owner-issued application capability plus applicable permission/scope. Guards resolve capabilities server-side; never accept a client list. |
 | Guards + ownership policy | Verify live role/capability, module/action permission, city/area and ownership. Resolve `X-Business-Kind` against the user's businesses; it grants no privilege, and ambiguous dual ownership is `BUSINESS_CONTEXT_REQUIRED`. Super-admin scope is platform-wide only where specified. |
-| Idempotency interceptor | Validate key/hash and prepare `CommandContext`; application invokes `CommandUnitOfWork` with the endpoint's non-secret result policy. Reauthorize/rehydrate capabilities atomically on replay; never persist bearer/OTP/CSRF/completion plaintext or finish idempotency after the response. |
+| Idempotency interceptor | Not yet implemented. The shared transaction claim/store core is available as `COMMAND_UNIT_OF_WORK`; the future interceptor must validate key/hash and prepare server-owned `CommandContext`, and each operation must provide its explicit non-secret result/replay policy. Reauthorize/rehydrate capabilities atomically on replay; never persist bearer/OTP/CSRF/completion plaintext or finish idempotency after the response. |
 | Audit interceptor/context | Collect trusted actor/correlation/action metadata only. Application calls Audit-owned `record(tx, entry)` inside the state transaction; an after-response log is not the required audit. |
 | Rate-limit guard | Atomic PostgreSQL buckets defined in data-model; shared across API processes, no Redis; Auth attempt/cooldown policy remains authoritative. |
 | Outbox publisher + job runner | Application appends outbox in its transaction; a separate relay sends to pg-boss at least once. Consumers deduplicate/reconcile; repositories do not publish. |
-| Adapter interfaces + fakes | Ports for payment, OTP/SMS, WhatsApp, email, storage and maps; unit tests inject deterministic fakes. |
+| Adapter interfaces + local implementations | Ports for payment, OTP/SMS, WhatsApp, email, storage and maps; [Cloudinary/embeds/OSM contract](./media-and-maps.md) fixes the selected capabilities and private-storage separation. Manual verification uses approved local adapters without real external sends. |
 | Settings/feature flags | Typed server-side reads; no client-supplied flag may authorize an action. |
 | OpenAPI | Generate from DTO/Zod schemas; version REST routes deliberately and publish stable error shapes. |
 | i18n message catalogue | `en` and `hi` message keys for user-visible API errors/templates; API returns key and safe parameters, clients render localized copy. |
+
+### Opaque-token helper
+
+`OpaqueTokens` supplies `issue(purpose) -> {token,hash}`,
+`hash(purpose,token)` for owner-repository lookup and
+`verify(purpose,token,expectedHash) -> boolean`. `SystemOpaqueTokens` uses
+Node's `randomBytes(32)` (256 bits), canonical unpadded base64url (43 characters),
+purpose-separated SHA-256 (32-byte stored hash), and `timingSafeEqual`.
+Supported purposes are `session` and `data-request-completion`; they are
+server-selected, never client-controlled. This high-entropy token helper is
+not an OTP/password hasher and does not replace `csrf-sync`.
+
+Malformed/non-canonical tokens throw the safe `InvalidOpaqueTokenError`; owner
+flows map it to their registered authentication/capability error without
+logging the submitted token. A validly encoded mismatch returns `false`.
+Invalid stored-hash length is a configuration/data error, not successful
+verification or an ordinary credential mismatch.
+Only the authorized issuing flow receives plaintext; store the hash in the
+owning session/request row. The owner checks row identity, ownership, scope,
+expiry and revocation and performs any rotation atomically. No expiry defaults,
+session endpoints or deletion-status authentication are implemented by this
+helper.
+
+- Given issuance, when a credential is generated, then it has exactly 32 random
+  bytes represented by 43 base64url characters, and only its 32-byte hash is
+  suitable for persistence.
+- Given the issued token and stored hash, when verification uses the same
+  purpose, then it succeeds; a changed token or purpose fails. Padding,
+  non-canonical encodings, wrong lengths and malformed stored hashes are
+  rejected explicitly.
 
 ### Error contract
 
@@ -71,7 +185,7 @@ Use the module dependency list, main/AppModule/worker composition, public exempt
 
 `code` is stable and uppercase; use `<MODULE>_<REASON>` for new codes, retaining existing module-owned codes such as `VALIDATION_ERROR`, `SUGGESTION_SCOPE_DENIED`, `CSRF_INVALID`. Do not rename them in a foundation example. `message_key` is localized by the client; `details` is an allow-listed JSON object (empty `{}` when none), with validation paths but never submitted values. All five fields are required; HTTP status and `status` match, and the correlation header equals `correlationId`. Common codes: `COMMON_VALIDATION_FAILED` (400), `COMMON_UNAUTHENTICATED` (401), `COMMON_FORBIDDEN` (403), `COMMON_NOT_FOUND` (404), `COMMON_CONFLICT` (409), `COMMON_RATE_LIMITED` (429), `COMMON_UNAVAILABLE` (503), `COMMON_INTERNAL_ERROR` (500).
 
-Global filter handles validation, guards, domain/persistence failures and unexpected errors identically (no Nest default envelope, nested `error`, stack or SQL detail). DTO/OpenAPI/client tests assert the flat shape; older nested-envelope examples are not alternative wire formats. Money/IDs/version/cursor/JSON rules live once in [data-model](./data-model.md#json-and-concurrency-representations).
+Global filter handles validation, guards, domain/persistence failures and unexpected errors identically (no Nest default envelope, nested `error`, stack or SQL detail). Generated-contract checks and manual DTO/OpenAPI/client inspection verify the flat shape; older nested-envelope examples are not alternative wire formats. Money/IDs/version/cursor/JSON rules live once in [data-model](./data-model.md#json-and-concurrency-representations).
 
 The [starter invariant error catalogue](./data-model.md#starter-invariant-error-catalogue) is kept with shared wire contracts to leave room here for the complete reference. Module specs add codes only for documented failures; never reuse a code for a different condition.
 
@@ -86,7 +200,7 @@ F-VD-006 / F-AD-006, J9, BR-07/12; [Catalog BE](../catalog/be/catalog.md) owns D
 | `catalog/application/preparation` | `CatalogPreparation(reads,ids,clock)`: `pending(tx,input,owner,ctx)` returns a new version-1 pending entity; `resolution(tx,before,input,ctx)` returns `{next,subcategory?}` with version+1 and state-specific review fields. **Read/validate/plan only**, never persist or open a transaction. See validation rules below. |
 | `catalog/domain/taxonomy`, `catalog/domain/reads` | `TaxonomyRepository`/`TAXONOMY`: `insert(tx, NewSubcategory)` only. `CatalogReads`/`CATALOG_READS`: category/active-target lookups and normalized exact/fuzzy candidates inside `tx`; `scope(id)` is a read-only guard projection. `infrastructure/taxonomy` and `infrastructure/reads` implement these ports as `PrismaTaxonomyRepository`/`PrismaCatalogReads`; application never imports their implementations. |
 | `catalog/infrastructure/mapping`, `catalog/application/present` | `fromRow(PrismaSuggestion): Suggestion` (`PrismaSuggestion` aliases generated `SubcategorySuggestion`), `insertRow(Suggestion)` and `decisionColumns(Suggestion)` explicitly map fields/UTC dates; decision columns allow only Catalog's review/state/target/version/updatedAt changes, not owner/scope mass assignment. `suggestionDto(Suggestion)` returns Catalog's JSON-safe response/current version, never an ORM object. |
-| Runtime/Audit/testing modules | `RuntimeModule` exports shared tokens, `PrismaDatabase`, `ScopeRegistry`, `CLOCK`, `ID_PROVIDER`; `AuditModule` exports `AUDIT_WRITER`. `startCatalogHttpFixture()` uses **real bootstrap + guards + migrated isolated DB**, fixture actors/UUIDs, private fake OTP sink and real cookie/CSRF login; `headers(actor)` supplies those credentials/Origin and a fresh idempotency key, `snapshot(id)` queries actual suggestion/subcategory/outbox/audit rows, `close()` disposes DB/processes. No HTTP authorization mocks. |
+| Runtime/Audit modules | `RuntimeModule` exports shared tokens, `PrismaDatabase`, `ScopeRegistry`, `CLOCK`, `ID_PROVIDER`; `AuditModule` exports `AUDIT_WRITER`. Manual verification uses **real bootstrap + guards + migrated isolated DB**, synthetic actors/UUIDs, approved local OTP delivery and real cookie/CSRF login. Inspect actual suggestion/subcategory/outbox/audit rows and stop owned processes afterward. No authorization mocks or automated test harness. |
 
 Preparation applies Catalog's common normalization (Unicode/case/space folding + `unaccent`), checks exact duplicates including pending suggestions, and returns fuzzy candidates as `SUGGESTION_SIMILARITY_WARNING` unless `allowSimilar === true`; exact matches remain `SUGGESTION_DUPLICATE`. Recheck under transaction/unique constraints. Names use source 2–60 characters; suggestion `nameHi` stays optional. Approval uses existing Hindi or `approvalNameHi`; absence -> `VALIDATION_ERROR`, **never auto-translate**. Direct subcategory creation requires Hindi. Merge needs an active same-category `targetSubcategoryId`, not a new translation; reject needs reason. Creation/slug/matching policy is Catalog-owned; unresolved thresholds/slug rules are alignment gates, not guessed constants.
 
@@ -282,39 +396,14 @@ export class CatalogModule implements OnModuleInit {
 
 No sample method imports Prisma into application/domain or publishes an event directly. Repository uniqueness errors are translated to the existing Catalog duplicate/conflict codes; they do not choose “merge” or “approve”. The approval target insert, versioned suggestion change, dotted outbox events, audit and idempotent DTO commit together.
 
-```ts
-// domain/suggestion.test.ts
-import { expect, it } from 'vitest';
-import { assertPending } from './suggestion';
-it('Given version 3 pending, When version 3/2 or terminal is checked, Then only the current pending command passes', () => {
-  expect(() => assertPending({ status: 'pending', version: 3 }, 3)).not.toThrow();
-  expect(() => assertPending({ status: 'pending', version: 3 }, 2)).toThrow('CATALOG_VERSION_CONFLICT');
-  expect(() => assertPending({ status: 'merged', version: 4 }, 4)).toThrow('SUGGESTION_STATE_INVALID');
-});
-```
+Follow the [verification policy](../../AGENTS.md#4-hard-limits-non-negotiable); do not generate automated test files or fixtures. Manual Catalog acceptance:
 
-```ts
-// presentation/catalog.http.test.ts
-import { beforeEach, afterEach, expect, it } from 'vitest';
-import request from 'supertest';
-import { startCatalogHttpFixture, type CatalogHttpFixture } from '../testing/catalog-http-fixture';
-let h: CatalogHttpFixture;
-beforeEach(async () => { h = await startCatalogHttpFixture(); });
-afterEach(async () => { await h.close(); });
-it.each(['outsideAdmin', 'catalogViewer', 'customer'] as const)('Given %s, When deciding by HTTP, Then denied with no DB writes', async actor => {
-  const before = await h.snapshot(h.pending.id);
-  await request(h.app.getHttpServer()).post(`/api/catalog/admin/subcategory-suggestions/${h.pending.id}/decision`)
-    .set(await h.headers(actor)).send({ action: 'approve', expectedVersion: h.pending.version, approvalNameHi: h.approvalNameHi }).expect(403);
-  expect(await h.snapshot(h.pending.id)).toEqual(before);
-});
-it('Given in-scope admin, When approving, Then current version and real outbox/audit rows commit', async () => {
-  const res = await request(h.app.getHttpServer()).post(`/api/catalog/admin/subcategory-suggestions/${h.pending.id}/decision`)
-    .set(await h.headers('inScopeAdmin')).send({ action: 'approve', expectedVersion: h.pending.version, approvalNameHi: h.approvalNameHi }).expect(200);
-  expect(res.body.version).toBe(h.pending.version + 1);
-  const events = await h.db.outboxEvent.findMany({ where: { aggregateId: h.pending.id } });
-  expect(events.map(e => e.type)).toEqual(['catalog.subcategory_suggestion.approved']);
-  expect(await h.db.auditLog.count({ where: { entityId: h.pending.id } })).toBe(1);
-});
-```
+- Given a pending version-3 suggestion, when version 3 versus version 2 is submitted, then only the current version succeeds; a terminal suggestion rejects another decision.
+- Given an outside-area admin, catalog viewer or customer, when deciding by HTTP, then return 403 without domain/outbox/audit writes.
+- Given an in-scope authorized admin, when approving, then suggestion version increments and the subcategory, `catalog.subcategory_suggestion.approved` outbox row, audit and idempotent result commit atomically.
+- Given missing session/CSRF, when mutating, then 401/403 with the flat envelope; given spoofed business/city/area fields or a non-owner business context, when suggesting, then validation/ownership denial.
+- Given an exact/fuzzy duplicate, when submitting, then reject/warn with explicit `allowSimilar` for fuzzy only.
+- Given missing suggestion Hindi, when approving without/with `approvalNameHi`, then validation failure/bilingual creation; given merge target under another category, when merging, then 422 and no writes.
+- Given competing version-N decisions or failed audit/outbox insert, when committing, then one winner or complete rollback.
 
-Additional Given/When/Then HTTP acceptance: given missing session/CSRF, when mutating, then 401/403 with the flat envelope; given spoofed business/city/area fields or a non-owner business context, when suggesting, then validation/ownership denial; given an exact/fuzzy duplicate, when submitting, then reject/warn with explicit `allowSimilar` for fuzzy only; given missing suggestion Hindi, when approving without/with `approvalNameHi`, then validation failure/bilingual creation; given merge target under another category, when merging, then 422 and no writes; given competing version-N decisions or failed audit/outbox insert, when committing, then one winner or complete rollback. Assert actual DB rows with workers paused, then start the relay separately to test delivery—there is no nonexistent `outbox.publish` mock.
+Inspect actual DB rows with owned workers paused, then start the relay separately to verify delivery. Record unavailable scenarios; a type-check alone does not prove these outcomes.

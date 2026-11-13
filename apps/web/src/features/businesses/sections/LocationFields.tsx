@@ -1,0 +1,129 @@
+'use client';
+
+import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { TextArea } from '@apnatown/ui/primitives/TextArea';
+import { Button } from '@apnatown/ui/primitives/Button';
+import { MapView, type MapConfiguration } from '@apnatown/ui/geo/MapView';
+import {
+  CityAreaFields,
+  deviceFailure,
+  requestDeviceLocation,
+} from '../../geo';
+import { useFieldError, type SectionProps } from './shared';
+
+/** City → area (server derives the city from the area), address, optional pin. */
+export function LocationFields({
+  form,
+  set,
+  errors,
+  disabled,
+  mapConfig,
+  pinLabel,
+}: SectionProps & { mapConfig: MapConfiguration; pinLabel: string }) {
+  const t = useTranslations('business.fields');
+  const tm = useTranslations('business.location');
+  const error = useFieldError(errors);
+  const [locating, setLocating] = useState(false);
+  const [pinError, setPinError] = useState<string>();
+  async function locate() {
+    setLocating(true);
+    setPinError(undefined);
+    try {
+      set({ location: await requestDeviceLocation() });
+    } catch (failure) {
+      setPinError(tm(`device.${deviceFailure(failure)}`));
+    } finally {
+      setLocating(false);
+    }
+  }
+  return (
+    <>
+      <CityAreaFields
+        cityId={form.cityId}
+        areaId={form.areaId}
+        onChange={set}
+        disabled={disabled}
+        areaError={error('areaId')}
+        labels={{
+          city: t('city'),
+          chooseCity: t('chooseCity'),
+          area: t('area'),
+          chooseArea: t('chooseArea'),
+          cityFirst: t('cityFirst'),
+          loadingOptions: t('loadingOptions'),
+          moreOptions: t('moreOptions'),
+          failed: t('locationsFailed'),
+          retry: t('retry'),
+        }}
+      />
+      <TextArea
+        label={t('address')}
+        required
+        maxLength={300}
+        autoComplete="street-address"
+        value={form.addressText}
+        disabled={disabled}
+        error={error('addressText')}
+        onChange={(event) => set({ addressText: event.target.value })}
+      />
+      <div className="grid min-w-0 gap-2">
+        <p className="m-0 text-field-label font-semibold">
+          {tm('pin')}{' '}
+          <span className="font-normal text-muted">({t('optional')})</span>
+        </p>
+        <p className="m-0 text-small text-muted">{tm('pinHint')}</p>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            size="small"
+            variant="outline"
+            disabled={disabled || locating}
+            loading={locating}
+            onClick={() => void locate()}
+          >
+            <span aria-hidden="true">📍</span>{' '}
+            {tm(form.location ? 'updatePin' : 'usePin')}
+          </Button>
+          {form.location && (
+            <Button
+              size="small"
+              variant="text"
+              disabled={disabled}
+              onClick={() => set({ location: null })}
+            >
+              {tm('clearPin')}
+            </Button>
+          )}
+        </div>
+        {pinError && (
+          <p role="alert" className="m-0 text-small text-error">
+            {pinError}
+          </p>
+        )}
+        {form.location ? (
+          <div className="h-56 min-w-0 overflow-hidden rounded-md border border-border">
+            <MapView
+              config={mapConfig}
+              markers={[{ id: 'business', ...form.location, label: pinLabel }]}
+              selectedId="business"
+              onSelect={() => undefined}
+              labels={{
+                map: tm('map.label'),
+                loading: tm('map.loading'),
+                failed: tm('map.failed'),
+                retry: t('retry'),
+                privacy: tm('map.privacy'),
+                zoomIn: tm('map.zoomIn'),
+                zoomOut: tm('map.zoomOut'),
+              }}
+            />
+          </div>
+        ) : (
+          <p className="m-0 rounded-md bg-surface-2 p-3 text-small text-text-2">
+            {tm('noPin')}
+          </p>
+        )}
+      </div>
+    </>
+  );
+}

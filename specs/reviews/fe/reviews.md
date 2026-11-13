@@ -4,7 +4,7 @@ Features: F-RV-001, F-RV-002, F-RV-003, F-RV-004, F-RV-005, F-RV-006, F-RV-007, 
 
 Backend contract: [BE reviews](../be/reviews.md)
 
-Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Tests](#tests)
+Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Verification](#verification)
 
 ## Routes and rendering
 
@@ -57,6 +57,10 @@ Public review sections (product F-PD-007, shop/provider/service) use `ReviewsSec
 - Delivery owns the route/shell; `GET /reviews/riders/me` supplies the rider's own aggregate and comments. Public rider review discovery remains RV-Q3-gated.
 - Acceptance: Given a rider, when feedback loads, then only their target's reviews appear; a modified rider ID never selects another rider's private feedback.
 
+### Implemented slice: owner reviews (2026-11-13)
+
+- `/vendor/reviews`, `/provider/reviews` → `features/reviews/owner/OwnerReviewsScreen` (shared by kind): `RatingSummary`, URL `?filter=all|needs_reply|reported&rating=1..5` chips/select with server counts, `ReviewItem` (new `context`/`children` slots) + `OwnerReplyEditor` (reply/edit/remove) + `ReportReviewAction` sheet (abusive/spam/fake/other), Load more, per-filter empty, shared owner read states. Keys `reviews.owner.*` (EN+HI). Not optimistic: success re-reads all filter pages/counts.
+
 ## Feature components
 
 `ReviewsSection` (summary/list/Write/Helpful/Report), `ReviewForm`, `ReviewCard`, `OwnerReplyEditor`, `ReportReviewSheet` in `src/features/reviews`. Shared: `Rating`, `Chip`, `Sheet`, `ModerationQueueItem`, `DataTable`, `Toast`; no duplicated rating or proof logic in UI.
@@ -65,6 +69,8 @@ Public review sections (product F-PD-007, shop/provider/service) use `ReviewsSec
 
 Prefix `reviews.*`, `admin.reviews.*`. Events: `review_submitted`, `review_helpful_marked`, `review_reported`, `review_replied`, `review_moderated`.
 
-## Tests
+## Verification
 
-Component/axe: rating keyboard, required text, provider versus service tags, Helpful pressed/count state, report/reply sheets, owner Reported filter, topmost Esc, Hindi/dark layouts. E2E J1/J14 use approved eligibility-policy fixtures; unresolved fixtures assert blocked writes, not presumed converted eligibility. Cover existing-ID edit hydration, wrong-owner/proof denial, report → hide → restore with exact counts, duplicate votes/reports, failed upload/retry and malicious plain text. Account deletion/export UI remains Users-owned; clear personal cached review state on session invalidation.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Manual UI/accessibility: rating keyboard, required text, provider versus service tags, Helpful pressed/count state, report/reply sheets, owner Reported filter, topmost Esc, Hindi/dark layouts. Manual journey J1/J14 use approved eligibility-policy synthetic scenarios; unresolved synthetic scenarios assert blocked writes, not presumed converted eligibility. Cover existing-ID edit hydration, wrong-owner/proof denial, report → hide → restore with exact counts, duplicate votes/reports, failed upload/retry and malicious plain text. Account deletion/export UI remains Users-owned; clear personal cached review state on session invalidation.

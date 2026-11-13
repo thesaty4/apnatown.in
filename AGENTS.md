@@ -27,37 +27,44 @@ that every change must preserve.
 docs/FEATURE_INVENTORY.md (not started)
         |
         v
-  spec-writer  -> specs/<module>/be/*.md + fe/*.md (BE<->FE linked)
-        |
-        v
-  architect (for cross-module or new-module work; otherwise skip)
+  architect -> linked BE/FE specs; design review for cross/new-module work
         |
         v
   developer-backend  and/or  developer-frontend
         |
         v
-  security-auditor  (required for auth/payments/uploads/admin-permissions/communications)
+  security-auditor (required for sensitive changes; see security.instructions.md)
         |
         v
-  code-reviewer   -- Blocker found? --> back to developer-* (max 3 loops, then escalate to a human)
+  architect (read-only code review)
+        |        -- Blocker found? --> developer-* (max 3 loops, then human)
         |
         v  APPROVE
-  pr-creator  -> opens PR, requests human review
+  owning developer-backend/frontend -> opens PR, requests human review
         |
         v
       human merges (agents never merge)
+        |
+        v
+  architect (optional release notes/checklist) -> human executes release
 ```
 
-`bug-fixer` enters this lifecycle at `developer-*` for an existing
-regression (reproduce -> failing test -> minimal fix -> verify ->
-lesson entry). `release-manager` runs after merge, never deploys.
+Existing regressions enter at the relevant developer agent: inspect the
+reported failure -> minimal fix -> build and fix errors -> reusable lesson, then the same
+security/review/PR gates. For combined BE/FE work, choose one developer as
+PR owner. Spec writing and read-only code review are separate architect
+modes; release preparation is only performed when requested after merge.
 
 ## 3. Agent roster
 
-See `.github/agents/*.agent.md` for each agent's full instructions:
-`spec-writer`, `architect`, `developer-backend`, `developer-frontend`,
-`code-reviewer`, `security-auditor`, `bug-fixer`, `pr-creator`,
-`release-manager`.
+The four agents in `.github/agents/` are:
+
+| Agent | Responsibilities |
+|---|---|
+| [architect](.github/agents/architect.agent.md) | BE/FE specs, architecture/ADRs, read-only general code review, release preparation |
+| [developer-backend](.github/agents/developer-backend.agent.md) | Backend implementation, bug fixes and PR creation after review |
+| [developer-frontend](.github/agents/developer-frontend.agent.md) | Frontend implementation, bug fixes and PR creation after review |
+| [security-auditor](.github/agents/security-auditor.agent.md) | Required read-only security review for sensitive changes |
 
 ## 4. Hard limits (non-negotiable)
 
@@ -70,20 +77,30 @@ See `.github/agents/*.agent.md` for each agent's full instructions:
 - **No secrets, tokens, or real PII** in code, commits, logs, or test
   fixtures. Use `.env.example` and fakes (`integrations.instructions.md`).
 - **Small PRs.** One feature/task/bug per PR; link its spec.
-- **Security-auditor is required**, not optional, before `pr-creator`
-  for any change touching `auth`, `payments`, uploads/CSV, embeds,
-  admin permissions, or `communications`.
+- **Implementation scope:** implement, run the affected build, and fix
+  related build errors only. Do not start Docker/runtime services, apply
+  migrations/seeds, run manual API/DB/browser checks, or generate
+  automated test files. Report deferred runtime checks honestly.
+- **Media/map choices are fixed:** use the
+  [integration contract](specs/_foundation/media-and-maps.md), not a new
+  provider proposal. Public Cloudinary images, private documents, link-only
+  video and policy-compliant Leaflet/OSM maps have separate boundaries.
+- **Security-auditor is required**, not optional, before PR creation
+  for sensitive changes defined in `security.instructions.md`.
 - **Don't invent product behaviour.** If section 2 of the original
   product brief (now `docs/PROJECT.md`/`docs/FEATURE_INVENTORY.md`) is
   ambiguous, add it to `docs/project/12-decisions-assumptions-open-questions.md` and ask,
   rather than guessing.
 - **Preserve invariants.** The business rules (BR-01..BR-22) in
-  `docs/project/04-business-rules.md` are enforced by `code-reviewer`
+  `docs/project/04-business-rules.md` are enforced by `architect` review
   on every PR; a Blocker there always means CHANGES_REQUESTED.
+- **PR gates:** the owning developer opens a PR only after `architect`
+  returns `APPROVE` and `security-auditor` returns `PASS` when required.
+  The developer never approves or merges their own PR.
 
 ## 5. Escalation rules
 
-- `code-reviewer` escalates to a human after 3 review loops with
+- `architect` escalates to a human after 3 code-review loops with
   unresolved Blockers.
 - Any agent escalates immediately (instead of guessing) when: a product
   invariant conflicts with a request, a change would touch
@@ -98,8 +115,8 @@ See `.github/agents/*.agent.md` for each agent's full instructions:
 Record durable lessons (bugs that recurred, footguns, conventions that
 prevented a bug class) in `docs/ai/LESSONS_LEARNED.md` — not in PR
 descriptions alone. Every agent reads it before starting non-trivial
-work in a module it covers, and every `bug-fixer` run ends by adding or
-updating an entry there.
+work in a module it covers. Developer bug-fix runs add or update an entry
+when they reveal a reusable lesson, per the `lessons-learned` skill.
 
 ## 7. How the pieces fit together
 

@@ -4,7 +4,7 @@ Features: F-SA-005, F-AC-005, F-AC-006, F-X-009 | Screens: S-SUPR-06, S-CUST-30,
 
 Backend contract: [BE settings](../be/settings.md)
 
-Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Tests](#tests)
+Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Verification](#verification)
 
 ## Routes and rendering
 
@@ -28,6 +28,11 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 - Commission & plans: default commission %, platform fee ₹, plan rows (localized name, tax-inclusive ₹/calendar month, commission %, enabled and Premium entitlement), promotion fee rows (tax-inclusive ₹/7 days). Use the server's fixed term rules; no auto-renew/proration controls or sample price fallback.
 - Payments: Online payments / Cash on delivery toggles; approved configured gateway choices; "Configured"/"Not configured" badge, no key input or silently selected provider. A separate versioned Tax configuration card edits verified platform supplier/classifications and displays missing readiness fields; it never infers a GST rate or claims regex validation proves registration.
 - Policies: approved refund window; review rule EN/HI textarea; blocked words chips. Rule copy cannot resolve Reviews' eligibility/re-review gates. A separate Upload policies card shows Media's approved limits/hard ceilings and saves `uploads` independently, without changing `policies_reviews` group semantics.
+- Upload policies also shows Cloudinary image readiness from the server,
+  without credential entry or provider URLs. Link-only video, separate private
+  documents and deployment-owned map/embedding configuration follow
+  [media and maps](../../_foundation/media-and-maps.md); image readiness
+  never enables a video-file upload control.
 - Notifications & WhatsApp: configured sender/status/enable toggle, SMS adapter and email sender; **public support Call and WhatsApp E.164 destinations**. No secrets or example phone number.
 - SEO: default title/description with search-result preview.
 - Feature flags: Customer reviews, Guest browsing, WhatsApp, Maintenance; future Booking/Donations visible **false, disabled, unavailable** until separately implemented.
@@ -80,6 +85,8 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 
 Prefixes `superAdmin.settings.*`, `help.*`, `legal.*`, `system.*`. Events: `settings_saved`, `feature_flag_toggled`, `support_message_sent`, `error_page_shown`.
 
-## Tests
+## Verification
 
-Component/axe: atomic group payloads/versions, error focus and retained drafts, keyboard tabs/toggles/FAQ, paise/bps transforms, Hindi/dark, legal sanitisation, message-only support and null contacts. E2E J10: grouped Save versus stale-member rollback; future flags remain false; support→real admin alert/detail with scope denial; flag/legal cache refresh; maintenance→Auth recovery→disable→health recovery without new-charge replay. Verify signed callbacks and admitted in-flight correctness are not intercepted by the frontend redirect.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Manual UI/accessibility: atomic group payloads/versions, error focus and retained drafts, keyboard tabs/toggles/FAQ, paise/bps transforms, Hindi/dark, legal sanitisation, message-only support and null contacts. Manual journey J10: grouped Save versus stale-member rollback; future flags remain false; support→real admin alert/detail with scope denial; flag/legal cache refresh; maintenance→Auth recovery→disable→health recovery without new-charge replay. Verify signed callbacks and admitted in-flight correctness are not intercepted by the frontend redirect.

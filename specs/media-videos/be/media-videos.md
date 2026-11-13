@@ -10,13 +10,18 @@ Contents: [Tables](#tables) · [Assets](#canonical-assetport-and-consumers) · [
 
 Own canonical uploaded-file identities/storage, gallery photos, videos, safe embeds, media reports and frozen Reels ranking. Other modules reference AssetPort-issued IDs and own only placement/document-purpose metadata. Engagement owns social relationships/comments; this module holds their counter projections. Final `js24`–`js27` overrides earlier behavior.
 
+Provider implementation follows [media and maps](../../_foundation/media-and-maps.md):
+Cloudinary stores sanitized public-purpose images behind the existing gateway;
+private documents remain separate. The 2026-11-12 user decision makes videos
+YouTube/Instagram links only and overrides the prototype's file-upload option.
+
 ## Tables
 
 | Table | Columns and constraints | Indexes (query served) |
 |---|---|---|
-| `media_assets` | `id uuid PK`; `owner_user_id uuid NOT NULL FK users`; `business_id uuid NULL FK businesses`; `purpose text NOT NULL CHECK ('product','service','gallery','business_profile','offer_banner','catalog_taxonomy','video_file','video_thumbnail','review_photo','case_evidence','kyc_document')`; `subject_type text NULL`; `subject_id uuid NULL`; `visibility text NOT NULL CHECK ('public','private')` (server-derived; evidence/KYC always private); `moderation_state text NOT NULL DEFAULT 'allowed' CHECK ('allowed','removed')`; `storage_key text NOT NULL UNIQUE`; `mime_type text NOT NULL`; `bytes bigint NOT NULL CHECK >0`; `width/height/duration_s int NULL`; `version int NOT NULL DEFAULT 1`; `created_at timestamptz`; `deleted_at timestamptz NULL` | `(owner_user_id,created_at,id)` account export; `(business_id,purpose,created_at DESC,id DESC)` attach/manage |
+| `media_assets` | `id uuid PK`; `owner_user_id uuid NOT NULL FK users`; `business_id uuid NULL FK businesses`; `purpose text NOT NULL CHECK ('product','service','gallery','business_profile','offer_banner','catalog_taxonomy','video_thumbnail','review_photo','case_evidence','kyc_document')`; `subject_type text NULL`; `subject_id uuid NULL`; `visibility text NOT NULL CHECK ('public','private')` (server-derived; evidence/KYC always private); `moderation_state text NOT NULL DEFAULT 'allowed' CHECK ('allowed','removed')`; `storage_provider text NOT NULL CHECK ('cloudinary','private')`; `storage_key text NOT NULL UNIQUE`; `mime_type text NOT NULL`; `bytes bigint NOT NULL CHECK >0`; `width/height int NULL`; `version int NOT NULL DEFAULT 1`; `created_at timestamptz`; `deleted_at timestamptz NULL` | `(owner_user_id,created_at,id)` account export; `(business_id,purpose,created_at DESC,id DESC)` attach/manage |
 | `gallery_photos` | `id uuid PK`; `business_id uuid NOT NULL FK businesses`; `media_asset_id uuid NOT NULL UNIQUE FK media_assets`; `caption text NULL CHECK <=200`; `linked_target_type text NULL CHECK ('product','service')`; `linked_target_id uuid NULL`; `sort_order int NOT NULL DEFAULT 0`; `heart_count int NOT NULL DEFAULT 0`; `version int NOT NULL DEFAULT 1`; `created_at/updated_at` | `(business_id,sort_order,id)` gallery |
-| `videos` | `id uuid PK`; `business_id uuid NOT NULL FK businesses`; `source text NOT NULL CHECK ('youtube','instagram','upload')`; `provider_kind text NULL CHECK ('watch','shorts','reel','p','tv')`; `provider_video_id text NULL` (provider-specific strict ID validation); `file_asset_id/thumbnail_asset_id uuid NULL FK media_assets`; `caption text NULL CHECK length <=300`; `hashtags text[] NOT NULL DEFAULT '{}'` (max 10); `show_in_gallery/show_in_reels bool NOT NULL`; `status text NOT NULL CHECK ('pending','approved','rejected','removed')`; `decision_reason text NULL`; `approved_at timestamptz NULL`; `owner_deleted_at timestamptz NULL`; `sort_order int NOT NULL DEFAULT 0`; `view_count/like_count/comment_count/share_count bigint NOT NULL DEFAULT 0 CHECK >=0`; `engagement_version bigint NOT NULL DEFAULT 0`; `version int NOT NULL DEFAULT 1`; timestamps; upload requires file only, embed requires validated provider ID only | `(status,show_in_reels,id)` candidates; `(business_id,sort_order,id)` manager/profile; `(status,created_at,id)` moderation; GIN hashtags |
+| `videos` | `id uuid PK`; `business_id uuid NOT NULL FK businesses`; `source text NOT NULL CHECK ('youtube','instagram')`; `provider_kind text NOT NULL CHECK ('watch','shorts','reel','p')`; `provider_video_id text NOT NULL` (provider-specific strict ID validation); `thumbnail_asset_id uuid NULL FK media_assets`; `caption text NULL CHECK length <=300`; `hashtags text[] NOT NULL DEFAULT '{}'` (max 10); `show_in_gallery/show_in_reels bool NOT NULL`; `status text NOT NULL CHECK ('pending','approved','rejected','removed')`; `decision_reason text NULL`; `approved_at timestamptz NULL`; `owner_deleted_at timestamptz NULL`; `sort_order int NOT NULL DEFAULT 0`; `view_count/like_count/comment_count/share_count bigint NOT NULL DEFAULT 0 CHECK >=0`; `engagement_version bigint NOT NULL DEFAULT 0`; `version int NOT NULL DEFAULT 1`; timestamps; source/kind pairing and validated provider ID required, no uploaded file source | `(status,show_in_reels,id)` candidates; `(business_id,sort_order,id)` manager/profile; `(status,created_at,id)` moderation; GIN hashtags |
 | `video_links` | `video_id uuid FK videos`; `target_type text CHECK ('product','service')`; `target_id uuid`; `sort_order int`; PK `(video_id,target_type,target_id)` | `(target_type,target_id)` (product/service "Videos & Reels" section) |
 | `media_reports` | `id uuid PK`; `target_kind text NOT NULL CHECK ('photo','video')`; `asset_id uuid NULL FK media_assets`; `video_id uuid NULL FK videos`; CHECK exactly the target-kind reference is set; `business_id uuid NOT NULL FK businesses`; `placement_type text NULL CHECK ('gallery_photo','product_image','service_image')`; `placement_id uuid NULL`; `reporter_user_id uuid NULL FK users`; `reporter_subject_hash bytea NOT NULL`; `reason text NOT NULL CHECK ('inappropriate','misleading','spam','copyright','other')`; `details text NULL CHECK length <=500`; `status text NOT NULL DEFAULT 'open' CHECK ('open','resolved')`; `resolution text NULL CHECK ('dismissed','removed')`; `resolved_at timestamptz NULL`; `version int NOT NULL DEFAULT 1`; `created_at`; unique open target+placement+subject | `(business_id,status,created_at,id)` scoped Reported queue; `(asset_id,status)`, `(video_id,status)` |
 | `business_media_order` | `business_id uuid PK FK businesses`; `video_order_version/gallery_order_version int NOT NULL DEFAULT 1` | PK for atomic reorder |
@@ -31,7 +36,7 @@ Reporting is **not** a video approval status (`js27.js:25,35`). A reported appro
 |---|---|
 | `AssetPort.upload(ctx,{purpose,businessId?,subject?,file,idempotencyKey})` | → `{assetId,status:'ready',purpose,visibility,mimeType,bytes,previewPath?}` only after synchronous content validation/sanitization, durable storage acknowledgement and metadata commit. Actor/owner/visibility are server-derived; enforce configured caps/MIME and strip EXIF/GPS. No raw key/client URL accepted or returned |
 | `AssetPort.validateAttachment(ctx,{assetId,purpose,businessId?,subject})` | → `{assetId}` only after matching owner/delegated authority, purpose, business/resource, ready/not-deleted/not-removed state. Same-business alone cannot authorize a different user's asset. Validate inside the attaching transaction |
-| `AssetPort.resolvePrivate(ctx,{assetId,consumer,resourceId})` | Calls owning `AssetAccessPort.authorize({actor,assetId,resourceId,operation:'view'})`; returns ≤5-minute signed view only on success. No generic “uploader can read all KYC/evidence” bypass; never log URLs |
+| `AssetPort.resolvePrivate(ctx,{assetId,consumer,resourceId})` | Calls owning `AssetAccessPort.authorize({actor,assetId,resourceId,operation:'view'})`; private documents get a ≤5-minute signed view only on success, while Cloudinary image previews stay behind a same-origin owner-authorized no-store route. No generic “uploader can read all KYC/evidence” bypass; never log URLs |
 | `AssetPort.resolvePublic({assetIds[],publicationContext})` | Resolves only currently authorized public placements (business approval, item/media publication, effective consent, or active taxonomy); `visibility=public` alone is not public authorization |
 | Businesses | `logoAssetId/coverAssetId` use `business_profile`; `documents.assetId` uses private `kyc_document`. Businesses retains document kind/application metadata, not duplicate storage/type/size ownership. Its existing multipart endpoints delegate upload and attachment validation here |
 | Delivery | Rider application docs reference `kyc_document` IDs; applicant upload is allowed through Delivery's own application context even before approval/rider role assignment. Private views delegate to Delivery approvals permission/scope |
@@ -40,11 +45,15 @@ Reporting is **not** a video approval status (`js27.js:25,35`). A reported appro
 | Catalog | Category/subcategory `imageAssetId` uses `catalog_taxonomy`; global upload/attachment requires `super_admin`, exact category/subcategory association is checked on attach and public resolution, and inactive taxonomy is not publicly resolved |
 | Reviews / Orders | `review_photo` belongs to the review author; private `case_evidence` attachment is authorized by Orders' customer/rider/scoped-admin case context. Orders, not Media, decides permitted uploaders/viewers |
 
-`MediaPublicAssetDTO={assetId,publicUrl,mimeType,width?,height?,durationS?,altText?}` uses a same-origin content URL, not a storage key. Its `PublicationContext={placementType,placementId,surface}` has allow-listed placement types `business|product|service|offer|promotion|gallery_photo|video|review|catalog_category|catalog_subcategory` and surfaces `card|detail|gallery|reels|home`. Resolve the actual attachment and the owning module's surface policy; a supplied context is never proof of publication. Unsupported combinations fail closed.
+`MediaPublicAssetDTO={assetId,path,mimeType,width?,height?,durationS?,altText?}` uses a root-relative same-origin content path validated by `MediaGatewayPathSchema`, not an absolute provider URL or storage key. Its `PublicationContext={placementType,placementId,surface}` has allow-listed placement types `business|product|service|offer|promotion|gallery_photo|video|review|catalog_category|catalog_subcategory` and surfaces `card|detail|gallery|reels|home`. Resolve the actual attachment and the owning module's surface policy; a supplied context is never proof of publication. Unsupported combinations fail closed.
 
 Vendor/provider **applicants** may upload their own draft/pending/rejected/changes-requested application documents/profile assets; do not require approved seller status for onboarding. Suspended applicants cannot use a generic upload to bypass owner-state restrictions. Authorized admin uploads require the consuming module permission and scope; global uses require super_admin.
 An asset row exists only after the configured synchronous upload succeeds; `ready` is not a fabricated asynchronous-processing status. Storage/validation failure returns an error with no attachable asset. A future provider needing asynchronous processing must add its real status/poll contract before enabling that path, not return ready prematurely. Idempotency stores the asset reference, not a signed preview URL; replay reauthorizes and resolves a fresh preview.
-Public still-image limits are resolved below (Q-46/Q-53/Q-66/Q-81); deployed StoragePort readiness remains required. Video hosting/transcoding and private-document/evidence policies Q-03/Q-40/Q-80 remain separate; do not apply public-image defaults to private KYC/PDF/video uploads. Validated link-based video flows remain available.
+Public still-image limits are resolved below (Q-46/Q-53/Q-66/Q-81); Cloudinary
+StoragePort readiness remains required. Direct video hosting/transcoding is
+disabled by the user-confirmed launch scope. Private-document/evidence policies
+Q-40/Q-80 remain separate; public-image defaults never authorize KYC/PDF uploads.
+Validated link-based video flows do not depend on Cloudinary readiness.
 Taxonomy image upload adds `catalog_taxonomy` to the Media purpose allow-list and requires a configured image policy before enabling the form. Extract/store intrinsic width and height for attached taxonomy assets so Catalog can reserve layout space. Category/subcategory publication is checked against the exact active taxonomy attachment; removed/inactive associations do not resolve publicly. Expand the purpose constraint in the forward migration; no prior taxonomy image rows exist to backfill.
 
 ### Public image policy
@@ -62,20 +71,23 @@ Taxonomy image upload adds `catalog_taxonomy` to the Media purpose allow-list an
 - Resize inside the original aspect ratio. Card/banner `object-fit` uses its existing token-backed container; uploader previews cropping, but does not bake translated text into the image. Taxonomy cards may use square display crop; service/product detail preserves full aspect ratio. Smaller inputs reuse the largest available variant rather than upscaling.
 - Begin WebP quality 80; reduce by 5 down to 60 to meet the listed per-variant byte ceiling. If the ceiling cannot be met, return `MEDIA_IMAGE_PROCESSING_FAILED` (422, `errors.media.imageProcessingFailed`) and keep the existing attachment. These are testable targets, not claimed benchmark results.
 - `ImagePolicy={version,allowedMimeTypes,maxBytes,minWidth,minHeight,maxWidth,maxHeight,maxPixels,variants:[{width,maxBytes}],quality:80,minQuality:60}` is Media-owned/shared Zod; Settings stores validated per-purpose values. Overrides may only tighten. Shared `PublicImageVariantDTO={width,height,mimeType:'image/webp',bytes,path}` is the sole wire shape; public assets expose `variants:PublicImageVariantDTO[]`. Original-decoded dimensions are distinct from delivered dimensions.
-- Variant `path` is server-built `/media/public/{assetId}?placementType={type}&placementId={id}&surface={surface}&variantWidth={width}&assetVersion={version}`. Validate width/version against stored descriptors (no arbitrary transforms/URLs); every GET/HEAD/206/304 uses the existing current placement authorization before bytes. Metadata stores `{width,height,mimeType,bytes,storageVariantKey,assetVersion}` internally, never a reusable public path. Resolution derives placement-specific paths; private owner previews use the existing private capability, not an unapproved public path. All consumers import this DTO; do not alias it as `url`.
+- Variant `path` is server-built `/media/public/{assetId}?placementType={type}&placementId={id}&surface={surface}&variantWidth={width}&assetVersion={version}`. Validate width/version against stored descriptors (no arbitrary transforms/URLs); every GET/HEAD/206/304 uses the existing current placement authorization before bytes. Metadata stores `{width,height,mimeType,bytes,storageVariantKey,assetVersion}` internally, plus a private Cloudinary reference `{assetId,publicId,version,resourceType:'image',deliveryType:'authenticated'}` per stored variant. Provider asset IDs never replace canonical Media IDs. Resolution derives placement-specific paths; owner previews use the same-origin private capability, not an unapproved public path. All consumers import this DTO; do not alias it as `url`.
 - Decode/resize work is bounded to two concurrent requests per worker process, a 256 MiB per-job memory budget and 10-second processing deadline; busy returns 429 with retry metadata, unavailable storage/processor returns 503. No unbounded in-request queue or silent original-file fallback. Return `status:'ready'` only after all variants are durably stored and metadata commits; partial storage failure produces no attachable asset and queues targeted orphan cleanup.
 - Replacing/removing an asset changes the owning attachment/version, emits existing invalidation events and uses new immutable variant URLs. Old referenced historical assets are not globally deleted by replacement. Every public variant route retains current attachment/publication checks; a cache hit cannot bypass revocation.
 - FE Uploader reads the safe policy, shows allowed formats/dimensions/size and an actionable conversion/compression error in EN/HI. Reserve intrinsic dimensions, `srcset/sizes`, priority only for the actual above-fold LCP image, lazy-load below-fold; banners put live localized text on a contrast-safe token surface.
 - Acceptance: Given exactly 5 MiB versus one byte over, edge/pixel-limit boundaries, spoofed MIME, animation or GPS metadata, then the server accepts only decodable in-policy content and sanitized ready outputs. Given hard-to-compress fixtures, then every delivered variant meets its byte ceiling or the request fails explicitly; failed replacement retains the previous image. Given six concurrent requests or a timeout, then bounded work/backpressure prevents unbounded allocation.
 
-Reference: [OWASP file-upload guidance](https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html). Retain StoragePort, ownership, moderation and private-asset boundaries; no new media hosting or queue product is selected.
+References: [OWASP file-upload guidance](https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html)
+and [Cloudinary delivery/upload contract](../../_foundation/media-and-maps.md#cloudinary-public-images).
+Retain StoragePort, ownership, moderation and private-asset boundaries; selecting
+Cloudinary images does not select video hosting or a new queue product.
 
 ## Endpoints
 
 | Method | Path | Auth, role, permission, scope | Request → response | Errors | Idempotent | Features / screens |
 |---|---|---|---|---|---|---|
 | POST | `/media/uploads` | Authenticated; AssetPort purpose/application/ownership checks above | multipart `{purpose,businessId?,subject?,file}` → AssetPort upload DTO | `MEDIA_TYPE_NOT_ALLOWED`, `MEDIA_TOO_LARGE`, `MEDIA_UPLOAD_POLICY_REQUIRED`, `FORBIDDEN` | Required key | all upload surfaces |
-| GET | `/media/private/{assetId}?consumer=&resourceId=` | Owning private-view authorization, exact approval/case scope | → no-store 302 to short-lived signed URL; guessed association denied | `MEDIA_NOT_FOUND` | Yes | BR-14 |
+| GET | `/media/private/{assetId}?consumer=&resourceId=` | Owning private-view authorization, exact approval/case scope | → no-store private-document 302 to short-lived signed URL, or same-origin bytes for a Cloudinary image preview; guessed association denied, no Cloudinary redirect | `MEDIA_NOT_FOUND` | Yes | BR-14 |
 | GET/HEAD | `/media/public/{assetId}?placementType=&placementId=&surface=` | Public only after current exact attachment/moderation/owner/consent checks | → validated media bytes/headers via StoragePort; authorize before 200/206/304; validated single-byte-range support, MIME + nosniff, `Cache-Control: private, no-cache`; no redirect to a permanent storage URL | `MEDIA_NOT_FOUND`, `COMMON_VALIDATION_FAILED`, `MEDIA_RANGE_INVALID` | Yes | public asset surfaces |
 | GET | `/businesses/{slug}/gallery?filter=all\|photos\|videos\|product\|service&cursor=` | Public; approved business | → gallery-only photos + product/service images with gallery consent + approved videos with `show_in_gallery` | — | Yes | F-PF-009, S-CUST-06, S-CUST-07 |
 | GET | `/businesses/{slug}/videos?cursor=` | Public | → approved Reels-visible videos (thumbnail, view count) | — | Yes | F-PF-010 |
@@ -85,7 +97,7 @@ Reference: [OWASP file-upload guidance](https://cheatsheetseries.owasp.org/cheat
 | POST | `/videos/{id}/views` | Public; per session dedupe | → 204 | — | Yes | F-RL-003 |
 | POST | `/videos/{id}/reports` | Public visible video, optional session; subject/abuse limits | `{reason,details?}` → `202 {reportId}` in `media_reports`; approval unchanged | `MEDIA_NOT_FOUND`, `COMMON_RATE_LIMITED` | Required key; duplicate acknowledgement | F-RL-005 |
 | POST | `/media/photos/{assetId}/reports` | Public visible photo placement; optional session | `{placementType,placementId,reason,details?}` → `202 {reportId}`; asset/business/placement validated, not matched by title | `MEDIA_NOT_FOUND`, `COMMON_RATE_LIMITED` | Required key; duplicate acknowledgement | F-PF-009 |
-| GET/POST | `/businesses/me/videos` | Approved vendor/provider; own business | `{url? \| fileAssetId?, thumbnailAssetId?, caption, hashtags[], links[], showInGallery, showInReels}` → video `pending` | `MEDIA_EMBED_HOST_NOT_ALLOWED`, `MEDIA_EMBED_ID_INVALID`, `MEDIA_LINK_TARGET_INVALID` | Required key | F-VD-012, F-RL-010, S-VEND-11, S-PROV-12 |
+| GET/POST | `/businesses/me/videos` | Approved vendor/provider; own business | `{source:VideoSource,thumbnailAssetId?,caption,hashtags[],links[],showInGallery,showInReels}` → video `pending`; no file source | `MEDIA_EMBED_HOST_NOT_ALLOWED`, `MEDIA_EMBED_ID_INVALID`, `MEDIA_LINK_TARGET_INVALID` | Required key | F-VD-012, F-RL-010, S-VEND-11, S-PROV-12 |
 | GET/PATCH/DELETE | `/businesses/me/videos/{id}` | Approved vendor/provider; own business/video | GET edit DTO/version; PATCH `VideoEdit` below; DELETE `{expectedVersion}` → owner-removed tombstone | `MEDIA_NOT_FOUND`, `MEDIA_VERSION_CONFLICT` | Version/key | F-VD-012, F-VD-013 |
 | GET/POST/PATCH/DELETE | `/businesses/me/gallery[/{id}]` | Approved owner | `{assetId,caption?,linkedTarget?,expectedVersion?}`; asset purpose gallery, links same business | `MEDIA_NOT_FOUND` | Key/version for writes | F-VD-012 |
 | GET/PUT | `/businesses/me/videos/order` · `/businesses/me/gallery/order` | Approved owner; every ID belongs to own manager list | GET `{orderedIds[],orderVersion}`; PUT `{orderedIds[],expectedOrderVersion}` → order/version, all-or-nothing; exact list membership, no duplicate IDs | `MEDIA_VERSION_CONFLICT`, `MEDIA_LINK_TARGET_INVALID` | Yes | F-VD-012 |
@@ -98,12 +110,18 @@ The gallery-consent default (`business_settings.gallery_media_default`) is read 
 
 Gallery photo rows include `{kind:'photo',assetId,placementType,placementId,businessId,caption?,linkedTarget?,publicPath}`. `placementId` is the gallery_photos row ID, Product ID or Service ID respectively; `(placementType,placementId,assetId)` identifies an actual current attachment, never an array index. Video rows use `{kind:'video',videoId,...}`. Reported queue rows expose `{reportId,targetKind,assetId?|videoId?,placementType?,placementId?,reason,details?,status,resolution?,reportVersion,targetVersion,allowedActions}`; targetVersion is the asset/video version, distinct from the report version.
 
-`VideoEdit={source?:{kind:'youtube'|'instagram',url}|{kind:'upload',fileAssetId},thumbnailAssetId?,caption?,hashtags?,links?:[{targetType:'product'|'service',targetId}],showInGallery?,showInReels?,resubmit?:true,expectedVersion}`. Source union replaces old source atomically; same embed/asset checks as create. Rejected→pending requires explicit `resubmit:true`; merely toggling consent is not a resubmission. Source/content replacement of approved content re-enters pending before any public read. Removed owner content cannot be resubmitted.
+`VideoSource={kind:'youtube'|'instagram',url}` and
+`VideoEdit={source?:VideoSource,thumbnailAssetId?,caption?,hashtags?,links?:[{targetType:'product'|'service',targetId}],showInGallery?,showInReels?,resubmit?:true,expectedVersion}`.
+Source replacement is atomic; the same embed/asset checks apply as on create.
+Reject `kind:'upload'`, file fields and `video_file` purposes before storage.
+Rejected→pending requires explicit `resubmit:true`; merely toggling consent is
+not resubmission. Source/content replacement of approved content re-enters
+pending before any public read. Removed owner content cannot be resubmitted.
 
 ## Rules and use-cases
 
-1. **Uploads:** use the canonical AssetPort contract above, configured allowlist/caps and StoragePort fake; no direct storage SDK/duplicated asset table in consumers. Client MIME/extension alone never establishes type.
-2. **Embeds (RL10):** accept only `youtube.com`, `youtu.be`, `instagram.com` (`/reel/`, `/p/`, `/tv/`); extract the ID with strict regex; store `(source, provider_kind, provider_video_id)` only. The response builds `embedUrl` server-side (`https://www.youtube-nocookie.com/embed/{id}`, `https://www.instagram.com/{kind}/{id}/embed`) plus `openUrl` for the "Open in YouTube/Instagram" fallback. Never echo the client URL.
+1. **Uploads:** use the canonical AssetPort, configured allowlist/caps and Cloudinary image adapter; private purposes keep their separate adapter. Local verification uses only an explicitly approved local adapter; no silent fallback, direct SDK or duplicated asset table in consumers. Client MIME/extension alone never establishes type.
+2. **Embeds (RL10):** follow the exact host/path/ID rules and shared `VideoPlaybackDTO` in the [embed contract](../../_foundation/media-and-maps.md#youtube-and-instagram-embeds). Store `(source,provider_kind,provider_video_id)` only; return a server-built YouTube iframe descriptor, canonical Instagram permalink descriptor or safe provider fallback. Invalid links are rejected, not echoed as fallback URLs. Never return raw oEmbed HTML or imply Meta credentials are required for standard embeds.
 3. **ST-video:** table below; only **approved** is publicly eligible, irrespective of report state. Every public read also checks owner/placement/consent. Decisions are versioned, audited and notify the owner.
 4. **Consent:** Gallery requires showInGallery; Reels/deep links require showInReels; current approved business/item and non-removed assets also required. Product/service Gallery aggregation follows final `js24.js:40–42`: current business Gallery allowance **and** per-placement consent. Defaults never silently grant consent; the default-only versus master-toggle wording conflict is called out below.
 5. Reports route to existing S-ADMN-11, preserving approval. Guests are allowed (`js24.js:52`); subject nonce/hash, 5 reports/hour per subject and abuse-IP hash, length/body caps, CSRF/origin checks and open-report dedupe. No raw IP/report body in logs. Dismiss resolves report only; Remove resolves report and removes the identified video/photo, not its parent business/product.
@@ -174,14 +192,60 @@ Public resolved-image DTOs expose intrinsic `{width,height}` and the canonical `
 | `MEDIA_VERSION_CONFLICT` | 409 | `errors.media.versionConflict` |
 | `VIDEO_INVALID_TRANSITION` | 409 | `errors.media.videoInvalidTransition` |
 | `MEDIA_UPLOAD_POLICY_REQUIRED` | 409 | `errors.media.uploadPolicyRequired` |
+| `MEDIA_STORAGE_UNAVAILABLE` | 503 | `errors.media.storageUnavailable` |
 | `MEDIA_FEED_EXPIRED` | 410 | `errors.media.feedExpired` |
 
 `MEDIA_VIDEO_NOT_PUBLISHED` is already in the shared catalogue.
 
+## Implemented slices
+
+- The Prisma `Video` model and forward migration persist validated provider,
+  kind and provider ID, status, owner, consent flags, captions, hashtags and
+  versions. The migration is authored but has not been applied.
+- `GET/POST /businesses/me/videos` lists an approved owner’s videos and
+  creates a pending video. Create accepts the source kind/URL, caption,
+  hashtags and Gallery/Reels consent; it requires an idempotency key and
+  stores no submitted URL.
+- `GET /videos/{id}` returns only an approved video for an approved business
+  with Reels consent. Playback descriptors and provider URLs are rebuilt from
+  stored IDs.
+- The new controller is registered in the metadata-only OpenAPI exporter.
+
+This RL10 slice implements source safety, basic owner submit/list and approved
+detail playback. Thumbnail uploads, product/service links, editing, ordering,
+analytics and public feeds remain unimplemented.
+
+The AD10 status-moderation slice now implements:
+
+- `GET /admin/videos` for pending/approved/rejected/removed/reported tabs,
+  scoped keyset pages and scoped video/report counts.
+- `POST /admin/videos/{id}/decision` for approve/reject/remove, with a
+  transaction-time `reviews:edit` and stored-business-scope recheck,
+  optimistic version check, required rejection reason, idempotency receipt and
+  before/after audit entry.
+- `POST /videos/{id}/reports` for guest or signed-in reports of currently
+  public videos, with session/IP abuse limits, idempotency and open-report
+  deduplication; reporting does not change approval.
+- `POST /admin/media-reports/{id}/decision` for scoped, versioned dismissal or
+  video removal. Resolution and any target removal are transactional and
+  audited; dismissal never republishes a video.
+- Metadata-only OpenAPI registration and generated typed client operations.
+
+AD10 remains **in progress**. The Reported tab currently supports video
+reports only; photo report intake/resolution, comments moderation, Engagement
+analytics (including linked-item tap attribution), and owner notifications
+remain unimplemented because their owning runtime contracts are not present.
+New videos can be approved only through the status decision endpoint; report
+resolution is a separate workflow.
+
+The migration is authored but unapplied. Build verification is recorded by the
+implementation task; database/runtime checks and automated test files are
+intentionally not run.
+
 ## Acceptance criteria
 
 1. Given `https://evil.com/watch?v=x` or a YouTube URL with an invalid ID, when submitted, then 422 and nothing is stored.
-2. Given a valid Instagram reel link, when approved, then feed DTOs contain a server-built embed URL and an open URL, never the submitted string.
+2. Given a valid Instagram reel link, when approved, then feed DTOs contain a server-built Instagram permalink playback descriptor and Open URL, never submitted strings or HTML.
 3. Given a pending video, when its deep link is opened, then `MEDIA_VIDEO_NOT_PUBLISHED` (FE shows unavailable).
 4. Given a user scrolls the For You feed while new videos are approved, when the next page loads, then order is unchanged and no duplicates appear.
 5. Given Gallery consent false, when public media is queried, then Gallery excludes it while separately approved/Reels-consented content may appear there.
@@ -196,14 +260,18 @@ Public resolved-image DTOs expose intrinsic `{width,height}` and the canonical `
 14. Given no approved upload/attribution/retention policy, when upload/analytics/erasure is requested, then the relevant gate is explicit; no guessed hosting, gains or destructive cleanup runs.
 15. Given an authorized super_admin uploads a valid taxonomy image, when Catalog attaches it, then only an exact `catalog_category`/`catalog_subcategory` placement on an active record resolves publicly; an invalid purpose, foreign attachment, inactive taxonomy or removed asset is denied.
 16. Given an image purpose has no configured content/size policy, when a category or homepage banner upload is attempted, then `MEDIA_UPLOAD_POLICY_REQUIRED` is returned and no attachable asset is created.
+17. Given a direct video file/source or private-document purpose, when the Cloudinary image path is requested, then it is rejected or routed to the separately authorized private adapter; no video/KYC/evidence reaches Cloudinary.
+18. Given revoked publication and an old image path, when GET/HEAD/range/conditional access is retried, then current authorization applies and no reusable Cloudinary URL or signature is exposed.
 
-## Tests
+## Verification
 
-Unit: source URL parser/host suffix attacks and provider-specific IDs; action table, source-union DTO, exact score/2.5 km boundary, immutable cursor/session/TTL. Integration: configured MIME/size sniff + EXIF, applicant/private AssetPort consumers, PHOTO report → existing queue → remove, reorder conflicts, mutable counters between pages, live consent/publication rechecks, deep-link seeding and event replay. Negatives: foreign asset/purpose/application, catalog-only moderator, same-city foreign area, signed URL leakage/SSRF. Account export/erase validates references and repeat receipts; Q-11 metrics never use invented attribution.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Rules: source URL parser/host suffix attacks and provider-specific IDs; action table, source-union DTO, exact score/2.5 km boundary, immutable cursor/session/TTL. Manual API/DB: configured MIME/size sniff + EXIF, applicant/private AssetPort consumers, PHOTO report → existing queue → remove, reorder conflicts, mutable counters between pages, live consent/publication rechecks, deep-link seeding and event replay. Negatives: foreign asset/purpose/application, catalog-only moderator, same-city foreign area, signed URL leakage/SSRF. Account export/erase validates references and repeat receipts; Q-11 metrics never use invented attribution.
 
 ## Open questions
 
-- Open question: Q-03 hosting/transcoding and purpose-specific limits (Q-40/Q-46/Q-80), thumbnail acquisition and retention remain vendor/product decisions; block unconfigured upload paths, keep validated links/fallbacks.
+- Q-03 launch scope is resolved as link-only; direct hosting requires a new decision. Cloudinary public-image selection does not resolve private-document/evidence policies Q-40/Q-80, residency or retention. Use owner-uploaded sanitized thumbnails or the existing empty-poster UI; automatic provider-thumbnail acquisition is not selected.
 - Q-11's existing video metrics are resolved above; return coverage metadata for incomplete historical attribution, and do not add unrelated tracking events.
 - Open question: default-only Gallery wording versus final js24's current business gate needs confirmation with Businesses/Services. Until resolved, use the stricter final-source current gate plus per-placement consent; never broaden visibility on a default toggle.
 - Moderation permission is resolved by final js27: **reviews:view/edit**. Reviews' eligibility policy and Users' deletion/retention gates remain owned there.

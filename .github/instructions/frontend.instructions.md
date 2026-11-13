@@ -1,11 +1,12 @@
 ---
+description: "Frontend screens, React Query API integration, URL state, design tokens and client security."
 applyTo: "apps/web/**,packages/ui/**"
 ---
 
 # Frontend
 
-Builds on `.github/copilot-instructions.md`. Design tokens/components:
-`docs/design-system.md`. i18n/a11y detail:
+Builds on `AGENTS.md`. Design tokens/components:
+`docs/design-context/05-design-system.md`. i18n/a11y detail:
 `i18n-a11y.instructions.md`.
 
 ## Architecture
@@ -17,14 +18,24 @@ Builds on `.github/copilot-instructions.md`. Design tokens/components:
 - API access only through a typed client generated from the OpenAPI
   contract (`backend.instructions.md`); never hand-write `fetch` calls
   scattered through components.
+- **React Query is required:** use `@tanstack/react-query` for every
+  client-side API read/mutation, through feature query/mutation hooks.
+  Server-only reads stay in Server Components; do not make routes client-only.
+  Follow the [shared API contract](../../specs/_foundation/frontend-shared.md#api-integration-with-react-query)
+  for provider/hydration, typed errors, scoped keys, retries, invalidation,
+  privacy and lifecycle handling. No `useEffect` fetching, SWR or duplicate API-response
+  stores; keep form/UI and URL state separate.
 - Pages/routes stay thin; business logic (filter resolution, cart
-  totals display) lives in hooks/services, is unit-tested.
+  totals display) lives in hooks/services.
+- Run the affected build and fix related errors only. Do not set up
+  Docker/runtime services, launch browsers or run manual UI checks during
+  implementation; report those as deferred.
 
 ## Five UX states (X7)
 
 Every screen implements: **default, skeleton, empty, error+retry,
 no-permission**. Use `packages/ui` skeleton/empty/error/no-permission
-components (`docs/design-system.md`) — don't build bespoke ones.
+components (`docs/design-context/05-design-system.md`) — don't build bespoke ones.
 
 ## Tokens and shared components
 
@@ -38,7 +49,7 @@ components (`docs/design-system.md`) — don't build bespoke ones.
 - Explore state is a **shareable URL** (`/explore?tab=...&category=...`);
   browser Back restores the previous page and scroll position (EX9).
 - Explore and Search keep **separate** filter state (BR-15,
-  `domain-catalog-search.instructions.md`) — never share one store.
+  `../../specs/search/fe/search.md`) — never share one store.
 - Never alias event handlers by assignment (e.g.
   `const onClick = this.handleClick` losing `this`/closures); bind or
   use arrow functions explicitly.
@@ -65,8 +76,10 @@ components (`docs/design-system.md`) — don't build bespoke ones.
 ## Client security
 
 - Never store tokens in `localStorage`; rely on httpOnly session
-  cookies (`security.instructions.md`).
+  cookies (`AGENTS.md`, section 4).
 - Render user-generated content as text; never `dangerouslySetInnerHTML`
   with unsanitized input.
-- Rebuild video embeds only from server-provided, already-allow-listed
-  embed URLs — never construct an iframe from a raw client-held link.
+- Follow the [media/map contract](../../specs/_foundation/media-and-maps.md):
+  shared API-backed image Uploader, typed YouTube/Instagram renderer and
+  client-only Leaflet MapView. No browser Cloudinary SDK/URLs, direct video
+  upload or raw iframe HTML; retain provider fallbacks and OSM attribution.

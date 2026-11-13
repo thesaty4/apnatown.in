@@ -12,12 +12,46 @@ const ownerKeys = {
     'DATABASE_URL',
     'WEB_ORIGIN',
     'CURSOR_SIGNING_KEY',
+    'IDEMPOTENCY_HASH_KEY',
+    'PII_ENCRYPTION_KEY',
+    'PHONE_LOOKUP_HASH_KEY',
+    'OTP_HASH_KEY',
+    'ANONYMOUS_SESSION_TTL_SECONDS',
+    'SESSION_TTL_SECONDS',
+    'OTP_TTL_SECONDS',
+    'OTP_MAX_ATTEMPTS',
+    'OTP_PHONE_REQUESTS_PER_HOUR',
+    'OTP_DELIVERY_ADAPTER',
+    'DEMO_LOGIN_ENABLED',
     'PORT',
     'WORKER_PROBE_PORT',
     'LOG_LEVEL',
     'SHUTDOWN_TIMEOUT_MS',
+    'JOB_RETRY_LIMIT',
+    'JOB_RETRY_DELAY_MS',
+    'IDEMPOTENCY_LEASE_MS',
+    'OUTBOX_RELAY_POLL_INTERVAL_MS',
+    'OUTBOX_RELAY_BATCH_SIZE',
+    'OUTBOX_RELAY_LEASE_MS',
+    'RUNTIME_CLEANUP_INTERVAL_MS',
+    'RUNTIME_CLEANUP_BATCH_SIZE',
+    'MAINTENANCE_RETRY_AFTER_SECONDS',
+    'CONSENT_NOTICE_VERSION',
+    'DATA_EXPORT_TTL_SECONDS',
+    'DATA_DELETION_POLICY_VERSION',
+    'DATA_DELETION_COMPLETION_TTL_SECONDS',
+    'GUEST_CART_TTL_SECONDS',
+    'PRIVATE_STORAGE_ADAPTER',
+    'PRIVATE_STORAGE_LOCAL_DIR',
+    'CLOUDINARY_CLOUD_NAME',
+    'CLOUDINARY_API_KEY',
+    'CLOUDINARY_API_SECRET',
   ],
-  web: ['APP_ENV', 'NODE_ENV', 'APP_BASE_URL', 'API_INTERNAL_ORIGIN'],
+  web: [
+    'APP_ENV', 'NODE_ENV', 'APP_BASE_URL', 'API_INTERNAL_ORIGIN',
+    'MAP_TILE_URL_TEMPLATE', 'MAP_TILE_ATTRIBUTION_TEXT',
+    'MAP_TILE_ATTRIBUTION_URL', 'MAP_TILE_MAX_ZOOM', 'DEMO_LOGIN_ENABLED',
+  ],
   database: [
     'APP_ENV',
     'NODE_ENV',
@@ -25,6 +59,22 @@ const ownerKeys = {
     'MIGRATION_DATABASE_URL',
     'SHADOW_DATABASE_URL',
   ],
+  // Demo seed hashes/encrypts fixture owner phones exactly like the API.
+  seed: [
+    'APP_ENV',
+    'NODE_ENV',
+    'DATABASE_URL',
+    'MIGRATION_DATABASE_URL',
+    'SHADOW_DATABASE_URL',
+    'PII_ENCRYPTION_KEY',
+    'PHONE_LOOKUP_HASH_KEY',
+    // Listing-report subject hash, identical to the API's intake service.
+    'CURSOR_SIGNING_KEY',
+    // Sample-order handover code HMAC, identical to the API's DeliveryCodesModule.
+    'OTP_HASH_KEY',
+  ],
+  // Prisma Studio browses as the owner; prisma/studio.mjs forces read-only.
+  studio: ['APP_ENV', 'NODE_ENV', 'MIGRATION_DATABASE_URL'],
   compose: ['POSTGRES_PASSWORD'],
   build: [],
 };
@@ -76,6 +126,51 @@ export function validateLocalEnvironment(values) {
   ) {
     throw new Error('Missing or inconsistent generated local credentials.');
   }
+  if (!/^[a-f0-9]{64}$/.test(values.IDEMPOTENCY_HASH_KEY ?? '')) {
+    throw new Error(
+      'Provision IDEMPOTENCY_HASH_KEY with 32 random bytes encoded as lowercase hex. Existing local configuration is never overwritten or automatically rotated.',
+    );
+  }
+  const authKeys = [
+    'PII_ENCRYPTION_KEY',
+    'PHONE_LOOKUP_HASH_KEY',
+    'OTP_HASH_KEY',
+  ];
+  for (const key of authKeys) {
+    if (
+      !/^[a-f0-9]{64}$/.test(values[key] ?? '') ||
+      /^(.)\1+$/.test(values[key])
+    ) {
+      throw new Error(
+        `Provision ${key} with independent random 32-byte lowercase hex; existing secrets are never overwritten.`,
+      );
+    }
+  }
+  const keys = [...authKeys, 'IDEMPOTENCY_HASH_KEY', 'CURSOR_SIGNING_KEY'].map(
+    (key) => values[key],
+  );
+  if (new Set(keys).size !== keys.length)
+    throw new Error('Auth keys must be independent.');
+  for (const [key, min, max] of [
+    ['ANONYMOUS_SESSION_TTL_SECONDS', 1, 3600],
+    ['SESSION_TTL_SECONDS', 1, 2592000],
+    ['OTP_TTL_SECONDS', 1, 900],
+    ['OTP_MAX_ATTEMPTS', 1, 10],
+    ['OTP_PHONE_REQUESTS_PER_HOUR', 1, 100],
+  ]) {
+    if (
+      !/^[1-9]\d*$/.test(values[key] ?? '') ||
+      Number(values[key]) < min ||
+      Number(values[key]) > max
+    )
+      throw new Error(
+        `Provision bounded ${key}; local fixture values are not production policy.`,
+      );
+  }
+  if (!['private-local', 'unavailable'].includes(values.OTP_DELIVERY_ADAPTER))
+    throw new Error('OTP delivery adapter must be explicit.');
+  if (!['', 'true', 'false'].includes(values.DEMO_LOGIN_ENABLED ?? ''))
+    throw new Error('DEMO_LOGIN_ENABLED must be true or false.');
   for (const key of ['APP_BASE_URL', 'API_INTERNAL_ORIGIN', 'WEB_ORIGIN']) {
     let url;
     try {
@@ -123,12 +218,23 @@ export async function createLocalEnvironment(root, environment = process.env) {
     APP_ENV: environment.APP_ENV ?? 'local',
     NODE_ENV: environment.APP_ENV === 'test' ? 'test' : 'development',
     POSTGRES_PASSWORD: migrationPassword,
-    DATABASE_URL: `postgresql://apnatown_runtime:${runtimePassword}@127.0.0.1:5432/apnatown_local`,
-    MIGRATION_DATABASE_URL: `postgresql://apnatown_migrator:${migrationPassword}@127.0.0.1:5432/apnatown_local`,
-    SHADOW_DATABASE_URL: `postgresql://apnatown_migrator:${migrationPassword}@127.0.0.1:5432/apnatown_shadow`,
+    DATABASE_URL: `postgresql://apnatown_runtime:${runtimePassword}@127.0.0.1:5434/apnatown_local`,
+    MIGRATION_DATABASE_URL: `postgresql://apnatown_migrator:${migrationPassword}@127.0.0.1:5434/apnatown_local`,
+    SHADOW_DATABASE_URL: `postgresql://apnatown_migrator:${migrationPassword}@127.0.0.1:5434/apnatown_shadow`,
     CURSOR_SIGNING_KEY: randomBytes(32).toString('hex'),
-    SESSION_COOKIE_SECRET: randomBytes(32).toString('hex'),
+    IDEMPOTENCY_HASH_KEY: randomBytes(32).toString('hex'),
+    PII_ENCRYPTION_KEY: randomBytes(32).toString('hex'),
+    PHONE_LOOKUP_HASH_KEY: randomBytes(32).toString('hex'),
+    OTP_HASH_KEY: randomBytes(32).toString('hex'),
     ANONYMOUS_SESSION_TTL_SECONDS: '900',
+    SESSION_TTL_SECONDS: '86400',
+    OTP_TTL_SECONDS: '300',
+    OTP_MAX_ATTEMPTS: '5',
+    OTP_PHONE_REQUESTS_PER_HOUR: '10',
+    OTP_DELIVERY_ADAPTER: 'private-local',
+    // Ignored private directory; the adapter enforces owner-only permissions.
+    PRIVATE_STORAGE_ADAPTER: 'private-local',
+    PRIVATE_STORAGE_LOCAL_DIR: resolve(root, '.local/storage'),
     SHUTDOWN_TIMEOUT_MS: '10000',
   });
   validateLocalEnvironment(values);

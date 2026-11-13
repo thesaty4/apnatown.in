@@ -7,7 +7,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run pnpm env:local first}
       POSTGRES_DB: apnatown_local
     ports:
-      - '127.0.0.1:5432:5432'
+      # Host port 5434: 5432/5433 are commonly taken by a Windows or WSL PostgreSQL on dev machines.
+      - '127.0.0.1:5434:5432'
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:

@@ -20,7 +20,73 @@ Own user profiles, roles, saved addresses, account-level preferences, consent re
 
 Q-32 still gates approved retention, export expiry, deletion boundaries and re-registration policy, not the processing/status contract below. Anonymous consent identity/purpose granularity remains Q-31. Saved payment-method data is owned by [Payments](../../payments/be/payments.md) (Q-33); disabled/unconfigured methods return an explicit unavailable state.
 
+### Identity persistence implementation
+
+The Prisma `User`/`UserRole` models and additive
+[`20261111172454_users_identity`](../../../apps/api/prisma/migrations/20261111172454_users_identity/migration.sql)
+migration cover only `users` and `user_roles`, the identity prerequisites for
+Auth. No accounts or privileged memberships are seeded. Identity resolution,
+live-principal lookup, encrypted profile fields and own profile/preferences
+endpoints are implemented for local use. Privileged approval integrations and
+role-grant use-cases remain unavailable; consent and data-request persistence
+remain separate slices. Saved-address implementation status follows below.
+
+SQL CHECK constraints enforce locale/theme/status/role values, positive version,
+optional 2-60-character display names and paired phone fields. Non-deleted rows
+require both phone fields; only a tombstone may hold both as NULL. This storage
+capability does not approve Q-32 erasure or re-registration. The nullable unique
+B-tree on `phone_lookup_hash` reserves every retained non-null identity, not only
+active accounts, while allowing multiple NULL tombstones. The partial B-tree on
+`deleted_at WHERE deleted_at IS NULL` serves live-identity filtering; the
+`user_roles(role,user_id)` B-tree serves role-first lookups, complementing the
+user-first composite primary key. These add write/storage cost on their indexed
+fields; representative query plans remain required before rollout.
+
+The membership FK restricts physical user deletion and ID updates. Runtime
+privileges are Users `SELECT/INSERT/UPDATE` (no hard delete), memberships
+`SELECT/INSERT/DELETE` (grant/revoke, not in-place identity rewriting).
+Owning application authorization/audit is still required; table privileges
+alone never authorize a role grant.
+
+The migration is transactional and forward-only, without data backfill. On
+failure, inspect the migration record and actual schema before resolving or
+retrying; never mark an unconfirmed migration applied. Once data exists,
+preserve it and repair through a new migration or an approved restore, not by
+dropping identity tables. SQL was generated offline then supplemented with
+CHECK constraints and grants. Database application, permission/constraint
+execution and runtime queries have not been verified; no database was started.
+
 ## Endpoints
+
+### Saved-address implementation status
+
+Saved-address CRUD, owner-bound signed pagination (default 20, cap 50),
+optimistic versions, soft deletion and `UsersAddressPort.forCheckout` are
+implemented. Geo's `assertAreasInCity` validates the selected city even with no
+area, joining the same transaction; this does not establish zone membership or
+checkout serviceability. Default changes serialize on the user row, including
+versioned demotion; deletion never selects a successor.
+
+POST/PATCH/DELETE require `Idempotency-Key`. The command UoW commits the write
+and an encrypted original-result receipt together; replay rechecks the live
+session, account and address ownership (including tombstones) before decrypting.
+Address text/landmark and replay snapshots use user/address/field-bound AEAD.
+The local retry horizon is 24 hours. Technical input bounds are label 60,
+address text 1000 and landmark 200 characters, plain text only.
+TODO(verify): approve these limits and the retry/receipt-retention horizon for
+production; they are not an approved DPDP retention policy.
+
+The additive
+[`20261112001000_users_addresses`](../../../apps/api/prisma/migrations/20261112001000_users_addresses/migration.sql)
+migration adds the owner-page index, live-default unique index, FK indexes and
+composite area/city FK. These indexes add write/storage cost; representative
+query plans remain a rollout gate. Runtime grants forbid hard deletion and
+rewriting `user_id`, `id` or `created_at`. No accounts/addresses are seeded.
+Recovery is forward repair or an approved restore, not dropping populated tables.
+Focused offline checks cover DTOs, owner/Geo validation, replay, default/version
+logic, query-pipe regression and parameterized adapter SQL. Database migration
+execution, concurrency/permissions/constraints, HTTP runtime checks and security
+audit remain release gates; static checks do not establish those results.
 
 | Method | Path | Auth / scope | Request → response | Errors | Idempotent | Features |
 |---|---|---|---|---|---|---|
@@ -105,9 +171,14 @@ Open question: Q-32 must also approve a verified request channel for suspended u
 8. Given a deletion has an unapproved retention policy or a blocked owner receipt, when processed, then it stays explicitly blocked and neither sessions nor financial records are silently destroyed.
 9. Given approved deletion processing completes, when sessions are revoked, then only the request-bound completion capability can confirm the terminal result, `/goodbye` becomes truthful, and a replay cannot expose personal data.
 10. Given a processing crash or expired export, when retried/downloaded, then receipts prevent duplicate erasure and expired/private artifacts cannot be fetched through another user's session.
+11. Given identity rows, when invalid locale/theme/status/role values, non-positive versions, invalid display-name lengths or an incomplete phone pair are written, then the database rejects them; a live identity cannot lose its phone fields.
+12. Given a retained phone hash or membership, when a duplicate is inserted, then its unique key rejects it; unrelated NULL tombstones remain possible, and a membership cannot reference a missing user.
+13. Given the runtime role, when physical user deletion or in-place membership rewriting is attempted, then database privileges deny it; adding the schema itself creates no users or role grants.
 
-## Tests
+## Verification
 
-- Unit: profile/address allow-lists; default-address transaction; consent append-only behavior; request idempotency.
-- Integration: owner CRUD; consent revocation visible to sender query; paginated export completeness, artifact expiry, policy-blocked deletion, interrupted/retried owner erasure and session-revocation completion race.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Rules: profile/address allow-lists; default-address transaction; consent append-only behavior; request idempotency.
+- Manual API/DB: owner CRUD; consent revocation visible to sender query; paginated export completeness, artifact expiry, policy-blocked deletion, interrupted/retried owner erasure and session-revocation completion race.
 - Authorization negatives: cross-user address ID; anonymous account access; unknown fields; stale consent; attempts to read another user's payment methods.

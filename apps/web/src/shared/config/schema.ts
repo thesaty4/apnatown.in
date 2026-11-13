@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { mapEnvironmentSchema } from './maps';
 
 const origin = z
   .string()
@@ -20,8 +21,23 @@ export const webEnvironmentSchema = z
     APP_ENV: z.enum(['local', 'test', 'production']),
     APP_BASE_URL: origin,
     API_INTERNAL_ORIGIN: origin,
+    // Local/test-only Demo controls (docs/adr/0002); must match the API flag.
+    DEMO_LOGIN_ENABLED: z
+      .preprocess(
+        (value) => (value === '' ? undefined : value),
+        z.enum(['true', 'false']).default('false'),
+      )
+      .transform((value) => value === 'true'),
+    ...mapEnvironmentSchema.shape,
   })
   .superRefine((value, context) => {
+    if (value.APP_ENV === 'production' && value.DEMO_LOGIN_ENABLED) {
+      context.addIssue({
+        code: 'custom',
+        path: ['DEMO_LOGIN_ENABLED'],
+        message: 'Demo sign-in is local/test only',
+      });
+    }
     if (
       value.APP_ENV === 'production' &&
       !value.APP_BASE_URL.startsWith('https://')

@@ -2,6 +2,14 @@
 
 Features: AU5, AU8, AC1–AC5; F-AU-005, F-AU-008, F-AC-001, F-AC-002, F-AC-003, F-AC-004, F-X-008 | Screens: S-CUST-23–S-CUST-29, S-CUST-33 | Flows: J12, J13
 
+API integration: [shared React Query contract](../../_foundation/frontend-shared.md#api-integration-with-react-query).
+Implemented account/profile/preferences client reads and writes use the shared
+identity-scoped query cache, including the global preference controls. Server
+route reads remain request-local and hydrate client-owned results. Profile and
+preference saves reconcile their shared queries only after confirmed success;
+logout, expiry and identity changes cancel and remove private cached state.
+This does not mark the address, consent or privacy frontend journeys implemented.
+
 ## Routes and rendering
 
 | Route | Screen ID | Rendering + reason | Auth / role | Index |
@@ -85,8 +93,10 @@ Features: AU5, AU8, AC1–AC5; F-AU-005, F-AU-008, F-AC-001, F-AC-002, F-AC-003,
 - Key prefixes: `account.*`, `consent.*`, `privacy.*`; use approved EN/HI catalogue; do not invent legal or consent copy.
 - Payment methods, legal-page content, login and notification preferences use their owning modules' contracts; no duplicate data fetching or business rules.
 
-## Tests
+## Verification
 
-- Component: profile validation, address empty/default/delete states, consent toggles, keyboard/map alternative, long Hindi.
-- E2E: J12 profile completion; J13 locale/theme preference; Your data/Copy data, owner-denied/expired export, blocked deletion, completion after session revocation and consent withdrawal. Destructive production deletion remains Q-32-gated.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Manual UI: profile validation, address empty/default/delete states, consent toggles, keyboard/map alternative, long Hindi.
+- Manual journey: J12 profile completion; J13 locale/theme preference; Your data/Copy data, owner-denied/expired export, blocked deletion, completion after session revocation and consent withdrawal. Destructive production deletion remains Q-32-gated.
 - Visual: 360px and desktop, EN/HI, light/dark.

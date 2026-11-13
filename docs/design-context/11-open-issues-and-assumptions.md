@@ -10,9 +10,9 @@
 |---|---|
 | A-01 | Delivery fee slabs, rider earning, commission, plans, promotion prices, coupons and refund window are **sample values** from the prototype settings; real values per city to be decided |
 | A-02 | Hindi translations are machine-assisted and unreviewed by a native speaker |
-| A-03 | Maps are schematic in the prototype; real maps/geocoding provider not chosen |
+| A-03 | Maps are schematic in the prototype; 2026-11-12 implementation selects Leaflet/OSM/Geoman Free. External geocoding is not selected; Geo/PostGIS and manual input remain authoritative |
 | A-04 | YouTube/Instagram embeds depend on the host allowing embedding; seed video ids are samples; the "Open in" fallback is always shown |
-| A-05 | Reels playback in the prototype is simulated (poster + progress bar); real playback uses embeds or hosted video |
+| A-05 | Reels playback in the prototype is simulated (poster + progress bar); launch uses YouTube/Instagram embeds with provider-supported controls, not hosted video |
 | A-06 | Payments, OTP, WhatsApp and file uploads are simulated; demo OTP 123456 exists only in the prototype and must never exist in production |
 | A-07 | Search relevance is a keyword mapping table + small typo tolerance, not a full search engine |
 | A-08 | Only Padrauna is live; Kasia is "coming soon"; Deoria and Gorakhpur planned |
@@ -30,7 +30,7 @@
 | G-05 | Prototype stores state in localStorage; production must not store tokens or PII in browser storage | Server sessions with httpOnly cookies; only UI preferences in localStorage |
 | G-06 | The hosted prototype may not keep a query string in the address bar | Production hosting keeps it; contract is in 07 and the Explore features |
 | G-07 | Tablet horizontal filter bar is specified but not built in the prototype | Build from spec EX7 using the shared FilterPanel |
-| G-08 | Video upload hosting vs link-only | Link-based first; hosting decision open |
+| G-08 | Video upload hosting vs link-only | User confirmed link-only on 2026-11-12; keep direct video-file upload disabled. Cloudinary is selected for public images, not video hosting |
 | G-09 | Comments are shown with moderation placeholder only | Implement moderation queue with comments in the admin video module |
 | G-10 | The desktop and mobile `dark-customer-explore.jpg` screenshots are byte-identical to their light variants | Use the runnable prototype's dark theme and token overrides as the visual source; regenerate or confirm the dark screenshots before pixel-level dark-mode review |
 | G-11 | `ST-city` names enabled/disabled/coming_soon; prototype stores active/soon/planned and labels them Enabled/Coming soon/Disabled. Its Disable action changes active to soon, while newly added cities can start in any of the three states. | Preserve the prototype's labels and action/copy; map active/soon/planned to enabled/coming_soon/disabled and use the explicit transition edges in the geo spec pending product confirmation (Q-17). |
@@ -43,10 +43,51 @@
 | G-18 | The prototype offers Candle/OHLC controls, but no approved financial definitions exist for valid OHLC values. | Remove Candle/OHLC from the Super Admin overview; retain the supported Graph for Orders/Deliveries, the existing filters, and an accessible data-table alternative. Revenue remains gated by ADM-Q4; never fabricate candle values. |
 | G-19 | Services Explore currently shows checkbox controls, while the requested presentation is ecommerce-style selectable pills. | Intentionally change only the visible control styling to token-based pills; preserve native multi-select semantics, counts, disabled/selected states, URL/Back/scroll behavior, and the shared filter component across Search/Explore/category pages. |
 | G-20 | The product owner requested provider Premium plan management, but the prototype has no provider billing screen. | Add S-PROV-18 at `/provider/billing`, reuse the vendor subscription components, and preserve provider ownership, plan/invoice scope, and paid-expiry cancellation behavior. |
-## Open questions
-Q-01 payment gateway; Q-02 maps/geocoding provider; Q-03 video upload hosting and transcoding; Q-04 WhatsApp Business sender and template approval process; Q-05 KYC retention period; Q-06 commission and invoicing rules, GST handling; Q-07 refund SLA and moderation SLAs; Q-08 owner of Hindi translation review; Q-09 exact delivery slabs per city; Q-10 vendor staff roles; Q-11 analytics and event-tracking plan; Q-12 legal copy (terms, privacy, refund); Q-13 data residency, backups and retention; Q-14 SEO: indexable facets policy owner; Q-15 OTP/SMS provider and DLT registration.
+| G-21 | Prototype `.btn.d` keeps white text on the dark error fill, measuring only 2.77:1 contrast. | The shared danger button uses the existing `on-primary` foreground token, preserving white in light mode and using the approved dark foreground in dark mode (6.47:1 / 6.24:1). This intentional accessibility correction needs design-owner acknowledgement; do not restore the failing literal white. |
+| G-22 | Simulated Reels controls imply identical playback/mute/progress APIs for every provider. | Use YouTube-supported controls and Instagram native interaction or safe Open fallback; never fabricate playback state. Preserve feed ranking/layout/consent under the [integration contract](../../specs/_foundation/media-and-maps.md) |
+| G-23 | Prototype provider onboarding picks a SERVICE category (`js9.js` `wizard('service')` uses `SCATS`), but the Businesses BE spec requires PRODUCT-category memberships for every business, which hid all approved providers and their services from Explore. | Public discovery requires PRODUCT memberships for shops only (`20261112191000_provider_public_context`); provider onboarding/profile category rules in the Businesses spec still need architect/product confirmation. |
+| G-24 | Reference provider products `p46`-`p49` (`js15.js` `addP`) inherit the provider's SERVICE category (`mechanic`, `electrician`), but Products accepts PRODUCT-category taxonomy only, so `pnpm db:seed` aborted with `SEED_DATA_INVALID` and demo personas were never created. | `seed-listing-fixtures.mjs` skips products whose category is not a PRODUCT category (49 of 53 seeded) instead of inventing a mapping; confirm the PRODUCT taxonomy for provider products before seeding them. |
 
-## P01 specification assumptions and open items
+## Confirmed integration decisions (2026-11-12)
+
+The user selected Cloudinary for public-purpose images only, YouTube/Instagram
+link-only videos, and Leaflet/OpenStreetMap. The
+[canonical implementation contract](../../specs/_foundation/media-and-maps.md)
+supersedes historical provider-open/upload wording for Q-02/Q-03/Q-19/Q-22
+within that scope. Private KYC/evidence/exports stay separate; residency,
+retention, hosting capacity and unrelated providers are not approved.
+The prototype remains visual reference, not permission to enable video uploads,
+simulate unsupported Instagram controls or bypass provider usage policies.
+
+## Confirmed dispatch decision D-RD-01 (2026-11-13)
+
+The user approved the platform-rider dispatch policy that the delivery BE spec
+gated (rule 2 "configured selection policy"):
+
+- Auto-assign offers a job to **one** eligible rider at a time: rider profile
+  `approved` + online + idle (no active job and no other unexpired live offer)
+  + same **city** as the job's pickup business (area not required). Live rider
+  role/account is rechecked under the rider lock at acceptance.
+- Order: nearest by straight-line PostGIS distance from the rider's latest
+  location to the shop when both are present; then the oldest
+  `last_location_at` (longest waiting); then user ID.
+- Each offer expires after **60 s**. Reject/expiry closes it and offers the
+  next candidate, excluding every rider who already had this job's offer
+  (`UNIQUE(job_id,rider_user_id)`); no candidate leaves the job `requested`
+  with `assignment_state='unassigned'` and notifies the owner, who can
+  re-request (new riders only) or pick a rider.
+- Owner manual assignment is a **directed offer** to a picked candidate (same
+  60 s accept flow), never a forced assignment; before pickup only.
+- Expiry runs in a 5 s worker sweep plus lazy rejection of late accepts; lock
+  order rider → order → job → offer/code.
+- Rider earning estimate/earned use the Settings `rider_earning` value
+  (local seed from sample `cfg.riderBase/riderPerKm` only when unset);
+  production values remain `TODO(verify)`.
+
+## Open questions
+Q-01 payment gateway; Q-02 external geocoding/production tile capacity (Leaflet/OSM rendering selected); Q-03 future video hosting only (link-only launch resolved); Q-04 WhatsApp Business sender and template approval process; Q-05 KYC retention period; Q-06 commission and invoicing rules, GST handling; Q-07 refund SLA and moderation SLAs; Q-08 owner of Hindi translation review; Q-09 exact delivery slabs per city; Q-10 vendor staff roles; Q-11 analytics and event-tracking plan; Q-12 legal copy (terms, privacy, refund); Q-13 data residency, backups and retention; Q-14 SEO: indexable facets policy owner; Q-15 OTP/SMS provider and DLT registration.
+
+## Earlier specification assumptions and open items
 
 These additions are append-only and do not replace the assumptions or questions above. Values marked provisional are planning inputs only; they are not approved product or vendor decisions.
 
@@ -54,36 +95,36 @@ These additions are append-only and do not replace the assumptions or questions 
 
 | ID | Assumption | Impact |
 |---|---|---|
-| A-13 | Historical P01 proposed Prisma, Redis/BullMQ, PostgreSQL full-text plus `pg_trgm`, an S3-compatible storage port, SSE for server-to-client status updates, and candidate India payment/OTP/maps providers. The active architecture selects PostgreSQL/Prisma, pg-boss + outbox, and no Redis at launch; the remaining vendor proposals are unapproved. | Redis/BullMQ are superseded by [the architecture foundation](../../specs/_foundation/architecture.md); no vendor credentials, external integration, or production topology may be treated as selected based only on P01. |
-| A-14 | P01 uses provisional NFR planning values where the pack has none: TTFB p75 <=800 ms, RPO <=15 minutes, RTO <=4 hours, Padrauna launch capacity 10,000 MAU/50 sustained API requests per second/150 short-peak requests per second, and a 10-city scenario of 100,000 MAU/500 sustained requests per second. | Capacity and recovery design must be revised after product forecast, provider/SLO review, and load testing. |
-| A-15 | P01 proposes a machine-readable API error envelope (`code`, `messageKey`, `fieldErrors`, `correlationId`) and candidate error codes for P04 to confirm. | Error-code names and HTTP status mapping are not final until approved in the backend specification. |
-| A-16 | F-X-001 requires the language choice to persist, but the pack does not specify whether it belongs to a signed-in profile or the current device. P01 traces it to a logical user/device preference without selecting storage. | P03/P04 must confirm preference ownership and retention before choosing a table or persistence mechanism. |
+| A-13 | An earlier architecture proposal included Prisma, Redis/BullMQ, PostgreSQL full-text plus `pg_trgm`, an S3-compatible storage port, SSE for server-to-client status updates, and candidate India payment/OTP/maps providers. The active architecture selects PostgreSQL/Prisma, pg-boss + outbox, and no Redis at launch; the remaining vendor proposals are unapproved. | Redis/BullMQ are superseded by [the architecture foundation](../../specs/_foundation/architecture.md); no vendor credentials, external integration, or production topology may be treated as selected based only on the earlier proposal. |
+| A-14 | Earlier specifications used provisional NFR planning values where the pack has none: TTFB p75 <=800 ms, RPO <=15 minutes, RTO <=4 hours, Padrauna launch capacity 10,000 MAU/50 sustained API requests per second/150 short-peak requests per second, and a 10-city scenario of 100,000 MAU/500 sustained requests per second. | Capacity and recovery design must be revised after product forecast, provider/SLO review, and load testing. |
+| A-15 | An earlier proposal included a machine-readable API error envelope (`code`, `messageKey`, `fieldErrors`, `correlationId`) and candidate error codes for product confirmation. | Error-code names and HTTP status mapping are not final until approved in the backend specification. |
+| A-16 | F-X-001 requires the language choice to persist, but the pack does not specify whether it belongs to a signed-in profile or the current device. An earlier specification traces it to a logical user/device preference without selecting storage. | Preference ownership and retention must be confirmed before choosing a table or persistence mechanism. |
 
 ### Open questions
 
-| ID | Question | Assumption used while P01 proceeds | Impact |
+| ID | Question | Assumption used while earlier specifications proceed | Impact |
 |---|---|---|---|
 | Q-16 | What TTFB target, launch/10-city workload, RPO and RTO should be approved? | Treat A-14 values as planning targets only; replace them after product forecast, SLO review and load testing. | Do not use the figures as a production capacity or recovery commitment before approval. |
 | Q-17 | For lifecycle transitions whose actor, guard or transition edge is not specified in the pack, what exact actors and guards apply? | Keep only source-defined edges and mark unspecified actors/guards for the owning BE spec. | Do not enable additional transitions until approved. |
-| Q-18 | Approve or replace the P01 candidate API error envelope and machine-readable codes in A-15. | Use the candidate shape only as a trace handle; final names and HTTP mappings remain unapproved. | Backend DTOs and clients must not treat the candidate contract as final. |
-| Q-19 | Approve or replace the P01 technology proposals in A-13; keep payment, OTP/SMS, WhatsApp, maps, storage and hosting provider decisions subject to their existing questions. | Treat all proposals as options behind ports, not selected dependencies. | No procurement, credentials or production integration decision follows from P01. |
+| Q-18 | Approve or replace the earlier candidate API error envelope and machine-readable codes in A-15. | Use the candidate shape only as a trace handle; final names and HTTP mappings remain unapproved. | Backend DTOs and clients must not treat the candidate contract as final. |
+| Q-19 | Approve or replace the earlier technology proposals in A-13. | Active foundations govern; Cloudinary public images and Leaflet/OSM are now selected by the 2026-11-12 user decision. Payment, OTP/SMS, WhatsApp, private storage and hosting remain separate. | Provider selection is not permission to provision accounts or claim production readiness. |
 
-## LEAN SPECS follow-up questions
+## Foundation follow-up questions
 
 These are additions for the backend/frontend foundation specs. Existing Q-01..Q-19 remain authoritative; recommendations below are not provider or product approvals.
 
 | ID | Question | Assumption used while writing the foundation | Impact |
 |---|---|---|---|
-| Q-20 | Does the LEAN SPECS prompt's fixed PostgreSQL/PostGIS target supersede the proposed tech-stack ADR and the earlier database-open decision? | Specs target PostgreSQL/PostGIS as explicitly requested; the ADR remains proposed until a human reconciles it. | Do not treat the documentation conflict as approval to procure or provision production infrastructure. |
+| Q-20 | Does the fixed PostgreSQL/PostGIS target supersede the earlier technology proposal and database-open decision? | Specs target PostgreSQL/PostGIS as explicitly requested; the previous tech-stack proposal remains unresolved until a human reconciles it. | Do not treat the documentation conflict as approval to procure or provision production infrastructure. |
 | Q-21 | For online checkout split across shops, is the gateway charge captured once per checkout or separately per shop? | Keep one idempotent checkout attempt and the BR-03 per-shop order/payment records; leave provider charge/capture topology to the payments decision. | Payments, reconciliation and refund specs must agree before gateway integration. |
-| Q-22 | Which storage provider and region serve product, service, gallery and uploaded video media? | Specify only a storage port, fake and S3-compatible recommendation; select neither vendor nor region. | Retention, signed access, upload limits and data residency must be confirmed before implementation. |
+| Q-22 | Which storage provider and region serve media? | Cloudinary is selected for public-purpose images behind Media's authorization gateway; private documents/exports remain separate and direct video upload is disabled. | Region/residency/retention and production private-storage vendor remain open; image limits and delivery follow the canonical Media/integration contracts. |
 | Q-23 | What production URL represents an indexable subcategory landing page? | Keep filter combinations `noindex`; do not invent a subcategory route beyond the current `/category/:slug` inventory. | SEO sitemap and canonical rules cannot include subcategory landing pages until the route is confirmed. |
 | Q-24 | How are English and Hindi locale variants represented in production URLs for `hreflang`? | Use next-intl locale routing, but do not assume a locale prefix or cookie-only URL strategy. | Canonicals and alternates need the approved locale routing contract. |
 | Q-25 | Which hosting region and backup/retention policy are approved for launch? | Recommend an India region; keep deployment provider, residency and recovery targets open under Q-13. | No production hosting or backup commitment follows from the recommendation. |
-| Q-26 | Which API error envelope is canonical: P01's `messageKey`/`fieldErrors` proposal or the LEAN SPECS `message_key`/`status`/`details` contract? | Foundations use the exact LEAN SPECS contract; keep P01's candidate unapproved until the backend contract is reconciled. | API, OpenAPI and web clients must use one shape before implementation. |
+| Q-26 | Which API error envelope is canonical: the earlier `messageKey`/`fieldErrors` proposal or the foundation `message_key`/`status`/`details` contract? | Foundations use the `message_key`/`status`/`details` contract; keep the earlier candidate unapproved until the backend contract is reconciled. | API, OpenAPI and web clients must use one shape before implementation. |
 | Q-27 | How should the design system reconcile 40px compact buttons and 44px action-bar buttons in prototype CSS with the 48px minimum touch-target rule, and what is the missing `lg` button metric? | Match the prototype's 40px `sm` and 48px base button metrics; retain the 48px accessibility target requirement for layouts and have the design owner approve exceptions/`lg`. | Final Tailwind size utilities and WCAG touch-target audit depend on this decision. |
 | Q-28 | Are the desktop/mobile dark Explore screenshots intentionally identical to light screenshots or should they be regenerated? | Use prototype CSS and the documented dark tokens for dark-mode specs until the images are corrected. | Screenshots cannot currently validate dark-mode visual parity. |
-| Q-29 | Does the LEAN SPECS default of pg-boss with no Redis supersede P01's A-13 Redis/BullMQ proposal? | Follow the latest prompt: use pg-boss and no Redis at launch; treat A-13 as superseded, unapproved guidance. | Reconcile the architecture ADR and any later operations specs before implementation. |
+| Q-29 | Does the current pg-boss/no-Redis default supersede A-13's Redis/BullMQ proposal? | Follow the current foundation: use pg-boss and no Redis at launch; treat A-13 as superseded, unapproved guidance. | Reconcile the architecture foundation and any later operations specs before implementation. |
 | Q-30 | Which optional email/Google sign-in methods are required, and how should account linking and recovery work? | Specify mobile OTP as the supported baseline; do not expose an unconfigured email or Google sign-in path. | The login UI and auth adapter contract need product/provider decisions before optional methods are built. |
 | Q-31 | What cookie-consent purposes/categories and anonymous identity mechanism should be recorded before sign-in? | Record only the explicit consent purposes in the product catalogue; do not invent analytics/advertising categories or an anonymous retention policy. | Cookie controls, anonymous consent evidence and opt-out semantics need legal/product review. |
 | Q-32 | What confirmation, processing, delivery, completion and retention rules apply to personal-data export and account deletion? | Record a request and do not claim completion or hard-delete shared/financial records before the policy is approved. | The data-request processor, customer copy, retained records and deletion boundary depend on this decision. |

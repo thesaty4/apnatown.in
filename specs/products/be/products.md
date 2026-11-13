@@ -9,11 +9,11 @@
 - [Events and jobs](#events-and-jobs)
 - [Errors](#errors)
 - [Acceptance criteria](#acceptance-criteria)
-- [Tests](#tests)
+- [Verification](#verification)
 
 Features: F-PD-001, F-PD-002, F-PD-003, F-PD-006, F-PD-008, F-PD-009, F-VD-004, F-VD-005, F-VD-009, F-PV-005 (product listing only) | Rules: BR-01, BR-02, BR-04, BR-06, BR-16 | State machines: none | Depends on: businesses, catalog | Used by: cart-checkout, search, offers, orders, reviews, engagement, media-videos, admin
 
-Frontend counterpart: [FE products](../fe/products.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Frontend counterpart: [FE products](../fe/products.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Responsibility
 
@@ -117,9 +117,11 @@ Prices and MRP are integer paise in API DTOs. Import converts valid decimal INR 
 11. Given a stale inventory version or a repeated cancellation release, when processed, then stock is neither overwritten nor restored twice.
 12. Given an owner selects a product for featuring without active Premium entitlement, when saved, then the write is rejected and no featured state is exposed; given entitlement expires, then its public projection is immediately non-featured while the owner selection remains stored; after a verified renewal, the still-eligible selected product becomes featured again without a product write.
 
-## Tests
+## Verification
 
-- Unit: paise parsing/validation, discount-independent price/MRP rules, variant membership, media allowlist/ownership, low-stock threshold, pill ordering, import row validation.
-- Integration: owner CRUD, keyset filtering, soft delete, inventory version conflict, bulk all-or-nothing behavior, product read visibility and cache/outbox writes.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Rules: paise parsing/validation, discount-independent price/MRP rules, variant membership, media allowlist/ownership, low-stock threshold, pill ordering, import row validation.
+- Manual API/DB: owner CRUD, keyset filtering, soft delete, inventory version conflict, bulk all-or-nothing behavior, product read visibility and cache/outbox writes.
 - Authorization negatives: customer mutation; vendor/provider wrong business; unapproved business; cross-business bulk IDs; stale version; no leakage from public unpublished/deleted slugs.
 - Concurrency: simultaneous reservation of final unit and duplicate idempotent import request.

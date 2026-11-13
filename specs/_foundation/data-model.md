@@ -39,7 +39,7 @@ These are shared Zod/OpenAPI/client primitives (`@apnatown/shared/wire`), not di
 
 `Money.toPaiseNumber()` checks bounds **before** conversion; inbound schemas use `.int().safe()` plus the field's sign/range. Arithmetic, sums, coupon allocation and audit/outbox serialization must all use these conversions. Never register `BigInt.prototype.toJSON` or stringify every bigint globally: that would silently change module DTOs.
 An out-of-wire-range persisted/result value fails safely with a logged, redacted `COMMON_INTERNAL_ERROR` 500; invalid client amounts fail the declared validation code. No rounding/truncation/string fallback. This is a technical JSON-safety limit, not a new product price cap.
-Successful mutation DTOs and idempotent replays have the same schema; capability-bearing fields may be freshly issued only under the explicit secret-excluded replay policy below. The flat error envelope is defined in [backend-shared](./backend-shared.md#error-contract). OpenAPI examples, HTTP tests, generated clients, audit JSON and outbox payloads must agree.
+Successful mutation DTOs and idempotent replays have the same schema; capability-bearing fields may be freshly issued only under the explicit secret-excluded replay policy below. The flat error envelope is defined in [backend-shared](./backend-shared.md#error-contract). OpenAPI examples, observed HTTP responses, generated clients, audit JSON and outbox payloads must agree.
 
 ## Starter invariant error catalogue
 
@@ -50,7 +50,7 @@ Existing common spellings remain registered: `VALIDATION_ERROR` is 400 /
 `errors.common.forbidden`, `AUTH_REQUIRED` is 401 /
 `errors.auth.required`, and the existing `RATE_LIMITED` is 429 /
 `errors.common.rateLimited` with `Retry-After`. They use the same flat envelope; an undeclared
-catalogue code is a configuration/test failure, not a guessed 200/500 mapping.
+catalogue code is a configuration/verification failure, not a guessed 200/500 mapping.
 
 | Rule | Starter code | HTTP | Message key |
 |---|---|---:|---|
@@ -215,7 +215,6 @@ erDiagram
     businesses |o--o{ reviews : receives
     businesses ||--o{ videos : publishes
     videos ||--o{ video_links : links
-    media_assets |o--o{ videos : file_asset
     media_assets |o--o{ videos : thumbnail_asset
     users ||--o{ follows : follows
     businesses ||--o{ follows : followed
@@ -313,41 +312,224 @@ Only this foundation defines these tables; shared persistence repositories own t
 
 **Transaction/helper contracts** (to implement in `apps/api/src/shared/persistence`; application code imports only the ports):
 - `TxContext` is an opaque handle; `UnitOfWork.run<T>(work: (tx: TxContext) => Promise<T>): Promise<T>` starts one transaction, commits only on success and rolls back on any throw. Only shared persistence infrastructure unwraps it using `PrismaDatabase.client(tx): Prisma.TransactionClient`; expired/foreign handles fail, no silent use of the root client.
-- `CommandUnitOfWork.run<T extends JsonValue>(command: CommandContext, work: (tx: TxContext) => Promise<T>, resultPolicy?: IdempotencyResultPolicy<T>): Promise<T>` is the application-invoked idempotent transaction wrapper. `CommandContext` contains live actor, correlation ID and validated operation/key/request hash, never client-supplied roles/scope. It claims/checks idempotency and stores the approved non-secret result in the **same commit** as `work`; registered operation/resource policies re-check current access **also on replay**, before skipping `work`. The HTTP interceptor prepares context, not a second transaction.
-- `IdempotencyResultPolicy<T>` provides `store(result: T): JsonValue` (explicit non-secret allow-list), `replay(tx, stored, command): Promise<T>` (authorized reconstruction inside the replay transaction), and optional `httpStatus(result: T): number` (otherwise the operation's declared success status). Ordinary DTOs use the default safe projection; endpoints returning a capability **must** register a secret-excluding policy. A transient plaintext token is never serialized into the idempotency record, error, audit or outbox, even on the first successful response.
+- `CommandUnitOfWork.run<T extends JsonValue>(command: CommandContext, work: (tx: TxContext) => Promise<T>, resultPolicy: IdempotencyResultPolicy<T>): Promise<T>` is the application-invoked idempotent transaction wrapper. `CommandContext` contains the server-resolved actor, correlation ID, stable operation, keyed request/key hashes, operation success status and server-selected expiry; it never contains client-supplied roles/scope. It claims/checks idempotency and stores the approved result in the **same commit** as `work`; the result policy re-checks current access **also on replay**, before skipping `work`. The HTTP interceptor prepares context, not a second transaction.
+- `IdempotencyResultPolicy<T>` is mandatory for every command and provides `store(result: T): JsonValue` (explicit non-secret field allow-list), `replay(tx, stored, command): Promise<T>` (re-check current access, then reconstruct the original accepted/rejected outcome inside the replay transaction), and optional deterministic `httpStatus(result: T): number` (otherwise the operation's declared success status). The replay result and status must match the original response; status `204` stores and replays only `null`. There is no generic response serializer: absent an explicit policy, a command cannot execute. Operation owners set expiry to cover the documented client/provider retry horizon; ambiguous external payment attempts must remain fenced by their owning reconciliation state and never be retried merely because an idempotency record expires. A transient plaintext token is never serialized into the idempotency record, error, audit or outbox, even on the first successful response.
+- A request with the same principal/operation/key but a different request hash returns `COMMON_CONFLICT`. A concurrent request that cannot acquire the bounded transaction-scoped claim returns `COMMON_CONFLICT` with `Retry-After: 1`; it never executes the domain work twice. Expired records may be reclaimed transactionally, while cleanup remains bounded and must not delete active leases.
 - `OutboxWriter.append(tx, event): Promise<void>` inserts the typed event; it does not publish to a network/queue. `EventFactory.create(type, aggregate, payload, correlationId)` adds UUIDv7, schema version and clock time; `aggregate` contains type/ID/current version. `AuditWriter.record(tx, entry)` is the [Audit-owned port](../audit/be/audit.md); its implementation joins this same handle and applies its redaction contract. Audit failure rolls back the command.
 - `PrismaDatabase` owns connection lifecycle, not domain orchestration. Only repository adapters and the shared transaction/lease infrastructure import Prisma. Module application code decides the write set and calls outbox/audit ports explicitly; repositories never create transactions, make business decisions or send events.
 
 **Rejected verification outcomes:** Auth/Delivery sometimes must commit a failed-attempt count, lock or valid-but-blocked challenge consumption. Return a typed JSON-safe accepted/rejected outcome from the UoW, commit **only** the permitted security bookkeeping on rejection, then map rejection to the registered non-2xx error envelope outside the transaction. Throwing inside `work` would undo the counter. Delivery's required idempotency policy stores only the outcome's safe code/details and projects its real HTTP status; replay returns the same rejection without another attempt. Unexpected database/programming failures still throw/rollback; never catch all exceptions and commit. Low-entropy code-bearing request fingerprints use a server-keyed hash, not plaintext or an offline-guessable unkeyed digest.
 
-**Outbox/worker semantics:** insert state + outbox (+ required audit/idempotent result) atomically. Relay leases a bounded `FOR UPDATE SKIP LOCKED` batch, commits the lease, then sends to pg-boss outside the transaction using stable event IDs; mark published only after durable enqueue acknowledgement. Crash after enqueue/before mark may deliver twice. Recover expired leases; bounded retry/backoff ends in `dead`, with redacted logs/metrics and explicit operator replay, not an invented admin screen. Replays retain event IDs.
-Consumers claim `idempotency_keys` under `principal_key=consumer:<name>`, `operation=<handler>`, key=event ID; their local state change and receipt commit together. External calls use the owning adapter's idempotency/reconciliation contract and never hold a DB transaction open. No exactly-once promise: a timeout after an external side effect is reconciled, not blindly sent again. Use aggregate version/state guards for stale delivery; cross-consumer/global ordering is not assumed.
+The shared wrapper now accepts explicit policy-selected `4xx` statuses for
+these committed rejections as well as `2xx` accepted results. The operation's
+default `successStatus` remains `2xx`; a rejected outcome must use its explicit
+policy mapping. `1xx`, `3xx`, `5xx`, non-integers and out-of-range statuses
+fail and roll back rather than becoming persisted outcomes. There is no
+catch-and-commit path for thrown errors.
+After the replay policy checks current access and reconstructs the outcome,
+the wrapper requires its status to equal the persisted status before committing
+any replay-side changes. A mismatch rolls back; a stored rejection cannot
+silently turn into success. This implements transaction mechanics only:
+Auth/Delivery still own the outcome types, permitted counter/lock writes,
+error mapping after commit and endpoint wiring.
+
+**Outbox/worker semantics:** insert state + outbox (+ required audit/idempotent result) atomically. Relay leases a bounded `FOR UPDATE SKIP LOCKED` batch, commits the lease, then sends `{eventId}` to the pre-provisioned `apnatown.outbox` pg-boss queue outside the transaction using the event ID as the job ID; mark published only after durable enqueue acknowledgement (an existing job with that ID is an idempotent acknowledgement). Crash after enqueue/before mark may deliver twice. Recover expired leases; bounded retry/backoff ends in `dead`; the target contract requires redacted logs/metrics and explicit operator replay, not an invented admin screen. Replays retain event IDs. The relay's implemented runtime bounds are in [backend-shared](./backend-shared.md#shared-layer). Consumer registrations remain deferred; no exactly-once or active-handler guarantee is implied. Metrics export and replay controls are not yet implemented and remain explicit operational gates.
+Consumers load the persisted envelope and claim `idempotency_keys` under `principal_key=consumer:<name>`, `operation=<handler>`, key=event ID; their local state change and receipt commit together. External calls use the owning adapter's idempotency/reconciliation contract and never hold a DB transaction open. No exactly-once promise: a timeout after an external side effect is reconciled, not blindly sent again. Use aggregate version/state guards for stale delivery; cross-consumer/global ordering is not assumed.
+
+The implemented worker-only `EVENT_CONSUMER` port is
+`run(operation, persistedEvent, expiresAt, work(tx, event)): Promise<void>`.
+The server-owned operation declares `consumer`, `handler`, `eventType` and
+`schemaVersion`; consumer/handler names use the existing command identity
+grammar. It validates the bounded JSON envelope and exact type/version before
+opening a transaction. The dispatcher must load the persisted envelope by job
+event ID, never treat a job-supplied payload as that source of truth.
+
+The executor uses purpose-separated HMAC-SHA256 hashes with
+`IDEMPOTENCY_HASH_KEY`: the event ID is the receipt key; the consumer/handler,
+immutable envelope metadata and canonical payload form the request fingerprint.
+Metadata and payload are encoded separately so an otherwise valid maximum-size
+payload is not rejected merely because the envelope adds fields. HTTP hash
+purposes/bytes are unchanged. Identical delivery reuses an unexpired committed
+receipt without running `work`; changed event data under that same identity
+conflicts. The local handler and receipt share the existing command transaction,
+and failures roll both back. Receipt status `204` and JSON `null` are internal
+no-result markers, not an HTTP endpoint; no payload/result is stored in the
+receipt and corrupt non-null receipts fail rather than being accepted.
+
+Work runs with the persisted correlation ID and must perform only local
+transactional effects, with current eligibility and aggregate-version checks
+owned by the handler. Replaying a receipt returns no protected data and performs
+no new effect; it does not authorize an external send. The owner selects expiry
+to cover its retry/replay horizon and retains domain-level stale/duplicate guards
+after receipt expiry. No generic retention default is added. Runtime/database
+deduplication remains unverified until service-backed validation is permitted.
+
+The worker's `OutboxDispatcher.dispatch(jobData)` now accepts only strict
+`{eventId: UUID}` data and loads the envelope through `OutboxEventStore` using
+one parameterized primary-key read. Additional job fields, missing/invalid
+events and unsupported type/version registrations fail explicitly. Loading does
+not require `state='published'`: a job may run after durable enqueue but before
+the relay records its acknowledgement. Relay delivery state is not the consumer
+completion receipt and does not change the immutable envelope.
+
+`OUTBOX_HANDLERS` is a static worker-only list of
+`{operation, expiresAt(event), handle(tx,event)}` registrations. Each has one
+exact event type/schema version and a unique consumer/handler identity;
+duplicate identities or invalid declarations fail during composition.
+The expiry function is a pure, owner-selected policy. The dispatcher takes a
+validated metadata snapshot and preserves the receiver of handler/policy methods.
+It visits every matching handler sequentially without assuming domain order,
+committing each through its independent consumer receipt. A failure is logged
+with only event ID, handler identity, correlation and fixed code; other handlers
+are still attempted, then dispatch rejects so the queue owner can retry.
+Successful handlers are skipped by their receipts on retry; no partial success
+is acknowledged as whole-job success.
+
+The current list is empty because no domain handler has been implemented.
+The dispatcher starts no loop or connection during construction, and an empty
+handler list never implies worker readiness. No runtime dispatch validation or
+query-plan measurements are claimed.
+
+`OutboxConsumer` now bridges pg-boss to that dispatcher. With a nonempty static
+registry it registers one worker for `apnatown.outbox`, batch size/local
+concurrency 1 and a 1-second poll interval. Successful dispatch resolves the
+callback for pg-boss acknowledgement; a dispatch failure logs and throws only
+`OUTBOX_DISPATCH_FAILED`, so raw database/handler exceptions never become job
+output. pg-boss applies the relay's configured job retry/backoff policy;
+exhausted consumer jobs become pg-boss `failed`, independently of the relay's
+`published` state. Successful effect receipts remain authoritative if completion
+acknowledgement is lost. Registration outages retry after `JOB_RETRY_DELAY_MS`;
+this connection polling is separate from the bounded per-job attempt limit.
+With zero handlers the bridge logs its inactive state and never fetches or
+acknowledges queued events.
+
+Relay and consumer share one lazy `OutboxQueue` client/start promise and one
+bounded pool; failed startup cleans up before retry. Schema creation/migration
+and scheduling remain disabled. When real handlers are configured, pg-boss
+supervision is enabled for abandoned-job recovery and queue-internal retention;
+automatic reindexing, persisted queue-stat partitions and persisted warnings
+are explicitly disabled to avoid runtime DDL or unsanitized warning storage.
+Migration-role queue provisioning remains unchanged. Supervision is disabled
+while the registry is empty. This configuration still requires runtime-role,
+crash/retry and shutdown validation before deployment; library source inspection
+and static checks are not execution evidence.
+
+Shutdown stops relay leases, consumer fetching and cleanup intake together;
+it drains their in-flight work, closes the shared queue, then releases the
+database. The existing process deadline remains armed on drain failure so
+shutdown cannot hang indefinitely. Domain handlers, the exact readiness
+manifest, metrics export, operator replay and external delivery/reconciliation
+remain pending; the bridge does not turn readiness true by itself.
 
 **HTTP idempotency:** hash the canonical allow-listed payload plus method/resource/operation and **server-resolved business ID/kind** for owner operations, excluding volatile correlation/CSRF fields. A changed `X-Business-Kind` cannot replay a shop result into a provider context. Same principal/key/hash replays the original status/non-secret result; changed payload/context -> 409 `COMMON_CONFLICT` (or module code); concurrent in-progress work returns a bounded retry response with `Retry-After`, never executes a second domain command. Authorization failure cannot become successful replay. For external payment-like workflows, commit reservation/attempt first, release the transaction, call the provider, then finalize through the owning module's reconciliation state machine; never expire an ambiguous attempt and charge again.
-**Users deletion exception:** the confirming session alone receives a status-only `completionToken`; its hash/expiry is Users-owned in `data_requests`. The idempotency row stores only the non-secret request result/reference. An eligible authenticated retry may atomically rotate that capability via its result policy, replacing the hash and returning the new transient token **without another deletion job**; no generic bearer replay or post-revocation re-authentication. Status polling after session revocation discloses only Users' permitted terminal-status DTO, not PII/export data/privileged actions. Use the same reviewed opaque-token helper as Auth; exact lifetime and access gates belong to Users.
-Retention/lease/backoff settings must be explicit, validated config and cover each module's retry/provider replay horizon; no invented production retention period. Cleanup removes only expired completed records or recoverable leases, not unresolved financial attempts. Policy values not set by module/product remain a deployment gate, while tests specify their own short deterministic windows.
 
-**Rate limits:** use DB time and one parameterized atomic upsert/conditional increment per window, not read-then-write counters. Multiple API processes share the result. Return 429 plus `Retry-After`; use only trusted proxy configuration for client IP. DB failure fails protected throttled operations closed with 503, not an unlimited in-memory fallback. Auth's attempt/cooldown records remain authoritative even when a shared bucket expires. No Redis.
+The implemented `COMMAND_CONTEXT_FACTORY` (`HttpCommandContextFactory.create`)
+takes a server-owned operation policy, a trusted binding and a key/validated
+business-payload projection. The operation declares a stable name, mutation
+method (`POST`, `PUT`, `PATCH`, `DELETE`), success status and explicit
+`principal`/`business` scope. The binding contains the authenticated user UUID,
+correlation ID, canonical resolved resource path (not the raw URL/query),
+server-selected expiry and either a resolved business UUID/kind or explicit
+`null`. A business-scoped operation without its binding fails closed; the
+factory does not authenticate users or resolve ownership.
+
+- `Idempotency-Key` is one case-sensitive 1-128-character string using
+  ASCII letters, digits, `.`, `_`, `:`, `-`. Do not trim, lowercase or join
+  duplicate header values. Missing, malformed or array-valued keys fail
+  `COMMON_VALIDATION_FAILED`; UUID keys are supported.
+- The key hash remains stable when the payload/resource/business changes so
+  the existing principal/operation/key identity produces a conflict rather
+  than another command. The request hash covers operation, method, resource,
+  actor, resolved business and bounded `canonicalJson` payload. Object key
+  ordering is immaterial; array ordering is significant. Correlation and expiry
+  are excluded from the fingerprint. Cookies and CSRF headers never enter the
+  factory input or returned context.
+  Callers supply the owning DTO's validated business fields, never the whole
+  request or authentication-header object.
+- Both hashes are 32-byte HMAC-SHA256 values with separate versioned purpose
+  prefixes. Required API/worker-only `IDEMPOTENCY_HASH_KEY` is a dedicated
+  32-byte secret encoded as 64 lowercase hexadecimal characters, independent
+  of cursor signing. Local generation creates it once; it never goes to Web,
+  the offline build/export process, logs or database rows. Keep it stable
+  across restarts and replicas; rotation requires a coordinated replay-aware
+  migration covering retained keys and unresolved attempts, not automatic
+  regeneration or a cursor-key rotation.
+
+**Users deletion exception:** the confirming session alone receives a status-only `completionToken`; its hash/expiry is Users-owned in `data_requests`. The idempotency row stores only the non-secret request result/reference. An eligible authenticated retry may atomically rotate that capability via its result policy, replacing the hash and returning the new transient token **without another deletion job**; no generic bearer replay or post-revocation re-authentication. Status polling after session revocation discloses only Users' permitted terminal-status DTO, not PII/export data/privileged actions. Use the same reviewed opaque-token helper as Auth; exact lifetime and access gates belong to Users.
+The idempotency claim lease is validated `IDEMPOTENCY_LEASE_MS` configuration (10-300 seconds, default 30 seconds); it bounds recovery of a claim, not the operation's retry horizon. Each operation owns its server-selected record expiry and must cover its documented client/provider retry horizon; do not invent one shared production retention period.
+
+**Shared runtime cleanup:** the worker now runs one immediate bounded batch and
+then at `RUNTIME_CLEANUP_INTERVAL_MS` (1 second-1 hour, default 60 seconds).
+`RUNTIME_CLEANUP_BATCH_SIZE` is 1-500, default 100 **per table per tick**, not an
+HTTP list limit. It deletes only expired rate-limit buckets and expired
+`state='completed'` idempotency receipts using database statement time (a stable
+expiry cutoff suitable for the existing `expires_at` indexes). Each table selects an ordered `FOR UPDATE SKIP LOCKED`
+batch; both deletes commit together through the shared unit of work. Locked
+rows are skipped, concurrent workers can make progress, and one process never
+overlaps its own ticks or loops until the backlog is empty.
+
+All `in_progress` receipts are retained, including expired leases; recovery
+belongs to the command/owning workflow, not blanket deletion. Outbox events,
+financial attempts, session/OTP records and domain data are untouched. No
+domain retention policy is introduced. Logs contain only deleted-row counts
+or a fixed failure code; failures retry on the next tick, without advancing an
+in-memory cleanup cursor. The API never starts this timer. Shutdown stops new
+ticks immediately and awaits the active task before releasing the database,
+within the worker lifecycle's existing bounded deadline. Cleanup does not make
+worker readiness true. Query plans and database-runtime behavior still require
+verification before rollout; no measurements are claimed by this implementation.
+
+**Rate limits:** use DB time and one parameterized atomic upsert/conditional increment per fixed, epoch-aligned policy window (`date_bin`), not read-then-write counters. The saturating hit count is bounded at `maximumHits + 1`; the extra count distinguishes the first rejected request without unbounded growth. Multiple API processes share the result. Return 429 plus `Retry-After` rounded up to the bucket expiry; use the socket IP unless an explicit trusted-proxy policy is configured. Hash subjects with a purpose-separated HMAC; never persist raw IP, user ID, or phone. DB failure fails protected throttled operations closed with 503, not an unlimited in-memory fallback. Expiry cleanup is bounded by the existing `expires_at` index. Auth's attempt/cooldown records remain authoritative even when a shared bucket expires. No Redis.
 
 ## Migrations, seeds and isolation
+
+Follow the [verification policy](../../AGENTS.md#4-hard-limits-non-negotiable):
+manual DB checks and existing migration/build tooling only; no automated
+database test files, suite provisioners or test-only fixtures.
+
+The initial [reviewed migrations](../../apps/api/prisma/migrations/) now cover
+the three extensions and shared runtime tables only.
+The [local migration launcher](../../apps/api/prisma/migrate.mjs) installs the
+pinned pg-boss schema and provisions the generic outbox queue under the
+migration role, then grants runtime queue access without DDL. Verification used
+a fresh disposable PostGIS 17/3.5 database: two migration runs, extension
+function checks and runtime DDL rejection passed. This does not mark domain
+schemas, their seeds, consumers or the worker/readiness manifest complete.
+Forward repair remains a new migration; no data reset was performed and no
+automated test harness was restored.
 
 1. API owns the single ordered Prisma migration history; domain owners contribute their tables, shared runtime contributes the three tables above. First reviewed SQL enables `postgis`, `pg_trgm`, `unaccent`; full-text is PostgreSQL built-in, not another extension/service. Verify extension versions via DB queries and PostGIS distance/trigram/unaccent smoke tests.
 2. Use a privileged **migration role** for extensions/schema/grants and a least-privilege **runtime role** for repositories; preserve Audit's INSERT/SELECT-only constraint. The pinned pg-boss schema is installed/upgraded once using its supported migration API under the migration role; workers open with runtime DDL disabled. No migrations or seeding in API startup/readiness.
 3. Development creates a reviewed migration using `prisma migrate dev` with an isolated `SHADOW_DATABASE_URL`; CI/deployment uses `prisma migrate deploy` through `pnpm db:migrate`. Never share shadow/prod URLs, edit an applied migration, use `db push` as evidence, or give application users extension/DDL privileges.
-4. `pnpm db:seed` adapts [10-sample-data.json](../../docs/design-context/10-sample-data.json) into the module schemas in FK order (geo/users/catalog before businesses/listings). Maintain a deterministic fixture alias -> valid UUIDv7 mapping, explicit EN/HI values, paise conversions and approved/pending/scoped test actors. Seeds are synthetic, versioned and idempotent by stable keys; repeat produces no duplicate taxonomy/users/rows and no external sends.
-5. Seed uses fixed test clock/ID fixtures, not a production ID generator change. Never seed usable passwords/session tokens/OTP bypasses, real phone recipients, KYC or payment details. Demo defaults are not production fees/legal/provider decisions; production bootstrap data requires a separate reviewed input, not the sample-data script.
-6. Every CI run allocates a separately named disposable DB; parallel HTTP/worker/Playwright suites get distinct databases and pg-boss namespaces/instances, not one shared public schema. Provision extensions, migrations and seed in each; all API/worker/Web test processes point to that same suite DB. Transaction rollback-only tests are insufficient for HTTP/outbox workers that use separate connections.
-7. Test harness verifies local/test environment, explicit database marker and runtime target before any reset/drop. It refuses an unmarked/shared/production URL, even with a “force” flag. A privileged test provisioner creates/drops only its recorded DB names; application credentials cannot drop databases. Cleanup stops workers/connections before dropping; parallel jobs cannot delete each other's DB.
+4. `pnpm db:seed` adapts [10-sample-data.json](../../docs/design-context/10-sample-data.json) into the module schemas in FK order (geo/users/catalog before businesses/listings). Maintain a deterministic fixture alias -> valid UUIDv7 mapping, explicit EN/HI values, paise conversions and approved/pending/scoped test actors. Seeds are synthetic, versioned and idempotent by stable keys; repeat produces no duplicate taxonomy/users/rows and no external sends. Current slice (`apps/api/prisma/seed.mjs`): Padrauna city/areas, sample business owners, businesses (settings, primary category, hours) and link videos through the runtime role, plus the local/test demo personas defined in the [Auth BE spec](../auth/be/auth.md) (`seed-personas.mjs`: customer `u1`, area admin `ad1` with role/permissions/scopes, a synthetic Super Admin); engagement counters stay zero, and products, offers, orders and riders are not yet seeded.
+5. Seed uses fixed test clock/ID fixtures, not a production ID generator change. Never seed usable passwords/session tokens/OTP bypasses, real phone recipients, KYC or payment details; demo persona identities are role holders only, usable solely through the local/test route defined in the Auth BE spec. Demo defaults are not production fees/legal/provider decisions; production bootstrap data requires a separate reviewed input, not the sample-data script.
+6. Manual verification uses a separately named disposable local DB; independent runs get distinct databases and pg-boss namespaces/instances, not one shared public schema. Provision extensions, migrations and synthetic seed only for the explicit target; API/worker/Web for that run use that same DB. Inspect committed state across connections because HTTP/outbox workers use separate connections.
+7. Before any approved reset/drop, verify local environment, explicit database marker, ownership and runtime target. Refuse unmarked/shared/production URLs, even with a “force” flag. Migration/provisioning credentials operate only on recorded disposable names; application credentials cannot drop databases. Stop owned workers/connections before cleanup; independent runs cannot delete each other's DB. Do not introduce test harnesses for this procedure.
 8. Apply changes **forward only**. Every migration documents its recovery/down procedure and data-loss risk for review, but no automatic production down/reset. Use expand/backfill/validate/contract for incompatible changes, bounded backfills and measured lock timeouts; protect older app/worker readers during rollout.
 9. A failed migration keeps readiness false; inspect the migration ledger and data, restore a verified backup into a **new** DB if necessary, then repair forward. `migrate resolve` only after a human verifies the recorded state matches actual SQL effects; never mark failed SQL applied to bypass a gate. Test upgrade from the preceding schema, empty install, duplicate deploy and recovery on disposable copies.
 10. Production backup retention/RPO/RTO/provider approval remains Q-25; no destructive migration is ready to deploy without an approved backup/restore test. Local/test recovery proves mechanics, not production disaster-recovery readiness.
 
 ## Persistence acceptance
 
+- Given an empty handler registry, when the worker starts, then no queue fetch callback is registered and queued events are not acknowledged. A configured registry uses one shared client and one-job consumer batches.
+- Given dispatch rejection or lost completion acknowledgement, when pg-boss retries, then only fixed safe failure details reach the queue and committed effects remain deduplicated. Exhausted queue jobs do not rewrite the relay's publication state.
+- Given SIGTERM or a failed drain, when shutdown runs, then no new relay/consumer/cleanup intake starts, in-flight work drains before database release, and the original deadline remains effective on failure.
+- Given a queued event ID, when dispatch runs, then only its persisted envelope is used; injected job payload fields, missing events and unmatched type/version handlers fail rather than being acknowledged.
+- Given several matching handlers and one failure, when dispatch runs, then the others are still attempted in independent transactions, the overall dispatch rejects, and retry skips already committed effects through their receipts.
+- Given duplicate consumer/handler identities, when the worker is composed, then startup fails; an empty declared registry activates no handler and does not change readiness.
+- Given a named consumer/handler and supported persisted event, when local work completes, then its effects and one no-result receipt commit together; identical redelivery before expiry skips the work.
+- Given changed event data under the same receipt identity, an unsupported event type/version, invalid JSON or a corrupt receipt, when consumption is attempted, then it fails without executing fresh effects. A thrown handler error rolls back both effects and the claim.
+- Given independent consumers/handlers or concurrent retries, when they consume the same event, then each identity is independent and each claim uses the shared bounded concurrency rule; external side effects are not covered by this transaction.
+- Given expired and live shared-runtime records, when one cleanup tick runs, then it deletes at most the configured batch size from each eligible table and preserves live buckets, all in-progress receipts and every business/outbox record.
+- Given concurrent cleanup workers or a row locked by replay, when batches run, then locked rows are skipped without double deletion; a failed batch rolls back and the next tick can retry. Shutdown schedules no new cleanup.
+- Given a permitted attempt-counter update and an explicit rejected outcome policy, when the command returns that outcome, then the counter and non-secret `4xx` receipt commit together before the caller maps the domain error.
+- Given a stored rejection, when an authorized retry reconstructs it, then the original status is preserved without rerunning the work or incrementing attempts; changed replay status, thrown errors and policy-selected `5xx` statuses roll back.
+- Given identical logical HTTP commands, when object property order, correlation ID or expiry changes, then the factory produces identical key/request hashes; changing payload, method, resource or resolved business changes the request hash without changing the key hash.
+- Given a business-scoped command without a resolved business or a malformed idempotency header, when context creation runs, then it fails before any unit of work and never substitutes an anonymous actor or a default business.
 - Given DB-only command success/failure, when outbox or required audit insert fails, then domain state, version and idempotent result all roll back; a successful command leaves queryable DB rows before a worker runs.
 - Given concurrent identical keys or two decisions on version N, when both write, then one commit occurs; the loser replays or receives the documented conflict, and no duplicate subcategory/outbox/audit row is created.
 - Given a deletion confirmation retry, when an eligible confirming session requests it, then only the capability hash rotates and one deletion job remains; when inspecting idempotency/audit/outbox JSON or logs, then no completion/bearer/OTP/CSRF plaintext exists, and a revoked session cannot obtain a fresh capability.
 - Given enqueue acknowledgement followed by relay death, when the lease expires, then repeated delivery with the same event ID does not repeat the consumer's persisted side effect.
 - Given two API processes and one rate-limit subject/window, when requests race, then the configured total cannot be exceeded; a forged proxy header does not create a fresh subject.
 - Given maximum-safe paise/UUID/version and a signed keyset cursor, when DTOs round-trip through HTTP/client/outbox, then types and integer values survive exactly; unsafe integers/tampered cursors fail, not stringify or round.
-- Given two clean isolated test DBs, when migrations and seed run twice and one suite is dropped, then constraints/extensions/fixtures remain valid and the other suite is unaffected; production/unmarked reset attempts are refused.
+- Given two clean isolated disposable DBs, when migrations and seed run twice and one owned DB is explicitly cleaned up, then constraints/extensions/seed data remain valid and the other DB is unaffected; production/unmarked reset attempts are refused.

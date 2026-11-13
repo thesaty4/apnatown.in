@@ -9,6 +9,7 @@ generator without fallback. The first keyboard-focusable link targets `#main`
 ## Contents
 
 - [Structure and imports](#structure-and-imports)
+- [API integration with React Query](#api-integration-with-react-query)
 - [Rendering and SEO](#rendering-and-seo)
 - [Tokens and typography](#tokens-and-typography)
 - [Shared components](#shared-components)
@@ -33,10 +34,39 @@ packages/shared/src/         # shared Zod schemas, types, enums, formatters
 - `apps/web/src/shared/ui` only re-exports `packages/ui`; it must not contain a second implementation. A feature may import `packages/shared`, `packages/ui`, `apps/web/src/shared`, and another feature's public `index.ts` only. Never import another feature's internals.
 - Shared UI never imports a feature; it renders props and callbacks only—no business logic, API calls or data fetching.
 - Server Components are the default. Add Client Components only for browser state, forms, media, gestures or live updates. API access uses the generated/typed OpenAPI client.
-- Use TanStack Query only in client islands that need client-side cache, mutation or live-update behavior; keep server data loading in Server Components.
+- TanStack React Query (`@tanstack/react-query`) is required for client-side API integration in every module; follow the [shared contract](#api-integration-with-react-query). Keep server-only data loading in Server Components.
 - Bootstrap, root layout/providers/loading/error/not-found, package exports/`transpilePackages`, generated-client commands and same-origin `/api` cookie/CSRF wrappers are specified in [architecture](./architecture.md#runtime-composition-and-lifecycle). Use those shared wrappers, not component fetches. Browser auth always comes from the live Auth contract; no cookie-role or UI-only authorization.
-- `shared/i18n/request.ts` supplies validated `en|hi` request config to the next-intl plugin; root `NextIntlClientProvider` receives the needed locale/messages. Query clients are request-local on SSR and stable per browser session, cleared on logout/account switch. No `"use client"` root layout or global private query cache.
+- `shared/i18n/request.ts` supplies validated `en|hi` request config to the next-intl plugin; root `NextIntlClientProvider` receives the needed locale/messages. No `"use client"` root layout or global private query cache.
 - Vendor/provider owner wrappers set `X-Business-Kind: shop|provider` explicitly and key private caches by that context; never select the first business implicitly. `BUSINESS_CONTEXT_REQUIRED` is an explicit error, not empty data. Pending-applicant profile capabilities and approved selling roles come from live server contracts, not this header or the role switcher.
+
+## API integration with React Query
+
+This contract applies to **all module FE specs**, including public client islands, account, vendor/provider, rider and admin surfaces. React Query owns API server-state; the generated OpenAPI client remains the transport and type source. It is not an optional per-feature library choice.
+
+| Concern | Required contract |
+|---|---|
+| Ownership | Feature `api` modules define typed operations, reusable query keys/options and mutation functions; feature hooks use `useQuery`, `useInfiniteQuery` and `useMutation`. Shared query setup belongs in Web's shared API layer, not `packages/ui`. No component `fetch`/Axios, `useEffect` request lifecycle, SWR or second Context/store copy of API responses. Forms/UI state stay local; filters stay in the URL. |
+| Transport and errors | Query/mutation functions call the [browser/server wrappers](./architecture.md#browser-and-server-api-transport), preserving cookies, CSRF, business context and idempotency. Unwrap successful generated-client results; throw normalized API errors (including resolved `{ error, response }` results) with `code`, `message_key`, `status`, safe `details` and `correlationId`. Never resolve failures as `undefined`, empty data or success. Forward query `AbortSignal` through the typed operation to the transport. CSRF bootstrap/rotation stays an internal transport responsibility, not query-cached security material. |
+| Provider and SSR | The existing client providers boundary owns `QueryClientProvider` with a stable browser `QueryClient`, not one recreated on render. Server-only reads may call the typed server client directly. When an SSR result is also client-owned, prefetch with a request-local `QueryClient`, then `dehydrate` into `HydrationBoundary` using the same key/options and a documented freshness policy; do not independently fetch the same initial data twice. Never share a server query client between requests or turn the root layout into a Client Component. |
+| Keys and scope | Keys include resource/operation, normalized response-affecting params, locale where relevant, and current account/role/business/permission scope for private data. Explore and Search use distinct namespaces derived from their own validated URL state. Use an in-memory location-context revision for precise-location changes, not raw coordinates in keys. No tokens, OTPs, contact details or private document contents in keys. |
+| Freshness and pagination | Each feature records `staleTime`, `gcTime`, refetch triggers and any polling interval according to its existing endpoint/visibility contract; freshness is not authorization. Use `useInfiniteQuery` with opaque `pageParam`/`nextCursor`, a filter-scoped key and Load more fallback for accumulating cursor pages. Filter/scope changes reset the page set; unrelated or out-of-order responses cannot replace current results. Snapshot-ranked feeds (Reels) set `staleTime: Infinity` and disable focus/reconnect refetch, because a background refetch re-runs page 1 and replaces the frozen order. Mirror in-session URL state that would change a dynamic route param (the active `/videos/:id`) with `history.replaceState`; `router.replace` there remounts the page and reloads its queries/embeds. |
+| Mutations and realtime | Use `useMutation` for client API commands. After confirmed success, update authoritative cached results or invalidate affected detail/list/count keys via `queryClient`; document cross-feature invalidation through public APIs. Optimistic updates require the owning spec's permission, cancellation of conflicting reads, snapshot/rollback and reconciliation. Never infer payment, order, code-verification or approval success locally. Existing SSE handlers update/invalidate the same cache; they do not create a parallel store or re-rank a frozen Reels session. |
+| Retry and offline | Set retry policy explicitly: bounded retries only for safe transient reads; no automatic validation/auth/permission/conflict retries, and respect server rate-limit/cooldown responses. Mutations default to `retry: false`; any allowed retry reuses the same logical idempotency key/payload under the BE contract. Never queue sensitive actions for automatic offline replay or turn a read Retry button into a repeated command. |
+| Privacy and lifecycle | Private data is memory-only where its owning contract permits it; HTTP `no-store` and existing no-cache rules still apply. Do not persist query/mutation caches to browser storage or service workers, or dehydrate secrets/private documents. Clear sensitive mutation variables/results after the flow no longer needs them. On logout, expiry, account/business/scope change or revocation, cancel affected reads, clear affected query/mutation state, and prevent old in-flight completions from repopulating it before rendering the new context. Cached state never grants permission. |
+| UX | Map query/mutation pending, error and paused/offline states to the shared state views, retaining permitted drafts and surfacing localized errors. Initial loading differs from background refresh; show an empty state only after a successful empty response. Preserve the login/session-expired flow for 401 and no-permission handling for 403. Never keep displaying revoked content as stale data. |
+
+### API integration acceptance and verification
+
+Follow the [verification policy](../../AGENTS.md#4-hard-limits-non-negotiable): manually exercise these scenarios in the local app using its real query hooks and typed transport, without generating automated tests or mocks. Inspect network activity and visible state; record expected/observed results and any gaps. Browser-to-API verification follows [architecture](./architecture.md#verification-and-clean-checkout-ci).
+
+| Given | When | Then |
+|---|---|---|
+| Two consumers share a key, or an SSR-prefetched query is still fresh | They mount/hydrate | The request is deduplicated or hydrated without an unnecessary second initial fetch; another SSR request receives a separate cache. |
+| A typed client returns an API error or a network request fails | The query/mutation settles | Localized error/retry or permission UX appears, never empty/success; retries follow the declared policy. |
+| URL filters, locale, location or ownership scope changes | New results arrive before an old request | Only the current key's data is shown; cursor pages reset and Explore/Search remain independent. |
+| A mutation changes a detail/list/count | It succeeds, fails or conflicts | Affected queries reconcile on success; permitted optimistic state rolls back on failure and drafts/errors remain visible. |
+| A session or business/scope context changes while requests are in flight | Old responses or callbacks finish | Private data cannot repopulate the new context's cache, and sensitive mutation state is cleared. |
+| The browser is offline or a command's outcome is unknown | Connectivity returns or the user retries | No sensitive command replays automatically; any authorized retry preserves the BE idempotency contract. |
 
 ## Rendering and SEO
 
@@ -110,7 +140,7 @@ Owner paths are under `packages/ui/src`; grouped names share the stated file unl
 
 | Component(s) | Props / variants | Owner |
 |---|---|---|
-| Button | `variant,size,loading,disabled,leftIcon,rightIcon,block,as`; primary/secondary/outline/ghost/tertiary/destructive; sm 40px, md 48px, lg metric open (Q-27) | `primitives/Button.tsx` |
+| Button | `variant,size,loading,disabled,leftIcon,rightIcon,block,as`; primary/secondary/outline/ghost/tertiary/destructive, plus `inverse` for always-dark immersive surfaces (Reels); `buttonVariantClassName(variant,size)` styles links as buttons; sm 40px, md 48px, lg metric open (Q-27) | `primitives/Button.tsx` |
 | IconButton | `icon,label (required),badge`; ghost/filled; 44-48px | `primitives/IconButton.tsx` |
 | Input | label, hint, error, prefix/suffix, required, inputMode; text/tel/number/email/search/date/time/textarea | `primitives/Input.tsx` |
 | PhoneInput | E.164 value/onChange; +91, 10 digits | `primitives/PhoneInput.tsx` |
@@ -138,7 +168,7 @@ Owner paths are under `packages/ui/src`; grouped names share the stated file unl
 | Sheet | title, wide, footer; focus trap, Esc, drag handle | `overlay/Sheet.tsx` |
 | Modal / ConfirmDialog | title, impact text, confirm label, tone; destructive impact named | `overlay/ConfirmDialog.tsx` |
 | Popover / ActionSheet / ShareSheet | items; WhatsApp/copy/native share where supported | `overlay/ShareSheet.tsx` |
-| EmptyState / ErrorState / NoPermissionState / OfflineBanner / SuccessState | icon, title, message, action; one clear action | `feedback/StateViews.tsx` |
+| EmptyState / ErrorState / NoPermissionState / OfflineBanner / SuccessState | icon, title, message, action; one clear action; `tone` surface/immersive (dark media surfaces) and `headingLevel` h1/h2 (h2 when the page owns its h1) | `feedback/StateViews.tsx` |
 | ShopCard | shop, lazyCover; responsive grid, open/rating/distance/actions | `cards/ShopCard.tsx` |
 | ProductCard | product; price/offer/stock/add/heart | `cards/ProductCard.tsx` |
 | ServiceCard | service; category/provider/price-or-enquiry/availability/actions | `cards/ServiceCard.tsx` |
@@ -156,7 +186,7 @@ Owner paths are under `packages/ui/src`; grouped names share the stated file unl
 | CategoryMultiSelect | counts per category; selected/empty | `discovery/CategoryMultiSelect.tsx` |
 | ActiveFilterChips / ClearAll | removable chips/count; clear all | `discovery/ActiveFilterChips.tsx` |
 | CategoryPillRow / SubcategoryPillRow | pills/counts; sticky horizontal overflow | `discovery/FilterPillRows.tsx` |
-| MapView | pins, clusters, radius, draggable pin, polygon editor; empty-city state | `geo/MapView.tsx` |
+| MapView | client-only Leaflet pins/clusters/radius; Geoman Free zone editor; attribution and list fallback per [map contract](./media-and-maps.md#leaflet-and-openstreetmap) | `geo/MapView.tsx` |
 | PriceRangeSlider | min/max and paired inputs | `commerce/PriceRangeSlider.tsx` |
 | OfferBanner | badge, discounted price, validity, terms; expired/out-of-stock | `commerce/OfferBanner.tsx` |
 | AddressForm / AddressCard | map pin, landmark, PIN, label | `geo/Address.tsx` |
@@ -166,9 +196,9 @@ Owner paths are under `packages/ui/src`; grouped names share the stated file unl
 | ReviewForm / RatingBreakdown | stars, text, photos, tags; not-eligible | `forms/ReviewForm.tsx`, `data/RatingBreakdown.tsx` |
 | MediaCarousel | images/video thumbnails; loading/error fallback | `media/MediaCarousel.tsx` |
 | FullScreenViewer | prev/next, swipe, zoom, counter, heart; focus trap | `media/FullScreenViewer.tsx` |
-| EmbedCard | validated YouTube/Instagram poster and open fallback | `media/EmbedCard.tsx` |
+| EmbedCard | typed YouTube iframe / Instagram permalink renderer, poster and validated Open fallback | `media/EmbedCard.tsx` |
 | GalleryGrid / Lightbox | filters, caption, linked chip, report; swipe/empty | `media/Gallery.tsx` |
-| ReelsPlayer | vertical feed, playback, mute, progress, data-saver, keyboard | `media/ReelsPlayer.tsx` |
+| ReelsPlayer | vertical feed, provider-supported playback controls, data-saver, keyboard; no simulated Instagram mute/progress | `media/ReelsPlayer.tsx` |
 | FollowButton | follow/following, bell, confirm, login prompt | `engagement/FollowButton.tsx` |
 | HeartButton / LikeButton | pressed state, reduced-motion animation | `engagement/ReactionButtons.tsx` |
 | LinkedItemsStrip | product/service cards; add/enquire/view | `media/LinkedItemsStrip.tsx` |
@@ -196,9 +226,9 @@ Owner paths are under `packages/ui/src`; grouped names share the stated file unl
 |---|---|
 | `useUrlState` | `apps/web/src/shared/hooks/use-url-state.ts`; schema-validate and serialize URL params, preserve Back/Forward. |
 | `useBackScroll`, `useDebounce`, `useMediaQuery` | `apps/web/src/shared/hooks/`; restore per-screen scroll, debounce input, subscribe to media queries with cleanup. |
-| `useCart`, `useAuthGate`, `useFollow`, `useLike`, `useI18n` | `apps/web/src/shared/hooks/`; use typed API/client contracts; login gate returns to a validated origin. |
-| `formatInr(paise)`, `formatDateIst`, `formatTimeIst`, `formatDistanceKm`, `formatPhone`, `slugify` | `packages/shared`; one implementation shared by web and API where applicable. |
-| `buildEmbedUrl` | `apps/api/src/modules/media-videos`; server-only allow-list and reconstruction—never build an embed from a client URL. |
+| `useCart`, `useAuthGate`, `useFollow`, `useLike`, `useI18n` | `apps/web/src/shared/hooks/`; API-backed behavior follows the [React Query contract](#api-integration-with-react-query), without a second response store; login gate returns to a validated origin. |
+| `formatInr(paise)`, `formatDateIst`, `formatTimeIst`, `formatDistanceKm`, `formatCompactCount`, `formatPhone`, `slugify` | `packages/shared`; one implementation shared by web and API where applicable. |
+| `VideoPlaybackDTO` builder | `apps/api/src/modules/media-videos`; server-only provider/ID validation and typed renderer reconstruction per [embed contract](./media-and-maps.md#youtube-and-instagram-embeds), never client URL/HTML. |
 
 ## States, i18n and interaction contracts
 
@@ -210,12 +240,23 @@ Owner paths are under `packages/ui/src`; grouped names share the stated file unl
 
 ## Performance, media and PWA
 
-- Budgets: retain the existing LCP <2.5 s on slow 4G, route JS approximately 170 KB gzip and CLS <0.1 targets; verify the full API/INP/TTFB budgets in [product NFR](../../docs/specs/01-product/06-non-functional-requirements.md). Do not add targets or claim measurements without production-like verification.
+- Budgets: retain the existing LCP <2.5 s on slow 4G, route JS approximately 170 KB gzip and CLS <0.1 targets. Do not add targets or claim measurements without production-like verification.
 - Use intrinsic dimensions/aspect ratio plus responsive `sizes`; prioritize only the actual LCP image and lazy-load below-fold/category/subcategory cards. Batch owner projections and cap every rendered section/page using its module's cursor limit. Preserve skeleton/poster geometry before media. Video never autoplays in data-saver/Save-Data mode; show tap-to-play poster and respect reduced motion.
-- Link embeds only from approved hosts; API rebuilds embed URLs. Uploads use the storage port, content/size validation and EXIF/GPS stripping; use short-lived authorized media access where required.
-- Revocable uploaded images use Media's revalidated public-content URLs. Do not let Next's image optimizer/CDN cache bypass their current publication check; use `unoptimized` with supplied dimensions/responsive layout until an equally authorized optimization path exists. Media's configured upload policy owns byte/dimension limits, EXIF removal and any approved compressed/responsive variants; no image format, quality or variant breakpoints are selected by this foundation. If no approved compressed variant exists, serve the validated source and measure it against the existing LCP budget; do not claim a compression gain. Static design assets may use ordinary image caching.
+- Follow [media and maps](./media-and-maps.md) for Cloudinary image uploads,
+  typed YouTube/Instagram rendering, provider-specific playback and client-only
+  Leaflet/Geoman Free. No direct video upload, raw embed HTML or browser
+  Cloudinary integration. Private documents stay on their separate capability.
+- Revocable uploaded images use Media's revalidated same-origin content paths.
+  Do not let Next's optimizer/CDN cache bypass current publication checks;
+  use `unoptimized` with supplied responsive variants until an equally
+  authorized optimization path exists. Media's [public image policy](../media-videos/be/media-videos.md#public-image-policy)
+  owns formats, quality and limits. Missing/failed variants are an explicit
+  error, never an original-file fallback. Static design assets retain ordinary caching.
 - Cache the static app shell for offline rendering; do not cache private API, KYC, session or payment data. Show offline state and retry. Rider actions remain server-authoritative; countdowns use server timestamps and cannot be accepted/delivered offline.
 - PWA supports install prompt and weak connections. Data-saver disables autoplay and requests smaller media variants; all controls remain operable without motion.
+- PWA/service workers must not prefetch/cache OSM tiles or third-party
+  embeds for offline playback. Normal tile HTTP caching, visible attribution,
+  origin-only referrers and the shared list/manual fallback remain required.
 
 ## Cross-cutting feature ownership
 
@@ -308,35 +349,4 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 
 Input IDs use `useId` unless an explicit unique ID is supplied, **not `name`** (repeated names are valid). External descriptions are merged with hint/error IDs and caller invalid state is preserved. The same contract covers text/tel/number/email/search/date/time and textarea; textarea retains the prototype's 96px minimum height/vertical resize.
 
-```tsx
-// packages/ui/src/primitives/controls.test.tsx
-import { expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { Button } from './Button';
-import { Input } from './Input';
-
-it('Given loading, When clicked, Then semantic native Button stays disabled', async () => {
-  const user = userEvent.setup();
-  let clicked = false;
-  render(<Button loading onClick={() => { clicked = true; }}>Save</Button>);
-  const button = screen.getByRole('button', { name: 'Save' });
-  expect(button).toHaveClass('bg-primary');
-  expect(button).toHaveAttribute('type', 'button');
-  expect(button).toHaveAttribute('aria-busy', 'true');
-  expect(button).toBeDisabled();
-  await user.click(button);
-  expect(clicked).toBe(false);
-});
-
-it('Given repeated names and external help, When rendered, Then IDs and descriptions remain correct', () => {
-  render(<><p id="help">Name</p><Input name="name" label="Shop" required hint="Name" error="Enter a name" aria-describedby="help" /><Input name="name" label="Provider" /></>);
-  const input = screen.getByRole('textbox', { name: /Shop/ });
-  expect(input.id).not.toBe(screen.getByRole('textbox', { name: 'Provider' }).id);
-  expect(input).toHaveAttribute('aria-invalid', 'true');
-  expect(input).toHaveAttribute('aria-describedby', `help ${input.id}-hint ${input.id}-error`);
-  expect(screen.getByRole('alert')).toHaveTextContent('Enter a name');
-});
-```
-
-Acceptance/tests: Given a form, when a default Button is clicked, then it does not submit; explicit `type="submit"` does. Given reduced-motion emulation, when loading/pressing, then computed animation/transform is absent but loading remains accessible. Given a caller ID/invalid/description, when an Input hint/error changes, then label association and external descriptions survive without ID collision. RTL + axe cover keyboard/ref/disabled/error and Hindi/light/dark; Playwright checks real generated CSS, root hydration/error recovery, EN/HI parity and the browser-to-API smoke in [architecture](./architecture.md#verification-and-clean-checkout-ci). No app/component test is claimed executed in this spec-only repair.
+Manual acceptance: Given a form, when a default Button is clicked, then it does not submit; explicit `type="submit"` does. Given reduced-motion emulation, when loading/pressing, then computed animation/transform is absent but loading remains accessible. Given a caller ID/invalid/description, when an Input hint/error changes, then label association and external descriptions survive without ID collision. Given a loading Button, when clicked, then it remains disabled, retains `aria-busy` and does not invoke the action. Manually inspect keyboard/ref/disabled/error behavior, Hindi/light/dark, generated CSS, hydration/error recovery and the browser-to-API flow in [architecture](./architecture.md#verification-and-clean-checkout-ci). These are acceptance scenarios, not claimed executions.

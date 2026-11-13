@@ -5,10 +5,44 @@
   --radius-*: initial;
   --shadow-*: initial;
   --breakpoint-*: initial;
+  --animate-overlay-fade: var(--at-overlay-fade);
+  --animate-sheet-pop: var(--at-sheet-pop);
+  --animate-sheet-up: var(--at-sheet-up);
   --animate-skeleton: var(--at-skeleton);
   --animate-spinner: var(--at-spinner);
+  --art-art-angle: var(--at-art-angle);
+  --art-art-end-lightness: var(--at-art-end-lightness);
+  --art-art-end-saturation: var(--at-art-end-saturation);
+  --art-art-hue-default: var(--at-art-hue-default);
+  --art-art-start-lightness: var(--at-art-start-lightness);
+  --art-art-start-saturation: var(--at-art-start-saturation);
+  --art-listing-hue-clothing: var(--at-listing-hue-clothing);
+  --art-listing-hue-coaching: var(--at-listing-hue-coaching);
+  --art-listing-hue-coaching-education: var(--at-listing-hue-coaching-education);
+  --art-listing-hue-electrician: var(--at-listing-hue-electrician);
+  --art-listing-hue-electronics: var(--at-listing-hue-electronics);
+  --art-listing-hue-food-sweets: var(--at-listing-hue-food-sweets);
+  --art-listing-hue-furniture: var(--at-listing-hue-furniture);
+  --art-listing-hue-grocery: var(--at-listing-hue-grocery);
+  --art-listing-hue-hardware: var(--at-listing-hue-hardware);
+  --art-listing-hue-home-builders: var(--at-listing-hue-home-builders);
+  --art-listing-hue-home-construction: var(--at-listing-hue-home-construction);
+  --art-listing-hue-jewellery: var(--at-listing-hue-jewellery);
+  --art-listing-hue-mechanic: var(--at-listing-hue-mechanic);
+  --art-listing-hue-mechanic-repair: var(--at-listing-hue-mechanic-repair);
+  --art-listing-hue-medical: var(--at-listing-hue-medical);
+  --art-listing-hue-mobile: var(--at-listing-hue-mobile);
+  --art-listing-hue-other-services: var(--at-listing-hue-other-services);
+  --art-listing-hue-plumber: var(--at-listing-hue-plumber);
+  --art-listing-hue-stationery: var(--at-listing-hue-stationery);
+  --art-listing-hue-wedding-events: var(--at-listing-hue-wedding-events);
+  --background-badge-fill: var(--at-badge-fill);
+  --border-width-chip-border: var(--at-chip-border);
   --breakpoint-desktop: 900px;
+  --breakpoint-sheet: 700px;
+  --breakpoint-shop-grid: 480px;
   --breakpoint-tablet: 600px;
+  --breakpoint-wide: 1200px;
   --color-accent: var(--at-accent);
   --color-accent-ink: var(--at-accent-ink);
   --color-ap-approved: var(--at-ap-approved);
@@ -31,6 +65,18 @@
   --color-primary: var(--at-primary);
   --color-primary-ink: var(--at-primary-ink);
   --color-primary-soft: var(--at-primary-soft);
+  --color-reel-canvas: var(--at-reel-canvas);
+  --color-reel-closed: var(--at-reel-closed);
+  --color-reel-hashtag: var(--at-reel-hashtag);
+  --color-reel-liked: var(--at-reel-liked);
+  --color-reel-open: var(--at-reel-open);
+  --color-reel-panel: var(--at-reel-panel);
+  --color-reel-panel-border: var(--at-reel-panel-border);
+  --color-reel-panel-card: var(--at-reel-panel-card);
+  --color-reel-surface: var(--at-reel-surface);
+  --color-reel-text: var(--at-reel-text);
+  --color-reel-text-2: var(--at-reel-text-2);
+  --color-reel-verified: var(--at-reel-verified);
   --color-secondary: var(--at-secondary);
   --color-secondary-soft: var(--at-secondary-soft);
   --color-st-accepted: var(--at-st-accepted);
@@ -46,20 +92,32 @@
   --color-success-soft: var(--at-success-soft);
   --color-surface: var(--at-surface);
   --color-surface-2: var(--at-surface-2);
+  --color-switch-thumb: var(--at-switch-thumb);
   --color-text: var(--at-text);
   --color-text-2: var(--at-text-2);
   --color-warning: var(--at-warning);
   --color-warning-soft: var(--at-warning-soft);
   --container-page: var(--at-page);
+  --container-page-padded: var(--at-page-padded);
+  --container-reel-feed: var(--at-reel-feed);
+  --container-reel-side: var(--at-reel-side);
+  --container-reel-state-copy: var(--at-reel-state-copy);
+  --container-sheet: var(--at-sheet);
+  --container-sheet-wide: var(--at-sheet-wide);
   --container-state-copy: var(--at-state-copy);
+  --drop-shadow-art-shadow: var(--at-art-shadow);
   --ease-standard: var(--at-ease);
   --font-body: var(--at-font-body);
   --font-devanagari: var(--at-font-devanagari);
   --font-display: var(--at-font-display);
   --leading-heading: var(--at-heading);
+  --leading-listing-title: var(--at-listing-title);
+  --opacity-art-brightness: var(--at-art-brightness);
   --radius-lg: var(--at-r-lg);
   --radius-md: var(--at-r-md);
   --radius-pill: var(--at-r-pill);
+  --radius-reel-frame: var(--at-reel-frame);
+  --radius-sheet-grab: var(--at-sheet-grab);
   --radius-sm: var(--at-r-sm);
   --radius-xs: var(--at-r-xs);
   --shadow-1: var(--at-sh-1);
@@ -72,9 +130,22 @@
   --spacing-4: var(--at-4);
   --spacing-6: var(--at-6);
   --spacing-8: var(--at-8);
+  --spacing-avatar-mini: var(--at-avatar-mini);
+  --spacing-badge-block: var(--at-badge-block);
+  --spacing-badge-inline: var(--at-badge-inline);
   --spacing-bottom-tab-height: var(--at-bottom-tab-height);
   --spacing-button-inline: var(--at-button-inline);
   --spacing-button-min-height: var(--at-button-min-height);
+  --spacing-button-small: var(--at-button-small);
+  --spacing-count: var(--at-count);
+  --spacing-count-block: var(--at-count-block);
+  --spacing-explore-sidebar: var(--at-explore-sidebar);
+  --spacing-explore-sidebar-max: var(--at-explore-sidebar-max);
+  --spacing-explore-sidebar-top: var(--at-explore-sidebar-top);
+  --spacing-explore-tab: var(--at-explore-tab);
+  --spacing-field-block: var(--at-field-block);
+  --spacing-field-gap: var(--at-field-gap);
+  --spacing-field-inline: var(--at-field-inline);
   --spacing-icon-max: var(--at-icon-max);
   --spacing-icon-min: var(--at-icon-min);
   --spacing-input-min-height: var(--at-input-min-height);
@@ -83,15 +154,36 @@
   --spacing-otp-height: var(--at-otp-height);
   --spacing-otp-width: var(--at-otp-width);
   --spacing-page-gutter: var(--at-page-gutter);
+  --spacing-product-card-min: var(--at-product-card-min);
+  --spacing-product-title-min: var(--at-product-title-min);
+  --spacing-reel-compact: var(--at-reel-compact);
+  --spacing-reel-info-end: var(--at-reel-info-end);
+  --spacing-reel-rail-bottom: var(--at-reel-rail-bottom);
+  --spacing-row-gap: var(--at-row-gap);
   --spacing-sab: var(--at-sab);
   --spacing-sat: var(--at-sat);
   --spacing-searchbar-min-height: var(--at-searchbar-min-height);
+  --spacing-selection-control: var(--at-selection-control);
+  --spacing-selection-gap: var(--at-selection-gap);
+  --spacing-service-card-min: var(--at-service-card-min);
+  --spacing-sheet-bottom: var(--at-sheet-bottom);
+  --spacing-sheet-grab-height: var(--at-sheet-grab-height);
+  --spacing-sheet-grab-width: var(--at-sheet-grab-width);
+  --spacing-sheet-max: var(--at-sheet-max);
+  --spacing-stack-gap: var(--at-stack-gap);
   --spacing-state-block: var(--at-state-block);
   --spacing-state-gap: var(--at-state-gap);
   --spacing-state-icon: var(--at-state-icon);
   --spacing-state-inline: var(--at-state-inline);
+  --spacing-switch-height: var(--at-switch-height);
+  --spacing-switch-inset: var(--at-switch-inset);
+  --spacing-switch-travel: var(--at-switch-travel);
+  --spacing-switch-width: var(--at-switch-width);
   --spacing-tab-h: var(--at-tab-h);
+  --spacing-textarea-min-height: var(--at-textarea-min-height);
   --spacing-touch: var(--at-touch);
+  --text-art: var(--at-art);
+  --text-art-mini: var(--at-art-mini);
   --text-big-number: var(--at-big-number);
   --text-big-number--font-weight: 700;
   --text-body: var(--at-body);
@@ -101,6 +193,9 @@
   --text-button--font-weight: 600;
   --text-caption: var(--at-caption);
   --text-caption-min: var(--at-caption-min);
+  --text-chip: var(--at-chip);
+  --text-field-error: var(--at-field-error);
+  --text-field-label: var(--at-field-label);
   --text-h1: var(--at-h1);
   --text-h1--font-weight: 700;
   --text-h1--letter-spacing: -0.01em;
@@ -121,12 +216,17 @@
   --text-h4--line-height: 1.25;
   --text-kpi-value: var(--at-kpi-value);
   --text-kpi-value--font-weight: 700;
+  --text-listing-art: var(--at-listing-art);
   --text-mrp: var(--at-mrp);
   --text-price: var(--at-price);
   --text-price--font-weight: 700;
+  --text-product-title: var(--at-product-title);
+  --text-reel-count: var(--at-reel-count);
+  --text-reel-pill-text: var(--at-reel-pill-text);
   --text-small: var(--at-small);
   --text-small-min: var(--at-small-min);
   --text-state-icon: var(--at-state-icon);
+  --text-tab-count: var(--at-tab-count);
   --tracking-heading: var(--at-heading);
   --transition-duration-1: var(--at-dur-1);
   --transition-duration-2: var(--at-dur-2);
@@ -141,4 +241,12 @@
 @utility duration-3 { transition-duration: var(--at-dur-3); }
 @keyframes apnatown-shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
 @keyframes apnatown-spin { to { transform: rotate(360deg); } }
+@keyframes apnatown-overlay-fade { from { opacity: 0; } }
+@keyframes apnatown-sheet-up { from { transform: translateY(100%); } }
+@keyframes apnatown-sheet-pop { from { opacity: 0; transform: translateY(4%); } }
+:root:has(dialog[data-apnatown-overlay][open]) { overflow: hidden; }
 @utility skeleton-fill { background: linear-gradient(90deg, var(--at-surface-2) 25%, var(--at-border) 37%, var(--at-surface-2) 63%); background-size: 400% 100%; }
+@utility badge-fill { background: var(--at-badge-fill); }
+@utility art-fill { background: linear-gradient(var(--at-art-angle), hsl(var(--at-art-hue, var(--at-art-hue-default)) var(--at-art-start-saturation) var(--at-art-start-lightness)), hsl(var(--at-art-hue, var(--at-art-hue-default)) var(--at-art-end-saturation) var(--at-art-end-lightness))); }
+@utility art-shadow { filter: drop-shadow(var(--at-art-shadow)); }
+@utility art-dim { :root[data-theme="dark"] & { filter: brightness(var(--at-art-brightness)); } @media (prefers-color-scheme: dark) { :root[data-theme="auto"] & { filter: brightness(var(--at-art-brightness)); } } }

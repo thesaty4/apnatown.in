@@ -1,12 +1,14 @@
 ---
 name: geo-zones-delivery-fees
-description: "Recipe for city/zone polygons, delivery fee slabs, and rider earning rules that both checkout and delivery read from a single source."
+description: "Recipe for shared Leaflet/OSM maps, Geoman Free zone editing, delivery fee slabs and authoritative geo calculations."
 ---
 
 # Geo zones and delivery fees
 
-Covers SA4, CK3/CK5, RD6 (`domain-accounts-admin.instructions.md`,
-`domain-delivery-riders.instructions.md`).
+Covers SA4, CK3/CK5 and RD6. Follow the applicable Geo, Checkout and
+Delivery feature specifications.
+Map library, tile configuration and usage limits are fixed by the
+[Leaflet/OSM contract](../../../specs/_foundation/media-and-maps.md#leaflet-and-openstreetmap).
 
 ## Steps
 
@@ -20,11 +22,15 @@ Covers SA4, CK3/CK5, RD6 (`domain-accounts-admin.instructions.md`,
 3. `delivery`/`settings` compute rider earning (per-ride base + per-km)
    from the current global settings at job-completion time, and persist
    the computed value so later settings changes don't retroactively
-   change historical earnings (`domain-delivery-riders.instructions.md`).
+   change historical earnings.
 4. Super admin city/zone screens (SA4): enable/disable a city requires
    a confirmation naming the impact (active orders/riders); the polygon
-   editor persists valid, non-self-intersecting polygons only.
-5. Test: address inside/outside a zone, address outside all zones
+   editor uses shared client-only Leaflet with Geoman Free. Convert to
+   GeoJSON `[longitude,latitude]`; PostGIS validates polygons. Keep
+   keyboard/coordinate/list alternatives, OSM attribution, safe popups
+   and HTTP tile caching; no offline tile downloads or paid plugin features.
+5. Document manual acceptance scenarios (no automated test files):
+   address inside/outside a zone, address outside all zones
    ("We are not in your city yet" + notify-me, LC5), fee slab boundary
    values, earning calculation stability after a settings change.
 
@@ -47,3 +53,5 @@ async function resolveDeliveryFee(address: LatLng, shopId: string): Promise<Deli
   settings changes.
 - [ ] Outside-service-area state shown clearly with a notify-me option.
 - [ ] City/zone changes require impact-aware confirmation.
+- [ ] One Leaflet MapView, policy-compliant tiles and usable failure fallback.
+- [ ] React Query owns API state; no implicit geocoding/routing provider.

@@ -14,12 +14,17 @@
     },
     "error": {
       "message": "Please check your connection and try again.",
+      "reference": "Error ID: {id}",
+      "snag": "We hit a snag",
       "title": "Something went wrong"
     },
     "language": {
       "english": "English",
+      "englishShort": "EN",
       "hindi": "हिन्दी",
-      "label": "Language"
+      "hindiShort": "हिं",
+      "label": "Language",
+      "switch": "Switch language to {language}"
     },
     "loading": {
       "label": "Loading"
@@ -29,7 +34,14 @@
       "title": "We’ll be right back"
     },
     "navigation": {
-      "skipToContent": "Skip to content"
+      "account": "Account",
+      "explore": "Explore",
+      "home": "Home",
+      "logo": "ApnaTown.in home",
+      "main": "Main",
+      "services": "Services",
+      "skipToContent": "Skip to content",
+      "videos": "Videos"
     },
     "noPermission": {
       "message": "This section is not available for your role. Ask a Super Admin for access.",
@@ -41,6 +53,9 @@
     },
     "offline": {
       "title": "No internet connection"
+    },
+    "preferences": {
+      "saveFailed": "Your preference could not be saved. Please try selecting it again."
     },
     "theme": {
       "auto": "Auto",

@@ -14,12 +14,17 @@
     },
     "error": {
       "message": "कृपया इंटरनेट जाँचकर फिर कोशिश करें।",
+      "reference": "एरर ID: {id}",
+      "snag": "कुछ गड़बड़ हुई",
       "title": "कुछ गड़बड़ हो गई"
     },
     "language": {
       "english": "English",
+      "englishShort": "EN",
       "hindi": "हिन्दी",
-      "label": "भाषा"
+      "hindiShort": "हिं",
+      "label": "भाषा",
+      "switch": "{language} भाषा चुनें"
     },
     "loading": {
       "label": "लोड हो रहा है"
@@ -29,7 +34,14 @@
       "title": "हम जल्द लौटेंगे"
     },
     "navigation": {
-      "skipToContent": "मुख्य सामग्री पर जाएँ"
+      "account": "खाता",
+      "explore": "खोजें",
+      "home": "होम",
+      "logo": "अपना टाउन.in होम",
+      "main": "मुख्य",
+      "services": "सेवाएँ",
+      "skipToContent": "मुख्य सामग्री पर जाएँ",
+      "videos": "वीडियो"
     },
     "noPermission": {
       "message": "यह सेक्शन आपकी भूमिका के लिए उपलब्ध नहीं है। सुपर एडमिन से अनुमति माँगें।",
@@ -41,6 +53,9 @@
     },
     "offline": {
       "title": "इंटरनेट नहीं है"
+    },
+    "preferences": {
+      "saveFailed": "आपकी पसंद सहेजी नहीं जा सकी। कृपया इसे फिर चुनकर कोशिश करें।"
     },
     "theme": {
       "auto": "ऑटो",

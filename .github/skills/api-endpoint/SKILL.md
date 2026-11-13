@@ -20,14 +20,14 @@ Use when implementing a BE spec's endpoint(s)
 4. Add the controller: validates the DTO, calls the service, maps
    domain errors to the error contract, never touches the repository
    directly.
-5. Authorize: role + ownership + scope check before the service call
-   (`secure-coding-review` skill).
+5. Authorize: role + ownership + scope check before the service call,
+   following the security requirements in `AGENTS.md`.
 6. Register the route and update the OpenAPI contract.
-7. Write unit tests (service, with fakes) and integration tests
-   (controller -> service -> repository), including authorization
-   negatives and malicious input (`testing.instructions.md`).
+7. Run the affected build and fix related errors. Do not start
+   Docker/runtime services, apply databases, or run API
+   smoke checks during implementation.
 8. Link the implementation back to its BE spec; update
-   `docs/FEATURE_INVENTORY.md` status.
+   `docs/design-context/01-feature-inventory.md` status.
 
 ## Skeleton
 
@@ -55,4 +55,4 @@ async cancel(orderId: string, dto: CancelOrderDto, ctx: RequestContext) {
 - [ ] Repository method is the only DB access point.
 - [ ] Authorization checked before any state change.
 - [ ] Error contract followed (`backend.instructions.md`).
-- [ ] Tests cover acceptance criteria + negatives.
+- [ ] Verification evidence covers acceptance criteria + negatives.

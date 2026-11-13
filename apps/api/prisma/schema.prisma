@@ -1,10 +1,2040 @@
-// C00 intentionally has no domain models. C01/C02 own runtime/domain migrations.
 generator client {
-  provider = "prisma-client"
-  output   = "../src/shared/persistence/generated"
-  moduleFormat = "cjs"
+  provider        = "prisma-client"
+  output          = "../src/shared/persistence/generated"
+  moduleFormat    = "cjs"
+  previewFeatures = ["partialIndexes"]
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+// Owner read foundations for EX1–EX12. SQL migrations own checks, public views
+// and expression indexes. There are deliberately no discovery write endpoints.
+model Product {
+  id String @id @db.Uuid
+  businessId String @map("business_id") @db.Uuid
+  categoryId String @map("category_id") @db.Uuid
+  subcategoryId String @map("subcategory_id") @db.Uuid
+  slug String @unique
+  nameEn String @map("name_en")
+  nameHi String? @map("name_hi")
+  description String?
+  brand String?
+  sku String?
+  pricePaise BigInt @map("price_paise")
+  mrpPaise BigInt @map("mrp_paise")
+  unit String
+  tags String[] @default([])
+  specs Json @default("[]")
+  taxCode String? @map("tax_code")
+  featuredSelected Boolean @default(false) @map("featured_selected")
+  published Boolean @default(true)
+  media Json @default("[]")
+  version Int @default(1)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  business Business @relation(fields:[businessId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  category Category @relation(fields:[categoryId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  subcategory Subcategory @relation(fields:[subcategoryId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  inventory Inventory?
+  offerTargets OfferTarget[]
+  variants ProductVariant[]
+  cartLines CartLine[]
+  @@unique([businessId,sku],where:raw("sku IS NOT NULL"),map:"products_business_sku_key")
+  @@index([businessId,createdAt(sort:Desc),id(sort:Desc)],map:"products_business_page_idx")
+  @@index([categoryId,subcategoryId,pricePaise,id],where:raw("published AND deleted_at IS NULL"),map:"products_taxonomy_price_idx")
+  @@index([subcategoryId],map:"products_subcategory_idx")
+  @@index([categoryId,featuredSelected(sort:Desc),createdAt(sort:Desc),id(sort:Desc)],where:raw("published AND deleted_at IS NULL"),map:"products_featured_page_idx")
+  @@index([brand,id],where:raw("published AND deleted_at IS NULL"),map:"products_brand_idx")
+  @@index([nameEn(ops:raw("gin_trgm_ops")),nameHi(ops:raw("gin_trgm_ops"))],type:Gin,map:"products_names_trgm_idx")
+  @@map("products")
+}
+model Inventory {
+  productId String @id @map("product_id") @db.Uuid
+  onHand Int @map("on_hand")
+  lowStockThreshold Int @default(5) @map("low_stock_threshold")
+  availableForSale Boolean @default(true) @map("available_for_sale")
+  version Int @default(1)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  product Product @relation(fields:[productId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  @@index([availableForSale,onHand,productId],map:"inventory_available_idx")
+  @@map("inventory")
+}
+/// Selectable product variant labels (Q-44); deactivated, never hard-deleted.
+model ProductVariant {
+  id        String  @id @db.Uuid
+  productId String  @map("product_id") @db.Uuid
+  label     String
+  position  Int
+  active    Boolean @default(true)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "product_variants_product_id_fkey")
+  cartLines CartLine[]
+
+  @@unique([productId, label], where: raw("active"), map: "product_variants_active_label_key")
+  @@unique([productId, position], where: raw("active"), map: "product_variants_active_position_key")
+  @@index([productId, active, position], map: "product_variants_product_order_idx")
+  @@map("product_variants")
+}
+
+/// Owner customer-facing product pill preferences; taxonomy is never written.
+model ProductCategoryPill {
+  businessId    String      @map("business_id") @db.Uuid
+  subcategoryId String      @map("subcategory_id") @db.Uuid
+  position      Int
+  labelEn       String?     @map("label_en")
+  labelHi       String?     @map("label_hi")
+  hidden        Boolean     @default(false)
+  business      Business    @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "product_category_pills_business_id_fkey")
+  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "product_category_pills_subcategory_id_fkey")
+
+  @@id([businessId, subcategoryId], map: "product_category_pills_pkey")
+  @@unique([businessId, position], map: "product_category_pills_business_position_key")
+  @@index([subcategoryId], map: "product_category_pills_subcategory_idx")
+  @@map("product_category_pills")
+}
+model Service {
+  id String @id @db.Uuid
+  businessId String @map("business_id") @db.Uuid
+  categoryId String @map("category_id") @db.Uuid
+  subcategoryId String @map("subcategory_id") @db.Uuid
+  slug String @unique
+  nameEn String @map("name_en")
+  nameHi String? @map("name_hi")
+  description String?
+  priceType String @map("price_type")
+  priceFromPaise BigInt? @map("price_from_paise")
+  priceToPaise BigInt? @map("price_to_paise")
+  unit String?
+  included String[] @default([])
+  excluded String[] @default([])
+  serviceArea String? @map("service_area")
+  experienceYears Int? @map("experience_years")
+  media Json @default("[]")
+  galleryVisible Boolean @map("gallery_visible")
+  faqs Json @default("[]")
+  featuredSelected Boolean @default(false) @map("featured_selected")
+  status String @default("active")
+  version Int @default(1)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  business Business @relation(fields:[businessId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  category Category @relation(fields:[categoryId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  subcategory Subcategory @relation(fields:[subcategoryId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  offerTargets OfferTarget[]
+  enquiries Enquiry[]
+  @@index([businessId,status,createdAt(sort:Desc),id(sort:Desc)],map:"services_business_page_idx")
+  @@index([businessId,createdAt(sort:Desc),id(sort:Desc)],where:raw("deleted_at IS NULL"),map:"services_owner_page_idx")
+  @@index([categoryId,subcategoryId,priceFromPaise,id],where:raw("status='active' AND deleted_at IS NULL"),map:"services_taxonomy_price_idx")
+  @@index([subcategoryId,businessId],map:"services_subcategory_idx")
+  @@index([categoryId,featuredSelected(sort:Desc),createdAt(sort:Desc),id(sort:Desc)],where:raw("status='active' AND deleted_at IS NULL"),map:"services_featured_page_idx")
+  @@index([nameEn(ops:raw("gin_trgm_ops")),nameHi(ops:raw("gin_trgm_ops"))],type:Gin,map:"services_names_trgm_idx")
+  @@map("services")
+}
+model Review {
+  id String @id @db.Uuid
+  targetType String @map("target_type")
+  targetId String @map("target_id") @db.Uuid
+  businessId String? @map("business_id") @db.Uuid
+  authorUserId String @map("author_user_id") @db.Uuid
+  eligibilityRefType String @map("eligibility_ref_type")
+  eligibilityRefId String @map("eligibility_ref_id") @db.Uuid
+  eligibilityPolicyVersion String? @map("eligibility_policy_version")
+  rating Int @db.SmallInt
+  text String
+  tags String[] @default([])
+  photoAssetIds String[] @default([]) @map("photo_asset_ids") @db.Uuid
+  status String
+  moderationReason String? @map("moderation_reason")
+  helpfulCount Int @default(0) @map("helpful_count")
+  ownerReply String? @map("owner_reply")
+  ownerRepliedAt DateTime? @map("owner_replied_at") @db.Timestamptz(6)
+  version Int @default(1)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  business Business? @relation(fields:[businessId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  author User @relation(fields:[authorUserId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  reports ReviewReport[]
+  @@index([targetType,targetId,rating,id],where:raw("status='published' AND deleted_at IS NULL"),map:"reviews_public_rating_idx")
+  @@index([businessId,status,createdAt(sort:Desc),id(sort:Desc)],map:"reviews_business_idx")
+  @@index([authorUserId,createdAt(sort:Desc),id(sort:Desc)],map:"reviews_author_idx")
+  @@index([targetType,targetId,createdAt(sort:Desc),id(sort:Desc)],where:raw("status IN ('published','reported') AND deleted_at IS NULL"),map:"reviews_public_recent_idx")
+  @@index([targetType,targetId,helpfulCount(sort:Desc),createdAt(sort:Desc),id(sort:Desc)],where:raw("status IN ('published','reported') AND deleted_at IS NULL"),map:"reviews_public_helpful_idx")
+  @@map("reviews")
+}
+model ReviewReport {
+  id String @id @db.Uuid
+  reviewId String @map("review_id") @db.Uuid
+  reporterUserId String? @map("reporter_user_id") @db.Uuid
+  reporterSubjectHash Bytes @map("reporter_subject_hash")
+  reason String
+  details String?
+  status String @default("open")
+  resolvedAt DateTime? @map("resolved_at") @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  review Review @relation(fields:[reviewId],references:[id],onDelete:Restrict,onUpdate:NoAction)
+  reporter User? @relation(fields:[reporterUserId],references:[id],onDelete:Restrict,onUpdate:NoAction)
+  @@unique([reviewId,reporterSubjectHash],map:"review_reports_subject_key")
+  @@index([reviewId,status],map:"review_reports_review_status_idx")
+  @@map("review_reports")
+}
+model FollowerAnnouncement {
+  id String @id @db.Uuid
+  businessId String @map("business_id") @db.Uuid
+  kind String
+  targetId String? @map("target_id") @db.Uuid
+  source String
+  sourceEventId String? @unique @map("source_event_id") @db.Uuid
+  messageEn String? @map("message_en")
+  messageHi String? @map("message_hi")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  business Business @relation(fields:[businessId],references:[id],onDelete:Restrict,onUpdate:NoAction)
+  @@index([businessId,createdAt(sort:Desc),id(sort:Desc)],map:"follower_announcements_recent_idx")
+  @@map("follower_announcements")
+}
+model BillingPurchase {
+  id String @id @db.Uuid
+  businessId String @map("business_id") @db.Uuid
+  initiatedBy String @map("initiated_by") @db.Uuid
+  kind String
+  targetKey String @map("target_key")
+  preparedPlacementId String? @map("prepared_placement_id") @db.Uuid
+  amountPaise BigInt @map("amount_paise")
+  configurationVersion String @map("configuration_version")
+  configurationSnapshot Json @map("configuration_snapshot")
+  periodSnapshot Json @map("period_snapshot")
+  status String
+  idempotencyKey String @map("idempotency_key")
+  requestHash String @map("request_hash")
+  version Int @default(1)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  business Business @relation(fields:[businessId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  initiator User @relation(fields:[initiatedBy],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  preparedPlacement PromotionPlacement? @relation("PreparedPlacement",fields:[preparedPlacementId],references:[id],onDelete:NoAction,onUpdate:NoAction,map:"billing_purchases_prepared_placement_fk")
+  placement PromotionPlacement? @relation("PlacementPurchase")
+  subscription BusinessSubscription?
+  @@unique([initiatedBy,idempotencyKey])
+  @@index([businessId,createdAt(sort:Desc),id(sort:Desc)],map:"billing_purchases_business_idx")
+  @@index([preparedPlacementId],map:"billing_purchases_placement_idx")
+  @@map("billing_purchases")
+}
+model BusinessSubscriptionVersion {
+  businessId String @id @map("business_id") @db.Uuid
+  version Int @default(1)
+  business Business @relation(fields:[businessId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  @@map("business_subscription_versions")
+}
+model BusinessSubscription {
+  id String @id @db.Uuid
+  businessId String @map("business_id") @db.Uuid
+  planKey String @map("plan_key")
+  purchaseId String? @unique @map("purchase_id") @db.Uuid
+  planSnapshot Json? @map("plan_snapshot")
+  startsAt DateTime @map("starts_at") @db.Timestamptz(6)
+  endsAt DateTime? @map("ends_at") @db.Timestamptz(6)
+  cancellationRequestedAt DateTime? @map("cancellation_requested_at") @db.Timestamptz(6)
+  version Int @default(1)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  business Business @relation(fields:[businessId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  purchase BillingPurchase? @relation(fields:[purchaseId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  @@index([businessId,startsAt,endsAt,id],map:"business_subscriptions_period_idx")
+  @@map("business_subscriptions")
+}
+model Offer {
+  id String @id @db.Uuid
+  businessId String @map("business_id") @db.Uuid
+  titleEn String @map("title_en")
+  titleHi String? @map("title_hi")
+  termsEn String? @map("terms_en")
+  termsHi String? @map("terms_hi")
+  discountType String @map("discount_type")
+  discountPercent Int? @map("discount_percent") @db.SmallInt
+  discountPaise BigInt? @map("discount_paise")
+  scope String
+  validFrom DateTime @map("valid_from") @db.Timestamptz(6)
+  validTo DateTime @map("valid_to") @db.Timestamptz(6)
+  status String @default("pending")
+  reviewDecision String? @map("review_decision")
+  reviewedBy String? @map("reviewed_by") @db.Uuid
+  reviewedAt DateTime? @map("reviewed_at") @db.Timestamptz(6)
+  firstApprovedAt DateTime? @map("first_approved_at") @db.Timestamptz(6)
+  rejectionReason String? @map("rejection_reason")
+  featured Boolean @default(false)
+  bannerAssetId String? @map("banner_asset_id") @db.Uuid
+  viewsCount BigInt @default(0) @map("views_count")
+  usesCount BigInt @default(0) @map("uses_count")
+  version Int @default(1)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  business Business @relation(fields:[businessId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  reviewer User? @relation(fields:[reviewedBy],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  banner MediaAsset? @relation(fields:[bannerAssetId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  targets OfferTarget[]
+  @@index([businessId,validFrom,validTo,id],where:raw("status='active' AND review_decision='approved'"),map:"offers_public_idx")
+  @@index([reviewedBy],map:"offers_reviewer_idx")
+  @@index([bannerAssetId],map:"offers_banner_idx")
+  @@map("offers")
+}
+model OfferTarget {
+  id String @id @db.Uuid
+  offerId String @map("offer_id") @db.Uuid
+  targetKind String @map("target_kind")
+  productId String? @map("product_id") @db.Uuid
+  serviceId String? @map("service_id") @db.Uuid
+  offer Offer @relation(fields:[offerId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  product Product? @relation(fields:[productId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  service Service? @relation(fields:[serviceId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  @@unique([offerId,productId],where:raw("product_id IS NOT NULL"),map:"offer_targets_product_key")
+  @@unique([offerId,serviceId],where:raw("service_id IS NOT NULL"),map:"offer_targets_service_key")
+  @@index([productId,offerId],map:"offer_targets_product_idx")
+  @@index([serviceId,offerId],map:"offer_targets_service_idx")
+  @@map("offer_targets")
+}
+model PromotionPlacement {
+  id String @id @db.Uuid
+  kind String
+  surface String
+  source String
+  businessId String? @map("business_id") @db.Uuid
+  purchaseId String? @unique @map("purchase_id") @db.Uuid
+  promotionKey String? @map("promotion_key")
+  scopeKind String @map("scope_kind")
+  cityId String? @map("city_id") @db.Uuid
+  areaId String? @map("area_id") @db.Uuid
+  titleEn String? @map("title_en")
+  titleHi String? @map("title_hi")
+  subtitleEn String? @map("subtitle_en")
+  subtitleHi String? @map("subtitle_hi")
+  bannerAssetId String? @map("banner_asset_id") @db.Uuid
+  destination Json?
+  position Int @default(0)
+  status String @default("draft")
+  startsAt DateTime? @map("starts_at") @db.Timestamptz(6)
+  endsAt DateTime? @map("ends_at") @db.Timestamptz(6)
+  configurationVersion String? @map("configuration_version")
+  activationBlockedReason String? @map("activation_blocked_reason")
+  createdBy String @map("created_by") @db.Uuid
+  updatedBy String @map("updated_by") @db.Uuid
+  version Int @default(1)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  business Business? @relation(fields:[businessId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  purchase BillingPurchase? @relation("PlacementPurchase",fields:[purchaseId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  preparedPurchases BillingPurchase[] @relation("PreparedPlacement")
+  city City? @relation(fields:[cityId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  area Area? @relation(fields:[areaId,cityId],references:[id,cityId],onDelete:NoAction,onUpdate:NoAction)
+  banner MediaAsset? @relation(fields:[bannerAssetId],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  creator User @relation("PlacementCreator",fields:[createdBy],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  updater User @relation("PlacementUpdater",fields:[updatedBy],references:[id],onDelete:NoAction,onUpdate:NoAction)
+  @@index([businessId,status,startsAt,endsAt,id],map:"promotion_placements_business_idx")
+  @@index([cityId,areaId,status,position,id],map:"promotion_placements_scope_idx")
+  @@index([areaId,cityId],map:"promotion_placements_area_idx")
+  @@index([createdBy],map:"promotion_placements_creator_idx")
+  @@index([updatedBy],map:"promotion_placements_updater_idx")
+  @@index([bannerAssetId],map:"promotion_placements_banner_idx")
+  @@map("promotion_placements")
+}
+
+model OutboxEvent {
+  id               String    @id @db.Uuid
+  type             String
+  schemaVersion    Int       @default(1) @map("schema_version")
+  aggregateType    String    @map("aggregate_type")
+  aggregateId      String    @map("aggregate_id") @db.Uuid
+  aggregateVersion Int       @map("aggregate_version")
+  payload          Json      @db.JsonB
+  correlationId    String    @map("correlation_id")
+  occurredAt       DateTime  @map("occurred_at") @db.Timestamptz(6)
+  availableAt      DateTime  @map("available_at") @db.Timestamptz(6)
+  state            String    @default("pending")
+  attemptCount     Int       @default(0) @map("attempt_count")
+  leaseOwner       String?   @map("lease_owner")
+  leaseExpiresAt   DateTime? @map("lease_expires_at") @db.Timestamptz(6)
+  publishedAt      DateTime? @map("published_at") @db.Timestamptz(6)
+  lastErrorCode    String?   @map("last_error_code")
+
+  @@index([state, availableAt, id], map: "outbox_events_state_available_at_id_idx")
+  @@index([leaseExpiresAt, id], where: raw("\"state\" = 'publishing'"), map: "outbox_events_lease_expires_at_id_idx")
+  @@index([aggregateType, aggregateId, aggregateVersion], map: "outbox_events_aggregate_idx")
+  @@map("outbox_events")
+}
+
+model IdempotencyKey {
+  id              String    @id @db.Uuid
+  principalKey    String    @map("principal_key")
+  operation       String
+  keyHash         Bytes     @map("key_hash")
+  requestHash     Bytes     @map("request_hash")
+  state           String
+  leaseOwner      String?   @map("lease_owner")
+  leaseExpiresAt  DateTime? @map("lease_expires_at") @db.Timestamptz(6)
+  httpStatus      Int?      @map("http_status")
+  responseBody    Json?     @map("response_body") @db.JsonB
+  responseHeaders Json      @default("{}") @map("response_headers") @db.JsonB
+  resourceRef     Json?     @map("resource_ref") @db.JsonB
+  createdAt       DateTime  @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime  @map("updated_at") @db.Timestamptz(6)
+  expiresAt       DateTime  @map("expires_at") @db.Timestamptz(6)
+
+  @@unique([principalKey, operation, keyHash], map: "idempotency_keys_principal_operation_key_hash_key")
+  @@index([expiresAt, id], map: "idempotency_keys_expires_at_id_idx")
+  @@index([state, leaseExpiresAt], map: "idempotency_keys_state_lease_expires_at_idx")
+  @@map("idempotency_keys")
+}
+
+model RateLimitBucket {
+  policyKey   String   @map("policy_key")
+  subjectHash Bytes    @map("subject_hash")
+  bucketStart DateTime @map("bucket_start") @db.Timestamptz(6)
+  hitCount    BigInt   @default(0) @map("hit_count")
+  expiresAt   DateTime @map("expires_at") @db.Timestamptz(6)
+
+  @@id([policyKey, subjectHash, bucketStart])
+  @@index([expiresAt], map: "rate_limit_buckets_expires_at_idx")
+  @@map("rate_limit_buckets")
+}
+
+model User {
+  bookmarks Bookmark[]
+  authoredReviews Review[]
+  reviewReports ReviewReport[]
+  billingPurchases BillingPurchase[]
+  reviewedOffers Offer[]
+  createdPlacements PromotionPlacement[] @relation("PlacementCreator")
+  updatedPlacements PromotionPlacement[] @relation("PlacementUpdater")
+  id                   String                   @id @db.Uuid
+  phoneCiphertext      String?                  @map("phone_ciphertext")
+  phoneLookupHash      Bytes?                   @unique(map: "users_phone_lookup_hash_key") @map("phone_lookup_hash")
+  emailCiphertext      String?                  @map("email_ciphertext")
+  displayName          String?                  @map("display_name")
+  preferredLocale      String                   @default("en") @map("preferred_locale")
+  themePreference      String                   @default("light") @map("theme_preference")
+  accountStatus        String                   @default("active") @map("account_status")
+  version              Int                      @default(1)
+  deletedAt            DateTime?                @map("deleted_at") @db.Timestamptz(6)
+  createdAt            DateTime                 @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime                 @map("updated_at") @db.Timestamptz(6)
+  roles                UserRole[]
+  sessions             Session[]
+  addresses            Address[]
+  consents             Consent[]
+  dataRequests         DataRequest[]
+  auditLogs            AuditLog[]
+  adminAccount         AdminAccount?            @relation("AdminAccountUser")
+  adminsCreated        AdminAccount[]           @relation("AdminAccountCreator")
+  settingsUpdated      Setting[]
+  flagsUpdated         FeatureFlag[]
+  legalUpdated         LegalPage[]
+  supportMessages      SupportMessage[]
+  homeSectionsCreated  CatalogHomeSection[]     @relation("CatalogHomeSectionCreator")
+  homeSectionsUpdated  CatalogHomeSection[]     @relation("CatalogHomeSectionUpdater")
+  suggestionsSubmitted SubcategorySuggestion[]  @relation("SuggestionSubmitter")
+  suggestionsReviewed  SubcategorySuggestion[]  @relation("SuggestionReviewer")
+  businessesOwned      Business[]               @relation("BusinessOwner")
+  businessesReviewed   Business[]               @relation("BusinessReviewer")
+  businessDocuments    BusinessDocument[]
+  billingReviewed      BusinessBillingProfile[]
+  mediaAssets          MediaAsset[]
+  mediaUploads         MediaUploadOperation[]
+  reportedMedia        MediaReport[]              @relation("MediaReportReporter")
+  videoComments        VideoComment[]
+  likes                Like[]
+  hearts               Heart[]
+  follows              Follow[]
+  enquiries            Enquiry[]
+  carts                Cart[]
+  notifications        Notification[]
+  notificationPreference NotificationPreference?
+  riderProfile         RiderProfile?            @relation("RiderProfileUser")
+
+  @@index([deletedAt], where: raw("\"deleted_at\" IS NULL"), map: "users_active_deleted_at_idx")
+  @@map("users")
+}
+
+model Bookmark {
+  userId String @map("user_id") @db.Uuid
+  targetType String @map("target_type")
+  targetId String @map("target_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  user User @relation(fields:[userId],references:[id],onDelete:Restrict,onUpdate:Restrict)
+  @@id([userId,targetType,targetId])
+  @@index([userId,targetType,createdAt(sort:Desc),targetId(sort:Desc)],map:"bookmarks_saved_page_idx")
+  @@map("bookmarks")
+}
+
+model UserRole {
+  userId    String   @map("user_id") @db.Uuid
+  role      String
+  createdAt DateTime @map("created_at") @db.Timestamptz(6)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "user_roles_user_id_fkey")
+
+  @@id([userId, role], map: "user_roles_pkey")
+  @@index([role, userId], map: "user_roles_role_user_id_idx")
+  @@map("user_roles")
+}
+
+model Address {
+  id          String                                @id @db.Uuid
+  userId      String                                @map("user_id") @db.Uuid
+  label       String
+  addressText String                                @map("address_text")
+  landmark    String?
+  pinCode     String                                @map("pin_code")
+  cityId      String                                @map("city_id") @db.Uuid
+  areaId      String?                               @map("area_id") @db.Uuid
+  location    Unsupported("geography(Point,4326)")?
+  isDefault   Boolean                               @default(false) @map("is_default")
+  version     Int                                   @default(1)
+  deletedAt   DateTime?                             @map("deleted_at") @db.Timestamptz(6)
+  createdAt   DateTime                              @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime                              @map("updated_at") @db.Timestamptz(6)
+  user        User                                  @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "addresses_user_id_fkey")
+  city        City                                  @relation(fields: [cityId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "addresses_city_id_fkey")
+  area        Area?                                 @relation(fields: [areaId, cityId], references: [id, cityId], onDelete: Restrict, onUpdate: Restrict, map: "addresses_area_city_fkey")
+
+  @@unique([userId], where: raw("\"is_default\" AND \"deleted_at\" IS NULL"), map: "addresses_live_default_key")
+  @@index([userId, deletedAt, createdAt(sort: Desc), id(sort: Desc)], map: "addresses_owner_page_idx")
+  @@index([cityId], map: "addresses_city_id_idx")
+  @@index([areaId, cityId], map: "addresses_area_city_idx")
+  @@map("addresses")
+}
+
+model Consent {
+  id                   String   @id @db.Uuid
+  userId               String?  @map("user_id") @db.Uuid
+  anonymousSubjectHash Bytes?   @map("anonymous_subject_hash")
+  purpose              String
+  channel              String?
+  granted              Boolean
+  noticeVersion        String?  @map("notice_version")
+  recordedAt           DateTime @map("recorded_at") @db.Timestamptz(6)
+  source               String
+  user                 User?    @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "consents_user_id_fkey")
+
+  @@index([userId, purpose, channel, recordedAt(sort: Desc), id(sort: Desc)], map: "consents_user_choice_idx")
+  @@index([anonymousSubjectHash, purpose, channel, recordedAt(sort: Desc), id(sort: Desc)], map: "consents_anonymous_choice_idx")
+  @@map("consents")
+}
+
+model DataRequest {
+  id                       String    @id @db.Uuid
+  userId                   String    @map("user_id") @db.Uuid
+  requestType              String    @map("request_type")
+  status                   String    @default("queued")
+  idempotencyKey           String    @map("idempotency_key")
+  policyVersion            String?   @map("policy_version")
+  completedSteps           Json      @default("{}") @map("completed_steps") @db.JsonB
+  artifactStorageKey       String?   @map("artifact_storage_key")
+  artifactExpiresAt        DateTime? @map("artifact_expires_at") @db.Timestamptz(6)
+  completionTokenHash      Bytes?    @map("completion_token_hash")
+  completionTokenExpiresAt DateTime? @map("completion_token_expires_at") @db.Timestamptz(6)
+  failureCode              String?   @map("failure_code")
+  requestedAt              DateTime  @map("requested_at") @db.Timestamptz(6)
+  updatedAt                DateTime  @map("updated_at") @db.Timestamptz(6)
+  completedAt              DateTime? @map("completed_at") @db.Timestamptz(6)
+  user                     User      @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "data_requests_user_id_fkey")
+
+  @@unique([userId, idempotencyKey], map: "data_requests_user_id_idempotency_key_key")
+  @@index([userId, requestedAt(sort: Desc), id(sort: Desc)], map: "data_requests_user_requested_idx")
+  @@index([status, requestedAt, id], where: raw("\"status\" IN ('queued', 'processing')"), map: "data_requests_work_idx")
+  @@map("data_requests")
+}
+
+model OtpChallenge {
+  id              String    @id @db.Uuid
+  phoneCiphertext String    @map("phone_ciphertext")
+  phoneLookupHash Bytes     @map("phone_lookup_hash")
+  codeHash        String    @map("code_hash")
+  attemptCount    Int       @default(0) @map("attempt_count")
+  expiresAt       DateTime  @map("expires_at") @db.Timestamptz(6)
+  resendAfter     DateTime  @map("resend_after") @db.Timestamptz(6)
+  verifiedAt      DateTime? @map("verified_at") @db.Timestamptz(6)
+  supersededAt    DateTime? @map("superseded_at") @db.Timestamptz(6)
+  createdAt       DateTime  @map("created_at") @db.Timestamptz(6)
+
+  @@index([phoneLookupHash, createdAt(sort: Desc)], map: "otp_challenges_phone_created_at_idx")
+  @@index([expiresAt], map: "otp_challenges_expires_at_idx")
+  @@map("otp_challenges")
+}
+
+model Session {
+  id         String    @id @db.Uuid
+  kind       String
+  userId     String?   @map("user_id") @db.Uuid
+  tokenHash  Bytes     @unique(map: "sessions_token_hash_key") @map("token_hash")
+  csrfToken  String    @map("csrf_token")
+  createdAt  DateTime  @map("created_at") @db.Timestamptz(6)
+  expiresAt  DateTime  @map("expires_at") @db.Timestamptz(6)
+  revokedAt  DateTime? @map("revoked_at") @db.Timestamptz(6)
+  lastSeenAt DateTime  @map("last_seen_at") @db.Timestamptz(6)
+  user       User?     @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "sessions_user_id_fkey")
+
+  @@index([userId, revokedAt, expiresAt], map: "sessions_user_revoked_expires_at_idx")
+  @@index([expiresAt], map: "sessions_expires_at_idx")
+  @@map("sessions")
+}
+
+model City {
+  promotionPlacements PromotionPlacement[]
+  id          String                  @id @db.Uuid
+  slug        String                  @unique(map: "cities_slug_key")
+  nameEn      String                  @map("name_en")
+  nameHi      String                  @map("name_hi")
+  stateCode   String                  @map("state_code") @db.Char(2)
+  status      String
+  version     Int                     @default(1)
+  createdAt   DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime                @default(now()) @map("updated_at") @db.Timestamptz(6)
+  areas       Area[]
+  zones       Zone[]
+  waitlist    ServiceAreaWaitlist[]
+  addresses   Address[]
+  adminScopes AdminScope[]
+  support     SupportMessage[]
+  suggestions SubcategorySuggestion[]
+  riders      RiderProfile[]
+
+  @@index([status, nameEn, id], map: "cities_status_name_en_id_idx")
+  @@map("cities")
+}
+
+model Area {
+  promotionPlacements PromotionPlacement[]
+  id          String                                @id @db.Uuid
+  cityId      String                                @map("city_id") @db.Uuid
+  slug        String
+  nameEn      String                                @map("name_en")
+  nameHi      String                                @map("name_hi")
+  pinCode     String?                               @map("pin_code")
+  centroid    Unsupported("geography(Point,4326)")?
+  createdAt   DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime                              @default(now()) @map("updated_at") @db.Timestamptz(6)
+  city        City                                  @relation(fields: [cityId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "areas_city_id_fkey")
+  addresses   Address[]
+  adminScopes AdminScope[]
+  support     SupportMessage[]
+  suggestions SubcategorySuggestion[]
+  businesses  Business[]
+  riders      RiderProfile[]
+
+  @@unique([id, cityId], map: "areas_id_city_id_key")
+  @@unique([cityId, slug], map: "areas_city_slug_key")
+  @@index([cityId, nameEn, id], map: "areas_city_name_en_id_idx")
+  @@index([cityId, pinCode], map: "areas_city_pin_code_idx")
+  @@index([nameEn(ops: raw("gin_trgm_ops")), nameHi(ops: raw("gin_trgm_ops"))], type: Gin, map: "areas_names_trgm_idx")
+  @@map("areas")
+}
+
+model Zone {
+  id        String                                @id @db.Uuid
+  cityId    String                                @map("city_id") @db.Uuid
+  name      String
+  polygon   Unsupported("geometry(Polygon,4326)")
+  status    String
+  version   Int                                   @default(1)
+  createdAt DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime                              @default(now()) @map("updated_at") @db.Timestamptz(6)
+  city      City                                  @relation(fields: [cityId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "zones_city_id_fkey")
+  feeSlabs  ZoneFeeSlab[]
+
+  @@index([polygon], type: Gist, map: "zones_polygon_idx")
+  @@index([cityId, status], map: "zones_city_status_idx")
+  @@index([cityId, name, id], map: "zones_city_name_id_idx")
+  @@map("zones")
+}
+
+model ZoneFeeSlab {
+  zoneId          String   @map("zone_id") @db.Uuid
+  sequence        Int      @db.SmallInt
+  upperDistanceKm Decimal  @map("upper_distance_km") @db.Decimal(5, 2)
+  feePaise        BigInt   @map("fee_paise")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  zone            Zone     @relation(fields: [zoneId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "zone_fee_slabs_zone_id_fkey")
+
+  @@id([zoneId, sequence], map: "zone_fee_slabs_pkey")
+  @@unique([zoneId, upperDistanceKm], map: "zone_fee_slabs_zone_distance_key")
+  @@map("zone_fee_slabs")
+}
+
+model ServiceAreaWaitlist {
+  id              String   @id @db.Uuid
+  cityId          String?  @map("city_id") @db.Uuid
+  phoneCiphertext String   @map("phone_ciphertext")
+  phoneLookupHash Bytes    @map("phone_lookup_hash")
+  requestedAt     DateTime @default(now()) @map("requested_at") @db.Timestamptz(6)
+  city            City?    @relation(fields: [cityId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "service_area_waitlist_city_id_fkey")
+
+  @@index([cityId, requestedAt(sort: Desc)], map: "service_area_waitlist_city_requested_at_idx")
+  @@map("service_area_waitlist")
+}
+
+/// Append-only (runtime INSERT, SELECT). The GIN full-text expression index
+/// `audit_logs_search_idx` lives in the migration only.
+model AuditLog {
+  id            String   @id @db.Uuid
+  occurredAt    DateTime @default(now()) @map("occurred_at") @db.Timestamptz(6)
+  actorUserId   String?  @map("actor_user_id") @db.Uuid
+  actorRole     String   @map("actor_role")
+  actorLabel    String   @map("actor_label")
+  action        String
+  entityType    String   @map("entity_type")
+  entityId      String?  @map("entity_id") @db.Uuid
+  cityId        String?  @map("city_id") @db.Uuid
+  areaId        String?  @map("area_id") @db.Uuid
+  relatedScopes Json     @default("[]") @map("related_scopes") @db.JsonB
+  summary       String
+  before        Json?    @db.JsonB
+  after         Json?    @db.JsonB
+  correlationId String   @map("correlation_id")
+  ipHash        Bytes?   @map("ip_hash")
+  actor         User?    @relation(fields: [actorUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "audit_logs_actor_user_id_fkey")
+
+  @@index([occurredAt(sort: Desc), id(sort: Desc)], map: "audit_logs_feed_idx")
+  @@index([entityType, entityId, occurredAt(sort: Desc), id(sort: Desc)], map: "audit_logs_entity_history_idx")
+  @@index([actorUserId, occurredAt(sort: Desc), id(sort: Desc)], map: "audit_logs_actor_feed_idx")
+  @@index([cityId, areaId, occurredAt(sort: Desc), id(sort: Desc)], map: "audit_logs_scope_feed_idx")
+  @@map("audit_logs")
+}
+
+model Role {
+  id          String           @id @db.Uuid
+  name        String           @unique(map: "roles_name_key")
+  description String?
+  isSystem    Boolean          @default(false) @map("is_system")
+  version     Int              @default(1)
+  createdAt   DateTime         @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime         @map("updated_at") @db.Timestamptz(6)
+  permissions RolePermission[]
+  admins      AdminAccount[]
+
+  @@map("roles")
+}
+
+model RolePermission {
+  roleId String @map("role_id") @db.Uuid
+  module String
+  action String
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "role_permissions_role_id_fkey")
+
+  @@id([roleId, module, action], map: "role_permissions_pkey")
+  @@map("role_permissions")
+}
+
+model AdminAccount {
+  userId              String            @id @map("user_id") @db.Uuid
+  displayName         String            @map("display_name")
+  emailCiphertext     String            @map("email_ciphertext")
+  roleId              String            @map("role_id") @db.Uuid
+  status              String
+  communicationScopes String[]          @default([]) @map("communication_scopes")
+  lastActiveAt        DateTime?         @map("last_active_at") @db.Timestamptz(6)
+  version             Int               @default(1)
+  createdBy           String?           @map("created_by") @db.Uuid
+  createdAt           DateTime          @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime          @map("updated_at") @db.Timestamptz(6)
+  user                User              @relation("AdminAccountUser", fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "admin_accounts_user_id_fkey")
+  role                Role              @relation(fields: [roleId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "admin_accounts_role_id_fkey")
+  creator             User?             @relation("AdminAccountCreator", fields: [createdBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "admin_accounts_created_by_fkey")
+  permissions         AdminPermission[]
+  scopes              AdminScope[]
+
+  @@index([roleId], map: "admin_accounts_role_id_idx")
+  @@index([status], map: "admin_accounts_status_idx")
+  @@index([createdAt(sort: Desc), userId(sort: Desc)], map: "admin_accounts_created_page_idx")
+  @@map("admin_accounts")
+}
+
+model AdminPermission {
+  userId  String       @map("user_id") @db.Uuid
+  module  String
+  action  String
+  account AdminAccount @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Restrict, map: "admin_permissions_user_id_fkey")
+
+  @@id([userId, module, action], map: "admin_permissions_pkey")
+  @@map("admin_permissions")
+}
+
+model AdminScope {
+  id        String       @id @db.Uuid
+  userId    String       @map("user_id") @db.Uuid
+  authority String
+  areaId    String?      @map("area_id") @db.Uuid
+  cityId    String       @map("city_id") @db.Uuid
+  account   AdminAccount @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: Restrict, map: "admin_scopes_user_id_fkey")
+  city      City         @relation(fields: [cityId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "admin_scopes_city_id_fkey")
+  area      Area?        @relation(fields: [areaId, cityId], references: [id, cityId], onDelete: Restrict, onUpdate: Restrict, map: "admin_scopes_area_city_fkey")
+
+  @@unique([userId, areaId], where: raw("\"authority\" = 'area'"), map: "admin_scopes_area_grant_key")
+  @@unique([userId, cityId], where: raw("\"authority\" = 'city'"), map: "admin_scopes_city_grant_key")
+  @@index([userId, authority, cityId, areaId], map: "admin_scopes_guard_idx")
+  @@index([cityId], map: "admin_scopes_city_id_idx")
+  @@index([areaId, cityId], map: "admin_scopes_area_city_idx")
+  @@map("admin_scopes")
+}
+
+model Setting {
+  key       String   @id
+  value     Json     @db.JsonB
+  version   Int      @default(1)
+  updatedBy String?  @map("updated_by") @db.Uuid
+  updatedAt DateTime @map("updated_at") @db.Timestamptz(6)
+  updater   User?    @relation(fields: [updatedBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "settings_updated_by_fkey")
+
+  @@index([updatedBy], map: "settings_updated_by_idx")
+  @@map("settings")
+}
+
+model FeatureFlag {
+  key       String   @id
+  enabled   Boolean
+  version   Int      @default(1)
+  updatedBy String?  @map("updated_by") @db.Uuid
+  updatedAt DateTime @map("updated_at") @db.Timestamptz(6)
+  updater   User?    @relation(fields: [updatedBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "feature_flags_updated_by_fkey")
+
+  @@index([updatedBy], map: "feature_flags_updated_by_idx")
+  @@map("feature_flags")
+}
+
+model LegalPage {
+  slug        String   @id
+  titleEn     String   @map("title_en")
+  titleHi     String   @map("title_hi")
+  bodyEn      String   @map("body_en")
+  bodyHi      String   @map("body_hi")
+  version     Int      @default(1)
+  publishedAt DateTime @map("published_at") @db.Timestamptz(6)
+  updatedBy   String?  @map("updated_by") @db.Uuid
+  updater     User?    @relation(fields: [updatedBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "legal_pages_updated_by_fkey")
+
+  @@index([updatedBy], map: "legal_pages_updated_by_idx")
+  @@map("legal_pages")
+}
+
+model SupportMessage {
+  id        String   @id @db.Uuid
+  userId    String?  @map("user_id") @db.Uuid
+  message   String
+  source    String
+  sourceKey String?  @map("source_key")
+  cityId    String?  @map("city_id") @db.Uuid
+  areaId    String?  @map("area_id") @db.Uuid
+  createdAt DateTime @map("created_at") @db.Timestamptz(6)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "support_messages_user_id_fkey")
+  city      City?    @relation(fields: [cityId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "support_messages_city_id_fkey")
+  area      Area?    @relation(fields: [areaId, cityId], references: [id, cityId], onDelete: Restrict, onUpdate: Restrict, map: "support_messages_area_city_fkey")
+
+  @@unique([source, sourceKey], map: "support_messages_source_key_key")
+  @@index([cityId, areaId, createdAt(sort: Desc), id(sort: Desc)], map: "support_messages_scope_feed_idx")
+  @@index([userId, createdAt, id], map: "support_messages_user_idx")
+  @@index([areaId, cityId], map: "support_messages_area_city_idx")
+  @@map("support_messages")
+}
+
+// Catalog taxonomy (F-SA-008).
+model Category {
+  products Product[]
+  services Service[]
+  id                 String                       @id @db.Uuid
+  kind               String
+  slug               String                       @unique(map: "categories_slug_key")
+  nameEn             String                       @map("name_en")
+  nameHi             String                       @map("name_hi")
+  icon               String?
+  imageAssetId       String?                      @map("image_asset_id") @db.Uuid
+  imageAsset         MediaAsset?                  @relation(fields: [imageAssetId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  active             Boolean                      @default(true)
+  sortOrder          Int                          @default(0) @map("sort_order")
+  version            Int                          @default(1)
+  createdAt          DateTime                     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime                     @default(now()) @map("updated_at") @db.Timestamptz(6)
+  subcategories      Subcategory[]
+  relatedTo          CategoryRelation[]           @relation("CategoryRelationSource")
+  relatedFrom        CategoryRelation[]           @relation("CategoryRelationRelated")
+  dedicatedSections  CatalogHomeSection[]         @relation("CatalogHomeSectionCategory")
+  initialForSections CatalogHomeSection[]         @relation("CatalogHomeSectionInitial")
+  sectionPills       CatalogHomeSectionCategory[]
+  suggestions        SubcategorySuggestion[]
+  keywordTargets     KeywordMappingTarget[]
+  businesses         BusinessCategory[]
+
+  @@index([kind, active, sortOrder, id], map: "categories_kind_active_sort_idx")
+  @@index([imageAssetId])
+  @@map("categories")
+}
+
+model CategoryRelation {
+  sourceCategoryId  String   @map("source_category_id") @db.Uuid
+  relatedCategoryId String   @map("related_category_id") @db.Uuid
+  sortOrder         Int      @map("sort_order")
+  source            Category @relation("CategoryRelationSource", fields: [sourceCategoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "category_relations_source_fkey")
+  related           Category @relation("CategoryRelationRelated", fields: [relatedCategoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "category_relations_related_fkey")
+
+  @@id([sourceCategoryId, relatedCategoryId], map: "category_relations_pkey")
+  @@unique([sourceCategoryId, sortOrder], map: "category_relations_source_sort_key")
+  @@index([relatedCategoryId], map: "category_relations_related_idx")
+  @@map("category_relations")
+}
+
+model Subcategory {
+  products Product[]
+  services Service[]
+  id             String                  @id @db.Uuid
+  categoryId     String                  @map("category_id") @db.Uuid
+  slug           String
+  nameEn         String                  @map("name_en")
+  nameHi         String                  @map("name_hi")
+  normalizedName String                  @map("normalized_name")
+  serviceTypes   String[]                @default([]) @map("service_types")
+  imageAssetId   String?                 @map("image_asset_id") @db.Uuid
+  imageAsset     MediaAsset?             @relation(fields: [imageAssetId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  active         Boolean                 @default(true)
+  sortOrder      Int                     @default(0) @map("sort_order")
+  version        Int                     @default(1)
+  createdAt      DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime                @default(now()) @map("updated_at") @db.Timestamptz(6)
+  category       Category                @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategories_category_id_fkey")
+  approvedFrom   SubcategorySuggestion[] @relation("SuggestionApproved")
+  mergedFrom     SubcategorySuggestion[] @relation("SuggestionMerged")
+  keywordTargets KeywordMappingTarget[]
+  providerExpertise ProviderExpertise[]
+  productCategoryPills ProductCategoryPill[]
+
+  @@unique([categoryId, slug], map: "subcategories_category_slug_key")
+  @@unique([categoryId, normalizedName], map: "subcategories_category_normalized_name_key")
+  @@index([categoryId, active, sortOrder, id], map: "subcategories_category_active_sort_idx")
+  @@index([imageAssetId])
+  @@index([normalizedName(ops: raw("gin_trgm_ops"))], type: Gin, map: "subcategories_normalized_name_trgm_idx")
+  @@map("subcategories")
+}
+
+model MediaAsset {
+  offerBanners Offer[]
+  placementBanners PromotionPlacement[]
+  id              String    @id @db.Uuid
+  ownerUserId     String    @map("owner_user_id") @db.Uuid
+  /// FK businesses(id) in SQL (20261112235500); set for product/service/business_profile.
+  businessId      String?   @map("business_id") @db.Uuid
+  purpose         String
+  /// 'logo' | 'cover' for business_profile only.
+  subjectType     String?   @map("subject_type")
+  visibility      String    @default("public")
+  moderationState String    @default("allowed") @map("moderation_state")
+  storageProvider String    @default("cloudinary") @map("storage_provider")
+  storageKey      String    @unique @map("storage_key")
+  mimeType        String    @map("mime_type")
+  bytes           BigInt
+  width           Int
+  height          Int
+  variants        Json      @db.JsonB
+  version         Int       @default(1)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  deletedAt       DateTime? @map("deleted_at") @db.Timestamptz(6)
+  owner           User      @relation(fields: [ownerUserId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  categories      Category[]
+  subcategories   Subcategory[]
+  reports         MediaReport[]
+  riderDocuments  RiderDocument[]
+
+  @@index([ownerUserId, createdAt, id])
+  @@index([businessId, purpose, createdAt(sort: Desc), id(sort: Desc)])
+  @@map("media_assets")
+}
+
+model MediaUploadOperation {
+  id          String    @id @db.Uuid
+  ownerUserId String    @map("owner_user_id") @db.Uuid
+  keyHash     String    @map("key_hash")
+  requestHash String    @map("request_hash")
+  policy      Json      @db.JsonB
+  state       String    @default("pending")
+  leaseId     String?   @map("lease_id") @db.Uuid
+  leaseUntil  DateTime? @map("lease_until") @db.Timestamptz(6)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  expiresAt   DateTime  @map("expires_at") @db.Timestamptz(6)
+  owner       User      @relation(fields: [ownerUserId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@unique([ownerUserId, keyHash])
+  @@index([state, expiresAt, id])
+  @@map("media_upload_operations")
+}
+
+model CatalogHomeSection {
+  id                String                       @id @db.Uuid
+  kind              String
+  contentKind       String                       @map("content_kind")
+  categoryId        String?                      @map("category_id") @db.Uuid
+  headingEn         String?                      @map("heading_en")
+  headingHi         String?                      @map("heading_hi")
+  supportingTextEn  String?                      @map("supporting_text_en")
+  supportingTextHi  String?                      @map("supporting_text_hi")
+  initialCategoryId String?                      @map("initial_category_id") @db.Uuid
+  position          Int
+  active            Boolean                      @default(false)
+  removedAt         DateTime?                    @map("removed_at") @db.Timestamptz(6)
+  version           Int                          @default(1)
+  createdBy         String                       @map("created_by") @db.Uuid
+  updatedBy         String                       @map("updated_by") @db.Uuid
+  createdAt         DateTime                     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime                     @default(now()) @map("updated_at") @db.Timestamptz(6)
+  category          Category?                    @relation("CatalogHomeSectionCategory", fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "catalog_home_sections_category_id_fkey")
+  initialCategory   Category?                    @relation("CatalogHomeSectionInitial", fields: [initialCategoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "catalog_home_sections_initial_category_id_fkey")
+  creator           User                         @relation("CatalogHomeSectionCreator", fields: [createdBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "catalog_home_sections_created_by_fkey")
+  updater           User                         @relation("CatalogHomeSectionUpdater", fields: [updatedBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "catalog_home_sections_updated_by_fkey")
+  categories        CatalogHomeSectionCategory[]
+
+  @@unique([categoryId], where: raw("\"kind\" = 'single_category' AND \"removed_at\" IS NULL"), map: "catalog_home_sections_single_category_key")
+  @@index([position, id], where: raw("\"active\""), map: "catalog_home_sections_active_position_idx")
+  @@map("catalog_home_sections")
+}
+
+model CatalogHomeSectionCategory {
+  sectionId  String             @map("section_id") @db.Uuid
+  categoryId String             @map("category_id") @db.Uuid
+  position   Int
+  section    CatalogHomeSection @relation(fields: [sectionId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "catalog_home_section_categories_section_id_fkey")
+  category   Category           @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "catalog_home_section_categories_category_id_fkey")
+
+  @@id([sectionId, categoryId], map: "catalog_home_section_categories_pkey")
+  @@unique([sectionId, position], map: "catalog_home_section_categories_section_position_key")
+  @@index([sectionId, position, categoryId], map: "catalog_home_section_categories_pills_idx")
+  @@index([categoryId, sectionId], map: "catalog_home_section_categories_category_idx")
+  @@map("catalog_home_section_categories")
+}
+
+model SubcategorySuggestion {
+  id                      String       @id @db.Uuid
+  businessId              String       @map("business_id") @db.Uuid
+  submitterUserId         String       @map("submitter_user_id") @db.Uuid
+  cityId                  String       @map("city_id") @db.Uuid
+  areaId                  String       @map("area_id") @db.Uuid
+  categoryId              String       @map("category_id") @db.Uuid
+  nameEn                  String       @map("name_en")
+  nameHi                  String?      @map("name_hi")
+  normalizedName          String       @map("normalized_name")
+  reason                  String?
+  status                  String       @default("pending")
+  reviewedBy              String?      @map("reviewed_by") @db.Uuid
+  reviewedAt              DateTime?    @map("reviewed_at") @db.Timestamptz(6)
+  rejectionReason         String?      @map("rejection_reason")
+  subcategoryId           String?      @map("subcategory_id") @db.Uuid
+  mergedIntoSubcategoryId String?      @map("merged_into_subcategory_id") @db.Uuid
+  version                 Int          @default(1)
+  createdAt               DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime     @default(now()) @map("updated_at") @db.Timestamptz(6)
+  submitter               User         @relation("SuggestionSubmitter", fields: [submitterUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_submitter_user_id_fkey")
+  reviewer                User?        @relation("SuggestionReviewer", fields: [reviewedBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_reviewed_by_fkey")
+  city                    City         @relation(fields: [cityId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_city_id_fkey")
+  area                    Area         @relation(fields: [areaId, cityId], references: [id, cityId], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_area_city_fkey")
+  category                Category     @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_category_id_fkey")
+  subcategory             Subcategory? @relation("SuggestionApproved", fields: [subcategoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_subcategory_id_fkey")
+  mergedInto              Subcategory? @relation("SuggestionMerged", fields: [mergedIntoSubcategoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_merged_into_fkey")
+  business                Business     @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "subcategory_suggestions_business_id_fkey")
+
+  @@unique([categoryId, normalizedName], where: raw("\"status\" = 'pending'"), map: "subcategory_suggestions_pending_name_key")
+  @@index([status, cityId, areaId, createdAt, id], map: "subcategory_suggestions_queue_idx")
+  @@index([businessId, createdAt(sort: Desc), id(sort: Desc)], map: "subcategory_suggestions_business_idx")
+  @@index([normalizedName(ops: raw("gin_trgm_ops"))], type: Gin, map: "subcategory_suggestions_normalized_name_trgm_idx")
+  @@index([areaId, cityId], map: "subcategory_suggestions_area_city_idx")
+  @@map("subcategory_suggestions")
+}
+
+model KeywordMapping {
+  id        String                 @id @db.Uuid
+  enabled   Boolean                @default(true)
+  version   Int                    @default(1)
+  createdAt DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime               @default(now()) @map("updated_at") @db.Timestamptz(6)
+  terms     KeywordMappingTerm[]
+  targets   KeywordMappingTarget[]
+
+  @@index([enabled, id], map: "keyword_mappings_enabled_id_idx")
+  @@map("keyword_mappings")
+}
+
+model KeywordMappingTerm {
+  id             String         @id @db.Uuid
+  mappingId      String         @map("mapping_id") @db.Uuid
+  term           String
+  normalizedTerm String         @unique(map: "keyword_mapping_terms_normalized_term_key") @map("normalized_term")
+  kind           String
+  createdAt      DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  mapping        KeywordMapping @relation(fields: [mappingId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "keyword_mapping_terms_mapping_id_fkey")
+
+  @@unique([mappingId], where: raw("\"kind\" = 'primary'"), map: "keyword_mapping_terms_primary_key")
+  @@index([normalizedTerm(ops: raw("gin_trgm_ops"))], type: Gin, map: "keyword_mapping_terms_normalized_term_trgm_idx")
+  @@index([mappingId, kind, id], map: "keyword_mapping_terms_mapping_kind_idx")
+  @@map("keyword_mapping_terms")
+}
+
+model KeywordMappingTarget {
+  id            String         @id @db.Uuid
+  mappingId     String         @map("mapping_id") @db.Uuid
+  targetKind    String         @map("target_kind")
+  categoryId    String?        @map("category_id") @db.Uuid
+  subcategoryId String?        @map("subcategory_id") @db.Uuid
+  productTag    String?        @map("product_tag")
+  mapping       KeywordMapping @relation(fields: [mappingId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "keyword_mapping_targets_mapping_id_fkey")
+  category      Category?      @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "keyword_mapping_targets_category_id_fkey")
+  subcategory   Subcategory?   @relation(fields: [subcategoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "keyword_mapping_targets_subcategory_id_fkey")
+
+  @@unique([mappingId, categoryId], where: raw("\"category_id\" IS NOT NULL"), map: "keyword_mapping_targets_category_key")
+  @@unique([mappingId, subcategoryId], where: raw("\"subcategory_id\" IS NOT NULL"), map: "keyword_mapping_targets_subcategory_key")
+  @@unique([mappingId, productTag], where: raw("\"product_tag\" IS NOT NULL"), map: "keyword_mapping_targets_product_tag_key")
+  @@index([categoryId], where: raw("\"category_id\" IS NOT NULL"), map: "keyword_mapping_targets_category_idx")
+  @@index([subcategoryId], where: raw("\"subcategory_id\" IS NOT NULL"), map: "keyword_mapping_targets_subcategory_idx")
+  @@index([productTag], where: raw("\"product_tag\" IS NOT NULL"), map: "keyword_mapping_targets_product_tag_idx")
+  @@map("keyword_mapping_targets")
+}
+
+// Businesses (F-PF/F-VD/F-PV). `logo_asset_id`, `cover_asset_id` and
+// `business_documents.asset_id` gain their media_assets FKs in the Media
+// migration; there is no Prisma relation until then.
+model Business {
+  followerAnnouncements FollowerAnnouncement[]
+  products Product[]
+  services Service[]
+  reviews Review[]
+  offers Offer[]
+  billingPurchases BillingPurchase[]
+  subscriptions BusinessSubscription[]
+  subscriptionVersion BusinessSubscriptionVersion?
+  promotionPlacements PromotionPlacement[]
+  id             String                                @id @db.Uuid
+  ownerUserId    String                                @map("owner_user_id") @db.Uuid
+  kind           String
+  status         String                                @default("draft")
+  nameEn         String?                               @map("name_en")
+  nameHi         String?                               @map("name_hi")
+  slug           String?                               @unique(map: "businesses_slug_key")
+  description    String?
+  cityId         String?                               @map("city_id") @db.Uuid
+  areaId         String?                               @map("area_id") @db.Uuid
+  addressText    String?                               @map("address_text")
+  location       Unsupported("geography(Point,4326)")?
+  phoneE164      String                                @map("phone_e164")
+  whatsappE164   String?                               @map("whatsapp_e164")
+  email          String?
+  instagramUrl   String?                               @map("instagram_url")
+  youtubeUrl     String?                               @map("youtube_url")
+  facebookUrl    String?                               @map("facebook_url")
+  logoAssetId    String?                               @map("logo_asset_id") @db.Uuid
+  coverAssetId   String?                               @map("cover_asset_id") @db.Uuid
+  verifiedAt     DateTime?                             @map("verified_at") @db.Timestamptz(6)
+  submittedAt    DateTime?                             @map("submitted_at") @db.Timestamptz(6)
+  reviewReason   String?                               @map("review_reason")
+  reviewedBy     String?                               @map("reviewed_by") @db.Uuid
+  reviewedAt     DateTime?                             @map("reviewed_at") @db.Timestamptz(6)
+  version        Int                                   @default(1)
+  deletedAt      DateTime?                             @map("deleted_at") @db.Timestamptz(6)
+  createdAt      DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime                              @default(now()) @map("updated_at") @db.Timestamptz(6)
+  owner          User                                  @relation("BusinessOwner", fields: [ownerUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "businesses_owner_user_id_fkey")
+  reviewer       User?                                 @relation("BusinessReviewer", fields: [reviewedBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "businesses_reviewed_by_fkey")
+  area           Area?                                 @relation(fields: [areaId, cityId], references: [id, cityId], onDelete: Restrict, onUpdate: Restrict, map: "businesses_area_city_fkey")
+  categories     BusinessCategory[]
+  hours          BusinessHours[]
+  settings       BusinessSettings?
+  documents      BusinessDocument[]
+  billingProfile BusinessBillingProfile?
+  viewDedup      BusinessViewDedup[]
+  dailyViews     BusinessDailyViews[]
+  suggestions    SubcategorySuggestion[]
+  videos         Video[]
+  mediaReports   MediaReport[]
+  follows        Follow[]
+  providerExpertise        ProviderExpertise[]
+  productCategoryPills     ProductCategoryPill[]
+  providerExpertiseVersion ProviderExpertiseVersion?
+  enquiries                Enquiry[]
+
+  @@unique([ownerUserId, kind], map: "businesses_owner_kind_key")
+  @@index([ownerUserId, status], map: "businesses_owner_status_idx")
+  @@index([status, areaId, createdAt, id], map: "businesses_queue_idx")
+  @@index([kind, createdAt, id], where: raw("status = 'approved' AND deleted_at IS NULL AND name_en IS NOT NULL AND slug IS NOT NULL"), map: "businesses_discovery_page_idx")
+  @@index([kind, createdAt, id], where: raw("status = 'approved' AND deleted_at IS NULL AND name_en IS NOT NULL AND slug IS NOT NULL AND verified_at IS NOT NULL"), map: "businesses_discovery_verified_page_idx")
+  @@index([areaId, cityId], map: "businesses_area_city_idx")
+  @@index([location], type: Gist, map: "businesses_location_gist_idx")
+  @@map("businesses")
+}
+
+model Video {
+  id                 String    @id @db.Uuid
+  businessId         String    @map("business_id") @db.Uuid
+  source             String
+  providerKind       String    @map("provider_kind")
+  providerVideoId    String    @map("provider_video_id")
+  caption            String    @default("")
+  hashtags           String[]  @default([])
+  showInGallery      Boolean   @default(false) @map("show_in_gallery")
+  showInReels         Boolean   @default(false) @map("show_in_reels")
+  status             String    @default("pending")
+  decisionReason     String?   @map("decision_reason")
+  approvedAt         DateTime? @map("approved_at") @db.Timestamptz(6)
+  ownerDeletedAt     DateTime? @map("owner_deleted_at") @db.Timestamptz(6)
+  sortOrder          Int       @default(0) @map("sort_order")
+  viewCount          BigInt    @default(0) @map("view_count")
+  likeCount          BigInt    @default(0) @map("like_count")
+  commentCount       BigInt    @default(0) @map("comment_count")
+  shareCount         BigInt    @default(0) @map("share_count")
+  engagementVersion  BigInt    @default(0) @map("engagement_version")
+  version            Int       @default(1)
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  /// FK media_assets(id) in SQL (20261112253000); own `video_thumbnail` asset.
+  thumbnailAssetId   String?   @map("thumbnail_asset_id") @db.Uuid
+  business           Business  @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "videos_business_id_fkey")
+  reports            MediaReport[]
+  comments           VideoComment[]
+  likes              Like[]
+  engagementCounts   VideoEngagementCounts?
+  links              VideoLink[]
+
+  @@index([status, showInReels, id], map: "videos_public_candidates_idx")
+  @@index([status, createdAt(sort: Desc), id(sort: Desc)], map: "videos_moderation_page_idx")
+  @@index([businessId, createdAt(sort: Desc), id(sort: Desc)], map: "videos_business_page_idx")
+  @@index([businessId, sortOrder, id], map: "videos_business_order_idx")
+  @@index([thumbnailAssetId], where: raw("thumbnail_asset_id IS NOT NULL"), map: "videos_thumbnail_asset_idx")
+  @@map("videos")
+}
+
+model VideoLink {
+  videoId    String @map("video_id") @db.Uuid
+  targetType String @map("target_type")
+  targetId   String @map("target_id") @db.Uuid
+  sortOrder  Int    @default(0) @map("sort_order")
+  video      Video  @relation(fields: [videoId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@id([videoId, targetType, targetId])
+  @@index([targetType, targetId], map: "video_links_target_idx")
+  @@index([videoId, sortOrder, targetId], map: "video_links_order_idx")
+  @@map("video_links")
+}
+
+model Like {
+  userId    String   @map("user_id") @db.Uuid
+  videoId   String   @map("video_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "likes_user_id_fkey")
+  video     Video    @relation(fields: [videoId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "likes_video_id_fkey")
+
+  @@id([userId, videoId], map: "likes_pkey")
+  @@index([videoId], map: "likes_video_id_idx")
+  @@map("likes")
+}
+
+model Heart {
+  userId     String   @map("user_id") @db.Uuid
+  targetType String   @map("target_type")
+  targetId   String   @map("target_id") @db.Uuid
+  mediaKind  String?  @map("media_kind")
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "hearts_user_id_fkey")
+
+  @@id([userId, targetType, targetId], map: "hearts_pkey")
+  @@index([userId, createdAt(sort: Desc), targetId], map: "hearts_user_created_target_idx")
+  @@index([userId, targetType, createdAt(sort: Desc), targetId(sort: Desc)], map: "hearts_saved_page_idx")
+  @@index([userId, targetType, mediaKind, createdAt(sort: Desc), targetId(sort: Desc)], map: "hearts_saved_kind_page_idx")
+  @@map("hearts")
+}
+
+model Follow {
+  userId         String    @map("user_id") @db.Uuid
+  businessId     String    @map("business_id") @db.Uuid
+  bellOn         Boolean   @default(false) @map("bell_on")
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  lastFollowedAt DateTime  @default(now()) @map("last_followed_at") @db.Timestamptz(6)
+  unfollowedAt   DateTime? @map("unfollowed_at") @db.Timestamptz(6)
+  user           User      @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "follows_user_id_fkey")
+  business       Business  @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "follows_business_id_fkey")
+
+  @@id([userId, businessId], map: "follows_pkey")
+  @@index([businessId, userId], where: raw("\"unfollowed_at\" IS NULL"), map: "follows_business_user_active_idx")
+  @@index([userId], where: raw("\"unfollowed_at\" IS NULL"), map: "follows_user_active_idx")
+  @@index([userId, lastFollowedAt(sort: Desc), businessId(sort: Desc)], where: raw("\"unfollowed_at\" IS NULL"), map: "follows_saved_page_idx")
+  @@map("follows")
+}
+
+model VideoEngagementCounts {
+  videoId   String   @id @map("video_id") @db.Uuid
+  likeCount BigInt   @default(0) @map("like_count")
+  shareCount BigInt  @default(0) @map("share_count")
+  version   BigInt   @default(1)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  video     Video    @relation(fields: [videoId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "video_engagement_counts_video_id_fkey")
+
+  @@map("video_engagement_counts")
+}
+
+model ReelRankSnapshot {
+  id                String   @id @db.Uuid
+  sessionSubjectHash Bytes   @map("session_subject_hash")
+  rankedItems       Json     @map("ranked_items") @db.JsonB
+  createdAt         DateTime @map("created_at") @db.Timestamptz(6)
+  expiresAt         DateTime @map("expires_at") @db.Timestamptz(6)
+
+  @@index([sessionSubjectHash, expiresAt], map: "reel_rank_snapshots_subject_expiry_idx")
+  @@index([expiresAt], map: "reel_rank_snapshots_expiry_idx")
+  @@map("reel_rank_snapshots")
+}
+
+model VideoComment {
+  id            String   @id @db.Uuid
+  videoId       String   @map("video_id") @db.Uuid
+  authorUserId  String   @map("author_user_id") @db.Uuid
+  text          String
+  status        String   @default("pending")
+  removedReason String?  @map("removed_reason")
+  version       Int      @default(1)
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  video         Video    @relation(fields: [videoId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "video_comments_video_id_fkey")
+  author        User     @relation(fields: [authorUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "video_comments_author_user_id_fkey")
+
+  @@index([videoId, status, createdAt(sort: Desc), id(sort: Desc)], map: "video_comments_video_status_page_idx")
+  @@index([status, createdAt, id], map: "video_comments_status_page_idx")
+  @@map("video_comments")
+}
+
+model MediaReport {
+  id                 String      @id @db.Uuid
+  targetKind         String      @map("target_kind")
+  assetId            String?     @map("asset_id") @db.Uuid
+  videoId            String?     @map("video_id") @db.Uuid
+  businessId         String      @map("business_id") @db.Uuid
+  placementType      String?     @map("placement_type")
+  placementId        String?     @map("placement_id") @db.Uuid
+  reporterUserId     String?     @map("reporter_user_id") @db.Uuid
+  reporterSubjectHash Bytes      @map("reporter_subject_hash")
+  reason             String
+  details            String?
+  status             String      @default("open")
+  resolution         String?
+  resolvedAt         DateTime?   @map("resolved_at") @db.Timestamptz(6)
+  version            Int         @default(1)
+  createdAt          DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  asset              MediaAsset? @relation(fields: [assetId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "media_reports_asset_id_fkey")
+  video              Video?      @relation(fields: [videoId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "media_reports_video_id_fkey")
+  business           Business    @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "media_reports_business_id_fkey")
+  reporter           User?       @relation("MediaReportReporter", fields: [reporterUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "media_reports_reporter_user_id_fkey")
+
+  @@index([businessId, status, createdAt, id], map: "media_reports_business_status_page_idx")
+  @@index([assetId, status], map: "media_reports_asset_status_idx")
+  @@index([videoId, status], map: "media_reports_video_status_idx")
+  @@map("media_reports")
+}
+
+model BusinessCategory {
+  businessId String   @map("business_id") @db.Uuid
+  categoryId String   @map("category_id") @db.Uuid
+  isPrimary  Boolean  @default(false) @map("is_primary")
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "business_categories_business_id_fkey")
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "business_categories_category_id_fkey")
+
+  @@id([businessId, categoryId], map: "business_categories_pkey")
+  @@unique([businessId], where: raw("\"is_primary\""), map: "business_categories_primary_key")
+  @@index([categoryId, businessId], map: "business_categories_category_idx")
+  @@map("business_categories")
+}
+
+/// Services-owned provider expertise (F-PV-002); separate from a service's single subcategory (BR-08).
+model ProviderExpertise {
+  businessId    String      @map("business_id") @db.Uuid
+  subcategoryId String      @map("subcategory_id") @db.Uuid
+  createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  business      Business    @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "provider_expertise_business_id_fkey")
+  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "provider_expertise_subcategory_id_fkey")
+
+  @@id([businessId, subcategoryId], map: "provider_expertise_pkey")
+  @@index([subcategoryId, businessId], map: "provider_expertise_subcategory_idx")
+  @@map("provider_expertise")
+}
+
+/// Expertise aggregate version; locked for atomic replace-all saves.
+model ProviderExpertiseVersion {
+  businessId String   @id(map: "provider_expertise_versions_pkey") @map("business_id") @db.Uuid
+  version    Int      @default(1)
+  updatedAt  DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "provider_expertise_versions_business_id_fkey")
+
+  @@map("provider_expertise_versions")
+}
+
+/// Services-owned customer enquiries (F-SV-005/F-VD-016/F-PV-004; ST-enquiry).
+/// The phone is AEAD ciphertext only; guest enquiries have no customer link.
+model Enquiry {
+  id              String    @id(map: "enquiries_pkey") @db.Uuid
+  serviceId       String    @map("service_id") @db.Uuid
+  businessId      String    @map("business_id") @db.Uuid
+  customerUserId  String?   @map("customer_user_id") @db.Uuid
+  name            String
+  phoneCiphertext String    @map("phone_ciphertext")
+  message         String
+  preferredDate   DateTime? @map("preferred_date") @db.Date
+  status          String    @default("new")
+  version         Int       @default(1)
+  convertedAt     DateTime? @map("converted_at") @db.Timestamptz(6)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  service         Service   @relation(fields: [serviceId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "enquiries_service_id_fkey")
+  business        Business  @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "enquiries_business_id_fkey")
+  customer        User?     @relation(fields: [customerUserId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "enquiries_customer_user_id_fkey")
+
+  @@index([businessId, status, createdAt(sort: Desc), id(sort: Desc)], map: "enquiries_inbox_idx")
+  @@index([customerUserId, businessId, createdAt(sort: Desc)], map: "enquiries_customer_idx")
+  @@index([businessId, createdAt, id], map: "enquiries_cohort_idx")
+  @@index([businessId, convertedAt, id], map: "enquiries_conversion_idx")
+  @@index([serviceId], map: "enquiries_service_idx")
+  @@map("enquiries")
+}
+
+model BusinessHours {
+  businessId String    @map("business_id") @db.Uuid
+  dayOfWeek  Int       @map("day_of_week") @db.SmallInt
+  opensAt    DateTime? @map("opens_at") @db.Time(0)
+  closesAt   DateTime? @map("closes_at") @db.Time(0)
+  isClosed   Boolean   @default(false) @map("is_closed")
+  business   Business  @relation(fields: [businessId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "business_hours_business_id_fkey")
+
+  @@id([businessId, dayOfWeek], map: "business_hours_pkey")
+  @@map("business_hours")
+}
+
+model BusinessSettings {
+  businessId          String   @id(map: "business_settings_pkey") @map("business_id") @db.Uuid
+  temporarilyClosed   Boolean  @default(false) @map("temporarily_closed")
+  deliveryMethod      String?  @map("delivery_method")
+  deliveryRadiusKm    Decimal? @map("delivery_radius_km") @db.Decimal(5, 2)
+  deliveryFeePaise    BigInt?  @map("delivery_fee_paise")
+  minimumOrderPaise   BigInt?  @map("minimum_order_paise")
+  pickupEnabled       Boolean  @default(false) @map("pickup_enabled")
+  pickupInstructions  String?  @map("pickup_instructions")
+  serviceRadiusKm     Decimal? @map("service_radius_km") @db.Decimal(5, 2)
+  serviceArea         String?  @map("service_area")
+  galleryMediaDefault Boolean  @default(true) @map("gallery_media_default")
+  createdAt           DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  business            Business @relation(fields: [businessId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "business_settings_business_id_fkey")
+
+  @@map("business_settings")
+}
+
+model BusinessDocument {
+  id           String   @id @db.Uuid
+  businessId   String   @map("business_id") @db.Uuid
+  documentKind String   @map("document_kind")
+  assetId      String   @unique(map: "business_documents_asset_id_key") @map("asset_id") @db.Uuid
+  uploadedBy   String   @map("uploaded_by") @db.Uuid
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  business     Business @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "business_documents_business_id_fkey")
+  uploader     User     @relation(fields: [uploadedBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "business_documents_uploaded_by_fkey")
+
+  @@index([businessId, createdAt(sort: Desc), id(sort: Desc)], map: "business_documents_business_idx")
+  @@map("business_documents")
+}
+
+model BusinessBillingProfile {
+  businessId              String    @id(map: "business_billing_profiles_pkey") @map("business_id") @db.Uuid
+  draft                   Json
+  approvedSnapshot        Json?     @map("approved_snapshot")
+  reviewStatus            String    @default("pending") @map("review_status")
+  version                 Int       @default(1)
+  approvedVersion         Int?      @map("approved_version")
+  reviewReason            String?   @map("review_reason")
+  verificationEvidenceRef String?   @map("verification_evidence_ref")
+  reviewedBy              String?   @map("reviewed_by") @db.Uuid
+  reviewedAt              DateTime? @map("reviewed_at") @db.Timestamptz(6)
+  createdAt               DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  business                Business  @relation(fields: [businessId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "business_billing_profiles_business_id_fkey")
+  reviewer                User?     @relation(fields: [reviewedBy], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "business_billing_profiles_reviewed_by_fkey")
+
+  @@map("business_billing_profiles")
+}
+
+// reporting-v1 visible-detail measurement: transient dedup claims (removed
+// after 48 hours) and IST daily aggregates without visitor identity.
+model BusinessViewDedup {
+  sessionSubjectHash Bytes    @map("session_subject_hash")
+  windowStart        DateTime @map("window_start") @db.Timestamptz(6)
+  businessId         String   @map("business_id") @db.Uuid
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  business           Business @relation(fields: [businessId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "business_view_dedup_business_id_fkey")
+
+  @@id([sessionSubjectHash, windowStart, businessId], map: "business_view_dedup_pkey")
+  @@index([createdAt], map: "business_view_dedup_created_at_idx")
+  @@map("business_view_dedup")
+}
+
+model BusinessDailyViews {
+  businessId String   @map("business_id") @db.Uuid
+  istDate    DateTime @map("ist_date") @db.Date
+  views      BigInt   @default(0)
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "business_daily_views_business_id_fkey")
+
+  @@id([businessId, istDate], map: "business_daily_views_pkey")
+  @@map("business_daily_views")
+}
+
+// Known reporting-v1 counter start (Admin "Reporting definitions"); earlier
+// days are unavailable, never zero.
+model BusinessReportingCoverage {
+  metric    String   @id(map: "business_reporting_coverage_pkey")
+  startedAt DateTime @map("started_at") @db.Timestamptz(6)
+
+  @@map("business_reporting_coverage")
+}
+
+model Cart {
+  id                 String     @id(map: "carts_pkey") @db.Uuid
+  userId             String?    @map("user_id") @db.Uuid
+  guestCartTokenHash Bytes?     @map("guest_cart_token_hash")
+  version            Int        @default(1)
+  createdAt          DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime   @default(now()) @map("updated_at") @db.Timestamptz(6)
+  user               User?      @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "carts_user_id_fkey")
+  lines              CartLine[]
+
+  @@unique([userId], where: raw("\"user_id\" IS NOT NULL"), map: "carts_user_key")
+  @@unique([guestCartTokenHash], map: "carts_guest_cart_token_hash_key")
+  @@index([updatedAt, id], where: raw("\"user_id\" IS NULL"), map: "carts_guest_expiry_idx")
+  @@map("carts")
+}
+
+model CartLine {
+  id               String          @id(map: "cart_lines_pkey") @db.Uuid
+  cartId           String          @map("cart_id") @db.Uuid
+  productId        String          @map("product_id") @db.Uuid
+  productVariantId String?         @map("product_variant_id") @db.Uuid
+  quantity         Int             @db.SmallInt
+  savedForLater    Boolean         @default(false) @map("saved_for_later")
+  version          Int             @default(1)
+  createdAt        DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime        @default(now()) @map("updated_at") @db.Timestamptz(6)
+  cart             Cart            @relation(fields: [cartId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "cart_lines_cart_id_fkey")
+  product          Product         @relation(fields: [productId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "cart_lines_product_id_fkey")
+  variant          ProductVariant? @relation(fields: [productVariantId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "cart_lines_product_variant_id_fkey")
+
+  @@unique([cartId, productId], where: raw("\"product_variant_id\" IS NULL"), map: "cart_lines_product_key")
+  @@unique([cartId, productId, productVariantId], where: raw("\"product_variant_id\" IS NOT NULL"), map: "cart_lines_variant_key")
+  @@index([cartId, savedForLater, createdAt, id], map: "cart_lines_cart_order_idx")
+  @@index([productId], map: "cart_lines_product_idx")
+  @@index([productVariantId], where: raw("\"product_variant_id\" IS NOT NULL"), map: "cart_lines_variant_idx")
+  @@map("cart_lines")
+}
+
+/// Notifications-owned role-bound logical messages (F-NT-001, F-X-012). Feed
+/// shows published in-app items only; params never carry codes/phones/PII.
+model Notification {
+  id               String                 @id(map: "notifications_pkey") @db.Uuid
+  userId           String                 @map("user_id") @db.Uuid
+  audienceRole     String                 @map("audience_role")
+  category         String
+  topic            String
+  intent           String
+  templateKey      String                 @map("template_key")
+  templateVersion  Int                    @map("template_version")
+  contentVersion   String                 @map("content_version")
+  params           Json                   @default("{}")
+  contentRef       Json?                  @map("content_ref")
+  followerRef      Json?                  @map("follower_ref")
+  linkPath         String?                @map("link_path")
+  resourceScope    Json?                  @map("resource_scope")
+  inAppPublishedAt DateTime?              @map("in_app_published_at") @db.Timestamptz(6)
+  readAt           DateTime?              @map("read_at") @db.Timestamptz(6)
+  sourceEventId    String                 @map("source_event_id") @db.Uuid
+  sourceType       String                 @map("source_type")
+  sourceVersion    BigInt                 @map("source_version")
+  createdAt        DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  user             User                   @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "notifications_user_id_fkey")
+  deliveries       NotificationDelivery[]
+
+  @@unique([userId, audienceRole, sourceEventId, templateKey, contentVersion], map: "notifications_logical_message_key")
+  @@index([userId, audienceRole, inAppPublishedAt(sort: Desc), id(sort: Desc)], where: raw("\"in_app_published_at\" IS NOT NULL"), map: "notifications_feed_idx")
+  @@index([userId, audienceRole], where: raw("\"in_app_published_at\" IS NOT NULL AND \"read_at\" IS NULL"), map: "notifications_unread_idx")
+  @@map("notifications")
+}
+
+/// The five persisted preference keys; display defaults are not consent.
+model NotificationPreference {
+  userId    String   @id(map: "notification_preferences_pkey") @map("user_id") @db.Uuid
+  inapp     Boolean
+  email     Boolean
+  waOrders  Boolean  @map("wa_orders")
+  waOffers  Boolean  @map("wa_offers")
+  waEnq     Boolean  @map("wa_enq")
+  version   Int      @default(1)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "notification_preferences_user_id_fkey")
+
+  @@map("notification_preferences")
+}
+
+/// Migration-seeded, immutable-per-version EN/HI templates.
+model NotificationTemplate {
+  key                String
+  channel            String
+  locale             String
+  title              String?
+  body               String
+  providerTemplateId String? @map("provider_template_id")
+  version            Int
+  active             Boolean
+
+  @@id([key, channel, locale, version], map: "notification_templates_pkey")
+  @@unique([key, channel, locale], where: raw("active"), map: "notification_templates_active_idx")
+  @@map("notification_templates")
+}
+
+/// Per-channel delivery outcome; external channels stay suppressed until a
+/// provider is configured (NT-Q1).
+model NotificationDelivery {
+  id                String       @id(map: "notification_deliveries_pkey") @db.Uuid
+  notificationId    String       @map("notification_id") @db.Uuid
+  channel           String
+  status            String
+  suppressionReason String?      @map("suppression_reason")
+  campaignId        String?      @map("campaign_id") @db.Uuid
+  recipientKey      String?      @map("recipient_key")
+  attempts          Int          @default(0)
+  providerMessageId String?      @map("provider_message_id")
+  lastErrorCode     String?      @map("last_error_code")
+  leaseUntil        DateTime?    @map("lease_until") @db.Timestamptz(6)
+  nextAttemptAt     DateTime?    @map("next_attempt_at") @db.Timestamptz(6)
+  sentAt            DateTime?    @map("sent_at") @db.Timestamptz(6)
+  deliveredAt       DateTime?    @map("delivered_at") @db.Timestamptz(6)
+  failedAt          DateTime?    @map("failed_at") @db.Timestamptz(6)
+  version           Int          @default(1)
+  createdAt         DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime     @default(now()) @map("updated_at") @db.Timestamptz(6)
+  notification      Notification @relation(fields: [notificationId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "notification_deliveries_notification_id_fkey")
+
+  @@unique([notificationId, channel], map: "notification_deliveries_message_channel_key")
+  @@unique([campaignId, recipientKey], where: raw("\"campaign_id\" IS NOT NULL"), map: "notification_deliveries_campaign_recipient_idx")
+  @@unique([channel, providerMessageId], where: raw("\"provider_message_id\" IS NOT NULL"), map: "notification_deliveries_provider_message_idx")
+  @@index([status, nextAttemptAt, leaseUntil], map: "notification_deliveries_work_idx")
+  @@map("notification_deliveries")
+}
+
+/// Admin-owned listing reports (F-PF-007, S-ADMN-03). Accessed through raw
+/// tagged SQL only; foreign keys (businesses, users, cities, areas(id,city_id))
+/// and CHECKs are enforced by migration 20261112252000_admin_listings.
+model ListingReport {
+  id                  String    @id(map: "listing_reports_pkey") @db.Uuid
+  targetType          String    @map("target_type")
+  targetId            String    @map("target_id") @db.Uuid
+  reporterUserId      String?   @map("reporter_user_id") @db.Uuid
+  reporterSubjectHash Bytes     @map("reporter_subject_hash")
+  reason              String
+  details             String?
+  cityId              String    @map("city_id") @db.Uuid
+  areaId              String    @map("area_id") @db.Uuid
+  status              String    @default("open")
+  resolution          String?
+  resolutionNote      String?   @map("resolution_note")
+  resolvedBy          String?   @map("resolved_by") @db.Uuid
+  resolvedAt          DateTime? @map("resolved_at") @db.Timestamptz(6)
+  version             Int       @default(1)
+  createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([targetId, reporterSubjectHash], where: raw("\"status\" = 'open'"), map: "listing_reports_open_subject_key")
+  @@index([areaId, status, createdAt(sort: Desc), id(sort: Desc)], map: "listing_reports_area_queue_idx")
+  @@index([cityId, status, createdAt(sort: Desc), id(sort: Desc)], map: "listing_reports_city_queue_idx")
+  @@index([targetId, status, createdAt(sort: Desc), id(sort: Desc)], map: "listing_reports_target_idx")
+  @@index([reporterUserId], map: "listing_reports_reporter_idx")
+  @@index([resolvedBy], map: "listing_reports_resolved_by_idx")
+  @@map("listing_reports")
+}
+
+/// Gallery-only owner photos (20261112253000). FKs to businesses/media_assets
+/// are SQL-only; soft-deleted so report placements stay resolvable.
+model GalleryPhoto {
+  id               String    @id @db.Uuid
+  businessId       String    @map("business_id") @db.Uuid
+  mediaAssetId     String    @map("media_asset_id") @db.Uuid
+  caption          String?
+  linkedTargetType String?   @map("linked_target_type")
+  linkedTargetId   String?   @map("linked_target_id") @db.Uuid
+  sortOrder        Int       @default(0) @map("sort_order")
+  version          Int       @default(1)
+  deletedAt        DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([mediaAssetId], where: raw("deleted_at IS NULL"), map: "gallery_photos_live_asset_key")
+  @@index([businessId, sortOrder, id], where: raw("deleted_at IS NULL"), map: "gallery_photos_business_order_idx")
+  @@index([linkedTargetType, linkedTargetId], where: raw("linked_target_id IS NOT NULL"), map: "gallery_photos_linked_target_idx")
+  @@map("gallery_photos")
+}
+
+/// Optimistic order version per owner manager list (20261112253000).
+model MediaManagerOrder {
+  businessId String   @map("business_id") @db.Uuid
+  listKind   String   @map("list_kind")
+  version    Int      @default(1)
+  updatedAt  DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@id([businessId, listKind])
+  @@map("media_manager_orders")
+}
+
+/// Delivery rider application/profile (20261113060000). SQL owns the status,
+/// vehicle, online-implies-approved and submitted-field checks.
+model RiderProfile {
+  userId               String                                @id @map("user_id") @db.Uuid
+  cityId               String?                               @map("city_id") @db.Uuid
+  areaId               String?                               @map("area_id") @db.Uuid
+  fullName             String?                               @map("full_name")
+  vehicleType          String?                               @map("vehicle_type")
+  vehicleNumber        String?                               @map("vehicle_number")
+  /// AES-GCM ciphertext (API PII key); never plaintext.
+  payoutUpiCiphertext  String?                               @map("payout_upi_ciphertext")
+  payoutBankCiphertext String?                               @map("payout_bank_ciphertext")
+  status               String                                @default("draft")
+  decisionReason       String?                               @map("decision_reason")
+  requirementsVersion  String?                               @map("requirements_version")
+  submittedAt          DateTime?                             @map("submitted_at") @db.Timestamptz(6)
+  isOnline             Boolean                               @default(false) @map("is_online")
+  lastLocation         Unsupported("geography(Point,4326)")? @map("last_location")
+  lastLocationAt       DateTime?                             @map("last_location_at") @db.Timestamptz(6)
+  preferredLocale      String                                @default("en") @map("preferred_locale")
+  version              Int                                   @default(1)
+  createdAt            DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime                              @default(now()) @map("updated_at") @db.Timestamptz(6)
+  user                 User                                  @relation("RiderProfileUser", fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "rider_profiles_user_id_fkey")
+  city                 City?                                 @relation(fields: [cityId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "rider_profiles_city_id_fkey")
+  area                 Area?                                 @relation(fields: [areaId, cityId], references: [id, cityId], onDelete: Restrict, onUpdate: Restrict, map: "rider_profiles_area_city_fkey")
+  documents            RiderDocument[]
+
+  @@index([lastLocation], type: Gist, where: raw("is_online AND status = 'approved'"), map: "rider_profiles_online_location_gist_idx")
+  @@index([cityId, areaId, status, createdAt, userId], map: "rider_profiles_scope_queue_idx")
+  @@index([status, createdAt, userId], map: "rider_profiles_status_queue_idx")
+  @@index([areaId, cityId], map: "rider_profiles_area_city_idx")
+  @@map("rider_profiles")
+}
+
+/// Typed private rider KYC references; no runtime writer until Media ships
+/// the private `kyc_document` purpose (Q-05).
+model RiderDocument {
+  id           String       @id @db.Uuid
+  riderUserId  String       @map("rider_user_id") @db.Uuid
+  docType      String       @map("doc_type")
+  mediaAssetId String       @map("media_asset_id") @db.Uuid
+  supersededAt DateTime?    @map("superseded_at") @db.Timestamptz(6)
+  createdAt    DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  rider        RiderProfile @relation(fields: [riderUserId], references: [userId], onDelete: Restrict, onUpdate: Restrict, map: "rider_documents_rider_user_id_fkey")
+  mediaAsset   MediaAsset   @relation(fields: [mediaAssetId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "rider_documents_media_asset_id_fkey")
+
+  @@unique([riderUserId, docType, mediaAssetId], map: "rider_documents_rider_type_asset_key")
+  @@unique([riderUserId, docType], where: raw("superseded_at IS NULL AND doc_type <> 'other'"), map: "rider_documents_live_kind_key")
+  @@index([mediaAssetId], map: "rider_documents_media_asset_idx")
+  @@map("rider_documents")
+}
+
+/// Checkout quote (20261113080000). Immutable server-priced snapshot; SQL owns
+/// the address pairing, expiry and FK constraints (carts/users/addresses).
+model CheckoutQuote {
+  id              String   @id @db.Uuid
+  cartId          String   @map("cart_id") @db.Uuid
+  userId          String?  @map("user_id") @db.Uuid
+  cartVersion     Int      @map("cart_version")
+  addressId       String?  @map("address_id") @db.Uuid
+  addressVersion  Int?     @map("address_version")
+  inputHash       String   @map("input_hash")
+  pricingRevision String   @map("pricing_revision")
+  snapshot        Json     @db.JsonB
+  createdAt       DateTime @map("created_at") @db.Timestamptz(6)
+  expiresAt       DateTime @map("expires_at") @db.Timestamptz(6)
+
+  @@index([cartId, cartVersion, createdAt(sort: Desc), id(sort: Desc)], map: "checkout_quotes_cart_current_idx")
+  @@index([expiresAt], map: "checkout_quotes_expires_at_idx")
+  @@index([userId], map: "checkout_quotes_user_idx")
+  @@map("checkout_quotes")
+}
+
+/// Checkout attempt (20261113080000); one per customer idempotency key.
+model CheckoutAttempt {
+  id             String    @id @db.Uuid
+  userId         String    @map("user_id") @db.Uuid
+  cartId         String    @map("cart_id") @db.Uuid
+  quoteId        String    @map("quote_id") @db.Uuid
+  idempotencyKey String    @map("idempotency_key")
+  requestHash    String    @map("request_hash")
+  status         String
+  paymentMethod  String    @map("payment_method")
+  paymentRound   Int       @default(1) @map("payment_round")
+  failureCode    String?   @map("failure_code")
+  invalidatedAt  DateTime? @map("invalidated_at") @db.Timestamptz(6)
+  expiresAt      DateTime  @map("expires_at") @db.Timestamptz(6)
+  version        Int       @default(1)
+  createdAt      DateTime  @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime  @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([userId, idempotencyKey], map: "checkout_attempts_user_key_unique")
+  @@index([userId, createdAt(sort: Desc), id(sort: Desc)], map: "checkout_attempts_user_page_idx")
+  @@index([status, expiresAt], map: "checkout_attempts_status_expiry_idx")
+  @@index([quoteId], map: "checkout_attempts_quote_idx")
+  @@map("checkout_attempts")
+}
+
+/// Payments-owned per-shop allocation (20261113080000). COD (`cash`) only in
+/// this slice; cash pending -> collected on verified handover.
+model PaymentAttempt {
+  id                  String    @id @db.Uuid
+  checkoutAttemptId   String?   @map("checkout_attempt_id") @db.Uuid
+  quoteId             String?   @map("quote_id") @db.Uuid
+  paymentRound        Int?      @map("payment_round")
+  orderId             String?   @map("order_id") @db.Uuid
+  businessId          String    @map("business_id") @db.Uuid
+  initiatedBy         String    @map("initiated_by") @db.Uuid
+  purpose             String
+  amountPaise         BigInt    @map("amount_paise")
+  currentPayablePaise BigInt    @map("current_payable_paise")
+  fundedPaise         BigInt    @default(0) @map("funded_paise")
+  returnedPaise       BigInt    @default(0) @map("returned_paise")
+  returnReservedPaise BigInt    @default(0) @map("return_reserved_paise")
+  method              String
+  status              String
+  idempotencyKey      String    @map("idempotency_key")
+  requestHash         String    @map("request_hash")
+  failureCode         String?   @map("failure_code")
+  closedAt            DateTime? @map("closed_at") @db.Timestamptz(6)
+  financialVersion    Int       @default(1) @map("financial_version")
+  version             Int       @default(1)
+  collectionKey       String?   @unique(map: "payment_attempts_collection_key_unique") @map("collection_key")
+  verifiedHandoverId  String?   @unique(map: "payment_attempts_handover_unique") @map("verified_handover_id") @db.Uuid
+  collectedBy         String?   @map("collected_by") @db.Uuid
+  collectedAt         DateTime? @map("collected_at") @db.Timestamptz(6)
+  createdAt           DateTime  @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime  @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([checkoutAttemptId, paymentRound, businessId], map: "payment_attempts_round_business_key")
+  @@unique([initiatedBy, idempotencyKey, businessId], map: "payment_attempts_initiator_key")
+  @@index([orderId, createdAt(sort: Desc), id(sort: Desc)], map: "payment_attempts_order_history_idx")
+  @@index([businessId], map: "payment_attempts_business_idx")
+  @@map("payment_attempts")
+}
+
+/// Per-shop order (20261113080000). SQL owns status/mode/amount invariants.
+model Order {
+  id                          String    @id @db.Uuid
+  orderNumber                 String    @unique(map: "orders_order_number_key") @map("order_number")
+  checkoutAttemptId           String    @map("checkout_attempt_id") @db.Uuid
+  customerUserId              String    @map("customer_user_id") @db.Uuid
+  businessId                  String    @map("business_id") @db.Uuid
+  cityId                      String    @map("city_id") @db.Uuid
+  areaId                      String    @map("area_id") @db.Uuid
+  mode                        String
+  deliveryMethod              String?   @map("delivery_method")
+  status                      String
+  paymentAttemptId            String    @unique(map: "orders_payment_attempt_key") @map("payment_attempt_id") @db.Uuid
+  orderedItemsSubtotalPaise   BigInt    @map("ordered_items_subtotal_paise")
+  orderedDiscountPaise        BigInt    @map("ordered_discount_paise")
+  orderedDeliveryFeePaise     BigInt    @map("ordered_delivery_fee_paise")
+  orderedPlatformFeePaise     BigInt    @map("ordered_platform_fee_paise")
+  orderedTotalPaise           BigInt    @map("ordered_total_paise")
+  fulfilledItemsSubtotalPaise BigInt    @map("fulfilled_items_subtotal_paise")
+  fulfilledDiscountPaise      BigInt    @map("fulfilled_discount_paise")
+  fulfilledDeliveryFeePaise   BigInt    @map("fulfilled_delivery_fee_paise")
+  fulfilledPlatformFeePaise   BigInt    @map("fulfilled_platform_fee_paise")
+  fulfilledTotalPaise         BigInt    @map("fulfilled_total_paise")
+  financialVersion            Int       @default(1) @map("financial_version")
+  version                     Int       @default(1)
+  businessSnapshot            Json      @map("business_snapshot") @db.JsonB
+  deliveryAddressSnapshot     Json?     @map("delivery_address_snapshot") @db.JsonB
+  readyAt                     DateTime? @map("ready_at") @db.Timestamptz(6)
+  fulfilledAt                 DateTime? @map("fulfilled_at") @db.Timestamptz(6)
+  cancelledAt                 DateTime? @map("cancelled_at") @db.Timestamptz(6)
+  placedAt                    DateTime  @map("placed_at") @db.Timestamptz(6)
+  createdAt                   DateTime  @map("created_at") @db.Timestamptz(6)
+  updatedAt                   DateTime  @map("updated_at") @db.Timestamptz(6)
+  items                       OrderItem[]
+  history                     OrderStatusHistory[]
+
+  @@unique([checkoutAttemptId, businessId], map: "orders_checkout_business_key")
+  @@index([customerUserId, placedAt(sort: Desc), id(sort: Desc)], map: "orders_customer_history_idx")
+  @@index([businessId, status, placedAt(sort: Desc), id(sort: Desc)], map: "orders_business_tab_idx")
+  @@index([cityId, areaId, status, placedAt, id], map: "orders_scope_queue_idx")
+  @@index([placedAt(sort: Desc), id(sort: Desc)], map: "orders_admin_page_idx")
+  @@index([areaId, cityId], map: "orders_area_city_idx")
+  @@map("orders")
+}
+
+/// Immutable purchase-time line snapshot (20261113080000).
+model OrderItem {
+  id                      String   @id @db.Uuid
+  orderId                 String   @map("order_id") @db.Uuid
+  productId               String?  @map("product_id") @db.Uuid
+  productVariantId        String?  @map("product_variant_id") @db.Uuid
+  productNameEn           String   @map("product_name_en")
+  productNameHi           String?  @map("product_name_hi")
+  variantLabel            String?  @map("variant_label")
+  orderedQuantity         Int      @map("ordered_quantity")
+  fulfilledQuantity       Int      @map("fulfilled_quantity")
+  unitPricePaise          BigInt   @map("unit_price_paise")
+  orderedDiscountPaise    BigInt   @map("ordered_discount_paise")
+  orderedLineTotalPaise   BigInt   @map("ordered_line_total_paise")
+  fulfilledDiscountPaise  BigInt   @map("fulfilled_discount_paise")
+  fulfilledLineTotalPaise BigInt   @map("fulfilled_line_total_paise")
+  availability            String   @default("ordered")
+  createdAt               DateTime @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime @map("updated_at") @db.Timestamptz(6)
+  order                   Order    @relation(fields: [orderId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "order_items_order_id_fkey")
+
+  @@index([orderId, id], map: "order_items_order_idx")
+  @@index([productId, orderId], map: "order_items_product_order_idx")
+  @@map("order_items")
+}
+
+/// Durable reservation per order line (20261113080000).
+model OrderStockAllocation {
+  orderItemId      String   @id @map("order_item_id") @db.Uuid
+  orderId          String   @map("order_id") @db.Uuid
+  reservationId    String   @map("reservation_id") @db.Uuid
+  productId        String   @map("product_id") @db.Uuid
+  variantId        String?  @map("variant_id") @db.Uuid
+  reservedQuantity Int      @map("reserved_quantity")
+  releasedQuantity Int      @default(0) @map("released_quantity")
+  disposition      String   @default("reserved")
+  version          Int      @default(1)
+  createdAt        DateTime @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime @map("updated_at") @db.Timestamptz(6)
+
+  @@index([reservationId, productId, orderItemId], map: "order_stock_allocations_reservation_idx")
+  @@index([orderId, disposition], map: "order_stock_allocations_order_idx")
+  @@index([productId], map: "order_stock_allocations_product_idx")
+  @@map("order_stock_allocations")
+}
+
+/// Idempotent stock reserve/release claim + result (20261113080000).
+model OrderStockOperation {
+  id            String   @id @db.Uuid
+  reservationId String   @map("reservation_id") @db.Uuid
+  kind          String
+  sourceKey     String   @unique(map: "order_stock_operations_source_key") @map("source_key")
+  payloadHash   String   @map("payload_hash")
+  lines         Json     @db.JsonB
+  result        Json     @db.JsonB
+  appliedAt     DateTime @map("applied_at") @db.Timestamptz(6)
+
+  @@index([reservationId, appliedAt, id], map: "order_stock_operations_replay_idx")
+  @@map("order_stock_operations")
+}
+
+/// Append-only order timeline (20261113080000).
+model OrderStatusHistory {
+  id          String   @id @db.Uuid
+  orderId     String   @map("order_id") @db.Uuid
+  fromStatus  String?  @map("from_status")
+  toStatus    String   @map("to_status")
+  eventKey    String   @map("event_key")
+  actorUserId String?  @map("actor_user_id") @db.Uuid
+  reasonKey   String?  @map("reason_key")
+  createdAt   DateTime @map("created_at") @db.Timestamptz(6)
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "order_status_history_order_id_fkey")
+
+  @@unique([orderId, eventKey], map: "order_status_history_event_key")
+  @@index([orderId, createdAt, id], map: "order_status_history_timeline_idx")
+  @@map("order_status_history")
+}
+
+/// Delivery-owned customer handover code generation (20261113080000): keyed
+/// HMAC + AES-GCM ciphertext only; plaintext is never stored.
+model DeliveryCode {
+  id                   String    @id @db.Uuid
+  orderId              String    @map("order_id") @db.Uuid
+  kind                 String
+  generation           Int
+  codeHash             Bytes     @map("code_hash")
+  codeCiphertext       Bytes?    @map("code_ciphertext")
+  hashKeyVersion       String    @map("hash_key_version")
+  encryptionKeyVersion String    @map("encryption_key_version")
+  attempts             Int       @default(0)
+  maxAttempts          Int       @default(5) @map("max_attempts")
+  issuedAt             DateTime  @map("issued_at") @db.Timestamptz(6)
+  expiresAt            DateTime  @map("expires_at") @db.Timestamptz(6)
+  reissueAvailableAt   DateTime  @map("reissue_available_at") @db.Timestamptz(6)
+  consumedAt           DateTime? @map("consumed_at") @db.Timestamptz(6)
+  invalidatedAt        DateTime? @map("invalidated_at") @db.Timestamptz(6)
+  lockedAt             DateTime? @map("locked_at") @db.Timestamptz(6)
+  consumedHandoverId   String?   @unique(map: "delivery_codes_consumed_handover_key") @map("consumed_handover_id") @db.Uuid
+  consumedBy           String?   @map("consumed_by") @db.Uuid
+
+  @@unique([orderId, kind, generation], map: "delivery_codes_generation_key")
+  @@index([expiresAt], map: "delivery_codes_expires_at_idx")
+  @@map("delivery_codes")
+}
+
+/// Delivery-owned platform rider job (20261113100000): one per platform
+/// order; estimate at creation, immutable earned snapshot at completion.
+/// Accessed through parameterized SQL in the Delivery job repository.
+model DeliveryJob {
+  id                      String                                @id @db.Uuid
+  orderId                 String                                @unique(map: "delivery_jobs_order_key") @map("order_id") @db.Uuid
+  cityId                  String                                @map("city_id") @db.Uuid
+  areaId                  String                                @map("area_id") @db.Uuid
+  riderUserId             String?                               @map("rider_user_id") @db.Uuid
+  status                  String                                @default("requested")
+  assignmentState         String                                @default("queued") @map("assignment_state")
+  failReason              String?                               @map("fail_reason")
+  cancellationReason      String?                               @map("cancellation_reason")
+  pickupPoint             Unsupported("geography(Point,4326)")? @map("pickup_point")
+  dropPoint               Unsupported("geography(Point,4326)")? @map("drop_point")
+  distanceM               Int                                   @map("distance_m")
+  estimateBasePaise       BigInt                                @map("estimate_base_paise")
+  estimatePerKmPaise      BigInt                                @map("estimate_per_km_paise")
+  estimateTotalPaise      BigInt                                @map("estimate_total_paise")
+  estimateSettingsVersion String                                @map("estimate_settings_version")
+  estimatedAt             DateTime                              @map("estimated_at") @db.Timestamptz(6)
+  earnedBasePaise         BigInt?                               @map("earned_base_paise")
+  earnedPerKmPaise        BigInt?                               @map("earned_per_km_paise")
+  earnedDistanceM         Int?                                  @map("earned_distance_m")
+  earnedDistancePayPaise  BigInt?                               @map("earned_distance_pay_paise")
+  earnedRoundingPaise     BigInt?                               @map("earned_rounding_paise")
+  earnedTotalPaise        BigInt?                               @map("earned_total_paise")
+  earnedSettingsVersion   String?                               @map("earned_settings_version")
+  earnedAt                DateTime?                             @map("earned_at") @db.Timestamptz(6)
+  payableFinancialVersion Int                                   @map("payable_financial_version")
+  checkedItemIds          String[]                              @default([]) @map("checked_item_ids") @db.Uuid
+  checkedFinancialVersion Int?                                  @map("checked_financial_version")
+  version                 Int                                   @default(1)
+  acceptedAt              DateTime?                             @map("accepted_at") @db.Timestamptz(6)
+  reachedShopAt           DateTime?                             @map("reached_shop_at") @db.Timestamptz(6)
+  pickedUpAt              DateTime?                             @map("picked_up_at") @db.Timestamptz(6)
+  reachedDropAt           DateTime?                             @map("reached_drop_at") @db.Timestamptz(6)
+  deliveredAt             DateTime?                             @map("delivered_at") @db.Timestamptz(6)
+  failedAt                DateTime?                             @map("failed_at") @db.Timestamptz(6)
+  cancelledAt             DateTime?                             @map("cancelled_at") @db.Timestamptz(6)
+  createdAt               DateTime                              @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime                              @map("updated_at") @db.Timestamptz(6)
+
+  @@index([riderUserId, createdAt(sort: Desc), id(sort: Desc)], map: "delivery_jobs_rider_history_idx")
+  @@index([cityId, areaId, status], map: "delivery_jobs_scope_status_idx")
+  @@index([areaId, cityId], map: "delivery_jobs_area_city_idx")
+  @@map("delivery_jobs")
+}
+
+/// Delivery-owned 60 s rider offer (20261113100000); one live offer per job.
+model DeliveryOffer {
+  id          String    @id @db.Uuid
+  jobId       String    @map("job_id") @db.Uuid
+  riderUserId String    @map("rider_user_id") @db.Uuid
+  status      String    @default("offered")
+  expiresAt   DateTime  @map("expires_at") @db.Timestamptz(6)
+  respondedAt DateTime? @map("responded_at") @db.Timestamptz(6)
+  version     Int       @default(1)
+  createdAt   DateTime  @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([jobId, riderUserId], map: "delivery_offers_job_rider_key")
+  @@index([riderUserId, status, expiresAt], map: "delivery_offers_rider_status_idx")
+  @@map("delivery_offers")
 }

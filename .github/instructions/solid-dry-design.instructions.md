@@ -5,7 +5,8 @@ applyTo: "**"
 # SOLID, DRY, KISS, YAGNI
 
 Concrete rules, with ApnaTown examples. Product context:
-`docs/PROJECT.md`; module map: `docs/architecture.md`.
+`../../docs/design-context/00-product-summary.md`; module map:
+`../../specs/_foundation/architecture.md`.
 
 ## Single Responsibility
 
@@ -34,8 +35,8 @@ Concrete rules, with ApnaTown examples. Product context:
   through one handler.
 - **Repository ports:** `ProductRepository`, `OrderRepository`, etc. are
   interfaces; services depend on them, not Prisma/PostgreSQL adapters.
-  PostgreSQL is selected; ports isolate persistence and support test
-  fakes, not speculative multi-database support (`database.instructions.md`).
+  PostgreSQL is selected; ports isolate persistence, not speculative
+  multi-database support (`database.instructions.md`).
 - **Shared schemas:** one zod schema per entity/DTO in
   `packages/shared`; both `apps/api` validation and `apps/web` forms
   import the same schema — never redefine a shape twice.
@@ -51,7 +52,7 @@ Concrete rules, with ApnaTown examples. Product context:
 
 - Controllers depend on services; services depend on repository/
   integration **interfaces** injected, not imported concretely, so
-  tests can inject fakes (`integrations.instructions.md`).
+  local verification can use approved integration adapters.
 
 ## DRY
 
@@ -76,9 +77,10 @@ Concrete rules, with ApnaTown examples. Product context:
 
 - Keep functions under ~40 lines and files under ~300 lines; split by
   responsibility, not by line count alone.
-- Name by domain language from `docs/glossary.md` (e.g. `enquiry`, not
+- Name by domain language from the active feature specs (e.g. `enquiry`, not
   `lead`; `pickupCode`, not `pin2`).
-- Module/folder names match `docs/architecture.md` exactly (21 modules).
+- Module/folder names match `../../specs/_foundation/architecture.md`
+  exactly (21 modules).
 
 ## Error handling
 

@@ -2,7 +2,7 @@
 
 Features: F-CK-001, F-CK-002, F-CK-003, F-CK-004, F-CK-005, F-CK-006, F-CK-007, F-CK-008, F-CK-009 | Screens: S-CUST-10, S-CUST-11, S-CUST-12, S-CUST-26 (address owner: Users) | Flows: J1, J12
 
-Backend contract: [BE cart-checkout](../be/cart-checkout.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Backend contract: [BE cart-checkout](../be/cart-checkout.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Routes and rendering
 
@@ -70,6 +70,13 @@ Use [frontend-shared.md](../../_foundation/frontend-shared.md) states; private r
   - Given the attempt is pending or failed, when the route loads, then it never displays a success confirmation.
   - Given another customer's attempt ID is supplied, when the page loads, then no order or address details are disclosed.
 
+## Implemented slice: COD checkout (2026-11-13)
+
+- S-CUST-10: the cart's Proceed to checkout links to `/checkout` (guests go through login with `returnTo=/checkout`).
+- S-CUST-11: `features/checkout` — saved-address radio picker (Users' address read; add/edit at `/account/addresses`), per-shop Delivery/Pickup radios disabled with the server reason, `POST /cart/quote` re-requested whenever cart version/address/mode changes (one in flight; latest input wins; a superseded quote cannot be placed), localized group/quote issues, per-shop and total breakdown (null amounts read "To be confirmed", never ₹0), fee-source note, split notice, payment list (cash only; online methods disabled "Not available yet"). Place order sends `POST /checkout/attempts` with one idempotency key per quote/version/method (transient retry reuses it; stale codes offer Review changes) and navigates to `/checkout/success?attempt={id}`.
+- S-CUST-12: `/checkout/success?attempt=` re-reads `GET /checkout/attempts/{id}`; per-shop order number, status, mode, total and Track order links; no code is shown. Deviation: query param is `attempt` (not `attemptId`).
+- Deferred: coupons, online payments/failure/compensation states, master checkout summary, map-pin editing in checkout. i18n `checkout.*`, `errors.checkout.*` (EN+HI). Runtime/UI journeys and screenshots deferred.
+
 ## Feature components and shared components
 
 - Feature-local: `CartGroup`, `CartLineItem`, `CheckoutShopSection`, `CouponEntry`, `CheckoutSummary`, `OrderConfirmation`.
@@ -81,10 +88,12 @@ Use [frontend-shared.md](../../_foundation/frontend-shared.md) states; private r
 - Key prefixes: `cart.*`, `checkout.*`, `checkout.payment.*`, `checkout.validation.*`, `checkout.success.*`; provide EN/HI for fee labels, pickup/delivery, coupon results, errors and payment states. Check long Hindi in responsive cards and dialogs.
 - Analytics: `cart.view`, `cart.line_update`, `cart.coupon_apply`, `checkout.start`, `checkout.mode_select`, `checkout.payment_select`, `checkout.submit`, `checkout.payment_result`, `checkout.success_view`. Never send raw address, coupon code, payment credentials, phone or OTP.
 
-## Tests
+## Verification
 
-- Component: grouped cart, quantity boundaries, coupon policy-unavailable state, per-shop modes, address selection, failure/retry/cash fallback, pending-vs-success guard, long Hindi, dark mode and offline state.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Manual UI: grouped cart, quantity boundaries, coupon policy-unavailable state, per-shop modes, address selection, failure/retry/cash fallback, pending-vs-success guard, long Hindi, dark mode and offline state.
 - Journey: J1 two-shop checkout through success/tracking; J12 login gate returning to checkout; payment failure followed by retry or enabled cash fallback.
 - Visual: required desktop/mobile screenshots in light and dark, English and Hindi; compare with the named prototype screenshots.
 - Map all acceptance bullets to scenarios: null/required variant identity, shared stock errors, fee-source labels, finite/capped coupon shares, no code enumeration, reservation expiry, stale quote/address during provider handoff, timeout/reload/late success, blocked COD race and compensation without an order.
-- Negatives/a11y: foreign attempt/address, expired session, malicious product/coupon text rendered safely, offline submit, duplicate submit, axe, keyboard payment radios/stepper/dialog focus, Hindi at 360px, dark/reduced-motion states. Never cache or log addresses, codes, handoff secrets or raw provider payloads.
+- Negatives/a11y: foreign attempt/address, expired session, malicious product/coupon text rendered safely, offline submit, duplicate submit, accessibility inspection, keyboard payment radios/stepper/dialog focus, Hindi at 360px, dark/reduced-motion states. Never cache or log addresses, codes, handoff secrets or raw provider payloads.

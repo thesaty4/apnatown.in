@@ -1,12 +1,15 @@
 ---
-applyTo: "apps/api/**,packages/shared/**"
+applyTo: 'apps/api/**,packages/shared/**'
 ---
 
 # Backend
 
-Builds on `.github/copilot-instructions.md` and
+Builds on `AGENTS.md` and
 `solid-dry-design.instructions.md`. Implementation contracts:
 `specs/_foundation/backend-shared.md` and `specs/_foundation/architecture.md`.
+Implementation verification: run the affected build and fix related
+build errors. Do not start Docker/runtime services, apply migrations or
+seeds, or run manual API/DB checks.
 
 ## Layers
 
@@ -31,6 +34,8 @@ transactions through ports (`database.instructions.md`).
 - Responses are explicit DTOs (never leak ORM/DB entities); money as
   integer paise, timestamps as ISO-8601 UTC, enums as the shared
   string union — client formats for IST/locale display.
+- Public image DTOs use `MediaGatewayPathSchema` root-relative paths;
+  never return absolute provider URLs that bypass Media authorization.
 
 ## Pagination and filtering
 
@@ -43,7 +48,13 @@ transactions through ports (`database.instructions.md`).
 ## Error contract
 
 ```json
-{"code":"COMMON_NOT_FOUND","message_key":"errors.common.notFound","status":404,"details":{},"correlationId":"request-id"}
+{
+  "code": "COMMON_NOT_FOUND",
+  "message_key": "errors.common.notFound",
+  "status": 404,
+  "details": {},
+  "correlationId": "request-id"
+}
 ```
 
 - All five fields are required; HTTP status matches `status`. The
@@ -77,14 +88,13 @@ transactions through ports (`database.instructions.md`).
 
 ## Timeouts and retries
 
-- Every outbound integration call (`integrations.instructions.md`) has
-  an explicit timeout and bounded retry with backoff; never an
-  unbounded retry loop.
+- Every outbound integration call has an explicit timeout and bounded
+  retry with backoff; never an unbounded retry loop.
 
 ## Observability
 
-- Structured logs per request (no secrets/PII,
-  `security.instructions.md`); correlate logs across a request with a
+- Structured logs per request (no secrets/PII, per `AGENTS.md`);
+  correlate logs across a request with a
   request id.
 - Emit metrics for queue depth, job failures, and integration latency/
   error rate; audit-log admin-triggered data changes (`audit` module).

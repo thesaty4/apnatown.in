@@ -2,7 +2,7 @@
 
 Features: F-HM-003, F-HM-004, F-SV-008, F-VD-006, F-AD-005, F-AD-006, F-AD-015, F-SA-008 | Screens: S-CUST-01, S-CUST-04, S-CUST-05, S-VEND-05, S-VEND-13, S-ADMN-05, S-ADMN-06, S-ADMN-15 | Flows: J1, J2, J9
 
-Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Routes and rendering
 
@@ -98,8 +98,9 @@ Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../..
 - Screenshots: `d-admin-acats.jpg`, `m-admin-acats.jpg`.
 - Layout: mobile uses stacked tree/cards; tablet and desktop use the shared tree/preview regions and `DataTable`; main categories are visibly fixed for area admins. Show image preview/placeholder beside category and subcategory labels.
 - Data: `GET /catalog/admin/categories`; filter preview uses `POST /search/admin/preview` with selected taxonomy IDs and the permitted scope; category/subcategory image uploads use Media's `catalog_taxonomy` purpose; Home section configuration uses `/catalog/admin/home-sections`.
-- Special states: no permission; empty subcategory tree; duplicate warning; preview with no results; image upload/validation and preview failure; empty Home section; unsaved version conflict.
+- Special states: no permission; empty subcategory tree; duplicate warning; preview with no results; image upload pending/progress, validation, actionable retry and preview failure; empty Home section; unsaved version conflict.
 - Interactions: expand/collapse category; preview filter; add/edit is available only to super admin pending Q-39; area admins use the suggestion queue.
+- Taxonomy images: only super admins can select/upload or explicitly remove one category/subcategory image. Use `catalog_taxonomy` through same-origin `POST /media/uploads` with the required idempotency key; attach only the returned canonical `assetId` when saving. Never send provider URLs. Revoke local object-URL previews on replacement, clear and scope/account lifecycle changes. A selected-but-not-uploaded file cannot be attached by Save.
 - Home sections: a super admin can create, reorder, edit, activate/deactivate or remove a dedicated-category or curated-pills section. EN/HI heading and supporting text are edited together; category kind cannot mix products and services. No date scheduling or arbitrary page-builder blocks.
 - Rules: F-AD-005/F-SA-008, BR-07, BR-12; no destructive category delete.
 - Acceptance:
@@ -108,6 +109,9 @@ Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../..
   - Given a category with subcategories, when previewed, then the search-owned preview reflects the selected taxonomy.
   - Given an area admin, when they try to upload or change a taxonomy image or Home section, then write controls are absent and server authorization remains authoritative.
   - Given a super admin removes an image, when the form saves, then the tile falls back to its icon/placeholder and the form version is updated.
+  - Given a super admin selects an allowed taxonomy image, when it is uploaded, then the UI shows an owner-safe preview and only its canonical `assetId` is submitted with the category/subcategory save.
+  - Given an invalid or oversized image, when selected, then a localized validation error explains the accepted JPEG/PNG/WebP formats and 5 MiB limit; an upload failure retains the prior attachment and offers retry.
+  - Given the account or private scope changes while an image is pending, when the lifecycle advances, then local preview URLs and pending asset state are cleared.
   - Given a curated section has an initial category not in its selected category pills, when saved or activated, then a localized validation error preserves the user's form values.
 
 ### S-ADMN-06 — Subcategory suggestions
@@ -144,6 +148,8 @@ Backend contract: [BE catalog](../be/catalog.md) · [Feature inventory](../../..
 - Keys: `catalog.categories.*`, `catalog.subcategorySuggestion.*`, `catalog.admin.suggestions.*`, `catalog.admin.keywords.*`; all visible copy EN/HI, with long Hindi labels wrapping.
 - Analytics: no new events until the shared event plan in Q-11 is approved.
 
-## Tests
+## Verification
 
-Component: category selection, exact/fuzzy duplicate states, queue decisions, target editor keyboard/RTL-independent Hindi wrapping. E2E: J1/J2 category navigation and J9 suggestion-to-decision; test denied scope, permission state, light/dark, mobile/desktop.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Manual UI: category selection, exact/fuzzy duplicate states, queue decisions, target editor keyboard/RTL-independent Hindi wrapping. Manual journey: J1/J2 category navigation and J9 suggestion-to-decision; check denied scope, permission state, light/dark, mobile/desktop.

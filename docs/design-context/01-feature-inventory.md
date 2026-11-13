@@ -1,6 +1,6 @@
 # 01 Feature inventory
 
-- **Purpose:** Every feature with a unique ID. Specs, code and tests must reference these IDs.
+- **Purpose:** Every feature with a unique ID. Specs, code and verification evidence must reference these IDs.
 - **Audience:** Copilot agents and developers
 - **Related:** 02-screen-inventory.md, 03-user-flows.md, 07-state-machines-and-business-rules.md
 - **Last updated:** 2026-11-10
@@ -185,13 +185,13 @@ Depends on: AU4, PD, LC, 07 BR-03/BR-19
 | ID | Feature | Roles | Description | Pri |
 |---|---|---|---|---|
 | F-CK-001 | Cart grouped by business | Customer | Quantity stepper, remove, save for later, price breakdown, delivery fee, charges, coupon field. | P0 |
-| F-CK-002 | One checkout, one order per shop | Customer | Clear notice when order splits into several shops; each order has own id, mode, payment record, OTP/pickup code. | P0 |
-| F-CK-003 | Per-shop delivery or pickup choice | Customer | Choose Home Delivery or Self-Pickup per shop. | P0 |
+| F-CK-002 | One checkout, one order per shop | Customer | Clear notice when order splits into several shops; each order has own id, mode, payment record, OTP/pickup code. Status 2026-11-13: quote + COD placement BE implemented (`POST /cart/quote`, `POST/GET /checkout/attempts`); online payments/coupons deferred. FE 2026-11-13: `/checkout` split notice + per-shop order IDs on success. | P0 |
+| F-CK-003 | Per-shop delivery or pickup choice | Customer | Choose Home Delivery or Self-Pickup per shop. Status 2026-11-13: per-shop mode in `POST /cart/quote` (BE). FE 2026-11-13: per-shop Delivery/Pickup radios with server reasons. | P0 |
 | F-CK-004 | Address book | Customer | Add/edit/delete, map pin, landmark, PIN, labels Home/Work/Other, default. | P0 |
-| F-CK-005 | Delivery range and minimum order checks | Customer | Delivery charge display; out-of-range and below-minimum messages. | P0 |
-| F-CK-006 | Payment methods | Customer | UPI, cards, net banking, wallets, COD / pay-at-pickup. | P0 |
+| F-CK-005 | Delivery range and minimum order checks | Customer | Delivery charge display; out-of-range and below-minimum messages. Status 2026-11-13: radius/minimum/fee checks in quote (BE). FE 2026-11-13: range/minimum/fee issues shown from the quote. | P0 |
+| F-CK-006 | Payment methods | Customer | UPI, cards, net banking, wallets, COD / pay-at-pickup. Status 2026-11-13: COD (`cash`) only; online methods return CHECKOUT_PAYMENT_UNAVAILABLE (BE). FE 2026-11-13: cash only; online methods shown "Not available yet". | P0 |
 | F-CK-007 | Payment failure and retry | Customer | Failure state with retry or pay-on-delivery. | P0 |
-| F-CK-008 | Order success | Customer | Order id per shop, summary, track link. | P0 |
+| F-CK-008 | Order success | Customer | Order id per shop, summary, track link. Status 2026-11-13: `/checkout/success?attempt=` implemented (FE). | P0 |
 | F-CK-009 | Coupons | Customer | Flat or percent, minimum, cap; discount distributed proportionally across shop orders. | P0 |
 
 ## OR - Orders and tracking
@@ -200,11 +200,11 @@ Depends on: CK, RD, 07 state machines
 
 | ID | Feature | Roles | Description | Pri |
 |---|---|---|---|---|
-| F-OR-001 | Orders list and detail | Customer | Active/completed/cancelled filters; detail with items, amounts, address, shop. | P0 |
-| F-OR-002 | Order timelines | Customer | Delivery: placed, accepted, preparing, ready, out for delivery, delivered; pickup: placed, accepted, ready, picked up; plus cancelled, refunded. | P0 |
-| F-OR-003 | Live tracking with delivery OTP | Customer | Rider name, phone, rating, status, ETA; delivery OTP shown to customer. | P0 |
-| F-OR-004 | Pickup with code | Customer | Shop address, directions, instructions, pickup code. | P0 |
-| F-OR-005 | Order actions | Customer | Cancel, request refund, report a problem, contact shop/rider, reorder, download invoice. | P0 |
+| F-OR-001 | Orders list and detail | Customer | Active/completed/cancelled filters; detail with items, amounts, address, shop. Status 2026-11-13: `GET /orders`, `GET /orders/{orderId}` implemented (BE). FE 2026-11-13: `/orders` tabs + `/orders/{id}` implemented. | P0 |
+| F-OR-002 | Order timelines | Customer | Delivery: placed, accepted, preparing, ready, out for delivery, delivered; pickup: placed, accepted, ready, picked up; plus cancelled, refunded. Status 2026-11-13: ST-order-* registry + timeline (BE); refunded deferred. FE 2026-11-13: customer timeline implemented. | P0 |
+| F-OR-003 | Live tracking with delivery OTP | Customer | Rider name, phone, rating, status, ETA; delivery OTP shown to customer. FE 2026-11-13: customer order detail rider card (status text, rider name/vehicle; masked call/ETA not available yet). FE 2026-11-13: customer order detail rider card (status text, rider name/vehicle; masked call/ETA not available yet). FE 2026-11-13: customer order detail rider card (status text, rider name/vehicle; masked call/ETA not available yet). FE 2026-11-13: customer order detail rider card (status text, rider name/vehicle; masked call/ETA not available yet). | P0 |
+| F-OR-004 | Pickup with code | Customer | Shop address, directions, instructions, pickup code. Status 2026-11-13: pickup code issue/read/verify implemented (BE). FE 2026-11-13: customer pickup/delivery code card (`/code`, reissue) implemented. | P0 |
+| F-OR-005 | Order actions | Customer | Cancel, request refund, report a problem, contact shop/rider, reorder, download invoice. Status 2026-11-13: cancel implemented (BE); refund/problem/reorder/invoice deferred. FE 2026-11-13: customer cancel sheet implemented; others shown not available. | P0 |
 | F-OR-006 | Cancellation and refund flow | Customer | Reason picker; 'Admin and vendor have been notified'; refund tracker requested/approved/completed. | P0 |
 | F-OR-007 | Partial fulfilment and substitution | Customer, Vendor | Vendor marks item unavailable; bill updated; customer notified. | P0 |
 | F-OR-008 | Dispute visibility | Customer | Case status visible to customer. | P0 |
@@ -216,7 +216,7 @@ Depends on: platform foundations
 
 | ID | Feature | Roles | Description | Pri |
 |---|---|---|---|---|
-| F-RV-001 | Review flows by target | Customer | Business, product, service/provider, rider; separate forms. | P0 |
+| F-RV-001 | Review flows by target | Customer | Business, product, service/provider, rider; separate forms. Status 2026-11-13: public read list `GET /reviews` implemented (BE); writes gated on Orders/BR-09. | P0 |
 | F-RV-002 | Eligibility | Customer | Verified purchasers or enquirers only; otherwise explanatory message. | P0 |
 | F-RV-003 | Rating, text, photos, tags | Customer | Star input, text, photos, quick tags per target type. | P0 |
 | F-RV-004 | Edit/delete and My reviews | Customer | Manage own reviews. | P0 |
@@ -246,14 +246,14 @@ Depends on: AD10 moderation, EG, VD12
 |---|---|---|---|---|
 | F-RL-001 | Entry points | Customer | Play icon in mobile top bar, desktop nav, bottom navigation. | P0 |
 | F-RL-002 | Feed pills | Customer | For You / Following / Nearby / Offers / Products / Services + category pills (Electronics, Fashion, Food, Wedding, Mobile, Repair). | P0 |
-| F-RL-003 | Vertical snap feed | Customer | Autoplay in view, tap pause/play, mute, progress, captions, data-saver 'Tap to play', lazy loading. | P0 |
+| F-RL-003 | Vertical snap feed | Customer | Provider-supported autoplay in view, pause/play, mute, progress and captions; Instagram native controls; data-saver 'Tap to play', lazy loading (G-22). | P0 |
 | F-RL-004 | Desktop layout | Customer | Centred player, side panel (comments, linked products), up/down arrow keys. | P0 |
 | F-RL-005 | Video overlay | Customer | Owner avatar/name/verified, Follow/Following + bell, like count, comments, share, caption, hashtags, distance, open/closed, overflow with Report. | P0 |
 | F-RL-006 | Linked products/services strip | Customer | Image, name, price, Add to cart / Enquire / View; 'Shop this video' sheet. | P0 |
 | F-RL-007 | Guest actions and return | Customer | Like/follow/comment prompts login and returns to same video. | P0 |
 | F-RL-008 | Reels states | Customer | Empty Following, no videos nearby, skeleton, failed with retry, offline, removed/unavailable. | P0 |
 | F-RL-009 | Deep link and stable ranking | Customer | /videos/:id starts at that video; ranking frozen per session. | P0 |
-| F-RL-010 | Video sources and safety | Customer, Vendor, Provider | YouTube/Instagram links or uploads; embed URLs rebuilt server-side from allow-listed hosts; Open-in fallback. | P0 |
+| F-RL-010 | Video sources and safety | Customer, Vendor, Provider | YouTube/Instagram links only; typed playback rebuilt server-side from allow-listed hosts/IDs; safe Open fallback. Direct video upload disabled. | P0 |
 
 ## NT - Notifications
 
@@ -261,7 +261,7 @@ Depends on: platform foundations
 
 | ID | Feature | Roles | Description | Pri |
 |---|---|---|---|---|
-| F-NT-001 | Notification centre | All roles | Read/unread, per-role feeds (order, offer, review, approval, enquiry, job, admin, system), bell with badge. | P0 |
+| F-NT-001 | Notification centre | All roles | Read/unread, per-role feeds (order, offer, review, approval, enquiry, job, admin, system), bell with badge. Status 2026-11-13: order in-app notifications (`order.new`/`order.status`/`order.cancelled`) + SSE `GET /realtime/stream` (order/notification hints) implemented (BE). | P0 |
 | F-NT-002 | Notification preferences | Customer | Per channel (in-app, email, WhatsApp for orders/offers/enquiries) with consent text and unsubscribe. | P0 |
 | F-NT-003 | Follower announcements | Vendor, Provider | Owners announce new offers/videos to followers. | P0 |
 
@@ -291,11 +291,11 @@ Depends on: AD2 approval
 | F-VD-005 | Product category pills manager | Vendor | Reorder, rename, hide. | P0 |
 | F-VD-006 | Subcategory suggestion | Vendor | Form with duplicate detection and 'my suggestions' status. | P0 |
 | F-VD-007 | Offers manager | Vendor | Create/edit/pause/end, discount type, validity, products, banner, featured, performance; admin approval. | P0 |
-| F-VD-008 | Vendor orders | Vendor | New-order alert, accept/reject with reason, preparing, ready, request/assign rider or own delivery with OTP, pickup handover with code, print slip, mark item unavailable, refund handling. | P0 |
+| F-VD-008 | Vendor orders | Vendor | New-order alert, accept/reject with reason, preparing, ready, request/assign rider or own delivery with OTP, pickup handover with code, print slip, mark item unavailable, refund handling. Status 2026-11-13: owner queue/counts, accept/reject/preparing/ready, self-dispatch/self-complete OTP, pickup verify (BE + FE `/vendor/orders[/:id]`); rider assignment, slip, item unavailability deferred (shown as not available yet). BE 2026-11-13: real-time new-order alert (SSE `order`/`notification` hints + `order.new` in-app notice). BE 2026-11-13 (dispatch, decision D-RD-01): `mark_ready` on apna_town_rider orders creates the delivery job and auto-offers the nearest eligible rider; `POST /delivery/orders/{id}/request`, `GET …/riders`, `POST …/assign` (directed offer); OrderDetail `delivery` block + `request_rider`/`assign_rider` actions; `delivery.assigned|unassigned` owner notices. FE 2026-11-13: Rider dispatch card on `/vendor|provider/orders/:id` (job/offer state with countdown, rider name/vehicle, Auto-assign + Assign-rider sheet with distance/availability; dispatch-unavailable notice removed). | P0 |
 | F-VD-009 | Inventory | Vendor | Stock levels, thresholds, quick toggles, restock, bulk update. | P0 |
 | F-VD-010 | Vendor reviews | Vendor | List, filter, reply, report. | P0 |
 | F-VD-011 | QR and links | Vendor | Business QR with logo, poster/table-tent/sticker templates, links, share. | P0 |
-| F-VD-012 | Gallery manager and videos/reels manager | Vendor | Gallery-only photos, default consent setting, link/upload videos, thumbnail, caption, hashtags, link items, 'Show in Gallery'/'Show in Reels', approval status, analytics. | P0 |
+| F-VD-012 | Gallery manager and videos/reels manager | Vendor | Gallery-only photos, default consent setting, YouTube/Instagram video links (file upload disabled), thumbnail, caption, hashtags, link items, 'Show in Gallery'/'Show in Reels', approval status, analytics. | P0 |
 | F-VD-013 | Media-consent toggle | Vendor | On every product/service media upload: 'Also show this in my business Gallery / Videos & Reels' with explanation and default. | P0 |
 | F-VD-014 | Services manager | Vendor | Title, category, one subcategory, price type/amount/unit, inclusions, exclusions, area, images, video, active/pause, shareable link. | P0 |
 | F-VD-015 | Followers | Vendor | Count, growth chart, announce to followers. | P0 |
@@ -313,7 +313,7 @@ Depends on: AD2 approval
 | F-PV-002 | Provider profile with expert-in | Provider | Category, expert-in multi-select, description, contact, location and service area, gallery, hours. | P0 |
 | F-PV-003 | Provider services manager | Provider | As vendor services manager. | P0 |
 | F-PV-004 | Enquiries inbox | Provider | List/detail, statuses new -> contacted -> converted -> closed, call/WhatsApp reply, filters. | P0 |
-| F-PV-005 | Provider products and orders | Provider | A provider can also list products and handle orders. | P0 |
+| F-PV-005 | Provider products and orders | Provider | A provider can also list products and handle orders. Status 2026-11-13: provider product orders share the owner order routes (BE + FE `/provider/orders[/:id]`). | P0 |
 | F-PV-006 | Provider reviews, QR, analytics, followers, media | Provider | Reviews, QR/share link, analytics (views, enquiries, conversion), followers, videos/gallery managers, notifications, account. | P0 |
 | F-PV-007 | Booking placeholders | Provider | Booking/appointment/quotation/payment behind feature flag (off). | P0 |
 | F-PV-008 | Provider Premium billing | Provider | Buy and manually renew configured Premium plans, cancel at paid expiry, view plan status/expiry and issued invoices. | P0 |
@@ -325,11 +325,11 @@ Depends on: AD2 approval, OR
 | ID | Feature | Roles | Description | Pri |
 |---|---|---|---|---|
 | F-RD-001 | Rider signup and verification | Rider | Profile, selfie, vehicle, licence, ID, RC, bank/UPI, documents, approval states. | P0 |
-| F-RD-002 | Rider home | Rider | Online/offline toggle, today's deliveries and earnings. | P0 |
-| F-RD-003 | Delivery request with countdown | Rider | Pickup shop, drop, distance, estimated earning, 60 s countdown, accept/reject. | P0 |
-| F-RD-004 | Active delivery flow | Rider | Accepted, reached shop, items check, picked up, navigation, reached drop, collect cash if COD, customer OTP, delivered; or failed with reason; masked call. | P0 |
-| F-RD-005 | Rider history | Rider | Filters all/today/week; detail. | P0 |
-| F-RD-006 | Rider earnings | Rider | Per-ride base + per-km, daily/weekly totals, payout status. | P0 |
+| F-RD-002 | Rider home | Rider | Online/offline toggle, today's deliveries and earnings. BE 2026-11-13: summary over persisted jobs (rolling 24 h); going offline with an active job → RIDER_HAS_ACTIVE_JOB. | P0 |
+| F-RD-003 | Delivery request with countdown | Rider | Pickup shop, drop, distance, estimated earning, 60 s countdown, accept/reject. BE 2026-11-13: `offers/current`, `POST /delivery/offers/{id}/accept` and `/reject`, SSE `delivery` hint, `delivery.offer` in-app notice; worker expiry sweep (D-RD-01). FE 2026-11-13: `/rider/requests` offer card with server-anchored countdown, Accept (navigates after commit)/Reject, expired/taken states, `delivery` realtime refresh. | P0 |
+| F-RD-004 | Active delivery flow | Rider | Accepted, reached shop, items check, picked up, navigation, reached drop, collect cash if COD, customer OTP, delivered; or failed with reason; masked call. BE 2026-11-13: `GET …/active`, `POST /delivery/jobs/{id}/events` (checklist at picked_up issues the customer OTP; fail cancels the order), `POST …/complete` (OTP + COD + earned snapshot). Masked call/navigation/live tracking deferred. FE 2026-11-13: `/rider/active` DeliveryStepFlow (reached shop → item checklist → picked up → reached drop → code + explicit COD cash → delivered; Mark-failed sheet with four reasons; device-maps Directions when a drop pin exists). | P0 |
+| F-RD-005 | Rider history | Rider | Filters all/today/week; detail. BE 2026-11-13: real terminal jobs (rolling periods). | P0 |
+| F-RD-006 | Rider earnings | Rider | Per-ride base + per-km, daily/weekly totals, payout status. BE 2026-11-13: persisted earned breakdown; payout stays unavailable. | P0 |
 | F-RD-007 | Rider feedback | Rider | Ratings and comments. | P0 |
 | F-RD-008 | Rider profile and support | Rider | Documents, payout, language, support, dispute report. | P0 |
 
@@ -345,7 +345,7 @@ Depends on: SA3 roles and permissions
 | F-AD-004 | Users management | Admin | Customers, vendors, riders; search, profile, order history, suspend/reactivate. | P0 |
 | F-AD-005 | Categories and tree preview | Admin | View fixed main categories; subcategory tree with service types, keywords, filter preview. | P0 |
 | F-AD-006 | Subcategory suggestion queue | Admin | Pending/Approved/Rejected/Merged; approve, reject with reason, merge, duplicate warning, notify suggester. | P0 |
-| F-AD-007 | Orders and disputes | Admin | All orders, disputed/refund/failed cases, workflow open -> in review -> resolved, notes, refund approval/completion, rider assign/reassign. | P0 |
+| F-AD-007 | Orders and disputes | Admin | All orders, disputed/refund/failed cases, workflow open -> in review -> resolved, notes, refund approval/completion, rider assign/reassign. Status 2026-11-13: read-only scoped `GET /admin/orders[/{orderId}]` (BE + FE `/admin/orders[/:id]`, `orders:view`); cases/refunds/rider reassignment deferred (shown as not available yet). | P0 |
 | F-AD-008 | Live deliveries map | Admin | City filter (All with cluster pins/one city), side list, empty state. | P0 |
 | F-AD-009 | Review moderation | Admin | Reported/pending/removed; approve, hide, delete. | P0 |
 | F-AD-010 | Video moderation queue | Admin | Pending/approved/rejected/removed/reported, reasons, engagement report. | P0 |

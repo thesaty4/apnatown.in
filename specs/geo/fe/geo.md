@@ -2,6 +2,16 @@
 
 Features: F-LC-001, F-LC-002, F-LC-003, F-LC-004, F-LC-005, F-SA-004 | Screens: S-CUST-01, S-CUST-02, S-CUST-06, S-CUST-07, S-CUST-09, S-SUPR-04, S-SUPR-05 | Flows: J10
 
+API integration: [shared React Query contract](../../_foundation/frontend-shared.md#api-integration-with-react-query), including private location-context keys.
+
+Backend counterpart: [BE geo](../be/geo.md).
+Map implementation: [Leaflet/OSM contract](../../_foundation/media-and-maps.md#leaflet-and-openstreetmap).
+Use one lazy client-only shared `MapView`, direct Leaflet bindings and Geoman
+Free for polygon editing; API reads/writes remain React Query-owned.
+Keep attribution, HTTP tile caching and origin-only referrers; no offline/
+prefetched tiles or implicit geocoding service. A failed basemap retains the
+list/manual inputs and explicit retry, never a fabricated empty result.
+
 ## Routes and rendering
 
 | Route | Screen ID | Rendering + reason | Auth / role | Index policy |
@@ -75,6 +85,7 @@ Features: F-LC-001, F-LC-002, F-LC-003, F-LC-004, F-LC-005, F-SA-004 | Screens: 
   - Given a super admin saves an invalid polygon or slab order, when the server rejects it, then the editor preserves entered values and shows field errors.
   - Given a zone changes, when save succeeds, then the map/list refresh from server values and the action is auditable.
   - Given a super admin deletes a zone, when they confirm the stated fallback, then the city default schedule is used for eligible addresses and the UI confirms deletion.
+  - Given keyboard-only use or failed tiles, when editing a zone, then the coordinate/list alternative retains undo/cancel/save; no paid plugin capability is required and server validation remains authoritative.
 
 ## Components and i18n
 
@@ -83,8 +94,10 @@ Features: F-LC-001, F-LC-002, F-LC-003, F-LC-004, F-LC-005, F-SA-004 | Screens: 
 - Key prefixes: `geo.location.*`, `geo.cities.*`, `geo.zones.*`; use approved EN/HI catalogue; do not auto-translate city names or invent legal/consent copy.
 - Auth/permission, offline, skeleton, error/retry and no-permission use the shared state set; no business or permission logic lives in UI.
 
-## Analytics and tests
+## Analytics and verification
+
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Analytics: no feature-specific events are prescribed.
-- Component: location picker validation/permission denial; map/list/radius controls; city status confirmation; zone editor geometry, slab validation and keyboard operation.
-- E2E: location optional/manual fallback and J10 city/zone admin journey; permission-negative, long Hindi, dark mode and 360px viewport.
+- Manual UI: location picker validation/permission denial; map/list/radius controls; city status confirmation; zone editor geometry, slab validation and keyboard operation.
+- Manual journey: location optional/manual fallback and J10 city/zone admin journey; permission-negative, long Hindi, dark mode and 360px viewport.

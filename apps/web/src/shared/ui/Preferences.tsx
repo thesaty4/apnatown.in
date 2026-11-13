@@ -1,51 +1,48 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
-import {
-  parseTheme,
-  publicHref,
-  themeCookie,
-  type Theme,
-} from '../i18n/preferences';
+import { useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
+import { parseTheme, type Theme } from '../i18n/preferences';
+import { applyTheme } from '../i18n/browser-preferences';
+import { useSession } from '../auth/SessionProvider';
+import { useSavePreferences } from '../i18n/preferences-query';
 
+/** Theme select; signed-in users persist the choice. Language lives in
+ * `LanguageSwitch`. */
 export function Preferences({ initialTheme }: { initialTheme: Theme }) {
   const [theme, setTheme] = useState(initialTheme);
-  const locale = useLocale() === 'hi' ? 'hi' : 'en';
-  const path = usePathname().replace(/^\/(?:hi|en)(?=\/|$)/, '') || '/';
+  const mutation = useSavePreferences();
+  const busy = mutation.isPending;
+  const { state } = useSession();
   const t = useTranslations('common');
-  const target = locale === 'en' ? 'hi' : 'en';
+  useEffect(() => {
+    const sync = () =>
+      setTheme(parseTheme(document.documentElement.dataset.theme));
+    window.addEventListener('apnatown-theme', sync);
+    return () => window.removeEventListener('apnatown-theme', sync);
+  }, []);
 
   function changeTheme(value: string) {
     const next = parseTheme(value);
-    document.documentElement.dataset.theme = next;
-    document.cookie = `${themeCookie}=${next}; Path=/; Max-Age=31536000; SameSite=Lax${location.protocol === 'https:' ? '; Secure' : ''}`;
-    setTheme(next);
+    const apply = (confirmed: Theme) => {
+      applyTheme(confirmed);
+      setTheme(confirmed);
+      mutation.reset();
+    };
+    if (state.kind === 'ready')
+      void mutation.run({ theme: next }, (confirmed) => apply(confirmed.theme));
+    else apply(next);
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-end gap-4 text-small">
-      <a
-        href={publicHref(path, target)}
-        hrefLang={target}
-        aria-label={t('language.label')}
-        className="inline-flex min-h-touch items-center rounded-sm px-3 underline focus-visible:ring-focus"
-        onClick={(event) => {
-          // Preserve current query and fragment without serializing request state
-          // into the global shell; normal Next navigation still restores Back.
-          event.currentTarget.href =
-            publicHref(path, target) + location.search + location.hash;
-        }}
-      >
-        {t(target === 'hi' ? 'language.hindi' : 'language.english')}
-      </a>
-      <label className="flex flex-wrap items-center gap-2">
-        {t('theme.label')}
+    <>
+      <label className="flex items-center text-small">
+        <span className="sr-only">{t('theme.label')}</span>
         <select
           value={theme}
+          disabled={busy || state.kind === 'loading'}
           onChange={(event) => changeTheme(event.target.value)}
-          className="min-h-touch rounded-sm border border-border bg-surface px-3 text-text"
+          className="h-11 rounded-pill border border-border bg-surface px-3 text-text"
         >
           {(['light', 'dark', 'auto'] as const).map((value) => (
             <option key={value} value={value}>
@@ -54,6 +51,11 @@ export function Preferences({ initialTheme }: { initialTheme: Theme }) {
           ))}
         </select>
       </label>
-    </div>
+      {mutation.isError && (
+        <p role="alert" className="text-small text-error">
+          {t('preferences.saveFailed')}
+        </p>
+      )}
+    </>
   );
 }

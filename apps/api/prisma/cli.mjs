@@ -1,8 +1,9 @@
 import { provision } from './provision.mjs';
 import { migrate } from './migrate.mjs';
 import { seed } from './seed.mjs';
+import { studio } from './studio.mjs';
 
-const commands = new Set(['provision', 'migrate', 'seed']);
+const commands = new Set(['provision', 'migrate', 'seed', 'studio']);
 const safeErrors = new Set([
   'INVALID_DATABASE_TARGET',
   'UNSAFE_DATABASE_TARGET',
@@ -10,9 +11,19 @@ const safeErrors = new Set([
   'UNSAFE_RUNTIME_MEMBERSHIPS',
   'UNMARKED_SHADOW_DATABASE',
   'C01_C02_REQUIRED_NO_REVIEWED_MIGRATIONS',
-  'C02_REQUIRED_NO_DOMAIN_SEED_ADAPTER',
-  'C01_REQUIRED_QUEUE_SCHEMA_AND_RUNTIME_MANIFEST',
+  'API_BUILD_REQUIRED',
+  'SEED_KEYS_REQUIRED',
+  'SEED_DATA_INVALID',
+  'SEED_REFERENCE_CONFLICT',
+  'SEED_USER_IDENTITY_CONFLICT',
+  'SEED_BUSINESS_IDENTITY_CONFLICT',
+  'SEED_LISTING_IDENTITY_CONFLICT',
+  'SEED_VIDEO_IDENTITY_CONFLICT',
+  'SEED_NOTIFICATION_TEMPLATE_REQUIRED',
+  'SEED_COVERAGE_INCOMPLETE',
   'MIGRATION_DEPLOY_FAILED',
+  'QUEUE_SCHEMA_SETUP_FAILED',
+  'STUDIO_FAILED',
   'INVALID_COMMAND',
 ]);
 
@@ -24,6 +35,7 @@ async function main() {
   if (command === 'provision') await provision(process.env);
   if (command === 'migrate') await migrate(process.env);
   if (command === 'seed') await seed(process.env);
+  if (command === 'studio') await studio(process.env);
   process.stdout.write('Database command completed\n');
 }
 

@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import '@apnatown/ui/tokens.css';
 @import '@apnatown/ui/tailwind';
+@import 'leaflet/dist/leaflet.css';
 
 @source "../../../../packages/ui/src";
 
@@ -44,5 +45,26 @@
       transition: none !important;
       scroll-behavior: auto !important;
     }
+  }
+}
+
+/* QR studio (S-VEND-10/S-PROV-13): print only the poster, never app chrome. */
+@media print {
+  body:has([data-print-area]) * {
+    visibility: hidden;
+  }
+  body:has([data-print-area]) [data-print-area],
+  body:has([data-print-area]) [data-print-area] * {
+    visibility: visible;
+  }
+  [data-print-area] {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    margin-inline: auto;
+    background: #fff;
+    color: #000;
+    border-color: #000;
+    print-color-adjust: exact;
   }
 }

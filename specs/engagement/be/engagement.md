@@ -29,22 +29,135 @@ All customer writes require login; guest calls return `AUTH_REQUIRED` so the FE 
 
 | Method | Path | Auth, role, permission, scope | Request → response | Errors | Idempotent | Features / screens |
 |---|---|---|---|---|---|---|
-| PUT / DELETE | `/engagement/follows/{businessId}` | Customer; own relationship | PUT `{bellOn?}` → `{following,bellOn,followerCount}`; new/refollow defaults bell false; DELETE never needs target public | `ENGAGEMENT_TARGET_NOT_FOUND` on create | Yes | F-EG-003, F-PF-008 |
+| PUT / DELETE | `/engagement/follows/{businessId}` | Customer; own relationship | Current PUT requires `{sourceVideoId,bellOn?}` and validates that the public video belongs to the business; returns `{following,bellOn,followerCount}`. New/refollow defaults bell false. DELETE never needs target public. | `MEDIA_VIDEO_NOT_PUBLISHED` on create | Yes | F-EG-003 |
 | PUT / DELETE | `/engagement/likes/{videoId}` | Customer; PUT requires approved/public video; DELETE own relationship only | → `{liked,likeCount}` | `MEDIA_VIDEO_NOT_PUBLISHED` on create | Yes | F-EG-004 |
-| PUT / DELETE | `/engagement/hearts/{targetType}/{targetId}` | Customer; PUT public photo/video, DELETE own relationship even if target unavailable | → `{hearted}` | `ENGAGEMENT_TARGET_NOT_FOUND` on create | Yes | F-EG-002 |
+| PUT / DELETE | `/engagement/hearts/{targetType}/{targetId}` | Current slice: customer; video only, PUT requires public video, DELETE own relationship even if unavailable | → `{hearted}` | `MEDIA_VIDEO_NOT_PUBLISHED` on create | Yes | F-EG-002 |
 | PUT / DELETE | `/engagement/bookmarks/{targetType}/{targetId}` | Customer; `targetType=service` only; PUT requires public target, DELETE own existing relationship | → `{bookmarked}` | `ENGAGEMENT_TARGET_NOT_FOUND` on create | Yes | F-EG-007 |
 | GET | `/engagement/me/saved?tab=shops\|services\|media&mediaFilter=photos\|videos\|reels&cursor=` | Customer; own | `shops` is the Following list from active follows, including bell state; Services remains service bookmarks; media remains hearts. Unavailable targets remain removable. | `VALIDATION_ERROR` | Yes | F-EG-001, S-CUST-19 |
-| GET | `/engagement/me/state?videoIds=&businessIds=&targets=` | Customer (guest → empty) | batch → liked/hearted/service-bookmarked flags and business `{following,bellOn}` (max 50 IDs); no separately stored shop/provider bookmark state | — | Yes | overlays, cards |
-| GET | `/videos/{videoId}/comments?cursor=` | Public | → published comments + caller's own pending ones | — | Yes | F-EG-005 |
+| GET | `/engagement/me/state?videoIds=&businessIds=&targets=` | Customer (guest → empty) | batch → liked/hearted/service-bookmarked flags and business `{following,bellOn}` (max 50 unique targets); no separately stored shop/provider bookmark state | — | Yes | overlays, cards |
+| GET | `/videos/{videoId}/comments?cursor=` | Public | → published comments + caller's own pending ones; `canDelete` is server-derived per item and never exposes the author ID | — | Yes | F-EG-005 |
 | POST | `/videos/{videoId}/comments` | Customer | `{text}` → comment with status | `VALIDATION_ERROR`, `RATE_LIMITED` | Required key | F-EG-005 |
 | DELETE | `/videos/{videoId}/comments/{id}` | Author | → 204 | `ENGAGEMENT_TARGET_NOT_FOUND` | Yes | F-EG-005 |
-| POST | `/engagement/shares` | Public | `{targetType:'video'\|'shop'\|'provider'\|'product'\|'service',targetId,channel:'whatsapp'\|'copy'\|'native'}` → 204 | — | Yes | F-EG-006 |
+| POST | `/engagement/shares` | Public session | Current slice: `{targetType:'video',targetId,channel:'whatsapp'\|'copy'\|'native'}` → 204; other target types are not wired yet | `MEDIA_VIDEO_NOT_PUBLISHED` | Yes | F-EG-006 |
 | GET | `/businesses/me/followers` | Approved vendor/provider; own business from session | → `{followers,gainedThisWeek,approvedVideos,growth:[{start,end,total,gained}],asOf,definitionVersion?,unavailable[],recentAnnouncements[]}`; eight weekly buckets, latest three announcements | — | Yes | F-VD-015, S-VEND-15, S-PROV-11 |
 | POST | `/businesses/me/announcements` | Approved vendor/provider; own; shared abuse limiter, no product quota assumed | `{kind:'product'\|'service'\|'offer'\|'video',targetId?,messageEn,messageHi?}` → `{announcementId,status:'queued',eligibleRecipients}`; not a claim of delivery | `ENGAGEMENT_TARGET_NOT_FOUND`, `COMMON_RATE_LIMITED` | Required key | F-NT-003 |
 | GET | `/admin/comments?status=pending\|published\|removed&cursor=&limit=` | Admin **`reviews:view`** + exact video's business scope; super_admin | → page `{id,videoId,businessId,authorLabel,text,status,reason?,version,allowedActions}` + scoped counts | `ADMIN_SCOPE_FORBIDDEN` | Yes | F-EG-005, S-ADMN-11 |
 | POST | `/admin/comments/{id}/decision` | Admin **`reviews:edit`** + same scope; audited | `{action:'publish'\|'remove',reason?,expectedVersion}` → comment and counters; require reason for removal | `COMMENT_INVALID_TRANSITION`, `COMMENT_VERSION_CONFLICT` | Required key | F-EG-005, S-ADMN-11 |
 
+### Implemented slice: owner followers + announcements (2026-11-13)
+
+- `GET /businesses/me/followers` (`businessMeFollowers`): active followers, first-ever follows per Monday-based IST week (`follows.created_at` survives refollow), `approvedVideos` (approved, not owner-deleted `videos`, read-only), latest three announcements. `follower_daily_counts` is not built yet, so past weekly closing totals are `null` with `unavailable: ['weekly_totals_history']` (current week total = followers); never reconstructed.
+- `POST /businesses/me/announcements` (`businessMeAnnouncementCreate`, Idempotency-Key, 10/hour): `{kind, messageEn, messageHi?}` → `follower_announcements` row + `engagement.announcement_created` outbox event → `{announcementId, status:'queued', eligibleRecipients}` (active bell-on followers). `targetId` is not accepted until a listing-launched target picker exists.
+- Notifications `FollowerAnnouncementRule` → `follower.announcement` (category `follow`, topic `follower_updates`, intent `marketing`, in-app only) to bell-on followers via the Engagement `FOLLOWER_ANNOUNCEMENT_CONTEXT` adapter (worker-safe module), linking to the kind's listing. TODO(verify): single batch capped at 500 recipients until resumable `notifications.fanout_followers` ships.
+
 ## Rules and use-cases
+
+### EG1 Saved implementation slice
+
+- `GET /engagement/me/saved` accepts `tab=shops|services|media`,
+  `mediaFilter=all|videos|reels`, an opaque cursor and `limit` (default 20,
+  maximum 50). Unsupported photo requests fail validation rather than
+  returning fabricated empty data.
+- Customer authority is rechecked in the read transaction; the session supplies
+  the owner. Signed cursors bind owner, tab and filter. Following sorts by
+  `(last_followed_at,business_id)` descending; video hearts sort by
+  `(created_at,target_id)` descending, preserving microsecond precision.
+- Businesses, Services and Media supply purpose-limited public cards through owner ports.
+  Hidden, removed, suspended or inactive-owner targets return only the customer's
+  relationship metadata and `available:false`/`reasonKey`; names, captions and
+  links are omitted. Existing relationship-only DELETE routes remove these items.
+- `hearts.media_kind` retains `video|reel` classification for filtering even after
+  a target becomes unavailable. YouTube Shorts and Instagram Reels are reels;
+  other accepted video sources are videos. Existing surviving targets are
+  backfilled; orphaned historical hearts retain null and remain removable under
+  All, without inventing their missing classification.
+- The additive `20261112130000_engagement_saved` migration adds the classification
+  and matching keyset indexes. It is authored, not applied. Forward repair can
+  rebuild indexes without removing relationships; preserve classification data
+  when repairing because a deleted source cannot reconstruct it.
+- Photo hearts, Following profile navigation and bell editing on Saved
+  remain deferred to their owning surfaces. Following includes shops and providers;
+  it never creates a second business bookmark table.
+
+### EG7 service bookmarks
+
+- `20261112184300_service_bookmarks` adds the service-only relationship and
+  Saved keyset index; migration is authored, not applied. PUT rechecks public
+  service eligibility; DELETE needs only the caller's relationship, even when
+  its target is no longer public. Both use customer/session/CSRF/rate guards
+  and naturally idempotent writes.
+- Batched state accepts `targets=service:<id>` within its shared max-50 bound,
+  returning `bookmarkedServiceIds` (default `[]`). Media-heart target schemas
+  remain photo/video-only. Saved services sort by `(created_at,target_id)`;
+  owner ports redact unavailable rows while keeping them removable.
+- `ServiceBookmarkDataOwner` contributes only the requesting user's
+  relationships to export and erasure with existing deletion fences.
+- Shared/API/client builds and generated checks passed; the independent
+  security re-review passed. Migration execution, live authorization negatives,
+  concurrency, tombstone removal and export/erasure remain unverified.
+
+### EG3 video-detail implementation slice
+
+- `follows` stores one `(user_id,business_id)` relationship, including
+  `bell_on` and `unfollowed_at`; retries do not duplicate or change counts.
+  Unfollow clears the bell. Refollow starts with the bell off unless the
+  customer explicitly enables it in the request.
+- The public video response supplies `businessId`. In this current slice,
+  follow and bell updates require a `sourceVideoId` that is still public and
+  belongs to that business. Unfollow is relationship-only and works even when
+  the video/business is no longer public.
+- Batched engagement state returns `businessStates`; follower counts are read
+  from active follow rows. This slice does not implement follower analytics,
+  follow outbox events or notification fan-out, public profile/card buttons,
+  or Following-feed reads.
+
+### EG4 implementation slice
+
+- `likes` and the `like_count`, `version`, `updated_at` portion of
+  `video_engagement_counts` are implemented. Comment/share projection columns
+  remain with their respective counter work; existing comment behavior is unchanged.
+- PUT/DELETE have no request body. PK changes, the serialized per-video count
+  update and `engagement.liked`/`engagement.unliked` outbox event commit together.
+  No-op retries do not change the count/version or emit another event.
+- The current `/engagement/me/state?videoIds=` contract accepts up to 50
+  comma-separated UUIDs and returns `{likedVideoIds,videoCounts:[{videoId,likeCount}]}`.
+  Guest relationship flags are empty. Counts include only currently public videos;
+  private relationship flags are caller-owned. Other relationship filters are
+  introduced with their features, not silently accepted.
+- The existing video-detail LikeButton reads authoritative counts from this
+  batch, not Media's not-yet-wired feed projection. Feed projection/analytics and
+  Users-orchestrated export/erasure remain their separate integration slices.
+- Migration is additive and is not applied during implementation. Forward
+  repair can rebuild counts from `likes`; dropping tables loses relationship data.
+
+### EG2 implementation slice
+
+- The additive `hearts` relation table supports the spec's `photo|video`
+  target enum, composite owner/type/target uniqueness, and Saved-media index.
+- Current API writes and batched state expose video hearts only. PUT verifies the
+  approved/public video through Media; DELETE removes only the caller's row and
+  does not require the video to remain public. Both operations are naturally
+  idempotent and require a customer session plus CSRF.
+- Saved-page video listing/removal is implemented by EG1. Gallery/photo target
+  validation remains unimplemented until the Media gallery exists. Migrations
+  remain unapplied.
+
+### EG6 implementation slice
+
+- `POST /engagement/shares` currently accepts `targetType:'video'`, a video ID,
+  and `channel:'whatsapp'|'copy'|'native'`. It accepts no caller URL; Media
+  verifies the video and current public eligibility before writing.
+- Each action requires an idempotency key and is limited to 30 actions/minute
+  per session. The unique command record, `video_engagement_counts.share_count`
+  increment, version, and `engagement.shared` outbox event commit together.
+  Replays revalidate visibility and do not increment twice.
+- The table addition is forward-only and additive. Counts can be rebuilt from
+  retained `engagement.shared` events. The migration is not applied here.
+- This implementation wires the existing video-detail screen. Other target
+  types in the broader share contract are not exposed until their public target
+  read seams and screens are available.
+
+### Shared rules
 
 1. All toggles are idempotent upserts/deletes keyed by PK; counts never go negative.
 2. New follow has an **unset/off bell** (`js24.js:4–6`); following alone does not enable follower notifications and is not marketing consent. Unfollow records the transition and clears bell; refollow does not silently re-enable it. Daily count rows update once in the same transaction, not from replayable analytics.
@@ -100,9 +213,11 @@ Consume `video.removed` and **`business.application.decision_changed`** to inval
 13. Given a customer follows without enabling the bell, or withdraws channel consent before delivery, when fan-out runs, then no follower notification is delivered through that ineligible channel.
 12. Given repeated account-erasure calls, when policy is approved, then receipts and counter changes are idempotent; without Q-32 policy they remain blocked.
 
-## Tests
+## Verification
 
-Unit: AC1/2/5/10 relationship transitions, typed target IDs, comment state/counter deltas. Integration: Saved tombstone removal, moderation queue/counts, out-of-order counter reconciliation, announcement worker restart/withdrawal, account receipts. Authorization negatives: guest writes, foreign saved relation/followers, non-author comment deletion, same-city foreign area, catalog-only moderator. Malicious text/IDs and duplicate/retried POSTs are bounded/inert.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Rules: AC1/2/5/10 relationship transitions, typed target IDs, comment state/counter deltas. Manual API/DB: Saved tombstone removal, moderation queue/counts, out-of-order counter reconciliation, announcement worker restart/withdrawal, account receipts. Authorization negatives: guest writes, foreign saved relation/followers, non-author comment deletion, same-city foreign area, catalog-only moderator. Malicious text/IDs and duplicate/retried POSTs are bounded/inert.
 
 ## Open questions
 

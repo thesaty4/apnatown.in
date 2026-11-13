@@ -1,25 +1,144 @@
 {
-  "source": "docs/design-context/reference/prototype-source/style.css: .wrap, .state, .btn, .skel, h1/h2 desktop overrides",
+  "source": "docs/design-context/reference/prototype-source/style.css: .wrap, .state, .btn, .skel, h1/h2 desktop overrides; .row/.stack (61), .field/.input/.hint/.errmsg (125-138), .chip/.badge (144-146), .auto/.auto-s (157), .art (160-165), .scrim/.sheet/.grab (207-214), .mini (248), .shopgrid/.exlay/.exside (266-269), .sfn (284), .reels/.rtop/.rpill/.rfeed/.rv/.rshade/.rinfo/.rrail/.rside/.rstate/.rsave (287-299); reel-open/reel-closed reuse the pack's dark success/error because the reel canvas is always dark",
+  "paritySource": "style.css: .wrap (1200px content plus 28px external gutter), .btn.sm (40px), .tabs (46px), .pcard .t (.92rem, 2.4em, 1.3), .shopcard .cover (3rem); 10-sample-data.json categories/serviceCategories supply decorative category fallback hues, not listing photos.",
   "tokens": {
+    "color": {
+      "switch-thumb": "#FFFFFF",
+      "reel-canvas": "#000000",
+      "reel-surface": "#111111",
+      "reel-text": "#FFFFFF",
+      "reel-text-2": "#CFC4B6",
+      "reel-liked": "#FB7185",
+      "reel-verified": "#5EEAD4",
+      "reel-hashtag": "#FDBA74",
+      "reel-open": "#4ADE80",
+      "reel-closed": "#F87171",
+      "reel-panel": "#1A1612",
+      "reel-panel-card": "#26201A",
+      "reel-panel-border": "#3A3228"
+    },
+    "border-width": {
+      "chip-border": "1.5px"
+    },
+    "opacity": {
+      "art-brightness": ".78"
+    },
+    "drop-shadow": {
+      "art-shadow": "0 2px 2px rgba(0,0,0,.18)"
+    },
+    "background": {
+      "badge-fill": "color-mix(in srgb,currentColor 12%,var(--at-surface))"
+    },
+    "art": {
+      "listing-hue-grocery": "30",
+      "listing-hue-medical": "160",
+      "listing-hue-electronics": "215",
+      "listing-hue-mobile": "260",
+      "listing-hue-food-sweets": "350",
+      "listing-hue-clothing": "300",
+      "listing-hue-hardware": "200",
+      "listing-hue-stationery": "50",
+      "listing-hue-furniture": "20",
+      "listing-hue-jewellery": "45",
+      "listing-hue-wedding-events": "330",
+      "listing-hue-home-builders": "25",
+      "listing-hue-home-construction": "25",
+      "listing-hue-mechanic-repair": "200",
+      "listing-hue-mechanic": "200",
+      "listing-hue-coaching-education": "240",
+      "listing-hue-coaching": "240",
+      "listing-hue-electrician": "48",
+      "listing-hue-plumber": "190",
+      "listing-hue-other-services": "120",
+      "art-hue-default": "25",
+      "art-angle": "135deg",
+      "art-start-saturation": "85%",
+      "art-start-lightness": "90%",
+      "art-end-saturation": "70%",
+      "art-end-lightness": "76%"
+    },
     "animate": {
       "skeleton": "apnatown-shimmer 1.3s infinite",
-      "spinner": "apnatown-spin .7s linear infinite"
+      "spinner": "apnatown-spin .7s linear infinite",
+      "overlay-fade": "apnatown-overlay-fade var(--at-dur-2)",
+      "sheet-up": "apnatown-sheet-up var(--at-dur-3) var(--at-ease)",
+      "sheet-pop": "apnatown-sheet-pop var(--at-dur-3) var(--at-ease)"
+    },
+    "breakpoint": {
+      "sheet": "700px",
+      "shop-grid": "480px",
+      "wide": "1200px"
+    },
+    "radius": {
+      "sheet-grab": "3px",
+      "reel-frame": "16px"
     },
     "spacing": {
+      "button-small": "40px",
+      "explore-tab": "46px",
+      "product-title-min": "2.4em",
+      "explore-sidebar": "270px",
+      "explore-sidebar-top": "76px",
+      "explore-sidebar-max": "calc(100dvh - 96px)",
+      "product-card-min": "160px",
+      "service-card-min": "250px",
       "page-gutter": "14px",
       "state-gap": "10px",
       "state-inline": "18px",
       "state-block": "36px",
       "state-icon": "92px",
-      "button-inline": "20px"
+      "button-inline": "20px",
+      "field-gap": "6px",
+      "field-block": "10px",
+      "field-inline": "14px",
+      "textarea-min-height": "96px",
+      "selection-control": "22px",
+      "selection-gap": "10px",
+      "switch-width": "52px",
+      "switch-height": "30px",
+      "switch-inset": "3px",
+      "switch-travel": "22px",
+      "badge-inline": "9px",
+      "badge-block": "2px",
+      "count": "28px",
+      "count-block": "1px",
+      "avatar-mini": "56px",
+      "stack-gap": "14px",
+      "row-gap": "10px",
+      "sheet-max": "88vh",
+      "sheet-bottom": "calc(18px + var(--at-sab))",
+      "sheet-grab-width": "44px",
+      "sheet-grab-height": "5px",
+      "reel-compact": "40px",
+      "reel-rail-bottom": "90px",
+      "reel-info-end": "76px"
     },
     "container": {
-      "state-copy": "38ch"
+      "page-padded": "1228px",
+      "state-copy": "38ch",
+      "reel-feed": "440px",
+      "reel-side": "340px",
+      "reel-state-copy": "30ch",
+      "sheet": "min(560px,94vw)",
+      "sheet-wide": "min(820px,94vw)"
+    },
+    "leading": {
+      "listing-title": "1.3"
     },
     "text": {
+      "product-title": ".92rem",
+      "listing-art": "3rem",
+      "tab-count": ".72rem",
       "state-icon": "2.6rem",
       "h1-desktop": "2.2rem",
-      "h2-desktop": "1.65rem"
+      "h2-desktop": "1.65rem",
+      "field-label": ".9rem",
+      "field-error": ".82rem",
+      "chip": ".9rem",
+      "art": "2.4rem",
+      "art-mini": "1.6rem",
+      "reel-pill-text": ".85rem",
+      "reel-count": ".72rem"
     }
   }
 }

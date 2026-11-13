@@ -31,6 +31,12 @@ The 2026-11-11 decisions are implementation requirements, not sample commercial 
 - Add `tax={platformSupplier:SupplierTaxProfile,classifications:[{code,hsnOrSac,unitCode,supplyType:'taxable'|'exempt'|'nil_rated',gstRateBps,cessRateBps}],feeTaxCodes:{platformFee,platformDelivery,subscription,promotion,commission},versionEvidence}`. Semantics follow [Orders](../../orders/be/orders.md#invoice-and-tax-policy); unique codes, integer rates 0..10000 bps, valid references and at most 5000 classifications/version. Exempt/nil-rated requires zero tax; zero never substitutes for missing verification. Super Admin confirms external fiscal verification with a private evidence reference. Secrets remain adapter-only.
 - `tax` has its own versioned single-key Save in the existing Payments settings section. Reject incomplete/invalid enabled products, unresolved tax references and incompatible platform supplier/IRN adapter capability. Fiscal profile/rates are effective only for new quotes; existing quote/purchase/order snapshots retain their versions. `SettingsTaxPort.resolve({taxCodes,supplierRef,placeOfSupplyStateCode,at},uow?)` returns a complete immutable policy snapshot or `configuration_required`, never guessed tax.
 - `uploads` uses the exact public-image schema/defaults/hard ceilings in [Media](../../media-videos/be/media-videos.md#public-image-policy), stored as versioned deployment seeds. Super Admin may lower limits or disable a purpose but cannot raise hard ceilings or allow active-content formats. An independent Upload policies Save uses the existing single-key `uploads` endpoint; it is not secretly added to `policies_reviews` group membership.
+- Image readiness additionally requires the selected Cloudinary adapter and
+  its server-only configuration per [media and maps](../../_foundation/media-and-maps.md#configuration-and-readiness).
+  Return readiness/missing-field names only, not credentials or delivery URLs.
+  Public-image settings cannot enable video upload, change a private-document
+  purpose, or choose arbitrary embed/tile hosts. Those deployment boundaries
+  do not become new admin-editable provider/secret forms.
 - `GET /super-admin/settings` adds `readiness:{plans,promotions,tax,images}` with `{ready,missingFields[]}`. `/settings/public` exposes only safe upload constraints, public prices/flags and checkout availability, never supplier verification evidence or internal tax configuration. A missing operator price/legal identity is a clear setup task; no open algorithm or sample-money fallback remains.
 - Acceptance: Given invalid tax code, an enabled plan lacking price, or an upload override above a hard ceiling, when saving, then the atomic versioned update fails and previous configuration survives. Given a new valid version, then only new quotes use it; replayed payments/documents keep their frozen values.
 
@@ -140,9 +146,11 @@ Blocked responses use the shared envelope + configured `Retry-After`, no stack/P
 11. Given `/health` during maintenance, when Check again polls, then HTTP 200 reports maintenance and later ok, without requiring an authenticated super-admin session.
 12. Given grouped settings/flag changes, when consumers read, then coherent new values/cache events appear, existing financial snapshots remain unchanged, and booking/donations cannot be enabled.
 
-## Tests
+## Verification
 
-Unit: all group memberships/version failures, money/contacts/markup validation, maintenance admission matrix and future-flag denial. Integration: AC3 atomic concurrency/replay; settings/group/flag/legal cache events; guest support→outbox→scoped existing alert/detail; health/auth recovery; signed callback and in-flight financial correctness under maintenance. Negatives: same-city foreign support area, non-super settings/group writes, forged callback or body-selected bypass, stale flags before send, secrets/sample contacts in DTOs. Existing order snapshots and Q-32 retention gates are asserted.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Rules: all group memberships/version failures, money/contacts/markup validation, maintenance admission matrix and future-flag denial. Manual API/DB: AC3 atomic concurrency/replay; settings/group/flag/legal cache events; guest support→outbox→scoped existing alert/detail; health/auth recovery; signed callback and in-flight financial correctness under maintenance. Negatives: same-city foreign support area, non-super settings/group writes, forged callback or body-selected bypass, stale flags before send, secrets/sample contacts in DTOs. Existing order snapshots and Q-32 retention gates are asserted.
 
 ## Open questions
 

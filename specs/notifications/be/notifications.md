@@ -6,6 +6,14 @@ Frontend counterpart: [FE notifications](../fe/notifications.md)
 
 Contents: [Tables](#tables) · [Endpoints](#endpoints) · [Command](#typed-notification-command) · [Sources](#event-recipient-template-destination-matrix) · [Consent](#preferences-consent-and-send-time-authorization) · [Delivery](#delivery-receipts-and-resumable-jobs) · [Acceptance](#acceptance-criteria)
 
+## Implementation status
+
+2026-11-13 order notifications + real-time push: **implemented; shared/API/OpenAPI/client builds passed; migration `20261113090000_order_notification_templates` applied locally; worker and API module contexts boot; curl E2E through the web `/api` proxy passed (vendor/customer streams + feeds); no automated tests; security review pending**.
+
+- Order rules (`application/handlers/order.rules.ts`, worker): `order.created` → B `order.new` `{orderNumber}` → `/{vendor|provider}/orders/{orderId}`; `order.status_changed` toStatus accepted/preparing/ready(pickup → `ready_for_pickup`)/out_for_delivery/delivered/picked_up → customer `order.status` `{status,orderNumber}` → `/orders/{orderId}`; `order.cancelled` source business → customer `order.status` `{status:'rejected'}`, source customer → B `order.cancelled` `{orderNumber}`. Policy: category `order`, topic `orders`, transactional, channels in_app + email (email suppressed `channel_disabled` until a provider exists). In-app EN/HI v1 templates via migration; `orderNumber` renders only when it matches `^[A-Z0-9-]{1,24}$`.
+- **Deviations (requested by product owner; confirm with architect):** keys `order.new`/`order.status`/`order.cancelled` replace the matrix's `order.received`/`order.out_for_delivery`/`order.delivered`/`order.picked_up`/`order.cancellation_requested`; customers are also notified on accepted/preparing/ready and owner reject. Not yet implemented: customer `order.placed` on creation, BR-20 `admin.alert` on customer cancellation, WhatsApp order template.
+- Real-time: SSE is `GET /realtime/stream` (operationId `realtimeStream`), not `/notifications/stream`. `NotificationPublisher` and Orders enqueue `pg_notify('apnatown_realtime', {v:1,kind,userIds≤150,orderId?})` inside the committing transaction; the API-only `RealtimeHub` holds one `LISTEN` connection (bounded backoff 1–30 s), zod-validates payloads and fans out per user. Frames: `ready {}`, `order {orderId}`, `notification {}`, `session {reason:expired|replaced|shutdown}` then close; `: heartbeat` every 25 s; session revalidated every 60 s; ≤5 streams/user (oldest replaced); 30 connects/min/principal. Hints are best-effort (missed while the listener reconnects): clients refetch on `ready`. Shared schemas: `@apnatown/shared/realtime`.
+
 ## Responsibility
 
 Own per-role feeds, the five actual preference keys, EN/HI templates, selected-channel delivery, unsubscribe/verified STOP, receipts and follower fan-out. A logical message is **not automatically an in-app notification**. Communications owns reviewed campaign content/audiences; this module owns final current-eligibility checks and channel adapters (`in_app`, `email`, `whatsapp`) with fakes.
@@ -165,9 +173,11 @@ No subscription to nonexistent `order.placed`, `business.status_changed` or gene
 13. Given a Premium subscription expires, when `business.subscription.expired` is delivered, then the owner and currently authorized `promos:view` admins in the exact business area plus super_admin receive role-bound system notices once; current channel preferences apply, WhatsApp/marketing consent is not inferred, and a later renewal does not erase the expiry notice.
 14. Given account erasure without approved retention policy, when requested internally, then pending sends stop but destructive processing returns blocked; receipts/exports never disclose another subject.
 
-## Tests
+## Verification
 
-Unit: all matrix rows/recipient-role-topic rules (AC1–3), five-key mutation/consent mapping, signed capability and STOP verification. Integration: fake channels with post-enqueue and pre-retry withdrawal (AC4/11), WhatsApp-only dispatch, callback dedupe/version ordering, uncertain acceptance reconciliation, interrupted fan-out, counter events and account receipts. Negatives: foreign role/ID, same-city foreign admin area, forged sender/body userId, source/content mismatch, malicious text/internal-path injection and unapproved templates. SSE/feed tests assert no unconditional in-app delivery.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Rules: all matrix rows/recipient-role-topic rules (AC1–3), five-key mutation/consent mapping, signed capability and STOP verification. Manual API/DB: fake channels with post-enqueue and pre-retry withdrawal (AC4/11), WhatsApp-only dispatch, callback dedupe/version ordering, uncertain acceptance reconciliation, interrupted fan-out, counter events and account receipts. Negatives: foreign role/ID, same-city foreign admin area, forged sender/body userId, source/content mismatch, malicious text/internal-path injection and unapproved templates. SSE/feed checks assert no unconditional in-app delivery.
 
 ## Open questions
 

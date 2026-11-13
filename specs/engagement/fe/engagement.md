@@ -4,7 +4,7 @@ Features: F-EG-001, F-EG-002, F-EG-003, F-EG-004, F-EG-005, F-EG-006, F-EG-007, 
 
 Backend contract: [BE engagement](../be/engagement.md)
 
-Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components-used-across-modules) · [Tests](#tests)
+Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components-used-across-modules) · [Verification](#verification)
 
 ## Routes and rendering
 
@@ -34,18 +34,91 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) for standard states,
 - Acceptance: Given empty text, when Send is pressed, then show required-field validation. Given a valid announcement of any of the four kinds with or without a target, when accepted, then acknowledgement uses the server count/status, the target/path is correct and history refreshes. Given final followers data, when rendered in Hindi/dark mode, then all three KPIs/eight-week chart/table remain readable.
 - Acceptance: Given disabled bell or withdrawn consent, when a queued announcement is dispatched, then the recipient is suppressed; the UI does not promise unconditional in-app delivery.
 
+### Implemented slice: followers screen (2026-11-13)
+
+- `/vendor/followers`, `/provider/followers` → `features/engagement/followers/FollowersScreen`: Followers / Gained this week / Videos `KpiCard`s, eight-week "new followers" `BarChart` with table fallback (past weekly totals unavailable), announce form (four kinds, required EN message ≤200, optional HI), server queued/eligible count acknowledgement, latest three announcements. Keys `engagement.followers.*` (EN+HI).
+
 ## Feature components (used across modules)
+
+### EG1 Saved implementation slice
+
+- `/saved` is a private, dynamic Server Component route with a no-store first-page
+  read and request-local React Query hydration. Private keys include account,
+  roles, session epoch, tab and media filter; stale time is 30 seconds, cache
+  lifetime five minutes, focus/reconnect refetch enabled, no automatic retries.
+- Following, Services and saved Videos/Reels have real paginated API data and Load more.
+  Photos show an explicit not-yet-available state, not mock lists
+  or success-shaped empty data. Existing business profile routes/cards are not
+  wired, so Following shows public names and bell state without broken links or
+  fabricated images, ratings, distances and totals.
+- Tab/filter selections live in `?tab=shops|services|media&media=all|photos|videos|reels`.
+  Back restores URL state; invalid values show a reset action. Guest login
+  preserves the selected Saved URL. Tabs support arrows/Home/End; media filters
+  use the shared Chip; all feedback is bilingual and wraps.
+- Removal reuses unfollow/heart/service-bookmark DELETE. Unfollow asks confirmation; unavailable
+  targets remain removable. Successful removal updates all Saved pages, refetches
+  the list and invalidates video engagement state. Video follow/heart writes
+  invalidate Saved in return. Failures are explicit and never optimistically
+  claim success; logout/scope changes cancel and clear private state.
+- The root provider now supplies the engagement catalog for both existing video
+  controls and Saved. Header navigation exposes Saved without requiring a direct URL.
+- Explore service cards and service details use `ServiceBookmarkButton` with
+  max-50 batched state reads, account/epoch-scoped queries and lifecycle-fenced
+  private mutations. Successful Save/removal invalidates Engagement and Saved;
+  pending/read-retry/write-error/non-customer states are explicit. No fake
+  optimistic success is shown. Login preserves the originating browse/detail URL.
+  Unavailable services remain removable without exposing private target data.
+  Shared/API/client/UI/web builds and security re-review passed; live
+  account-switch, export/erasure and unavailable-target checks remain deferred.
 
 | Component | Behaviour | Used in |
 |---|---|---|
 | `FollowButton` (shared) | Follow / Following + separate bell; following alone sends no follower notifications; new/refollow bell **off/unset**, explicit PUT `{bellOn}` toggles it; unfollow confirmation clears bell; login gate | profiles, cards, Reels overlay, Videos tab |
-| `HeartButton` | Heart with scale animation; reduced-motion → instant fill + text change (EG2) | gallery lightbox, Reels, media tiles |
+| `HeartButton` | Save/Saved with touch-scale feedback; reduced motion removes transition (EG2) | video detail; gallery and media tiles when available |
 | `LikeButton` | Toggle with count (EG4) | Reels overlay |
 | `BookmarkButton` | Save/Saved for services only (EG7); shop/provider cards use the canonical FollowButton relationship | cards, service details |
-| `ShareSheet` | WhatsApp (`wa.me` with encoded canonical URL), Copy link (toast), native `navigator.share` when available (EG6); posts `/engagement/shares` | Reels, profiles, products, services |
-| `CommentsPanel` | Public list + composer (required 1–500 trimmed chars), own pending “Awaiting moderation”, own DELETE; reconcile server count on removal, rollback failed writes | Reels |
+| `ShareSheet` | WhatsApp (`wa.me` with encoded canonical URL), Copy link (status), native `navigator.share` when available (EG6); posts `/engagement/shares` | Video detail; other target screens when available |
+| `CommentsPanel` | Public list + composer (required 1–500 trimmed chars), own pending “Awaiting moderation”, server-derived `canDelete` for author DELETE; reconcile server count on removal, rollback failed writes | Reels |
 
 All buttons use foundation touch-target tokens, `aria-pressed` where appropriate, EN/HI labels and icon+text status. Follow does not grant marketing consent.
+
+### EG4 implementation slice
+
+The reusable LikeButton is integrated on `/videos/:id`. Its React Query hook
+reads the likes-only batch state (`likedVideoIds`, public `videoCounts`), uses
+session/epoch-scoped private cache keys even for guests, optimistically toggles
+with rollback, and reconciles the authoritative mutation result. Writes are
+serialized per mounted control and are not automatically retried. Guest clicks
+show the existing login gate preserving the same video URL. Zero is a valid count;
+unavailable, loading, read/retry, write-error and non-customer states are explicit.
+The eventual Reels feed reuses the control/batch pattern; this slice does not
+implement or claim the feed itself.
+
+### EG2 implementation slice
+
+The video detail page uses `HeartButton` with the batched React Query engagement
+state and session-scoped cache. It updates the returned heart flag after the
+authoritative write, gates guests to login with a return to the same video, and
+shows loading, unavailable, retry, write-error and non-customer states. Photo
+hearts remain separate; EG1 lists and removes saved videos.
+
+### EG3 video-detail implementation slice
+
+The public video detail uses `FollowButton` for its owning business. Follow
+state shares the same batched React Query request as video likes/hearts. New
+follows start with notifications off; the customer can toggle the bell, and
+unfollow requires confirmation and clears the bell. Guest actions preserve the
+video return path. Business profile/cards, the Reels feed and
+notification fan-out remain separate work.
+
+### EG6 implementation slice
+
+The video detail page uses `ShareSheet` with WhatsApp, Copy link, and native
+share when supported. It builds the same-origin canonical `/videos/:id` URL,
+never accepts a caller URL, and records the selected channel through a
+React Query mutation only after a successful copy/native action or an explicit
+WhatsApp click. Native-share cancellation is not recorded. Clipboard and API
+errors remain visible; EN/HI copy wraps within the shared Sheet.
 
 ### Comments moderation integration — existing S-ADMN-11
 - Media FE owns `/admin/videos`; its Pending/Removed content selector includes Comments per G-09, using `GET /admin/comments` and `POST /admin/comments/{id}/decision`.
@@ -56,6 +129,26 @@ All buttons use foundation touch-target tokens, `aria-pressed` where appropriate
 
 Prefixes `engagement.*`, `saved.*`, `vendor.followers.*`. Events: `follow_toggled`, `bell_toggled`, `like_toggled`, `heart_toggled`, `bookmark_toggled`, `share_clicked` (channel), `comment_posted`, `announcement_sent`.
 
-## Tests
+## Verification
 
-Component/axe: off-by-default bell, optimistic rollback/retry, unfollow dialog, required comment/message text, eight-week chart table, reduced-motion heart, share fallbacks, EN/HI/dark and topmost Esc. E2E J4: return to same video, hidden-target Saved removal after reload, comment publish/remove counters and reviews-only moderation, announcement interruption/opt-out. Account export/delete remains Users-owned; clear personal Saved/follow/comment caches when the session is invalidated.
+### EG1 build evidence (2026-11-12)
+
+| Check | Result |
+|---|---|
+| `pnpm build` | Passed: shared schemas, Prisma client generation, Nest API/OpenAPI, typed client, UI and Next production build; `/saved` is dynamic SSR |
+| `pnpm check:generated` | Passed: design tokens, EN/HI catalogs, OpenAPI and client are current |
+| `git diff --name-only -z HEAD -- '*.ts' '*.tsx' \| xargs -0 -r pnpm exec eslint` | Passed, zero errors; generated API declaration ignored as configured |
+| `git diff --check HEAD` | Passed |
+| Static security review | PASS: complete implementation diff reviewed; no high-confidence exploitable findings |
+
+Migration execution and runtime checks were not performed. Human acceptance:
+save a video/reel and follow its business, open Saved, reload and paginate;
+change filters and use Back; remove available and subsequently hidden targets;
+verify another customer cannot reuse the cursor or see the first customer's
+list; exercise logout/account switch while reads/writes are in flight; verify
+guest login returns to the selected tab; check failed writes, offline/retry,
+keyboard/focus and Hindi/light/dark layouts. No automated test files were added.
+
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Manual UI/accessibility: off-by-default bell, optimistic rollback/retry, unfollow dialog, required comment/message text, eight-week chart table, reduced-motion heart, share fallbacks, EN/HI/dark and topmost Esc. Manual journey J4: return to same video, hidden-target Saved removal after reload, comment publish/remove counters and reviews-only moderation, announcement interruption/opt-out. Account export/delete remains Users-owned; clear personal Saved/follow/comment caches when the session is invalidated.

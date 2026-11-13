@@ -2,7 +2,7 @@
 
 Features: F-HM-003, F-HM-004, F-SV-008, F-VD-006, F-AD-005, F-AD-006, F-AD-015, F-SA-008 | Rules: BR-07, BR-08, BR-12, BR-18 | State machines: ST-subcategory-suggestion | Depends on: none | Used by: businesses, products, services, search, admin
 
-Frontend counterpart: [FE catalog](../fe/catalog.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Frontend counterpart: [FE catalog](../fe/catalog.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Responsibility
 
@@ -53,7 +53,7 @@ Category filter and keyword-result previews use `POST /search/admin/preview` fro
 
 Internal `CatalogReadPort.taxonomy({categoryIds?,subcategoryIds?,kind?,activeOnly})` returns `{categories,subcategories,revision}` with IDs/slugs, bilingual names, kind/parent and active state. `CatalogReadPort.resolveKeywords({normalizedQuery})` returns enabled `{mappingId,matchedTerm,matchKind:"exact"|"fuzzy",targets}` and a revision. Search uses the shared normalization and these typed targets; disabled mappings never enter public results.
 
-`TaxonomyImageDTO={assetId,publicUrl,mimeType,width,height}`; `width/height` are required for an attached taxonomy image to reserve layout space. `CategoryDTO={id,slug,kind,nameEn,nameHi,icon?,image?:TaxonomyImageDTO,active,sortOrder}`; `SubcategoryDTO` adds `categoryId`. Public DTOs resolve only an attached, currently public `catalog_taxonomy` asset through Media and never return storage keys. Admin write DTOs accept `imageAssetId` and explicit null for removal. `CatalogHomeSectionDTO` is a discriminated union: a dedicated section carries `{id,kind,contentKind,category,supportingText,position}`; a curated section carries `{id,kind,contentKind,heading,supportingText,categories:[{category,position}],initialCategoryId,position}`. All displayed text is localized at request time.
+`TaxonomyImageDTO={assetId,path,mimeType,width,height}`; `path` is a root-relative same-origin Media gateway path (never an absolute provider URL), and `width/height` are required for an attached taxonomy image to reserve layout space. `CategoryDTO={id,slug,kind,nameEn,nameHi,icon?,image?:TaxonomyImageDTO,active,sortOrder}`; `SubcategoryDTO` adds `categoryId`. Public DTOs resolve only an attached, currently public `catalog_taxonomy` asset through Media and never return storage keys or provider URLs. Admin write DTOs accept `imageAssetId` and explicit null for removal. `CatalogHomeSectionDTO` is a discriminated union: a dedicated section carries `{id,kind,contentKind,category,supportingText,position}`; a curated section carries `{id,kind,contentKind,heading,supportingText,categories:[{category,position}],initialCategoryId,position}`. All displayed text is localized at request time.
 
 `HomeSectionWriteDTO` has two forms. `{kind:'single_category',contentKind,categoryId,supportingTextEn?,supportingTextHi?,position}` derives its heading from category names. `{kind:'curated_categories',contentKind,headingEn,headingHi,supportingTextEn?,supportingTextHi?,categories:[{categoryId,position}],initialCategoryId,position}` requires one or more distinct categories of the same kind; supporting copy is either absent in both locales or supplied in both. `kind` and `contentKind` are immutable after create. POST always creates an inactive draft; PATCH uses `expectedVersion`; activation/deactivation uses its explicit status command.
 
@@ -106,6 +106,8 @@ Suggestion events carry `{suggestionId,categoryId,businessId,submitterUserId,cit
 - Given an area-scoped moderator previews an unsaved mapping, when another area has matches, then those results/counts are excluded and no live mapping changes.
 - Given an owned editable pending application with a resolved area but no approved seller role, when suggesting taxonomy, then its narrow capability permits the request without enabling selling; a non-owner or suspended application is denied.
 
-## Tests
+## Verification
 
-Unit: normalization, duplicate candidates, typed target validation, transition guards. Integration: unique constraints, cursor ordering, version races, outbox atomicity. Authorization negatives: owner spoofing, non-super-admin category write, missing `catalog` permission, out-of-area queue decision. Journey: J9 suggestion-to-decision and cache invalidation.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Rules: normalization, duplicate candidates, typed target validation, transition guards. Manual API/DB: unique constraints, cursor ordering, version races, outbox atomicity. Authorization negatives: owner spoofing, non-super-admin category write, missing `catalog` permission, out-of-area queue decision. Journey: J9 suggestion-to-decision and cache invalidation.

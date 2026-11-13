@@ -1,0 +1,87 @@
+import { Module, type DynamicModule } from '@nestjs/common';
+import { USERS_REPOSITORY } from './domain/identity';
+import { USER_IDENTITY } from './application/identity-port';
+import { IdentityService } from './application/identity.service';
+import { ProfileService } from './application/profile.service';
+import { PrismaUsersRepository } from './infrastructure/users.repository';
+import { UsersController } from './presentation/users.controller';
+import { ADDRESS_REPOSITORY } from './domain/address';
+import { USERS_ADDRESS } from './application/address-port';
+import { AddressService } from './application/address.service';
+import { AddressAccess } from './application/address-access';
+import { AddressCommands } from './application/address-command';
+import { AddressProjection } from './application/address-projection';
+import { PrismaAddressRepository } from './infrastructure/address.repository';
+import { AddressesController } from './presentation/addresses.controller';
+import { CONSENT_REPOSITORY } from './domain/consent';
+import { CONSENT_READ, CONSENT_WRITE } from './application/consent-port';
+import { ConsentService } from './application/consent.service';
+import { PrismaConsentRepository } from './infrastructure/consent.repository';
+import { ConsentsController } from './presentation/consents.controller';
+import { AnonymousConsentsController } from './presentation/anonymous-consents.controller';
+import { privateStorageProvider } from '../../integrations/storage/provider';
+import { DATA_REQUEST_REPOSITORY } from './domain/data-request';
+import { DataRequestEvents } from './application/data-request-events';
+import { DataRequestService } from './application/data-request.service';
+import { PrismaDataRequestRepository } from './infrastructure/data-request.repository';
+import {
+  DataRequestCompletionController,
+  DataRequestsController,
+} from './presentation/data-requests.controller';
+import { USER_ROLES_REPOSITORY } from './domain/user-roles';
+import { PrismaUserRolesRepository } from './infrastructure/user-roles.repository';
+import { UserRolesService } from './application/user-roles.service';
+import { USER_ADMIN_READ, USER_ROLES } from './application/user-role-port';
+
+@Module({})
+export class UsersModule {
+  static forRoot(runtime: DynamicModule, geo: DynamicModule): DynamicModule {
+    return {
+      module: UsersModule,
+      imports: [runtime, geo],
+      controllers: [
+        UsersController,
+        AddressesController,
+        ConsentsController,
+        AnonymousConsentsController,
+        DataRequestsController,
+        DataRequestCompletionController,
+      ],
+      providers: [
+        { provide: USERS_REPOSITORY, useClass: PrismaUsersRepository },
+        IdentityService,
+        ProfileService,
+        { provide: USER_IDENTITY, useExisting: IdentityService },
+        { provide: ADDRESS_REPOSITORY, useClass: PrismaAddressRepository },
+        AddressAccess,
+        AddressCommands,
+        AddressProjection,
+        AddressService,
+        { provide: USERS_ADDRESS, useExisting: AddressService },
+        { provide: CONSENT_REPOSITORY, useClass: PrismaConsentRepository },
+        ConsentService,
+        { provide: CONSENT_READ, useExisting: ConsentService },
+        { provide: CONSENT_WRITE, useExisting: ConsentService },
+        {
+          provide: DATA_REQUEST_REPOSITORY,
+          useClass: PrismaDataRequestRepository,
+        },
+        privateStorageProvider,
+        DataRequestEvents,
+        DataRequestService,
+        { provide: USER_ROLES_REPOSITORY, useClass: PrismaUserRolesRepository },
+        UserRolesService,
+        { provide: USER_ROLES, useExisting: UserRolesService },
+        { provide: USER_ADMIN_READ, useExisting: UserRolesService },
+      ],
+      exports: [
+        USER_IDENTITY,
+        USERS_ADDRESS,
+        CONSENT_READ,
+        CONSENT_WRITE,
+        USER_ROLES,
+        USER_ADMIN_READ,
+      ],
+    };
+  }
+}

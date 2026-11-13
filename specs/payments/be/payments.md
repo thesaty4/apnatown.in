@@ -2,7 +2,7 @@
 
 Features: F-CK-006, F-CK-007, F-OR-006, F-VD-017, F-PV-008; gated Account integration F-AC-001, S-CUST-24 | Rules: BR-01, BR-02, BR-03, BR-20 | State machines: ST-payment, ST-refund | Depends on / used by: cart-checkout, orders, delivery, businesses, settings; `offers` consumes paid-promotion events. Cross-module access is through typed contracts/events only.
 
-Frontend counterpart: [FE payments](../fe/payments.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Frontend counterpart: [FE payments](../fe/payments.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Responsibility
 
@@ -66,6 +66,12 @@ Checkout's customer routes, retries and payment selection remain in the [Cart/Ch
 
 `billing_purchases.status`/`PurchaseDTO.status` additionally allow `compensating|compensated`; add optional `recovery:{status,amountPaise,reasonCode}` from the linked compensation. A compensated purchase stays activation-blocked, cannot retry into a free entitlement, and is not ordinary successful billing. Billing compensation events use `{purpose:'billing',purchaseId,paymentAttemptId,compensationId,status,amountPaise}`; existing checkout events retain their required checkout/round fields and are never synthesized for billing.
 All same-key replays reauthorize current role/ownership before returning their stored result, then bypass stale-version checks only for the identical authorized operation. Financial return reservation is shared across refunds/compensations on the underlying charge.
+
+
+### Implemented slice: vendor Earnings & plan reads (2026-11-13)
+
+- `GET /payments/me/earnings` (`paymentsMeEarnings`): current IST month sales = fulfilled (delivered/picked up) orders with a paid/collected payment attempt at fulfilled items − discount; six-month series; commission is an **estimate** at the current plan rate (active subscription, else the free plan) or `commission.defaultBps`, null when unconfigured; `unavailable` lists payout schedule and invoices (no ledger/settlement yet).
+- `GET /payments/me/subscription` (`paymentsMeSubscription`): enabled Settings `plans` with `current`, paid-through, enabled `promotion_fees`; `purchaseAvailable: false`. Purchases, cancellation, retry, invoices and payouts remain unimplemented. Local seed maps sample `cfg.plans`/`cfg.promos` into Settings (insert-only, `TODO(verify)` prices).
 
 ## Rules and use-cases
 
@@ -195,10 +201,12 @@ Reuse `COMMON_UNAUTHENTICATED`, `COMMON_FORBIDDEN`, `COMMON_VALIDATION_FAILED`, 
 20. Given a provider owns a verified finite Premium subscription, when they cancel with the current version, then cancellation is recorded for the paid expiry instant, entitlement remains active until that instant, and no refund/payment operation occurs; stale, expired, foreign, or no-expiry subscriptions are rejected without mutation.
 21. Given an expiry job is replayed or a verified renewal covers the expiry boundary, when the job runs, then it emits at most one expiry event only for a real eligibility loss; a later verified renewal restores still-selected public listings and invalidates their cached featured state.
 
-## Tests
+## Verification
 
-- Unit: exact ST-payment/ST-refund transitions, integer-paise caps, current plan lookup/cancellation state, event deduplication and immutable ledger insertion.
-- Integration: provider fake success/failure/timeout, signed webhook verification, checkout event replay, cash collection, refund retries, subscription expiry boundary/renewal, delayed-job replay and ledger queries with keyset pagination.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Rules: exact ST-payment/ST-refund transitions, integer-paise caps, current plan lookup/cancellation state, event deduplication and immutable ledger insertion.
+- Manual API/DB: provider fake success/failure/timeout, signed webhook verification, checkout event replay, cash collection, refund retries, subscription expiry boundary/renewal, delayed-job replay and ledger queries with keyset pagination.
 - Authorization negatives: wrong role, non-owner vendor/provider, cross-business record identifier, inactive/unapproved business purchase, invalid internal event identity; assert 403/404 and no leaked records.
 - Concurrency: duplicate webhook/refund event and simultaneous refund requests cannot exceed the remaining captured amount or create duplicate entries.
 - Security: signatures checked before mutation; credentials/payment details excluded from logs and responses; plan/promotion keys allow-listed.

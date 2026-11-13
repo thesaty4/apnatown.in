@@ -22,5 +22,7 @@
 | reference/apnatown-prototype.html | The runnable design. Open in a browser; the Demo button switches role, language, theme and simulated states |
 | reference/prototype-source/ | Complete source (JS modules, `style.css`) of the prototype: the exact visual and behavioural reference |
 
-Rule: when a document and the prototype disagree, the prototype wins; log the conflict in file 11.
-Validate this pack: `node scripts/validate-design-pack.mjs`.
+Rule: when a document and the prototype disagree, the prototype wins unless
+an explicit user decision is recorded in file 11. The
+[2026-11-12 media/map contract](../../specs/_foundation/media-and-maps.md)
+records the approved provider choices and disabled direct-video-upload path.

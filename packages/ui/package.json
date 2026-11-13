@@ -11,6 +11,58 @@
       "types": "./dist/primitives/Button.d.ts",
       "import": "./dist/primitives/Button.js"
     },
+    "./primitives/Input": {
+      "types": "./dist/primitives/Input.d.ts",
+      "import": "./dist/primitives/Input.js"
+    },
+    "./primitives/TextArea": {
+      "types": "./dist/primitives/TextArea.d.ts",
+      "import": "./dist/primitives/TextArea.js"
+    },
+    "./primitives/Select": {
+      "types": "./dist/primitives/Select.d.ts",
+      "import": "./dist/primitives/Select.js"
+    },
+    "./primitives/Selection": {
+      "types": "./dist/primitives/Selection.d.ts",
+      "import": "./dist/primitives/Selection.js"
+    },
+    "./primitives/Chip": {
+      "types": "./dist/primitives/Chip.d.ts",
+      "import": "./dist/primitives/Chip.js"
+    },
+    "./primitives/Pill": {
+      "types": "./dist/primitives/Pill.d.ts",
+      "import": "./dist/primitives/Pill.js"
+    },
+    "./primitives/Badge": {
+      "types": "./dist/primitives/Badge.d.ts",
+      "import": "./dist/primitives/Badge.js"
+    },
+    "./cards/Card": {
+      "types": "./dist/cards/Card.d.ts",
+      "import": "./dist/cards/Card.js"
+    },
+    "./cards/CategoryTile": {
+      "types": "./dist/cards/CategoryTile.d.ts",
+      "import": "./dist/cards/CategoryTile.js"
+    },
+    "./data/Avatar": {
+      "types": "./dist/data/Avatar.d.ts",
+      "import": "./dist/data/Avatar.js"
+    },
+    "./overlay/Sheet": {
+      "types": "./dist/overlay/Sheet.d.ts",
+      "import": "./dist/overlay/Sheet.js"
+    },
+    "./overlay/ConfirmDialog": {
+      "types": "./dist/overlay/ConfirmDialog.d.ts",
+      "import": "./dist/overlay/ConfirmDialog.js"
+    },
+    "./overlay/FullScreenViewer": {
+      "types": "./dist/overlay/FullScreenViewer.d.ts",
+      "import": "./dist/overlay/FullScreenViewer.js"
+    },
     "./feedback/Skeleton": {
       "types": "./dist/feedback/Skeleton.d.ts",
       "import": "./dist/feedback/Skeleton.js"
@@ -19,9 +71,37 @@
       "types": "./dist/feedback/StateViews.d.ts",
       "import": "./dist/feedback/StateViews.js"
     },
+    "./feedback/Toast": {
+      "types": "./dist/feedback/Toast.d.ts",
+      "import": "./dist/feedback/Toast.js"
+    },
+    "./commerce/QuantityStepper": {
+      "types": "./dist/commerce/QuantityStepper.d.ts",
+      "import": "./dist/commerce/QuantityStepper.js"
+    },
     "./navigation/SkipLink": {
       "types": "./dist/navigation/SkipLink.d.ts",
       "import": "./dist/navigation/SkipLink.js"
+    },
+    "./layout/DashboardShell": {
+      "types": "./dist/layout/DashboardShell.d.ts",
+      "import": "./dist/layout/DashboardShell.js"
+    },
+    "./admin/PermissionMatrix": {
+      "types": "./dist/admin/PermissionMatrix.d.ts",
+      "import": "./dist/admin/PermissionMatrix.js"
+    },
+    "./admin/AdminCollapsibleCard": {
+      "types": "./dist/admin/AdminCollapsibleCard.d.ts",
+      "import": "./dist/admin/AdminCollapsibleCard.js"
+    },
+    "./geo/Address": {
+      "types": "./dist/geo/Address.d.ts",
+      "import": "./dist/geo/Address.js"
+    },
+    "./geo/MapView": {
+      "types": "./dist/geo/MapView.d.ts",
+      "import": "./dist/geo/MapView.js"
     },
     "./tokens.css": "./dist/tokens.css",
     "./tailwind": "./dist/tailwind.css"
@@ -34,10 +114,13 @@
     "typecheck": "tsc -p tsconfig.build.json --noEmit"
   },
   "peerDependencies": {
+    "leaflet": "1.9.4",
     "react": "19.3.1",
     "react-dom": "19.3.1"
   },
   "devDependencies": {
+    "leaflet": "1.9.4",
+    "@types/leaflet": "1.9.21",
     "@formatjs/icu-messageformat-parser": "3.5.23",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",

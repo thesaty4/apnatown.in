@@ -2,7 +2,12 @@
 
 Features: F-PF-001, F-PF-002, F-PF-003, F-PF-004, F-PF-005, F-PF-006, F-PF-007, F-PF-011, F-PF-012, F-PF-013, F-VD-001, F-VD-002, F-VD-003, F-VD-011, F-VD-018, F-PV-001, F-PV-002, F-PV-006, F-PV-007, F-X-011 | Screens: S-CUST-06, S-CUST-07, S-VEND-01, S-VEND-02, S-VEND-10, S-VEND-12, S-VEND-18, S-PROV-01, S-PROV-02, S-PROV-09, S-PROV-13, S-PROV-14, S-PROV-16 | Flows: J7
 
-Backend contract: [BE businesses](../be/businesses.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Backend contract: [BE businesses](../be/businesses.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
+
+Logo/cover Uploaders, media panels and location pins follow the shared
+[media/map contract](../../_foundation/media-and-maps.md). Public-purpose
+images use Cloudinary through Media; onboarding documents stay private even
+when they are photos. Reuse Leaflet MapView and the typed link-only renderer.
 
 ## Routes and rendering
 
@@ -191,6 +196,12 @@ Owner API calls set `X-Business-Kind` from the vendor/provider route group; the 
 - Given OTP security information is shown, when no change-phone/recovery action is approved under Q-43, then it remains informational and invokes no nonexistent mutation.
 - Given Hindi or keyboard navigation is used, when account settings render, then labels, focus and errors remain accessible.
 
+### Implemented slices (2026-11-13)
+
+- S-PROV-14 `/provider/analytics` → `BusinessAnalytics`: KPI cards (views, enquiries, converted, conversion / Not applicable), views-vs-enquiries `BarChart` with table, enquiry status mix, explicit empty state, locked note before approval.
+- S-VEND-18 / S-PROV-16 `/vendor/account`, `/provider/account` → `BusinessAccount`: own Users profile form (name/email; login phone read-only pending Q-43), OTP security note, language switch, help link; vendor adds payout-unavailable and staff-unavailable notes (no mutation, Q-10).
+- Dashboard nav now links Reviews, Followers, Analytics and Account. Shared web pieces: `shared/ui/KpiCard`, `shared/ui/BarChart`, `features/businesses/OwnerQueryState`.
+
 ## Feature components and shared components
 
 Feature-only: `BusinessOnboardingWizard`, `BusinessProfileHeader`, `BusinessProfileEditor`, `BusinessQrPrintTemplate`, `BusinessAnalyticsPanel`. Reuse `DashboardShell`, `Stepper`, `PhoneInput`, `OtpInput`, `Input`, `Select`, `Uploader`, `MapView`, `Toggle`, `Tabs`, `ShopCard`, `ServiceCard`, `Rating`, `KpiCard`, `Charts`, `ShareSheet`, `FollowButton`, and shared state views; data fetching remains in feature route/server or hooks.
@@ -203,9 +214,11 @@ Feature-only: `BusinessOnboardingWizard`, `BusinessProfileHeader`, `BusinessProf
 - In the unified public profile, F-PF-008 is owned by engagement and F-PF-009/010 by media-videos; this spec owns only their profile-tab composition.
 - Within F-PV-006, S-PROV-10 reviews is reviews-owned, S-PROV-11 followers is engagement-owned, and S-PROV-12 media is media-videos-owned; this module owns the overview, QR, analytics and account surfaces.
 
-## Tests
+## Verification
+
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 Add the shared Billing identity section to existing vendor/provider onboarding/profile editors, using `/businesses/me/billing-profile`, its independent version and registration-specific fiscal fields. Save submits review; show pending/rejected/approved and explain the block on new financial quotes/purchases without changing existing invoices. No self-verified checkbox. Admin approvals uses the linked owner contract and exact `approvals:view/edit` scope. Verify EN/HI validation, forbidden evidence reads and stale saves.
 Public profiles record views only after actual display, never SSR/GET/prefetch or owner preview. Label counts as session windows, not unique people.
 
-Component: onboarding step retention/validation, profile preview, document privacy, QR print variants, analytics empty state, account ownership. E2E: J7 onboarding; public shop/provider profile load and unavailable states; vendor/provider profile save; QR share/print; provider analytics empty state.
+Manual UI: onboarding step retention/validation, profile preview, document privacy, QR print variants, analytics empty state, account ownership. Manual journey: J7 onboarding; public shop/provider profile load and unavailable states; vendor/provider profile save; QR share/print; provider analytics empty state.

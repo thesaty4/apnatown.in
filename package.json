@@ -9,12 +9,14 @@
     "pnpm": "10.34.9"
   },
   "scripts": {
+    "bootstrap": "node scripts/setup.mjs",
     "env:local": "node scripts/workspace.mjs env:local",
     "db:up": "node scripts/workspace.mjs db:up",
     "db:down": "node scripts/workspace.mjs db:down",
     "db:generate": "node scripts/workspace.mjs db:generate",
     "db:migrate": "node scripts/workspace.mjs db:migrate",
     "db:seed": "node scripts/workspace.mjs db:seed",
+    "db:studio": "node scripts/workspace.mjs db:studio",
     "tokens:generate": "node scripts/workspace.mjs tokens:generate",
     "i18n:generate": "node scripts/workspace.mjs i18n:generate",
     "api:openapi": "node scripts/workspace.mjs api:openapi",
@@ -27,7 +29,7 @@
     "start:web": "node scripts/workspace.mjs start:web",
     "start:worker": "node scripts/workspace.mjs start:worker",
     "lint": "eslint . && node scripts/check-workspace.mjs",
-    "format:check": "prettier --check package.json pnpm-workspace.yaml tsconfig*.json eslint.config.mjs compose.yaml apps packages scripts/environment* scripts/processes* scripts/workspace* scripts/check-workspace* .github/workflows",
+    "format:check": "prettier --check package.json pnpm-workspace.yaml tsconfig*.json eslint.config.mjs compose.yaml apps packages scripts/environment* scripts/processes* scripts/setup* scripts/workspace* scripts/check-workspace*",
     "typecheck": "node scripts/workspace.mjs typecheck",
     "check:generated": "node scripts/workspace.mjs check:generated"
   },

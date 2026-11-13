@@ -4,6 +4,21 @@ Features: F-RV-001, F-RV-002, F-RV-003, F-RV-004, F-RV-005, F-RV-006, F-RV-007, 
 
 Frontend counterpart: [FE reviews](../fe/reviews.md)
 
+## Implementation status
+
+2026-11-13, public read only: **`GET /reviews` implemented; shared/API/client builds passed; migration and seed applied to the local DB on explicit request; HTTP runtime checks deferred**.
+
+- Implemented: shared entry `@apnatown/shared/reviews` (`ReviewListQuerySchema`, `ReviewCardSchema`, `ReviewSummarySchema`, `ReviewPageSchema`, `reviewAuthorLabel`), `ReviewsModule` with public `GET /reviews` (operationId `reviewsList`, IP rate limit 120/min, `private, no-store`). Visible set = `published|reported`, not deleted, active non-deleted author, publicly visible target (`products_public_discovery` / `services_public_discovery` / `businesses_public_context`); otherwise `COMMON_NOT_FOUND`. Summary (1-decimal average, count, `[1★..5★]` breakdown) uses the same set. Sorts `recent` (created_at, id DESC) and `helpful` (helpful_count, created_at, id DESC) with a signed keyset cursor bound to target + sort; partial indexes in migration `20261113070000_reviews_public_read`. Authors are first name + last initial.
+2026-11-13, owner side (S-VEND-09/S-PROV-10, F-VD-010, F-RV-007): **`GET /businesses/me/reviews`, `PUT`/`DELETE /businesses/me/reviews/{id}/reply`, owner `POST /reviews/{id}/reports` implemented; API/web builds passed; migration/seed/runtime checks deferred**.
+
+- Owner list: approved seller (`ApprovedSellerAccess`, X-Business-Kind), business/product/service reviews of that business in the visible set; summary + `{all,needs_reply,reported}` counts over the whole set; `filter`, `rating`, newest-first keyset cursor bound to filter+rating+business; cards add `targetType`, target EN/HI name and `reportedByMe`. Shared SQL fragments live in `infrastructure/review-sql.ts`; `toReviewCard` is shared by public and owner DTOs.
+- Reply: plain text ≤1000, overwrite on edit, DELETE clears; foreign/invisible review → `REVIEW_NOT_FOUND` (404). Report: `review_reports` table (migration `20261113110000_owner_reviews_followers`), one report per reporter subject (sha256 of the user ID), `published → reported` (still public/counted); replay acknowledged once; 5/hour limit.
+- Deferred: public (customer/guest) reporting, `review.replied` event + author notification, admin moderation queue.
+- Not yet: `rider` public listing (RV-Q3), per-subject `helpfulByMe/reportedByMe/allowedActions`, `review_aggregates`/`review_reports`/`review_helpful_votes` tables.
+- Gated on Orders proof and BR-09/RV-Q1/RV-Q2: all writes (POST/PATCH/DELETE, eligibility, helpful, reports, replies, moderation, `/reviews/me`, rider/owner/admin reads).
+- Known divergence: `reviews_public_aggregates` (discovery rating/count) still counts `published` only, while rule 4 and this list count `published` + `reported`; reconcile when Reviews owns aggregates.
+- Seed: only sample-pack reviews whose reviewer exists in sample `users` are inserted (rv6, rv8, rv9); others are skipped with a counted reason. Sample tags are stored as labels (`TODO(verify)` tag-key catalogue).
+
 Contents: [Tables](#tables) · [Identity and proof](#target-identity-and-proof-contracts) · [Endpoints](#endpoints) · [Rules](#rules-and-use-cases) · [Acceptance](#acceptance-criteria) · [Decisions](#open-questions)
 
 ## Responsibility
@@ -120,9 +135,11 @@ Implement Users' internal `UserDataPort.exportPage({userId,cursor,limit})` as `R
 11. Given a public review card, when Helpful is retried or removed, then only that subject's vote changes and counts stay correct; hidden content cannot gain new votes.
 12. Given an account-erasure request without approved Q-32 policy, when `erase` runs, then it returns a durable blocked receipt and keeps authored counts/history unchanged.
 
-## Tests
+## Verification
 
-Unit: AC1/9/10 target/proof matrix, boundary statuses and decision gates; required text/tags; hidden restoration and aggregate deltas. Integration: POST/PATCH hydration consistency after policy decision, report → owner/admin queues → restoration, reply/moderation notifications, asset-purpose rejection, account receipts/counters. Negatives: non-author edit, wrong proof owner/target, service versus provider ID, same-city foreign area, city-only rider. Concurrency: duplicate votes/reports/restores and repeat purchases; malicious text/photo IDs remain inert/rejected.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Rules: AC1/9/10 target/proof matrix, boundary statuses and decision gates; required text/tags; hidden restoration and aggregate deltas. Manual API/DB: POST/PATCH hydration consistency after policy decision, report → owner/admin queues → restoration, reply/moderation notifications, asset-purpose rejection, account receipts/counters. Negatives: non-author edit, wrong proof owner/target, service versus provider ID, same-city foreign area, city-only rider. Concurrency: duplicate votes/reports/restores and repeat purchases; malicious text/photo IDs remain inert/rejected.
 
 ## Open questions
 

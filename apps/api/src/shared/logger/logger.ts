@@ -3,6 +3,9 @@ import type { LoggerService } from '@nestjs/common';
 import { CorrelationIdSchema } from '@apnatown/shared/wire';
 import pino, { type DestinationStream, type Logger } from 'pino';
 import type { RuntimeConfig } from '../config/config';
+import { currentCorrelationId } from './context';
+
+export const RUNTIME_LOGGER = Symbol('RUNTIME_LOGGER');
 
 export function correlationId(input: unknown): string {
   const value = CorrelationIdSchema.safeParse(input);
@@ -16,6 +19,10 @@ export function createLogger(
   const options: pino.LoggerOptions = {
     level,
     base: null,
+    mixin: () => {
+      const id = currentCorrelationId();
+      return id ? { correlationId: id } : {};
+    },
     // Defence in depth; callers log only explicitly selected technical metadata.
     redact: {
       paths: [
@@ -23,6 +30,14 @@ export function createLogger(
         'token',
         'cookie',
         'authorization',
+        '*.authorization',
+        'latitude', 'longitude', '*.latitude', '*.longitude',
+        '["x-discovery-latitude"]', '["x-discovery-longitude"]',
+        'headers["x-discovery-latitude"]', 'headers["x-discovery-longitude"]',
+        'headers["X-Discovery-Latitude"]', 'headers["X-Discovery-Longitude"]',
+        // Data-request deletion completion capability (never logged).
+        'completionToken',
+        '*.completionToken',
         'DATABASE_URL',
         'req',
         'res',

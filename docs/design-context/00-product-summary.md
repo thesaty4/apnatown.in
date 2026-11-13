@@ -25,7 +25,7 @@ Customer, Vendor (shop), Service Provider, Rider, Admin (area- and module-scoped
 9. **Refunds and cancellations notify admin and vendor**; admin resolves disputes.
 10. Main categories are fixed and managed only by Super Admin; subcategories are suggested by vendors/providers/admins and approved by admins (duplicate detection, merge).
 11. Each service has exactly one subcategory; providers can be "expert in" several.
-12. Videos are YouTube/Instagram links or uploads, publicly visible only after admin approval.
+12. Videos are YouTube/Instagram links, publicly visible only after admin approval; direct video uploads are disabled by the 2026-11-12 user decision.
 13. Media added to a product/service appears in the business Gallery/Reels only if the vendor allows it.
 14. Location is never mandatory; WhatsApp messaging only with recorded opt-in consent.
 
@@ -33,7 +33,11 @@ Customer, Vendor (shop), Service Provider, Rider, Admin (area- and module-scoped
 - **Phase 1 (launch, P0):** discovery (Home, Explore, Search, profiles, product, service pages), cart/checkout/orders/tracking, vendor + provider dashboards, rider app, admin + super admin, notifications, reels with moderation, EN/HI, SEO foundation.
 - **Phase 2 (P1):** richer analytics, advanced promotions, staff roles for vendors, saved payment methods.
 - **Phase 3 (P2):** service booking/quotation/payment, wallet, loyalty, more cities.
-- **Out of scope now:** donations (flag off), in-app video upload hosting beyond link-based (decision pending).
+- **Out of scope now:** donations (flag off), direct video upload/hosting (link-only launch confirmed).
+
+Public images use Cloudinary; maps use Leaflet/OSM with Geoman Free. Private
+documents stay separate. See the [integration contract](../../specs/_foundation/media-and-maps.md)
+for security, configuration, free-service limits and remaining operational gates.
 
 ## Numbers at a glance (from the design)
 206 features in 22 areas; 105 screens (customer 38, vendor 18, provider 16, rider 8, admin 17, super admin 8); 6 roles; 10 product categories; 7 service categories (29 seeded subcategories); 16 status models; 22 business rules.

@@ -4,7 +4,13 @@ Features: F-RL-001, F-RL-002, F-RL-003, F-RL-004, F-RL-005, F-RL-006, F-RL-007, 
 
 Backend contract: [BE media-videos](../be/media-videos.md)
 
-Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Tests](#tests)
+API integration: [shared React Query contract](../../_foundation/frontend-shared.md#api-integration-with-react-query), preserving the frozen feed snapshot.
+
+Integration implementation: [Cloudinary images and link-only provider renderers](../../_foundation/media-and-maps.md).
+This supersedes prototype direct-video-upload controls, not moderation,
+surface consent, feed ranking or guest return-to-video rules.
+
+Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Verification](#verification)
 
 ## Routes and rendering
 
@@ -22,34 +28,65 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 - Data: `GET /videos/feed` returns **snapshotId, expiresAt, effectiveFilter, nextCursor** over immutable ranked IDs/scores; `GET /videos/:id` validates the deep link. POST `/videos/{id}/views` for the active ≥60%-in-view video, replay-safe per session, not a new two-second analytics rule.
 - Retain opaque snapshot/cursor with Back position; never recompute sort from changing overlay counters. `MEDIA_FEED_EXPIRED` shows restart/reload, creates a new 30-minute snapshot explicitly and does not quietly splice new ranking into the old feed.
 - Special states: empty Following (For You CTA), no videos nearby (“Try another area or pick another tab” / For You), failed/retry, offline, unavailable, data-saver poster. Nearby follows source **2.5 km**; no invented radius-widening control.
-- Interactions: autoplay muted only when ≥ 60 % in view and not data-saver/Save-Data; tap toggles play/pause; mute toggle persists per session; progress bar; captions; ↑/↓ and j/k on desktop; Esc closes sheets; pill and video id in URL (`/videos/:id?pill=`), Back restores position. "Shop this video" opens `ShopThisVideoSheet`; items Add to cart / Enquire / View. Guest like/follow/comment opens login and returns to the same video (RL7, BR-21). Overflow → Report sheet.
-- Rules: BR-10 only approved; embeds rendered from server `embedUrl` in a sandboxed iframe (`allow` minimal) else `EmbedCard` "Open in YouTube/Instagram".
+- Interactions: supported YouTube playback autoplays muted only when ≥ 60 % in view, not data-saver/Save-Data, and permitted by browser/consent policy; tap play/pause, session mute and progress/captions use the real provider API. Instagram retains native interaction, not simulated custom controls. ↑/↓ and j/k navigate on desktop; Esc closes sheets; pill and video id in URL (`/videos/:id?pill=`), Back restores position. "Shop this video" opens `ShopThisVideoSheet`; items Add to cart / Enquire / View. Guest like/follow/comment opens login and returns to the same video (RL7, BR-21). Overflow → Report sheet.
+- Rules: BR-10 only approved; consume `VideoPlaybackDTO`: YouTube iframe, safe Instagram permalink markup with the trusted embed loader, or `EmbedCard` Open fallback. Never insert raw HTML or embed a form-held URL. Custom play/mute/progress controls appear only where the provider supports them; Instagram uses native interaction, not simulated autoplay/progress.
 - Deep link sends `startVideoId`; an out-of-filter eligible ID causes the returned `effectiveFilter=for_you` and new snapshot, as final js25 does. A removed/non-consented ID is unavailable, never force-played.
 - Acceptance: Given an eligible deep link, when opened, then playback anchors by ID, not array index. Given changed likes/views/new approvals, when loading the next page, then existing order stays fixed while hidden/withdrawn items disappear. Given an expired or foreign snapshot, when used, then restart/denial is explicit. Given data-saver, when entering a video, then no autoplay occurs. Given guest Like, when login completes, then the exact video/action returns once.
 
 ### Gallery and Videos tabs (inside shop/provider profiles S-CUST-06, S-CUST-07)
 - Gallery (PF9): filter chips All / Photos / Videos / By product / By service; masonry grid; `FullScreenViewer` lightbox with swipe, caption, linked-item chip, heart (Engagement), Report media.
 - Report is bound for **photos as well as videos**: photo → `POST /media/photos/{assetId}/reports` with `{placementType,placementId,reason,details?}`; video → `/videos/{id}/reports`. Use canonical IDs supplied by Gallery, never title text or array index. Both allow the source's guest report flow with abuse-limit feedback.
+- The public `/videos/:id` detail also exposes Report video in a localized sheet with the report reason and optional details; submission uses the typed report mutation, and success leaves the approved video visible.
 - Success reports “Reported. Thank you.” without removing approved content locally. If moderation later removes it, show unavailable and refresh the projection; report status is not approval status.
 - Videos tab (PF10): grid with view counts and `FollowButton`; tile opens `/videos/:id`.
 - Data: `GET /businesses/{slug}/gallery?filter=`, `GET /businesses/{slug}/videos`. Empty: "No photos yet" / "No videos yet".
 - Acceptance: Given a Gallery PHOTO, when Report is submitted/retried, then one typed report reaches the existing admin Reported queue. Given a removed asset or current consent off, when Gallery refreshes, then the asset is not displayed; heart removal still works through Engagement.
+- Acceptance: Given a public video, when a guest or signed-in viewer submits a valid report from `/videos/:id`, then the typed report reaches the admin Reported queue and the video remains visible with localized success feedback.
 
 ### Videos & Reels section (product S-CUST-08, service S-CUST-09)
 - PD5/SV4: horizontal strip below details, hidden when empty; tile opens `/videos/:id?from=product:<id>` and the Reels linked strip returns to the product. Service page also shows previous-work gallery images. Data: `GET /videos?targetType=&targetId=`.
 
 ### S-VEND-11 / S-PROV-12 Gallery and videos manager | `/vendor/media`, `/provider/media` | `d-vendor-vmedia.jpg`, `m-vendor-vmedia.jpg`, `d-provider-smedia.jpg`, `m-provider-smedia.jpg`
-- Layout matches final js26: Videos & Reels / Gallery; link/upload editor, thumbnail, caption, hashtags, linked items and separate Gallery/Reels toggles. Each video has **Move up/Move down**, status/reason, Preview, linked-item editor and Remove confirmation; Gallery photos have arrow/drag ordering.
+- Layout matches final js26: Videos & Reels / Gallery; YouTube/Instagram link editor, image thumbnail, caption, hashtags, linked items and separate Gallery/Reels toggles. Direct video-file upload remains disabled with the launch-scope explanation. Each video has **Move up/Move down**, status/reason, Preview, linked-item editor and Remove confirmation; Gallery photos have arrow/drag ordering.
 - Display **Views, Likes, Shares, Followers gained, Taps on linked** (comments in the shared analytics table) using reporting-v1 and BE first-follow attribution. Coverage/definition metadata distinguishes missing historical evidence from zero; never estimate gains client-side.
 - Data: `/businesses/me/videos`, `/businesses/me/gallery`, `/businesses/me/videos/analytics`, `/media/uploads`, Businesses settings for the default.
 - Reorder GET/PUT `/businesses/me/videos/order` or `/gallery/order` uses canonical ordered IDs and `expectedOrderVersion`; keyboard arrows share the same atomic mutation as drag, rollback/reload on conflicts.
 - Edit GET `/businesses/me/videos/{id}` hydrates source union, thumbnail asset ID, text, links, consent and version. PATCH sends `VideoEdit`; **Edit & resubmit** on rejected content explicitly sends `resubmit:true`. Source replacement validates/re-enters pending; a consent-only change does not pretend to resubmit. Removed owner content remains read-only.
-- Upload uses purpose-specific AssetPort IDs (`video_file`, `video_thumbnail`, `gallery`). If hosting/caps are unconfigured, disable that upload with `MEDIA_UPLOAD_POLICY_REQUIRED` explanation; validated YouTube/Instagram links still work. No assumed provider/size promise.
+- Image upload uses purpose-specific AssetPort IDs (`video_thumbnail`, `gallery`) and the Cloudinary-backed multipart API through React Query. Never upload directly to Cloudinary or cache file bytes/provider URLs in Query state. Missing image readiness disables only that upload with `MEDIA_UPLOAD_POLICY_REQUIRED`; validated YouTube/Instagram links still work. No video-file purpose/control can be enabled by image readiness.
 - Special states: pending, rejected with reason, removed, order/version conflict, unavailable metrics and unconfigured upload.
 - Validation: link field validates host client-side for fast feedback; server is authoritative (RL10).
 - Acceptance: Given an unsupported URL or foreign/wrong-purpose asset, when submitted, then validation blocks it. Given a rejected video, when valid edit plus explicit resubmit succeeds, then the new status is Pending with the returned version. Given consent defaults off, when creating, then new controls start off without opting existing items in. Given a keyboard reorder, when reloaded, then persisted order matches and a stale version cannot overwrite it.
 
 `MediaConsentToggle` (VD13) is also used in product/service editors (products and services FE specs).
+
+### Current implementation boundary
+
+The RL10 slice provides the owner link form and paged video list on
+`/vendor/media` and `/provider/media`, plus approved-video playback through
+`EmbedCard`. The customer feed now supports For You, Following, Nearby and
+category filters over a frozen session ranking. `/videos/:id` starts at the
+requested eligible video by ID; if it is outside the requested supported
+filter, the API explicitly switches to a fresh For You snapshot. The URL keeps
+the snapshot ID so reloads and Back navigation stay on that frozen ranking;
+expired snapshots require an explicit fresh-feed action.
+
+S-CUST-21 renders as the prototype's full-screen dark shell (`reel-*`
+tokens): top pills, snap-scrolled slides, right rail (like/comment/share/
+more), creator info, desktop side panel and up/down arrows, ↑/↓/j/k and Esc
+keys, comments/report/more/guest-login sheets, and in-feed loading, empty,
+offline, expired and next-page-error slides. The active video and filter
+are mirrored with `history.replaceState` (as prototype `rtab`), so scrolling
+or switching pills never remounts the feed or adds history entries; Back
+leaves the feed. The feed query never refetches on focus/staleness, keeping
+the frozen order. Save sits in the More sheet; Copy link lives in Share.
+
+This is not completion of S-VEND-11/S-PROV-12 or the full S-CUST-21 feed.
+Thumbnail upload, linked-item editing, video edit/delete, ordering, analytics,
+gallery management, view recording (`POST /videos/{id}/views`), Shop this
+video, provider-API mute/progress/Space-to-pause, live comment/share counts
+and Offers/Products/Services feed filters (shown as unavailable pills) remain
+unimplemented. Pending, removed, hidden or non-consented items remain
+unavailable publicly under BR-10.
 
 ### S-ADMN-11 Videos and moderation | `/admin/videos` | `d-admin-avideos.jpg`, `m-admin-avideos.jpg`
 - Layout: Pending / Approved / Rejected / Removed / Reported / Engagement; player preview/business/links/reasons, scoped tab counts, Approve/Reject/Remove. Only **reviews:edit** enables decisions; catalog permissions are irrelevant (`js27`).
@@ -60,18 +97,38 @@ Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components]
 - Special states: no permission, empty tab.
 - Acceptance: Given a reason-required decision, when reason is empty, then submission is blocked. Given catalog-only permission, when opening moderation, then no access; reviews:view is read-only. Given a same-city unassigned area, when an ID is pasted, then data/action is denied. Given a published comment removal or photo report dismissal, when successful, then the correct queue/counters change without accidental video approval.
 
+### Implemented slice: AD10 status moderation
+
+`/admin/videos?tab=pending|approved|rejected|removed|reported` currently uses
+React Query over the typed API client. It shows scoped counts and keyset
+pages, keeps the selected tab in the URL, uses the shared safe `EmbedCard`
+only after an explicit preview action, and gates reads/decisions using
+`reviews:view`/`reviews:edit`. Reject and report-based removal require a
+reason; successful decisions invalidate all status lists and counts.
+
+The full S-ADMN-11 contract is still **in progress**: photo reports, comments
+moderation, Engagement metrics and owner notifications are not implemented.
+Their API/data ownership dependencies are recorded in the BE spec.
+Runtime/browser checks and automated test files are intentionally not run.
+
 ## Feature components
 
-`ReelsFeed`, `ReelOverlay`, `FeedPills`, `GalleryGrid`, `VideoGrid`, `VideoEditorSheet`, `VideoAnalyticsTable` in `src/features/reels` and `src/features/gallery`. Shared: `ReelsPlayer`, `LinkedItemsStrip`, `ShopThisVideoSheet`, `EmbedCard`, `FullScreenViewer`, `MediaConsentToggle`, `FollowButton`, `ModerationQueueItem`, `DataTable`, `Skeleton`.
+`ReelsFeed`, `ReelOverlay`, `FeedPills`, `GalleryGrid`, `VideoGrid`, `VideoEditorSheet`, `VideoAnalyticsTable` in `src/features/reels` and `src/features/gallery`. Shared: `ReelsPlayer`, `LinkedItemsStrip`, `ShopThisVideoSheet`, `EmbedCard`, `FullScreenViewer`, `MediaConsentToggle`, `FollowButton`, `ModerationQueueItem`, `DataTable`, `Skeleton`. `EmbedCard` accepts only validated `VideoPlaybackDTO` values; it loads the active YouTube iframe or trusted Instagram embed script and uses the canonical provider Open link when embeds are disabled or unavailable.
 
 ## i18n and analytics
 
 Prefixes `reels.*`, `gallery.*`, `vendor.media.*`, `admin.videos.*`. Events: `reel_viewed`, `reel_pill_changed`, `reel_shop_opened`, `reel_linked_item_clicked`, `video_submitted`, `video_moderated`, `gallery_opened`.
 
-## Tests
+## Verification
+
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 All public-image Uploaders follow [Media image policy](../be/media-videos.md#public-image-policy), display accepted format/size/dimensions, and retain the prior image on replacement failure. Consume variant dimensions/URLs for responsive images. Linked-tap POST occurs only on actual target activation. Follow includes `sourceVideoId` only with a recent same-session view; login-return following works without attribution. Prefetch/preload never creates a view.
 
-Responsive renderers import `PublicImageVariantDTO` and use `variant.path` with its width/height; never expect a `url` alias or construct storage paths. Test upload-ready without public placement, authorized public variants, invalid width/version and revoked placement including conditional/range requests.
+Responsive renderers import `PublicImageVariantDTO` and use `variant.path` with its width/height; never expect a `url` alias or construct storage paths. Manually verify upload-ready without public placement, authorized public variants, invalid width/version and revoked placement including conditional/range requests.
 
-Component/axe: feed snap/keyboard and player lazy loading, data-saver, ID anchoring, explicit TTL restart, report/photo sheet, source edit/resubmit, reorder arrows/drag, comment queue, focus after action, Hindi/dark layouts. E2E J4/J6: immutable ranking despite counters/approvals, live consent removal, out-of-filter deep link, guest PHOTO report → scoped admin resolution, catalog-only denial, published-comment count decrement and private applicant upload-purpose checks. Account data export/deletion stays Users-owned; clear personal cached media/report state on invalidation.
+Verify both provider renderers, private/deleted/embedding-disabled Instagram
+fallback, CSP/referrer behavior, unsupported autoplay controls and direct-file
+rejection using the [integration acceptance cases](../../_foundation/media-and-maps.md#manual-acceptance).
+
+Manual UI/accessibility: feed snap/keyboard and player lazy loading, data-saver, ID anchoring, explicit TTL restart, report/photo sheet, source edit/resubmit, reorder arrows/drag, comment queue, focus after action, Hindi/dark layouts. Manual journey J4/J6: immutable ranking despite counters/approvals, live consent removal, out-of-filter deep link, guest PHOTO report → scoped admin resolution, catalog-only denial, published-comment count decrement and private applicant upload-purpose checks. Account data export/deletion stays Users-owned; clear personal cached media/report state on invalidation.

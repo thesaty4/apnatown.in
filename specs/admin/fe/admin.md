@@ -4,7 +4,7 @@ Features: F-AD-001, F-AD-002, F-AD-003, F-AD-004, F-AD-013, F-AD-016, F-SA-001, 
 
 Backend contract: [BE admin](../be/admin.md)
 
-Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Tests](#tests)
+Contents: [Routes](#routes-and-rendering) · [Screens](#screens) · [Components](#feature-components) · [Verification](#verification)
 
 ## Routes and rendering
 
@@ -110,6 +110,8 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) for standard states,
 
 Prefixes `admin.*`, `superAdmin.*`. Events: `approval_decided`, `listing_updated`, `product_unpublished`, `user_status_changed`, `report_exported`, `chart_view_changed`, `admin_status_changed`, `role_saved`, `role_deleted`.
 
-## Tests
+## Verification
 
-Component: all screen ACs, typed listing/rider hydration, required phone/name, inert report/support text, versions, role matrix normalization, area/zone chips and actor shortcut. Keyboard/axe: Add/Edit/Remove and report sheets, documents, tabs, permission matrix, chart table/tooltip, topmost Esc, Hindi/dark layouts. E2E J7/J10: approval, role reassign/deactivate, report intake → existing alert → detail, rider edit/remove, export filter parity and stale writes. Negatives: same-city unassigned area, destination-only grants, scope revoked while a sheet is open, catalog-only video moderator, forbidden metrics. ADM-Q1/Q2/Q3 remain visible gates, not passing happy-path fixtures; ADM-Q4 is resolved by reporting-v1.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+Manual UI: all screen ACs, typed listing/rider hydration, required phone/name, inert report/support text, versions, role matrix normalization, area/zone chips and actor shortcut. Keyboard/accessibility: Add/Edit/Remove and report sheets, documents, tabs, permission matrix, chart table/tooltip, topmost Esc, Hindi/dark layouts. Manual journey J7/J10: approval, role reassign/deactivate, report intake → existing alert → detail, rider edit/remove, export filter parity and stale writes. Negatives: same-city unassigned area, destination-only grants, scope revoked while a sheet is open, catalog-only video moderator, forbidden metrics. ADM-Q1/Q2/Q3 remain visible gates, not passing happy-path synthetic scenarios; ADM-Q4 is resolved by reporting-v1.

@@ -64,7 +64,7 @@ U->>R: Tap linked product Add to cart
 ## J5 Search "AC" and "iPhone 15" -> grouped results -> service details
 Features: F-SR-001..010. "AC": Products (Split AC, Window AC), Shops (electronics), Services (AC Installation, AC Repair, AC Gas Refill) with label "Related services for AC", Videos. On the Services tab the user ticks AC Repair and AC Installation. "iPhone 15": products, mobile shops, services Mobile Repair/Screen Replacement.
 
-## J6 Vendor uploads a video, links products, chooses Gallery option -> admin approves -> public Reels and Gallery
+## J6 Vendor submits a video link, links products, chooses Gallery option -> admin approves -> public Reels and Gallery
 Features: F-VD-012..013, F-AD-010, F-RL-010, F-PF-009..010
 Steps: vendor pastes YouTube/Instagram link (validated, preview) -> caption, hashtags, thumbnail -> link products/services -> toggles Show in Gallery / Show in Reels -> status pending -> admin Video moderation approves (or rejects with reason) -> vendor notified -> video appears in feed, Videos/Reels tab and Gallery.
 

@@ -215,7 +215,17 @@ async function main() {
       'api',
       command,
       args,
-      environmentFor('database', await readLocalEnvironment(root)),
+      environmentFor(
+        command === 'db:seed' ? 'seed' : 'database',
+        await readLocalEnvironment(root),
+      ),
+    );
+  } else if (command === 'db:studio') {
+    packageRun(
+      'api',
+      'db:studio',
+      [],
+      environmentFor('studio', await readLocalEnvironment(root)),
     );
   } else if (command === 'db:generate' || command === 'api:openapi') {
     packageRun('api', command, args);

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { glob, readFile } from 'node:fs/promises';
 
 const readJson = async (file) => JSON.parse(await readFile(file, 'utf8'));
 const root = await readJson('package.json');
@@ -59,12 +59,14 @@ for (const name of ['packages/ui']) {
 const compose = await readFile('compose.yaml', 'utf8');
 assert.match(compose, /postgis\/postgis:\d+-[\d.]+@sha256:[a-f0-9]{64}/);
 assert(!/redis|bullmq/i.test(compose), 'No Redis at launch.');
-const workflow = await readFile('.github/workflows/ci.yml', 'utf8');
-for (const [, reference] of workflow.matchAll(/uses:\s+([^\s]+)/g)) {
-  assert.match(
-    reference,
-    /^[\w./-]+@[a-f0-9]{40}$/,
-    'Pin actions by immutable SHA.',
-  );
+for await (const path of glob('.github/workflows/*.{yml,yaml}')) {
+  const workflow = await readFile(path, 'utf8');
+  for (const [, reference] of workflow.matchAll(/uses:\s+([^\s]+)/g)) {
+    assert.match(
+      reference,
+      /^[\w./-]+@[a-f0-9]{40}$/,
+      `${path}: pin actions by immutable SHA.`,
+    );
+  }
 }
 console.log('Workspace pins, package boundaries, and CI action pins verified.');

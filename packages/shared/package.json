@@ -4,6 +4,26 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./formatters": {
+      "import": {
+        "types": "./dist/esm/formatters.d.ts",
+        "default": "./dist/esm/formatters.js"
+      },
+      "require": {
+        "types": "./dist/cjs/formatters.d.ts",
+        "default": "./dist/cjs/formatters.js"
+      }
+    },
+    "./public-listings": {
+      "import": {
+        "types": "./dist/esm/public-listings.d.ts",
+        "default": "./dist/esm/public-listings.js"
+      },
+      "require": {
+        "types": "./dist/cjs/public-listings.d.ts",
+        "default": "./dist/cjs/public-listings.js"
+      }
+    },
     ".": {
       "import": {
         "types": "./dist/esm/index.d.ts",
@@ -14,6 +34,116 @@
         "default": "./dist/cjs/index.js"
       }
     },
+    "./admin": {
+      "import": {
+        "types": "./dist/esm/admin.d.ts",
+        "default": "./dist/esm/admin.js"
+      },
+      "require": {
+        "types": "./dist/cjs/admin.d.ts",
+        "default": "./dist/cjs/admin.js"
+      }
+    },
+    "./businesses": {
+      "import": {
+        "types": "./dist/esm/businesses.d.ts",
+        "default": "./dist/esm/businesses.js"
+      },
+      "require": {
+        "types": "./dist/cjs/businesses.d.ts",
+        "default": "./dist/cjs/businesses.js"
+      }
+    },
+    "./cart": {
+      "import": {
+        "types": "./dist/esm/cart.d.ts",
+        "default": "./dist/esm/cart.js"
+      },
+      "require": {
+        "types": "./dist/cjs/cart.d.ts",
+        "default": "./dist/cjs/cart.js"
+      }
+    },
+    "./catalog": {
+      "import": {
+        "types": "./dist/esm/catalog.d.ts",
+        "default": "./dist/esm/catalog.js"
+      },
+      "require": {
+        "types": "./dist/cjs/catalog.d.ts",
+        "default": "./dist/cjs/catalog.js"
+      }
+    },
+    "./geo": {
+      "import": {
+        "types": "./dist/esm/geo.d.ts",
+        "default": "./dist/esm/geo.js"
+      },
+      "require": {
+        "types": "./dist/cjs/geo.d.ts",
+        "default": "./dist/cjs/geo.js"
+      }
+    },
+    "./auth": {
+      "import": {
+        "types": "./dist/esm/auth.d.ts",
+        "default": "./dist/esm/auth.js"
+      },
+      "require": {
+        "types": "./dist/cjs/auth.d.ts",
+        "default": "./dist/cjs/auth.js"
+      }
+    },
+    "./products": {
+      "import": {
+        "types": "./dist/esm/products.d.ts",
+        "default": "./dist/esm/products.js"
+      },
+      "require": {
+        "types": "./dist/cjs/products.d.ts",
+        "default": "./dist/cjs/products.js"
+      }
+    },
+    "./search": {
+      "import": {
+        "types": "./dist/esm/search.d.ts",
+        "default": "./dist/esm/search.js"
+      },
+      "require": {
+        "types": "./dist/cjs/search.d.ts",
+        "default": "./dist/cjs/search.js"
+      }
+    },
+    "./services": {
+      "import": {
+        "types": "./dist/esm/services.d.ts",
+        "default": "./dist/esm/services.js"
+      },
+      "require": {
+        "types": "./dist/cjs/services.d.ts",
+        "default": "./dist/cjs/services.js"
+      }
+    },
+    "./settings": {
+      "import": {
+        "types": "./dist/esm/settings.d.ts",
+        "default": "./dist/esm/settings.js"
+      },
+      "require": {
+        "types": "./dist/cjs/settings.d.ts",
+        "default": "./dist/cjs/settings.js"
+      }
+    },
+    "./users": {
+      "import": {
+        "types": "./dist/esm/users.d.ts",
+        "default": "./dist/esm/users.js"
+      },
+      "require": {
+        "types": "./dist/cjs/users.d.ts",
+        "default": "./dist/cjs/users.js"
+      }
+    },
     "./wire": {
       "import": {
         "types": "./dist/esm/wire.d.ts",
@@ -22,6 +152,86 @@
       "require": {
         "types": "./dist/cjs/wire.d.ts",
         "default": "./dist/cjs/wire.js"
+      }
+    },
+    "./notifications": {
+      "import": {
+        "types": "./dist/esm/notifications.d.ts",
+        "default": "./dist/esm/notifications.js"
+      },
+      "require": {
+        "types": "./dist/cjs/notifications.d.ts",
+        "default": "./dist/cjs/notifications.js"
+      }
+    },
+    "./delivery": {
+      "import": {
+        "types": "./dist/esm/delivery.d.ts",
+        "default": "./dist/esm/delivery.js"
+      },
+      "require": {
+        "types": "./dist/cjs/delivery.d.ts",
+        "default": "./dist/cjs/delivery.js"
+      }
+    },
+    "./offers": {
+      "import": {
+        "types": "./dist/esm/offers.d.ts",
+        "default": "./dist/esm/offers.js"
+      },
+      "require": {
+        "types": "./dist/cjs/offers.d.ts",
+        "default": "./dist/cjs/offers.js"
+      }
+    },
+    "./earnings": {
+      "import": {
+        "types": "./dist/esm/earnings.d.ts",
+        "default": "./dist/esm/earnings.js"
+      },
+      "require": {
+        "types": "./dist/cjs/earnings.d.ts",
+        "default": "./dist/cjs/earnings.js"
+      }
+    },
+    "./reviews": {
+      "import": {
+        "types": "./dist/esm/reviews.d.ts",
+        "default": "./dist/esm/reviews.js"
+      },
+      "require": {
+        "types": "./dist/cjs/reviews.d.ts",
+        "default": "./dist/cjs/reviews.js"
+      }
+    },
+    "./orders": {
+      "import": {
+        "types": "./dist/esm/orders.d.ts",
+        "default": "./dist/esm/orders.js"
+      },
+      "require": {
+        "types": "./dist/cjs/orders.d.ts",
+        "default": "./dist/cjs/orders.js"
+      }
+    },
+    "./checkout": {
+      "import": {
+        "types": "./dist/esm/checkout.d.ts",
+        "default": "./dist/esm/checkout.js"
+      },
+      "require": {
+        "types": "./dist/cjs/checkout.d.ts",
+        "default": "./dist/cjs/checkout.js"
+      }
+    },
+    "./realtime": {
+      "import": {
+        "types": "./dist/esm/realtime.d.ts",
+        "default": "./dist/esm/realtime.js"
+      },
+      "require": {
+        "types": "./dist/cjs/realtime.d.ts",
+        "default": "./dist/cjs/realtime.js"
       }
     }
   },

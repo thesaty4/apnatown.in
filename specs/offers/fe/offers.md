@@ -2,7 +2,7 @@
 
 Features: F-OF-001, F-OF-002, F-OF-003, F-OF-004, F-OF-005, F-OF-006, F-PD-004, F-VD-007, F-AD-011 | Screens: S-CUST-20, S-VEND-07, S-PROV-17, S-ADMN-12 | Flows: J3
 
-Backend contract: [BE offers](../be/offers.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Backend contract: [BE offers](../be/offers.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
 ## Routes and rendering
 
@@ -49,6 +49,8 @@ Provider coupon management reuses the owner UI and `Offers` APIs; this does not 
   - Given a stale edit version or another business's offer is submitted, when the API rejects it, then the form retains user input and no foreign data is exposed.
   - Given the Coupons tab opens, when a coupon is created/edited, then draft/pending/active/paused/ended/rejected match the server; live owner edits await reapproval. Only active eligible product coupons can discount checkout.
 
+- Implemented (2026-11-13): `/vendor/offers` → `features/offers/owner` — URL `?status=` chips, offer cards (title, discount, IST validity, status badge incl. Expired/Rejected + reason, views/uses), create/edit sheet (EN/HI title, percent/flat/free delivery, IST date range; save re-queues approval), pause/resume and End with confirm, Load more. Keys `offers.owner.*`.
+
 ### S-PROV-17 — Provider coupon manager (`/provider/offers`)
 - Reuse the vendor manager's shared responsive form/table and expose the Coupons tab only. Provider identity/business scope is server-derived. Provider service coupons require a selected owned service target and remain enquiry-display only; product-checkout coupons can target eligible products.
 - States and validation match S-VEND-07. Pending owner coupons have no public discount. Active product coupons follow the finite-limit one-code checkout policy; approved service coupons remain informational and never alter price or create booking/payment.
@@ -93,11 +95,13 @@ The shared Coupon editor uses BE-normalized codes, server eligible-target previe
 - Key prefixes: `offers.*`, `admin.promotions.*`; EN/HI for titles, discount labels, terms when supplied, validity, statuses, validation, approval decisions and empty/error copy.
 - Analytics: `offers.list_view` (page visible), `offers.select` (card opened), `offers.create` (submit), `offers.edit` (save), `admin.offer_decision` (decision succeeds). Do not send raw coupon codes, private business data or customer identifiers.
 
-## Tests
+## Verification
 
-- Component: offer filters/cards, expired and out-of-stock states, vendor editor validation and pending state, scoped admin queue, no-permission state, long Hindi and dark mode.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
+
+- Manual UI: offer filters/cards, expired and out-of-stock states, vendor editor validation and pending state, scoped admin queue, no-permission state, long Hindi and dark mode.
 - Journey: J3 offer → product/service/filtered Explore/shop destination; vendor create → pending approval → admin decision → public listing; rejected/expired offers never appear as active.
-- Map every acceptance bullet to component/contract/E2E scenarios: direct expired target read, removable offer URL, same-city/wrong-area placement CRUD, duplicate paid activation, stale toggle/expiry, foreign/private asset and malicious destination rejection. Axe, keyboard-only editor/confirmation focus, long Hindi, dark mode and reduced motion cover all three panels.
+- Map every acceptance bullet to component/contract/manual journey scenarios: direct expired target read, removable offer URL, same-city/wrong-area placement CRUD, duplicate paid activation, stale toggle/expiry, foreign/private asset and malicious destination rejection. Accessibility inspection, keyboard-only editor/confirmation focus, long Hindi, dark mode and reduced motion cover all three panels.
 
 ## Open questions
 

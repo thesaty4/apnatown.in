@@ -6,11 +6,15 @@
 - [Screens](#screens)
 - [Components and integrations](#components-and-integrations)
 - [i18n and analytics](#i18n-and-analytics)
-- [Tests](#tests)
+- [Verification](#verification)
 
 Features: F-SV-001, F-SV-002, F-SV-003, F-SV-004, F-SV-005, F-SV-006, F-SV-007, F-VD-014, F-VD-016, F-PV-003, F-PV-004 | Screens: S-CUST-09, S-VEND-13/14, S-PROV-03/08 | Flows: J2, J14
 
-Backend contract: [BE services](../be/services.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Backend contract: [BE services](../be/services.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
+
+Previous-work images, video panels and any location map reuse the
+[media/map contract](../../_foundation/media-and-maps.md): Cloudinary through
+Media, link-only provider rendering and one Leaflet MapView.
 
 ## Routes and rendering
 
@@ -86,10 +90,12 @@ Service card is reusable by Search, Explore, business profiles and category page
 - Analytics: `service.detail.view`, `service.enquiry.submit`, `service.manager.save`, `service.enquiry.status_change`; never include phone, name or message.
 - Verify long Hindi labels at 360px, keyboard focus order, reduced motion and light/dark states.
 
-## Tests
+## Verification
 
-Use [Media's public-image policy](../../media-videos/be/media-videos.md#public-image-policy) for the five-image service editor: display format/size/dimension limits, consume ready responsive variants, preserve existing images on failure. This adds neither service tax checkout nor bookings/payments. Test oversize/wrong-purpose inputs and EN/HI errors.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
-- Component: service detail active/paused, enquiry validation/success, service editor price/subcategory validation, inbox status and no-permission.
-- E2E: J2 service discovery-to-enquiry; J14 provider inbox-to-converted proof and Reviews' approved eligibility gate; independent expertise-version conflict and pending-applicant publication denial.
+Use [Media's public-image policy](../../media-videos/be/media-videos.md#public-image-policy) for the five-image service editor: display format/size/dimension limits, consume ready responsive variants, preserve existing images on failure. This adds neither service tax checkout nor bookings/payments. Manually verify oversize/wrong-purpose inputs and EN/HI errors.
+
+- Manual UI: service detail active/paused, enquiry validation/success, service editor price/subcategory validation, inbox status and no-permission.
+- Manual journey: J2 service discovery-to-enquiry; J14 provider inbox-to-converted proof and Reviews' approved eligibility gate; independent expertise-version conflict and pending-applicant publication denial.
 - Screenshot checks: named mobile/desktop service, manager and inbox images; EN/HI and light/dark.

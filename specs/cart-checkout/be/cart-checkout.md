@@ -2,7 +2,16 @@
 
 Features: F-CK-001, F-CK-002, F-CK-003, F-CK-004, F-CK-005, F-CK-006, F-CK-007, F-CK-008, F-CK-009 | Rules: BR-01, BR-03, BR-04, BR-17, BR-19, BR-21 | State machines: ST-payment, ST-order-delivery, ST-order-pickup | Depends on: products, businesses, offers, geo, payments, orders, users, settings
 
-Frontend counterpart: [FE cart-checkout](../fe/cart-checkout.md) · [Feature inventory](../../../docs/FEATURE_INVENTORY.md)
+Frontend counterpart: [FE cart-checkout](../fe/cart-checkout.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
+
+## Implementation status
+
+2026-11-13 quote + COD placement slice (with the Orders MVP): **implemented; builds passed; migration `20261113080000_orders_checkout` applied locally; security review pending**.
+
+- Implemented: `checkout_quotes`, `checkout_attempts`, Payments `payment_attempts` (cash subset); `POST /cart/quote` (authenticated customer; per-shop groups with current offer-effective prices/shared stock, Businesses fulfilment settings, shop radius by straight-line distance to the address point, minimum on shop subtotal, fee = 0 pickup / business flat fee self / Geo slab `apna_town_rider`, platform fee = Settings `commission.platformFeePaise` or **0 when unconfigured** (local slice decision, Q-71), null unknown amounts, per-shop issues, 15-minute persisted quote); `POST /checkout/attempts` (Idempotency-Key; re-verifies own unexpired ready quote, cart/address versions and an identical recomputation under business locks, then attempt + per-shop cash allocations + `createPerShopOrders` + purchased-line clearing + `checkout.orders_created` in one UoW); `GET /checkout/attempts/{attemptId}`. Shared entry `@apnatown/shared/checkout`.
+- Decisions: `paymentMethod:'cash'` is COD / pay at pickup and requires the `payments_cod` flag; `upi|card|net_banking|wallet` return `CHECKOUT_PAYMENT_UNAVAILABLE` (no provider configured); a stale `cartVersion` at quote time is `CART_VERSION_CONFLICT`; a not-ready pinned quote is `ORDER_CHECKOUT_INVALID`; changed stock at placement is `PRODUCT_NOT_AVAILABLE`; guests can keep a cart but quoting/placement requires sign-in.
+- Deferred: coupons (`couponCode` → `CHECKOUT_COUPON_POLICY_UNAVAILABLE`), online payment rounds/retry/compensation/reconciliation, tax snapshots/invoice policy, quote/attempt expiry jobs, guest quotes, privacy export/erase.
+- Local demo seed: fills untouched seeded `business_settings` fulfilment from the sample `del` block and enables `payments_cod` only while it is the untouched migration default (sample `cfg.cod`).
 
 ## Responsibility
 
@@ -125,10 +134,12 @@ Reuse `COMMON_UNAUTHENTICATED`, `COMMON_FORBIDDEN`, `COMMON_VALIDATION_FAILED`, 
 16. Given an export/erase request with unknown policy or unfinished payment, when processed, then it returns a durable blocked receipt without deleting financial records or another cart.
 17. Given an approved provider with `deliveryMethod=null,pickupEnabled=false`, when quoting or placing its products, then fulfilment is unavailable; no free/rider/pickup defaults or stock/payment side effects appear.
 
-## Tests
+## Verification
+
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 
 - Given an unpersisted cart, when concurrent first adds use version 0, then one owner cart is created and the losing version conflicts; given login rotates Auth state, when guest merge succeeds or its response is lost, then the independent guest proof is consumed once and same-key retry cannot double quantities.
-- Unit/integration map AC1–AC17 to grouping, null-variant identity, shared-stock aggregation, 1-paise/capped coupon allocation, fee precedence/unconfigured provider, revision validation, rollback, code-free projections and privacy receipts.
+- Rules and manual API/DB checks map AC1–AC17 to grouping, null-variant identity, shared-stock aggregation, 1-paise/capped coupon allocation, fee precedence/unconfigured provider, revision validation, rollback, code-free projections and privacy receipts.
 - Concurrency/fault injection: two checkouts/last unit across labels; duplicate callback/key; failure-before-success and success-before-failure; address deletion; mutation during payment; provider timeout/crash after capture; retry-vs-COD; recovery replay. Assert money conservation and no duplicate stock movement/order/coupon use.
 - Negatives: anonymous placement; foreign line/address/quote/attempt; false flags/client totals; unknown/malicious filters/enum/oversized payload; unsafe JSON integers; foreign product variant. Verify flat error fields/redaction.
 

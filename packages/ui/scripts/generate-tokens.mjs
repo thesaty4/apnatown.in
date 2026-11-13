@@ -106,8 +106,10 @@ const [iconMin, iconMax] = source['components-metrics'].iconbutton.split('-');
 map('spacing', 'icon-min', `${iconMin}px`);
 map('spacing', 'icon-max', iconMax);
 for (const [namespace, entries] of Object.entries(metrics.tokens)) {
-  for (const [key, value] of Object.entries(entries))
-    map(namespace, key, value);
+  for (const [key, value] of Object.entries(entries)) {
+    if (namespace === 'breakpoint') theme[`breakpoint-${key}`] = value;
+    else map(namespace, key, value);
+  }
 }
 
 const expected = {
@@ -185,7 +187,15 @@ const integration =
     .join('') +
   '@keyframes apnatown-shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }\n' +
   '@keyframes apnatown-spin { to { transform: rotate(360deg); } }\n' +
-  '@utility skeleton-fill { background: linear-gradient(90deg, var(--at-surface-2) 25%, var(--at-border) 37%, var(--at-surface-2) 63%); background-size: 400% 100%; }\n';
+  '@keyframes apnatown-overlay-fade { from { opacity: 0; } }\n' +
+  '@keyframes apnatown-sheet-up { from { transform: translateY(100%); } }\n' +
+  '@keyframes apnatown-sheet-pop { from { opacity: 0; transform: translateY(4%); } }\n' +
+  ':root:has(dialog[data-apnatown-overlay][open]) { overflow: hidden; }\n' +
+  '@utility skeleton-fill { background: linear-gradient(90deg, var(--at-surface-2) 25%, var(--at-border) 37%, var(--at-surface-2) 63%); background-size: 400% 100%; }\n' +
+  '@utility badge-fill { background: var(--at-badge-fill); }\n' +
+  '@utility art-fill { background: linear-gradient(var(--at-art-angle), hsl(var(--at-art-hue, var(--at-art-hue-default)) var(--at-art-start-saturation) var(--at-art-start-lightness)), hsl(var(--at-art-hue, var(--at-art-hue-default)) var(--at-art-end-saturation) var(--at-art-end-lightness))); }\n' +
+  '@utility art-shadow { filter: drop-shadow(var(--at-art-shadow)); }\n' +
+  '@utility art-dim { :root[data-theme="dark"] & { filter: brightness(var(--at-art-brightness)); } @media (prefers-color-scheme: dark) { :root[data-theme="auto"] & { filter: brightness(var(--at-art-brightness)); } } }\n';
 const destination = outputRoot();
 await writeOutput(destination, 'packages/ui/src/tokens.css', css);
 await writeOutput(destination, 'packages/ui/src/tailwind.css', integration);

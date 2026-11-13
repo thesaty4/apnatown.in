@@ -12,6 +12,7 @@ export function shutdownHandler(
   server: Server,
   timeoutMs: number,
   logger: Logger,
+  stopBackgroundWork?: () => Promise<void>,
 ): () => Promise<void> {
   let pending: Promise<void> | undefined;
   return () =>
@@ -24,19 +25,20 @@ export function shutdownHandler(
         process.exit(1);
       }, timeoutMs);
       deadline.unref();
-      try {
-        // Stop accepting connections; drain active requests before releasing the DB.
-        await new Promise<void>((resolve, reject) => {
+      // Stop accepting connections; drain active requests before releasing the DB.
+      await Promise.all([
+        new Promise<void>((resolve, reject) => {
           server.close((error) => (error ? reject(error) : resolve()));
           server.closeIdleConnections();
-        });
-        await app.get<ReadinessRepository>(READINESS_REPOSITORY).close();
-        await app.close();
-        logger.info({ event: 'shutdown.completed' });
-        logger.flush();
-      } finally {
-        clearTimeout(deadline);
-      }
+        }),
+        stopBackgroundWork?.(),
+      ]);
+      await app.get<ReadinessRepository>(READINESS_REPOSITORY).close();
+      await app.close();
+      logger.info({ event: 'shutdown.completed' });
+      logger.flush();
+      // A failed drain must leave the deadline armed for remaining connections.
+      clearTimeout(deadline);
     })());
 }
 
