@@ -29,6 +29,7 @@ export function Account({
 }) {
   const { state, epoch } = useSession();
   const t = useTranslations('account.menu');
+  const orders = useTranslations('orders.nav');
   // An active deletion outlives session revocation: it is tracked here, above
   // the session gate, with its capability only in this component's memory.
   const [deletion, setDeletion] = useState<Deletion>();
@@ -84,6 +85,12 @@ export function Account({
           </OwnResource>
           <Card padded>
             <nav aria-label={t('title')} className="grid gap-2">
+              <Link
+                href="/orders"
+                className="inline-flex min-h-touch items-center underline"
+              >
+                {orders('label')}
+              </Link>
               <Link
                 href="/account/profile"
                 className="inline-flex min-h-touch items-center underline"

@@ -11,6 +11,7 @@ import type { UserRole } from '@apnatown/shared/users';
 import type { Logger } from 'pino';
 import { RUNTIME_LOGGER } from '../../../shared/logger/logger';
 import type { TxContext } from '../../../shared/persistence/ports';
+import { REALTIME_SIGNAL, type RealtimeSignal } from '../../../shared/realtime/ports';
 import {
   CLOCK,
   ID_PROVIDER,
@@ -68,6 +69,7 @@ export class NotificationPublisher {
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(ID_PROVIDER) private readonly ids: IdProvider,
     @Inject(RUNTIME_LOGGER) private readonly logger: Logger,
+    @Inject(REALTIME_SIGNAL) private readonly realtime: RealtimeSignal,
   ) {
     this.channels = new Map(channels.map((channel) => [channel.kind, channel]));
   }
@@ -85,6 +87,7 @@ export class NotificationPublisher {
       command.templateKey,
     );
     const seen = new Set<string>();
+    const publishedTo = new Set<string>();
     let published = 0;
     for (const recipient of command.recipients) {
       const identity = `${recipient.userId}:${recipient.audienceRole}`;
@@ -126,7 +129,10 @@ export class NotificationPublisher {
                 preferences,
                 at,
               });
-        if (kind === 'in_app' && outcome.status === 'delivered') published++;
+        if (kind === 'in_app' && outcome.status === 'delivered') {
+          published++;
+          publishedTo.add(recipient.userId);
+        }
         await this.notifications.recordDelivery(tx, {
           id: this.ids.uuidv7(),
           notificationId: id,
@@ -138,6 +144,9 @@ export class NotificationPublisher {
         });
       }
     }
+    // Bell/feed refresh hint, delivered by PostgreSQL only if this tx commits.
+    if (publishedTo.size)
+      await this.realtime.signal(tx, { kind: 'notification', userIds: [...publishedTo] });
     // Counts and identifiers only; never recipients, params or bodies.
     this.logger.info({
       event: 'notifications.processed',

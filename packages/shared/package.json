@@ -183,6 +183,36 @@
         "types": "./dist/cjs/reviews.d.ts",
         "default": "./dist/cjs/reviews.js"
       }
+    },
+    "./orders": {
+      "import": {
+        "types": "./dist/esm/orders.d.ts",
+        "default": "./dist/esm/orders.js"
+      },
+      "require": {
+        "types": "./dist/cjs/orders.d.ts",
+        "default": "./dist/cjs/orders.js"
+      }
+    },
+    "./checkout": {
+      "import": {
+        "types": "./dist/esm/checkout.d.ts",
+        "default": "./dist/esm/checkout.js"
+      },
+      "require": {
+        "types": "./dist/cjs/checkout.d.ts",
+        "default": "./dist/cjs/checkout.js"
+      }
+    },
+    "./realtime": {
+      "import": {
+        "types": "./dist/esm/realtime.d.ts",
+        "default": "./dist/esm/realtime.js"
+      },
+      "require": {
+        "types": "./dist/cjs/realtime.d.ts",
+        "default": "./dist/cjs/realtime.js"
+      }
     }
   },
   "scripts": {

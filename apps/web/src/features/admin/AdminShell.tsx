@@ -199,6 +199,7 @@ function Shell({ me, children }: { me: AdminMe; children: ReactNode }) {
   const canModerateVideos =
     me.isSuper || me.permissions.reviews.includes('view');
   const canApprove = me.isSuper || me.permissions.approvals.includes('view');
+  const canViewOrders = me.isSuper || me.permissions.orders.includes('view');
   const groups = [
     ...(me.isSuper
       ? [
@@ -225,6 +226,14 @@ function Shell({ me, children }: { me: AdminMe; children: ReactNode }) {
           {
             label: t('manage'),
             items: [item('/admin/approvals', t('approvals'), '🛡️')],
+          },
+        ]
+      : []),
+    ...(canViewOrders
+      ? [
+          {
+            label: t('monitor'),
+            items: [item('/admin/orders', t('orders'), '📦')],
           },
         ]
       : []),

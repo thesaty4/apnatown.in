@@ -18,12 +18,16 @@ const implemented = new Set([
   '/hi/services',
   '/saved',
   '/cart',
+  '/checkout',
+  '/checkout/success',
+  '/orders',
   '/notifications',
   '/vendor/enquiries',
   '/vendor/inventory',
   '/vendor/media',
   '/vendor/notifications',
   '/vendor/onboarding',
+  '/vendor/orders',
   '/vendor/overview',
   '/vendor/products',
   '/vendor/profile',
@@ -33,6 +37,7 @@ const implemented = new Set([
   '/provider/media',
   '/provider/notifications',
   '/provider/onboarding',
+  '/provider/orders',
   '/provider/overview',
   '/provider/products',
   '/provider/profile',
@@ -53,6 +58,7 @@ const implemented = new Set([
   '/admin/categories',
   '/admin/keywords',
   '/admin/listings',
+  '/admin/orders',
   '/admin/profile',
   '/admin/subcategory-suggestions',
   '/admin/videos',
@@ -69,8 +75,12 @@ const implementedApprovalPath =
   /^\/admin\/approvals\/(?:business|provider)\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
 const implementedEnquiryPath =
   /^\/(?:vendor|provider)\/enquiries\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
+const implementedOwnerOrderPath =
+  /^\/(?:vendor|provider|admin)\/orders\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
 const implementedProductEditorPath =
   /^\/(?:vendor|provider)\/products\/(?:new|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/iu;
+const implementedOrderPath =
+  /^\/orders\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
 const implementedVideoPath =
   /^\/(?:hi\/)?videos\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
 const implementedListingPath =
@@ -96,9 +106,11 @@ export function safeReturnTo(input: unknown): string | undefined {
     url.origin !== 'https://return.invalid' ||
     (!implemented.has(url.pathname) &&
       !implementedVideoPath.test(url.pathname) &&
+      !implementedOrderPath.test(url.pathname) &&
       !implementedCityPath.test(url.pathname) &&
       !implementedApprovalPath.test(url.pathname) &&
       !implementedEnquiryPath.test(url.pathname) &&
+      !implementedOwnerOrderPath.test(url.pathname) &&
       !implementedProductEditorPath.test(url.pathname) &&
       !implementedListingPath.test(url.pathname) &&
       !implementedCategoryPath.test(url.pathname)) ||

@@ -140,6 +140,24 @@ export const queryKeys = {
   /** Guest-or-customer cart (S-CUST-10). Guests share the epoch-scoped key. */
   cart: (scope: AccountScope | null, epoch: number) =>
     ['private', scope ?? { epoch }, 'cart'] as const,
+  // S-CUST-12 own checkout attempt (per-shop order IDs; never a code/address).
+  checkoutAttempt: (scope: AccountScope, attemptId: string) =>
+    ['private', scope, 'checkout', 'attempts', attemptId] as const,
+  // S-CUST-13/14 customer orders. Lists are keyed by the URL group; the
+  // detail sits under the same root so one invalidation refreshes both.
+  customerOrdersRoot: (scope: AccountScope) =>
+    ['private', scope, 'orders'] as const,
+  customerOrders: (scope: AccountScope, group: string) =>
+    [...queryKeys.customerOrdersRoot(scope), 'list', group] as const,
+  customerOrder: (scope: AccountScope, orderId: string) =>
+    [...queryKeys.customerOrdersRoot(scope), 'detail', orderId] as const,
+  // Customer handover code (no-store channel): memory-only, gcTime 0. The
+  // nonsecret code version keys a reissued generation; never the code.
+  deliveryCode: (
+    scope: AccountScope,
+    orderId: string,
+    codeVersion: number | null,
+  ) => ['private', scope, 'delivery', 'code', orderId, codeVersion] as const,
   // Admin taxonomy reads. Suggestion pages are keyed by the URL status tab.
   adminCatalog: (scope: AccountScope) =>
     ['private', scope, 'admin', 'catalog'] as const,

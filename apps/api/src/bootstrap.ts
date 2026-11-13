@@ -8,6 +8,7 @@ import { configureHttp } from './shared/http/security';
 import { createLogger, NestLogger } from './shared/logger/logger';
 import { mountLocalApiDocs } from './shared/openapi/docs-ui';
 import { shutdownHandler } from './shared/lifecycle';
+import { RealtimeHub } from './shared/realtime/realtime-hub';
 
 export async function createApplication(config: RuntimeConfig) {
   const logger = createLogger(config.LOG_LEVEL);
@@ -27,9 +28,17 @@ export async function createApplication(config: RuntimeConfig) {
   server.requestTimeout = 15000;
   server.headersTimeout = 10000;
   server.keepAliveTimeout = 5000;
+  const hub = app.get(RealtimeHub);
   return {
     app,
     logger,
-    shutdown: shutdownHandler(app, server, config.SHUTDOWN_TIMEOUT_MS, logger),
+    // Long-lived SSE streams are ended so the HTTP server can drain.
+    shutdown: shutdownHandler(
+      app,
+      server,
+      config.SHUTDOWN_TIMEOUT_MS,
+      logger,
+      () => Promise.resolve(hub.closeAll()),
+    ),
   };
 }

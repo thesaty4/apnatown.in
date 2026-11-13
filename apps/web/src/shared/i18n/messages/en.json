@@ -561,6 +561,57 @@
       "view": "View",
       "viewNamed": "View {name}"
     },
+    "orders": {
+      "back": "All orders",
+      "columns": {
+        "action": "Action",
+        "business": "Business",
+        "mode": "Mode",
+        "order": "Order",
+        "payment": "Payment",
+        "placed": "Placed",
+        "status": "Status",
+        "total": "Total"
+      },
+      "emptyActiveMessage": "There are no active orders in your areas right now.",
+      "emptyMessage": "Orders placed in your assigned areas will appear here.",
+      "emptyTitle": "No orders in your areas",
+      "filterLabel": "Filter orders",
+      "filters": {
+        "active": "Active",
+        "all": "All",
+        "disputes": "Disputes",
+        "failed": "Failed deliveries",
+        "refunds": "Refunds"
+      },
+      "loadErrorTitle": "Couldn’t load orders",
+      "loadMore": "Load more",
+      "noPermission": "You need the Orders view permission to see orders.",
+      "notFoundMessage": "This order doesn’t exist or is outside your assigned areas.",
+      "notFoundTitle": "Order not found",
+      "open": "Open",
+      "orderFacts": "Order",
+      "riderDispatchUnavailable": "ApnaTown rider dispatch is not available yet, so this order can’t move past Ready.",
+      "showAll": "Show all orders",
+      "tableCaption": "Orders: {filter}",
+      "title": "Orders & disputes",
+      "tools": {
+        "caseWorkflow": {
+          "body": "Opening cases and adding notes is not available yet.",
+          "title": "Case workflow"
+        },
+        "refund": {
+          "body": "Refund decisions are not available yet. Payments are never marked refunded by hand.",
+          "title": "Refund"
+        },
+        "rider": {
+          "body": "Rider assignment and reassignment are not available yet.",
+          "title": "Delivery & rider"
+        }
+      },
+      "unavailableMessage": "Cases, refunds and failed-delivery tracking will appear here once they launch.",
+      "unavailableTitle": "Disputes and refunds are not available yet"
+    },
     "permissions": {
       "actions": {
         "create": "Create",
@@ -615,7 +666,9 @@
       "listings": "Listings",
       "manage": "Manage",
       "moderation": "Moderation",
+      "monitor": "Monitor",
       "navLabel": "Admin sections",
+      "orders": "Orders & disputes",
       "platform": "Platform",
       "profile": "Profile",
       "roles": "Roles & permissions",
@@ -1828,6 +1881,159 @@
       "subcategory": "Subcategory"
     }
   },
+  "checkout": {
+    "address": {
+      "add": "Add address",
+      "defaultLabel": "{label} (default)",
+      "empty": "No saved addresses. Add one if you want home delivery.",
+      "emptyRequired": "Add a delivery address for home delivery, or choose self-pickup.",
+      "error": "We could not load your saved addresses.",
+      "line": "{address}, PIN {pin}",
+      "loading": "Loading your addresses",
+      "manage": "Manage addresses",
+      "more": "Show more addresses",
+      "pickupOnly": "An address is needed only for home delivery.",
+      "retry": "Try again",
+      "title": "Delivery address"
+    },
+    "amount": {
+      "delivery": "Delivery",
+      "discount": "Discount",
+      "minus": "−{amount}",
+      "orderTotal": "Order total",
+      "platformFee": "Platform fee",
+      "subtotal": "Subtotal",
+      "unknown": "To be confirmed"
+    },
+    "denied": {
+      "action": "Go home",
+      "message": "This account cannot place orders.",
+      "title": "Checkout is not available"
+    },
+    "empty": {
+      "action": "Start shopping",
+      "message": "Add items to continue.",
+      "title": "Your cart is empty"
+    },
+    "error": {
+      "message": "Check your connection and try again.",
+      "retry": "Try again",
+      "title": "We could not load checkout"
+    },
+    "errors": {
+      "addressChanged": "Your address or delivery options changed. Review and try again.",
+      "cartChanged": "Your cart changed. Review the updated items and prices.",
+      "forbidden": "This account cannot place orders.",
+      "generic": "Something went wrong",
+      "inProgress": "Your order is still being processed. Try again in a moment.",
+      "rateLimited": "Too many tries. Wait a moment and try again.",
+      "retry": "Try again",
+      "review": "Review changes",
+      "security": "Your session changed. Refresh the page and try again."
+    },
+    "group": {
+      "delivery": "Home delivery",
+      "feeSource": {
+        "pickup": "No delivery fee for self-pickup.",
+        "platform": "Delivered by an ApnaTown rider at the local delivery rate.",
+        "shop": "Delivered by the shop at its own delivery fee."
+      },
+      "items": "{count, plural, one {# item} other {# items}}",
+      "line": "{name} × {quantity}",
+      "lineVariant": "{name} ({variant}) × {quantity}",
+      "modeLegend": "How do you want to get this order?",
+      "pickup": "Self-pickup",
+      "unknownShop": "Shop no longer available"
+    },
+    "issues": {
+      "addressLocationRequired": "This address has no map pin. Add a pin in Saved addresses or choose another address.",
+      "addressRequired": "Choose a delivery address.",
+      "cartEmpty": "Your cart is empty",
+      "deliveryUnavailable": "This shop does not deliver right now.",
+      "feeUnavailable": "The delivery fee for this address is not set yet. Choose self-pickup or another address.",
+      "lineIssues": "Some items need attention. Update them in your cart.",
+      "minimumAmount": "Minimum order for delivery is {amount}. Add items or choose self-pickup.",
+      "minimumNotMet": "The minimum order for delivery is not met. Add items or choose self-pickup.",
+      "modeRequired": "Choose home delivery or self-pickup for this shop.",
+      "outOfRange": "Out of delivery range. Choose self-pickup or another address.",
+      "paymentUnavailable": "Cash payment is not available right now, so orders cannot be placed.",
+      "pickupUnavailable": "This shop does not offer self-pickup.",
+      "shopClosed": "This shop is closed right now.",
+      "shopIssues": "Fix the items marked above to continue.",
+      "shopUnavailable": "This shop is not taking orders right now."
+    },
+    "offline": {
+      "message": "Connect to the internet to continue to checkout.",
+      "notice": "You are offline. Reconnect to update prices and place your order.",
+      "title": "You are offline"
+    },
+    "page": {
+      "loading": "Loading checkout",
+      "loginMessage": "Log in to place your order",
+      "notAvailable": "Coupons and online payments are not available yet.",
+      "quoted": "Prices updated",
+      "quoting": "Getting the latest prices",
+      "split": "Your order will be split into {count, plural, one {# shop} other {# shops}}. You will get a separate order ID for each shop.",
+      "title": "Checkout"
+    },
+    "payment": {
+      "cashDelivery": "Cash on delivery",
+      "cashHint": "Pay when you receive",
+      "cashMixed": "Cash on delivery / pay at pickup",
+      "cashPickup": "Pay at pickup",
+      "cashUnavailable": "Cash payment is not available right now.",
+      "method": {
+        "card": "Card",
+        "netBanking": "Net banking",
+        "upi": "UPI",
+        "wallet": "Wallet"
+      },
+      "notAvailable": "Not available yet",
+      "title": "Payment"
+    },
+    "success": {
+      "codeHint": "Your delivery or pickup code appears on the order page when it is ready.",
+      "continue": "Continue shopping",
+      "denied": {
+        "message": "You can only see orders placed from your account.",
+        "title": "This order is not available"
+      },
+      "error": {
+        "message": "Your order is safe. Check your connection and try again.",
+        "retry": "Try again",
+        "title": "We could not load your order"
+      },
+      "loading": "Loading your order",
+      "loginMessage": "Log in to see your orders",
+      "myOrders": "My orders",
+      "none": {
+        "action": "My orders",
+        "message": "Your placed orders appear here.",
+        "title": "No recent order"
+      },
+      "notified": "The shop has been notified.",
+      "offline": {
+        "message": "Connect to the internet to see your order.",
+        "title": "You are offline"
+      },
+      "orderId": "Order ID",
+      "payDelivery": "Cash on delivery",
+      "payPickup": "Pay at pickup",
+      "split": "Your order was split into {count} shops. Each has its own order ID.",
+      "title": "Order placed!",
+      "total": "Total for all orders: {amount}",
+      "track": "Track order"
+    },
+    "summary": {
+      "blocked": "Fix the items marked above to continue.",
+      "place": "Place order",
+      "separate": "You will get a separate order ID for each shop.",
+      "taxes": "GST is included in item prices.",
+      "title": "Price details",
+      "total": "{count, plural, one {Total} other {Total for # orders}}",
+      "updating": "Updating prices for your latest choices…"
+    }
+  },
   "common": {
     "actions": {
       "checkAgain": "Check again",
@@ -2976,7 +3182,23 @@
     }
   },
   "errors": {
+    "checkout": {
+      "addressInvalid": "This address can no longer be used. Choose another address.",
+      "attemptConflict": "This order is already being placed. Wait a moment and check My orders.",
+      "attemptNotFound": "We could not find this order confirmation.",
+      "deliveryUnavailable": "Delivery is not available for one of the shops. Choose self-pickup or another address.",
+      "minimumOrderNotMet": "A shop's minimum order for delivery is not met. Add items or choose self-pickup.",
+      "paymentUnavailable": "This payment method is not available. Pay in cash instead.",
+      "quoteStale": "Prices or availability changed. Review the updated checkout and try again.",
+      "splitInvalid": "The shops in your cart changed. Review checkout again.",
+      "stateInvalid": "This checkout cannot be completed. Review your cart and try again."
+    },
     "delivery": {
+      "codeConsumed": "This code has already been used.",
+      "codeCooldown": "Please wait a little before asking for a new code.",
+      "codeExpired": "This code has expired. Get a new code.",
+      "codeLocked": "This code is locked after too many wrong tries.",
+      "codeNotReady": "The code is not ready yet.",
       "jobNotFound": "This delivery is no longer available.",
       "requirementsUnavailable": "Rider applications can’t be submitted yet because document verification is not available. Your saved draft is kept.",
       "riderHasActiveJob": "You have an active delivery. Finish it before going offline.",
@@ -2996,6 +3218,13 @@
       "typeNotAllowed": "This image type is not allowed.",
       "uploadPolicyRequired": "Image uploads are not configured or are disabled.",
       "videoSourceInvalid": "Enter a valid YouTube watch/Shorts link or Instagram Reel/public post link."
+    },
+    "orders": {
+      "checkoutInvalid": "Your checkout changed before the order was placed. Review and try again.",
+      "creationConflict": "Your order is still being placed. Check My orders in a moment.",
+      "invalidTransition": "This order can no longer be changed.",
+      "notFound": "This order does not exist or is not yours.",
+      "versionConflict": "This order was just updated. Check the latest status and try again."
     },
     "products": {
       "importInvalid": "The file has problems. Nothing was imported.",
@@ -3687,6 +3916,10 @@
       "title": "Notifications",
       "unread": "Unread"
     },
+    "live": {
+      "dismiss": "Dismiss",
+      "view": "View"
+    },
     "time": {
       "hoursAgo": "{count} hr ago",
       "justNow": "Just now",
@@ -3699,6 +3932,383 @@
       "confirmImpact": "Offers and promotions will stop on in-app, email and WhatsApp. Order and enquiry updates are not affected.",
       "confirmTitle": "Unsubscribe from all marketing?",
       "done": "You are unsubscribed from marketing"
+    }
+  },
+  "orders": {
+    "cancel": {
+      "close": "Close",
+      "confirm": "Cancel order",
+      "description": "Choose a reason. The shop will be notified.",
+      "keep": "Keep order",
+      "reasonLegend": "Why are you cancelling?",
+      "title": "Cancel this order?"
+    },
+    "code": {
+      "attempts": "{count, plural, one {# try left} other {# tries left}}",
+      "codeLabel": "Code: {digits}",
+      "cooldown": "You can get a new code after {time}.",
+      "deliveryTitle": "Your delivery OTP",
+      "expired": "This code has expired. Get a new code.",
+      "laterDelivery": "Your delivery code will appear here when the order is out for delivery.",
+      "laterPickup": "Your pickup code will appear here when the order is ready for pickup.",
+      "loading": "Loading your code",
+      "locked": "This code is locked after too many wrong tries. Contact the shop.",
+      "pickupTitle": "Pickup code",
+      "reissue": "Get a new code",
+      "retry": "Try again",
+      "showDelivery": "Tell the delivery person at your door",
+      "showPickup": "Show this code to the shop when you pick up your order.",
+      "validUntil": "Valid until {time}"
+    },
+    "detail": {
+      "actions": {
+        "invoice": "Invoice",
+        "refund": "Request refund",
+        "report": "Report a problem"
+      },
+      "addressTitle": "Delivery address",
+      "addressUnknown": "The delivery address is not available.",
+      "back": "My orders",
+      "cancelled": "Order cancelled",
+      "cancelledBy": {
+        "business": "Cancelled by the shop",
+        "customer": "Cancelled by you",
+        "system": "Cancelled by ApnaTown"
+      },
+      "cancelOrder": "Cancel order",
+      "cancelReason": "Reason: {reason}",
+      "currentPayable": "Amount to pay now",
+      "delivery": "Delivery",
+      "deliveryProgress": "Delivery progress",
+      "denied": {
+        "message": "You can only see orders placed from your account.",
+        "title": "This order is not available"
+      },
+      "discount": "Discount",
+      "error": {
+        "message": "Check your connection and try again.",
+        "retry": "Try again",
+        "title": "We could not load this order"
+      },
+      "helpTitle": "Need help?",
+      "helpUnavailable": "Invoices, refunds and help requests are not available yet.",
+      "items": "Items",
+      "landmark": "Landmark: {landmark}",
+      "line": "{name} × {quantity}",
+      "lineVariant": "{name} ({variant}) × {quantity}",
+      "loading": "Loading order",
+      "loginMessage": "Log in to see your orders",
+      "minus": "−{amount}",
+      "missing": {
+        "action": "Go to my orders",
+        "message": "This order does not exist or is not yours.",
+        "title": "Order not found"
+      },
+      "offline": {
+        "message": "Connect to the internet to see this order.",
+        "title": "You are offline"
+      },
+      "pageTitle": "Order details",
+      "pickupProgress": "Pickup progress",
+      "pickupTitle": "Self-pickup",
+      "pickupUnknown": "Ask the shop for pickup details.",
+      "pin": "PIN {pin}",
+      "platformFee": "Platform fee",
+      "revisedTotal": "Revised total",
+      "riderUnavailable": "ApnaTown rider delivery is not available yet, so this order cannot go out for delivery right now. The shop still has your order.",
+      "stepCurrent": "(current step)",
+      "stepDone": "(done)",
+      "stepNext": "(upcoming)",
+      "subtotal": "Subtotal",
+      "title": "Order {number}",
+      "total": "Total",
+      "unavailable": "Unavailable"
+    },
+    "errors": {
+      "forbidden": "You cannot change this order.",
+      "generic": "Something went wrong",
+      "inProgress": "Your last request is still being processed. Try again in a moment.",
+      "rateLimited": "Too many tries. Wait a moment and try again.",
+      "security": "Your session changed. Refresh the page and try again."
+    },
+    "list": {
+      "denied": {
+        "action": "Go home",
+        "message": "This account does not have customer orders.",
+        "title": "Orders are not available"
+      },
+      "empty": {
+        "action": "Start shopping",
+        "active": "No active orders",
+        "cancelled": "No cancelled orders",
+        "completed": "No completed orders",
+        "message": "Your orders will appear here."
+      },
+      "error": {
+        "message": "Check your connection and try again.",
+        "retry": "Try again",
+        "title": "We could not load your orders"
+      },
+      "loading": "Loading your orders",
+      "loadMore": "Load more orders",
+      "loadMoreError": "We could not load more orders. Try again.",
+      "loginMessage": "Log in to see your orders",
+      "offline": {
+        "message": "Connect to the internet to see your orders.",
+        "title": "You are offline"
+      },
+      "summaryMore": "{name} + {count, plural, one {# more item} other {# more items}}",
+      "tabs": {
+        "active": "Active",
+        "cancelled": "Cancelled",
+        "completed": "Completed"
+      },
+      "tabsLabel": "Order status",
+      "title": "My orders"
+    },
+    "mode": {
+      "delivery": "Home delivery",
+      "pickup": "Self-pickup"
+    },
+    "nav": {
+      "label": "Orders"
+    },
+    "payment": {
+      "cashDelivery": "Cash on delivery",
+      "cashPickup": "Pay at pickup",
+      "dueDelivery": "Pay {amount} in cash when your order is delivered.",
+      "duePickup": "Pay {amount} at the shop when you pick up.",
+      "method": {
+        "card": "Card",
+        "netBanking": "Net banking",
+        "upi": "UPI",
+        "wallet": "Wallet"
+      },
+      "status": {
+        "collected": "Collected",
+        "failed": "Failed",
+        "paid": "Paid",
+        "pending": "Pending",
+        "refunded": "Refunded"
+      },
+      "title": "Payment"
+    },
+    "reasons": {
+      "changeItemsOrAddress": "Want to change items or address",
+      "deliveryTakingTooLong": "Delivery is taking too long",
+      "foundBetterPrice": "Found a better price",
+      "itemOutOfStock": "Item out of stock",
+      "orderedByMistake": "Ordered by mistake",
+      "other": "Other",
+      "shopClosing": "Shop is closing",
+      "tooFarToDeliver": "Too far to deliver"
+    },
+    "status": {
+      "accepted": "Accepted",
+      "cancelled": "Cancelled",
+      "delivered": "Delivered",
+      "outForDelivery": "Out for delivery",
+      "pickedUp": "Picked up",
+      "placed": "Placed",
+      "preparing": "Preparing",
+      "ready": "Ready",
+      "readyPickup": "Ready for pickup",
+      "refunded": "Refunded"
+    }
+  },
+  "ownerOrders": {
+    "actions": {
+      "accept": "Accept order",
+      "done": {
+        "accepted": "Order accepted.",
+        "delivered": "Delivery completed.",
+        "dispatched": "Out for delivery. The customer now has a delivery code.",
+        "pickedUp": "Handed over to the customer.",
+        "preparing": "Marked as preparing.",
+        "ready": "Marked ready.",
+        "rejected": "Order rejected."
+      },
+      "markReady": "Mark ready",
+      "markReadyPickup": "Mark ready for pickup",
+      "moreTools": "Other order tools",
+      "noActions": "No further action needed.",
+      "notAvailableYet": "Not available yet",
+      "reject": "Reject",
+      "reload": "Reload order",
+      "riderDispatchUnavailable": "ApnaTown rider dispatch is not available yet. This order can’t move past Ready until it is.",
+      "selfComplete": "Delivered (enter customer code)",
+      "selfDispatch": "Deliver yourself",
+      "startPreparing": "Start preparing",
+      "title": "Update status",
+      "tools": {
+        "invoice": "Invoice",
+        "itemAvailability": "Mark an item unavailable",
+        "packingSlip": "Print order slip"
+      },
+      "verifyPickup": "Handed to customer (enter code)"
+    },
+    "detail": {
+      "actor": {
+        "business": "By business",
+        "customer": "By customer",
+        "system": "By ApnaTown"
+      },
+      "back": "All orders",
+      "currentPayable": "Current amount payable",
+      "customer": "Customer",
+      "customerWillCollect": "Customer will collect",
+      "deliverTo": "Deliver to",
+      "deliveryBy": "Delivery by",
+      "deliveryFee": "Delivery fee",
+      "deliveryRider": "ApnaTown rider",
+      "deliverySelf": "Your own delivery",
+      "discount": "Discount",
+      "errorTitle": "Couldn’t load this order",
+      "itemLine": "{name} × {quantity}",
+      "items": "Items",
+      "itemUnavailable": "Unavailable",
+      "landmark": "Landmark: {landmark}",
+      "loading": "Loading order…",
+      "name": "Name",
+      "notFoundMessage": "This order doesn’t exist or doesn’t belong to your business.",
+      "notFoundTitle": "Order not found",
+      "notShared": "Not shared",
+      "offlineMessage": "Connect to the internet to see this order.",
+      "offlineTitle": "You’re offline",
+      "outstanding": "Still to collect",
+      "payment": "Payment",
+      "pickup": "Pickup",
+      "pinCode": "PIN {pin}",
+      "platformFee": "Platform fee",
+      "reason": "Reason: {reason}",
+      "retry": "Retry",
+      "subtotal": "Subtotal",
+      "timeline": "Timeline",
+      "timelineEmpty": "No updates yet.",
+      "total": "Total"
+    },
+    "errors": {
+      "cashNotConfirmed": "Confirm that you collected the current cash amount before completing.",
+      "codeConsumed": "This code was already used. Reload to see the latest status.",
+      "codeExpired": "This code has expired. Ask the customer to open their order for a new code.",
+      "codeInvalid": "That code didn’t match. Check it with the customer and try again.",
+      "codeInvalidAttempts": "That code didn’t match. {count, plural, one {# attempt left.} other {# attempts left.}}",
+      "codeLocked": "Too many wrong codes. The code is locked; the customer needs a new one from their order.",
+      "codeNotReady": "The customer’s code isn’t ready yet. Reload the order and try again.",
+      "forbidden": "You can’t manage this order.",
+      "invalidTransition": "This action is no longer possible for this order. Reload to see what’s next.",
+      "maintenance": "ApnaTown is under maintenance. Try again shortly.",
+      "notFound": "This order is no longer available.",
+      "offline": "You’re offline. Connect to the internet to continue.",
+      "rateLimited": "Too many attempts. Wait a moment and try again.",
+      "requestFailed": "Something went wrong. Try again.",
+      "riderDispatchUnavailable": "ApnaTown rider dispatch is not available yet.",
+      "validation": "Some details are not valid. Check and try again.",
+      "versionConflict": "This order changed on another device. Reload to see the latest status."
+    },
+    "handover": {
+      "cancel": "Cancel",
+      "cashCollected": "I collected {amount} in cash",
+      "cashHint": "Tick only after you have the cash. A matching code alone does not mean it’s paid.",
+      "cashRequired": "Confirm the cash collection to continue.",
+      "close": "Close",
+      "codeHint": "4 digits",
+      "codeRequired": "Enter the 4-digit code.",
+      "deliveryCodeLabel": "Customer’s delivery code",
+      "deliveryConfirm": "Mark delivered",
+      "deliveryDescription": "Order {number}. Ask the customer for the 4-digit delivery code shown in their order.",
+      "deliveryTitle": "Complete delivery",
+      "noCashDue": "No cash to collect for this order.",
+      "pickupCodeLabel": "Customer’s pickup code",
+      "pickupConfirm": "Verify and hand over",
+      "pickupDescription": "Order {number}. Ask the customer for the 4-digit pickup code shown in their order.",
+      "pickupTitle": "Hand over to customer"
+    },
+    "list": {
+      "customerUnknown": "Customer",
+      "emptyMessage": "Orders move here as their status changes.",
+      "emptyNewMessage": "New orders from customers will appear here.",
+      "emptyTitle": "No orders in “{tab}”",
+      "errorTitle": "Couldn’t load orders",
+      "forbiddenMessage": "Orders open once your business is approved and active.",
+      "forbiddenTitle": "Orders are not available",
+      "itemCount": "{count, plural, one {# item} other {# items}}",
+      "itemSummaryMore": "{name} + {count} more",
+      "loading": "Loading orders…",
+      "loadMore": "Load more",
+      "loadMoreFailed": "Couldn’t load more orders.",
+      "newAlert": "{count, plural, one {# new order waiting} other {# new orders waiting}}",
+      "newAlertAction": "Show new orders",
+      "newAlertBody": "Open an order to accept or reject it.",
+      "offlineMessage": "Connect to the internet to see your orders.",
+      "offlineTitle": "You’re offline",
+      "openOrder": "Open order {number}",
+      "refreshFailed": "Couldn’t refresh orders. Showing the last loaded list.",
+      "retry": "Retry",
+      "title": "Orders"
+    },
+    "mode": {
+      "delivery": "Delivery",
+      "pickup": "Pickup"
+    },
+    "payment": {
+      "cashOnDelivery": "Cash on delivery",
+      "method": {
+        "card": "Card",
+        "cash": "Cash",
+        "netBanking": "Net banking",
+        "upi": "UPI",
+        "wallet": "Wallet"
+      },
+      "payAtPickup": "Pay at pickup",
+      "status": {
+        "collected": "Cash collected",
+        "failed": "Failed",
+        "paid": "Paid",
+        "pending": "Pending",
+        "refunded": "Refunded"
+      },
+      "summary": "{method} · {status}"
+    },
+    "reasons": {
+      "changeItemsOrAddress": "Want to change items or address",
+      "deliveryTakingTooLong": "Delivery is taking too long",
+      "foundBetterPrice": "Found a better price",
+      "itemOutOfStock": "Item out of stock",
+      "orderedByMistake": "Ordered by mistake",
+      "other": "Other",
+      "shopClosing": "Shop is closing",
+      "tooFarToDeliver": "Too far to deliver"
+    },
+    "reject": {
+      "cancel": "Keep order",
+      "close": "Close",
+      "confirm": "Reject order",
+      "description": "Order {number}. The customer will be told it was rejected.",
+      "impact": "This can’t be undone. Reserved stock is released.",
+      "reasonLabel": "Reason",
+      "reasonRequired": "Choose a reason.",
+      "title": "Reject this order?"
+    },
+    "status": {
+      "accepted": "Accepted",
+      "cancelled": "Cancelled",
+      "delivered": "Delivered",
+      "outForDelivery": "Out for delivery",
+      "pickedUp": "Picked up",
+      "placed": "Placed",
+      "preparing": "Preparing",
+      "ready": "Ready",
+      "readyForPickup": "Ready for pickup",
+      "refunded": "Refunded"
+    },
+    "tabs": {
+      "cancelled": "Cancelled",
+      "completed": "Completed",
+      "inProgress": "In progress",
+      "label": "Order status",
+      "new": "New",
+      "readyOut": "Ready / out"
     }
   },
   "privacy": {

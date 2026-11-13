@@ -59,3 +59,20 @@ export interface NotificationChannel {
   readonly available: boolean;
   deliver(tx: TxContext, input: ChannelDeliveryInput): Promise<ChannelOutcome>;
 }
+
+// ---------------------------------------------------------------------------
+// Orders-owned least-privilege context (spec `OrderNotificationReadPort`,
+// MVP subset): immutable references for routing/rendering only. No address,
+// contact, amounts or codes.
+// ---------------------------------------------------------------------------
+
+export const ORDER_NOTIFICATION_CONTEXT = Symbol('ORDER_NOTIFICATION_CONTEXT');
+export interface OrderNotificationContext {
+  orderId: string;
+  orderNumber: string;
+  customerUserId: string;
+  businessId: string;
+}
+export interface OrderNotificationContextPort {
+  context(tx: TxContext, orderId: string): Promise<OrderNotificationContext | null>;
+}

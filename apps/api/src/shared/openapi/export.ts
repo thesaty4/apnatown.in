@@ -4,6 +4,8 @@ import { resolve } from 'node:path';
 import { Module } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { buildOpenApiDocument } from './document';
+import { RealtimeController } from '../realtime/realtime.controller';
+import { RealtimeStreamService } from '../realtime/realtime-stream.service';
 import { HealthController } from '../health/health.controller';
 import { ReadinessService } from '../health/readiness';
 import { AuthController } from '../../modules/auth/presentation/auth.controller';
@@ -180,6 +182,21 @@ import { PhotoReportService } from '../../modules/media-videos/application/photo
 import { MediaReportModerationService } from '../../modules/media-videos/application/media-report-moderation.service';
 import { ReviewsPublicController } from '../../modules/reviews/presentation/reviews-public.controller';
 import { ReviewsPublicService } from '../../modules/reviews/application/reviews-public.service';
+import {
+  CartQuoteController,
+  CheckoutAttemptsController,
+} from '../../modules/cart-checkout/presentation/checkout.controller';
+import { CheckoutQuoteService } from '../../modules/cart-checkout/application/checkout-quote.service';
+import { CheckoutAttemptService } from '../../modules/cart-checkout/application/checkout-attempt.service';
+import { OrdersController } from '../../modules/orders/presentation/orders.controller';
+import { BusinessOrdersController } from '../../modules/orders/presentation/business-orders.controller';
+import { AdminOrdersController } from '../../modules/orders/presentation/admin-orders.controller';
+import { OrderReadService } from '../../modules/orders/application/order-read.service';
+import { OrderCommandsService } from '../../modules/orders/application/order-commands.service';
+import { OrderAdminReadService } from '../../modules/orders/application/order-admin-read.service';
+import { HandoverController } from '../../modules/delivery/presentation/handover.controller';
+import { HandoverService } from '../../modules/delivery/application/handover.service';
+import { CustomerCodeService } from '../../modules/delivery/application/customer-code.service';
 
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
@@ -260,6 +277,13 @@ import { ReviewsPublicService } from '../../modules/reviews/application/reviews-
     LinkedVideoController,
     PhotoReportController,
     ReviewsPublicController,
+    CartQuoteController,
+    CheckoutAttemptsController,
+    OrdersController,
+    BusinessOrdersController,
+    AdminOrdersController,
+    HandoverController,
+    RealtimeController,
   ],
   providers: [
     SavedService,
@@ -343,6 +367,14 @@ import { ReviewsPublicService } from '../../modules/reviews/application/reviews-
     PhotoReportService,
     MediaReportModerationService,
     ReviewsPublicService,
+    CheckoutQuoteService,
+    CheckoutAttemptService,
+    OrderReadService,
+    OrderCommandsService,
+    OrderAdminReadService,
+    HandoverService,
+    CustomerCodeService,
+    RealtimeStreamService,
   ].map((provide) => ({ provide, useValue: Object.freeze({}) })),
 })
 class OpenApiModule {}

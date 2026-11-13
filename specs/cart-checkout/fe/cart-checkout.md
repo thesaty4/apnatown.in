@@ -70,6 +70,13 @@ Use [frontend-shared.md](../../_foundation/frontend-shared.md) states; private r
   - Given the attempt is pending or failed, when the route loads, then it never displays a success confirmation.
   - Given another customer's attempt ID is supplied, when the page loads, then no order or address details are disclosed.
 
+## Implemented slice: COD checkout (2026-11-13)
+
+- S-CUST-10: the cart's Proceed to checkout links to `/checkout` (guests go through login with `returnTo=/checkout`).
+- S-CUST-11: `features/checkout` — saved-address radio picker (Users' address read; add/edit at `/account/addresses`), per-shop Delivery/Pickup radios disabled with the server reason, `POST /cart/quote` re-requested whenever cart version/address/mode changes (one in flight; latest input wins; a superseded quote cannot be placed), localized group/quote issues, per-shop and total breakdown (null amounts read "To be confirmed", never ₹0), fee-source note, split notice, payment list (cash only; online methods disabled "Not available yet"). Place order sends `POST /checkout/attempts` with one idempotency key per quote/version/method (transient retry reuses it; stale codes offer Review changes) and navigates to `/checkout/success?attempt={id}`.
+- S-CUST-12: `/checkout/success?attempt=` re-reads `GET /checkout/attempts/{id}`; per-shop order number, status, mode, total and Track order links; no code is shown. Deviation: query param is `attempt` (not `attemptId`).
+- Deferred: coupons, online payments/failure/compensation states, master checkout summary, map-pin editing in checkout. i18n `checkout.*`, `errors.checkout.*` (EN+HI). Runtime/UI journeys and screenshots deferred.
+
 ## Feature components and shared components
 
 - Feature-local: `CartGroup`, `CartLineItem`, `CheckoutShopSection`, `CouponEntry`, `CheckoutSummary`, `OrderConfirmation`.

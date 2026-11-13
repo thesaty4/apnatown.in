@@ -17,30 +17,59 @@ function useCustomerPath() {
 /** Desktop customer menu (prototype `.deskmenu`); only live routes. */
 export function CustomerMenu() {
   const t = useTranslations('common.navigation');
+  const orders = useTranslations('orders.nav');
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
+  const { state } = useSession();
   const { path, customer } = useCustomerPath();
   if (!customer) return null;
   const items = [
-    ['home', publicHref('/', locale), path === '/'],
-    ['explore', publicHref('/explore', locale), path.startsWith('/explore')],
-    ['videos', publicHref('/videos', locale), path.startsWith('/videos')],
-    ['services', publicHref('/services', locale), path.startsWith('/services')],
+    ['home', t('home'), publicHref('/', locale), path === '/'],
+    [
+      'explore',
+      t('explore'),
+      publicHref('/explore', locale),
+      path.startsWith('/explore'),
+    ],
+    [
+      'videos',
+      t('videos'),
+      publicHref('/videos', locale),
+      path.startsWith('/videos'),
+    ],
+    [
+      'services',
+      t('services'),
+      publicHref('/services', locale),
+      path.startsWith('/services'),
+    ],
+    [
+      'orders',
+      orders('label'),
+      ordersHref(state.kind === 'ready', locale),
+      isOrdersPath(path),
+    ],
   ] as const;
   return (
     <nav aria-label={t('main')} className="ms-2 hidden gap-1 desktop:flex">
-      {items.map(([key, href, on]) => (
+      {items.map(([key, label, href, on]) => (
         <Link
           key={key}
           href={href}
           aria-current={on ? 'page' : undefined}
           className={`rounded-sm px-3 py-2.5 font-medium hover:bg-primary-soft hover:text-primary-ink focus-visible:ring-focus ${on ? 'bg-primary-soft text-primary-ink' : 'text-text'}`}
         >
-          {t(key)}
+          {label}
         </Link>
       ))}
     </nav>
   );
 }
+
+/** Orders (S-CUST-13): guests go through login and return to the list. */
+function ordersHref(signedIn: boolean, locale: 'en' | 'hi') {
+  return signedIn ? '/orders' : loginHref(locale, '/orders');
+}
+const isOrdersPath = (path: string) => /^\/orders(?:\/|$)/.test(path);
 
 type Tab = [NavIconName, string, string, boolean, ReactNode?];
 
@@ -54,6 +83,7 @@ export function CustomerTabBar({
 }) {
   const t = useTranslations('common.navigation');
   const cart = useTranslations('cart.nav');
+  const orders = useTranslations('orders.nav');
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
   const { state } = useSession();
   const { path, customer } = useCustomerPath();
@@ -83,6 +113,12 @@ export function CustomerTabBar({
             cartCount,
           ] satisfies Tab,
         ]),
+    [
+      'box',
+      orders('label'),
+      ordersHref(state.kind === 'ready', locale),
+      isOrdersPath(path),
+    ],
     [
       'user',
       t('account'),

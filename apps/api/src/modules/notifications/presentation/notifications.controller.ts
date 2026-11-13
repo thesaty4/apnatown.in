@@ -80,7 +80,7 @@ export class NotificationsController {
     operationId: 'notificationsList',
     summary: 'List own in-app notifications for one role',
     description:
-      'Published in-app items for the caller and a role the caller currently holds (vendor/provider applicants qualify through their own business), newest first, keyset-paginated. Admin alerts are filtered by live module/scope grants on every read. Real-time push (SSE) is not available; poll unread-count.',
+      'Published in-app items for the caller and a role the caller currently holds (vendor/provider applicants qualify through their own business), newest first, keyset-paginated. Admin alerts are filtered by live module/scope grants on every read. New items are hinted over GET /realtime/stream (`event: notification`); refetch this list/unread-count on receipt.',
   })
   @ApiQuery(ROLE_QUERY)
   @ApiQuery({ name: 'cursor', required: false, type: String })

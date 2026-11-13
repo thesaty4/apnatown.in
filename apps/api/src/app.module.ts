@@ -31,9 +31,14 @@ import { BusinessPublicModule } from './modules/businesses/business-public.modul
 import { BusinessesModule } from './modules/businesses/businesses.module';
 import { CartCheckoutModule } from './modules/cart-checkout/cart-checkout.module';
 import { DeliveryModule } from './modules/delivery/delivery.module';
+import { DeliveryCodesModule } from './modules/delivery/delivery-codes.module';
+import { OrdersModule } from './modules/orders/orders.module';
+import { PaymentsOrderModule } from './modules/payments/payments-order.module';
+import { ProductsStockModule } from './modules/products/products-stock.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
 import { RuntimeModule } from './shared/health/runtime.module';
+import { RealtimeModule } from './shared/realtime/realtime.module';
 import { RateLimitGuard } from './shared/rate-limit/rate-limit';
 
 @Module({})
@@ -76,6 +81,17 @@ export class AppModule {
       businessContext,
       media,
     ]);
+    const payments = PaymentsOrderModule.forRoot(runtime);
+    const deliveryCodes = DeliveryCodesModule.forRoot(runtime);
+    const orders = OrdersModule.forRoot([
+      runtime,
+      users,
+      admin,
+      businessContext,
+      payments,
+      ProductsStockModule.forRoot(runtime),
+      deliveryCodes,
+    ]);
     const delivery = DeliveryModule.forRoot([
       runtime,
       geo,
@@ -83,6 +99,10 @@ export class AppModule {
       audit,
       admin,
       settings,
+      businessContext,
+      orders,
+      payments,
+      deliveryCodes,
     ]);
     const services = ServicesModule.forRoot(runtime, catalog, businessContext, media);
     const engagement = EngagementModule.forRoot(
@@ -121,9 +141,11 @@ export class AppModule {
           ProductAdminModule.forRoot(runtime, admin, businesses, audit),
           audit,
         ),
-        CartCheckoutModule.forRoot(runtime),
+        orders,
+        CartCheckoutModule.forRoot(runtime, [users, geoAdmin, settings, payments, orders]),
         ReviewsModule.forRoot(runtime),
         NotificationsModule.forRoot(runtime, users, admin, businessContext),
+        RealtimeModule.forRoot(runtime),
       ],
       controllers: [HealthController],
       providers: [

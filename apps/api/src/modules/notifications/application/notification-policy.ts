@@ -19,6 +19,9 @@ export interface TemplatePolicy {
 }
 const SYSTEM = Object.freeze(['in_app', 'email'] as const);
 const ENQUIRIES = Object.freeze(['in_app', 'email', 'whatsapp'] as const);
+// O (orders): in-app + email (email stays suppressed until a provider exists);
+// WhatsApp order updates await an approved template + order_updates consent.
+const ORDERS = Object.freeze(['in_app', 'email'] as const);
 export const TEMPLATE_POLICY: Readonly<
   Record<NotificationTemplateKey, TemplatePolicy>
 > = Object.freeze({
@@ -28,6 +31,9 @@ export const TEMPLATE_POLICY: Readonly<
   'subcategory.decided': { category: 'approval', topic: 'system', intent: 'transactional', channels: SYSTEM },
   'comment.decided': { category: 'system', topic: 'system', intent: 'transactional', channels: SYSTEM },
   'support.received': { category: 'admin', topic: 'system', intent: 'transactional', channels: SYSTEM },
+  'order.new': { category: 'order', topic: 'orders', intent: 'transactional', channels: ORDERS },
+  'order.status': { category: 'order', topic: 'orders', intent: 'transactional', channels: ORDERS },
+  'order.cancelled': { category: 'order', topic: 'orders', intent: 'transactional', channels: ORDERS },
 });
 
 /** Logical content identity for template notices (campaigns use their own). */
@@ -51,10 +57,22 @@ const VOCABULARY: Readonly<Record<string, Record<'en' | 'hi', string>>> = {
   'status.inactive': { en: 'inactive', hi: 'निष्क्रिय' },
   'status.published': { en: 'published', hi: 'प्रकाशित हुई' },
   'status.removed': { en: 'removed', hi: 'हटा दी गई' },
+  'status.accepted': { en: 'accepted by the shop', hi: 'दुकान ने स्वीकार कर लिया है' },
+  'status.preparing': { en: 'being prepared', hi: 'तैयार किया जा रहा है' },
+  'status.ready': { en: 'ready', hi: 'तैयार है' },
+  'status.ready_for_pickup': { en: 'ready for pickup', hi: 'पिकअप के लिए तैयार है' },
+  'status.out_for_delivery': { en: 'out for delivery', hi: 'डिलीवरी के लिए निकल चुका है' },
+  'status.delivered': { en: 'delivered', hi: 'डिलीवर हो गया है' },
+  'status.picked_up': { en: 'picked up', hi: 'पिकअप हो गया है' },
+  'status.cancelled': { en: 'cancelled', hi: 'रद्द कर दिया गया है' },
 };
 
 /** Params that are free catalog names (suggestion name) rather than codes. */
 const NAME_PARAMS = new Set(['name']);
+/** Literal non-PII references rendered verbatim only when they match the shape. */
+const LITERAL_PARAMS: Readonly<Record<string, RegExp>> = {
+  orderNumber: /^[A-Z0-9-]{1,24}$/,
+};
 const PLACEHOLDER = /\{([a-z][a-zA-Z]{0,30})\}/g;
 
 export function renderTemplate(
@@ -65,6 +83,8 @@ export function renderTemplate(
   return text.replace(PLACEHOLDER, (_match, name: string) => {
     const value = params[name];
     if (typeof value !== 'string') return '';
+    const literal = LITERAL_PARAMS[name];
+    if (literal) return literal.test(value) ? value : '';
     if (NAME_PARAMS.has(name)) {
       const localized = params[`${name}_${locale}`];
       return (typeof localized === 'string' ? localized : value).slice(0, 80);

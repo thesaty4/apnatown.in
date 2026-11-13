@@ -4,6 +4,7 @@ import { CLOCK, type Clock } from '../../shared/runtime/providers';
 import { AdminRecipientsWorkerModule } from '../admin/admin-recipients-worker.module';
 import { BusinessContextModule } from '../businesses/business-context.module';
 import { CatalogReadWorkerModule } from '../catalog/catalog-read-worker.module';
+import { OrdersNotificationReadModule } from '../orders/orders-notification-read.module';
 import { UsersReadWorkerModule } from '../users/users-read-worker.module';
 import { EmailChannel, InAppChannel, WhatsAppChannel } from './application/channels';
 import {
@@ -20,6 +21,12 @@ import {
   CommentPendingRule,
   SupportMessageRule,
 } from './application/handlers/engagement-support.rules';
+import {
+  OrderCancelledRule,
+  OrderNotificationSupport,
+  OrderPlacedRule,
+  OrderProgressRule,
+} from './application/handlers/order.rules';
 import {
   NOTIFICATION_CHANNELS,
   type NotificationChannel,
@@ -52,6 +59,9 @@ const RULES = [
   CommentPendingRule,
   CommentModeratedRule,
   SupportMessageRule,
+  OrderPlacedRule,
+  OrderProgressRule,
+  OrderCancelledRule,
 ] as const;
 
 /**
@@ -76,6 +86,7 @@ export class NotificationsWorkerModule {
         businessContext,
         AdminRecipientsWorkerModule.forRoot(runtime, users),
         CatalogReadWorkerModule.forRoot(runtime, businessContext, mediaStorage),
+        OrdersNotificationReadModule.forRoot(runtime),
       ],
       providers: [
         {
@@ -93,6 +104,7 @@ export class NotificationsWorkerModule {
         },
         NotificationRecipients,
         NotificationPublisher,
+        OrderNotificationSupport,
         ...RULES,
         {
           provide: NOTIFICATION_RULES,

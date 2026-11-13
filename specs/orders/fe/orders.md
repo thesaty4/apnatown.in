@@ -96,6 +96,26 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) states/components, p
 - Acceptance: Given an admin lacks `orders:view/edit` or the order is outside assigned area, when the route/action loads, then no record or mutation is exposed. Given case resolution commits, when refreshed, then the state/note and audit-backed history persist.
   Given no case exists, when an authorized admin selects Open a case, then POST creates one versioned case and note-only action does not resolve it. Given same-city/wrong-area scope, unknown refund authority or post-pickup reassignment, when a control is attempted, then no unauthorized optimistic success appears.
 
+### Implemented slice: owner and admin orders (2026-11-13)
+
+- S-VEND-03/04, S-PROV-04/05: `features/owner-orders` (shared by kind) — five URL tabs (`?tab=`) with `/counts`, new-order alert, Load more; detail renders only `allowedActions` (accept, reject sheet with `BUSINESS_REJECT_REASONS`, start preparing, mark ready, self-dispatch, self-complete/pickup verify with typed 4-digit code + separate cash checkbox only when cash is outstanding). Stale/handover rejections re-read the order; `rider_dispatch_unavailable` shows an info note. Packing slip, invoice and item availability are stated as not available yet.
+- S-ADMN-07/08: `features/admin/orders` — `orders:view` gate, URL `?filter=`; Disputes/Refunds/Failed show an explicit not-available empty state; read-only detail with case/refund/rider tools stated as not available yet.
+- i18n: `ownerOrders.*`, `admin.orders.*` (EN+HI). Runtime/UI journeys and screenshots deferred.
+
+### Implemented slice: customer orders (2026-11-13)
+
+- S-CUST-13: `features/orders` `/orders?group=active|completed|cancelled` — keyboard tabs with server counts, order cards (number, status icon+text, shop, item summary, IST date, ordered total, mode), Load more, per-tab empty, login/offline/error/no-permission states. Account menu, desktop menu and mobile tab bar link Orders.
+- S-CUST-14: `/orders/{id}` — delivery/pickup timeline with persisted IST times and a distinct cancelled step (actor + reason); handover code card reads only `GET /delivery/orders/{id}/code` when `allowedActions` has `view_code` (React Query `gcTime 0`, never SSR/persisted), shows expiry and Get a new code (reissue honours `reissueAvailableAt`); items/variant/qty/line totals, ordered amounts (revised total only when fulfilled differs), cash payment summary, business link, delivery address or pickup point, `rider_dispatch_unavailable` info note; Cancel sheet with `CUSTOMER_CANCEL_REASONS` + order version + idempotency key. Invoice/refund/report are shown disabled with an explicit not-available note; rider tracking and reorder are not rendered.
+- i18n: `orders.*`, `errors.orders.*`, `errors.delivery.code*` (EN+HI). Runtime/UI journeys and screenshots deferred.
+
+### Implemented slice: live order updates (2026-11-13)
+
+- One own-account SSE stream per tab (`GET /api/realtime/stream`) via `shared/realtime/RealtimeProvider`, opened for ready sessions and reopened on account/epoch change. Frames are zod-validated hints only (no PII/codes/amounts); `useRealtimeInvalidation(topics, keys)` marks the owning React Query keys stale on a matching hint and on every (re)connect `ready`.
+- Vendor/provider: `useOwnerOrdersLive(kind)` in `BusinessDashboard` refreshes queue pages, open detail, tab counts and overview when an order is placed or changes (accept/reject, preparing, ready, dispatch, delivered/picked up, customer cancel).
+- Customer: `useCustomerOrder(s)` refresh the list/detail root on every order hint (accept/reject, progress steps, code reissue); the handover code re-reads by the new `codeVersion`.
+- Notifications: the role bell refreshes unread count + feed on `notification` hints, so `order.new`/`order.status`/`order.cancelled` notices appear immediately.
+- Existing 60 s polling and focus/reconnect refetch remain the fallback; local seed adds historical order notices per sample order. Runtime SSE journeys deferred.
+
 ## Components, i18n and analytics
 
 - Feature-local: `OrderCard`, `OrderTimeline`, `OrderActions`, `RefundTracker`, `OrderCasePanel`, `InvoicePrintView`.

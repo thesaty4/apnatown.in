@@ -21,6 +21,7 @@ import { useOnline } from '../../shared/hooks/use-online';
 import { useBusinessMe } from './queries';
 import { dashboardBase, deniedCodes, errorKey } from './parts';
 import { DashboardBell } from '../notifications/Bells';
+import { useOwnerOrdersLive } from '../owner-orders/queries';
 
 type NavEntry = {
   /** `null` = planned screen without a route: shown as "Coming soon". */
@@ -36,7 +37,7 @@ const nav: Record<BusinessKind, { group: string; items: NavEntry[] }[]> = {
       group: 'sell',
       items: [
         { path: '/overview', key: 'overview', icon: '📊' },
-        { path: null, key: 'orders', icon: '📦' },
+        { path: '/orders', key: 'orders', icon: '📦' },
         { path: '/products', key: 'products', icon: '🏷️' },
         { path: '/services', key: 'services', icon: '🔧' },
         { path: '/enquiries', key: 'enquiries', icon: '💬' },
@@ -69,7 +70,7 @@ const nav: Record<BusinessKind, { group: string; items: NavEntry[] }[]> = {
       items: [
         { path: '/overview', key: 'overview', icon: '📊' },
         { path: '/enquiries', key: 'enquiries', icon: '💬' },
-        { path: null, key: 'orders', icon: '📦' },
+        { path: '/orders', key: 'orders', icon: '📦' },
         { path: '/products', key: 'products', icon: '🏷️' },
         { path: '/services', key: 'services', icon: '🔧' },
         { path: '/profile', key: 'profile', icon: '🪪' },
@@ -107,6 +108,7 @@ export function BusinessDashboard({
   const common = useTranslations('business.common');
   const path = usePathname();
   const { state } = useSession();
+  useOwnerOrdersLive(kind);
   if (state.kind !== 'ready') return <AccessState />;
   const base = dashboardBase(kind);
   const groups = nav[kind].map(({ group, items }) => ({

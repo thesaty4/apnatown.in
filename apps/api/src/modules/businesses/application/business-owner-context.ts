@@ -101,6 +101,14 @@ export class BusinessOwnerContext {
     );
   }
 
+  /**
+   * Current owner of a business (any status, including deleted) for
+   * reference-only routing such as real-time hints; grants no access.
+   */
+  async ownerUserId(tx: TxContext, businessId: string): Promise<string | null> {
+    return (await this.businesses.find(tx, businessId, false))?.ownerUserId ?? null;
+  }
+
   /** Live matching vendor/provider role (never replaces approval checks). */
   sellerRole(tx: TxContext, business: StoredBusiness): Promise<boolean> {
     return this.roles.hasActiveRole(

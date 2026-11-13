@@ -15,6 +15,8 @@ import { seedCommerceData } from './seed-commerce-data.mjs';
 import { seedEngagementData } from './seed-engagement-data.mjs';
 import { seedNotificationData } from './seed-notification-data.mjs';
 import { seedReviewData } from './seed-review-data.mjs';
+import { seedOrderData } from './seed-order-data.mjs';
+import { seedOrderNotifications } from './seed-order-notifications.mjs';
 
 const require = createRequire(import.meta.url);
 const SAMPLE_DATA = new URL(
@@ -29,13 +31,15 @@ function loadHelpers(env) {
   if (
     !KEY.test(env.PII_ENCRYPTION_KEY ?? '') ||
     !KEY.test(env.PHONE_LOOKUP_HASH_KEY ?? '') ||
-    !KEY.test(env.CURSOR_SIGNING_KEY ?? '')
+    !KEY.test(env.CURSOR_SIGNING_KEY ?? '') ||
+    !KEY.test(env.OTP_HASH_KEY ?? '')
   )
     throw new Error('SEED_KEYS_REQUIRED');
   let modules;
   try {
     modules = {
       crypto: require('../dist/shared/auth/crypto.js'),
+      deliveryCodes: require('../dist/modules/delivery/application/delivery-code-cipher.js'),
       videos: require('../dist/modules/media-videos/domain/video-source.js'),
       personas: require('../dist/modules/auth/domain/demo-personas.js'),
       adminProjection: require('../dist/modules/admin/application/admin-projection.js'),
@@ -55,11 +59,14 @@ function loadHelpers(env) {
   const subjectKey = modules.listingReports.listingReportSubjectKey(
     env.CURSOR_SIGNING_KEY,
   );
+  const crypto = new modules.crypto.NodeIdentityCrypto(
+    env.PII_ENCRYPTION_KEY,
+    env.PHONE_LOOKUP_HASH_KEY,
+  );
   return {
-    crypto: new modules.crypto.NodeIdentityCrypto(
-      env.PII_ENCRYPTION_KEY,
-      env.PHONE_LOOKUP_HASH_KEY,
-    ),
+    crypto,
+    // Same HMAC/AES-GCM code material as the API's DeliveryCodesModule.
+    deliveryCodes: new modules.deliveryCodes.DeliveryCodeCipher(env.OTP_HASH_KEY, crypto),
     slug: modules.catalog.catalogSlug,
     slugSchema: modules.catalog.CatalogSlugSchema,
     normalizeCatalogText: modules.catalog.normalizeCatalogText,
@@ -320,6 +327,14 @@ async function apply(client, fixtures, listings, personas, providers, helpers, s
   const reviews = await seedReviewData(client, context);
   Object.assign(counts.extended, reviews.tables);
   counts.reviewSkips = reviews.skipped;
+  const { skipReasons, ...orders } = await seedOrderData(client, context);
+  Object.assign(counts.extended, orders);
+  counts.orderSkips = skipReasons;
+  // After orders: notices reference each seeded order's history.
+  const orderNotices = await seedOrderNotifications(client, context);
+  counts.extended.order_notifications = orderNotices.notifications;
+  counts.extended.order_notification_deliveries = orderNotices.notification_deliveries;
+  counts.extended.notification_preferences += orderNotices.notification_preferences;
   return counts;
 }
 
@@ -375,4 +390,6 @@ export async function seed(env) {
     process.stdout.write(`Demo seed: ${table}: ${inserted} rows added\n`);
   for (const [reason, skipped] of Object.entries(counts.reviewSkips))
     process.stdout.write(`Demo seed: sample reviews skipped (${reason}): ${skipped}\n`);
+  for (const [reason, skipped] of Object.entries(counts.orderSkips))
+    process.stdout.write(`Demo seed: sample orders skipped (${reason}): ${skipped}\n`);
 }

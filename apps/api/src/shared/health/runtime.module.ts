@@ -24,6 +24,8 @@ import {
   PostgresRateLimitRepository,
 } from '../rate-limit/repository';
 import { ScopeRegistry } from '../auth/scope-registry';
+import { REALTIME_SIGNAL } from '../realtime/ports';
+import { PgRealtimeSignal } from '../persistence/realtime-signal';
 
 @Module({})
 export class RuntimeModule {
@@ -69,6 +71,13 @@ export class RuntimeModule {
             new PrismaOutboxWriter(database),
           inject: [PrismaDatabase],
         },
+        // Producer side only (API + worker); the LISTEN hub is API-only.
+        {
+          provide: REALTIME_SIGNAL,
+          useFactory: (database: PrismaDatabase) =>
+            new PgRealtimeSignal(database),
+          inject: [PrismaDatabase],
+        },
         OutboxRelayStore,
         OutboxEventStore,
         RuntimeCleanupStore,
@@ -95,6 +104,7 @@ export class RuntimeModule {
         COMMAND_UNIT_OF_WORK,
         UNIT_OF_WORK,
         OUTBOX_WRITER,
+        REALTIME_SIGNAL,
         OutboxRelayStore,
         OutboxEventStore,
         RuntimeCleanupStore,

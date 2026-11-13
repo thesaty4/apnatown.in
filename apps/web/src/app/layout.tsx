@@ -27,6 +27,7 @@ import { SiteFooter } from '../features/support/SiteFooter';
 import { DemoSwitcher } from '../features/auth/demo/DemoControls';
 import { CartCount } from '../features/cart';
 import { CustomerBell } from '../features/notifications/Bells';
+import { NotificationToast } from '../features/notifications/NotificationToast';
 import './globals.css';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -76,7 +77,14 @@ export default async function RootLayout({
     cart: catalogue.cart,
     rider: catalogue.rider,
     reviews: catalogue.reviews,
-    errors: { delivery: catalogue.errors.delivery },
+    ownerOrders: catalogue.ownerOrders,
+    checkout: catalogue.checkout,
+    orders: catalogue.orders,
+    errors: {
+      delivery: catalogue.errors.delivery,
+      checkout: catalogue.errors.checkout,
+      orders: catalogue.errors.orders,
+    },
   };
   return (
     <html lang={locale} data-theme={theme} className={fontVariables}>
@@ -117,6 +125,7 @@ export default async function RootLayout({
               {children}
             </main>
           </div>
+          <NotificationToast />
           <SiteFooter />
           <CustomerTabBar cartCount={<CartCount tab />} />
         </Providers>

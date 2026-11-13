@@ -9,6 +9,7 @@ import {
 } from '@tanstack/react-query';
 import type { Locale } from '../shared/i18n/preferences';
 import { SessionProvider } from '../shared/auth/SessionProvider';
+import { RealtimeProvider } from '../shared/realtime/RealtimeProvider';
 import { createQueryClient } from '../shared/api/query-client';
 
 /** One client per mounted browser provider; SSR constructs a fresh instance. */
@@ -34,7 +35,9 @@ export function Providers({
     >
       <QueryClientProvider client={client}>
         <HydrationBoundary state={initialSession}>
-          <SessionProvider>{children}</SessionProvider>
+          <SessionProvider>
+            <RealtimeProvider>{children}</RealtimeProvider>
+          </SessionProvider>
         </HydrationBoundary>
       </QueryClientProvider>
     </NextIntlClientProvider>

@@ -21,6 +21,7 @@ import {
 } from '../../shared/api/private-query';
 import type { AccountScope } from '../../shared/api/query-keys';
 import { normalizeFailure, retryTransientRead } from '../../shared/api/result';
+import { useRealtimeInvalidation } from '../../shared/realtime/RealtimeProvider';
 import {
   getUnreadCount,
   listNotifications,
@@ -37,14 +38,14 @@ export type FeedContext = {
 };
 type Feed = InfiniteData<NotificationPage, string | null>;
 
-/** TODO(verify): no SSE/push stream exists yet (BE spec "Live updates"), so the
- * badge polls every 60 s while the tab is visible and refetches on focus.
- * React Query pauses `refetchInterval` for hidden tabs by default. Replace
- * with the stream (and keep this as its fallback) once it ships. */
+/** Fallback poll (60 s while visible, plus focus refetch); the realtime
+ * `notification` hint refreshes the badge and feed immediately. React Query
+ * pauses `refetchInterval` for hidden tabs by default. */
 const POLL_MS = 60_000;
 
 export function useUnreadCount({ api, scope, lifecycle, role }: FeedContext) {
   const client = useQueryClient();
+  useRealtimeInvalidation(['notification'], [notificationKeys.role(scope, role)]);
   const query = useQuery({
     ...privateQueryOptions(
       notificationKeys.unread(scope, role),

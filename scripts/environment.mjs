@@ -70,6 +70,8 @@ const ownerKeys = {
     'PHONE_LOOKUP_HASH_KEY',
     // Listing-report subject hash, identical to the API's intake service.
     'CURSOR_SIGNING_KEY',
+    // Sample-order handover code HMAC, identical to the API's DeliveryCodesModule.
+    'OTP_HASH_KEY',
   ],
   // Prisma Studio browses as the owner; prisma/studio.mjs forces read-only.
   studio: ['APP_ENV', 'NODE_ENV', 'MIGRATION_DATABASE_URL'],

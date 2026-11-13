@@ -1,27 +1,33 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import { useLocale, useTranslations } from 'next-intl';
 import type { Cart } from '@apnatown/shared/cart';
 import { Card } from '@apnatown/ui/cards/Card';
-import { Button } from '@apnatown/ui/primitives/Button';
+import { buttonClassName } from '@apnatown/ui/primitives/Button';
+import { loginHref } from '../../shared/auth/return-to';
+import { useSession } from '../../shared/auth/SessionProvider';
 import { money, type Locale } from './format';
 
-const NOTE_ID = 'cart-checkout-unavailable';
-
-/** Disabled until the quote/checkout backend exists; never links anywhere. */
+/** Proceed to /checkout (S-CUST-11). Guests log in first and return there;
+ * the guest cart merges on login (J12). */
 function CheckoutButton({ className = '' }: { className?: string }) {
   const t = useTranslations('cart.summary');
+  const locale = useLocale() === 'hi' ? 'hi' : 'en';
+  const { state } = useSession();
+  const href =
+    state.kind === 'ready' ? '/checkout' : loginHref(locale, '/checkout');
   return (
-    <Button disabled aria-describedby={NOTE_ID} className={className}>
+    <Link href={href} className={`${buttonClassName} ${className}`}>
       {t('checkout')}
-    </Button>
+    </Link>
   );
 }
 
 /**
  * Prototype "Price details" (right column). Only the server estimate is shown:
- * delivery/fees are quote-only and coupon entry is omitted until checkout
- * exists. Nothing here is a final payable total.
+ * delivery/fees are quote-only (checkout) and coupon entry is omitted until
+ * coupons are configured. Nothing here is a final payable total.
  */
 export function CartSummary({ cart, locale }: { cart: Cart; locale: Locale }) {
   const t = useTranslations('cart.summary');
@@ -58,15 +64,12 @@ export function CartSummary({ cart, locale }: { cart: Cart; locale: Locale }) {
           <p className="m-0 text-small text-text-2">{t('issuesExcluded')}</p>
         )}
         <CheckoutButton className="hidden w-full desktop:inline-flex" />
-        <p id={NOTE_ID} className="m-0 text-small text-text-2">
-          {t('checkoutUnavailable')}
-        </p>
       </Card>
     </section>
   );
 }
 
-/** Mobile sticky bar above the tab bar: estimate + the same disabled CTA. */
+/** Mobile sticky bar above the tab bar: estimate + the same checkout CTA. */
 export function CartCheckoutBar({
   cart,
   locale,

@@ -1705,3 +1705,237 @@ model RiderDocument {
   @@index([mediaAssetId], map: "rider_documents_media_asset_idx")
   @@map("rider_documents")
 }
+
+/// Checkout quote (20261113080000). Immutable server-priced snapshot; SQL owns
+/// the address pairing, expiry and FK constraints (carts/users/addresses).
+model CheckoutQuote {
+  id              String   @id @db.Uuid
+  cartId          String   @map("cart_id") @db.Uuid
+  userId          String?  @map("user_id") @db.Uuid
+  cartVersion     Int      @map("cart_version")
+  addressId       String?  @map("address_id") @db.Uuid
+  addressVersion  Int?     @map("address_version")
+  inputHash       String   @map("input_hash")
+  pricingRevision String   @map("pricing_revision")
+  snapshot        Json     @db.JsonB
+  createdAt       DateTime @map("created_at") @db.Timestamptz(6)
+  expiresAt       DateTime @map("expires_at") @db.Timestamptz(6)
+
+  @@index([cartId, cartVersion, createdAt(sort: Desc), id(sort: Desc)], map: "checkout_quotes_cart_current_idx")
+  @@index([expiresAt], map: "checkout_quotes_expires_at_idx")
+  @@index([userId], map: "checkout_quotes_user_idx")
+  @@map("checkout_quotes")
+}
+
+/// Checkout attempt (20261113080000); one per customer idempotency key.
+model CheckoutAttempt {
+  id             String    @id @db.Uuid
+  userId         String    @map("user_id") @db.Uuid
+  cartId         String    @map("cart_id") @db.Uuid
+  quoteId        String    @map("quote_id") @db.Uuid
+  idempotencyKey String    @map("idempotency_key")
+  requestHash    String    @map("request_hash")
+  status         String
+  paymentMethod  String    @map("payment_method")
+  paymentRound   Int       @default(1) @map("payment_round")
+  failureCode    String?   @map("failure_code")
+  invalidatedAt  DateTime? @map("invalidated_at") @db.Timestamptz(6)
+  expiresAt      DateTime  @map("expires_at") @db.Timestamptz(6)
+  version        Int       @default(1)
+  createdAt      DateTime  @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime  @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([userId, idempotencyKey], map: "checkout_attempts_user_key_unique")
+  @@index([userId, createdAt(sort: Desc), id(sort: Desc)], map: "checkout_attempts_user_page_idx")
+  @@index([status, expiresAt], map: "checkout_attempts_status_expiry_idx")
+  @@index([quoteId], map: "checkout_attempts_quote_idx")
+  @@map("checkout_attempts")
+}
+
+/// Payments-owned per-shop allocation (20261113080000). COD (`cash`) only in
+/// this slice; cash pending -> collected on verified handover.
+model PaymentAttempt {
+  id                  String    @id @db.Uuid
+  checkoutAttemptId   String?   @map("checkout_attempt_id") @db.Uuid
+  quoteId             String?   @map("quote_id") @db.Uuid
+  paymentRound        Int?      @map("payment_round")
+  orderId             String?   @map("order_id") @db.Uuid
+  businessId          String    @map("business_id") @db.Uuid
+  initiatedBy         String    @map("initiated_by") @db.Uuid
+  purpose             String
+  amountPaise         BigInt    @map("amount_paise")
+  currentPayablePaise BigInt    @map("current_payable_paise")
+  fundedPaise         BigInt    @default(0) @map("funded_paise")
+  returnedPaise       BigInt    @default(0) @map("returned_paise")
+  returnReservedPaise BigInt    @default(0) @map("return_reserved_paise")
+  method              String
+  status              String
+  idempotencyKey      String    @map("idempotency_key")
+  requestHash         String    @map("request_hash")
+  failureCode         String?   @map("failure_code")
+  closedAt            DateTime? @map("closed_at") @db.Timestamptz(6)
+  financialVersion    Int       @default(1) @map("financial_version")
+  version             Int       @default(1)
+  collectionKey       String?   @unique(map: "payment_attempts_collection_key_unique") @map("collection_key")
+  verifiedHandoverId  String?   @unique(map: "payment_attempts_handover_unique") @map("verified_handover_id") @db.Uuid
+  collectedBy         String?   @map("collected_by") @db.Uuid
+  collectedAt         DateTime? @map("collected_at") @db.Timestamptz(6)
+  createdAt           DateTime  @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime  @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([checkoutAttemptId, paymentRound, businessId], map: "payment_attempts_round_business_key")
+  @@unique([initiatedBy, idempotencyKey, businessId], map: "payment_attempts_initiator_key")
+  @@index([orderId, createdAt(sort: Desc), id(sort: Desc)], map: "payment_attempts_order_history_idx")
+  @@index([businessId], map: "payment_attempts_business_idx")
+  @@map("payment_attempts")
+}
+
+/// Per-shop order (20261113080000). SQL owns status/mode/amount invariants.
+model Order {
+  id                          String    @id @db.Uuid
+  orderNumber                 String    @unique(map: "orders_order_number_key") @map("order_number")
+  checkoutAttemptId           String    @map("checkout_attempt_id") @db.Uuid
+  customerUserId              String    @map("customer_user_id") @db.Uuid
+  businessId                  String    @map("business_id") @db.Uuid
+  cityId                      String    @map("city_id") @db.Uuid
+  areaId                      String    @map("area_id") @db.Uuid
+  mode                        String
+  deliveryMethod              String?   @map("delivery_method")
+  status                      String
+  paymentAttemptId            String    @unique(map: "orders_payment_attempt_key") @map("payment_attempt_id") @db.Uuid
+  orderedItemsSubtotalPaise   BigInt    @map("ordered_items_subtotal_paise")
+  orderedDiscountPaise        BigInt    @map("ordered_discount_paise")
+  orderedDeliveryFeePaise     BigInt    @map("ordered_delivery_fee_paise")
+  orderedPlatformFeePaise     BigInt    @map("ordered_platform_fee_paise")
+  orderedTotalPaise           BigInt    @map("ordered_total_paise")
+  fulfilledItemsSubtotalPaise BigInt    @map("fulfilled_items_subtotal_paise")
+  fulfilledDiscountPaise      BigInt    @map("fulfilled_discount_paise")
+  fulfilledDeliveryFeePaise   BigInt    @map("fulfilled_delivery_fee_paise")
+  fulfilledPlatformFeePaise   BigInt    @map("fulfilled_platform_fee_paise")
+  fulfilledTotalPaise         BigInt    @map("fulfilled_total_paise")
+  financialVersion            Int       @default(1) @map("financial_version")
+  version                     Int       @default(1)
+  businessSnapshot            Json      @map("business_snapshot") @db.JsonB
+  deliveryAddressSnapshot     Json?     @map("delivery_address_snapshot") @db.JsonB
+  readyAt                     DateTime? @map("ready_at") @db.Timestamptz(6)
+  fulfilledAt                 DateTime? @map("fulfilled_at") @db.Timestamptz(6)
+  cancelledAt                 DateTime? @map("cancelled_at") @db.Timestamptz(6)
+  placedAt                    DateTime  @map("placed_at") @db.Timestamptz(6)
+  createdAt                   DateTime  @map("created_at") @db.Timestamptz(6)
+  updatedAt                   DateTime  @map("updated_at") @db.Timestamptz(6)
+  items                       OrderItem[]
+  history                     OrderStatusHistory[]
+
+  @@unique([checkoutAttemptId, businessId], map: "orders_checkout_business_key")
+  @@index([customerUserId, placedAt(sort: Desc), id(sort: Desc)], map: "orders_customer_history_idx")
+  @@index([businessId, status, placedAt(sort: Desc), id(sort: Desc)], map: "orders_business_tab_idx")
+  @@index([cityId, areaId, status, placedAt, id], map: "orders_scope_queue_idx")
+  @@index([placedAt(sort: Desc), id(sort: Desc)], map: "orders_admin_page_idx")
+  @@index([areaId, cityId], map: "orders_area_city_idx")
+  @@map("orders")
+}
+
+/// Immutable purchase-time line snapshot (20261113080000).
+model OrderItem {
+  id                      String   @id @db.Uuid
+  orderId                 String   @map("order_id") @db.Uuid
+  productId               String?  @map("product_id") @db.Uuid
+  productVariantId        String?  @map("product_variant_id") @db.Uuid
+  productNameEn           String   @map("product_name_en")
+  productNameHi           String?  @map("product_name_hi")
+  variantLabel            String?  @map("variant_label")
+  orderedQuantity         Int      @map("ordered_quantity")
+  fulfilledQuantity       Int      @map("fulfilled_quantity")
+  unitPricePaise          BigInt   @map("unit_price_paise")
+  orderedDiscountPaise    BigInt   @map("ordered_discount_paise")
+  orderedLineTotalPaise   BigInt   @map("ordered_line_total_paise")
+  fulfilledDiscountPaise  BigInt   @map("fulfilled_discount_paise")
+  fulfilledLineTotalPaise BigInt   @map("fulfilled_line_total_paise")
+  availability            String   @default("ordered")
+  createdAt               DateTime @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime @map("updated_at") @db.Timestamptz(6)
+  order                   Order    @relation(fields: [orderId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "order_items_order_id_fkey")
+
+  @@index([orderId, id], map: "order_items_order_idx")
+  @@index([productId, orderId], map: "order_items_product_order_idx")
+  @@map("order_items")
+}
+
+/// Durable reservation per order line (20261113080000).
+model OrderStockAllocation {
+  orderItemId      String   @id @map("order_item_id") @db.Uuid
+  orderId          String   @map("order_id") @db.Uuid
+  reservationId    String   @map("reservation_id") @db.Uuid
+  productId        String   @map("product_id") @db.Uuid
+  variantId        String?  @map("variant_id") @db.Uuid
+  reservedQuantity Int      @map("reserved_quantity")
+  releasedQuantity Int      @default(0) @map("released_quantity")
+  disposition      String   @default("reserved")
+  version          Int      @default(1)
+  createdAt        DateTime @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime @map("updated_at") @db.Timestamptz(6)
+
+  @@index([reservationId, productId, orderItemId], map: "order_stock_allocations_reservation_idx")
+  @@index([orderId, disposition], map: "order_stock_allocations_order_idx")
+  @@index([productId], map: "order_stock_allocations_product_idx")
+  @@map("order_stock_allocations")
+}
+
+/// Idempotent stock reserve/release claim + result (20261113080000).
+model OrderStockOperation {
+  id            String   @id @db.Uuid
+  reservationId String   @map("reservation_id") @db.Uuid
+  kind          String
+  sourceKey     String   @unique(map: "order_stock_operations_source_key") @map("source_key")
+  payloadHash   String   @map("payload_hash")
+  lines         Json     @db.JsonB
+  result        Json     @db.JsonB
+  appliedAt     DateTime @map("applied_at") @db.Timestamptz(6)
+
+  @@index([reservationId, appliedAt, id], map: "order_stock_operations_replay_idx")
+  @@map("order_stock_operations")
+}
+
+/// Append-only order timeline (20261113080000).
+model OrderStatusHistory {
+  id          String   @id @db.Uuid
+  orderId     String   @map("order_id") @db.Uuid
+  fromStatus  String?  @map("from_status")
+  toStatus    String   @map("to_status")
+  eventKey    String   @map("event_key")
+  actorUserId String?  @map("actor_user_id") @db.Uuid
+  reasonKey   String?  @map("reason_key")
+  createdAt   DateTime @map("created_at") @db.Timestamptz(6)
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "order_status_history_order_id_fkey")
+
+  @@unique([orderId, eventKey], map: "order_status_history_event_key")
+  @@index([orderId, createdAt, id], map: "order_status_history_timeline_idx")
+  @@map("order_status_history")
+}
+
+/// Delivery-owned customer handover code generation (20261113080000): keyed
+/// HMAC + AES-GCM ciphertext only; plaintext is never stored.
+model DeliveryCode {
+  id                   String    @id @db.Uuid
+  orderId              String    @map("order_id") @db.Uuid
+  kind                 String
+  generation           Int
+  codeHash             Bytes     @map("code_hash")
+  codeCiphertext       Bytes?    @map("code_ciphertext")
+  hashKeyVersion       String    @map("hash_key_version")
+  encryptionKeyVersion String    @map("encryption_key_version")
+  attempts             Int       @default(0)
+  maxAttempts          Int       @default(5) @map("max_attempts")
+  issuedAt             DateTime  @map("issued_at") @db.Timestamptz(6)
+  expiresAt            DateTime  @map("expires_at") @db.Timestamptz(6)
+  reissueAvailableAt   DateTime  @map("reissue_available_at") @db.Timestamptz(6)
+  consumedAt           DateTime? @map("consumed_at") @db.Timestamptz(6)
+  invalidatedAt        DateTime? @map("invalidated_at") @db.Timestamptz(6)
+  lockedAt             DateTime? @map("locked_at") @db.Timestamptz(6)
+  consumedHandoverId   String?   @unique(map: "delivery_codes_consumed_handover_key") @map("consumed_handover_id") @db.Uuid
+  consumedBy           String?   @map("consumed_by") @db.Uuid
+
+  @@unique([orderId, kind, generation], map: "delivery_codes_generation_key")
+  @@index([expiresAt], map: "delivery_codes_expires_at_idx")
+  @@map("delivery_codes")
+}

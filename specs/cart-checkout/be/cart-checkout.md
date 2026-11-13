@@ -4,6 +4,15 @@ Features: F-CK-001, F-CK-002, F-CK-003, F-CK-004, F-CK-005, F-CK-006, F-CK-007, 
 
 Frontend counterpart: [FE cart-checkout](../fe/cart-checkout.md) · [Feature inventory](../../../docs/design-context/01-feature-inventory.md)
 
+## Implementation status
+
+2026-11-13 quote + COD placement slice (with the Orders MVP): **implemented; builds passed; migration `20261113080000_orders_checkout` applied locally; security review pending**.
+
+- Implemented: `checkout_quotes`, `checkout_attempts`, Payments `payment_attempts` (cash subset); `POST /cart/quote` (authenticated customer; per-shop groups with current offer-effective prices/shared stock, Businesses fulfilment settings, shop radius by straight-line distance to the address point, minimum on shop subtotal, fee = 0 pickup / business flat fee self / Geo slab `apna_town_rider`, platform fee = Settings `commission.platformFeePaise` or **0 when unconfigured** (local slice decision, Q-71), null unknown amounts, per-shop issues, 15-minute persisted quote); `POST /checkout/attempts` (Idempotency-Key; re-verifies own unexpired ready quote, cart/address versions and an identical recomputation under business locks, then attempt + per-shop cash allocations + `createPerShopOrders` + purchased-line clearing + `checkout.orders_created` in one UoW); `GET /checkout/attempts/{attemptId}`. Shared entry `@apnatown/shared/checkout`.
+- Decisions: `paymentMethod:'cash'` is COD / pay at pickup and requires the `payments_cod` flag; `upi|card|net_banking|wallet` return `CHECKOUT_PAYMENT_UNAVAILABLE` (no provider configured); a stale `cartVersion` at quote time is `CART_VERSION_CONFLICT`; a not-ready pinned quote is `ORDER_CHECKOUT_INVALID`; changed stock at placement is `PRODUCT_NOT_AVAILABLE`; guests can keep a cart but quoting/placement requires sign-in.
+- Deferred: coupons (`couponCode` → `CHECKOUT_COUPON_POLICY_UNAVAILABLE`), online payment rounds/retry/compensation/reconciliation, tax snapshots/invoice policy, quote/attempt expiry jobs, guest quotes, privacy export/erase.
+- Local demo seed: fills untouched seeded `business_settings` fulfilment from the sample `del` block and enables `payments_cod` only while it is the untouched migration default (sample `cfg.cod`).
+
 ## Responsibility
 
 Own customer carts, server-priced quotes and checkout orchestration. Group eligible product lines by business, validate address/mode/minimum/stock, and create one independent order per shop through the Orders contract. Address CRUD, delivery-fee policy, coupon records, payment records and order state remain owned by Users, Geo, Offers, Payments and Orders respectively.
