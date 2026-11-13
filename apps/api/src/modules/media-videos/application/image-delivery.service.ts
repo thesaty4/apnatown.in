@@ -8,7 +8,8 @@ import { IMAGE_PUBLICATION, LISTING_IMAGE_PUBLICATION, IMAGE_STORAGE, MEDIA_IMAG
 /** Stored asset purpose each public placement type may serve. */
 const PLACEMENT_PURPOSES: Readonly<Record<MediaPublicQuery['placementType'], StoredImagePurpose>> = Object.freeze({
   catalog_category: 'catalog_taxonomy', catalog_subcategory: 'catalog_taxonomy', product: 'product',
-  service: 'service', business: 'business_profile', gallery_photo: 'gallery', video: 'video_thumbnail',
+  service: 'service', business: 'business_profile', promotion: 'offer_banner',
+  gallery_photo: 'gallery', video: 'video_thumbnail',
 });
 
 @Injectable()

@@ -14,6 +14,8 @@ export class PrismaListingImagePublication implements ImagePublication {
     const client = this.db.client(tx);
     if (placement.placementType === 'gallery_photo' || placement.placementType === 'video')
       return this.requireMediaPlacement(tx, placement);
+    if (placement.placementType === 'promotion')
+      return this.requirePromotion(tx, placement);
     // Gallery surface: the listing image must also carry current Gallery consent.
     if (placement.surface === 'gallery' && placement.placementType !== 'business'
       && !(await this.galleryRow(tx, `${placement.placementType}_image`, placement)))
@@ -30,6 +32,15 @@ export class PrismaListingImagePublication implements ImagePublication {
       if (profile.length) return;
     }
     throw new DomainError('MEDIA_NOT_FOUND');
+  }
+
+  /** Hero/local banner backgrounds: only a live public placement may serve. */
+  private async requirePromotion(tx: TxContext, placement: ImagePlacement): Promise<void> {
+    const rows = await this.db.client(tx).$queryRaw<{ id: string }[]>`
+      SELECT id::text AS id FROM promotion_placements_public
+      WHERE id=${placement.placementId}::uuid AND banner_asset_id=${placement.assetId}::uuid
+      LIMIT 1`;
+    if (!rows.length) throw new DomainError('MEDIA_NOT_FOUND');
   }
 
   /** Gallery-only photos and video thumbnails are Media-owned placements. */

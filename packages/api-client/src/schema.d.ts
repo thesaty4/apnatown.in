@@ -2587,7 +2587,7 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** Follow a business from one of its currently public videos or update its notification bell */
+        /** Follow a business (optional public-video attribution) or update its notification bell */
         put: operations["engagementFollowBusiness"];
         post?: never;
         /** Unfollow a business and clear its notification bell */
@@ -3223,6 +3223,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/offers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Public active offers by business and featured flag
+         * @description Approved, in-window offers of approved public businesses, newest expiry first, keyset page ≤50. Expired/ended/paused drafts are never returned.
+         */
+        get: operations["listPublicOffers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/orders": {
         parameters: {
             query?: never;
@@ -3352,6 +3372,26 @@ export interface paths {
         };
         /** Public product detail for /product/[slug]; checkout is unavailable */
         get: operations["getPublicProduct"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/promotions/placements": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Live homepage banners and promotion placements
+         * @description Active, in-window placements in the caller-provided city/area scope (platform-only without context). Internal destinations are resolved server-side; unavailable targets are omitted. Any location context makes the response private/no-store.
+         */
+        get: operations["listPublicPlacements"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7448,7 +7488,7 @@ export interface components {
         FollowUpdateDto: {
             bellOn?: boolean;
             /** Format: uuid */
-            sourceVideoId: string;
+            sourceVideoId?: string;
         };
         GeoAreaPageDto: {
             items: {
@@ -7877,6 +7917,40 @@ export interface components {
             /** Format: date-time */
             validTo: string;
         };
+        OfferPublicPageDto: {
+            items: {
+                business: {
+                    /** Format: uuid */
+                    id: string;
+                    /** @enum {string} */
+                    kind: "shop" | "provider";
+                    nameEn: string;
+                    nameHi: string | null;
+                    slug: string;
+                };
+                destination: string;
+                discount: {
+                    flatPaise: number | null;
+                    percent: number | null;
+                    /** @enum {string} */
+                    type: "percent" | "flat" | "free_delivery";
+                };
+                featured: boolean;
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                state: "active" | "expired" | "out_of_stock" | "paused" | "ended";
+                termsEn: string | null;
+                termsHi: string | null;
+                titleEn: string;
+                titleHi: string | null;
+                /** Format: date-time */
+                validFrom: string;
+                /** Format: date-time */
+                validTo: string;
+            }[];
+            nextCursor: string | null;
+        };
         OfferStatusCommandDto: {
             expectedVersion: number;
             /** @enum {string} */
@@ -8279,6 +8353,37 @@ export interface components {
             expectedOrderVersion: number;
             /** Format: uuid */
             orderId: string;
+        };
+        PlacementPublicPageDto: {
+            items: {
+                banner: {
+                    bytes: number;
+                    height: number;
+                    /** @enum {string} */
+                    mimeType: "image/webp";
+                    /** @description Root-relative same-origin Media gateway path; provider URLs are invalid. */
+                    path: string;
+                    width: number;
+                } | null;
+                destination: {
+                    href: string;
+                    /** @enum {string} */
+                    kind: "offers" | "explore" | "business" | "product" | "service" | "category";
+                    /** Format: uuid */
+                    targetId: string | null;
+                };
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                kind: "homepage_banner" | "featured_business";
+                position: number;
+                subtitleEn: string | null;
+                subtitleHi: string | null;
+                /** @enum {string} */
+                surface: "hero_banner" | "featured_business" | "local_promotion";
+                titleEn: string | null;
+                titleHi: string | null;
+            }[];
         };
         PlatformHealthDto: {
             /** Format: date-time */
@@ -43254,6 +43359,79 @@ export interface operations {
             };
         };
     };
+    listPublicOffers: {
+        parameters: {
+            query?: {
+                businessId?: string;
+                cursor?: string;
+                featured?: string;
+                limit?: number;
+            };
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OfferPublicPageDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE or COMMON_UNAVAILABLE */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
     ordersList: {
         parameters: {
             query?: {
@@ -44238,6 +44416,79 @@ export interface operations {
                 };
             };
             /** @description MAINTENANCE (errors.system.maintenance) while maintenance mode is on and this route is not admitted */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    listPublicPlacements: {
+        parameters: {
+            query?: {
+                areaId?: string;
+                cityId?: string;
+                kind?: string;
+                limit?: number;
+            };
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlacementPublicPageDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE or COMMON_UNAVAILABLE */
             503: {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */

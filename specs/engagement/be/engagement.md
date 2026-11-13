@@ -44,6 +44,15 @@ All customer writes require login; guest calls return `AUTH_REQUIRED` so the FE 
 | GET | `/admin/comments?status=pending\|published\|removed&cursor=&limit=` | Admin **`reviews:view`** + exact video's business scope; super_admin | → page `{id,videoId,businessId,authorLabel,text,status,reason?,version,allowedActions}` + scoped counts | `ADMIN_SCOPE_FORBIDDEN` | Yes | F-EG-005, S-ADMN-11 |
 | POST | `/admin/comments/{id}/decision` | Admin **`reviews:edit`** + same scope; audited | `{action:'publish'\|'remove',reason?,expectedVersion}` → comment and counters; require reason for removal | `COMMENT_INVALID_TRANSITION`, `COMMENT_VERSION_CONFLICT` | Required key | F-EG-005, S-ADMN-11 |
 
+### Implemented slice: profile follow (2026-11-14)
+
+`PUT /engagement/follows/{businessId}` accepts an optional `sourceVideoId`.
+Profile/card buttons send `{bellOn}` only (no video attribution); an explicit
+source is still validated against a currently public video of the same
+business. `GET /engagement/me/state?businessIds=` supplies the follow/bell
+state, so the shop/provider profile can reuse the one relationship and Saved
+"Following" list without a second bookmark record.
+
 ### Implemented slice: owner followers + announcements (2026-11-13)
 
 - `GET /businesses/me/followers` (`businessMeFollowers`): active followers, first-ever follows per Monday-based IST week (`follows.created_at` survives refollow), `approvedVideos` (approved, not owner-deleted `videos`, read-only), latest three announcements. `follower_daily_counts` is not built yet, so past weekly closing totals are `null` with `unavailable: ['weekly_totals_history']` (current week total = followers); never reconstructed.

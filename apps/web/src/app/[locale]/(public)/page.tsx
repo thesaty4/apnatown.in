@@ -7,6 +7,7 @@ import { HomeCategoryTiles } from '../../../features/catalog/HomeCategoryTiles';
 import { HomeSections } from '../../../features/catalog/HomeSections';
 import { HomeBookmarks } from '../../../features/engagement/HomeBookmarks';
 import { readCategories } from '../../../features/catalog/server';
+import { HomeHero } from '../../../features/offers/public/HomeHero';
 import { HomeListings } from '../../../features/search/home/HomeListings';
 import { NearbyShops } from '../../../features/search/home/NearbyShops';
 import { readSearchHome } from '../../../features/search/server';
@@ -33,7 +34,8 @@ export default async function HomePage() {
     <>
       <h1 className="sr-only">{t('welcome')}</h1>
       <LocationBar />
-      <div className="grid min-w-0 gap-stack-gap">
+      <HomeHero locale={locale} />
+      <div className="mt-stack-gap grid min-w-0 gap-stack-gap">
         <HomeCategoryTiles locale={locale} />
         {home ? (
           <>

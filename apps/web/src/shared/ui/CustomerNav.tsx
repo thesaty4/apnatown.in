@@ -17,9 +17,7 @@ function useCustomerPath() {
 /** Desktop customer menu (prototype `.deskmenu`); only live routes. */
 export function CustomerMenu() {
   const t = useTranslations('common.navigation');
-  const orders = useTranslations('orders.nav');
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
-  const { state } = useSession();
   const { path, customer } = useCustomerPath();
   if (!customer) return null;
   const items = [
@@ -31,22 +29,16 @@ export function CustomerMenu() {
       path.startsWith('/explore'),
     ],
     [
-      'videos',
-      t('videos'),
-      publicHref('/videos', locale),
-      path.startsWith('/videos'),
-    ],
-    [
       'services',
       t('services'),
       publicHref('/services', locale),
       path.startsWith('/services'),
     ],
     [
-      'orders',
-      orders('label'),
-      ordersHref(state.kind === 'ready', locale),
-      isOrdersPath(path),
+      'offers',
+      t('offers'),
+      publicHref('/offers', locale),
+      path.startsWith('/offers'),
     ],
   ] as const;
   return (
@@ -65,12 +57,6 @@ export function CustomerMenu() {
   );
 }
 
-/** Orders (S-CUST-13): guests go through login and return to the list. */
-function ordersHref(signedIn: boolean, locale: 'en' | 'hi') {
-  return signedIn ? '/orders' : loginHref(locale, '/orders');
-}
-const isOrdersPath = (path: string) => /^\/orders(?:\/|$)/.test(path);
-
 type Tab = [NavIconName, string, string, boolean, ReactNode?];
 
 /** Mobile bottom tabs (prototype `.bottom.cust`), hidden from 900px and on
@@ -83,7 +69,6 @@ export function CustomerTabBar({
 }) {
   const t = useTranslations('common.navigation');
   const cart = useTranslations('cart.nav');
-  const orders = useTranslations('orders.nav');
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
   const { state } = useSession();
   const { path, customer } = useCustomerPath();
@@ -97,10 +82,10 @@ export function CustomerTabBar({
       path.startsWith('/explore'),
     ],
     [
-      'play',
-      t('videos'),
-      publicHref('/videos', locale),
-      path.startsWith('/videos'),
+      'tag',
+      t('offers'),
+      publicHref('/offers', locale),
+      path.startsWith('/offers'),
     ],
     ...(cartCount === undefined
       ? []
@@ -113,12 +98,6 @@ export function CustomerTabBar({
             cartCount,
           ] satisfies Tab,
         ]),
-    [
-      'box',
-      orders('label'),
-      ordersHref(state.kind === 'ready', locale),
-      isOrdersPath(path),
-    ],
     [
       'user',
       t('account'),

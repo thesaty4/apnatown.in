@@ -99,6 +99,7 @@ export const MediaPublicQuerySchema = z.strictObject({
     'product',
     'service',
     'business',
+    'promotion',
     'gallery_photo',
     'video',
   ]),

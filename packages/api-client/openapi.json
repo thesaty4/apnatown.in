@@ -2850,7 +2850,7 @@
             "sessionCookie": []
           }
         ],
-        "summary": "Follow a business from one of its currently public videos or update its notification bell",
+        "summary": "Follow a business (optional public-video attribution) or update its notification bell",
         "tags": [
           "engagement"
         ]
@@ -71668,6 +71668,353 @@
         ]
       }
     },
+    "/offers": {
+      "get": {
+        "description": "Approved, in-window offers of approved public businesses, newest expiry first, keyset page ≤50. Expired/ended/paused drafts are never returned.",
+        "operationId": "listPublicOffers",
+        "parameters": [
+          {
+            "required": false,
+            "name": "businessId",
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "featured",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 2048,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferPublicPageDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "429": {
+            "description": "COMMON_RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds until this rate-limit window resets"
+              }
+            }
+          },
+          "503": {
+            "description": "MAINTENANCE or COMMON_UNAVAILABLE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds before retrying; sent with MAINTENANCE"
+              }
+            }
+          }
+        },
+        "summary": "Public active offers by business and featured flag",
+        "tags": [
+          "offers"
+        ]
+      }
+    },
+    "/promotions/placements": {
+      "get": {
+        "description": "Active, in-window placements in the caller-provided city/area scope (platform-only without context). Internal destinations are resolved server-side; unavailable targets are omitted. Any location context makes the response private/no-store.",
+        "operationId": "listPublicPlacements",
+        "parameters": [
+          {
+            "required": false,
+            "name": "kind",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "cityId",
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "areaId",
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$",
+              "type": "string"
+            }
+          },
+          {
+            "required": false,
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 20,
+              "default": 5,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "X-Correlation-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlacementPublicPageDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              }
+            }
+          },
+          "429": {
+            "description": "COMMON_RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds until this rate-limit window resets"
+              }
+            }
+          },
+          "503": {
+            "description": "MAINTENANCE or COMMON_UNAVAILABLE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            },
+            "headers": {
+              "X-Correlation-ID": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Validated or generated request ID"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Auth, own-account and admin responses are private, no-store."
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "description": "Seconds before retrying; sent with MAINTENANCE"
+              }
+            }
+          }
+        },
+        "summary": "Live homepage banners and promotion placements",
+        "tags": [
+          "offers"
+        ]
+      }
+    },
     "/payments/me/earnings": {
       "get": {
         "description": "Sales = fulfilled (delivered/picked up) orders with a paid/collected payment, at fulfilled items − discount, by IST month. Commission is an estimate at the current plan (else platform default) rate; null when no policy is configured. Payout schedule and invoices are unavailable (never fabricated). Owner of an APPROVED vendor/provider business with its live seller role, resolved server-side (X-Business-Kind selects between the caller's own businesses). Read-only. private, no-store.",
@@ -81404,9 +81751,6 @@
             "type": "boolean"
           }
         },
-        "required": [
-          "sourceVideoId"
-        ],
         "additionalProperties": false
       },
       "FollowResultDto": {
@@ -122840,6 +123184,313 @@
         "required": [
           "status",
           "expectedVersion"
+        ],
+        "additionalProperties": false
+      },
+      "OfferPublicPageDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+                },
+                "business": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "shop",
+                        "provider"
+                      ]
+                    },
+                    "slug": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80
+                    },
+                    "nameEn": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "nameHi": {
+                      "type": "string",
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "kind",
+                    "slug",
+                    "nameEn",
+                    "nameHi"
+                  ],
+                  "additionalProperties": false
+                },
+                "titleEn": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "titleHi": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "termsEn": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "termsHi": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "discount": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "percent",
+                        "flat",
+                        "free_delivery"
+                      ]
+                    },
+                    "percent": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 100,
+                      "nullable": true
+                    },
+                    "flatPaise": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "percent",
+                    "flatPaise"
+                  ],
+                  "additionalProperties": false
+                },
+                "validFrom": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                },
+                "validTo": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "active",
+                    "expired",
+                    "out_of_stock",
+                    "paused",
+                    "ended"
+                  ]
+                },
+                "featured": {
+                  "type": "boolean"
+                },
+                "destination": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2048
+                }
+              },
+              "required": [
+                "id",
+                "business",
+                "titleEn",
+                "titleHi",
+                "termsEn",
+                "termsHi",
+                "discount",
+                "validFrom",
+                "validTo",
+                "state",
+                "featured",
+                "destination"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "nullable": true
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "additionalProperties": false
+      },
+      "PlacementPublicPageDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "homepage_banner",
+                    "featured_business"
+                  ]
+                },
+                "surface": {
+                  "type": "string",
+                  "enum": [
+                    "hero_banner",
+                    "featured_business",
+                    "local_promotion"
+                  ]
+                },
+                "titleEn": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "titleHi": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "subtitleEn": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "subtitleHi": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "banner": {
+                  "type": "object",
+                  "properties": {
+                    "width": {
+                      "type": "integer",
+                      "exclusiveMinimum": true,
+                      "maximum": 9007199254740991,
+                      "minimum": 0
+                    },
+                    "height": {
+                      "type": "integer",
+                      "exclusiveMinimum": true,
+                      "maximum": 9007199254740991,
+                      "minimum": 0
+                    },
+                    "mimeType": {
+                      "type": "string",
+                      "enum": [
+                        "image/webp"
+                      ]
+                    },
+                    "bytes": {
+                      "type": "integer",
+                      "exclusiveMinimum": true,
+                      "maximum": 358400,
+                      "minimum": 0
+                    },
+                    "path": {
+                      "type": "string",
+                      "minLength": 2,
+                      "maxLength": 2048,
+                      "pattern": "^\\/(?!\\/)(?!.*%(?![A-Fa-f0-9]{2}))[A-Za-z0-9._~!$&'()*+,;=:@%/-]+(?:\\?[A-Za-z0-9._~%=&-]+)?$",
+                      "description": "Root-relative same-origin Media gateway path; provider URLs are invalid."
+                    }
+                  },
+                  "required": [
+                    "width",
+                    "height",
+                    "mimeType",
+                    "bytes",
+                    "path"
+                  ],
+                  "additionalProperties": false,
+                  "nullable": true
+                },
+                "destination": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "offers",
+                        "explore",
+                        "business",
+                        "product",
+                        "service",
+                        "category"
+                      ]
+                    },
+                    "targetId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$",
+                      "nullable": true
+                    },
+                    "href": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2048
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "targetId",
+                    "href"
+                  ],
+                  "additionalProperties": false
+                },
+                "position": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "id",
+                "kind",
+                "surface",
+                "titleEn",
+                "titleHi",
+                "subtitleEn",
+                "subtitleHi",
+                "banner",
+                "destination",
+                "position"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "items"
         ],
         "additionalProperties": false
       },

@@ -27,6 +27,12 @@ Discovery endpoints are public reads; the separate admin preview requires permis
 
 Implementation status: the first `/search/home` slice accepts only `locale` and returns `{categorySections}` (Catalog dedicated and curated sections in one array ordered by `position`), cached publicly for 60 seconds. Other sections are added as their owner modules land; omitted sections render nothing on Home.
 
+Home hero banners (2026-11-14) currently read Offers' spec'd public
+`GET /promotions/placements?kind=homepage_banner` directly from the Home
+server component; they are not yet composed into `/search/home`. When Offers'
+`homePlacements` read port is added, `SearchHomeService` should compose the
+same `banners` section and Home should stop making the second read.
+
 Implementation status (2026-11-12, full EX1–EX12 backend/shared read contract): **implemented; builds/generated contracts and independent security re-review passed; runtime checks deferred**. The businesses-only response is replaced by `ExploreResponseSchema`:
 `{tab,normalizedFilters,counts:{products,shops,services},page:{items,nextCursor},facets:{categories,subcategories,brands,priceRange},mapPins,relatedCategories}`.
 Products reads real product rows; Shops reads shop businesses; Services counts individual service rows of shops/providers. No tab is hardcoded empty and no signal is invented when a source has no rows. SearchHome is unchanged.

@@ -28,7 +28,7 @@ export class VideoFollowsController {
   @ApiParam({ name: 'businessId', schema: { type: 'string', format: 'uuid' } })
   @ApiOperation({
     operationId: 'engagementFollowBusiness',
-    summary: 'Follow a business from one of its currently public videos or update its notification bell',
+    summary: 'Follow a business (optional public-video attribution) or update its notification bell',
   })
   @ApiOkResponse({ type: FollowResultDto })
   async follow(

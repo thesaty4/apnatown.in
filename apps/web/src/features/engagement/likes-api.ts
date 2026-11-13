@@ -33,7 +33,7 @@ export async function getEngagementState(
 export async function setBusinessFollow(
   api: BrowserApi,
   businessId: string,
-  sourceVideoId: string,
+  sourceVideoId: string | null,
   input: { following: boolean; bellOn: boolean },
   assertCurrent: () => void,
 ) {
@@ -49,7 +49,10 @@ export async function setBusinessFollow(
   };
   const result = await api.PUT('/engagement/follows/{businessId}', {
     ...options,
-    body: { sourceVideoId, bellOn: input.bellOn },
+    body: {
+      ...(sourceVideoId !== null && { sourceVideoId }),
+      bellOn: input.bellOn,
+    },
   });
   return unwrap(result, FollowResultSchema);
 }

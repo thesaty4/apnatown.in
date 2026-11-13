@@ -3007,6 +3007,7 @@
       "home": "होम",
       "logo": "अपना टाउन.in होम",
       "main": "मुख्य",
+      "offers": "ऑफ़र",
       "services": "सेवाएँ",
       "skipToContent": "मुख्य सामग्री पर जाएँ",
       "videos": "वीडियो"
@@ -3151,9 +3152,11 @@
       "following": "फ़ॉलो कर रहे हैं",
       "loading": "फ़ॉलो की स्थिति लोड हो रही है",
       "loginPrompt": "इस कारोबार को फ़ॉलो करने के लिए लॉग इन करें। लॉग इन के बाद आप इसी वीडियो पर लौटेंगे।",
+      "profileLoginPrompt": "इस कारोबार को फ़ॉलो करने और Following में उसके अपडेट देखने के लिए लॉग इन करें।",
       "rateLimited": "बहुत अधिक बदलाव किए गए हैं। थोड़ी देर रुककर फिर कोशिश करें।",
       "restrictedMessage": "केवल ग्राहक खाते कारोबार को फ़ॉलो कर सकते हैं।",
       "restrictedTitle": "ग्राहक की अनुमति ज़रूरी है",
+      "retry": "फिर कोशिश करें",
       "unavailableMessage": "यह कारोबार अब फ़ॉलो करने के लिए उपलब्ध नहीं है।",
       "unavailableTitle": "कारोबार उपलब्ध नहीं है",
       "unfollow": "अनफ़ॉलो करें",
@@ -3502,6 +3505,23 @@
       "withinKm": "{km, number} किमी के अंदर",
       "zoomIn": "ज़ूम इन",
       "zoomOut": "ज़ूम आउट"
+    },
+    "service": {
+      "breadcrumb": "ब्रेडक्रम्ब",
+      "details": "विवरण",
+      "distance": "{km} दूर",
+      "excluded": "शामिल नहीं",
+      "experience": "{years, number} वर्ष का अनुभव",
+      "home": "होम",
+      "included": "क्या शामिल है",
+      "media": "सेवा मीडिया",
+      "offeredBy": "सेवा देने वाला",
+      "related": "मिलती-जुलती सेवाएँ",
+      "reviewsCount": "{count, number} समीक्षाएँ",
+      "serviceArea": "सेवा क्षेत्र: {area}",
+      "services": "सेवाएँ",
+      "share": "सेवा साझा करें",
+      "viewAll": "सभी देखें"
     }
   },
   "gallery": {
@@ -4030,6 +4050,16 @@
     }
   },
   "offers": {
+    "hero": {
+      "browse": "देखें",
+      "explore": "खोजें",
+      "goTo": "बैनर {number, number} पर जाएँ",
+      "label": "प्रचार",
+      "viewBusiness": "कारोबार देखें",
+      "viewOffers": "ऑफ़र देखें",
+      "viewProduct": "उत्पाद देखें",
+      "viewService": "सेवा देखें"
+    },
     "owner": {
       "amountInvalid": "₹0 से ज़्यादा राशि लिखें।",
       "amountLabel": "छूट राशि (₹)",
@@ -4086,6 +4116,28 @@
       "validFrom": "कब से मान्य",
       "validity": "{from} – {to}",
       "validTo": "कब तक मान्य"
+    },
+    "public": {
+      "emptyMessage": "आपके इलाके के कारोबारों ने अभी कोई ऑफ़र नहीं निकाला है। जल्द फिर देखें।",
+      "emptyTitle": "अभी कोई ऑफ़र नहीं",
+      "errorMessage": "कनेक्शन जाँचें और फिर कोशिश करें।",
+      "errorTitle": "ऑफ़र लोड नहीं हो सके",
+      "explore": "कारोबार खोजें",
+      "featured": "विशेष",
+      "flatOff": "{amount} की छूट",
+      "freeDelivery": "मुफ़्त डिलीवरी",
+      "intro": "आस-पास के स्वीकृत कारोबारों की चालू छूटें।",
+      "loading": "ऑफ़र लोड हो रहे हैं",
+      "loadMore": "और देखें",
+      "loadMoreError": "और ऑफ़र लोड नहीं हो सके।",
+      "outOfStock": "स्टॉक में नहीं",
+      "percentOff": "{value, number}% छूट",
+      "provider": "सेवा प्रदाता",
+      "retry": "फिर कोशिश करें",
+      "shop": "दुकान",
+      "title": "ऑफ़र और छूटें",
+      "validUntil": "{date} तक मान्य",
+      "viewBusiness": "कारोबार देखें"
     }
   },
   "orders": {
@@ -5553,6 +5605,7 @@
       "shownOf": "{count, number} में से {shown, number} नतीजे दिख रहे हैं",
       "showResults": "{count, number} नतीजे दिखाएँ",
       "sort": "क्रमबद्ध",
+      "submit": "खोजें",
       "suggestionCount": "{count, plural, one {# सुझाव} other {# सुझाव}} उपलब्ध हैं। चुनने के लिए ऊपर-नीचे वाली तीर कुंजियाँ दबाएँ।",
       "suggestions": "सुझाव",
       "suggestionsLoading": "सुझाव लोड हो रहे हैं",

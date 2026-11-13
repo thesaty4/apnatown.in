@@ -262,3 +262,72 @@ function withHeart(
     heartedTargets.push({ targetType: 'video', targetId: videoId });
   return { ...state, heartedTargets };
 }
+
+/**
+ * Profile-level follow (S-CUST-06/07). The relationship is the same one Saved
+ * lists as "Following"; no video attribution is sent from a profile.
+ */
+export function useBusinessFollow(businessId: string) {
+  const { api, lifecycle, state, epoch } = useSession();
+  const client = useQueryClient();
+  const scope = state.kind === 'ready' ? accountScope(state.data, epoch) : null;
+  const rootKey = queryKeys.engagementStateRoot(scope, epoch);
+  const queryKey = queryKeys.engagementState(scope, epoch, [], [businessId]);
+  const query = useQuery({
+    ...privateQueryOptions(queryKey, epoch, lifecycle, (signal) =>
+      getEngagementState(api, [], [businessId], signal),
+    ),
+    enabled:
+      state.kind === 'ready' ||
+      (state.kind === 'error' && state.code === 'SESSION_EXPIRED'),
+    staleTime: 30_000,
+    retry: false,
+  });
+  const mutation = usePrivateMutation(
+    lifecycle,
+    async (
+      input: { following: boolean; bellOn: boolean },
+      assertCurrent,
+    ): Promise<FollowResult> => {
+      const result = await setBusinessFollow(
+        api,
+        businessId,
+        null,
+        input,
+        assertCurrent,
+      );
+      assertCurrent();
+      await client.cancelQueries({ queryKey, exact: true });
+      assertCurrent();
+      client.setQueryData<EngagementState>(queryKey, (current) =>
+        current
+          ? {
+              ...current,
+              businessStates: current.businessStates.map((item) =>
+                item.businessId === businessId
+                  ? {
+                      ...item,
+                      following: result.following,
+                      bellOn: result.bellOn,
+                    }
+                  : item,
+              ),
+            }
+          : current,
+      );
+      await client.invalidateQueries({ queryKey: rootKey });
+      if (scope)
+        await client.invalidateQueries({
+          queryKey: queryKeys.savedRoot(scope),
+        });
+      return result;
+    },
+  );
+  return {
+    query,
+    mutation,
+    business: query.data?.businessStates.find(
+      (item) => item.businessId === businessId,
+    ),
+  };
+}

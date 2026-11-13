@@ -90,7 +90,8 @@ export const EngagementStateSchema = z.strictObject({
 export type EngagementState = z.infer<typeof EngagementStateSchema>;
 
 export const FollowUpdateSchema = z.strictObject({
-  sourceVideoId: IdSchema,
+  /** Optional first-follow attribution; profile/card buttons omit it. */
+  sourceVideoId: IdSchema.optional(),
   bellOn: z.boolean().optional(),
 });
 export type FollowUpdate = z.infer<typeof FollowUpdateSchema>;

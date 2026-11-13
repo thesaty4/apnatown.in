@@ -52,7 +52,13 @@ export interface ImageStorage {
 export interface ImageByteRange { readonly start: number; readonly end: number }
 /** Persisted `media_assets.purpose`; logo/cover share `business_profile`. */
 export type StoredImagePurpose =
-  'catalog_taxonomy' | 'product' | 'service' | 'business_profile' | 'gallery' | 'video_thumbnail';
+  | 'catalog_taxonomy'
+  | 'product'
+  | 'service'
+  | 'business_profile'
+  | 'offer_banner'
+  | 'gallery'
+  | 'video_thumbnail';
 export type ProfileImageSubject = 'logo' | 'cover';
 export interface StoredPurpose {
   purpose: StoredImagePurpose;

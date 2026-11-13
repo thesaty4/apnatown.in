@@ -3007,6 +3007,7 @@
       "home": "Home",
       "logo": "ApnaTown.in home",
       "main": "Main",
+      "offers": "Offers",
       "services": "Services",
       "skipToContent": "Skip to content",
       "videos": "Videos"
@@ -3151,9 +3152,11 @@
       "following": "Following",
       "loading": "Loading follow status",
       "loginPrompt": "Log in to follow this business. You will return to this video after login.",
+      "profileLoginPrompt": "Log in to follow this business and see its updates in Following.",
       "rateLimited": "Too many changes. Wait a moment, then try again.",
       "restrictedMessage": "Only customer accounts can follow businesses.",
       "restrictedTitle": "Customer access required",
+      "retry": "Retry",
       "unavailableMessage": "This business is no longer available to follow.",
       "unavailableTitle": "Business unavailable",
       "unfollow": "Unfollow",
@@ -3502,6 +3505,23 @@
       "withinKm": "Within {km, number} km",
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out"
+    },
+    "service": {
+      "breadcrumb": "Breadcrumb",
+      "details": "Details",
+      "distance": "{km} away",
+      "excluded": "Not included",
+      "experience": "{years, number} years of experience",
+      "home": "Home",
+      "included": "What’s included",
+      "media": "Service media",
+      "offeredBy": "Offered by",
+      "related": "Related services",
+      "reviewsCount": "{count, number} reviews",
+      "serviceArea": "Service area: {area}",
+      "services": "Services",
+      "share": "Share service",
+      "viewAll": "View all"
     }
   },
   "gallery": {
@@ -4030,6 +4050,16 @@
     }
   },
   "offers": {
+    "hero": {
+      "browse": "Browse",
+      "explore": "Explore",
+      "goTo": "Go to banner {number, number}",
+      "label": "Promotions",
+      "viewBusiness": "View business",
+      "viewOffers": "View offers",
+      "viewProduct": "View product",
+      "viewService": "View service"
+    },
     "owner": {
       "amountInvalid": "Enter an amount greater than ₹0.",
       "amountLabel": "Discount amount (₹)",
@@ -4086,6 +4116,28 @@
       "validFrom": "Valid from",
       "validity": "{from} – {to}",
       "validTo": "Valid until"
+    },
+    "public": {
+      "emptyMessage": "Businesses in your area haven’t published an offer yet. Check back soon.",
+      "emptyTitle": "No offers right now",
+      "errorMessage": "Check your connection and try again.",
+      "errorTitle": "Offers couldn’t load",
+      "explore": "Explore businesses",
+      "featured": "Featured",
+      "flatOff": "{amount} off",
+      "freeDelivery": "Free delivery",
+      "intro": "Live discounts from approved businesses near you.",
+      "loading": "Loading offers",
+      "loadMore": "Load more",
+      "loadMoreError": "More offers couldn’t load.",
+      "outOfStock": "Out of stock",
+      "percentOff": "{value, number}% off",
+      "provider": "Service provider",
+      "retry": "Try again",
+      "shop": "Shop",
+      "title": "Offers and deals",
+      "validUntil": "Valid until {date}",
+      "viewBusiness": "View business"
     }
   },
   "orders": {
@@ -5553,6 +5605,7 @@
       "shownOf": "Showing {shown, number} of {count, number} results",
       "showResults": "Show {count, number} results",
       "sort": "Sort",
+      "submit": "Search",
       "suggestionCount": "{count, plural, one {# suggestion} other {# suggestions}} available. Use the up and down arrow keys to choose.",
       "suggestions": "Suggestions",
       "suggestionsLoading": "Loading suggestions",

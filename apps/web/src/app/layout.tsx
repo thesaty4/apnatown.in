@@ -16,6 +16,8 @@ import { Preferences } from '../shared/ui/Preferences';
 import { LanguageSwitch } from '../shared/ui/LanguageSwitch';
 import { BrandLogo } from '../shared/ui/BrandLogo';
 import { CustomerMenu, CustomerTabBar } from '../shared/ui/CustomerNav';
+import { HeaderSearch } from '../shared/ui/HeaderSearch';
+import { HeaderSearchLink } from '../shared/ui/HeaderSearchLink';
 import { Providers } from './providers';
 import en from '../shared/i18n/messages/en.json';
 import hi from '../shared/i18n/messages/hi.json';
@@ -111,6 +113,8 @@ export default async function RootLayout({
               </Link>
               <CustomerMenu />
               <span className="min-w-0 flex-1" />
+              <HeaderSearch />
+              <HeaderSearchLink />
               <LanguageSwitch short />
               {getWebEnvironment().DEMO_LOGIN_ENABLED && <DemoSwitcher />}
               <AccountNavigation cartCount={<CartCount />} />

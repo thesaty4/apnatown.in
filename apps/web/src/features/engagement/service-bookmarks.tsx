@@ -10,12 +10,13 @@ import {
 import { Button } from '@apnatown/ui/primitives/Button';
 import { NavIcon } from '../../shared/ui/NavIcon';
 import { useSession } from '../../shared/auth/SessionProvider';
-import { AccessState } from '../../shared/auth/AccessState';
 import { accountScope, queryKeys } from '../../shared/api/query-keys';
 import { privateQueryOptions } from '../../shared/api/private-query';
 import { usePrivateMutation } from '../../shared/api/use-private-mutation';
 import { failureCode, unwrap } from '../../shared/api/result';
 import type { BrowserApi } from '../../shared/api/browser';
+import { useCustomerAccess } from './engagement-actions';
+import { CompactLoginPrompt } from './CompactLoginPrompt';
 
 export async function setServiceBookmark(
   api: BrowserApi,
@@ -107,9 +108,10 @@ export function ServiceBookmarkButton({
   const cache = useQueryClient();
   const scope = state.kind === 'ready' ? accountScope(state.data, epoch) : null;
   const [loginPrompt, setLoginPrompt] = useState(false);
-  const customer =
-    state.kind === 'ready' && state.data.roles.includes('customer');
-  const forbidden = state.kind === 'ready' && !customer;
+  const access = useCustomerAccess();
+  const customer = access === 'customer';
+  const forbidden = access === 'forbidden';
+  const unavailable = access === 'unavailable';
   const mutation = usePrivateMutation(
     lifecycle,
     async (saved: boolean, assertCurrent) => {
@@ -142,9 +144,9 @@ export function ServiceBookmarkButton({
         aria-pressed={bookmark.bookmarked}
         aria-label={t(bookmark.bookmarked ? 'saved' : 'save')}
         loading={
-          mutation.isPending || bookmark.pending || state.kind === 'loading'
+          mutation.isPending || bookmark.pending || access === 'pending'
         }
-        disabled={forbidden}
+        disabled={forbidden || unavailable || access === 'pending'}
         onClick={() => {
           if (!customer) setLoginPrompt(true);
           else if (bookmark.failed) bookmark.retry();
@@ -179,7 +181,12 @@ export function ServiceBookmarkButton({
         </p>
       )}
       {loginPrompt && !customer && !forbidden && (
-        <AccessState guest guestMessage={t('loginPrompt')} />
+        <CompactLoginPrompt message={t('loginPrompt')} />
+      )}
+      {unavailable && (
+        <p role="alert" className="m-0 text-small text-error">
+          {t('failed')}
+        </p>
       )}
     </div>
   );

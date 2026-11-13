@@ -4,7 +4,6 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import { NavIcon } from '../ui/NavIcon';
-import { publicHref } from '../i18n/preferences';
 import { useSession } from './SessionProvider';
 import { loginHref } from './return-to';
 
@@ -23,29 +22,11 @@ export function AccountNavigation({
   const { state } = useSession();
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
   const t = useTranslations('auth.login');
-  const reels = useTranslations('reels.feed');
   const saved = useTranslations('engagement.saved');
   const cart = useTranslations('cart.nav');
-  const search = useTranslations('search.screen');
   const label = t(state.kind === 'ready' ? 'account' : 'login');
   return (
     <nav aria-label={t('account')} className="flex items-center gap-1">
-      <Link
-        className={iconButton}
-        href={publicHref('/search', locale)}
-        aria-label={search('placeholder')}
-        title={search('title')}
-      >
-        <NavIcon name="search" />
-      </Link>
-      <Link
-        className={iconButton}
-        href={publicHref('/videos', locale)}
-        aria-label={reels('title')}
-        title={reels('title')}
-      >
-        <NavIcon name="play" />
-      </Link>
       <Link
         className={iconButton}
         href="/saved"

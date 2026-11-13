@@ -186,7 +186,12 @@ import { FollowerInsightsController } from '../../modules/engagement/presentatio
 import { ReviewsPublicService } from '../../modules/reviews/application/reviews-public.service';
 import { ReviewsOwnerService } from '../../modules/reviews/application/reviews-owner.service';
 import { OwnerOffersService } from '../../modules/offers/application/owner-offers.service';
+import { PublicPromotionsService } from '../../modules/offers/application/public-promotions.service';
 import { OwnerOffersController } from '../../modules/offers/presentation/owner-offers.controller';
+import {
+  PublicOffersController,
+  PublicPlacementsController,
+} from '../../modules/offers/presentation/public-promotions.controller';
 import { OwnerEarningsService } from '../../modules/payments/application/owner-earnings.service';
 import { OwnerEarningsController } from '../../modules/payments/presentation/owner-earnings.controller';
 import { FollowerInsightsService } from '../../modules/engagement/application/follower-insights.service';
@@ -293,6 +298,8 @@ import { RiderJobCompleteService } from '../../modules/delivery/application/ride
     ReviewsPublicController,
     ReviewsOwnerController,
     OwnerOffersController,
+    PublicOffersController,
+    PublicPlacementsController,
     OwnerEarningsController,
     FollowerInsightsController,
     CartQuoteController,
@@ -389,6 +396,7 @@ import { RiderJobCompleteService } from '../../modules/delivery/application/ride
     ReviewsPublicService,
     ReviewsOwnerService,
     OwnerOffersService,
+    PublicPromotionsService,
     OwnerEarningsService,
     FollowerInsightsService,
     CheckoutQuoteService,

@@ -1,7 +1,7 @@
 name: apnatown-local
 services:
   postgres:
-    image: postgis/postgis:17-3.5@sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6
+    image: ghcr.io/baosystems/postgis:17-3.5@sha256:75e3391d48e13538928fd26141b30f12c7587d937919c6656f3967f176af7701
     environment:
       POSTGRES_USER: apnatown_migrator
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run pnpm env:local first}

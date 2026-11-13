@@ -18,6 +18,7 @@ import { ProfileActions } from './ProfileActions';
 import { ProfileHeader, type HeaderCategory } from './ProfileHeader';
 import { ProfileTabs } from './ProfileTabs';
 import { GalleryGrid, VideoGrid } from '../../gallery';
+import { ReviewsSection } from '../../reviews';
 import { ComingSoonPanel } from './StaticPanels';
 import { localBusinessJsonLd } from './json-ld';
 import { readProviderExpertise, readPublicBusiness, type ProfileKind } from './read';
@@ -95,13 +96,11 @@ export async function BusinessProfilePage({ kind, slug }: { kind: ProfileKind; s
           gallery: <GalleryGrid slug={slug} profilePath={path} businessName={name} />,
           videos: <VideoGrid slug={slug} />,
           reviews: (
-            <ComingSoonPanel
-              section="reviews"
-              rating={
-                item.rating !== null && item.reviewCount > 0
-                  ? { value: item.rating, count: item.reviewCount }
-                  : undefined
-              }
+            <ReviewsSection
+              targetType="business"
+              targetId={item.business.id}
+              name={name}
+              returnPath={path}
             />
           ),
           contact: (

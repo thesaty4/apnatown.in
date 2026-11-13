@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import type { BusinessDiscoveryDetail } from '@apnatown/shared/public-listings';
 import { buttonVariantClassName } from '@apnatown/ui/primitives/Button';
+import { BusinessFollowButton } from '../../engagement';
 import { DirectionsAction } from '../../geo';
 import { publicHref, type Locale } from '../../../shared/i18n/preferences';
 import { NavIcon } from '../../../shared/ui/NavIcon';
@@ -14,10 +15,9 @@ function phoneDigits(value: string | null) {
 }
 
 /**
- * Prototype `actionBar`: Call (primary), WhatsApp (secondary), Directions,
- * Share. Every action uses approved public profile fields and is omitted when
- * its field is absent. Follow/Save need an engagement contract that is not
- * video-scoped (see hand-off), so they are not rendered.
+ * Prototype `actionBar`: Follow/Save, Call (primary), WhatsApp (secondary),
+ * Directions, Share. Every action uses approved public profile fields and is
+ * omitted when its field is absent.
  */
 export async function ProfileActions({
   detail,
@@ -39,6 +39,9 @@ export async function ProfileActions({
       aria-label={t('label')}
       className="flex flex-wrap gap-2 print:hidden"
     >
+      <div className={action}>
+        <BusinessFollowButton businessId={item.business.id} />
+      </div>
       {call && (
         <a
           href={`tel:+${call}`}

@@ -57,7 +57,10 @@ for (const name of ['packages/ui']) {
   );
 }
 const compose = await readFile('compose.yaml', 'utf8');
-assert.match(compose, /postgis\/postgis:\d+-[\d.]+@sha256:[a-f0-9]{64}/);
+assert.match(
+  compose,
+  /ghcr\.io\/baosystems\/postgis:\d+-[\d.]+@sha256:[a-f0-9]{64}/,
+);
 assert(!/redis|bullmq/i.test(compose), 'No Redis at launch.');
 for await (const path of glob('.github/workflows/*.{yml,yaml}')) {
   const workflow = await readFile(path, 'utf8');

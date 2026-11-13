@@ -150,8 +150,63 @@ async function seedPlacement(client, context, business, reviewer, position) {
   return result.rowCount;
 }
 
+async function seedHomepageBanner(client, context, reviewer, banner, position) {
+  const id = fixtureId('promotion-placement', `hero-banner:${banner.id}`);
+  const existing = await client.query(
+    'SELECT kind, surface, source FROM promotion_placements WHERE id = $1::uuid', [id],
+  );
+  assertReference(existing.rows.every((row) =>
+    row.kind === 'homepage_banner' && row.surface === 'hero_banner' && row.source === 'admin'));
+  if (existing.rowCount) return 0;
+  assertSeed(banner.on === true);
+  assertSeed(typeof banner.t === 'string' && banner.t.trim().length > 0);
+  assertSeed(typeof banner.s === 'string' && banner.s.trim().length > 0);
+  // Only internal, already-public targets: a business, Explore or an active
+  // Catalog category. No invented URL, image or paid purchase reference.
+  let destination;
+  if (banner.link.startsWith('biz-')) {
+    destination = {
+      kind: 'business',
+      targetId: seedReference(context.businesses, banner.link.slice(4)),
+    };
+  } else if (banner.link === 'explore') {
+    destination = { kind: 'explore' };
+  } else if (banner.link.startsWith('cat-')) {
+    // Sample keys are Catalog ids, not slugs (`wedding` -> `wedding-events`);
+    // resolve the same deterministic category identity Catalog seeds use.
+    const key = banner.link.slice(4);
+    const { rows } = await client.query(
+      `SELECT id FROM categories
+       WHERE id = md5('apnatown:catalog:category:' || $1::text)::uuid AND active
+       LIMIT 1`,
+      [key],
+    );
+    assertReference(rows.length === 1);
+    destination = { kind: 'category', targetId: rows[0].id };
+  } else {
+    throw new Error('SEED_REFERENCE_CONFLICT');
+  }
+  const result = await client.query(
+    `INSERT INTO promotion_placements
+       (id, kind, surface, source, scope_kind, title_en, subtitle_en,
+        destination, position, status, starts_at, ends_at,
+        created_by, updated_by, created_at, updated_at)
+     VALUES ($1::uuid, 'homepage_banner', 'hero_banner', 'admin', 'platform',
+       $2, $3, $4::jsonb, $5::int, 'active', $6::timestamptz, $7::timestamptz,
+       $8::uuid, $8::uuid, $6::timestamptz, $6::timestamptz)
+     ON CONFLICT DO NOTHING`,
+    [id, banner.t, banner.s, JSON.stringify(destination), position,
+      FIXTURE_CLOCK, DEMO_VALID_TO, reviewer],
+  );
+  return result.rowCount;
+}
+
 export async function seedCommerceOffers(client, context, counts) {
   const reviewer = await reviewerId(client, context);
+  for (const [position, banner] of (context.sample.banners ?? []).entries())
+    counts.promotion_placements += await seedHomepageBanner(
+      client, context, reviewer, banner, position,
+    );
   for (const offer of context.sample.offers) {
     // of2 promises free delivery only above Rs 500. Offers has no minimum
     // field; seeding it business-wide would waive fees below that threshold.

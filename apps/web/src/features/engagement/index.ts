@@ -3,6 +3,8 @@ export { LikeButton } from './LikeButton';
 export { ShareSheet } from './ShareSheet';
 export { HeartButton } from './HeartButton';
 export { FollowButton } from './FollowButton';
+export { BusinessFollowButton } from './BusinessFollowButton';
+export { CompactLoginPrompt } from './CompactLoginPrompt';
 export {
   ServiceBookmarkAction,
   ServiceBookmarkButton,

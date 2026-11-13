@@ -33,8 +33,7 @@ export class FollowsService {
     return this.uow.run(async (tx) => {
       const principal = await this.sessions.requirePrincipal(tx, request.session);
       if (!principal.roles.includes('customer')) throw new DomainError('COMMON_FORBIDDEN');
-      if (following) {
-        if (!input) throw new DomainError('VALIDATION_ERROR');
+      if (following && input?.sourceVideoId) {
         const target = await this.media.find(tx, input.sourceVideoId);
         if (!target?.public || target.businessId !== businessId)
           throw new DomainError('MEDIA_VIDEO_NOT_PUBLISHED');

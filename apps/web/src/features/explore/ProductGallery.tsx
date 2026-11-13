@@ -2,17 +2,24 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import type { ProductPublic } from '@apnatown/shared/public-listings';
-
-type Image = ProductPublic['images'][number];
+type Image = {
+  path: string;
+  width: number;
+  height: number;
+};
 
 /** Prototype `.stage` + `.thumbs`: one large image with a selectable strip. */
 export function ProductGallery({
   name,
   images,
+  mediaLabel,
+  fallback = '🛍️',
 }: {
   name: string;
   images: readonly Image[];
+  /** Screen-owned media label (product default, service override). */
+  mediaLabel?: string;
+  fallback?: string;
 }) {
   const t = useTranslations('explore.product');
   const screen = useTranslations('explore.screen');
@@ -24,7 +31,7 @@ export function ProductGallery({
         aria-hidden="true"
         className="grid aspect-square place-items-center rounded-lg bg-surface-2 text-[4rem]"
       >
-        🛍️
+        {fallback}
       </div>
     );
   return (
@@ -45,7 +52,7 @@ export function ProductGallery({
       {images.length > 1 && (
         <div
           role="tablist"
-          aria-label={t('media')}
+          aria-label={mediaLabel ?? t('media')}
           className="flex gap-2 overflow-x-auto pb-1"
         >
           {images.map((image, position) => (

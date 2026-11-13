@@ -81,6 +81,29 @@ Offer links are `/product/{slug}?offerId={id}`, `/service/{slug}?offerId={id}`, 
 
 - `GET/POST /businesses/me/offers`, `PATCH /businesses/me/offers/{id}`, `PATCH …/{id}/status` (`OffersModule`, `ApprovedSellerAccess`). Business-wide scope only; product targets, `bannerAssetId`, featured requests and coupons are not authored yet. Create (Idempotency-Key) and every edit enter `pending` with the review decision cleared; pause = active only; resume = approved paused offer within its window; end = active/paused (terminal); stale version → `OFFER_VERSION_CONFLICT`, disallowed transition → `OFFER_STATE_INVALID`, foreign → `OFFER_NOT_FOUND`. DTO adds `expired` and server `allowedActions`. Runtime write grants: migration `20261113120000_owner_offers_write`. Admin approval queue is not built yet, so new/edited offers stay pending locally.
 
+### Implemented slice: public offers and hero placements (2026-11-14)
+
+- `GET /offers` (public, keyset `businessId`/`featured`, limit ≤50) reads the
+  runtime view `offers_public_active` joined to `businesses_public_context`;
+  only approved, in-window offers of approved public businesses are returned.
+  `state` is `active`, or `out_of_stock` when every targeted product/service is
+  currently ineligible. `destination` is the server-resolved profile path.
+- `GET /promotions/placements?kind=&cityId=&areaId=&limit=` (public) reads the
+  new `promotion_placements_public` view: active, in-window, unblocked
+  placements in the caller's platform/city/area scope (platform-only without
+  location). Internal `destination` JSON is resolved to an href for
+  `offers|explore|business|product|service|category`; rows whose target is no
+  longer public are omitted rather than linked blindly.
+- Banner backgrounds reuse the existing `offer_banner` Media purpose and the
+  `promotion` media placement type (`placementType=promotion&placementId=…`);
+  authorization rechecks the live placement on every byte read. Text-only
+  banners remain valid and render on a token-backed gradient.
+- Migration `20261114010000_public_promotion_placements` widens the stored
+  `media_assets.purpose` list, creates the public view and grants runtime
+  SELECT. Admin placement writes, coupons and purchases remain unbuilt; local
+  demo banners come from `seed-commerce-offers.mjs` using the reference
+  `banners` sample with business/Explore/category destinations only.
+
 ## Rules and use-cases
 
 1. Require an approved owner business (BR-06). Derive `business_id` from the session; verify every product/service target belongs to that business and matches the offer scope.
