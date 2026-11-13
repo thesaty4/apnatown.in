@@ -47,7 +47,7 @@ permission module/action) if applicable.
 
 ## 6. Security notes
 
-Call out anything from `security.instructions.md` that applies
+Call out applicable security requirements from `AGENTS.md`
 specifically here (e.g. OTP handling, upload validation, webhook
 verification).
 

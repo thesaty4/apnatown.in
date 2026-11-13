@@ -84,7 +84,7 @@ the files needing implementation; hand off to the relevant developer.
    Failing builds and actual correctness/security defects block `APPROVE`;
    do not require or generate automated tests.
 5. Verify affected docs/spec status and implementation inventory updates.
-   Spec-only work follows the spec-writing skill's narrower scope.
+   Spec-only work follows the scope of the request.
 6. Required security review is a separate gate for sensitive changes;
    this general review does not substitute for it.
 

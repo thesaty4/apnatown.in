@@ -86,8 +86,8 @@ All customer writes require login; guest calls return `AUTH_REQUIRED` so the FE 
   owner ports redact unavailable rows while keeping them removable.
 - `ServiceBookmarkDataOwner` contributes only the requesting user's
   relationships to export and erasure with existing deletion fences.
-- Shared/API/client builds and generated checks passed; security-auditor
-  re-review passed. Migration execution, live authorization negatives,
+- Shared/API/client builds and generated checks passed; the independent
+  security re-review passed. Migration execution, live authorization negatives,
   concurrency, tombstone removal and export/erasure remain unverified.
 
 ### EG3 video-detail implementation slice

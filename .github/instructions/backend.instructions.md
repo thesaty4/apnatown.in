@@ -88,14 +88,13 @@ transactions through ports (`database.instructions.md`).
 
 ## Timeouts and retries
 
-- Every outbound integration call (`integrations.instructions.md`) has
-  an explicit timeout and bounded retry with backoff; never an
-  unbounded retry loop.
+- Every outbound integration call has an explicit timeout and bounded
+  retry with backoff; never an unbounded retry loop.
 
 ## Observability
 
-- Structured logs per request (no secrets/PII,
-  `security.instructions.md`); correlate logs across a request with a
+- Structured logs per request (no secrets/PII, per `AGENTS.md`);
+  correlate logs across a request with a
   request id.
 - Emit metrics for queue depth, job failures, and integration latency/
   error rate; audit-log admin-triggered data changes (`audit` module).

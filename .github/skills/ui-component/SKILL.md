@@ -36,8 +36,8 @@ Use when implementing a FE spec (`frontend.instructions.md`,
 6. Keyboard and ARIA pass: tab order, focus ring, roles/labels,
    `prefers-reduced-motion` (`i18n-a11y.instructions.md`).
 7. Implement light/dark theme behavior and responsive states.
-8. Invoke `verify-change` to build and fix related errors only. Do not
-   launch browsers or capture screenshots during implementation; report
+8. Run the affected build and fix related errors only. Do not launch
+   browsers or capture screenshots during implementation; report
    runtime/UI checks as deferred.
 
 ## Skeleton

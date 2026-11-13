@@ -1,99 +1,51 @@
 # BE: auth
 
-Features: F-AU-004, F-AU-006, F-AU-007 | Rules: BR-05, BR-21 | State machines: none | Depends on: `users`; used by all authenticated modules
+Features: F-AU-004, F-AU-006, F-AU-007 | Rules: BR-05, BR-21 | Depends on: `users`
 
 Frontend counterpart: [FE auth](../fe/auth.md).
 
-Implementation status: local backend slice implemented; runtime verification and
-security-auditor hand-off pending. Includes the Users identity/profile/preferences
-dependency, not addresses, consent, privacy processing or privileged authority.
+Status: backend implemented; runtime checks and security review pending.
 
 ## Responsibility
 
-Issue and verify login challenges, create and revoke server-side sessions, and expose the authenticated principal. Guest browsing and the safe return-to-origin interaction are frontend concerns; authentication never trusts a client-side verified flag.
+Auth handles mobile OTP login, server-side sessions, logout and the current user. Guests can browse without logging in. Returning to the original page after login is handled by the frontend.
 
 ## Tables
 
-| Table | Columns and constraints | Indexes |
+| Table | Key fields | Indexes |
 |---|---|---|
-| `otp_challenges` | `id uuid PK`, `phone_ciphertext text`, `phone_lookup_hash bytea`, `code_hash text`, `attempt_count int default 0`, `expires_at timestamptz`, `resend_after timestamptz`, `verified_at timestamptz null`, `superseded_at timestamptz null`, `created_at timestamptz`; encrypted phone and hash are never exposed | `(phone_lookup_hash, created_at desc)` for rate-limit lookup; `(expires_at)` for expiry cleanup |
-| `sessions` | `id uuid PK`, `kind text CHECK anonymous/authenticated`, `user_id uuid FK users null`, `token_hash bytea unique`, `csrf_token text`, `created_at timestamptz`, `expires_at timestamptz`, `revoked_at timestamptz null`, `last_seen_at timestamptz`; CHECK anonymous has no user and authenticated has a user | `(user_id, revoked_at, expires_at)` for active-session lookup; `(expires_at)` for cleanup |
+| `otp_challenges` | `id`, encrypted phone, phone lookup hash, OTP hash, `attempt_count`, `expires_at`, `resend_after`, `verified_at`, `superseded_at`, `created_at` | `(phone_lookup_hash, created_at desc)`, `(expires_at)` |
+| `sessions` | `id`, `kind` (`anonymous`/`authenticated`), `user_id`, unique token hash, CSRF token, `expires_at`, `revoked_at`, `last_seen_at`, `created_at` | `(user_id, revoked_at, expires_at)`, `(expires_at)` |
 
-Phone uniqueness and challenge concurrency are enforced in the repository transaction; clear OTPs and bearer session-cookie values are never persisted. `csrf_token` is the synchronizer library's private server-side state, not a bearer login credential; never expose the session row, log this field or put it in audit/outbox/idempotency data.
-
-### Persistence implementation
-
-The Prisma `OtpChallenge`/`Session` models and additive
-[`20261111173739_auth_storage`](../../../apps/api/prisma/migrations/20261111173739_auth_storage/migration.sql)
-migration supply these tables after the Users identity migration. OTP challenges
-remain pre-account records without a user FK. Session ownership restricts user
-deletion/ID updates, never cascades or silently converts an authenticated row to
-anonymous. SQL enforces the kind/user pairing, non-negative attempt counts,
-expiry after creation, resend time not before creation and the shared opaque-token
-helper's 32-byte session digest. It does not impose a new TTL or attempt limit.
-
-The phone/creation B-tree supports latest-challenge/cooldown reads; expiry
-B-trees support future bounded Auth cleanup; the unique token digest index
-supports session resolution; and `(user_id,revoked_at,expires_at)` supports
-active-session reads/revocation. Each adds insert/update/storage cost for its
-query, not an index for every field. Plans and runtime-role behavior still need
-verification with representative non-PII data before rollout.
-
-The transaction-wrapped migration inserts no challenges, credentials or users.
-Runtime DML grants cover only these Auth tables. A failed migration requires
-inspection of its record/schema before resolution or retry; later repair is a
-new migration or approved restore, not an automatic destructive down migration.
-Client generation and schema validation are offline; no database application,
-constraint/grant execution or session/OTP flow has been verified.
-
-The local backend slice now supplies contextual AES-GCM encryption, separately
-keyed phone/code hashes, serialized challenge/cooldown/attempt consumption,
-PostgreSQL-backed csrf-sync state, rotated opaque session cookies, live identity
-checks, five Auth endpoints and bounded expiry cleanup. Private local OTP delivery
-is opt-in; production startup explicitly fails until a real provider/fallback and
-approved policy settings are configured. Business/rider approval states remain
-explicitly unavailable and grant no operational authority. Runtime/database
-verification has not been performed. Four focused unit checks covering DTOs,
-cryptography, CSRF and cookies pass; database integration coverage remains unrun.
-
-- Given invalid kind/user pairing, a missing user, a wrong-length session digest
-  or duplicate digest, when a session is persisted, then its constraints reject it.
-- Given negative attempts or invalid creation/expiry/resend ordering, when a
-  challenge is persisted, then it is rejected; no implicit account is created.
-- Given this migration alone, when the application starts, then no login
-  endpoint, credential seed, session authentication or expiry-cleanup job is enabled.
+Never store plain OTPs, phone numbers, or session cookie values. Anonymous sessions have no user; authenticated sessions must have one.
 
 ## Endpoints
 
-| Method | Path | Auth / scope | Request → response | Errors | Idempotent | Features |
-|---|---|---|---|---|---|---|
-| GET | `/auth/csrf` | Guest or authenticated; same-origin, no-store | → `{csrfToken}` bound to the current anonymous/session context by the shared CSRF middleware | `COMMON_RATE_LIMITED` | Read | F-AU-004, F-AU-007 |
-| POST | `/auth/otp/challenges` | Guest; rate-limited; CSRF + Origin check | `{phone}` → `{challengeId,resendAfter,expiresAt}` | `VALIDATION_ERROR`, `OTP_RATE_LIMITED`, `OTP_DELIVERY_FAILED`, `CSRF_INVALID` | No | F-AU-004 |
-| POST | `/auth/otp/challenges/{challengeId}/verify` | Guest; challenge-bound; CSRF + Origin check | `{code}` → principal; sets rotated httpOnly session cookie | `OTP_INVALID`, `OTP_EXPIRED`, `OTP_LOCKED`, `OTP_NOT_FOUND`, `ACCOUNT_UNAVAILABLE`, `CSRF_INVALID` | No | F-AU-004 |
-| GET | `/auth/session` | Session cookie; no-store | → `{userId,roles,approvalStates,accountStatus,expiresAt}` from current owner-module state | `SESSION_EXPIRED`, `ACCOUNT_UNAVAILABLE` | Yes | F-AU-004, F-AU-007 |
-| POST | `/auth/logout` | Authenticated session + CSRF | → `{loggedOut:true}`; revokes server session and clears cookie | `SESSION_EXPIRED`, `CSRF_INVALID` | Yes | F-AU-007 |
-| POST | `/auth/demo/sessions` | Local/test only, registered when `DEMO_LOGIN_ENABLED`; guest or session + CSRF + Origin; 30/min per IP | `{persona}` (allow-listed enum) → principal; revokes the current session and sets a rotated httpOnly session cookie | `DEMO_PERSONA_UNAVAILABLE`, `VALIDATION_ERROR`, `CSRF_INVALID`, `COMMON_RATE_LIMITED`; 404 when disabled | No | Prototype Demo controls |
+| Method | Path | Access | Request → response | Main errors |
+|---|---|---|---|---|
+| GET | `/auth/csrf` | Guest or user | → `{csrfToken}` | `COMMON_RATE_LIMITED` |
+| POST | `/auth/otp/challenges` | Guest + CSRF | `{phone}` → `{challengeId,resendAfter,expiresAt}` | `VALIDATION_ERROR`, `OTP_RATE_LIMITED`, `OTP_DELIVERY_FAILED`, `CSRF_INVALID` |
+| POST | `/auth/otp/challenges/{challengeId}/verify` | Guest + CSRF | `{code}` → current user; sets session cookie | `OTP_INVALID`, `OTP_EXPIRED`, `OTP_LOCKED`, `OTP_NOT_FOUND`, `ACCOUNT_UNAVAILABLE`, `CSRF_INVALID` |
+| GET | `/auth/session` | Logged-in user | → `{userId,roles,approvalStates,accountStatus,expiresAt}` | `SESSION_EXPIRED`, `ACCOUNT_UNAVAILABLE` |
+| POST | `/auth/logout` | Logged-in user + CSRF | → `{loggedOut:true}`; clears cookie | `SESSION_EXPIRED`, `CSRF_INVALID` |
+| POST | `/auth/demo/sessions` | Local/test only when `DEMO_LOGIN_ENABLED`; CSRF | `{persona}` → current user; sets session cookie | `DEMO_PERSONA_UNAVAILABLE`, `VALIDATION_ERROR`, `CSRF_INVALID`, `COMMON_RATE_LIMITED`; 404 when disabled |
 
-Use the shared error envelope and OpenAPI DTOs from [backend-shared.md](../../_foundation/backend-shared.md). OTP maximum attempts/expiry are configuration values; the resend cooldown is 30 seconds. Optional email/Google methods are not specified beyond their presence in the design; see Q-30.
+Use the shared error format from [backend-shared.md](../../_foundation/backend-shared.md). Auth responses are `no-store`.
 
-## Rules and use-cases
+## Rules
 
-1. Validate phone as the documented +91/10-digit number; normalize before rate limiting or challenge creation.
-2. Generate a cryptographically secure six-digit code server-side, hash it, persist only the hash and send through the OTP port. Never log or return the code.
-3. Enforce the 30-second phone-level resend cooldown and configured attempt limit server-side. Resend creates a new challenge and supersedes previous unconsumed challenges for that phone. Lock the challenge row while checking expiry, supersession, attempts and `verified_at`; increment failed attempts and consume successful verification atomically. Concurrent verification can issue at most one session; a used or superseded challenge is invalid.
-4. On successful verification, resolve/create the user through `users`, check current account status, rotate session credentials, and set a Secure, httpOnly, SameSite cookie. Never accept role or user ID from the request body. A suspended/deleting/deleted identity cannot obtain a fresh session; consume the valid challenge but commit no session and return `ACCOUNT_UNAVAILABLE`.
-5. Authentication requires an unrevoked, unexpired `kind=authenticated` session with a current active user; an anonymous CSRF session never authenticates `/auth/session` or a protected route. Recheck current user status, roles and business/rider approval capabilities; cookie claims are not authoritative. Logout revokes the current session; expired authenticated sessions direct the frontend to `/session-expired`. `AuthSessionPort.revokeUserSessions({userId})` serves suspension/deletion; the live-status check closes asynchronous revocation races.
-6. Preserve an origin only as a validated same-origin route in the frontend flow; do not use an arbitrary redirect supplied to these endpoints.
-7. Use the foundation's same-origin `/api` transport and `csrf-sync` synchronizer middleware, including anonymous login requests. Auth owns its PostgreSQL-backed state in `sessions`; no second store, Redis or process-local fallback. `/auth/csrf` creates a short-lived anonymous session when needed or returns the current session's token. It persists state before sending the cookie/token and never refreshes expired authenticated access implicitly. `ANONYMOUS_SESSION_TTL_SECONDS` is positive validated server config; local/test uses an explicit short fixture value, production requires an approved value.
-8. Hydrate request-local CSRF state from the validated session before the library runs. Its `getTokenFromState`/`storeTokenInState` callbacks operate synchronously on that state; repository persistence is awaited outside those callbacks. Reuse an existing token on bootstrap, so another tab does not invalidate it. Login atomically revokes the anonymous/old session and issues a new authenticated session plus new CSRF state; logout revokes state and clears the cookie, then the client bootstraps a fresh anonymous context. Check `X-CSRF-Token` and Origin before every browser mutation; no handwritten token-generation/comparison protocol.
-9. Auth/session responses are private/no-store and no service worker caches them. OTP fakes are test/local delivery adapters, never a production fixed-code bypass. Rate-limit anonymous session creation and clean up expired/revoked records in bounded batches. The only login-as path is this local/test demo persona route: production config refuses the flag, the persona maps server-side to a fixed seeded phone, and the live principal must be active and already hold that role; it never creates users or grants roles.
-10. Use the foundation's [rejected-verification transaction contract](../../_foundation/data-model.md#shared-runtime-persistence): wrong-code attempts/locks and valid-challenge consumption for `ACCOUNT_UNAVAILABLE` commit before the HTTP error is raised. No session is created on rejection. Unexpected failures roll back; a broad catch must not turn them into a committed authentication outcome.
-
-Open question: profile phone editing in `js7.js` has no verified-number-change flow (Q-43). Login identity cannot be changed through generic profile PATCH; keep that field read-only until re-verification and account-linking behavior are approved. Email/Google controls remain explicitly unavailable under Q-30, not success-shaped demo logins.
-
-## Events and jobs
-
-No domain event/job is required by the source pack. OTP delivery uses the `OtpDeliveryPort`; provider failure is explicit and must not expose whether an account exists.
+1. Accept only a valid Indian mobile number and normalize it before use.
+2. Generate a six-digit OTP on the server, store only its hash, and send it through the OTP adapter. Never log or return it.
+3. Enforce a 30-second resend cooldown and configured expiry/attempt limits. A new OTP replaces older unused OTPs for that phone.
+4. A challenge can create only one session. Wrong, expired, locked, reused, or replaced OTPs cannot log in.
+5. After successful OTP verification, find or create the user through `users`, check account status, and set a new Secure, httpOnly, SameSite cookie. Never trust a user ID or role sent by the client.
+6. Suspended, deleting, or deleted accounts cannot log in or use an existing session.
+7. Protected requests require an active, unexpired authenticated session. Always read current account status and roles from the database.
+8. Check CSRF token and request Origin on every browser request that changes data, including login and logout.
+9. Logout revokes the current session and clears its cookie. Expired sessions return `SESSION_EXPIRED`.
+10. Do not redirect to a URL supplied to Auth. Only the frontend may return the user to a safe internal page.
+11. Demo login is never available in production. It only signs in an existing active seeded user for an allowed persona and must not create users or grant roles.
+12. Email and Google login stay unavailable until Q-30 is decided. Phone number changes stay read-only until Q-43 is decided.
 
 ## Error codes added
 
@@ -112,26 +64,17 @@ No domain event/job is required by the source pack. OTP delivery uses the `OtpDe
 
 ## Acceptance criteria
 
-1. Given a valid phone and available OTP adapter, when a guest requests a challenge, then the server sends a six-digit OTP and returns only the challenge ID and resend time.
-2. Given the resend cooldown has not elapsed, when the same challenge requests a resend, then the server rejects it without sending another code.
-3. Given a valid unexpired code, when the guest verifies the matching challenge, then the server establishes a rotated session cookie and returns the authenticated principal.
-4. Given an incorrect, expired, or locked challenge, when a code is submitted, then verification fails with a stable error and no session is created.
-5. Given an OTP or session token, when the request is logged or serialized, then neither secret appears in logs, response bodies, or stored plaintext.
-6. Given a session is expired or revoked, when it is used, then the protected request is denied and the client receives `SESSION_EXPIRED`.
-7. Given a user requests logout without a valid CSRF token, when the request is processed, then it is rejected and the session is not silently treated as logged out.
-8. Given an arbitrary external return URL, when login completes, then auth does not redirect to that URL.
-9. Given two correct verifications race, when the challenge is locked and consumed, then exactly one session is issued; stale resend challenges and replayed codes cannot log in.
-10. Given an account is suspended/deleted, when its OTP or existing session is used, then no protected access is granted, even before a revocation event is delivered.
-11. Given a cross-site login/logout request or missing CSRF token, when the API receives it, then it is denied; same-origin anonymous CSRF bootstrap permits the legitimate login flow.
-12. Given an anonymous CSRF session, when it calls `/auth/session` or a protected endpoint, then it receives 401; its cookie does not grant a customer or applicant role.
-13. Given two API processes and concurrent tabs, when they bootstrap/use the same session token or an API restarts, then CSRF remains valid through PostgreSQL state; login/logout invalidates the old binding everywhere.
-14. Given `DEMO_LOGIN_ENABLED` is off or the environment is production, when `/auth/demo/sessions` is called, then it is not registered (404), and production startup refuses the flag; given it is on locally, when a missing/inactive persona or one without its role is requested, then `DEMO_PERSONA_UNAVAILABLE` is returned and no session changes.
+1. A valid phone receives an OTP; the response contains only challenge ID, resend time and expiry.
+2. Resending before 30 seconds is rejected.
+3. A valid OTP creates a session cookie and returns the current user.
+4. Wrong, expired, locked, reused, or replaced OTPs do not create a session.
+5. OTPs and session tokens never appear in logs, responses, or plain-text storage.
+6. Expired, revoked, or anonymous sessions cannot access protected endpoints.
+7. Login and logout fail without valid CSRF and Origin checks.
+8. Suspended or deleted users cannot log in or keep using an old session.
+9. Auth never redirects to an external return URL.
+10. Demo login returns 404 when disabled and is refused in production.
 
 ## Verification
 
-Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
-
-- Given a wrong OTP or a valid OTP for a blocked account, when verification returns its non-2xx error, then the committed attempt/lock or challenge consumption survives a new database connection, no session exists, and unexpected transaction failure still rolls back.
-- Rules: phone normalization; cooldown; attempt count; expiry; session rotation and revocation.
-- Manual API/DB: challenge/verify with deterministic OTP fake; logout invalidates cookie; concurrent verification, attempt-limit and resend races; live status/role changes; anonymous-to-authenticated CSRF rotation.
-- Authorization negatives: expired/revoked cookie; invalid CSRF; unknown challenge; provider outage; no OTP disclosure or account-enumeration response.
+Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): use manual acceptance evidence and existing non-test checks only; do not add automated test files.

@@ -135,8 +135,7 @@ Prefixes `engagement.*`, `saved.*`, `vendor.followers.*`. Events: `follow_toggle
 | `pnpm check:generated` | Passed: design tokens, EN/HI catalogs, OpenAPI and client are current |
 | `git diff --name-only -z HEAD -- '*.ts' '*.tsx' \| xargs -0 -r pnpm exec eslint` | Passed, zero errors; generated API declaration ignored as configured |
 | `git diff --check HEAD` | Passed |
-| `security-auditor` static review | PASS: complete implementation diff reviewed; no high-confidence exploitable findings |
-| `node scripts/validate-ai-setup.mjs` | Blocked by existing missing testing/specs-and-docs instruction links and the untouched backend instruction's 4,000-character budget violation |
+| Static security review | PASS: complete implementation diff reviewed; no high-confidence exploitable findings |
 
 Migration execution and runtime checks were not performed. Human acceptance:
 save a video/reel and follow its business, open Saved, reload and paginate;

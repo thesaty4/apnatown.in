@@ -203,7 +203,7 @@ Other malformed query values use `COMMON_VALIDATION_FAILED`; an empty result is 
 
 ## Verification
 
-Implementation build evidence (2026-11-12): `pnpm --filter @apnatown/api db:generate`, `pnpm --filter @apnatown/shared build`, `pnpm --filter @apnatown/api build`, `pnpm --filter @apnatown/api api:openapi`, `pnpm --filter @apnatown/api-client client:generate`, and `pnpm --filter @apnatown/api-client build`. No runtime/Docker services, migrations, seeds, API/DB checks or automated tests were run. SQL execution/EXPLAIN performance, source-data ingestion, negative authorization/expiry/location/media runtime scenarios and independent security-auditor review remain verification gates, not passing evidence. Parent owns FE/inventory documentation and final audit/integration.
+Implementation build evidence (2026-11-12): `pnpm --filter @apnatown/api db:generate`, `pnpm --filter @apnatown/shared build`, `pnpm --filter @apnatown/api build`, `pnpm --filter @apnatown/api api:openapi`, `pnpm --filter @apnatown/api-client client:generate`, and `pnpm --filter @apnatown/api-client build`. No runtime/Docker services, migrations, seeds, API/DB checks or automated tests were run. SQL execution/EXPLAIN performance, source-data ingestion, negative authorization/expiry/location/media runtime scenarios and independent security review remain verification gates, not passing evidence. Parent owns FE/inventory documentation and final audit/integration.
 
 Follow the [verification policy](../../../AGENTS.md#4-hard-limits-non-negotiable): manual acceptance evidence and existing non-test checks only; do not generate automated test files.
 

@@ -47,8 +47,8 @@ cache ownership and Server Component boundaries.
    filter state, Back/scroll restoration.
 4. Add EN+HI translation keys; implement long-Hindi wrapping, keyboard
    and accessibility behavior (`i18n-a11y.instructions.md`).
-5. Follow the `verify-change` skill: run the affected build and fix
-   related errors only. Do not start Docker/runtime services, launch
+5. Run the affected build and fix related errors only. Do not start
+   Docker/runtime services, launch
    browsers or run manual UI checks during implementation.
 6. Report UI journeys and screenshots as deferred; capture them only on
    a separate explicit request.
@@ -85,8 +85,6 @@ owner. Never fabricate approval/verification evidence or approve/merge the PR.
 
 ## Hands off to
 
-`security-auditor` first if the task touches auth UI, payment UI,
-uploads, embeds, admin-permission UI, or communications UI (required —
-`AGENTS.md` and `security.instructions.md`); otherwise to `architect` in
-read-only code-review mode. After approval, resume only the PR-creation
-step and hand off to a human.
+Hand off to `architect` in read-only code-review mode after implementation.
+For sensitive changes, arrange the required security review before PR
+creation. After approval, hand off to a human for merge.

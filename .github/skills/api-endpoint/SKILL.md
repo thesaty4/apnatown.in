@@ -20,11 +20,11 @@ Use when implementing a BE spec's endpoint(s)
 4. Add the controller: validates the DTO, calls the service, maps
    domain errors to the error contract, never touches the repository
    directly.
-5. Authorize: role + ownership + scope check before the service call
-   (`secure-coding-review` skill).
+5. Authorize: role + ownership + scope check before the service call,
+   following the security requirements in `AGENTS.md`.
 6. Register the route and update the OpenAPI contract.
-7. Invoke `verify-change`: run the affected build and fix related errors.
-   Do not start Docker/runtime services, apply databases, or run API
+7. Run the affected build and fix related errors. Do not start
+   Docker/runtime services, apply databases, or run API
    smoke checks during implementation.
 8. Link the implementation back to its BE spec; update
    `docs/design-context/01-feature-inventory.md` status.

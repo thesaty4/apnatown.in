@@ -16,7 +16,7 @@ relevant `docs/design-context/01-feature-inventory.md` row.
 - **Route:** `/path/:param`
 - **Query params (if Explore/Search):** list each, with allowed
   values; note shareable-URL and Back/scroll-restoration behaviour
-  (`domain-catalog-search.instructions.md`) if applicable.
+  (see the related Catalog/Search specs) if applicable.
 
 ## 3. UX states (all five required — X7)
 

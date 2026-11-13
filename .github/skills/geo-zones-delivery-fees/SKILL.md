@@ -29,7 +29,8 @@ Map library, tile configuration and usage limits are fixed by the
    GeoJSON `[longitude,latitude]`; PostGIS validates polygons. Keep
    keyboard/coordinate/list alternatives, OSM attribution, safe popups
    and HTTP tile caching; no offline tile downloads or paid plugin features.
-5. Manually verify (`verify-change`; no automated test files): address inside/outside a zone, address outside all zones
+5. Document manual acceptance scenarios (no automated test files):
+   address inside/outside a zone, address outside all zones
    ("We are not in your city yet" + notify-me, LC5), fee slab boundary
    values, earning calculation stability after a settings change.
 

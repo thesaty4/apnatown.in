@@ -42,8 +42,8 @@ of direct video-file uploads.
    existing ports/schemas; add new ones only if none fit.
 4. Review the change against the security requirements in `AGENTS.md`
    and its feature spec.
-5. Follow the `verify-change` skill: run the affected build and fix
-   related errors. Do not start Docker/runtime services, apply migrations
+5. Run the affected build and fix related errors. Do not start
+   Docker/runtime services, apply migrations
    or seeds, or run manual API/DB checks.
 6. Update the spec's status and
    `docs/design-context/01-feature-inventory.md` row.
@@ -79,8 +79,6 @@ owner. Never fabricate approval/verification evidence or approve/merge the PR.
 
 ## Hands off to
 
-`security-auditor` first if the task touches auth, payments, uploads/
-CSV, embeds, admin permissions, or communications (required, not
-optional — `AGENTS.md` and `security.instructions.md`); otherwise to
-`architect` in read-only code-review mode. After approval, resume only
-the PR-creation step and hand off to a human.
+Hand off to `architect` in read-only code-review mode after implementation.
+For sensitive changes, arrange the required security review before PR
+creation. After approval, hand off to a human for merge.

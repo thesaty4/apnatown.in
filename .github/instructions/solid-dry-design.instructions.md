@@ -52,7 +52,7 @@ Concrete rules, with ApnaTown examples. Product context:
 
 - Controllers depend on services; services depend on repository/
   integration **interfaces** injected, not imported concretely, so
-  local verification can use approved adapters (`integrations.instructions.md`).
+  local verification can use approved integration adapters.
 
 ## DRY
 
@@ -77,7 +77,7 @@ Concrete rules, with ApnaTown examples. Product context:
 
 - Keep functions under ~40 lines and files under ~300 lines; split by
   responsibility, not by line count alone.
-- Name by domain language from `docs/glossary.md` (e.g. `enquiry`, not
+- Name by domain language from the active feature specs (e.g. `enquiry`, not
   `lead`; `pickupCode`, not `pin2`).
 - Module/folder names match `../../specs/_foundation/architecture.md`
   exactly (21 modules).
