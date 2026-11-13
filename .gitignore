@@ -31,3 +31,4 @@ test-results/
 # Misc
 *.tsbuildinfo
 .turbo/
+*:Zone.Identifier
