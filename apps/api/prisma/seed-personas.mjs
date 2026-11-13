@@ -1,4 +1,5 @@
 import { FIXTURE_CLOCK, fixtureId } from './seed-fixtures.mjs';
+import { findSeedUser } from './seed-context.mjs';
 
 // Prototype role-matrix letters (js18.js RACT_L).
 const ACTIONS = { v: 'view', c: 'create', e: 'edit', d: 'delete', x: 'export' };
@@ -125,12 +126,7 @@ async function insertGrants(client, table, column, id, permissions) {
 // Reuses an account that already signed in with the persona phone.
 async function seedUser(client, crypto, user, counts) {
   const hash = Buffer.from(crypto.phoneHash(user.phone));
-  const existing = await client.query(
-    `SELECT id FROM users WHERE phone_lookup_hash = $1 OR id = $2::uuid
-     ORDER BY (id = $2::uuid) DESC LIMIT 1`,
-    [hash, user.id],
-  );
-  let id = existing.rows[0]?.id;
+  let id = await findSeedUser(client, crypto, user);
   if (!id) {
     await client.query(
       `INSERT INTO users (id, phone_ciphertext, phone_lookup_hash, display_name,

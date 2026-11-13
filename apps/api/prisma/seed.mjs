@@ -8,6 +8,7 @@ import { buildPersonaFixtures, seedPersonas } from './seed-personas.mjs';
 import { buildProviderFixtures, seedProviderData } from './seed-provider-data.mjs';
 import { seedLocalSettings } from './seed-settings.mjs';
 import { localTargets } from './targets.mjs';
+import { findSeedUser } from './seed-context.mjs';
 
 const require = createRequire(import.meta.url);
 const SAMPLE_DATA = new URL(
@@ -96,12 +97,7 @@ async function seedAreas(client, cityId, areas) {
 // Reuses an account that already signed in with the fixture phone.
 async function seedOwner(client, crypto, owner) {
   const hash = Buffer.from(crypto.phoneHash(owner.phone));
-  const existing = await client.query(
-    `SELECT id FROM users WHERE phone_lookup_hash = $1 OR id = $2::uuid
-     ORDER BY (id = $2::uuid) DESC LIMIT 1`,
-    [hash, owner.id],
-  );
-  let id = existing.rows[0]?.id;
+  let id = await findSeedUser(client, crypto, owner);
   if (!id) {
     await client.query(
       `INSERT INTO users (id, phone_ciphertext, phone_lookup_hash, created_at, updated_at)

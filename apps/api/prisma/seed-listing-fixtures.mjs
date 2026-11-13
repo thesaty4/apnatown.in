@@ -166,9 +166,13 @@ export function buildListingFixtures(sample, helpers) {
     businesses.map((entry) => [entry.id, { products: [], services: [] }]),
   );
   if (byBusiness.size !== businesses.length) invalid();
-  const products = sample.products.map((entry) =>
-    productFor(entry, sample, helpers),
-  );
+  // Provider products inherit the provider's SERVICE category in the reference
+  // (js15.js addP), but Products accepts PRODUCT categories only; skip them
+  // rather than inventing a product category mapping (open issue G-24).
+  const productCategories = new Set(sample.categories.map((entry) => entry.id));
+  const products = sample.products
+    .filter((entry) => productCategories.has(entry.cat))
+    .map((entry) => productFor(entry, sample, helpers));
   const services = businesses.flatMap((business) =>
     business.services.map((entry) =>
       serviceFor(entry, business, sample, helpers),
