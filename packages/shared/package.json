@@ -163,6 +163,26 @@
         "types": "./dist/cjs/notifications.d.ts",
         "default": "./dist/cjs/notifications.js"
       }
+    },
+    "./delivery": {
+      "import": {
+        "types": "./dist/esm/delivery.d.ts",
+        "default": "./dist/esm/delivery.js"
+      },
+      "require": {
+        "types": "./dist/cjs/delivery.d.ts",
+        "default": "./dist/cjs/delivery.js"
+      }
+    },
+    "./reviews": {
+      "import": {
+        "types": "./dist/esm/reviews.d.ts",
+        "default": "./dist/esm/reviews.js"
+      },
+      "require": {
+        "types": "./dist/cjs/reviews.d.ts",
+        "default": "./dist/cjs/reviews.js"
+      }
     }
   },
   "scripts": {

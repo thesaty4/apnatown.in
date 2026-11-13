@@ -1,4 +1,5 @@
 export { areaOptions, cityOptions, geoName } from './api';
+export { CityAreaFields, type CityAreaLabels } from './CityAreaFields';
 export {
   deviceFailure,
   requestDeviceLocation,
@@ -28,4 +29,9 @@ export {
   type MapListState,
   type MapPin,
 } from './MapListControls';
-export { GeoNote, cityStatusIcon, cityStatusKey, cityStatusTone } from './parts';
+export {
+  GeoNote,
+  cityStatusIcon,
+  cityStatusKey,
+  cityStatusTone,
+} from './parts';

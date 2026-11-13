@@ -74,6 +74,8 @@ export const queryKeys = {
     ['public', 'business-profile', slug, 'videos'] as const,
   publicLinkedVideos: (targetType: 'product' | 'service', targetId: string) =>
     ['public', 'media', 'linked-videos', targetType, targetId] as const,
+  publicReviews: (targetType: string, targetId: string, sort: string) =>
+    ['public', 'reviews', targetType, targetId, sort] as const,
   catalogDuplicateCheck: (
     scope: AccountScope,
     check: Readonly<Record<string, string | undefined>>,
@@ -184,7 +186,11 @@ export const queryKeys = {
       targetKind,
     ] as const,
   adminMediaReportCounts: (scope: AccountScope, scopeRevision: string) =>
-    [...queryKeys.adminMediaReportsRoot(scope), scopeRevision, 'counts'] as const,
+    [
+      ...queryKeys.adminMediaReportsRoot(scope),
+      scopeRevision,
+      'counts',
+    ] as const,
   // Admin reads are scoped by account/roles/epoch like every private key. The
   // free-text search never enters a key (it may hold a phone or email); the
   // caller keys it by an in-memory revision instead.
@@ -298,12 +304,7 @@ export const queryKeys = {
     status: string,
     query: string,
   ) =>
-    [
-      ...queryKeys.enquiriesRoot(scope, kind),
-      'inbox',
-      status,
-      query,
-    ] as const,
+    [...queryKeys.enquiriesRoot(scope, kind), 'inbox', status, query] as const,
   enquiry: (scope: AccountScope, kind: 'shop' | 'provider', id: string) =>
     [...queryKeys.enquiriesRoot(scope, kind), 'detail', id] as const,
   // S-VEND-05/06/08, S-PROV-06/07 owner catalogue, kind-scoped like enquiries.
@@ -326,8 +327,19 @@ export const queryKeys = {
     ['private', scope, 'business', kind, 'inventory'] as const,
   // Owner image upload limits per purpose and target business (never a file
   // name, bytes or preview path).
-  ownerImagePolicy: (scope: AccountScope, purpose: string, businessId: string) =>
-    ['private', scope, 'media', 'owner-image-policy', purpose, businessId] as const,
+  ownerImagePolicy: (
+    scope: AccountScope,
+    purpose: string,
+    businessId: string,
+  ) =>
+    [
+      'private',
+      scope,
+      'media',
+      'owner-image-policy',
+      purpose,
+      businessId,
+    ] as const,
   // S-VEND-13 / S-PROV-08 owner services, kind-scoped like products/enquiries.
   servicesRoot: (scope: AccountScope, kind: 'shop' | 'provider') =>
     ['private', scope, 'business', kind, 'services'] as const,

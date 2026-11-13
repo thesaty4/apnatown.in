@@ -6,6 +6,7 @@ import { StatusBadge } from '@apnatown/ui/primitives/Badge';
 import { Button } from '@apnatown/ui/primitives/Button';
 import { useVideoComments, useVideoLikeAction } from '../engagement';
 import { reelBusinessName } from './ReelInfo';
+import { ReelLinkList } from './ReelLinks';
 
 function SideComments({
   item,
@@ -144,6 +145,15 @@ function ActiveDetails({
           </p>
         )}
       </div>
+      <section
+        aria-labelledby={`reel-side-links-${item.id}`}
+        className="grid gap-2"
+      >
+        <h3 id={`reel-side-links-${item.id}`} className="m-0 text-h4">
+          {t('linkedTitle')}
+        </h3>
+        <ReelLinkList links={item.links} />
+      </section>
       <SideComments item={item} onComments={onComments} />
     </div>
   );

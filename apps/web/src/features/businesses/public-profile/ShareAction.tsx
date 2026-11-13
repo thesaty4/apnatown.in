@@ -12,7 +12,16 @@ const TOAST_MS = 5_000;
  * canonical profile URL. Video shares stay engagement-owned (ShareSheet);
  * profile shares are not recorded. Dismissing the native sheet is not an error.
  */
-export function ShareAction({ name, path }: { name: string; path: string }) {
+export function ShareAction({
+  name,
+  path,
+  label,
+}: {
+  name: string;
+  path: string;
+  /** Visible label override (e.g. product detail "Share product"). */
+  label?: string;
+}) {
   const t = useTranslations('business.publicProfile.actions');
   const [toast, setToast] = useState<{ id: number; ok: boolean }>();
   useEffect(() => {
@@ -27,10 +36,15 @@ export function ShareAction({ name, path }: { name: string; path: string }) {
     const url = new URL(path, window.location.origin).toString();
     if (typeof navigator.share === 'function') {
       try {
-        await navigator.share({ title: name, text: t('shareText', { name }), url });
+        await navigator.share({
+          title: name,
+          text: t('shareText', { name }),
+          url,
+        });
         return;
       } catch (error) {
-        if (error instanceof DOMException && error.name === 'AbortError') return;
+        if (error instanceof DOMException && error.name === 'AbortError')
+          return;
       }
     }
     try {
@@ -50,7 +64,7 @@ export function ShareAction({ name, path }: { name: string; path: string }) {
         onClick={() => void share()}
       >
         <NavIcon name="share" className="size-4.5 shrink-0" />
-        {t('share')}
+        {label ?? t('share')}
       </button>
       <div
         role="status"

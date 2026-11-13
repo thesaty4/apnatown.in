@@ -6,6 +6,7 @@ import { formatCompactCount, type VideoFeedItem } from '@apnatown/shared';
 import { NavIcon, type NavIconName } from '../../shared/ui/NavIcon';
 import { ShareSheet, useVideoLikeAction } from '../engagement';
 import type { ReelGate } from './ReelGateSheet';
+import { ReelShopSheet } from './ReelLinks';
 import { reelCountClassName, reelRailButtonClassName } from './reel-styles';
 
 function RailAction({
@@ -132,6 +133,12 @@ export function ReelRail({
               countLabel={t('sharesCount', { count: item.shareCount })}
               onClick={open}
             />
+          )}
+        />
+        <ReelShopSheet
+          item={item}
+          renderTrigger={(open) => (
+            <RailAction icon="cart" label={t('shopVideo')} onClick={open} />
           )}
         />
         <RailAction icon="dots" label={t('moreOptions')} onClick={onMore} />

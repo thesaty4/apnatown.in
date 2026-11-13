@@ -30,7 +30,9 @@ import { ServicesModule } from './modules/services/services.module';
 import { BusinessPublicModule } from './modules/businesses/business-public.module';
 import { BusinessesModule } from './modules/businesses/businesses.module';
 import { CartCheckoutModule } from './modules/cart-checkout/cart-checkout.module';
+import { DeliveryModule } from './modules/delivery/delivery.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { ReviewsModule } from './modules/reviews/reviews.module';
 import { RuntimeModule } from './shared/health/runtime.module';
 import { RateLimitGuard } from './shared/rate-limit/rate-limit';
 
@@ -74,6 +76,14 @@ export class AppModule {
       businessContext,
       media,
     ]);
+    const delivery = DeliveryModule.forRoot([
+      runtime,
+      geo,
+      users,
+      audit,
+      admin,
+      settings,
+    ]);
     const services = ServicesModule.forRoot(runtime, catalog, businessContext, media);
     const engagement = EngagementModule.forRoot(
       runtime,
@@ -102,7 +112,8 @@ export class AppModule {
         services,
         BusinessPublicModule.forRoot(runtime, media),
         businesses,
-        AdminApprovalsModule.forRoot(runtime, businesses, audit),
+        delivery,
+        AdminApprovalsModule.forRoot(runtime, businesses, delivery, audit),
         AdminListingsModule.forRoot(
           runtime,
           admin,
@@ -111,6 +122,7 @@ export class AppModule {
           audit,
         ),
         CartCheckoutModule.forRoot(runtime),
+        ReviewsModule.forRoot(runtime),
         NotificationsModule.forRoot(runtime, users, admin, businessContext),
       ],
       controllers: [HealthController],

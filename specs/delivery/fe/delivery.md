@@ -85,6 +85,23 @@ Approved rider routes use `DashboardShell`/rider nav per permission matrix; pend
 - Special states: empty authorized city; stale/unavailable location/ETA, disconnected stream, permission/scope revoked, map unavailable with usable list. All cities means union of allowed areas, not all jobs in those cities.
 - Acceptance: Given an admin assigned one area within a city, when selecting All or subscribing, then other areas' pins/counts/rows never appear. Given delivered/cancelled job, when SSE updates, then pin/list entry leaves without reload. Given permission removed/reconnect, when data refreshes, then stale private pins clear and no client-only filter protects the response. Given keyboard/screen reader use, when map unavailable, then list/combobox provides the same actionable information.
 
+### Implemented slice: Rider dashboard (S-RIDE-01..08)
+
+`/rider/{onboarding,home,requests,active,history,earnings,feedback,profile}`
+(`app/rider`, force-dynamic + noindex; `/rider` → `/rider/home`) use the shared
+`DashboardShell` with React Query over the typed client
+(`features/rider/{api,queries}.ts`, account-scoped private keys). Guests go to
+login with `returnTo`; onboarding/profile accept any authenticated user, other
+screens require the rider role (no-permission state links to onboarding). The
+demo "Switch role" sheet signs in as the rider persona and opens `/rider/home`;
+login `landing()` sends rider-only sessions there.
+
+**In progress / gated:** KYC document upload (explicit unavailable state; submit
+surfaces `RIDER_REQUIREMENTS_UNAVAILABLE`), offer accept/reject, active-job
+step actions, SSE streams, history detail sheet, Reviews (S-RIDE-07 shows
+"Ratings not available yet") and payouts ("Payout details unavailable"). Runtime/
+browser checks and automated test files are intentionally not run.
+
 ## Shared order integrations
 
 F-OR-002, F-OR-003, F-OR-004, F-VD-008, F-PV-005, F-AD-002, F-AD-007; S-CUST-14, S-VEND-04, S-PROV-05, S-ADMN-02, S-ADMN-08. [Orders FE](../../orders/fe/orders.md) owns these pages; Delivery owns their typed actions/projections.

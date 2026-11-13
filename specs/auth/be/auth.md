@@ -44,7 +44,7 @@ Use the shared error format from [backend-shared.md](../../_foundation/backend-s
 8. Check CSRF token and request Origin on every browser request that changes data, including login and logout.
 9. Logout revokes the current session and clears its cookie. Expired sessions return `SESSION_EXPIRED`.
 10. Do not redirect to a URL supplied to Auth. Only the frontend may return the user to a safe internal page.
-11. Demo login is never available in production. It only signs in an existing active seeded user for an allowed persona and must not create users or grant roles.
+11. Demo login is never available in production. It only signs in an existing active seeded user for an allowed persona and must not create users or grant roles. Allowed personas (`DEMO_PERSONAS`, seeded by `db:seed`): `customer` (u1, 9876543210), `vendor` (b1 owner, 9876500001), `provider` (s1 owner, 9876500101), `rider` (r1 Sunil Yadav, 9876500401; approved Delivery rider profile), `admin` (ad1, 9876500501) and `super_admin` (synthetic 9876500500). The seeded user must already hold the persona role.
 12. Email and Google login stay unavailable until Q-30 is decided. Phone number changes stay read-only until Q-43 is decided.
 
 ## Error codes added

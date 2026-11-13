@@ -74,6 +74,9 @@ export default async function RootLayout({
     system: catalogue.system,
     notifications: catalogue.notifications,
     cart: catalogue.cart,
+    rider: catalogue.rider,
+    reviews: catalogue.reviews,
+    errors: { delivery: catalogue.errors.delivery },
   };
   return (
     <html lang={locale} data-theme={theme} className={fontVariables}>

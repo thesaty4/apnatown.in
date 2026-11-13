@@ -4,6 +4,16 @@ Features: F-RV-001, F-RV-002, F-RV-003, F-RV-004, F-RV-005, F-RV-006, F-RV-007, 
 
 Frontend counterpart: [FE reviews](../fe/reviews.md)
 
+## Implementation status
+
+2026-11-13, public read only: **`GET /reviews` implemented; shared/API/client builds passed; migration and seed applied to the local DB on explicit request; HTTP runtime checks deferred**.
+
+- Implemented: shared entry `@apnatown/shared/reviews` (`ReviewListQuerySchema`, `ReviewCardSchema`, `ReviewSummarySchema`, `ReviewPageSchema`, `reviewAuthorLabel`), `ReviewsModule` with public `GET /reviews` (operationId `reviewsList`, IP rate limit 120/min, `private, no-store`). Visible set = `published|reported`, not deleted, active non-deleted author, publicly visible target (`products_public_discovery` / `services_public_discovery` / `businesses_public_context`); otherwise `COMMON_NOT_FOUND`. Summary (1-decimal average, count, `[1★..5★]` breakdown) uses the same set. Sorts `recent` (created_at, id DESC) and `helpful` (helpful_count, created_at, id DESC) with a signed keyset cursor bound to target + sort; partial indexes in migration `20261113070000_reviews_public_read`. Authors are first name + last initial.
+- Not yet: `rider` public listing (RV-Q3), per-subject `helpfulByMe/reportedByMe/allowedActions`, `review_aggregates`/`review_reports`/`review_helpful_votes` tables.
+- Gated on Orders proof and BR-09/RV-Q1/RV-Q2: all writes (POST/PATCH/DELETE, eligibility, helpful, reports, replies, moderation, `/reviews/me`, rider/owner/admin reads).
+- Known divergence: `reviews_public_aggregates` (discovery rating/count) still counts `published` only, while rule 4 and this list count `published` + `reported`; reconcile when Reviews owns aggregates.
+- Seed: only sample-pack reviews whose reviewer exists in sample `users` are inserted (rv6, rv8, rv9); others are skipped with a counted reason. Sample tags are stored as labels (`TODO(verify)` tag-key catalogue).
+
 Contents: [Tables](#tables) · [Identity and proof](#target-identity-and-proof-contracts) · [Endpoints](#endpoints) · [Rules](#rules-and-use-cases) · [Acceptance](#acceptance-criteria) · [Decisions](#open-questions)
 
 ## Responsibility

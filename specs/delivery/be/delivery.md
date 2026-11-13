@@ -8,6 +8,17 @@ Frontend counterpart: [FE delivery](../fe/delivery.md)
 
 Own rider application/approval, platform jobs/offers, secure customer handover codes for **all** modes, live tracking and immutable rider earning snapshots. Orders owns lifecycle/cases/stock; Payments owns collection/refund execution. Reviews owns rider ratings. Settlement authority/payout records remain decision-gated, not “marked paid by finance”.
 
+## Implementation status
+
+2026-11-13, rider side without Orders: **implemented; shared/API/client builds passed; migration and seed authored but not applied; runtime checks deferred; security review pending**.
+
+- Implemented: `rider_profiles` + `rider_documents` (migration `20261113060000_delivery_riders`, runtime grants), shared entry `@apnatown/shared/delivery`, `DeliveryModule` with `GET/PUT /delivery/riders/me`, `POST /delivery/riders/me/online|location|disputes`, `GET /delivery/riders/me/summary|offers/current|active|history|history/{jobId}|earnings`, `GET /delivery/admin/riders/applications`, `POST /delivery/admin/riders/{userId}/decision` (audited, Users rider grant, `rider.application_submitted|decided` outbox) and Admin approvals `type=rider` cards. Payout UPI/bank are AES-GCM encrypted with the PII key (context `rider:{userId}:payout:{upi|bank}`) and returned masked only.
+- Decisions taken: GET with no application returns the empty first draft (`version 0`, `status draft`); stale versions return `DELIVERY_VERSION_CONFLICT`; online/location are operational state (rider-row lock, no application version bump; offline and any non-approved transition clear the latest location). A missing/draft application on the admin decision is `COMMON_NOT_FOUND`.
+- Gated: typed KYC (Q-05) and Media's private `kyc_document` purpose do not exist, so `requirements.availability='unavailable'`, attaching `documents` and `submit=true` (after field checks) return `RIDER_REQUIREMENTS_UNAVAILABLE` (`details.field='documents'`); `canSubmit` stays false. The admin document viewer endpoint is not shipped.
+- Gated on Orders/Payments: `delivery_jobs`, `delivery_offers`, `delivery_codes`, offer accept/reject, job events/complete/call, customer tracking/code/reissue, pickup/self-dispatch flows, vendor/admin assignment, admin live/SSE, rider SSE and job-linked disputes/notes. `DeliveryJobReadPort` is bound to an empty adapter, so summary/earnings are zero, history is empty, `offers/current` is `{offer:null}`, `active`/history detail and job-linked disputes are `DELIVERY_JOB_NOT_FOUND`, and payout is `unavailable` with `pendingPaise:null`.
+- Provisional (`TODO(verify)`): dispute `reasonKey` values `account|payout|delivery|other` (details ≤ 960 chars to fit Settings' 1000-char message with the reason prefix); bank account accepted as 9–18 digits.
+- Demo: persona `rider` = sample `r1` Sunil Yadav (`9876500401`), seeded insert-only as an approved, offline rider in Hata Road with no payout instrument.
+
 Use [foundation](../../_foundation/backend-shared.md) flat errors `{code,message_key,status,details,correlationId}`, CSRF/session guards and allow-listed DTOs. Money is `bigint` paise in storage, safe-integer paise **numbers** in JSON. No raw phone, code, KYC or payout instrument in logs/events/general APIs.
 
 ## Tables

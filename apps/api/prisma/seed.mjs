@@ -14,6 +14,7 @@ import { seedCatalogData } from './seed-catalog-data.mjs';
 import { seedCommerceData } from './seed-commerce-data.mjs';
 import { seedEngagementData } from './seed-engagement-data.mjs';
 import { seedNotificationData } from './seed-notification-data.mjs';
+import { seedReviewData } from './seed-review-data.mjs';
 
 const require = createRequire(import.meta.url);
 const SAMPLE_DATA = new URL(
@@ -27,7 +28,8 @@ const KEY = /^[a-f0-9]{64}$/;
 function loadHelpers(env) {
   if (
     !KEY.test(env.PII_ENCRYPTION_KEY ?? '') ||
-    !KEY.test(env.PHONE_LOOKUP_HASH_KEY ?? '')
+    !KEY.test(env.PHONE_LOOKUP_HASH_KEY ?? '') ||
+    !KEY.test(env.CURSOR_SIGNING_KEY ?? '')
   )
     throw new Error('SEED_KEYS_REQUIRED');
   let modules;
@@ -43,12 +45,16 @@ function loadHelpers(env) {
       wire: require('@apnatown/shared/wire'),
       search: require('@apnatown/shared/search'),
       notification: require('../dist/modules/notifications/application/notification-policy.js'),
+      listingReports: require('../dist/modules/admin/domain/listing-report.js'),
     };
   } catch (error) {
     if (error.code === 'MODULE_NOT_FOUND')
       throw new Error('API_BUILD_REQUIRED', { cause: error });
     throw error;
   }
+  const subjectKey = modules.listingReports.listingReportSubjectKey(
+    env.CURSOR_SIGNING_KEY,
+  );
   return {
     crypto: new modules.crypto.NodeIdentityCrypto(
       env.PII_ENCRYPTION_KEY,
@@ -67,6 +73,9 @@ function loadHelpers(env) {
     communicationScopeSchema: modules.admin.CommunicationScopeSchema,
     notificationPolicy: modules.notification.TEMPLATE_POLICY,
     notificationContentVersion: modules.notification.TEMPLATE_CONTENT_VERSION,
+    // Same keyed subject hash as ListingReportIntakeService (live dedupe).
+    listingReportSubjectHash: (userId) =>
+      modules.listingReports.listingReportSubjectHash(subjectKey, `user:${userId}`),
   };
 }
 
@@ -251,6 +260,7 @@ async function apply(client, fixtures, listings, personas, providers, helpers, s
     personas: 0,
     adminAccounts: 0,
     personaConflicts: 0,
+    riders: 0,
     expertise: 0,
     enquiries: 0,
     settings: 0,
@@ -307,6 +317,9 @@ async function apply(client, fixtures, listings, personas, providers, helpers, s
     ...await seedEngagementData(client, context),
     ...await seedNotificationData(client, context),
   };
+  const reviews = await seedReviewData(client, context);
+  Object.assign(counts.extended, reviews.tables);
+  counts.reviewSkips = reviews.skipped;
   return counts;
 }
 
@@ -354,9 +367,12 @@ export async function seed(env) {
       `${counts.listingsSkipped} listings skipped (existing, conflicting or missing settings); ` +
       `${counts.personas} demo persona users and ${counts.adminAccounts} admin accounts added; ` +
       `${counts.personaConflicts} persona role conflicts; ` +
+      `${counts.riders} demo rider profiles added; ` +
       `${counts.expertise} provider expertise rows and ${counts.enquiries} enquiries added; ` +
       `${counts.settings} local settings added\n`,
   );
   for (const [table, inserted] of Object.entries(counts.extended))
     process.stdout.write(`Demo seed: ${table}: ${inserted} rows added\n`);
+  for (const [reason, skipped] of Object.entries(counts.reviewSkips))
+    process.stdout.write(`Demo seed: sample reviews skipped (${reason}): ${skipped}\n`);
 }

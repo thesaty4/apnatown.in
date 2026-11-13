@@ -8,6 +8,7 @@ import {
   VideoPageSchema,
   VideoSchema,
   VideoFeedItemSchema,
+  VideoFeedLinkSchema,
   VideoFeedPageSchema,
   VideoFeedQuerySchema,
   type VideoFeedPill,
@@ -58,6 +59,7 @@ import {
 } from '../domain/videos';
 
 const positionSchema = z.tuple([TimestampSchema, IdSchema]);
+const VideoFeedLinksSchema = z.array(VideoFeedLinkSchema).max(5);
 const feedPositionSchema = z.tuple([z.number().int().nonnegative(), IdSchema]);
 const RECEIPT_TTL_MS = 24 * 60 * 60 * 1000;
 const FEED_SNAPSHOT_TTL_MS = 30 * 60 * 1000;
@@ -455,6 +457,7 @@ export class VideoService {
       likeCount: count(row.likeCount),
       commentCount: count(row.commentCount),
       shareCount: count(row.shareCount),
+      links: VideoFeedLinksSchema.parse(row.links),
     });
   }
 

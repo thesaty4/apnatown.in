@@ -38,6 +38,15 @@ const implemented = new Set([
   '/provider/profile',
   '/provider/qr',
   '/provider/services',
+  '/rider',
+  '/rider/home',
+  '/rider/onboarding',
+  '/rider/requests',
+  '/rider/active',
+  '/rider/history',
+  '/rider/earnings',
+  '/rider/feedback',
+  '/rider/profile',
   '/admin',
   '/admin/approvals',
   '/admin/audit',
@@ -106,12 +115,21 @@ export function landing(
   returnTo: unknown,
   locale: Locale,
 ) {
-  // Roles never imply business/rider approval. Their dashboards have no live owner gate yet.
+  // Roles never imply business/rider approval; each dashboard keeps its own
+  // gate. Only a rider without a higher operational role opens Rider home.
   return (
     safeReturnTo(returnTo) ??
-    (session.roles.includes('customer') ? publicHref('/', locale) : '/account')
+    (riderLanding(session.roles)
+      ? '/rider/home'
+      : session.roles.includes('customer')
+        ? publicHref('/', locale)
+        : '/account')
   );
 }
+
+const aboveRider = ['super_admin', 'admin', 'vendor', 'provider'];
+const riderLanding = (roles: readonly string[]) =>
+  roles.includes('rider') && !roles.some((role) => aboveRider.includes(role));
 
 export function loginHref(locale: Locale, returnTo?: string) {
   const destination = safeReturnTo(returnTo);

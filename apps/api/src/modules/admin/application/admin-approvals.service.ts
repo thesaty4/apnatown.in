@@ -19,6 +19,10 @@ import {
   BUSINESS_ADMIN_READ,
   type BusinessApplicationsReadPort,
 } from '../../businesses/application/business-ports';
+import {
+  RIDER_APPLICATIONS_READ,
+  type RiderApplicationsReadPort,
+} from '../../delivery/application/delivery-ports';
 
 const KIND_FOR_TYPE: Readonly<Record<AdminBusinessApprovalType, BusinessKind>> =
   { business: 'shop', provider: 'provider' };
@@ -26,14 +30,17 @@ const KIND_FOR_TYPE: Readonly<Record<AdminBusinessApprovalType, BusinessKind>> =
 /**
  * S-ADMN-02 approvals queue composed from owning modules' read ports. Admin
  * never writes the owning tables; decisions go to the owning module. Rider
- * approvals need the Delivery module, which has not shipped: that type is
- * reported unavailable with no items rather than an invented empty queue.
+ * cards come from Delivery's scoped queue (decisions: POST
+ * /delivery/admin/riders/{userId}/decision); the shared detail view stays
+ * business-only.
  */
 @Injectable()
 export class AdminApprovalsService {
   constructor(
     @Inject(BUSINESS_ADMIN_READ)
     private readonly businesses: BusinessApplicationsReadPort,
+    @Inject(RIDER_APPLICATIONS_READ)
+    private readonly riders: RiderApplicationsReadPort,
     @Inject(AUDIT_ENTITY_HISTORY)
     private readonly history: AuditEntityHistoryPort,
   ) {}
@@ -42,12 +49,7 @@ export class AdminApprovalsService {
     ctx: AdminReadContext,
     query: AdminApprovalQuery,
   ): Promise<AdminApprovalPage> {
-    if (query.type === 'rider')
-      return AdminApprovalPageSchema.parse({
-        items: [],
-        nextCursor: null,
-        unavailable: ['rider'],
-      });
+    if (query.type === 'rider') return this.riderPage(ctx, query);
     const type = query.type;
     const page = await this.businesses.list(ctx, {
       view: 'applications',
@@ -63,6 +65,33 @@ export class AdminApprovalsService {
         nameEn: card.nameEn,
         nameHi: card.nameHi,
         categoryId: card.categoryId,
+        cityId: card.cityId,
+        areaId: card.areaId,
+        submittedAt: card.submittedAt,
+        status: card.status,
+        version: card.version,
+      })),
+      nextCursor: page.nextCursor,
+      unavailable: [],
+    });
+  }
+
+  private async riderPage(
+    ctx: AdminReadContext,
+    query: AdminApprovalQuery,
+  ): Promise<AdminApprovalPage> {
+    const page = await this.riders.list(ctx, {
+      status: query.status,
+      ...(query.cursor ? { cursor: query.cursor } : {}),
+      limit: query.limit,
+    });
+    return AdminApprovalPageSchema.parse({
+      items: page.items.map((card) => ({
+        type: 'rider',
+        id: card.userId,
+        nameEn: card.fullName,
+        nameHi: null,
+        categoryId: null,
         cityId: card.cityId,
         areaId: card.areaId,
         submittedAt: card.submittedAt,

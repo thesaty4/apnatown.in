@@ -8,7 +8,7 @@ export interface paths {
         };
         /**
          * Scoped approvals queue
-         * @description type=business (shops) | provider (service providers) | rider (default business) and status=pending|changes_requested|approved|rejected (default pending): applications inside the caller's assigned city/area scope (super_admin: all), oldest first with a caller/filter/scope-bound keyset cursor; limit <= 50. Rider approvals belong to the Delivery module, which has not shipped: type=rider returns no items and unavailable=['rider']. Decide via POST /businesses/admin/applications/{id}/decision. private, no-store.
+         * @description type=business (shops) | provider (service providers) | rider (default business) and status=pending|changes_requested|approved|rejected (default pending): applications inside the caller's assigned city/area scope (super_admin: all), oldest first with a caller/filter/scope-bound keyset cursor; limit <= 50. type=rider lists Delivery rider applications (id = rider user ID, nameEn = full name). Decide businesses via POST /businesses/admin/applications/{id}/decision and riders via POST /delivery/admin/riders/{userId}/decision. private, no-store.
          */
         get: operations["adminApprovals"];
         put?: never;
@@ -1769,6 +1769,250 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/delivery/admin/riders/{userId}/decision": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Decide on a rider application (ST-approval)
+         * @description {action,reason?,expectedVersion}: approve|reject|request_changes from pending; suspend from approved (forces offline); restore from suspended. reject/request_changes require a reason. Requires approvals:edit over the application city/area (rechecked in the transaction; super_admin platform-wide); an admin never decides their own application. Status, the Users rider role grant (into approved), one audit entry and rider.application_decided commit atomically. private, no-store.
+         */
+        post: operations["adminRiderDecision"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/delivery/admin/riders/applications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Scoped rider application queue
+         * @description Submitted rider applications whose validated city/area is inside the caller's assigned scope (super_admin: all), filtered by the allow-listed status (default pending), oldest first with a caller/filter/scope-bound keyset cursor; limit <= 50. Cards carry version and ST-approval allowedActions; never phone, KYC or payout. private, no-store.
+         */
+        get: operations["adminRiderApplications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/delivery/riders/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The caller's rider application/profile
+         * @description RiderProfileDTO for the session user in any status. A user with no application receives the empty first draft (version 0, status draft, canEdit). Payout is server-masked only; documents are typed private references. requirements.availability is unavailable until the typed KYC policy (Q-05) and Media private documents ship. private, no-store.
+         */
+        get: operations["riderMe"];
+        /**
+         * Save the rider application draft / submit
+         * @description {expectedVersion (0 for the first draft), step, profile?, vehicle?, payout?, documents?, submit?}. Draft validates supplied steps only; profile.areaId is validated by Geo and implies its city. Editable in draft, rejected and changes_requested. submit=true checks every required field, verified identity and the typed document policy, then moves to pending and emits rider.application_submitted. No role/status/online field is accepted. A rejected submit commits nothing. private, no-store.
+         */
+        put: operations["riderSave"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/delivery/riders/me/active": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Currently assigned job
+         * @description RiderJobDTO of the approved rider's assigned job. Jobs need Orders/Payments, which have not shipped: no job can exist yet. private, no-store.
+         */
+        get: operations["riderActiveJob"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/delivery/riders/me/disputes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Report a rider dispute
+         * @description {jobId?, reasonKey, details}. Without jobId the report is delegated to Settings support intake (source rider) and returns the persisted supportMessageId. A jobId must name the caller's own assigned/completed job; jobs need Orders, so a supplied jobId is DELIVERY_JOB_NOT_FOUND. details is plain text and never logged. private, no-store.
+         */
+        post: operations["riderDisputeCreate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/delivery/riders/me/earnings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Own earnings for a rolling period
+         * @description range=day|week (rolling [asOf-24h|7x24h, asOf)). Totals use persisted earned snapshots; payout availability is unavailable with pendingPaise null until a settlement owner is approved (never zero/paid). Jobs need Orders/Payments, which have not shipped: no job can exist yet. private, no-store.
+         */
+        get: operations["riderEarnings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/delivery/riders/me/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Own terminal job history
+         * @description range=all|today|week (rolling 24 h / 7x24 h), keyset cursor pinned to asOf, limit <= 50. Jobs need Orders/Payments, which have not shipped: no job can exist yet. private, no-store.
+         */
+        get: operations["riderHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/delivery/riders/me/history/{jobId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Own terminal job detail
+         * @description Persisted estimate/earned breakdown of the caller's own job. Jobs need Orders/Payments, which have not shipped: no job can exist yet. private, no-store.
+         */
+        get: operations["riderHistoryDetail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/delivery/riders/me/location": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Report the latest location
+         * @description {lat,lng} WGS84. Approved online riders; stores the latest point only (no trail), never logged. Rate limited to 1 per 5 s. private, no-store.
+         */
+        post: operations["riderLocation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/delivery/riders/me/offers/current": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Current delivery request
+         * @description {offer} for an approved online rider; {offer:null} is the explicit no-offer state. Jobs need Orders/Payments, which have not shipped: no job can exist yet. The SSE stream is not implemented. private, no-store.
+         */
+        get: operations["riderCurrentOffer"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/delivery/riders/me/online": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Go online/offline
+         * @description {online}. Approved riders only (BR-06), idempotent by state under the rider row lock; going offline clears the latest location and is refused during an active job. private, no-store.
+         */
+        post: operations["riderOnline"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/delivery/riders/me/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Rider home summary
+         * @description Rolling 24 h [asOf-24h, asOf) completed count and earned total (paise), online and approval status, active job when assigned; timeZone Asia/Kolkata is display-only. Jobs need Orders/Payments, which have not shipped: no job can exist yet. private, no-store.
+         */
+        get: operations["riderSummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/engagement/bookmarks/{targetType}/{targetId}": {
         parameters: {
             query?: never;
@@ -2440,6 +2684,26 @@ export interface paths {
         };
         /** Public product detail for /product/[slug]; checkout is unavailable */
         get: operations["getPublicProduct"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Public reviews, rating summary and star breakdown for a product, service or business
+         * @description Only published/reported reviews of a publicly visible target. Authors are shown as first name + last initial. Keyset cursor is bound to the target and sort. Rider reviews have no public listing (RV-Q3).
+         */
+        get: operations["reviewsList"];
         put?: never;
         post?: never;
         delete?: never;
@@ -5658,7 +5922,7 @@ export interface components {
         };
         DemoSessionInputDto: {
             /** @enum {string} */
-            persona: "customer" | "vendor" | "provider" | "admin" | "super_admin";
+            persona: "customer" | "vendor" | "provider" | "rider" | "admin" | "super_admin";
         };
         EmptyBodyDto: Record<string, never>;
         EmptyDto: Record<string, never>;
@@ -7050,6 +7314,452 @@ export interface components {
                 viewCount: number;
             }[];
             nextCursor: string | null;
+        };
+        ReviewPageDto: {
+            items: {
+                authorLabel: string;
+                /** Format: date-time */
+                createdAt: string;
+                helpfulCount: number;
+                /** Format: uuid */
+                id: string;
+                /** Format: date-time */
+                ownerRepliedAt: string | null;
+                ownerReply: string | null;
+                rating: number;
+                /** @enum {string} */
+                status: "published" | "reported";
+                tags: string[];
+                text: string;
+            }[];
+            nextCursor: string | null;
+            summary: {
+                average: number | null;
+                breakdown: number[];
+                count: number;
+            };
+        };
+        RiderApplicationPageDto: {
+            items: {
+                allowedActions: ("approve" | "reject" | "request_changes" | "suspend" | "restore")[];
+                /** Format: uuid */
+                areaId: string | null;
+                /** Format: uuid */
+                cityId: string | null;
+                /** Format: date-time */
+                createdAt: string;
+                fullName: string | null;
+                /** @enum {string} */
+                status: "draft" | "pending" | "approved" | "rejected" | "changes_requested" | "suspended" | "inactive";
+                /** Format: date-time */
+                submittedAt: string | null;
+                /** Format: uuid */
+                userId: string;
+                /** @enum {string|null} */
+                vehicleType: "bike" | "scooter" | "cycle" | null;
+                version: number;
+            }[];
+            nextCursor: string | null;
+        };
+        RiderCurrentOfferDto: {
+            offer: {
+                distanceM: number;
+                dropArea: string;
+                estimate: {
+                    basePaise: number;
+                    /** Format: date-time */
+                    estimatedAt: string;
+                    perKmPaise: number;
+                    settingsVersion: string;
+                    totalPaise: number;
+                };
+                /** Format: date-time */
+                expiresAt: string;
+                itemCount: number;
+                /** Format: uuid */
+                jobId: string;
+                /** Format: uuid */
+                offerId: string;
+                pickup: {
+                    area: string;
+                    businessName: string;
+                };
+                /** Format: date-time */
+                serverTime: string;
+                version: number;
+            } | null;
+        };
+        RiderDecisionDto: {
+            /** @enum {string} */
+            action: "approve" | "reject" | "request_changes" | "suspend" | "restore";
+            expectedVersion: number;
+            reason?: string;
+        };
+        RiderDecisionResultDto: {
+            /** Format: date-time */
+            decidedAt: string;
+            /** @enum {string} */
+            previousStatus: "draft" | "pending" | "approved" | "rejected" | "changes_requested" | "suspended" | "inactive";
+            /** @enum {string} */
+            status: "draft" | "pending" | "approved" | "rejected" | "changes_requested" | "suspended" | "inactive";
+            /** Format: uuid */
+            userId: string;
+            version: number;
+        };
+        RiderDisputeInputDto: {
+            details: string;
+            /** Format: uuid */
+            jobId?: string;
+            /** @enum {string} */
+            reasonKey: "account" | "payout" | "delivery" | "other";
+        };
+        RiderDisputeResultDto: {
+            /** @enum {string} */
+            kind: "support";
+            /** Format: uuid */
+            supportMessageId: string;
+        };
+        RiderDraftWriteDto: {
+            documents?: {
+                /** Format: uuid */
+                assetId: string;
+                /** @enum {string} */
+                kind: "selfie" | "licence" | "id_proof" | "rc" | "other";
+            }[];
+            expectedVersion: number;
+            payout?: {
+                bankAccount?: string;
+                upi: string;
+            };
+            profile?: {
+                /** Format: uuid */
+                areaId?: string;
+                /** Format: uuid */
+                cityId?: string;
+                fullName: string;
+            };
+            step: 1 | 2 | 3 | 4 | 5;
+            submit?: boolean;
+            vehicle?: {
+                number?: string;
+                /** @enum {string} */
+                type: "bike" | "scooter" | "cycle";
+            };
+        };
+        RiderEarningsDto: {
+            /** Format: date-time */
+            asOf: string;
+            completedCount: number;
+            nextCursor: string | null;
+            payout: {
+                /** @enum {string} */
+                availability: "unavailable" | "available";
+                items: {
+                    amountPaise: number;
+                    /** Format: date-time */
+                    periodEnd: string;
+                }[];
+                pendingPaise: number | null;
+            };
+            /** Format: date-time */
+            periodEnd: string;
+            /** Format: date-time */
+            periodStart: string;
+            rides: {
+                distanceM: number;
+                dropArea: string;
+                earned?: {
+                    basePaise: number;
+                    distanceM: number;
+                    distancePayPaise: number;
+                    /** Format: date-time */
+                    earnedAt: string;
+                    perKmPaise: number;
+                    roundingPaise: number;
+                    settingsVersion: string;
+                    totalPaise: number;
+                };
+                estimate: {
+                    basePaise: number;
+                    /** Format: date-time */
+                    estimatedAt: string;
+                    perKmPaise: number;
+                    settingsVersion: string;
+                    totalPaise: number;
+                };
+                /** Format: uuid */
+                jobId: string;
+                /** Format: uuid */
+                orderId: string;
+                orderNumber: string;
+                /** @enum {string} */
+                reasonKey?: "customer_unreachable" | "wrong_address" | "customer_cancelled" | "vehicle_problem";
+                shopName: string;
+                /** @enum {string} */
+                status: "delivered" | "failed" | "cancelled";
+                timestamps: {
+                    /** Format: date-time */
+                    acceptedAt: string | null;
+                    /** Format: date-time */
+                    cancelledAt: string | null;
+                    /** Format: date-time */
+                    deliveredAt: string | null;
+                    /** Format: date-time */
+                    failedAt: string | null;
+                };
+            }[];
+            /** @enum {string} */
+            timeZone: "Asia/Kolkata";
+            totalPaise: number;
+        };
+        RiderHistoryDto: {
+            distanceM: number;
+            dropArea: string;
+            earned?: {
+                basePaise: number;
+                distanceM: number;
+                distancePayPaise: number;
+                /** Format: date-time */
+                earnedAt: string;
+                perKmPaise: number;
+                roundingPaise: number;
+                settingsVersion: string;
+                totalPaise: number;
+            };
+            estimate: {
+                basePaise: number;
+                /** Format: date-time */
+                estimatedAt: string;
+                perKmPaise: number;
+                settingsVersion: string;
+                totalPaise: number;
+            };
+            /** Format: uuid */
+            jobId: string;
+            /** Format: uuid */
+            orderId: string;
+            orderNumber: string;
+            /** @enum {string} */
+            reasonKey?: "customer_unreachable" | "wrong_address" | "customer_cancelled" | "vehicle_problem";
+            shopName: string;
+            /** @enum {string} */
+            status: "delivered" | "failed" | "cancelled";
+            timestamps: {
+                /** Format: date-time */
+                acceptedAt: string | null;
+                /** Format: date-time */
+                cancelledAt: string | null;
+                /** Format: date-time */
+                deliveredAt: string | null;
+                /** Format: date-time */
+                failedAt: string | null;
+            };
+        };
+        RiderHistoryPageDto: {
+            /** Format: date-time */
+            asOf: string;
+            items: {
+                distanceM: number;
+                dropArea: string;
+                earned?: {
+                    basePaise: number;
+                    distanceM: number;
+                    distancePayPaise: number;
+                    /** Format: date-time */
+                    earnedAt: string;
+                    perKmPaise: number;
+                    roundingPaise: number;
+                    settingsVersion: string;
+                    totalPaise: number;
+                };
+                estimate: {
+                    basePaise: number;
+                    /** Format: date-time */
+                    estimatedAt: string;
+                    perKmPaise: number;
+                    settingsVersion: string;
+                    totalPaise: number;
+                };
+                /** Format: uuid */
+                jobId: string;
+                /** Format: uuid */
+                orderId: string;
+                orderNumber: string;
+                /** @enum {string} */
+                reasonKey?: "customer_unreachable" | "wrong_address" | "customer_cancelled" | "vehicle_problem";
+                shopName: string;
+                /** @enum {string} */
+                status: "delivered" | "failed" | "cancelled";
+                timestamps: {
+                    /** Format: date-time */
+                    acceptedAt: string | null;
+                    /** Format: date-time */
+                    cancelledAt: string | null;
+                    /** Format: date-time */
+                    deliveredAt: string | null;
+                    /** Format: date-time */
+                    failedAt: string | null;
+                };
+            }[];
+            nextCursor: string | null;
+            /** Format: date-time */
+            periodEnd: string;
+            /** Format: date-time */
+            periodStart: string | null;
+        };
+        RiderJobDto: {
+            allowedActions: ("reached_shop" | "picked_up" | "reached_drop" | "fail" | "complete")[];
+            call: {
+                available: boolean;
+                maskedLabel?: string;
+            };
+            distanceM: number;
+            drop: {
+                address: string;
+                firstName: string;
+                location: {
+                    lat: number;
+                    lng: number;
+                } | null;
+            };
+            earned?: {
+                basePaise: number;
+                distanceM: number;
+                distancePayPaise: number;
+                /** Format: date-time */
+                earnedAt: string;
+                perKmPaise: number;
+                roundingPaise: number;
+                settingsVersion: string;
+                totalPaise: number;
+            };
+            estimate: {
+                basePaise: number;
+                /** Format: date-time */
+                estimatedAt: string;
+                perKmPaise: number;
+                settingsVersion: string;
+                totalPaise: number;
+            };
+            financialVersion: number;
+            handover: {
+                attemptsRemaining?: number;
+                codeVersion?: number;
+                /** Format: date-time */
+                expiresAt?: string;
+                /** @enum {string} */
+                kind?: "delivery_otp" | "pickup_code";
+                /** Format: date-time */
+                reissueAvailableAt?: string;
+                /** @enum {string} */
+                state: "not_ready" | "active" | "expired" | "locked" | "consumed";
+            };
+            itemCount: number;
+            items: {
+                /** @enum {string} */
+                availability: "available" | "unavailable";
+                name: string;
+                /** Format: uuid */
+                orderItemId: string;
+                quantity: number;
+                variantLabel?: string;
+            }[];
+            /** Format: uuid */
+            jobId: string;
+            /** Format: uuid */
+            orderId: string;
+            orderNumber: string;
+            orderVersion: number;
+            payment: {
+                currentPayablePaise: number;
+                /** @enum {string} */
+                method: "cod" | "prepaid" | "no_charge";
+                outstandingPaise: number;
+                status: string;
+            };
+            pickup: {
+                area: string;
+                businessName: string;
+            };
+            /** @enum {string} */
+            status: "requested" | "accepted" | "reached_shop" | "picked_up" | "reached_drop" | "delivered" | "failed" | "cancelled";
+            version: number;
+        };
+        RiderLocationInputDto: {
+            lat: number;
+            lng: number;
+        };
+        RiderOnlineInputDto: {
+            online: boolean;
+        };
+        RiderOnlineStateDto: {
+            /** @enum {string} */
+            approvalStatus: "draft" | "pending" | "approved" | "rejected" | "changes_requested" | "suspended" | "inactive";
+            /** Format: date-time */
+            asOf: string;
+            online: boolean;
+        };
+        RiderProfileDto: {
+            capabilities: {
+                canEdit: boolean;
+                canGoOnline: boolean;
+                canSubmit: boolean;
+                canWork: boolean;
+            };
+            documents: {
+                /** Format: uuid */
+                assetId: string;
+                /** @enum {string} */
+                kind: "selfie" | "licence" | "id_proof" | "rc" | "other";
+                /** Format: date-time */
+                uploadedAt: string;
+            }[];
+            payoutMasked?: {
+                bank?: string;
+                upi?: string;
+            };
+            profile: {
+                /** Format: uuid */
+                areaId: string | null;
+                areaName?: string;
+                /** Format: uuid */
+                cityId: string | null;
+                cityName?: string;
+                fullName: string | null;
+            };
+            reason?: string;
+            requirements: {
+                /** @enum {string} */
+                availability: "available" | "unavailable";
+                requiredDocumentKinds: ("selfie" | "licence" | "id_proof" | "rc" | "other")[];
+                requiredFields: string[];
+                version?: string;
+            };
+            /** @enum {string} */
+            status: "draft" | "pending" | "approved" | "rejected" | "changes_requested" | "suspended" | "inactive";
+            vehicle?: {
+                number: string | null;
+                /** @enum {string} */
+                type: "bike" | "scooter" | "cycle";
+            };
+            version: number;
+        };
+        RiderSummaryDto: {
+            /** Format: uuid */
+            activeJobId?: string;
+            /** @enum {string} */
+            approvalStatus: "draft" | "pending" | "approved" | "rejected" | "changes_requested" | "suspended" | "inactive";
+            /** Format: date-time */
+            asOf: string;
+            completedCount: number;
+            online: boolean;
+            /** Format: date-time */
+            periodEnd: string;
+            /** Format: date-time */
+            periodStart: string;
+            /** @enum {string} */
+            timeZone: "Asia/Kolkata";
+            totalPaise: number;
         };
         RoleDeletedDto: {
             /** @enum {boolean} */
@@ -10691,6 +11401,19 @@ export interface components {
                 /** @enum {string} */
                 kind: "watch" | "shorts" | "share" | "reel" | "p";
                 likeCount: number;
+                links: {
+                    nameEn: string;
+                    nameHi: string | null;
+                    priceMaxPaise: number | null;
+                    pricePaise: number | null;
+                    /** @enum {string|null} */
+                    priceType: "from" | "fixed" | "range" | "enquiry" | null;
+                    slug: string;
+                    /** Format: uuid */
+                    targetId: string;
+                    /** @enum {string} */
+                    targetType: "product" | "service";
+                }[];
                 playback: {
                     embedUrl: string;
                     openUrl: string;
@@ -28145,6 +28868,1966 @@ export interface operations {
             };
         };
     };
+    adminRiderDecision: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive command key. Retry the identical decision within 24 hours to replay the stored result; replay rechecks current admin access. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path: {
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RiderDecisionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiderDecisionResultDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for an unknown action, a missing reason or unexpected fields; COMMON_VALIDATION_FAILED for a missing/invalid Idempotency-Key. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_FORBIDDEN without approvals:edit; ADMIN_INACTIVE for a deactivated admin; ADMIN_SCOPE_FORBIDDEN outside the application city/area. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_NOT_FOUND for a missing or draft application. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description RIDER_STATE_CONFLICT when ST-approval does not allow the action; DELIVERY_VERSION_CONFLICT for a stale expectedVersion; idempotency conflicts. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description ADMIN_SELF_ACTION when the caller is the applicant. */
+            422: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED with Retry-After. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on (admins are not admitted); COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    adminRiderApplications: {
+        parameters: {
+            query?: {
+                cursor?: string;
+                limit?: number;
+                status?: string;
+            };
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiderApplicationPageDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for an unknown status, invalid limit or a cursor bound to another caller/filter/scope revision. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_FORBIDDEN without approvals:view or without an active assigned scope; ADMIN_INACTIVE for a deactivated admin. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on (admins are not admitted); COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    riderMe: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiderProfileDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    riderSave: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive key; retry the identical command within 24 hours to replay the stored result. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RiderDraftWriteDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiderProfileDto"];
+                };
+            };
+            /** @description COMMON_VALIDATION_FAILED for invalid/unexpected fields, a city/area mismatch, missing submit fields (details.fields) or a missing/invalid Idempotency-Key. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_FORBIDDEN without a verified phone at submit. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description AREA_NOT_FOUND / CITY_NOT_FOUND for an unknown Geo reference. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description DELIVERY_VERSION_CONFLICT for a stale expectedVersion; RIDER_STATE_CONFLICT when pending, approved, suspended or inactive; idempotency conflicts. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED with Retry-After. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description RIDER_REQUIREMENTS_UNAVAILABLE (details.field=documents) when documents are attached or submit needs the unconfigured typed KYC policy. MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    riderActiveJob: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiderJobDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description RIDER_NOT_APPROVED. COMMON_FORBIDDEN without the live rider role; RIDER_NOT_APPROVED without a rider application row. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description DELIVERY_JOB_NOT_FOUND when no job is assigned. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    riderDisputeCreate: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Case-sensitive key; a retry with the same key returns the same support message. */
+                "Idempotency-Key": string;
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RiderDisputeInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiderDisputeResultDto"];
+                };
+            };
+            /** @description COMMON_VALIDATION_FAILED / VALIDATION_ERROR for invalid fields or a missing/invalid Idempotency-Key. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description DELIVERY_JOB_NOT_FOUND for a supplied jobId. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED (also the shared support intake 5/hour limit). */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    riderEarnings: {
+        parameters: {
+            query?: {
+                range?: string;
+            };
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiderEarningsDto"];
+                };
+            };
+            /** @description COMMON_VALIDATION_FAILED / VALIDATION_ERROR for an unknown range. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_FORBIDDEN without the live rider role; RIDER_NOT_APPROVED without a rider application row. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    riderHistory: {
+        parameters: {
+            query?: {
+                cursor?: string;
+                limit?: number;
+                range?: string;
+            };
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiderHistoryPageDto"];
+                };
+            };
+            /** @description COMMON_VALIDATION_FAILED / VALIDATION_ERROR for an unknown range, invalid limit or foreign cursor. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_FORBIDDEN without the live rider role; RIDER_NOT_APPROVED without a rider application row. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    riderHistoryDetail: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path: {
+                jobId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiderHistoryDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR for an invalid jobId. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_FORBIDDEN without the live rider role; RIDER_NOT_APPROVED without a rider application row. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description DELIVERY_JOB_NOT_FOUND for a missing or foreign job. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    riderLocation: {
+        parameters: {
+            query?: never;
+            header: {
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RiderLocationInputDto"];
+            };
+        };
+        responses: {
+            /** @description Latest location stored. */
+            204: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description VALIDATION_ERROR for out-of-range or non-numeric coordinates. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description RIDER_NOT_APPROVED. COMMON_FORBIDDEN without the live rider role; RIDER_NOT_APPROVED without a rider application row. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description RIDER_NOT_ONLINE when the rider is offline. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED with Retry-After. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    riderCurrentOffer: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiderCurrentOfferDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_FORBIDDEN without the live rider role; RIDER_NOT_APPROVED without a rider application row. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    riderOnline: {
+        parameters: {
+            query?: never;
+            header: {
+                Origin: string;
+                "X-Correlation-ID"?: string;
+                "X-CSRF-Token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RiderOnlineInputDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiderOnlineStateDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description RIDER_NOT_APPROVED when not currently approved. COMMON_FORBIDDEN without the live rider role; RIDER_NOT_APPROVED without a rider application row. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description RIDER_HAS_ACTIVE_JOB when going offline with an active job. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED with Retry-After. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
+    riderSummary: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiderSummaryDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            401: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description COMMON_FORBIDDEN without the live rider role; RIDER_NOT_APPROVED without a rider application row. */
+            403: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            409: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            410: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description Flat error envelope; no submitted values or credentials. */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE while maintenance mode is on; COMMON_UNAVAILABLE when the store is unavailable. */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthErrorDto"];
+                };
+            };
+        };
+    };
     engagementServiceBookmark: {
         parameters: {
             query?: never;
@@ -34245,6 +36928,106 @@ export interface operations {
                 };
             };
             /** @description MAINTENANCE (errors.system.maintenance) while maintenance mode is on and this route is not admitted */
+            503: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds before retrying; sent with MAINTENANCE */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    reviewsList: {
+        parameters: {
+            query: {
+                cursor?: string;
+                limit?: number;
+                sort?: "recent" | "helpful";
+                targetId: string;
+                targetType: "product" | "service" | "business";
+            };
+            header?: {
+                "X-Correlation-ID"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewPageDto"];
+                };
+            };
+            /** @description VALIDATION_ERROR; COMMON_VALIDATION_FAILED for a cursor from another target/sort */
+            400: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description COMMON_NOT_FOUND: target is not publicly visible */
+            404: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description COMMON_RATE_LIMITED: read limit exceeded */
+            429: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Seconds until this rate-limit window resets */
+                    "Retry-After"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description Unexpected failure */
+            500: {
+                headers: {
+                    /** @description Auth, own-account and admin responses are private, no-store. */
+                    "Cache-Control"?: string;
+                    /** @description Validated or generated request ID */
+                    "X-Correlation-ID"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+            /** @description MAINTENANCE or COMMON_UNAVAILABLE */
             503: {
                 headers: {
                     /** @description Auth, own-account and admin responses are private, no-store. */

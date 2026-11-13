@@ -26,9 +26,18 @@ export function AccountNavigation({
   const reels = useTranslations('reels.feed');
   const saved = useTranslations('engagement.saved');
   const cart = useTranslations('cart.nav');
+  const search = useTranslations('search.screen');
   const label = t(state.kind === 'ready' ? 'account' : 'login');
   return (
     <nav aria-label={t('account')} className="flex items-center gap-1">
+      <Link
+        className={iconButton}
+        href={publicHref('/search', locale)}
+        aria-label={search('placeholder')}
+        title={search('title')}
+      >
+        <NavIcon name="search" />
+      </Link>
       <Link
         className={iconButton}
         href={publicHref('/videos', locale)}

@@ -216,7 +216,7 @@ Depends on: platform foundations
 
 | ID | Feature | Roles | Description | Pri |
 |---|---|---|---|---|
-| F-RV-001 | Review flows by target | Customer | Business, product, service/provider, rider; separate forms. | P0 |
+| F-RV-001 | Review flows by target | Customer | Business, product, service/provider, rider; separate forms. Status 2026-11-13: public read list `GET /reviews` implemented (BE); writes gated on Orders/BR-09. | P0 |
 | F-RV-002 | Eligibility | Customer | Verified purchasers or enquirers only; otherwise explanatory message. | P0 |
 | F-RV-003 | Rating, text, photos, tags | Customer | Star input, text, photos, quick tags per target type. | P0 |
 | F-RV-004 | Edit/delete and My reviews | Customer | Manage own reviews. | P0 |

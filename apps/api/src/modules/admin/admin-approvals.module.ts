@@ -4,18 +4,20 @@ import { AdminApprovalsController } from './presentation/admin-approvals.control
 
 /**
  * S-ADMN-02 approvals composition. Imports the owning modules' read ports
- * (Businesses applications, Audit entity history); writes nothing.
+ * (Businesses applications, Delivery rider applications, Audit entity
+ * history); writes nothing.
  */
 @Module({})
 export class AdminApprovalsModule {
   static forRoot(
     runtime: DynamicModule,
     businesses: DynamicModule,
+    delivery: DynamicModule,
     audit: DynamicModule,
   ): DynamicModule {
     return {
       module: AdminApprovalsModule,
-      imports: [runtime, businesses, audit],
+      imports: [runtime, businesses, delivery, audit],
       controllers: [AdminApprovalsController],
       providers: [AdminApprovalsService],
     };

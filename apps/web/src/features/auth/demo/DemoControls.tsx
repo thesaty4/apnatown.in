@@ -68,23 +68,20 @@ function DemoControlsSheet({
           className="grid grid-cols-2 gap-2"
         >
           {demoRoles.map(({ persona, label, emoji }) => {
-            const active = persona !== undefined && persona === current;
+            const active = persona === current;
             return (
               <Button
                 key={label}
                 size="small"
                 variant={active ? 'primary' : 'ghost'}
-                aria-pressed={persona ? active : undefined}
-                disabled={!persona || busy}
+                aria-pressed={active}
+                disabled={busy}
                 loading={busy && picked === persona}
-                onClick={() => persona && pick(persona)}
+                onClick={() => pick(persona)}
               >
                 <span aria-hidden="true">{emoji}</span>
                 <span>{t(`role.${label}`)}</span>
                 {active && <NavIcon name="check" className="size-4" />}
-                {!persona && (
-                  <span className="text-caption">({t('comingSoon')})</span>
-                )}
               </Button>
             );
           })}

@@ -42,7 +42,10 @@ const moderationColumns = Prisma.sql`
   b.name_en AS "businessNameEn", b.name_hi AS "businessNameHi",
   b.city_id AS "cityId", b.area_id AS "areaId"`;
 
-export function scopePredicate(scope: VideoModerationScope, businessAlias = 'b') {
+export function scopePredicate(
+  scope: VideoModerationScope,
+  businessAlias = 'b',
+) {
   const business = Prisma.raw(businessAlias);
   if (scope.platformWide) return Prisma.sql`TRUE`;
   const cities = scope.cityWideIds.length
@@ -197,12 +200,13 @@ export class PrismaVideoRepository implements VideoRepository {
     },
   ): Promise<VideoFeedRecord[]> {
     const filter = this.feedFilter(input);
-    const distance = input.lat !== undefined && input.lng !== undefined
-      ? Prisma.sql`ST_Distance(
+    const distance =
+      input.lat !== undefined && input.lng !== undefined
+        ? Prisma.sql`ST_Distance(
           b.location,
           ST_SetSRID(ST_MakePoint(${input.lng}, ${input.lat}), 4326)::geography
         ) / 1000.0`
-      : Prisma.sql`NULL::double precision`;
+        : Prisma.sql`NULL::double precision`;
     return this.database.client(tx).$queryRaw<VideoFeedRecord[]>(Prisma.sql`
       WITH ranked AS (
         SELECT (entry->>'videoId')::uuid AS video_id,
@@ -226,11 +230,39 @@ export class PrismaVideoRepository implements VideoRepository {
         v.view_count::text AS "viewCount",
         COALESCE(vc.like_count, v.like_count)::text AS "likeCount",
         v.comment_count::text AS "commentCount",
-        COALESCE(vc.share_count, v.share_count)::text AS "shareCount"
+        COALESCE(vc.share_count, v.share_count)::text AS "shareCount",
+        links.items AS links
       FROM ranked r
       JOIN videos v ON v.id = r.video_id
       JOIN businesses b ON b.id = v.business_id
       JOIN users u ON u.id = b.owner_user_id
+      -- Only targets still publicly visible (discovery views gate status,
+      -- approval and account state); hidden targets silently drop out.
+      CROSS JOIN LATERAL (
+        SELECT COALESCE(jsonb_agg(jsonb_build_object(
+            'targetType', t.target_type, 'targetId', t.id, 'slug', t.slug,
+            'nameEn', t.name_en, 'nameHi', t.name_hi,
+            'pricePaise', t.price_paise, 'priceMaxPaise', t.price_max_paise,
+            'priceType', t.price_type
+          ) ORDER BY t.sort_order, t.id), '[]'::jsonb) AS items
+        FROM (
+          SELECT l.target_type, l.sort_order, p.id, p.slug, p.name_en,
+            p.name_hi, p.price_paise, p.price_max_paise, p.price_type
+          FROM video_links l
+          JOIN products_public_discovery p ON p.id = l.target_id
+          WHERE l.video_id = v.id AND l.target_type = 'product'
+            AND p.business_id = v.business_id
+          UNION ALL
+          SELECT l.target_type, l.sort_order, s.id, s.slug, s.name_en,
+            s.name_hi, s.price_paise, s.price_max_paise, s.price_type
+          FROM video_links l
+          JOIN services_public_discovery s ON s.id = l.target_id
+          WHERE l.video_id = v.id AND l.target_type = 'service'
+            AND s.business_id = v.business_id
+          ORDER BY 2, 3
+          LIMIT 5
+        ) t
+      ) links
       LEFT JOIN video_engagement_counts vc ON vc.video_id = v.id
       LEFT JOIN business_settings bs ON bs.business_id = b.id
       LEFT JOIN business_hours bh ON bh.business_id = b.id

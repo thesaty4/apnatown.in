@@ -39,8 +39,12 @@ export const OWNER_IMAGE_UPLOAD_PURPOSES = Object.freeze([
   'gallery',
   'video_thumbnail',
 ] as const);
-export const OwnerImageUploadPurposeSchema = z.enum(OWNER_IMAGE_UPLOAD_PURPOSES);
-export type OwnerImageUploadPurpose = z.infer<typeof OwnerImageUploadPurposeSchema>;
+export const OwnerImageUploadPurposeSchema = z.enum(
+  OWNER_IMAGE_UPLOAD_PURPOSES,
+);
+export type OwnerImageUploadPurpose = z.infer<
+  typeof OwnerImageUploadPurposeSchema
+>;
 export const MediaUploadPurposeSchema = z.enum([
   'catalog_taxonomy',
   ...OWNER_IMAGE_UPLOAD_PURPOSES,
@@ -60,7 +64,9 @@ export type MediaUploadBody = z.infer<typeof MediaUploadBodySchema>;
 export const OwnerImagePolicyParamsSchema = z.strictObject({
   purpose: OwnerImageUploadPurposeSchema,
 });
-export const OwnerImagePolicyQuerySchema = z.strictObject({ businessId: IdSchema });
+export const OwnerImagePolicyQuerySchema = z.strictObject({
+  businessId: IdSchema,
+});
 export type OwnerImagePolicyQuery = z.infer<typeof OwnerImagePolicyQuerySchema>;
 export const PublicImageVariantSchema = z.strictObject({
   width: z.number().int().positive(),
@@ -88,8 +94,13 @@ export const MediaPolicyResultSchema = z.strictObject({
 export const MediaAssetParamsSchema = z.strictObject({ assetId: IdSchema });
 export const MediaPublicQuerySchema = z.strictObject({
   placementType: z.enum([
-    'catalog_category', 'catalog_subcategory', 'product', 'service', 'business',
-    'gallery_photo', 'video',
+    'catalog_category',
+    'catalog_subcategory',
+    'product',
+    'service',
+    'business',
+    'gallery_photo',
+    'video',
   ]),
   placementId: IdSchema,
   surface: z.enum(['card', 'detail', 'home', 'gallery', 'reels']),
@@ -99,11 +110,20 @@ export const MediaPublicQuerySchema = z.strictObject({
 export type MediaPublicQuery = z.infer<typeof MediaPublicQuerySchema>;
 
 const VideoIdSchema = z.string().regex(/^[A-Za-z0-9_-]{11}$/);
-const InstagramCodeSchema = z.string().min(1).max(64).regex(/^[A-Za-z0-9_-]+$/);
-const HttpsUrlSchema = z.string().url().refine((value) => {
-  const url = new URL(value);
-  return url.protocol === 'https:' && !url.username && !url.password && !url.port;
-});
+const InstagramCodeSchema = z
+  .string()
+  .min(1)
+  .max(64)
+  .regex(/^[A-Za-z0-9_-]+$/);
+const HttpsUrlSchema = z
+  .string()
+  .url()
+  .refine((value) => {
+    const url = new URL(value);
+    return (
+      url.protocol === 'https:' && !url.username && !url.password && !url.port
+    );
+  });
 
 export const VideoSourceSchema = z.discriminatedUnion('provider', [
   z.strictObject({
@@ -123,14 +143,22 @@ export const VideoPlaybackSchema = z.discriminatedUnion('render', [
   z.strictObject({
     provider: z.literal('youtube'),
     render: z.literal('iframe'),
-    embedUrl: HttpsUrlSchema.regex(/^https:\/\/www\.youtube-nocookie\.com\/embed\/[A-Za-z0-9_-]{11}$/),
-    openUrl: HttpsUrlSchema.regex(/^https:\/\/www\.youtube\.com\/watch\?v=[A-Za-z0-9_-]{11}$/),
+    embedUrl: HttpsUrlSchema.regex(
+      /^https:\/\/www\.youtube-nocookie\.com\/embed\/[A-Za-z0-9_-]{11}$/,
+    ),
+    openUrl: HttpsUrlSchema.regex(
+      /^https:\/\/www\.youtube\.com\/watch\?v=[A-Za-z0-9_-]{11}$/,
+    ),
   }),
   z.strictObject({
     provider: z.literal('instagram'),
     render: z.literal('instagram'),
-    permalink: HttpsUrlSchema.regex(/^https:\/\/www\.instagram\.com\/(?:reel|p)\/[A-Za-z0-9_-]{1,64}\/$/),
-    openUrl: HttpsUrlSchema.regex(/^https:\/\/www\.instagram\.com\/(?:reel|p)\/[A-Za-z0-9_-]{1,64}\/$/),
+    permalink: HttpsUrlSchema.regex(
+      /^https:\/\/www\.instagram\.com\/(?:reel|p)\/[A-Za-z0-9_-]{1,64}\/$/,
+    ),
+    openUrl: HttpsUrlSchema.regex(
+      /^https:\/\/www\.instagram\.com\/(?:reel|p)\/[A-Za-z0-9_-]{1,64}\/$/,
+    ),
   }),
   z.strictObject({
     provider: z.enum(['youtube', 'instagram']),
@@ -139,13 +167,25 @@ export const VideoPlaybackSchema = z.discriminatedUnion('render', [
     reason: z.enum(['disabled', 'unavailable']),
   }),
 ]);
-export const SafeVideoPlaybackSchema = VideoPlaybackSchema.superRefine((value, context) => {
-  if (value.render !== 'fallback') return;
-  const valid = value.provider === 'youtube'
-    ? /^https:\/\/www\.youtube\.com\/watch\?v=[A-Za-z0-9_-]{11}$/.test(value.openUrl)
-    : /^https:\/\/www\.instagram\.com\/(?:reel|p)\/[A-Za-z0-9_-]{1,64}\/$/.test(value.openUrl);
-  if (!valid) context.addIssue({ code: 'custom', path: ['openUrl'], message: 'Expected canonical provider URL' });
-});
+export const SafeVideoPlaybackSchema = VideoPlaybackSchema.superRefine(
+  (value, context) => {
+    if (value.render !== 'fallback') return;
+    const valid =
+      value.provider === 'youtube'
+        ? /^https:\/\/www\.youtube\.com\/watch\?v=[A-Za-z0-9_-]{11}$/.test(
+            value.openUrl,
+          )
+        : /^https:\/\/www\.instagram\.com\/(?:reel|p)\/[A-Za-z0-9_-]{1,64}\/$/.test(
+            value.openUrl,
+          );
+    if (!valid)
+      context.addIssue({
+        code: 'custom',
+        path: ['openUrl'],
+        message: 'Expected canonical provider URL',
+      });
+  },
+);
 export type VideoPlayback = z.infer<typeof SafeVideoPlaybackSchema>;
 
 export const VideoSourceInputSchema = z.strictObject({
@@ -174,7 +214,11 @@ const VideoBaseSchema = z.strictObject({
   businessId: IdSchema,
   provider: z.enum(['youtube', 'instagram']),
   kind: z.enum(['watch', 'shorts', 'share', 'reel', 'p']),
-  providerId: z.string().min(1).max(64).regex(/^[A-Za-z0-9_-]+$/),
+  providerId: z
+    .string()
+    .min(1)
+    .max(64)
+    .regex(/^[A-Za-z0-9_-]+$/),
   status: VideoStatusSchema,
   caption: z.string().max(300),
   hashtags: z.array(z.string().max(40)).max(10),
@@ -185,7 +229,10 @@ const VideoBaseSchema = z.strictObject({
   playback: SafeVideoPlaybackSchema,
 });
 
-function refineVideo(video: z.infer<typeof VideoBaseSchema>, context: z.RefinementCtx) {
+function refineVideo(
+  video: z.infer<typeof VideoBaseSchema>,
+  context: z.RefinementCtx,
+) {
   const validKind =
     video.provider === 'youtube'
       ? ['watch', 'shorts', 'share'].includes(video.kind)
@@ -243,7 +290,10 @@ export const VideoFeedQuerySchema = z
         path: ['category'],
         message: 'Category is valid only for the category filter',
       });
-    if (query.pill === 'nearby' && (query.lat === undefined || query.lng === undefined))
+    if (
+      query.pill === 'nearby' &&
+      (query.lat === undefined || query.lng === undefined)
+    )
       context.addIssue({
         code: 'custom',
         path: ['lat'],
@@ -270,6 +320,29 @@ export const VideoFeedQuerySchema = z
   });
 export type VideoFeedQuery = z.infer<typeof VideoFeedQuerySchema>;
 
+/** Public, live product/service a reel links to (prototype "Shop this video"). */
+export const VideoFeedLinkSchema = z.strictObject({
+  targetType: z.enum(['product', 'service']),
+  targetId: IdSchema,
+  slug: z.string().min(1).max(200),
+  nameEn: z.string().max(200),
+  nameHi: z.string().max(200).nullable(),
+  pricePaise: z
+    .number()
+    .int()
+    .nonnegative()
+    .max(Number.MAX_SAFE_INTEGER)
+    .nullable(),
+  priceMaxPaise: z
+    .number()
+    .int()
+    .nonnegative()
+    .max(Number.MAX_SAFE_INTEGER)
+    .nullable(),
+  priceType: z.enum(['from', 'fixed', 'range', 'enquiry']).nullable(),
+});
+export type VideoFeedLink = z.infer<typeof VideoFeedLinkSchema>;
+
 export const VideoFeedItemSchema = VideoBaseSchema.extend({
   businessNameEn: z.string().max(200).nullable(),
   businessNameHi: z.string().max(200).nullable(),
@@ -280,6 +353,7 @@ export const VideoFeedItemSchema = VideoBaseSchema.extend({
   likeCount: CountSchema,
   commentCount: CountSchema,
   shareCount: CountSchema,
+  links: z.array(VideoFeedLinkSchema).max(5),
 }).superRefine(refineVideo);
 export type VideoFeedItem = z.infer<typeof VideoFeedItemSchema>;
 
@@ -343,7 +417,10 @@ export const VideoReportQueueItemSchema = z.strictObject({
   reportVersion: z.number().int().positive(),
   targetVersion: z.number().int().positive(),
   createdAt: TimestampSchema,
-  allowedActions: z.array(z.enum(['dismiss', 'remove'])).min(1).max(2),
+  allowedActions: z
+    .array(z.enum(['dismiss', 'remove']))
+    .min(1)
+    .max(2),
   video: VideoModerationItemSchema,
 });
 export type VideoReportQueueItem = z.infer<typeof VideoReportQueueItemSchema>;
@@ -376,19 +453,21 @@ export const VideoModerationPageSchema = z.strictObject({
 });
 export type VideoModerationPage = z.infer<typeof VideoModerationPageSchema>;
 
-export const MediaReportDecisionSchema = z.strictObject({
-  action: z.enum(['dismiss', 'remove']),
-  reason: z.string().trim().min(1).max(500).optional(),
-  expectedVersion: z.number().int().min(1).max(2147483647),
-  targetVersion: z.number().int().min(1).max(2147483647),
-}).superRefine((decision, context) => {
-  if (decision.action === 'remove' && !decision.reason)
-    context.addIssue({
-      code: 'custom',
-      path: ['reason'],
-      message: 'A removal reason is required',
-    });
-});
+export const MediaReportDecisionSchema = z
+  .strictObject({
+    action: z.enum(['dismiss', 'remove']),
+    reason: z.string().trim().min(1).max(500).optional(),
+    expectedVersion: z.number().int().min(1).max(2147483647),
+    targetVersion: z.number().int().min(1).max(2147483647),
+  })
+  .superRefine((decision, context) => {
+    if (decision.action === 'remove' && !decision.reason)
+      context.addIssue({
+        code: 'custom',
+        path: ['reason'],
+        message: 'A removal reason is required',
+      });
+  });
 export type MediaReportDecision = z.infer<typeof MediaReportDecisionSchema>;
 
 export const MediaReportDecisionResultSchema = z.strictObject({
@@ -409,16 +488,20 @@ export type MediaReportDecisionResult = z.infer<
   typeof MediaReportDecisionResultSchema
 >;
 
-export const VideoModerationDecisionSchema = z.strictObject({
-  action: z.enum(['approve', 'reject', 'remove']),
-  reason: z.string().trim().min(1).max(500).optional(),
-  expectedVersion: z.number().int().min(1).max(2147483647),
-}).superRefine((decision, context) => {
-  if (decision.action === 'reject' && !decision.reason)
-    context.addIssue({
-      code: 'custom',
-      path: ['reason'],
-      message: 'A rejection reason is required',
-    });
-});
-export type VideoModerationDecision = z.infer<typeof VideoModerationDecisionSchema>;
+export const VideoModerationDecisionSchema = z
+  .strictObject({
+    action: z.enum(['approve', 'reject', 'remove']),
+    reason: z.string().trim().min(1).max(500).optional(),
+    expectedVersion: z.number().int().min(1).max(2147483647),
+  })
+  .superRefine((decision, context) => {
+    if (decision.action === 'reject' && !decision.reason)
+      context.addIssue({
+        code: 'custom',
+        path: ['reason'],
+        message: 'A rejection reason is required',
+      });
+  });
+export type VideoModerationDecision = z.infer<
+  typeof VideoModerationDecisionSchema
+>;

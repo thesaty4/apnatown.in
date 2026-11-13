@@ -136,6 +136,15 @@ import { BusinessAdminReadService } from '../../modules/businesses/application/b
 import { BusinessDecisionService } from '../../modules/businesses/application/business-decision.service';
 import { AdminApprovalsController } from '../../modules/admin/presentation/admin-approvals.controller';
 import { AdminApprovalsService } from '../../modules/admin/application/admin-approvals.service';
+import { RiderMeController } from '../../modules/delivery/presentation/rider-me.controller';
+import { RiderWorkController } from '../../modules/delivery/presentation/rider-work.controller';
+import { RiderAdminController } from '../../modules/delivery/presentation/rider-admin.controller';
+import { RiderProfileService } from '../../modules/delivery/application/rider-profile.service';
+import { RiderDisputeService } from '../../modules/delivery/application/rider-dispute.service';
+import { RiderWorkService } from '../../modules/delivery/application/rider-work.service';
+import { RiderJobsService } from '../../modules/delivery/application/rider-jobs.service';
+import { RiderAdminReadService } from '../../modules/delivery/application/rider-admin-read.service';
+import { RiderDecisionService } from '../../modules/delivery/application/rider-decision.service';
 import { CartController } from '../../modules/cart-checkout/presentation/cart.controller';
 import { CartLinesController } from '../../modules/cart-checkout/presentation/cart-lines.controller';
 import { CartReadService } from '../../modules/cart-checkout/application/cart-read.service';
@@ -169,6 +178,8 @@ import { MediaOrderService } from '../../modules/media-videos/application/media-
 import { PublicMediaService } from '../../modules/media-videos/application/public-media.service';
 import { PhotoReportService } from '../../modules/media-videos/application/photo-report.service';
 import { MediaReportModerationService } from '../../modules/media-videos/application/media-report-moderation.service';
+import { ReviewsPublicController } from '../../modules/reviews/presentation/reviews-public.controller';
+import { ReviewsPublicService } from '../../modules/reviews/application/reviews-public.service';
 
 // Metadata-only composition; never imported by AppModule or WorkerModule.
 // No runtime config, repository, DB client, provider, queue or listen.
@@ -233,6 +244,9 @@ import { MediaReportModerationService } from '../../modules/media-videos/applica
     BusinessOwnerController,
     BusinessAdminController,
     AdminApprovalsController,
+    RiderMeController,
+    RiderWorkController,
+    RiderAdminController,
     CartController,
     CartLinesController,
     NotificationsController,
@@ -245,6 +259,7 @@ import { MediaReportModerationService } from '../../modules/media-videos/applica
     PublicBusinessMediaController,
     LinkedVideoController,
     PhotoReportController,
+    ReviewsPublicController,
   ],
   providers: [
     SavedService,
@@ -304,6 +319,12 @@ import { MediaReportModerationService } from '../../modules/media-videos/applica
     BusinessAdminReadService,
     BusinessDecisionService,
     AdminApprovalsService,
+    RiderProfileService,
+    RiderDisputeService,
+    RiderWorkService,
+    RiderJobsService,
+    RiderAdminReadService,
+    RiderDecisionService,
     CartReadService,
     CartMergeService,
     CartLinesService,
@@ -321,6 +342,7 @@ import { MediaReportModerationService } from '../../modules/media-videos/applica
     PublicMediaService,
     PhotoReportService,
     MediaReportModerationService,
+    ReviewsPublicService,
   ].map((provide) => ({ provide, useValue: Object.freeze({}) })),
 })
 class OpenApiModule {}

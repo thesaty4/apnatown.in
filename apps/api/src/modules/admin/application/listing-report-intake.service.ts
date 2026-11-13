@@ -1,4 +1,3 @@
-import { createHmac } from 'node:crypto';
 import { Inject, Injectable } from '@nestjs/common';
 import type { JsonValue } from '@apnatown/shared';
 import {
@@ -42,11 +41,12 @@ import {
 } from '../../businesses/application/business-ports';
 import {
   LISTING_REPORT_REPOSITORY,
+  listingReportSubjectHash,
+  listingReportSubjectKey,
   type ListingReportRepository,
   type StoredListingReport,
 } from '../domain/listing-report';
 
-const SUBJECT_KEY_LABEL = 'apnatown:listing-report-subject:v1';
 const KIND_FOR_TYPE = { business: 'shop', provider: 'provider' } as const;
 
 /** 5 per hour per user/anonymous session and per network address (hashed). */
@@ -90,10 +90,7 @@ export class ListingReportIntakeService {
     @Inject(ID_PROVIDER) private readonly ids: IdProvider,
     @Inject(RUNTIME_CONFIG) config: RuntimeConfig,
   ) {
-    // Purpose-separated subkey: never equal to cursor or rate-limit MACs.
-    this.subjectKey = createHmac('sha256', config.CURSOR_SIGNING_KEY)
-      .update(SUBJECT_KEY_LABEL)
-      .digest();
+    this.subjectKey = listingReportSubjectKey(config.CURSOR_SIGNING_KEY);
   }
 
   submit(
@@ -147,9 +144,7 @@ export class ListingReportIntakeService {
           targetType: input.targetType,
           targetId: target.id,
           reporterUserId: userId,
-          subjectHash: createHmac('sha256', this.subjectKey)
-            .update(subject)
-            .digest(),
+          subjectHash: listingReportSubjectHash(this.subjectKey, subject),
           reason: input.reason,
           details: input.details ?? null,
           cityId: target.cityId,

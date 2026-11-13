@@ -711,7 +711,6 @@
       "cardBody": "This demo lets you open any dashboard.",
       "cardTitle": "Switch role",
       "close": "Close",
-      "comingSoon": "Coming soon",
       "description": "Local demo only. Choosing a role signs you in as its sample account and opens its dashboard.",
       "open": "Switch demo role",
       "role": {
@@ -2977,6 +2976,15 @@
     }
   },
   "errors": {
+    "delivery": {
+      "jobNotFound": "This delivery is no longer available.",
+      "requirementsUnavailable": "Rider applications can’t be submitted yet because document verification is not available. Your saved draft is kept.",
+      "riderHasActiveJob": "You have an active delivery. Finish it before going offline.",
+      "riderNotApproved": "Your rider application is not approved yet, so this action is unavailable.",
+      "riderNotOnline": "Go online first to receive or act on delivery requests.",
+      "riderStateConflict": "Your rider status changed. Refresh and try again.",
+      "versionConflict": "Your application changed in another tab or device. Reload to see the latest version."
+    },
     "media": {
       "feedExpired": "This feed expired. Start a fresh feed to continue.",
       "imageProcessingFailed": "The image could not be safely processed. Choose another image.",
@@ -2996,6 +3004,23 @@
     }
   },
   "explore": {
+    "product": {
+      "breadcrumb": "Breadcrumb",
+      "counter": "{current, number} / {total, number}",
+      "details": "Details",
+      "distance": "{km} away",
+      "home": "Home",
+      "imageTab": "Image {number, number}",
+      "inclusiveTaxes": "Inclusive of all taxes",
+      "lowStock": "Only {count, number} left. Order soon.",
+      "media": "Product media",
+      "outsideDelivery": "Outside delivery range. Self-pickup available.",
+      "related": "Related products",
+      "reviewsCount": "{count, number} reviews",
+      "share": "Share product",
+      "soldBy": "Sold by",
+      "viewAll": "View all"
+    },
     "screen": {
       "allBrands": "All brands",
       "allCategories": "All categories",
@@ -4051,6 +4076,7 @@
       "category": "Category",
       "close": "Close feed",
       "closed": "Closed",
+      "closeShop": "Close",
       "comments": "Comments",
       "dependentFiltersUnavailable": "Offer, product and service filters are unavailable until those listings are connected.",
       "distance": "{distance} away",
@@ -4063,10 +4089,17 @@
       "feedExpired": "This feed expired. Start a fresh feed to continue.",
       "following": "Following",
       "forYou": "For You",
+      "linkedTitle": "Linked products & services",
+      "linkKindProduct": "Product",
+      "linkKindService": "Service",
+      "linkPriceOnEnquiry": "Price on enquiry",
+      "linkView": "View {name}",
+      "linkViewShort": "View",
       "loading": "Loading videos",
       "loadMore": "Load more videos",
       "nearby": "Nearby",
       "nearbyRequiresLocation": "Nearby videos need a device location.",
+      "nothingLinked": "Nothing linked.",
       "offers": "Offers",
       "offersUnavailable": "Offer videos aren't available yet",
       "open": "Open now",
@@ -4075,6 +4108,7 @@
       "retry": "Try again",
       "services": "Services",
       "servicesUnavailable": "Service videos aren't available yet",
+      "shopVideo": "Shop this video",
       "signIn": "Sign in to see videos from businesses you follow",
       "startFresh": "Start a fresh feed",
       "title": "Videos & Reels",
@@ -4149,6 +4183,347 @@
       "title": "Video",
       "unavailableMessage": "This video is not approved or is no longer available.",
       "unavailableTitle": "Video unavailable"
+    }
+  },
+  "reviews": {
+    "section": {
+      "barLabel": "{star, number} star: {count, number} reviews",
+      "count": "{count, plural, one {# review} other {# reviews}}",
+      "emptyMessage": "Be the first to review this product.",
+      "emptyTitle": "No reviews yet",
+      "errorMessage": "Please try again.",
+      "errorTitle": "Reviews could not load",
+      "helpful": "{count, plural, one {# person found this helpful} other {# people found this helpful}}",
+      "loading": "Loading reviews",
+      "loadMore": "Load more reviews",
+      "noRatings": "No ratings yet",
+      "ownerReply": "Reply from the seller",
+      "retry": "Try again",
+      "sort": {
+        "helpful": "Most helpful",
+        "recent": "Most recent"
+      },
+      "sortLabel": "Sort reviews",
+      "starsLabel": "Rated {rating, number} out of 5",
+      "title": "Ratings & reviews",
+      "underReview": "Under review"
+    },
+    "write": {
+      "action": "Write a review",
+      "close": "Close",
+      "guestHint": "Log in to see whether you can review this product.",
+      "keepShopping": "Continue shopping",
+      "login": "Log in",
+      "noPurchase": "We couldn’t find a delivered order for this product on your account. You can review it after your order is delivered.",
+      "title": "Review {name}",
+      "verifiedOnly": "Only customers who bought this on ApnaTown can review it, so every review comes from a real purchase."
+    }
+  },
+  "rider": {
+    "account": {
+      "application": "Your rider application",
+      "become": "Become a rider",
+      "becomeHint": "Earn by delivering orders in your area.",
+      "continue": "Continue",
+      "dashboard": "Rider dashboard",
+      "failed": "Couldn’t load your rider application.",
+      "loading": "Loading rider application…",
+      "open": "Open",
+      "retry": "Retry",
+      "start": "Apply",
+      "title": "Deliver with ApnaTown",
+      "view": "View"
+    },
+    "active": {
+      "distance": "Distance",
+      "drop": "Drop",
+      "emptyMessage": "When you accept a request, its steps will appear here.",
+      "emptyTitle": "No active delivery",
+      "estimate": "Estimated earning",
+      "openRequests": "View requests",
+      "order": "Order {number}",
+      "pickup": "Pickup",
+      "stepsUnavailable": "Delivery step actions aren’t available in the app yet. Contact support if you need help with this delivery.",
+      "title": "Active delivery"
+    },
+    "common": {
+      "becomeRider": "Go to rider application",
+      "errorTitle": "Couldn’t load this",
+      "forbiddenTitle": "Not available for your account",
+      "loading": "Loading…",
+      "notRiderMessage": "This screen is for approved riders. Apply to deliver with ApnaTown or check your application status.",
+      "notRiderTitle": "Rider access only",
+      "offlineMessage": "Reconnect to load the latest rider details.",
+      "offlineTitle": "You’re offline",
+      "period": "Period: {start} – {end} (IST)",
+      "periodUntil": "Up to {end} (IST)",
+      "retry": "Retry",
+      "role": "Rider"
+    },
+    "dispute": {
+      "close": "Close",
+      "description": "Tell us what went wrong. Our support team will follow up.",
+      "details": "Details",
+      "detailsHint": "Up to 960 characters. Don’t include bank or UPI details.",
+      "detailsInvalid": "Describe the issue in plain text (no < or > characters).",
+      "done": "Done",
+      "failed": "Your report wasn’t sent",
+      "open": "Report a dispute",
+      "reason": "Topic",
+      "reasons": {
+        "account": "Account or approval",
+        "delivery": "A delivery",
+        "other": "Something else",
+        "payout": "Earnings or payout"
+      },
+      "sentBody": "Your support reference ID is",
+      "sentTitle": "Report received",
+      "submit": "Send report",
+      "title": "Report a dispute"
+    },
+    "earnings": {
+      "breakdownTitle": "Per-ride breakdown",
+      "empty": {
+        "day": "No completed rides in the last 24 hours.",
+        "week": "No completed rides in the last 7 days."
+      },
+      "payoutPending": "Pending payout: {amount}",
+      "payoutTitle": "Payouts",
+      "payoutUnavailable": "Payout details unavailable",
+      "payoutUnavailableBody": "Payout schedules and amounts aren’t available yet. Your earnings above are not a payment confirmation.",
+      "range": {
+        "day": "Day",
+        "week": "Week"
+      },
+      "rangeLabel": "Earnings period",
+      "rides": "Completed rides",
+      "title": "Earnings",
+      "total": "Total earned"
+    },
+    "errors": {
+      "areaInvalid": "Choose an available city and area.",
+      "forbidden": "Your account can’t do this.",
+      "rateLimited": "Too many attempts. Please wait a moment and try again.",
+      "requestFailed": "Something went wrong. Please try again.",
+      "validation": "Some details are invalid. Check the highlighted fields."
+    },
+    "feedback": {
+      "title": "Feedback",
+      "unavailableMessage": "Customer ratings and comments for riders will appear here once reviews are available.",
+      "unavailableTitle": "Ratings not available yet"
+    },
+    "history": {
+      "breakdown": "Base {base} + distance {distance} + rounding {rounding}",
+      "earned": "Earned {amount}",
+      "empty": {
+        "all": "No deliveries yet",
+        "today": "No deliveries in the last 24 hours",
+        "week": "No deliveries in the last 7 days"
+      },
+      "emptyMessage": "Completed, failed and cancelled deliveries will appear here.",
+      "estimated": "Estimate {amount}",
+      "filterLabel": "Filter history by period",
+      "loadMore": "Load more",
+      "range": {
+        "all": "All",
+        "today": "Today",
+        "week": "This week"
+      },
+      "rowMeta": "Order {order} · {area}",
+      "status": {
+        "cancelled": "Cancelled",
+        "delivered": "Delivered",
+        "failed": "Failed"
+      },
+      "title": "Delivery history"
+    },
+    "home": {
+      "deliveries": "Deliveries",
+      "earnings": "Earnings",
+      "notApprovedHint": "Available after your application is approved.",
+      "notApprovedTitle": "You can go online once approved",
+      "offlineBody": "Go online to start receiving delivery requests.",
+      "offlineTitle": "You’re offline",
+      "onlineBody": "You can receive new delivery requests.",
+      "onlineTitle": "You’re online",
+      "openActive": "Open active delivery",
+      "openEarnings": "View earnings",
+      "openRequests": "View requests",
+      "quickLinks": "Rider shortcuts",
+      "statusLabel": "Status:",
+      "title": "Rider home",
+      "today": "Today (last 24 hours)",
+      "toggleFailed": "Your availability didn’t change",
+      "toggleLabel": "Available for deliveries",
+      "viewStatus": "View application status"
+    },
+    "nav": {
+      "active": "Active delivery",
+      "deliver": "Deliver",
+      "earnings": "Earnings",
+      "feedback": "Feedback",
+      "history": "History",
+      "home": "Home",
+      "label": "Rider navigation",
+      "me": "Me",
+      "onboarding": "Application",
+      "profile": "Profile",
+      "requests": "Requests"
+    },
+    "onboard": {
+      "back": "Back",
+      "continue": "Continue",
+      "documents": {
+        "unavailableBody": "KYC document upload isn’t available yet. You can continue with the other steps; we’ll ask for documents when verification opens.",
+        "unavailableTitle": "Document upload not yet available"
+      },
+      "errors": {
+        "areaId": "Choose the area you’ll deliver in.",
+        "bankAccount": "Enter a 9–18 digit account number.",
+        "cityId": "Choose your city.",
+        "fullName": "Enter your full name (2–60 characters).",
+        "upi": "Enter a valid UPI ID, e.g. name@bank.",
+        "vehicleNumber": "Enter a valid vehicle number, e.g. MP 20 AB 1234.",
+        "vehicleType": "Choose your vehicle type."
+      },
+      "fields": {
+        "area": "Delivery area",
+        "areaHint": "Choose the city and area where you want to deliver. The area is needed before you submit.",
+        "bankAccount": "Bank account number (optional)",
+        "bankAccountHint": "9–18 digits. Shown only in masked form after saving.",
+        "chooseArea": "Choose area",
+        "chooseCity": "Choose city",
+        "chooseVehicle": "Choose vehicle",
+        "city": "City",
+        "cityFirst": "Choose a city first.",
+        "fullName": "Full name",
+        "loadingOptions": "Loading options…",
+        "locationsFailed": "Couldn’t load cities and areas.",
+        "moreOptions": "Show more options",
+        "payoutKeep": "Leave the fields empty to keep these details, or enter new ones to replace them.",
+        "payoutSaved": "Payout details saved",
+        "retry": "Retry",
+        "upi": "UPI ID",
+        "upiHint": "For example name@bank. Shown only in masked form after saving.",
+        "vehicleNumber": "Vehicle number (optional)",
+        "vehicleNumberHint": "As shown on the number plate.",
+        "vehicleType": "Vehicle type"
+      },
+      "gatedTitle": "Can’t submit yet",
+      "intro": "Complete each step. Your progress is saved as you go.",
+      "progress": "Application progress",
+      "readOnly": "This application can’t be edited right now.",
+      "reload": "Reload application",
+      "requirementsBody": "Document verification isn’t set up yet, so applications can’t be submitted. Your draft stays saved.",
+      "requirementsTitle": "Submission isn’t available yet",
+      "review": {
+        "area": "Delivery area",
+        "documents": "Documents",
+        "documentsCount": "{count, plural, one {# document} other {# documents}}",
+        "documentsUnavailable": "Upload not yet available",
+        "fullName": "Full name",
+        "missing": "Not added yet",
+        "payout": "Payout (UPI)",
+        "vehicle": "Vehicle"
+      },
+      "saveContinue": "Save and continue",
+      "saveFailed": "Couldn’t save this step",
+      "state": {
+        "approved": {
+          "body": "Your rider application is approved. Go online from Rider home to receive requests.",
+          "title": "You’re approved"
+        },
+        "changesRequested": {
+          "body": "Please update your application as described below and submit it again.",
+          "title": "Changes requested"
+        },
+        "contactSupport": "Contact support",
+        "goHome": "Go to rider home",
+        "inactive": {
+          "body": "Your rider account is inactive. Contact support to reactivate it.",
+          "title": "Rider account inactive"
+        },
+        "pending": {
+          "body": "We’re reviewing your application. You’ll be notified when there’s a decision.",
+          "title": "Application under review"
+        },
+        "reasonLabel": "Reason from the reviewer",
+        "rejected": {
+          "body": "Your application wasn’t approved. Check the reason below.",
+          "title": "Application not approved"
+        },
+        "resubmit": "Update and resubmit",
+        "suspended": {
+          "body": "You can’t take deliveries right now. Contact support to resolve this.",
+          "title": "Rider account suspended"
+        },
+        "viewProfile": "View rider profile"
+      },
+      "stepDone": "done",
+      "stepOf": "Step {step} of {total}: {name}",
+      "steps": {
+        "documents": "Documents",
+        "payout": "Payout details",
+        "profile": "Profile",
+        "review": "Review and submit",
+        "vehicle": "Vehicle"
+      },
+      "submit": "Submit application",
+      "title": "Rider application"
+    },
+    "profile": {
+      "bank": "Bank account",
+      "documentKinds": {
+        "idProof": "ID proof",
+        "licence": "Driving licence",
+        "other": "Other document",
+        "rc": "Vehicle RC",
+        "selfie": "Selfie"
+      },
+      "documentsTitle": "Documents",
+      "documentsUnavailable": "Document upload not yet available",
+      "documentsUnavailableBody": "KYC document upload and verification aren’t available yet. We’ll let you know when you can add documents.",
+      "documentUploaded": "{kind} uploaded {at}",
+      "editApplication": "Edit application",
+      "help": "Help centre",
+      "noName": "Name not added",
+      "noPayout": "No payout details saved yet.",
+      "payoutTitle": "Payout details",
+      "reason": "Reason: {reason}",
+      "status": "Application status:",
+      "supportTitle": "Help and support",
+      "title": "Rider profile",
+      "upi": "UPI",
+      "viewApplication": "View application"
+    },
+    "requests": {
+      "backHome": "Back to home",
+      "distance": "Distance",
+      "emptyMessage": "Stay online — new delivery requests will appear here.",
+      "emptyTitle": "No requests right now",
+      "estimate": "Estimated earning",
+      "estimateNote": "Estimate only. Your final earning is set when the delivery is completed.",
+      "expired": "Request expired",
+      "expiresAt": "Expires at",
+      "items": "Items",
+      "respondUnavailable": "Accepting or declining requests isn’t available in the app yet.",
+      "route": "{pickup} → {drop}",
+      "secondsLeft": "{seconds} seconds left",
+      "title": "Delivery requests"
+    },
+    "status": {
+      "approved": "Approved",
+      "changesRequested": "Changes requested",
+      "draft": "Draft",
+      "inactive": "Inactive",
+      "pending": "Under review",
+      "rejected": "Rejected",
+      "suspended": "Suspended"
+    },
+    "vehicle": {
+      "bike": "Motorbike",
+      "cycle": "Bicycle",
+      "scooter": "Scooter"
     }
   },
   "search": {

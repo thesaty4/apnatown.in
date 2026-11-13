@@ -33,6 +33,7 @@ import { EnquiryForm } from '../services';
 import { AddToCart } from '../cart';
 import { LinkedVideosStrip } from '../gallery';
 import { NavIcon } from '../../shared/ui/NavIcon';
+import { ProductDetail } from './ProductDetail';
 
 /** S-CUST-08/09. Shop/provider profiles live in `features/businesses/public-profile`. */
 type ListingKind = 'product' | 'service';
@@ -99,6 +100,8 @@ export async function PublicListingPage({
   }
   const { item, description, images } = result.data;
   if (item.path !== `/${kind}/${slug}`) notFound();
+  if (item.kind === 'product' && 'inventory' in result.data)
+    return <ProductDetail data={result.data} locale={locale} />;
   const name = locale === 'hi' && item.nameHi ? item.nameHi : item.nameEn;
   const businessName =
     locale === 'hi' && item.business.nameHi

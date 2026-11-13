@@ -160,6 +160,8 @@ model Review {
   @@index([targetType,targetId,rating,id],where:raw("status='published' AND deleted_at IS NULL"),map:"reviews_public_rating_idx")
   @@index([businessId,status,createdAt(sort:Desc),id(sort:Desc)],map:"reviews_business_idx")
   @@index([authorUserId,createdAt(sort:Desc),id(sort:Desc)],map:"reviews_author_idx")
+  @@index([targetType,targetId,createdAt(sort:Desc),id(sort:Desc)],where:raw("status IN ('published','reported') AND deleted_at IS NULL"),map:"reviews_public_recent_idx")
+  @@index([targetType,targetId,helpfulCount(sort:Desc),createdAt(sort:Desc),id(sort:Desc)],where:raw("status IN ('published','reported') AND deleted_at IS NULL"),map:"reviews_public_helpful_idx")
   @@map("reviews")
 }
 model BillingPurchase {
@@ -416,6 +418,7 @@ model User {
   carts                Cart[]
   notifications        Notification[]
   notificationPreference NotificationPreference?
+  riderProfile         RiderProfile?            @relation("RiderProfileUser")
 
   @@index([deletedAt], where: raw("\"deleted_at\" IS NULL"), map: "users_active_deleted_at_idx")
   @@map("users")
@@ -562,6 +565,7 @@ model City {
   adminScopes AdminScope[]
   support     SupportMessage[]
   suggestions SubcategorySuggestion[]
+  riders      RiderProfile[]
 
   @@index([status, nameEn, id], map: "cities_status_name_en_id_idx")
   @@map("cities")
@@ -584,6 +588,7 @@ model Area {
   support     SupportMessage[]
   suggestions SubcategorySuggestion[]
   businesses  Business[]
+  riders      RiderProfile[]
 
   @@unique([id, cityId], map: "areas_id_city_id_key")
   @@unique([cityId, slug], map: "areas_city_slug_key")
@@ -903,6 +908,7 @@ model MediaAsset {
   categories      Category[]
   subcategories   Subcategory[]
   reports         MediaReport[]
+  riderDocuments  RiderDocument[]
 
   @@index([ownerUserId, createdAt, id])
   @@index([businessId, purpose, createdAt(sort: Desc), id(sort: Desc)])
@@ -1645,4 +1651,57 @@ model MediaManagerOrder {
 
   @@id([businessId, listKind])
   @@map("media_manager_orders")
+}
+
+/// Delivery rider application/profile (20261113060000). SQL owns the status,
+/// vehicle, online-implies-approved and submitted-field checks.
+model RiderProfile {
+  userId               String                                @id @map("user_id") @db.Uuid
+  cityId               String?                               @map("city_id") @db.Uuid
+  areaId               String?                               @map("area_id") @db.Uuid
+  fullName             String?                               @map("full_name")
+  vehicleType          String?                               @map("vehicle_type")
+  vehicleNumber        String?                               @map("vehicle_number")
+  /// AES-GCM ciphertext (API PII key); never plaintext.
+  payoutUpiCiphertext  String?                               @map("payout_upi_ciphertext")
+  payoutBankCiphertext String?                               @map("payout_bank_ciphertext")
+  status               String                                @default("draft")
+  decisionReason       String?                               @map("decision_reason")
+  requirementsVersion  String?                               @map("requirements_version")
+  submittedAt          DateTime?                             @map("submitted_at") @db.Timestamptz(6)
+  isOnline             Boolean                               @default(false) @map("is_online")
+  lastLocation         Unsupported("geography(Point,4326)")? @map("last_location")
+  lastLocationAt       DateTime?                             @map("last_location_at") @db.Timestamptz(6)
+  preferredLocale      String                                @default("en") @map("preferred_locale")
+  version              Int                                   @default(1)
+  createdAt            DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime                              @default(now()) @map("updated_at") @db.Timestamptz(6)
+  user                 User                                  @relation("RiderProfileUser", fields: [userId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "rider_profiles_user_id_fkey")
+  city                 City?                                 @relation(fields: [cityId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "rider_profiles_city_id_fkey")
+  area                 Area?                                 @relation(fields: [areaId, cityId], references: [id, cityId], onDelete: Restrict, onUpdate: Restrict, map: "rider_profiles_area_city_fkey")
+  documents            RiderDocument[]
+
+  @@index([lastLocation], type: Gist, where: raw("is_online AND status = 'approved'"), map: "rider_profiles_online_location_gist_idx")
+  @@index([cityId, areaId, status, createdAt, userId], map: "rider_profiles_scope_queue_idx")
+  @@index([status, createdAt, userId], map: "rider_profiles_status_queue_idx")
+  @@index([areaId, cityId], map: "rider_profiles_area_city_idx")
+  @@map("rider_profiles")
+}
+
+/// Typed private rider KYC references; no runtime writer until Media ships
+/// the private `kyc_document` purpose (Q-05).
+model RiderDocument {
+  id           String       @id @db.Uuid
+  riderUserId  String       @map("rider_user_id") @db.Uuid
+  docType      String       @map("doc_type")
+  mediaAssetId String       @map("media_asset_id") @db.Uuid
+  supersededAt DateTime?    @map("superseded_at") @db.Timestamptz(6)
+  createdAt    DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  rider        RiderProfile @relation(fields: [riderUserId], references: [userId], onDelete: Restrict, onUpdate: Restrict, map: "rider_documents_rider_user_id_fkey")
+  mediaAsset   MediaAsset   @relation(fields: [mediaAssetId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "rider_documents_media_asset_id_fkey")
+
+  @@unique([riderUserId, docType, mediaAssetId], map: "rider_documents_rider_type_asset_key")
+  @@unique([riderUserId, docType], where: raw("superseded_at IS NULL AND doc_type <> 'other'"), map: "rider_documents_live_kind_key")
+  @@index([mediaAssetId], map: "rider_documents_media_asset_idx")
+  @@map("rider_documents")
 }

@@ -1,25 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { useLocale, useTranslations } from 'next-intl';
-import { Select } from '@apnatown/ui/primitives/Select';
+import { useTranslations } from 'next-intl';
 import { TextArea } from '@apnatown/ui/primitives/TextArea';
 import { Button } from '@apnatown/ui/primitives/Button';
 import { MapView, type MapConfiguration } from '@apnatown/ui/geo/MapView';
 import {
-  areaOptions,
-  cityOptions,
+  CityAreaFields,
   deviceFailure,
-  geoName,
   requestDeviceLocation,
 } from '../../geo';
-import { useSession } from '../../../shared/auth/SessionProvider';
 import { useFieldError, type SectionProps } from './shared';
-
-function useAll<T>(pages: { items: T[] }[] | undefined) {
-  return pages?.flatMap((page) => page.items) ?? [];
-}
 
 /** City → area (server derives the city from the area), address, optional pin. */
 export function LocationFields({
@@ -32,16 +23,7 @@ export function LocationFields({
 }: SectionProps & { mapConfig: MapConfiguration; pinLabel: string }) {
   const t = useTranslations('business.fields');
   const tm = useTranslations('business.location');
-  const locale = useLocale() === 'hi' ? 'hi' : 'en';
   const error = useFieldError(errors);
-  const { api } = useSession();
-  const cities = useInfiniteQuery(cityOptions(api));
-  const areas = useInfiniteQuery({
-    ...areaOptions(api, form.cityId),
-    enabled: Boolean(form.cityId),
-  });
-  const cityItems = useAll(cities.data?.pages);
-  const areaItems = useAll(areas.data?.pages);
   const [locating, setLocating] = useState(false);
   const [pinError, setPinError] = useState<string>();
   async function locate() {
@@ -55,78 +37,26 @@ export function LocationFields({
       setLocating(false);
     }
   }
-  const failed = cities.isError || areas.isError;
   return (
     <>
-      <div className="grid min-w-0 gap-3 tablet:grid-cols-2">
-        <Select
-          label={t('city')}
-          required
-          value={form.cityId}
-          disabled={disabled || cities.isPending}
-          hint={cities.isPending ? t('loadingOptions') : undefined}
-          onChange={(event) => set({ cityId: event.target.value, areaId: '' })}
-          options={[
-            { value: '', label: t('chooseCity') },
-            ...cityItems.map((city) => ({
-              value: city.id,
-              label: geoName(city, locale),
-              disabled: city.status !== 'enabled' && city.id !== form.cityId,
-            })),
-          ]}
-        />
-        <Select
-          label={t('area')}
-          required
-          value={form.areaId}
-          disabled={disabled || !form.cityId || areas.isPending}
-          hint={form.cityId ? undefined : t('cityFirst')}
-          error={error('areaId')}
-          onChange={(event) => set({ areaId: event.target.value })}
-          options={[
-            { value: '', label: t('chooseArea') },
-            ...areaItems.map((area) => ({
-              value: area.id,
-              label:
-                geoName(area, locale) +
-                (area.pinCode ? ` · ${area.pinCode}` : ''),
-            })),
-          ]}
-        />
-      </div>
-      {(cities.hasNextPage || areas.hasNextPage) && (
-        <Button
-          size="small"
-          variant="outline"
-          className="justify-self-start"
-          disabled={cities.isFetchingNextPage || areas.isFetchingNextPage}
-          onClick={() =>
-            void (cities.hasNextPage
-              ? cities.fetchNextPage()
-              : areas.fetchNextPage())
-          }
-        >
-          {t('moreOptions')}
-        </Button>
-      )}
-      {failed && (
-        <div
-          role="alert"
-          className="flex flex-wrap items-center gap-2 text-small text-error"
-        >
-          <span>{t('locationsFailed')}</span>
-          <Button
-            size="small"
-            variant="outline"
-            onClick={() => {
-              if (cities.isError) void cities.refetch();
-              if (areas.isError) void areas.refetch();
-            }}
-          >
-            {t('retry')}
-          </Button>
-        </div>
-      )}
+      <CityAreaFields
+        cityId={form.cityId}
+        areaId={form.areaId}
+        onChange={set}
+        disabled={disabled}
+        areaError={error('areaId')}
+        labels={{
+          city: t('city'),
+          chooseCity: t('chooseCity'),
+          area: t('area'),
+          chooseArea: t('chooseArea'),
+          cityFirst: t('cityFirst'),
+          loadingOptions: t('loadingOptions'),
+          moreOptions: t('moreOptions'),
+          failed: t('locationsFailed'),
+          retry: t('retry'),
+        }}
+      />
       <TextArea
         label={t('address')}
         required

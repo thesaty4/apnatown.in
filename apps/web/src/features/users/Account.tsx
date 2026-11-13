@@ -11,6 +11,7 @@ import { AccessState } from '../../shared/auth/AccessState';
 import { Logout } from '../../shared/auth/Logout';
 import { DemoRoleCard } from '../auth/demo/DemoControls';
 import { AccountBusinessEntry } from '../businesses/AccountBusinessEntry';
+import { AccountRiderEntry } from '../rider/AccountRiderEntry';
 import { accountScope } from '../../shared/api/query-keys';
 import { profileOptions } from './api';
 import { OwnResource } from './OwnResource';
@@ -104,6 +105,7 @@ export function Account({
             </nav>
           </Card>
           <AccountBusinessEntry />
+          <AccountRiderEntry />
           <PrivacyActions
             key={`${state.data.userId}:${epoch}`}
             scope={accountScope(state.data, epoch)}

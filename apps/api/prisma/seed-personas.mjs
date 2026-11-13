@@ -21,6 +21,32 @@ function samplePhones(value, phones = new Set()) {
   return phones;
 }
 
+// Sample rider vehicle text, e.g. "Bike UP57 AB 2210" -> bike + number.
+const VEHICLE = /^(Bike|Scooter|Cycle)\s+([A-Z0-9][A-Z0-9 -]{3,19})$/;
+
+function riderFixture(sample, helpers, fixtures, phone) {
+  const rider = (sample.riders ?? []).find(
+    (entry) => entry.phone && helpers.normalizePhone(entry.phone) === phone,
+  );
+  const vehicle = VEHICLE.exec(rider?.vehicle ?? '');
+  const area = fixtures.areas.find((entry) => entry.en === rider?.area);
+  if (!rider || rider.status !== 'approved' || !vehicle || !area) invalid();
+  return {
+    user: {
+      id: fixtureId('user', rider.id),
+      phone,
+      name: rider.name,
+      roles: ['customer', 'rider'],
+    },
+    profile: {
+      fullName: rider.name,
+      vehicleType: vehicle[1].toLowerCase(),
+      vehicleNumber: vehicle[2],
+      areaKey: area.key,
+    },
+  };
+}
+
 function matrix(role, helpers) {
   const permissions = {};
   for (const [module, letters] of Object.entries(role.mx ?? {})) {
@@ -33,7 +59,8 @@ function matrix(role, helpers) {
 /**
  * Local/test-only Demo controls identities (docs/adr/0002) for the API's
  * shared DEMO_PERSONAS map. Vendor/provider personas are fixture owners;
- * customer, admin and super admin are seeded here with their roles.
+ * customer, rider, admin and super admin are seeded here with their roles
+ * (the rider also gets its approved Delivery rider profile).
  */
 export function buildPersonaFixtures(sample, helpers, fixtures) {
   const personas = helpers.demoPersonas;
@@ -47,6 +74,7 @@ export function buildPersonaFixtures(sample, helpers, fixtures) {
   const admin = byPhone(sample.admins, 'admin');
   const role = sample.roles?.find((entry) => entry.name === admin?.role);
   const areaKeys = new Set(fixtures.areas.map((area) => area.key));
+  const rider = riderFixture(sample, helpers, fixtures, phone('rider'));
   const known = new Set([...samplePhones(sample)].map(helpers.normalizePhone));
   if (
     !customer ||
@@ -86,7 +114,10 @@ export function buildPersonaFixtures(sample, helpers, fixtures) {
         name: SUPER_ADMIN_NAME,
         roles: ['customer', 'super_admin'],
       },
+      // Appended last: seed-context reads users[0..2] by position.
+      rider.user,
     ],
+    rider: rider.profile,
     role: {
       id: fixtureId('admin-role', role.id),
       name: role.name,
@@ -228,9 +259,34 @@ async function seedAdmin(client, helpers, admin, ids) {
   return 1;
 }
 
+// Approved demo rider (sample status approved, offline). The sample pack has
+// no payout instrument, so payout stays empty rather than invented.
+async function seedRiderProfile(client, userId, rider, scope) {
+  const areaId = scope.areaIds.get(rider.areaKey);
+  if (!areaId) invalid();
+  const { rowCount } = await client.query(
+    `INSERT INTO rider_profiles (user_id, city_id, area_id, full_name,
+       vehicle_type, vehicle_number, status, submitted_at, is_online,
+       preferred_locale, version, created_at, updated_at)
+     VALUES ($1::uuid, $2::uuid, $3::uuid, $4, $5, $6, 'approved', $7, FALSE,
+       'en', 1, $7, $7)
+     ON CONFLICT DO NOTHING`,
+    [
+      userId,
+      scope.cityId,
+      areaId,
+      rider.fullName,
+      rider.vehicleType,
+      rider.vehicleNumber,
+      FIXTURE_CLOCK,
+    ],
+  );
+  return rowCount;
+}
+
 /** Insert-only persona rows; existing users, roles and admin accounts stay untouched. */
 export async function seedPersonas(client, helpers, personas, scope, counts) {
-  const [customer, admin, superAdmin] = personas.users;
+  const [customer, admin, superAdmin, rider] = personas.users;
   if (personas.admin.areas.some((key) => !scope.areaIds.has(key))) invalid();
   await grantRoles(
     client,
@@ -251,4 +307,12 @@ export async function seedPersonas(client, helpers, personas, scope, counts) {
   if (await exclusive(client, superId, 'super_admin'))
     await grantRoles(client, superId, superAdmin.roles);
   else counts.personaConflicts += 1;
+  const riderId = await seedUser(client, helpers.crypto, rider, counts);
+  await grantRoles(client, riderId, rider.roles);
+  counts.riders += await seedRiderProfile(
+    client,
+    riderId,
+    personas.rider,
+    scope,
+  );
 }

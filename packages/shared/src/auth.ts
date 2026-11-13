@@ -34,11 +34,15 @@ export const SessionSchema = PrincipalSchema.extend({
   expiresAt: TimestampSchema,
 });
 export const LogoutSchema = z.strictObject({ loggedOut: z.literal(true) });
-/** Local/test-only demo personas (ADR 0002). Rider has no owner module yet. */
+/**
+ * Local/test-only demo personas (ADR 0002). Rider signs in as the seeded
+ * approved rider (Delivery rider profile); job features still need Orders.
+ */
 export const DemoPersonaSchema = z.enum([
   'customer',
   'vendor',
   'provider',
+  'rider',
   'admin',
   'super_admin',
 ]);

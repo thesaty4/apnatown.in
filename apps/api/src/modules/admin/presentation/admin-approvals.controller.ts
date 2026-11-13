@@ -60,7 +60,7 @@ export class AdminApprovalsController {
     operationId: 'adminApprovals',
     summary: 'Scoped approvals queue',
     description:
-      "type=business (shops) | provider (service providers) | rider (default business) and status=pending|changes_requested|approved|rejected (default pending): applications inside the caller's assigned city/area scope (super_admin: all), oldest first with a caller/filter/scope-bound keyset cursor; limit <= 50. Rider approvals belong to the Delivery module, which has not shipped: type=rider returns no items and unavailable=['rider']. Decide via POST /businesses/admin/applications/{id}/decision. private, no-store.",
+      "type=business (shops) | provider (service providers) | rider (default business) and status=pending|changes_requested|approved|rejected (default pending): applications inside the caller's assigned city/area scope (super_admin: all), oldest first with a caller/filter/scope-bound keyset cursor; limit <= 50. type=rider lists Delivery rider applications (id = rider user ID, nameEn = full name). Decide businesses via POST /businesses/admin/applications/{id}/decision and riders via POST /delivery/admin/riders/{userId}/decision. private, no-store.",
   })
   @ApiOkResponse({ type: AdminApprovalPageDto })
   @AdminErrors({

@@ -3,9 +3,27 @@ import type {
   ListingReportReason,
   ListingReportStatus,
 } from '@apnatown/shared/admin';
+import { createHmac } from 'node:crypto';
 import type { TxContext } from '../../../shared/persistence/ports';
 
 export const LISTING_REPORT_REPOSITORY = Symbol('LISTING_REPORT_REPOSITORY');
+
+const SUBJECT_KEY_LABEL = 'apnatown:listing-report-subject:v1';
+
+/** Purpose-separated subkey: never equal to cursor or rate-limit MACs. */
+export function listingReportSubjectKey(cursorSigningKey: string): Buffer {
+  return createHmac('sha256', cursorSigningKey)
+    .update(SUBJECT_KEY_LABEL)
+    .digest();
+}
+
+/** Keyed reporter subject hash; shared by intake and the local demo seed. */
+export function listingReportSubjectHash(
+  subjectKey: Buffer,
+  subject: string,
+): Buffer {
+  return createHmac('sha256', subjectKey).update(subject).digest();
+}
 
 /** Stored report; the subject hash is never read back out of the store. */
 export interface StoredListingReport {

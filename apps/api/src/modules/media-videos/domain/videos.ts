@@ -90,6 +90,8 @@ export interface VideoFeedRecord extends StoredVideo {
   likeCount: string;
   commentCount: string;
   shareCount: string;
+  /** Up to five live public link targets in owner order (JSON from SQL). */
+  links: unknown;
 }
 
 export interface VideoFeedFilter {
