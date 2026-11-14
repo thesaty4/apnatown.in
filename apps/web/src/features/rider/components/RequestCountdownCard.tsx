@@ -9,19 +9,24 @@ import type { OfferDecision } from '../job-queries';
 import { Notice, useIstTime, useKm, useMoney } from '../parts';
 
 /** Seconds left from the server's expiry, corrected by its clock skew. */
-function useRemaining(offer: RiderOffer) {
+export function useOfferRemaining(offer: RiderOffer | null) {
   const [now, setNow] = useState(() => Date.now());
-  const [skew, setSkew] = useState(
-    () => Date.parse(offer.serverTime) - Date.now(),
+  const active = offer !== null;
+  const serverTime = offer?.serverTime ?? null;
+  const [skew, setSkew] = useState(() =>
+    serverTime ? Date.parse(serverTime) - Date.now() : 0,
   );
   // Each re-read (focus, reconnect, realtime hint) re-anchors the clock.
   useEffect(() => {
-    setSkew(Date.parse(offer.serverTime) - Date.now());
-  }, [offer.serverTime]);
+    if (serverTime) setSkew(Date.parse(serverTime) - Date.now());
+  }, [serverTime]);
   useEffect(() => {
+    if (!active) return;
+    setNow(Date.now());
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(timer);
-  }, []);
+  }, [active]);
+  if (!offer) return 0;
   return Math.max(
     0,
     Math.ceil((Date.parse(offer.expiresAt) - (now + skew)) / 1000),
@@ -54,7 +59,7 @@ export function RequestCountdownCard({
   const money = useMoney();
   const km = useKm();
   const time = useIstTime();
-  const remaining = useRemaining(offer);
+  const remaining = useOfferRemaining(offer);
   const expired = remaining === 0;
   const milestone = expired
     ? t('expired')

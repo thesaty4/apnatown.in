@@ -74,7 +74,6 @@ export function ReelEmbedFailure({
   onRetry: () => void;
 }) {
   const t = useTranslations('reels.embed');
-  const copy = useTranslations('common.copy');
   return (
     <div
       role="alert"
@@ -86,7 +85,7 @@ export function ReelEmbedFailure({
       <p className="m-0 max-w-reel-state-copy font-bold">{t('failedTitle')}</p>
       <Button variant="inverse" onClick={onRetry}>
         <NavIcon name="refresh" className="size-4" />
-        {copy('retry')}
+        {t('retry')}
       </Button>
       <a
         className="text-small text-reel-text underline underline-offset-2"

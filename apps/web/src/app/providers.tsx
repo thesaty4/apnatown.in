@@ -1,7 +1,7 @@
 'use client';
 
 import { NextIntlClientProvider, type AbstractIntlMessages } from 'next-intl';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import {
   HydrationBoundary,
   QueryClientProvider,
@@ -11,6 +11,8 @@ import type { Locale } from '../shared/i18n/preferences';
 import { SessionProvider } from '../shared/auth/SessionProvider';
 import { RealtimeProvider } from '../shared/realtime/RealtimeProvider';
 import { createQueryClient } from '../shared/api/query-client';
+import { unlockAlertAudio } from '../shared/audio/alert-chime';
+import { ServiceWorkerRegistration } from '../shared/pwa/ServiceWorkerRegistration';
 
 /** One client per mounted browser provider; SSR constructs a fresh instance. */
 export function Providers({
@@ -27,6 +29,8 @@ export function Providers({
   const [client] = useState(createQueryClient);
   // Root RSC refreshes must not rehydrate an old session after an auth transition.
   const [initialSession] = useState(session);
+  // Alert cues need one user gesture before the browser lets them play.
+  useEffect(unlockAlertAudio, []);
   return (
     <NextIntlClientProvider
       locale={locale}
@@ -36,7 +40,10 @@ export function Providers({
       <QueryClientProvider client={client}>
         <HydrationBoundary state={initialSession}>
           <SessionProvider>
-            <RealtimeProvider>{children}</RealtimeProvider>
+            <RealtimeProvider>
+              {children}
+              <ServiceWorkerRegistration />
+            </RealtimeProvider>
           </SessionProvider>
         </HydrationBoundary>
       </QueryClientProvider>

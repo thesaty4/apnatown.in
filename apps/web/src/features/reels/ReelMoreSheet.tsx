@@ -5,8 +5,8 @@ import { SafeVideoPlaybackSchema, type VideoFeedItem } from '@apnatown/shared';
 import { Button, buttonVariantClassName } from '@apnatown/ui/primitives/Button';
 import { Sheet } from '@apnatown/ui/overlay/Sheet';
 import { NavIcon } from '../../shared/ui/NavIcon';
-import { useVideoSaveAction } from '../engagement';
 import type { ReelGate } from './ReelGateSheet';
+import { useReelSave } from './use-reel-save';
 
 function SaveAction({
   item,
@@ -16,32 +16,16 @@ function SaveAction({
   onGate: (gate: ReelGate) => void;
 }) {
   const t = useTranslations('engagement.heart');
-  const save = useVideoSaveAction(item.id, item.businessId);
-  if (save.access === 'customer' && save.query.isSuccess && !save.available)
-    return null;
-  const loading =
-    save.access === 'pending' ||
-    (save.access === 'customer' && save.query.isPending);
-
+  const save = useReelSave(item, onGate);
+  if (save.hidden) return null;
   return (
     <>
       <Button
         variant="ghost"
         className="w-full justify-start"
         aria-pressed={save.saved}
-        loading={loading || save.busy}
-        onClick={() => {
-          if (save.access === 'guest' || save.access === 'unavailable')
-            onGate({ kind: 'login', message: t('loginPrompt') });
-          else if (save.access === 'forbidden')
-            onGate({
-              kind: 'restricted',
-              title: t('restrictedTitle'),
-              message: t('restrictedMessage'),
-            });
-          else if (save.query.isError) void save.query.refetch();
-          else save.toggle();
-        }}
+        loading={save.busy}
+        onClick={save.toggle}
       >
         <NavIcon name="bookmark" filled={save.saved} className="size-4.5" />
         {t(save.saved ? 'saved' : 'save')}
@@ -72,7 +56,6 @@ export function ReelMoreSheet({
   const t = useTranslations('reels.feed');
   const report = useTranslations('reels.viewer.report');
   const embed = useTranslations('reels.embed');
-  const copy = useTranslations('common.copy');
   const playback = item
     ? SafeVideoPlaybackSchema.safeParse(item.playback)
     : undefined;
@@ -82,7 +65,7 @@ export function ReelMoreSheet({
       open={open && item !== null}
       onOpenChange={onOpenChange}
       title={t('moreOptions')}
-      closeLabel={copy('close')}
+      closeLabel={t('close')}
     >
       {item && (
         <div className="grid gap-2">

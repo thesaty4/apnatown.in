@@ -82,6 +82,12 @@ export function CustomerTabBar({
       path.startsWith('/explore'),
     ],
     [
+      'play',
+      t('videos'),
+      publicHref('/videos', locale),
+      path.startsWith('/videos'),
+    ],
+    [
       'tag',
       t('offers'),
       publicHref('/offers', locale),

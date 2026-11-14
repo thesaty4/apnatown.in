@@ -41,6 +41,7 @@ Approved rider routes use `DashboardShell`/rider nav per permission matrix; pend
 
 ### S-RIDE-03 Delivery requests | `/rider/requests` | `d-rider-rreq.jpg`, `m-rider-rreq.jpg`
 - Layout: request card — pickup shop/area, drop area, distance, estimated earning (₹, Indian grouping), circular 60 s countdown, Accept (primary) / Reject.
+- Offer alert: every rider screen mounts one top-layer alert (`role="alertdialog"`, native `<dialog>` above heads-up toasts, sheets and Reels). A new offer repeats "tudun tudun tudun" until accept, reject or expiry; the alert has no dismiss action, and the chime also stops on expiry. Expired/answered offers clear the alert; the sound is best-effort (browser autoplay policy, unlocked on first gesture) and never blocks the visual alert.
 - Data: `RiderOfferDTO` from `/delivery/riders/me/offers/current` + `/stream`; `delivery.offer_created {offerId,jobId,riderUserId,expiresAt}` signals a current-offer refresh, not a client-created job/countdown. Ignore stale/replayed signals after authoritative expiry/response. Accept/reject sends offer version + stable operation key on network retry. Show immutable estimate/settings snapshot, not an earned/paid promise.
 - Special states: no requests (empty, stays online), expired (card greyed, "Request expired" text + icon).
 - Interactions: countdown from `expiresAt`/`serverTime`, resync after foreground/reconnect; announce at 30/10 s, not each tick. Navigate only after accept commits. No customer full address/phone/code on an offer.

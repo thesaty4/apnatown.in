@@ -73,7 +73,6 @@ export function ReelFeedStatus({
   onForYou: () => void;
 }) {
   const t = useTranslations('reels.feed');
-  const copy = useTranslations('common.copy');
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
   const shared = {
     tone: 'immersive',
@@ -155,11 +154,11 @@ export function ReelFeedStatus({
         <OfflineState
           {...shared}
           role="alert"
-          title={copy('youAreOffline')}
+          title={t('offlineTitle')}
           message={t('offlineMessage')}
           action={
             <Button variant="inverse" onClick={onRetry}>
-              {copy('retry')}
+              {t('retry')}
             </Button>
           }
         />

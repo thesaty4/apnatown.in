@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import type { NotificationRole } from './keys';
 import { ToastRegion, type ToastMessage } from '@apnatown/ui/feedback/Toast';
 import { useSession } from '../../shared/auth/SessionProvider';
+import { playOrderChime } from '../../shared/audio/alert-chime';
 import { useRealtimeEvents } from '../../shared/realtime/RealtimeProvider';
 import { listNotifications } from './api';
 
@@ -53,6 +54,13 @@ export function NotificationToast() {
         );
         if (!item) return;
         shown.current.add(item.id);
+        // Owners hear one "tudun" for order activity; riders use the
+        // repeating offer alert instead.
+        if (
+          item.category === 'order' &&
+          (role === 'vendor' || role === 'provider')
+        )
+          playOrderChime();
         setToast({
           id: Date.now(),
           tone: 'info',

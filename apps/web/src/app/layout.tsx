@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import { cookies } from 'next/headers';
 import { getLocale, getTranslations } from 'next-intl/server';
@@ -11,6 +11,7 @@ import {
   themeCookie,
 } from '../shared/i18n/preferences';
 import { getWebEnvironment } from '../shared/config/server';
+import { PWA_THEME_COLOR } from '../shared/config/pwa';
 import Link from 'next/link';
 import { Preferences } from '../shared/ui/Preferences';
 import { LanguageSwitch } from '../shared/ui/LanguageSwitch';
@@ -30,13 +31,36 @@ import { DemoSwitcher } from '../features/auth/demo/DemoControls';
 import { CartCount } from '../features/cart';
 import { CustomerBell } from '../features/notifications/Bells';
 import { NotificationToast } from '../features/notifications/NotificationToast';
+import { RiderOfferAlert } from '../features/rider/OfferAlert';
 import './globals.css';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: PWA_THEME_COLOR,
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('common.app');
   return {
     title: t('welcome'),
+    applicationName: 'ApnaTown',
     metadataBase: new URL(getWebEnvironment().APP_BASE_URL),
+    icons: {
+      icon: [
+        { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+        { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+      ],
+      apple: [
+        {
+          url: '/icons/apple-touch-icon.png',
+          sizes: '180x180',
+          type: 'image/png',
+        },
+      ],
+    },
+    appleWebApp: { capable: true, title: 'ApnaTown', statusBarStyle: 'default' },
     // C00 has no published Home/content pages.
     robots: { index: false, follow: false },
   };
@@ -132,6 +156,7 @@ export default async function RootLayout({
             </main>
           </div>
           <NotificationToast />
+          <RiderOfferAlert />
           <SiteFooter />
           <CustomerTabBar cartCount={<CartCount tab />} />
         </Providers>

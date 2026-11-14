@@ -22,11 +22,20 @@ export function AccountNavigation({
   const { state } = useSession();
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
   const t = useTranslations('auth.login');
+  const nav = useTranslations('common.navigation');
   const saved = useTranslations('engagement.saved');
   const cart = useTranslations('cart.nav');
   const label = t(state.kind === 'ready' ? 'account' : 'login');
   return (
     <nav aria-label={t('account')} className="flex items-center gap-1">
+      <Link
+        className={iconButton}
+        href="/videos"
+        aria-label={nav('videos')}
+        title={nav('videos')}
+      >
+        <NavIcon name="play" />
+      </Link>
       <Link
         className={iconButton}
         href="/saved"

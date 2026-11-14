@@ -6,6 +6,7 @@
       "retry": "Try again"
     },
     "app": {
+      "description": "Shop local businesses, book services and get delivery in your town.",
       "welcome": "Welcome to ApnaTown"
     },
     "empty": {

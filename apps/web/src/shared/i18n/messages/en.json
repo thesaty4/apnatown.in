@@ -2066,6 +2066,7 @@
       "retry": "Try again"
     },
     "app": {
+      "description": "Shop local businesses, book services and get delivery in your town.",
       "welcome": "Welcome to ApnaTown"
     },
     "copy": {
@@ -4947,12 +4948,15 @@
   "reels": {
     "embed": {
       "dataSaverOn": "Data saver is on",
+      "failedTitle": "Video couldn’t play",
       "openProvider": "Open video on its original platform",
       "openUnavailable": "This embed is unavailable. Open it on the original platform.",
+      "retry": "Retry",
       "tapToPlay": "Tap to play",
       "youtubeTitle": "YouTube video player"
     },
     "feed": {
+      "back": "Back",
       "browseVideos": "Browse videos",
       "businessUnavailable": "Local business",
       "categoriesUnavailable": "Categories could not be loaded.",
@@ -4961,6 +4965,7 @@
       "closed": "Closed",
       "closeShop": "Close",
       "comments": "Comments",
+      "commentsCount": "{count, plural, one {# comment} other {# comments}}",
       "dependentFiltersUnavailable": "Offer, product and service filters are unavailable until those listings are connected.",
       "distance": "{distance} away",
       "emptyFollowingMessage": "Follow a business or explore videos picked for you.",
@@ -4969,7 +4974,10 @@
       "emptyNearbyMessage": "Try another tab or choose a different area.",
       "emptyNearbyTitle": "No videos nearby",
       "emptyTitle": "No videos to show",
+      "engagementUnavailable": "Engagement isn’t available right now.",
       "feedExpired": "This feed expired. Start a fresh feed to continue.",
+      "feedExpiredTitle": "This feed expired",
+      "feedLabel": "Video feed",
       "following": "Following",
       "forYou": "For You",
       "linkedTitle": "Linked products & services",
@@ -4980,18 +4988,26 @@
       "linkViewShort": "View",
       "loading": "Loading videos",
       "loadMore": "Load more videos",
+      "moreOptions": "More options",
       "nearby": "Nearby",
       "nearbyRequiresLocation": "Nearby videos need a device location.",
+      "next": "Next video",
       "nothingLinked": "Nothing linked.",
       "offers": "Offers",
       "offersUnavailable": "Offer videos aren't available yet",
+      "offlineMessage": "Connect to the internet to watch videos.",
+      "offlineTitle": "You are offline",
       "open": "Open now",
+      "pillsLabel": "Video filters",
+      "previous": "Previous video",
       "products": "Products",
       "productsUnavailable": "Product videos aren't available yet",
       "retry": "Try again",
       "services": "Services",
       "servicesUnavailable": "Service videos aren't available yet",
+      "sharesCount": "{count, plural, one {# share} other {# shares}}",
       "shopVideo": "Shop this video",
+      "sidePanelLabel": "Video details and comments",
       "signIn": "Sign in to see videos from businesses you follow",
       "startFresh": "Start a fresh feed",
       "title": "Videos & Reels",
@@ -5000,6 +5016,10 @@
       "videoUnavailableMessage": "It may have been removed or is no longer public.",
       "videoUnavailableTitle": "This video is unavailable",
       "views": "{count, plural, one {# view} other {# views}}"
+    },
+    "gate": {
+      "close": "Not now",
+      "title": "Log in to continue"
     },
     "manager": {
       "caption": "Caption (optional)",
@@ -5492,6 +5512,8 @@
     },
     "requests": {
       "accept": "Accept",
+      "alertDescription": "Respond before the countdown ends to keep this delivery.",
+      "alertTitle": "New delivery request",
       "backHome": "Back to home",
       "distance": "Distance",
       "emptyMessage": "Stay online — new delivery requests will appear here.",

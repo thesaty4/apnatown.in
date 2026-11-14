@@ -2066,6 +2066,7 @@
       "retry": "फिर कोशिश करें"
     },
     "app": {
+      "description": "अपने शहर के स्थानीय व्यवसायों से खरीदें, सेवाएँ बुक करें और डिलीवरी पाएँ।",
       "welcome": "अपना टाउन में स्वागत है"
     },
     "copy": {
@@ -4947,12 +4948,15 @@
   "reels": {
     "embed": {
       "dataSaverOn": "डेटा सेवर चालू है",
+      "failedTitle": "वीडियो नहीं चला",
       "openProvider": "वीडियो को मूल प्लेटफ़ॉर्म पर खोलें",
       "openUnavailable": "यह एम्बेड उपलब्ध नहीं है। इसे मूल प्लेटफ़ॉर्म पर खोलें।",
+      "retry": "फिर कोशिश करें",
       "tapToPlay": "चलाने के लिए टैप करें",
       "youtubeTitle": "YouTube वीडियो प्लेयर"
     },
     "feed": {
+      "back": "वापस",
       "browseVideos": "वीडियो देखें",
       "businessUnavailable": "स्थानीय व्यवसाय",
       "categoriesUnavailable": "श्रेणियाँ लोड नहीं हो सकीं।",
@@ -4961,6 +4965,7 @@
       "closed": "बंद है",
       "closeShop": "बंद करें",
       "comments": "टिप्पणियाँ",
+      "commentsCount": "{count, plural, one {# टिप्पणी} other {# टिप्पणियाँ}}",
       "dependentFiltersUnavailable": "ऑफ़र, प्रोडक्ट और सेवा फ़िल्टर तब उपलब्ध होंगे जब उनकी लिस्टिंग जुड़ जाएगी।",
       "distance": "{distance} दूर",
       "emptyFollowingMessage": "किसी व्यवसाय को फ़ॉलो करें या आपके लिए चुने गए वीडियो देखें।",
@@ -4969,7 +4974,10 @@
       "emptyNearbyMessage": "दूसरा टैब आज़माएँ या कोई अलग इलाका चुनें।",
       "emptyNearbyTitle": "आस-पास वीडियो नहीं हैं",
       "emptyTitle": "दिखाने के लिए वीडियो नहीं हैं",
+      "engagementUnavailable": "एंगेजमेंट अभी उपलब्ध नहीं है।",
       "feedExpired": "इस फ़ीड की अवधि पूरी हो गई। आगे बढ़ने के लिए नई फ़ीड शुरू करें।",
+      "feedExpiredTitle": "यह फ़ीड खत्म हो गई",
+      "feedLabel": "वीडियो फ़ीड",
       "following": "फ़ॉलो किए गए",
       "forYou": "आपके लिए",
       "linkedTitle": "जुड़े प्रोडक्ट और सेवाएँ",
@@ -4980,18 +4988,26 @@
       "linkViewShort": "देखें",
       "loading": "वीडियो लोड हो रहे हैं",
       "loadMore": "और वीडियो लोड करें",
+      "moreOptions": "और विकल्प",
       "nearby": "आस-पास",
       "nearbyRequiresLocation": "आस-पास के वीडियो के लिए डिवाइस की लोकेशन चाहिए।",
+      "next": "अगला वीडियो",
       "nothingLinked": "कुछ भी जुड़ा नहीं है।",
       "offers": "ऑफ़र",
       "offersUnavailable": "ऑफ़र वाले वीडियो अभी उपलब्ध नहीं हैं",
+      "offlineMessage": "वीडियो देखने के लिए इंटरनेट से जुड़ें।",
+      "offlineTitle": "आप ऑफ़लाइन हैं",
       "open": "अभी खुला है",
+      "pillsLabel": "वीडियो फ़िल्टर",
+      "previous": "पिछला वीडियो",
       "products": "प्रोडक्ट",
       "productsUnavailable": "प्रोडक्ट वाले वीडियो अभी उपलब्ध नहीं हैं",
       "retry": "फिर कोशिश करें",
       "services": "सेवाएँ",
       "servicesUnavailable": "सेवा वाले वीडियो अभी उपलब्ध नहीं हैं",
+      "sharesCount": "{count, plural, one {# शेयर} other {# शेयर}}",
       "shopVideo": "इस वीडियो से खरीदें",
+      "sidePanelLabel": "वीडियो विवरण और टिप्पणियाँ",
       "signIn": "आपके फ़ॉलो किए व्यवसायों के वीडियो देखने के लिए साइन इन करें",
       "startFresh": "नई फ़ीड शुरू करें",
       "title": "वीडियो और रील्स",
@@ -5000,6 +5016,10 @@
       "videoUnavailableMessage": "इसे हटाया गया हो सकता है या यह अब सार्वजनिक नहीं है।",
       "videoUnavailableTitle": "यह वीडियो उपलब्ध नहीं है",
       "views": "{count} व्यू"
+    },
+    "gate": {
+      "close": "अभी नहीं",
+      "title": "जारी रखने के लिए लॉग इन करें"
     },
     "manager": {
       "caption": "कैप्शन (ज़रूरी नहीं)",
@@ -5492,6 +5512,8 @@
     },
     "requests": {
       "accept": "स्वीकार",
+      "alertDescription": "यह डिलीवरी पाने के लिए उलटी गिनती खत्म होने से पहले जवाब दें।",
+      "alertTitle": "नई डिलीवरी रिक्वेस्ट",
       "backHome": "होम पर वापस जाएँ",
       "distance": "दूरी",
       "emptyMessage": "ऑनलाइन रहें — नए डिलीवरी अनुरोध यहाँ दिखेंगे।",

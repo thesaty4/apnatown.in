@@ -99,14 +99,15 @@ export class VideoSharesService {
             request.correlationId,
           ),
         );
-        return true;
+        // 204 commands must store no body (`IDEMPOTENCY_NO_CONTENT_RESULT_INVALID`).
+        return null;
       },
       {
-        store: (result) => result,
+        store: () => null,
         replay: async (tx) => {
           const target = await this.media.find(tx, input.targetId);
           if (!target?.public) throw new DomainError('MEDIA_VIDEO_NOT_PUBLISHED');
-          return true;
+          return null;
         },
       },
     );

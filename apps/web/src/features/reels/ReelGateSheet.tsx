@@ -19,7 +19,7 @@ export function ReelGateSheet({
   gate: ReelGate | null;
   onClose: () => void;
 }) {
-  const t = useTranslations('common.copy');
+  const t = useTranslations('reels.gate');
   const auth = useTranslations('auth.feedback');
   const loginHref = useLoginHref();
   // Keep the last gate's copy while the sheet animates closed.
@@ -33,10 +33,10 @@ export function ReelGateSheet({
         if (!open) onClose();
       }}
       title={
-        shown?.kind === 'restricted' ? shown.title : t('pleaseLogInToContinue')
+        shown?.kind === 'restricted' ? shown.title : t('title')
       }
       description={shown?.message ?? ''}
-      closeLabel={t('notNow')}
+      closeLabel={t('close')}
     >
       <div className="grid gap-2">
         {shown?.kind === 'login' && (
@@ -48,7 +48,7 @@ export function ReelGateSheet({
           </Link>
         )}
         <Button variant="text" className="w-full" onClick={onClose}>
-          {t('notNow')}
+          {t('close')}
         </Button>
       </div>
     </Sheet>

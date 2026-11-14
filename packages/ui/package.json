@@ -55,6 +55,10 @@
       "types": "./dist/overlay/Sheet.d.ts",
       "import": "./dist/overlay/Sheet.js"
     },
+    "./overlay/DialogFrame": {
+      "types": "./dist/overlay/DialogFrame.d.ts",
+      "import": "./dist/overlay/DialogFrame.js"
+    },
     "./overlay/ConfirmDialog": {
       "types": "./dist/overlay/ConfirmDialog.d.ts",
       "import": "./dist/overlay/ConfirmDialog.js"

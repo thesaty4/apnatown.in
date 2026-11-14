@@ -71,7 +71,7 @@ export function DialogFrame({
       aria-labelledby={titleId}
       aria-describedby={description ? descriptionId : undefined}
       aria-busy={busy || undefined}
-      className={`fixed inset-x-0 top-auto bottom-0 m-0 h-fit max-h-sheet-max w-full max-w-none overflow-y-auto overscroll-contain rounded-t-lg border-0 bg-surface px-4 pt-2 pb-sheet-bottom text-text shadow-3 animate-sheet-up backdrop:bg-overlay backdrop:animate-overlay-fade sheet:inset-0 sheet:m-auto sheet:rounded-lg sheet:animate-sheet-pop motion-reduce:animate-none motion-reduce:backdrop:animate-none ${wide ? 'sheet:w-sheet-wide' : 'sheet:w-sheet'}`}
+      className={`pointer-events-auto fixed inset-x-0 top-auto bottom-0 m-0 h-fit max-h-sheet-max w-full max-w-none overflow-y-auto overscroll-contain rounded-t-lg border-0 bg-surface px-4 pt-2 pb-sheet-bottom text-text shadow-3 animate-sheet-up backdrop:bg-overlay backdrop:animate-overlay-fade sheet:inset-0 sheet:m-auto sheet:rounded-lg sheet:animate-sheet-pop motion-reduce:animate-none motion-reduce:backdrop:animate-none ${wide ? 'sheet:w-sheet-wide' : 'sheet:w-sheet'}`}
       onCancel={(event) => {
         event.preventDefault();
         event.stopPropagation();

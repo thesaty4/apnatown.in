@@ -8,6 +8,7 @@ import { ShareSheet, useVideoLikeAction } from '../engagement';
 import type { ReelGate } from './ReelGateSheet';
 import { ReelShopSheet } from './ReelLinks';
 import { reelCountClassName, reelRailButtonClassName } from './reel-styles';
+import { useReelSave } from './use-reel-save';
 
 function RailAction({
   icon,
@@ -72,8 +73,10 @@ export function ReelRail({
   const likes = useTranslations('engagement.likes');
   const comments = useTranslations('engagement.comments');
   const share = useTranslations('engagement.share');
+  const heart = useTranslations('engagement.heart');
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
   const like = useVideoLikeAction(item.id, item.businessId);
+  const save = useReelSave(item, onGate);
   const likeCount = like.available ? like.count : item.likeCount;
   const compact = (count: number) => formatCompactCount(count, locale);
 
@@ -92,6 +95,7 @@ export function ReelRail({
 
   let alert: ReactNode = null;
   if (like.errorKey) alert = likes(like.errorKey);
+  else if (save.errorKey) alert = heart(save.errorKey);
   else if (like.query.isError && like.access === 'customer')
     alert = t('engagementUnavailable');
 
@@ -135,6 +139,15 @@ export function ReelRail({
             />
           )}
         />
+        {!save.hidden && (
+          <RailAction
+            icon="bookmark"
+            label={heart(save.saved ? 'saved' : 'save')}
+            pressed={save.saved}
+            busy={save.busy}
+            onClick={save.toggle}
+          />
+        )}
         <ReelShopSheet
           item={item}
           renderTrigger={(open) => (

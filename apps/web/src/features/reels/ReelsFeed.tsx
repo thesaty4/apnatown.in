@@ -54,7 +54,6 @@ export function ReelsFeed({
   initialVideoId?: string;
 }) {
   const t = useTranslations('reels.feed');
-  const copy = useTranslations('common.copy');
   const report = useTranslations('reels.viewer.report');
   const comments = useTranslations('engagement.comments');
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
@@ -174,7 +173,7 @@ export function ReelsFeed({
       <div className="z-3 flex items-start gap-1.5 bg-linear-to-b from-reel-canvas/70 to-transparent px-2.5 py-2">
         <button
           type="button"
-          aria-label={copy('back')}
+          aria-label={t('back')}
           className={reelTopIconClassName}
           onClick={close}
         >
@@ -290,7 +289,7 @@ export function ReelsFeed({
           open={commentsOpen}
           onOpenChange={setCommentsOpen}
           title={comments('title')}
-          closeLabel={copy('close')}
+          closeLabel={t('close')}
         >
           <CommentsPanel videoId={commentsItem.id} showHeading={false} />
         </Sheet>

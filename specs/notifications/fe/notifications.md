@@ -49,6 +49,8 @@ Use [frontend-shared](../../_foundation/frontend-shared.md) for standard states,
 
 `NotificationFeed`, `NotificationItem`, `ChannelPreferences`, `BellBadge` in `src/features/notifications`. Shared: `IconButton` (bell badge), `Switch`, `Toast`, `Skeleton`, `EmptyState`.
 
+`NotificationToast` reacts to the `notification` SSE hint by reading the newest unread item for the current area role and shows a toast above the page. On vendor/provider order activity it also plays one short "tudun" cue (`shared/audio/alert-chime.ts`); audio is unlocked by the first user gesture and stays silent when the browser blocks it. Rider offers use the repeating alert in [delivery](../../delivery/fe/delivery.md), not this toast, so a rider never hears two order cues.
+
 ## i18n and analytics
 
 Prefixes `notifications.*`; template copy is rendered server-side. Events: `notification_opened`, `notifications_mark_all_read`, `notification_pref_changed`.
