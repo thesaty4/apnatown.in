@@ -43,7 +43,7 @@ export class PrismaFollowRepository implements FollowRepository {
           user_id, business_id, bell_on, created_at, last_followed_at
         ) VALUES (
           ${input.userId}::uuid, ${input.businessId}::uuid,
-          ${input.bellOn ?? false}, ${input.at}, ${input.at}
+          ${input.bellOn ?? true}, ${input.at}, ${input.at}
         )
         ON CONFLICT (user_id, business_id) DO NOTHING`;
       if (inserted === 0) {
@@ -59,7 +59,7 @@ export class PrismaFollowRepository implements FollowRepository {
         if (current.unfollowedAt !== null) {
           await client.$executeRaw`
             UPDATE follows
-            SET bell_on = ${input.bellOn ?? false},
+            SET bell_on = ${input.bellOn ?? true},
                 last_followed_at = ${input.at},
                 unfollowed_at = NULL
             WHERE user_id = ${input.userId}::uuid

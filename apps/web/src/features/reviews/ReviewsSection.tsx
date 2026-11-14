@@ -38,6 +38,13 @@ export function ReviewsSection({
   );
   const summary = query.data?.pages[0]?.summary;
   const reviews = query.data?.pages.flatMap((page) => page.items) ?? [];
+  const emptyMessage = t(
+    targetType === 'business'
+      ? 'emptyBusinessMessage'
+      : targetType === 'service'
+        ? 'emptyServiceMessage'
+        : 'emptyMessage',
+  );
   const headingId = `reviews-${targetType}-${targetId}`;
 
   let body;
@@ -58,7 +65,7 @@ export function ReviewsSection({
       <EmptyState
         icon="⭐"
         title={t('emptyTitle')}
-        message={t('emptyMessage')}
+        message={emptyMessage}
         headingLevel="h2"
         action={null}
       />

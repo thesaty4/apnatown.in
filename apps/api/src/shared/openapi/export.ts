@@ -182,9 +182,11 @@ import { PhotoReportService } from '../../modules/media-videos/application/photo
 import { MediaReportModerationService } from '../../modules/media-videos/application/media-report-moderation.service';
 import { ReviewsPublicController } from '../../modules/reviews/presentation/reviews-public.controller';
 import { ReviewsOwnerController } from '../../modules/reviews/presentation/reviews-owner.controller';
+import { ReviewsSelfController } from '../../modules/reviews/presentation/reviews-self.controller';
 import { FollowerInsightsController } from '../../modules/engagement/presentation/follower-insights.controller';
 import { ReviewsPublicService } from '../../modules/reviews/application/reviews-public.service';
 import { ReviewsOwnerService } from '../../modules/reviews/application/reviews-owner.service';
+import { ReviewsSelfService } from '../../modules/reviews/application/reviews-self.service';
 import { OwnerOffersService } from '../../modules/offers/application/owner-offers.service';
 import { PublicPromotionsService } from '../../modules/offers/application/public-promotions.service';
 import { OwnerOffersController } from '../../modules/offers/presentation/owner-offers.controller';
@@ -297,6 +299,7 @@ import { RiderJobCompleteService } from '../../modules/delivery/application/ride
     PhotoReportController,
     ReviewsPublicController,
     ReviewsOwnerController,
+    ReviewsSelfController,
     OwnerOffersController,
     PublicOffersController,
     PublicPlacementsController,
@@ -395,6 +398,7 @@ import { RiderJobCompleteService } from '../../modules/delivery/application/ride
     MediaReportModerationService,
     ReviewsPublicService,
     ReviewsOwnerService,
+    ReviewsSelfService,
     OwnerOffersService,
     PublicPromotionsService,
     OwnerEarningsService,

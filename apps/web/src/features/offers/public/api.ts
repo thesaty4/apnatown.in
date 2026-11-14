@@ -12,12 +12,17 @@ export async function getPublicOffers(
   api: Reader,
   cursor: string | null,
   signal: AbortSignal,
+  businessId?: string,
 ): Promise<OfferPublicPage> {
   try {
     return unwrap(
       await api.GET('/offers', {
         params: {
-          query: { limit: 12, ...(cursor && { cursor }) },
+          query: {
+            limit: 12,
+            ...(businessId && { businessId }),
+            ...(cursor && { cursor }),
+          },
         },
         signal,
       }),

@@ -126,3 +126,39 @@ export type ReviewReport = z.infer<typeof ReviewReportSchema>;
 export const ReviewReportResultSchema = z.strictObject({
   reported: z.literal(true),
 });
+
+// ---------------------------------------------------------------------------
+// Customer self list (S-CUST-23 / account "My reviews"). Read-only: includes
+// pending/hidden items the customer wrote, with the current target label.
+// ---------------------------------------------------------------------------
+
+export const MY_REVIEW_STATUSES = [
+  'pending',
+  'published',
+  'reported',
+  'hidden',
+] as const;
+export const MyReviewStatusSchema = z.enum(MY_REVIEW_STATUSES);
+export type MyReviewStatus = z.infer<typeof MyReviewStatusSchema>;
+
+export const MyReviewSchema = z.strictObject({
+  id: IdSchema,
+  targetType: z.enum(['product', 'service', 'business', 'rider']),
+  targetId: IdSchema,
+  targetNameEn: z.string().nullable(),
+  targetNameHi: z.string().nullable(),
+  /** Same-origin listing path; null for rider reviews or removed targets. */
+  targetPath: z.string().min(1).max(2048).nullable(),
+  rating: ReviewRatingSchema,
+  text: z.string().min(1).max(1000),
+  status: MyReviewStatusSchema,
+  helpfulCount: CountSchema,
+  ownerReply: z.string().min(1).max(1000).nullable(),
+  createdAt: TimestampSchema,
+});
+export type MyReview = z.infer<typeof MyReviewSchema>;
+
+export const MyReviewPageSchema = z.strictObject({
+  items: z.array(MyReviewSchema).max(50),
+});
+export type MyReviewPage = z.infer<typeof MyReviewPageSchema>;

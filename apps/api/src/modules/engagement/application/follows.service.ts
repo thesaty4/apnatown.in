@@ -38,13 +38,14 @@ export class FollowsService {
         if (!target?.public || target.businessId !== businessId)
           throw new DomainError('MEDIA_VIDEO_NOT_PUBLISHED');
       }
-      return FollowResultSchema.parse(await this.follows.set(tx, {
+      const { changed: _changed, ...result } = await this.follows.set(tx, {
         userId: principal.userId,
         businessId,
         following,
         ...(input?.bellOn !== undefined && { bellOn: input.bellOn }),
         at: this.clock.now(),
-      }));
+      });
+      return FollowResultSchema.parse(result);
     });
   }
 }

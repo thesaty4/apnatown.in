@@ -5,7 +5,7 @@ import type { SavedItem, SavedPage } from '@apnatown/shared';
 import { queryKeys, type AccountScope } from '../../shared/api/query-keys';
 import { usePrivateMutation } from '../../shared/api/use-private-mutation';
 import { useSession } from '../../shared/auth/SessionProvider';
-import { removeBusinessFollow, setVideoHeart } from './likes-api';
+import { removeBusinessFollow, setBusinessFollow, setVideoHeart } from './likes-api';
 import { setServiceBookmark } from './service-bookmarks';
 
 export function useRemoveSaved(scope: AccountScope) {
@@ -44,6 +44,36 @@ export function useRemoveSaved(scope: AccountScope) {
       await Promise.all([
         client.invalidateQueries({ queryKey: root }),
         client.invalidateQueries({ queryKey: engagement }),
+      ]);
+      assertCurrent();
+    },
+  );
+}
+
+
+/** Bell-only update for a followed business shown in the saved/following list. */
+export function useSavedBellToggle(scope: AccountScope) {
+  const { api, lifecycle } = useSession();
+  const client = useQueryClient();
+  return usePrivateMutation(
+    lifecycle,
+    async (
+      input: { businessId: string; bellOn: boolean },
+      assertCurrent,
+    ) => {
+      await setBusinessFollow(
+        api,
+        input.businessId,
+        null,
+        { following: true, bellOn: input.bellOn },
+        assertCurrent,
+      );
+      assertCurrent();
+      await Promise.all([
+        client.invalidateQueries({ queryKey: queryKeys.savedRoot(scope) }),
+        client.invalidateQueries({
+          queryKey: queryKeys.engagementStateRoot(scope, scope.epoch),
+        }),
       ]);
       assertCurrent();
     },

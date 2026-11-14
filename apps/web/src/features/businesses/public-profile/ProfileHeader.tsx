@@ -7,6 +7,7 @@ import { StatusBadge } from '@apnatown/ui/primitives/Badge';
 import { categoryPath } from '../../catalog';
 import { publicHref, type Locale } from '../../../shared/i18n/preferences';
 import { openStatus } from './hours';
+import { ProfileCover } from './ProfileCover';
 
 export type HeaderCategory = { slug: string; name: string; icon: string | null };
 
@@ -70,17 +71,12 @@ export async function ProfileHeader({
         </ol>
       </nav>
       <div className="relative">
-        <Avatar
-          label={profile.cover ? t('coverAlt', { name }) : ''}
-          emoji={fallback}
-          size="4:3"
+        <ProfileCover
+          cover={profile.cover}
+          slug={item.slug}
+          name={name}
+          fallback={fallback}
           style={hue}
-          className="aspect-[16/9]! rounded-lg tablet:aspect-[3/1]! text-listing-art!"
-          {...(profile.cover && {
-            src: profile.cover.path,
-            imageWidth: profile.cover.width,
-            imageHeight: profile.cover.height,
-          })}
         />
         <Avatar
           label={profile.logo ? t('logoAlt', { name }) : ''}

@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@apnatown/ui/primitives/Button';
 import type { ButtonVariant } from '@apnatown/ui/primitives/Button';
 import { failureCode } from '../../shared/api/result';
+import { NavIcon } from '../../shared/ui/NavIcon';
 import { useBusinessFollow } from './likes-queries';
 import { useCustomerAccess } from './engagement-actions';
 import { CompactLoginPrompt } from './CompactLoginPrompt';
@@ -44,16 +45,24 @@ export function BusinessFollowButton({
           disabled={forbidden || access === 'pending'}
           onClick={() => {
             if (!customer) setLoginPrompt(true);
-            else run(!following, following ? false : Boolean(business?.bellOn));
+            else run(!following, following ? false : true);
           }}
         >
+          <NavIcon
+            name="bell"
+            filled={following && (business?.bellOn ?? true)}
+            className="size-4"
+          />
           {t(following ? 'following' : 'follow')}
         </Button>
         {following && (
           <Button
             variant="outline"
+            size="small"
+            className="size-touch min-w-touch p-0"
             aria-pressed={business?.bellOn ?? false}
             aria-label={t(business?.bellOn ? 'bellOn' : 'bellOff')}
+            title={t(business?.bellOn ? 'bellOn' : 'bellOff')}
             loading={mutation.isPending || access === 'pending'}
             disabled={forbidden || access === 'pending'}
             onClick={() => {
@@ -61,7 +70,11 @@ export function BusinessFollowButton({
               else run(true, !business?.bellOn);
             }}
           >
-            {t(business?.bellOn ? 'bellOn' : 'bellOff')}
+            <NavIcon
+              name="bell"
+              filled={business?.bellOn ?? false}
+              className="size-5"
+            />
           </Button>
         )}
       </div>

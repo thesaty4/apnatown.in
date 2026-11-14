@@ -6,6 +6,9 @@ const environment = parseWebEnvironment(process.env);
 const config: NextConfig = {
   poweredByHeader: false,
   skipTrailingSlashRedirect: true,
+  // Allow `/_next/*` dev requests when the dev server is reached through the
+  // public tunnel instead of localhost (required by Next's dev origin check).
+  allowedDevOrigins: ['roomier-ungoverning-carmelia.ngrok-free.dev'],
   transpilePackages: [
     '@apnatown/shared',
     '@apnatown/ui',

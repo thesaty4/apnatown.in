@@ -5,9 +5,9 @@ import { publicHref } from '../../shared/i18n/preferences';
 import { BrandLogo } from '../../shared/ui/BrandLogo';
 import { LanguageSwitch } from '../../shared/ui/LanguageSwitch';
 
-/** Public footer (prototype `.foot`): brand + tagline, help and legal links
- * (S-CUST-30..33, 38) and the language switch. "Join us" signup links wait
- * for the onboarding routes. */
+/** Public footer (prototype `.foot`): brand + tagline, help, signup and legal
+ * links (S-CUST-30..33, 38) and the language switch. Signup routes are the
+ * private onboarding dashboards, so they stay unprefixed for both locales. */
 export async function SiteFooter() {
   const t = await getTranslations('legal.footer');
   const copy = await getTranslations('common.copy');
@@ -18,17 +18,28 @@ export async function SiteFooter() {
     [
       t('company'),
       [
-        ['/about', t('about')],
-        ['/help', t('help')],
-        ...(internal ? [['/design-system', t('design')] as const] : []),
+        [publicHref('/about', locale), t('about')],
+        [publicHref('/help', locale), t('help')],
+        ...(internal
+          ? [[publicHref('/design-system', locale), t('design')] as const]
+          : []),
+      ],
+    ],
+    [
+      copy('joinUs'),
+      // Signup routes are private dashboards outside the locale tree.
+      [
+        ['/vendor/onboarding', copy('sellOnApnatownVendorSignup')],
+        ['/provider/onboarding', copy('listYourService')],
+        ['/rider/onboarding', copy('becomeARider')],
       ],
     ],
     [
       t('legal'),
       [
-        ['/terms', t('terms')],
-        ['/privacy', t('privacy')],
-        ['/refund-policy', t('refund')],
+        [publicHref('/terms', locale), t('terms')],
+        [publicHref('/privacy', locale), t('privacy')],
+        [publicHref('/refund-policy', locale), t('refund')],
       ],
     ],
   ] as const;
@@ -51,10 +62,10 @@ export async function SiteFooter() {
           <nav key={title} aria-label={title} className="grid content-start">
             <h2 className="mb-1 text-body font-semibold">{title}</h2>
             <ul>
-              {links.map(([path, label]) => (
-                <li key={path}>
+              {links.map(([href, label]) => (
+                <li key={href}>
                   <Link
-                    href={publicHref(path, locale)}
+                    href={href}
                     className="inline-flex min-h-touch items-center text-text-2 hover:text-primary focus-visible:ring-focus"
                   >
                     {label}

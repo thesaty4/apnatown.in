@@ -11,6 +11,7 @@ import { publicHref, type Locale } from '../../shared/i18n/preferences';
 import { NavIcon } from '../../shared/ui/NavIcon';
 import { AddToCart } from '../cart';
 import { ShareAction } from '../businesses';
+import { BusinessFollowButton } from '../engagement';
 import { LinkedVideosStrip } from '../gallery';
 import { ReviewsSection } from '../reviews';
 import { readCategories } from '../catalog/server';
@@ -209,6 +210,10 @@ export async function ProductDetail({
           </span>
           <NavIcon name="cr" className="size-5" />
         </Link>
+        <BusinessFollowButton
+          businessId={item.business.id}
+          variant="outline"
+        />
         <hr className="m-0 border-border" />
         <p className="m-0 flex items-center gap-2 text-small">
           {item.delivers ? (

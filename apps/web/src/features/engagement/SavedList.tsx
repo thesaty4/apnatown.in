@@ -17,8 +17,9 @@ import type { AccountScope } from '../../shared/api/query-keys';
 import { failureCode } from '../../shared/api/result';
 import { AccessState, Failure } from '../../shared/auth/AccessState';
 import { useSession } from '../../shared/auth/SessionProvider';
+import { NavIcon } from '../../shared/ui/NavIcon';
 import { savedOptions } from './saved-api';
-import { useRemoveSaved } from './saved-queries';
+import { useRemoveSaved, useSavedBellToggle } from './saved-queries';
 import { publicHref } from '../../shared/i18n/preferences';
 
 export function SavedList({
@@ -30,10 +31,12 @@ export function SavedList({
 }) {
   const t = useTranslations('engagement.saved');
   const follow = useTranslations('engagement.follow');
+  const profile = useTranslations('business.publicProfile');
   const locale = useLocale() === 'hi' ? 'hi' : 'en';
   const { api, lifecycle } = useSession();
   const query = useInfiniteQuery(savedOptions(api, scope, lifecycle, request));
   const remove = useRemoveSaved(scope);
+  const bell = useSavedBellToggle(scope);
   const [confirm, setConfirm] = useState<SavedItem | null>(null);
   const [notice, setNotice] = useState(false);
   const status = useRef<HTMLParagraphElement>(null);
@@ -117,35 +120,52 @@ export function SavedList({
                   : item.labelEn) ||
                 t(item.targetType === 'service' ? 'service' : 'video')
               : t('unavailable');
+            const business = item.available ? item.business : undefined;
+            const category = business
+              ? locale === 'hi'
+                ? (business.categoryHi ?? business.categoryEn)
+                : business.categoryEn
+              : null;
+            const rating =
+              business && business.rating !== null
+                ? profile('rating', {
+                    rating: business.rating,
+                    count: business.reviewCount,
+                  })
+                : business
+                  ? profile('noRating')
+                  : null;
             return (
               <Card
                 key={`${item.targetType}:${item.targetId}`}
                 padded
-                className="flex flex-wrap items-center gap-3"
+                className="relative flex flex-wrap items-center gap-3"
               >
-                <span aria-hidden="true" className="text-h2">
+                {item.available && item.canonicalPath && (
+                  <Link
+                    href={publicHref(item.canonicalPath, locale)}
+                    aria-label={label}
+                    className="absolute inset-0 z-1 rounded-md focus-visible:ring-focus"
+                  >
+                    <span className="sr-only">{label}</span>
+                  </Link>
+                )}
+                <span aria-hidden="true" className="relative z-2 text-h2">
                   {!item.available
                     ? '⊘'
-                    : item.targetType === 'business'
-                      ? '✓'
+                    : business
+                      ? business.kind === 'provider'
+                        ? '🛠️'
+                        : '🏪'
                       : item.targetType === 'service'
                         ? '▣'
                         : '▶'}
                 </span>
-                <div className="min-w-0 flex-1">
-                  {item.available && item.canonicalPath ? (
-                    <Link
-                      className="inline-flex min-h-touch items-center font-semibold underline"
-                      href={publicHref(item.canonicalPath, locale)}
-                    >
-                      {label}
-                    </Link>
-                  ) : (
-                    <h2 className="m-0 text-body font-semibold">{label}</h2>
-                  )}
-                  {item.targetType === 'business' ? (
-                    <p className="m-0 text-small text-text-2">
-                      {follow(item.bellOn ? 'bellOn' : 'bellOff')}
+                <div className="pointer-events-none relative z-2 min-w-0 flex-1">
+                  <h2 className="m-0 text-body font-semibold">{label}</h2>
+                  {business ? (
+                    <p className="m-0 text-small text-text-2 [overflow-wrap:anywhere]">
+                      {[category, rating].filter(Boolean).join(' · ')}
                     </p>
                   ) : (
                     item.mediaKind && (
@@ -155,18 +175,42 @@ export function SavedList({
                     )
                   )}
                 </div>
-                <Button
-                  variant="outline"
-                  disabled={remove.isPending}
-                  aria-label={t('removeLabel', { name: label })}
-                  onClick={() => {
-                    remove.reset();
-                    if (item.targetType === 'business') setConfirm(item);
-                    else removeItem(item);
-                  }}
-                >
-                  {t('remove')}
-                </Button>
+                <div className="relative z-2 flex items-center gap-2">
+                  {business && (
+                    <button
+                      type="button"
+                      className="grid size-11 place-items-center rounded-pill border border-border bg-surface text-primary focus-visible:ring-focus disabled:opacity-50"
+                      aria-pressed={item.bellOn}
+                      aria-label={follow(item.bellOn ? 'bellOn' : 'bellOff')}
+                      title={follow(item.bellOn ? 'bellOn' : 'bellOff')}
+                      disabled={bell.isPending}
+                      onClick={() =>
+                        bell.run({
+                          businessId: item.targetId,
+                          bellOn: !item.bellOn,
+                        })
+                      }
+                    >
+                      <NavIcon
+                        name="bell"
+                        filled={item.bellOn}
+                        className="size-5"
+                      />
+                    </button>
+                  )}
+                  <Button
+                    variant="outline"
+                    disabled={remove.isPending}
+                    aria-label={t('removeLabel', { name: label })}
+                    onClick={() => {
+                      remove.reset();
+                      if (item.targetType === 'business') setConfirm(item);
+                      else removeItem(item);
+                    }}
+                  >
+                    {t('remove')}
+                  </Button>
+                </div>
               </Card>
             );
           })}

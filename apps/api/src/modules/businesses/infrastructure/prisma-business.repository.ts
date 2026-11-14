@@ -105,11 +105,34 @@ export class PrismaBusinessRepository implements BusinessRepository {
 
   savedCards(tx: TxContext, ids: readonly string[]) {
     return this.database.client(tx).$queryRaw<
-      Array<{ id: string; labelEn: string; labelHi: string | null }>
+      Array<{
+        id: string;
+        labelEn: string;
+        labelHi: string | null;
+        kind: 'shop' | 'provider';
+        slug: string;
+        categoryEn: string | null;
+        categoryHi: string | null;
+        rating: number | null;
+        reviewCount: number;
+      }>
     >`
-      SELECT b.id, b.name_en AS "labelEn", b.name_hi AS "labelHi"
+      SELECT b.id, b.name_en AS "labelEn", b.name_hi AS "labelHi",
+        b.kind, b.slug,
+        c.name_en AS "categoryEn", c.name_hi AS "categoryHi",
+        r.rating, coalesce(r.review_count, 0)::integer AS "reviewCount"
       FROM businesses b
       JOIN users u ON u.id = b.owner_user_id
+      LEFT JOIN LATERAL (
+        SELECT cat.name_en, cat.name_hi
+        FROM business_categories bc
+        JOIN catalog_discovery_categories cat ON cat.id = bc.category_id
+        WHERE bc.business_id = b.id
+        ORDER BY bc.is_primary DESC, cat.sort_order, cat.id
+        LIMIT 1
+      ) c ON true
+      LEFT JOIN reviews_public_aggregates r
+        ON r.target_type = 'business' AND r.target_id = b.id
       WHERE b.id = ANY(${[...ids]}::uuid[])
         AND b.status = 'approved' AND b.deleted_at IS NULL
         AND b.name_en IS NOT NULL

@@ -72,8 +72,17 @@ export class SavedService {
       const cards =
         query.tab === 'shops'
           ? (await this.businesses.cards(tx, ids)).map((card) => ({
-              ...card,
-              canonicalPath: null,
+              id: card.id,
+              labelEn: card.labelEn,
+              labelHi: card.labelHi,
+              canonicalPath: `/${card.kind}/${card.slug}`,
+              business: {
+                kind: card.kind,
+                categoryEn: card.categoryEn,
+                categoryHi: card.categoryHi,
+                rating: card.rating,
+                reviewCount: card.reviewCount,
+              },
             }))
           : query.tab === 'services'
           ? await this.services.cards(tx,ids)
@@ -95,6 +104,7 @@ export class SavedService {
                 labelEn: card.labelEn,
                 labelHi: card.labelHi,
                 canonicalPath: card.canonicalPath,
+                ...('business' in card && { business: card.business }),
               }
             : {
                 ...row,

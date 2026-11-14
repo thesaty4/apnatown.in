@@ -10,6 +10,7 @@ import { useSession } from '../../shared/auth/SessionProvider';
 import { AccessState } from '../../shared/auth/AccessState';
 import { Logout } from '../../shared/auth/Logout';
 import { DemoRoleCard } from '../auth/demo/DemoControls';
+import { NavIcon } from '../../shared/ui/NavIcon';
 import { AccountBusinessEntry } from '../businesses/AccountBusinessEntry';
 import { AccountRiderEntry } from '../rider/AccountRiderEntry';
 import { accountScope } from '../../shared/api/query-keys';
@@ -84,31 +85,34 @@ export function Account({
             )}
           </OwnResource>
           <Card padded>
-            <nav aria-label={t('title')} className="grid gap-2">
-              <Link
-                href="/orders"
-                className="inline-flex min-h-touch items-center underline"
-              >
-                {orders('label')}
-              </Link>
-              <Link
-                href="/account/profile"
-                className="inline-flex min-h-touch items-center underline"
-              >
-                {t('profile')}
-              </Link>
-              <Link
-                href="/account/addresses"
-                className="inline-flex min-h-touch items-center underline"
-              >
-                {t('addresses')}
-              </Link>
-              <Link
-                href="/account/preferences"
-                className="inline-flex min-h-touch items-center underline"
-              >
-                {t('preferences')}
-              </Link>
+            <nav aria-label={t('title')} className="grid gap-2 tablet:grid-cols-2">
+              {([
+                ['/account/profile', '👤', t('profile')],
+                ['/orders', '📦', orders('label')],
+                ['/saved?tab=shops', '🏪', t('following')],
+                ['/saved?tab=media', '🖼️', t('savedMedia')],
+                ['/my-reviews', '⭐', t('myReviews')],
+                ['/offers', '🏷️', t('offers')],
+                ['/account/addresses', '📍', t('addresses')],
+                ['/account/notifications', '🔔', t('notifications')],
+                ['/account/consent', '✅', t('consent')],
+                ['/account/payments', '💳', t('payments')],
+                ['/account/language', '🌐', t('language')],
+                ['/account/theme', '🎨', t('theme')],
+                ['/help', '🆘', t('help')],
+              ] as const).map(([href, icon, label]) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="flex min-h-touch items-center gap-3 rounded-md border border-border bg-surface px-3 py-2 font-semibold text-text hover:bg-surface-2 focus-visible:ring-focus"
+                >
+                  <span aria-hidden="true" className="text-h3">
+                    {icon}
+                  </span>
+                  <span className="min-w-0 flex-1">{label}</span>
+                  <NavIcon name="cr" className="size-4 shrink-0 text-muted" />
+                </Link>
+              ))}
             </nav>
           </Card>
           <AccountBusinessEntry />
@@ -127,7 +131,6 @@ export function Account({
           <Logout />
         </>
       )}
-      <p className="text-small text-muted">{t('unavailable')}</p>
     </div>
   );
 }

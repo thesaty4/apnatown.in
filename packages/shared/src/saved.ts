@@ -33,8 +33,20 @@ export const SavedItemSchema = z.discriminatedUnion('available', [
     labelHi: z.string().max(500).nullable(),
     canonicalPath: z
       .string()
-      .regex(/^(?:\/videos\/[0-9a-f-]{36}|\/service\/[a-z0-9]+(?:-[a-z0-9]+)*)$/)
+      .regex(
+        /^(?:\/videos\/[0-9a-f-]{36}|\/service\/[a-z0-9]+(?:-[a-z0-9]+)*|\/(?:shop|provider)\/[a-z0-9]+(?:-[a-z0-9]+)*)$/,
+      )
       .nullable(),
+    /** Present for followed businesses only; never invented for media/services. */
+    business: z
+      .strictObject({
+        kind: z.enum(['shop', 'provider']),
+        categoryEn: z.string().nullable(),
+        categoryHi: z.string().nullable(),
+        rating: z.number().nullable(),
+        reviewCount: z.number().int().nonnegative(),
+      })
+      .optional(),
   }),
 ]);
 export type SavedItem = z.infer<typeof SavedItemSchema>;

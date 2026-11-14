@@ -124,11 +124,22 @@ export interface DiscoveryRow {
 }
 
 export const BUSINESS_REPOSITORY = Symbol('BUSINESS_REPOSITORY');
+export type BusinessSavedCard = {
+  id: string;
+  labelEn: string;
+  labelHi: string | null;
+  kind: 'shop' | 'provider';
+  slug: string;
+  categoryEn: string | null;
+  categoryHi: string | null;
+  rating: number | null;
+  reviewCount: number;
+};
 export interface BusinessRepository {
   savedCards(
     tx: TxContext,
     ids: readonly string[],
-  ): Promise<Array<{ id: string; labelEn: string; labelHi: string | null }>>;
+  ): Promise<BusinessSavedCard[]>;
   find(
     tx: TxContext,
     id: string,

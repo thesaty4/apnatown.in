@@ -45,6 +45,7 @@ Shared UX states come from `frontend-shared.md`; use the screen-specific states 
 - Given a product has no variants, when the customer buys it, then purchase remains available without a fabricated variant selection.
 - Given the product is out of stock or unavailable, when its detail loads, then the correct special state appears, purchase actions are unavailable and the page does not claim an unconfirmed notification subscription.
 - Given a guest opens the viewer, bookmarks, or starts purchase, when login is required, then the action returns to the same product and overlay/action context where applicable.
+- Implemented (2026-11-14): the purchase actions show **Add to cart** and **Buy now**; Buy now adds the selected variant/quantity with the same cart mutation and routes to `/checkout` after it commits. The Sold by card includes the shared `BusinessFollowButton` (bell on by default).
 
 ### S-VEND-05 — Products
 

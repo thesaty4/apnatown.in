@@ -57,7 +57,14 @@ export function Preferences({
   );
 }
 
-function PreferencesForm({ preferences }: { preferences: PreferencesData }) {
+export function PreferencesForm({
+  preferences,
+  field,
+}: {
+  preferences: PreferencesData;
+  /** Render and save only this preference; the other keeps its current value. */
+  field?: 'locale' | 'theme';
+}) {
   const mutation = useSavePreferences();
   const router = useRouter();
   const t = useTranslations('account.preferences');
@@ -99,34 +106,38 @@ function PreferencesForm({ preferences }: { preferences: PreferencesData }) {
             void save();
           }}
         >
-          <Select
-            label={common('language.label')}
-            value={locale}
-            disabled={busy}
-            onChange={(event) => {
-              setLocale(event.target.value);
-              setSaved(false);
-            }}
-            options={['en', 'hi'].map((value) => ({
-              value,
-              label: common(
-                value === 'en' ? 'language.english' : 'language.hindi',
-              ),
-            }))}
-          />
-          <Select
-            label={common('theme.label')}
-            value={theme}
-            disabled={busy}
-            onChange={(event) => {
-              setTheme(event.target.value);
-              setSaved(false);
-            }}
-            options={['light', 'dark', 'auto'].map((value) => ({
-              value,
-              label: common(`theme.${value}`),
-            }))}
-          />
+          {field !== 'theme' && (
+            <Select
+              label={common('language.label')}
+              value={locale}
+              disabled={busy}
+              onChange={(event) => {
+                setLocale(event.target.value);
+                setSaved(false);
+              }}
+              options={['en', 'hi'].map((value) => ({
+                value,
+                label: common(
+                  value === 'en' ? 'language.english' : 'language.hindi',
+                ),
+              }))}
+            />
+          )}
+          {field !== 'locale' && (
+            <Select
+              label={common('theme.label')}
+              value={theme}
+              disabled={busy}
+              onChange={(event) => {
+                setTheme(event.target.value);
+                setSaved(false);
+              }}
+              options={['light', 'dark', 'auto'].map((value) => ({
+                value,
+                label: common(`theme.${value}`),
+              }))}
+            />
+          )}
           <Button type="submit" loading={busy}>
             {t('save')}
           </Button>

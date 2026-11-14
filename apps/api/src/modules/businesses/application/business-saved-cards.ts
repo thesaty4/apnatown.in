@@ -3,14 +3,12 @@ import type { TxContext } from '../../../shared/persistence/ports';
 import {
   BUSINESS_REPOSITORY,
   type BusinessRepository,
+  type BusinessSavedCard,
 } from '../domain/business';
 
 export const BUSINESS_SAVED_CARDS = Symbol('BUSINESS_SAVED_CARDS');
 export interface BusinessSavedCards {
-  cards(
-    tx: TxContext,
-    ids: readonly string[],
-  ): Promise<Array<{ id: string; labelEn: string; labelHi: string | null }>>;
+  cards(tx: TxContext, ids: readonly string[]): Promise<BusinessSavedCard[]>;
 }
 
 @Injectable()

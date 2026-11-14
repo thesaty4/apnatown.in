@@ -5,11 +5,12 @@ import { getPublicOffers } from './api';
 
 type Reader = Pick<BrowserApi, 'GET'>;
 
-export function publicOffersOptions(api: Reader) {
+export function publicOffersOptions(api: Reader, businessId?: string) {
   return infiniteQueryOptions({
-    queryKey: ['offers', 'public', 'active'] as const,
+    queryKey: ['offers', 'public', 'active', businessId ?? 'all'] as const,
     initialPageParam: null as string | null,
-    queryFn: ({ pageParam, signal }) => getPublicOffers(api, pageParam, signal),
+    queryFn: ({ pageParam, signal }) =>
+      getPublicOffers(api, pageParam, signal, businessId),
     getNextPageParam: (page) => page.nextCursor ?? undefined,
     staleTime: 60_000,
     gcTime: 5 * 60_000,

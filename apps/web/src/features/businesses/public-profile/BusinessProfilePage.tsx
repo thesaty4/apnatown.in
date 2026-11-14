@@ -16,10 +16,10 @@ import { AboutPanel } from './AboutPanel';
 import { ContactPanel } from './ContactPanel';
 import { ProfileActions } from './ProfileActions';
 import { ProfileHeader, type HeaderCategory } from './ProfileHeader';
+import { ProfileOffersPanel } from './ProfileOffersPanel';
 import { ProfileTabs } from './ProfileTabs';
 import { GalleryGrid, VideoGrid } from '../../gallery';
 import { ReviewsSection } from '../../reviews';
-import { ComingSoonPanel } from './StaticPanels';
 import { localBusinessJsonLd } from './json-ld';
 import { readProviderExpertise, readPublicBusiness, type ProfileKind } from './read';
 
@@ -28,7 +28,7 @@ import { readProviderExpertise, readPublicBusiness, type ProfileKind } from './r
  * (header, actions, static panels); only tabs/pills/listings, share, map and
  * QR are client islands. The API returns 404 for missing and not-live alike.
  */
-export async function BusinessProfilePage({ kind, slug }: { kind: ProfileKind; slug: string }) {
+export async function BusinessProfilePage({ kind, slug, search = '' }: { kind: ProfileKind; slug: string; search?: string }) {
   const path = `/${kind}/${slug}`;
   const [result, locale] = await Promise.all([readPublicBusiness(slug), currentLocale()]);
   if (result.kind === 'error') {
@@ -52,7 +52,9 @@ export async function BusinessProfilePage({ kind, slug }: { kind: ProfileKind; s
   if (item.path !== path) {
     // Same slug under the other profile kind: send to its canonical route.
     if (item.path === `/${kind === 'shop' ? 'provider' : 'shop'}/${slug}`)
-      redirect(publicHref(item.path, locale));
+      redirect(
+        `${publicHref(item.path, locale)}${search ? `?${search}` : ''}`,
+      );
     notFound();
   }
 
@@ -92,7 +94,7 @@ export async function BusinessProfilePage({ kind, slug }: { kind: ProfileKind; s
         categories={categories}
         panels={{
           about: <AboutPanel detail={detail} expertise={expertise} locale={locale} />,
-          offers: <ComingSoonPanel section="offers" />,
+          offers: <ProfileOffersPanel businessId={item.business.id} />,
           gallery: <GalleryGrid slug={slug} profilePath={path} businessName={name} />,
           videos: <VideoGrid slug={slug} />,
           reviews: (

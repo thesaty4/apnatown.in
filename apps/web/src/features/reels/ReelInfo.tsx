@@ -47,7 +47,7 @@ function ReelFollow({
       });
     else if (query.isError) void query.refetch();
     else if (following) setConfirmUnfollow(true);
-    else follow.set(true, false);
+    else follow.set(true, true);
   }
 
   return (

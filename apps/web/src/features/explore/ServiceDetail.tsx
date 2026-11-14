@@ -11,7 +11,7 @@ import { resource, unwrap } from '../../shared/api/result';
 import { publicHref, type Locale } from '../../shared/i18n/preferences';
 import { NavIcon } from '../../shared/ui/NavIcon';
 import { ShareAction } from '../businesses';
-import { ServiceBookmarkAction } from '../engagement';
+import { BusinessFollowButton, ServiceBookmarkAction } from '../engagement';
 import { LinkedVideosStrip } from '../gallery';
 import { ReviewsSection } from '../reviews';
 import { EnquiryForm } from '../services';
@@ -203,6 +203,10 @@ export async function ServiceDetail({
           </span>
           <NavIcon name="cr" className="size-5" />
         </Link>
+        <BusinessFollowButton
+          businessId={item.business.id}
+          variant="outline"
+        />
         {data.serviceArea && (
           <>
             <hr className="m-0 border-border" />

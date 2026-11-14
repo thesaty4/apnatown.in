@@ -96,19 +96,80 @@
       "loading": "Loading your account…",
       "retry": "Try again"
     },
+    "consent": {
+      "guestMessage": "Log in to manage your consent choices.",
+      "intro": "Review and withdraw the consents you have given.",
+      "title": "Consent"
+    },
+    "language": {
+      "guestMessage": "Log in to change your language.",
+      "title": "Language"
+    },
     "menu": {
       "addresses": "Saved addresses",
       "cancel": "Cancel",
       "complete": "Complete your profile",
+      "consent": "Consent",
       "edit": "Edit",
+      "following": "Following",
+      "help": "Help & support",
+      "language": "Language",
       "logout": "Log out",
       "logoutMessage": "You can log back in anytime with your mobile number.",
       "logoutTitle": "Log out?",
+      "myReviews": "My reviews",
+      "notifications": "Notifications",
+      "offers": "Offers",
       "operationsUnavailable": "Operational dashboards and approval checks are not available here. Your role does not grant operational access on this screen.",
+      "payments": "Payments",
       "preferences": "Language & theme",
       "profile": "Profile",
+      "savedMedia": "Saved photos, videos & reels",
+      "theme": "Theme",
       "title": "Account",
       "unavailable": "Payment methods and notifications are not available yet."
+    },
+    "myReviews": {
+      "emptyMessage": "Reviews you write will appear here.",
+      "emptyTitle": "No reviews yet",
+      "errorMessage": "Please try again.",
+      "errorTitle": "Couldn’t load your reviews",
+      "helpful": "{count, plural, one {# helpful} other {# helpful}}",
+      "intro": "Reviews you have written for products, services and businesses.",
+      "kind": {
+        "business": "Business",
+        "product": "Product",
+        "rider": "Delivery partner",
+        "service": "Service"
+      },
+      "loading": "Loading your reviews",
+      "retry": "Try again",
+      "status": {
+        "hidden": "Not published",
+        "pending": "Under review",
+        "published": "Published",
+        "rejected": "Not published",
+        "reported": "Reported"
+      },
+      "title": "My reviews",
+      "viewTarget": "View listing"
+    },
+    "notifications": {
+      "guestMessage": "Log in to manage your notification channels.",
+      "intro": "Choose where order updates, offers and replies reach you.",
+      "title": "Notifications"
+    },
+    "payments": {
+      "available": "Available",
+      "cod": "Cash / pay at pickup",
+      "errorMessage": "Please try again.",
+      "errorTitle": "Couldn’t load payment options",
+      "intro": "Payment options available on ApnaTown right now.",
+      "note": "Saved cards are managed by the payment provider. ApnaTown never stores card numbers.",
+      "online": "Online payments",
+      "retry": "Try again",
+      "title": "Payments",
+      "unavailable": "Not available yet"
     },
     "preferences": {
       "cookiesUnavailable": "Cookie choices are not available yet. Saving language or theme does not grant consent.",
@@ -133,6 +194,10 @@
       "saved": "Profile saved",
       "skip": "Skip for now",
       "title": "Profile"
+    },
+    "theme": {
+      "guestMessage": "Log in to change your theme.",
+      "title": "Theme"
     }
   },
   "admin": {
@@ -1308,6 +1373,7 @@
         "youtube": "YouTube"
       },
       "coverAlt": "Cover photo of {name}",
+      "coverLabel": "Business photos",
       "delivery": "Home delivery",
       "deliveryRadius": "Delivers within {km, number} km",
       "errorMessage": "Check your connection and try again.",
@@ -1319,6 +1385,7 @@
         "imageAlt": "{name} photo {number, number}",
         "title": "Gallery"
       },
+      "goToPhoto": "Go to photo {number}",
       "home": "Home",
       "listings": {
         "all": "All",
@@ -1347,6 +1414,11 @@
       "logoAlt": "Logo of {name}",
       "noRating": "No reviews yet",
       "notLiveMessage": "It may have been removed or isn't live yet. Explore other shops and services nearby.",
+      "offers": {
+        "emptyMessage": "This business has no active offers right now. Check back later.",
+        "emptyTitle": "No active offers"
+      },
+      "photoAlt": "{name} photo {number}",
       "pickup": "Store pickup",
       "rating": "{rating, number} rating · {count, number} reviews",
       "report": {
@@ -1457,6 +1529,7 @@
     "add": {
       "action": "Add to cart",
       "added": "Added to cart",
+      "buyNow": "Buy now",
       "dismiss": "Dismiss",
       "logIn": "Log in",
       "offline": "You are offline. Reconnect to add items.",
@@ -5135,7 +5208,9 @@
     "section": {
       "barLabel": "{star, number} star: {count, number} reviews",
       "count": "{count, plural, one {# review} other {# reviews}}",
+      "emptyBusinessMessage": "Be the first to review this business.",
       "emptyMessage": "Be the first to review this product.",
+      "emptyServiceMessage": "Be the first to review this service.",
       "emptyTitle": "No reviews yet",
       "errorMessage": "Please try again.",
       "errorTitle": "Reviews could not load",

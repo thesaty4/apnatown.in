@@ -1,11 +1,17 @@
 import { infiniteQueryOptions } from '@tanstack/react-query';
 import {
+  MyReviewPageSchema,
   ReviewPageSchema,
   type ReviewPublicTargetType,
   type ReviewSort,
 } from '@apnatown/shared/reviews';
 import type { BrowserApi } from '../../shared/api/browser';
-import { queryKeys } from '../../shared/api/query-keys';
+import {
+  queryKeys,
+  type AccountScope,
+} from '../../shared/api/query-keys';
+import { privateQueryOptions } from '../../shared/api/private-query';
+import type { PrivateLifecycle } from '../../shared/api/private-lifecycle';
 import {
   normalizeFailure,
   retryTransientRead,
@@ -50,4 +56,23 @@ export function reviewsOptions(
     staleTime: 30_000,
     retry: retryTransientRead,
   });
+}
+
+
+/** Own review history (account "My reviews"); private, revision-fenced. */
+export function myReviewsOptions(
+  api: Pick<BrowserApi, 'GET'>,
+  scope: AccountScope | null,
+  lifecycle: PrivateLifecycle,
+) {
+  return privateQueryOptions(
+    scope ? queryKeys.myReviews(scope) : ['private', 'pending', 'reviews'],
+    scope?.epoch ?? 0,
+    lifecycle,
+    async (signal) =>
+      unwrap(
+        await api.GET('/reviews/me', { signal }),
+        MyReviewPageSchema,
+      ),
+  );
 }

@@ -23,6 +23,8 @@ export const queryKeys = {
   pendingPreferences: (epoch: number) =>
     ['private', 'login-preferences', epoch] as const,
   addresses: (scope: AccountScope) => ['private', scope, 'addresses'] as const,
+  myReviews: (scope: AccountScope) =>
+    ['private', scope, 'reviews', 'mine'] as const,
   consents: (scope: AccountScope) => ['private', scope, 'consents'] as const,
   dataRequest: (scope: AccountScope, requestId: string) =>
     ['private', scope, 'data-requests', requestId] as const,

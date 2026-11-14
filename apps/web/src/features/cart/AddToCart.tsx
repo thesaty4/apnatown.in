@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useId, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { QuantityStepper } from '@apnatown/ui/commerce/QuantityStepper';
 import { ToastRegion, type ToastMessage } from '@apnatown/ui/feedback/Toast';
@@ -42,6 +43,7 @@ export function AddToCart({
   const t = useTranslations('cart.add');
   const line = useTranslations('cart.line');
   const errors = useTranslations('cart.errors');
+  const router = useRouter();
   const online = useOnline();
   const login = useLoginHref();
   const { mutation, ready } = useAddToCart(productId);
@@ -84,7 +86,7 @@ export function AddToCart({
   const max = inventory.maxQuantity;
   const hasVariants = variants.length > 0;
   const errorKey = mutation.isError ? cartErrorKey(mutation.error) : undefined;
-  function add() {
+  function add(mode: 'cart' | 'buy') {
     const selected = hasVariants
       ? variants.find((variant) => variant.id === variantId)?.id
       : null;
@@ -96,6 +98,10 @@ export function AddToCart({
       { quantity: Math.min(quantity, max), variantId: selected },
       () => {
         setQuantity(1);
+        if (mode === 'buy') {
+          router.push('/checkout');
+          return;
+        }
         setToast((current) => ({
           id: (current?.id ?? 0) + 1,
           message: t('added'),
@@ -137,16 +143,26 @@ export function AddToCart({
           {line('max', { count: max })}
         </span>
       </div>
-      <Button
-        variant="outline"
-        className="tablet:justify-self-start"
-        loading={mutation.isPending}
-        disabled={!ready || !online}
-        onClick={add}
-      >
-        <NavIcon name="cart" className="size-4.5" />
-        {t('action')}
-      </Button>
+      <div className="flex flex-wrap gap-2">
+        <Button
+          variant="outline"
+          className="min-w-0 flex-1 basis-40 tablet:flex-none"
+          loading={mutation.isPending}
+          disabled={!ready || !online}
+          onClick={() => add('cart')}
+        >
+          <NavIcon name="cart" className="size-4.5" />
+          {t('action')}
+        </Button>
+        <Button
+          className="min-w-0 flex-1 basis-40 tablet:flex-none"
+          loading={mutation.isPending}
+          disabled={!ready || !online}
+          onClick={() => add('buy')}
+        >
+          {t('buyNow')}
+        </Button>
+      </div>
       {!online && <p className="m-0 text-small text-text-2">{t('offline')}</p>}
       {errorKey && (
         <p

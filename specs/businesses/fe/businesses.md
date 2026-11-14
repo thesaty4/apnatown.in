@@ -44,6 +44,7 @@ Owner API calls set `X-Business-Kind` from the vendor/provider route group; the 
 - Given a business is not approved, when its public route is requested, then private application data is not disclosed and the unavailable copy is shown; the Verified badge is never derived from approval status.
 - Given a live business is closed, out of range or has no eligible listings, when its profile loads, then the matching special state appears without hiding unrelated sections.
 - Given a guest invokes a gated action, when login is required, then return-to-origin restores this profile; keyboard, EN/HI and dark states remain usable.
+- Implemented (2026-11-14): the cover is a swipe/dot carousel combining the stored cover with approved `gallery_photo` items (`ProfileCover`, no autoplay); the Offers tab reads `/offers?businessId=` and renders the shared `OfferCard`; the Reviews tab renders `ReviewsSection` with business-specific empty copy; Follow sends `bellOn: true` by default and keeps the bell toggle.
 
 ### S-CUST-07 — Service provider profile
 
